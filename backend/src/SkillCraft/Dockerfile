@@ -9,10 +9,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["SkillCraft/SkillCraft.csproj", "SkillCraft/"]
-RUN dotnet restore "./SkillCraft/./SkillCraft.csproj"
+COPY ["src/SkillCraft/SkillCraft.csproj", "src/SkillCraft/"]
+RUN dotnet restore "src/SkillCraft/./SkillCraft.csproj"
 COPY . .
-WORKDIR "/src/SkillCraft"
+WORKDIR "/src/src/SkillCraft"
 RUN dotnet build "./SkillCraft.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
