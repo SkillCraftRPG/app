@@ -61,8 +61,6 @@ internal class Startup : StartupBase
       services.AddOpenApi();
     }
 
-    // TODO(fpion): persistence
-
     services.AddDistributedMemoryCache();
     services.AddSkillCraftInfrastructure();
   }

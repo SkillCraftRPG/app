@@ -17,7 +17,7 @@ internal class UserService : IUserService
   public async Task<User> AuthenticateAsync(User user, string password, CancellationToken cancellationToken)
   {
     AuthenticateUserPayload payload = new(user.UniqueName, password);
-    RequestContext context = new(cancellationToken); // TODO(fpion): send user
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _userClient.AuthenticateAsync(payload, context);
   }
 
@@ -49,7 +49,7 @@ internal class UserService : IUserService
     {
       Email = new Modification<EmailPayload>(new EmailPayload(email.Address, email.IsVerified))
     };
-    RequestContext context = new(cancellationToken); // TODO(fpion): send user
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _userClient.UpdateAsync(user.Id, payload, context)
       ?? throw new InvalidOperationException($"The user 'Id={user.Id}' update returned null.");
   }

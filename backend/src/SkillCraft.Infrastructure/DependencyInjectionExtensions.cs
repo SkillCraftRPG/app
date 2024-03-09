@@ -9,6 +9,8 @@ public static class DependencyInjectionExtensions
 {
   public static IServiceCollection AddSkillCraftInfrastructure(this IServiceCollection services)
   {
+    // TODO(fpion): Logitar.Portal.Client
+
     return services
       .AddSkillCraftApplication()
       .AddIdentityServices();

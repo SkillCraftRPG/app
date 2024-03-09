@@ -4,7 +4,7 @@ using SkillCraft.Models.Account;
 
 namespace SkillCraft.Authentication;
 
-public interface IAuthenticationService
+public interface IAuthenticationService // TODO(fpion): implement
 {
   TokenResponse GetTokenResponse(Session session);
   ValidatedToken ValidateAccessToken(string accessToken);

@@ -27,7 +27,7 @@ internal class OneTimePasswordService : IOneTimePasswordService
     };
     payload.SetUserId(user);
     payload.SetPurpose(purpose);
-    RequestContext context = new(cancellationToken); // TODO(fpion): send user
+    RequestContext context = new(cancellationToken);
     return await _oneTimePasswordClient.CreateAsync(payload, context);
   }
 
