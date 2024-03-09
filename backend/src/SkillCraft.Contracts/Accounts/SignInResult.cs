@@ -1,33 +1,29 @@
-﻿using Logitar.Portal.Contracts.Sessions;
+﻿using Logitar.Portal.Contracts.Passwords;
+using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Tokens;
 
 namespace SkillCraft.Contracts.Accounts;
 
 public record SignInResult
 {
+  public SentMessage? AuthenticationLinkSentTo { get; private set; }
   public bool IsPasswordRequired { get; private set; }
-  public SentMessage? MultiFactorAuthentication { get; private set; }
+  public OneTimePasswordValidation? OneTimePasswordValidation { get; private set; }
   public string? ProfileCompletionToken { get; private set; }
-  public SentMessage? SentMessage { get; private set; } // TODO(fpion): rename
   public Session? Session { get; private set; }
 
   private SignInResult()
   {
   }
 
-  public SignInResult(SentMessage sentMessage) : this() // TODO(fpion): transform into static method
+  public static SignInResult AuthenticationLinkSent(SentMessage sentMessage) => new()
   {
-    SentMessage = sentMessage;
-  }
+    AuthenticationLinkSentTo = sentMessage
+  };
 
-  public SignInResult(Session session) : this()
+  public static SignInResult RequireOneTimePasswordValidation(OneTimePassword oneTimePassword, SentMessage sentMessage) => new()
   {
-    Session = session;
-  }
-
-  public static SignInResult RequireMultiFactorAuthentication(SentMessage sentMessage) => new()
-  {
-    MultiFactorAuthentication = sentMessage
+    OneTimePasswordValidation = new OneTimePasswordValidation(oneTimePassword, sentMessage)
   };
 
   public static SignInResult RequirePassword() => new()
@@ -38,5 +34,10 @@ public record SignInResult
   public static SignInResult RequireProfileCompletion(CreatedToken createdToken) => new()
   {
     ProfileCompletionToken = createdToken.Token
+  };
+
+  public static SignInResult Succeed(Session session) => new()
+  {
+    Session = session
   };
 }

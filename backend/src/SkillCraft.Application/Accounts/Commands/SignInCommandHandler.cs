@@ -71,7 +71,6 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     User user = await _userService.FindAsync(credentials.EmailAddress, cancellationToken)
       ?? await _userService.CreateAsync(credentials.EmailAddress, cancellationToken);
 
-    SentMessage? sentMessage;
     if (user.Email == null)
     {
       throw new InvalidOperationException($"The user 'Id={user.Id}' has no email.");
@@ -84,8 +83,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
         ["Token"] = createdToken.Token
       };
       SentMessages sentMessages = await _messageService.SendAsync(PasswordlessTemplate, user, locale, variables, cancellationToken);
-      sentMessage = new(sentMessages, user.Email);
-      return new SignInResult(sentMessage);
+      SentMessage sentMessage = new(sentMessages, user.Email);
+      return SignInResult.AuthenticationLinkSent(sentMessage);
     }
     else if (credentials.Password == null)
     {
@@ -96,27 +95,21 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     if (mfaMode == MultiFactorAuthenticationMode.None && user.IsProfileCompleted())
     {
       Session session = await _sessionService.SignInAsync(user, credentials.Password, sessionAttributes, cancellationToken);
-      return new SignInResult(session);
+      return SignInResult.Succeed(session);
     }
     else
     {
       await _userService.AuthenticateAsync(user, credentials.Password, cancellationToken);
     }
 
-    sentMessage = mfaMode switch
+    return mfaMode switch
     {
       MultiFactorAuthenticationMode.Email => await SendMultiFactorAuthenticationEmailMessageAsync(user, locale, cancellationToken),
-      MultiFactorAuthenticationMode.Phone => throw new NotSupportedException(), // TODO(fpion): implement text messages (SMS)
-      _ => null,
+      MultiFactorAuthenticationMode.Phone => throw new NotSupportedException(),// TODO(fpion): implement text messages (SMS)
+      _ => await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken),
     };
-    if (sentMessage != null)
-    {
-      return SignInResult.RequireMultiFactorAuthentication(sentMessage);
-    }
-
-    return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
-  private async Task<SentMessage> SendMultiFactorAuthenticationEmailMessageAsync(User user, string locale, CancellationToken cancellationToken)
+  private async Task<SignInResult> SendMultiFactorAuthenticationEmailMessageAsync(User user, string locale, CancellationToken cancellationToken)
   {
     if (user.Email == null)
     {
@@ -133,7 +126,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
       ["OneTimePassword"] = oneTimePassword.Password
     };
     SentMessages sentMessages = await _messageService.SendAsync(MultiFactorAuthenticationTemplate, user, locale, variables, cancellationToken);
-    return new SentMessage(sentMessages, user.Email);
+    SentMessage sentMessage = new(sentMessages, user.Email);
+    return SignInResult.RequireOneTimePasswordValidation(oneTimePassword, sentMessage);
   }
 
   private async Task<SignInResult> HandleTokenAsync(string token, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
@@ -181,6 +175,6 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     }
 
     Session session = await _sessionService.CreateAsync(user, sessionAttributes, cancellationToken);
-    return new SignInResult(session);
+    return SignInResult.Succeed(session);
   }
 }

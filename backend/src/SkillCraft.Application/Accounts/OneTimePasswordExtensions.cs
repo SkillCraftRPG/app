@@ -1,9 +1,9 @@
 ﻿using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Passwords;
 
-namespace SkillCraft.Contracts.Accounts;
+namespace SkillCraft.Application.Accounts;
 
-public static class OneTimePasswordExtensions
+internal static class OneTimePasswordExtensions
 {
   private const string PurposeKey = "Purpose";
   private const string UserIdKey = "UserId";

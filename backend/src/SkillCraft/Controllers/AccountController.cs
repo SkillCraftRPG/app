@@ -1,5 +1,4 @@
-﻿using Logitar.Portal.Contracts.Sessions;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application.Accounts.Commands;
 using SkillCraft.Authentication;
@@ -23,32 +22,25 @@ public class AccountController : ControllerBase
   }
 
   [HttpPost("sign/in")]
-  public async Task<ActionResult<CurrentUser>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<SignInResponse<CurrentUser>>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
   {
     Contracts.Accounts.SignInResult result = await _mediator.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+    CurrentUser? currentUser = null;
     if (result.Session != null)
     {
-      Session session = result.Session;
-      HttpContext.SignIn(session);
-      CurrentUser currentUser = new(session);
-      return Ok(currentUser);
+      currentUser = new(result.Session);
+      HttpContext.SignIn(result.Session);
     }
-
-    throw new NotImplementedException(); // TODO(fpion): implement
+    SignInResponse<CurrentUser> response = new(result, currentUser);
+    return Ok(response);
   }
 
   [HttpPost("token")]
-  public async Task<ActionResult<TokenResponse>> GetTokenAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<SignInResponse<TokenResponse>>> GetTokenAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
   {
     Contracts.Accounts.SignInResult result = await _mediator.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
-    if (result.Session != null)
-    {
-      Session session = result.Session;
-      HttpContext.Response.Headers.CacheControl = "no-store";
-      TokenResponse tokenResponse = _authenticationService.GetTokenResponse(session);
-      return Ok(tokenResponse);
-    }
-
-    throw new NotImplementedException(); // TODO(fpion): implement
+    TokenResponse? token = result.Session == null ? null : _authenticationService.GetTokenResponse(result.Session);
+    SignInResponse<TokenResponse> response = new(result, token);
+    return Ok(response);
   }
 }

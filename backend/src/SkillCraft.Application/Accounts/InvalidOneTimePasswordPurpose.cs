@@ -1,11 +1,12 @@
 ﻿using Logitar;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts.Passwords;
 
-namespace SkillCraft.Contracts.Accounts;
+namespace SkillCraft.Application.Accounts;
 
-public class InvalidOneTimePasswordPurpose : Exception
+internal class InvalidOneTimePasswordPurpose : InvalidCredentialsException
 {
-  private const string ErrorMessage = "The specified purpose did not match the expected One-Time Passord (OTP) purpose.";
+  private new const string ErrorMessage = "The specified purpose did not match the expected One-Time Passord (OTP) purpose.";
 
   public Guid OneTimePasswordId
   {

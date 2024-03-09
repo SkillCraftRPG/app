@@ -20,9 +20,4 @@ public static class UserExtensions
   {
     return user.CustomAttributes.Any(x => x.Key == ProfileCompletedOnKey);
   }
-
-  public static string Mask(this Email email)
-  {
-    throw new NotImplementedException(); // TODO(fpion): implement
-  }
 }
