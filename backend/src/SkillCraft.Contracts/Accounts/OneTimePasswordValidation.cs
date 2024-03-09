@@ -4,8 +4,8 @@ namespace SkillCraft.Contracts.Accounts;
 
 public record OneTimePasswordValidation
 {
-  public Guid OneTimePasswordId { get; private set; }
-  public SentMessage SentMessage { get; private set; }
+  public Guid OneTimePasswordId { get; }
+  public SentMessage SentMessage { get; }
 
   public OneTimePasswordValidation(OneTimePassword oneTimePassword, SentMessage sentMessage)
   {

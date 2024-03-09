@@ -4,11 +4,11 @@ namespace SkillCraft.Models.Account;
 
 public record SignInResponse<T>
 {
-  public SentMessage? AuthenticationLinkSentTo { get; private set; }
-  public bool IsPasswordRequired { get; private set; }
-  public OneTimePasswordValidation? OneTimePasswordValidation { get; private set; }
-  public string? ProfileCompletionToken { get; private set; }
-  public T? Success { get; private set; }
+  public SentMessage? AuthenticationLinkSentTo { get; }
+  public bool IsPasswordRequired { get; }
+  public OneTimePasswordValidation? OneTimePasswordValidation { get; }
+  public string? ProfileCompletionToken { get; }
+  public T? Success { get; }
 
   public SignInResponse(SignInResult result, T? success)
   {
