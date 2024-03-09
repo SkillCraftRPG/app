@@ -1,4 +1,7 @@
-﻿using SkillCraft.Extensions;
+﻿using SkillCraft.Application;
+using SkillCraft.Extensions;
+using SkillCraft.Filters;
+using SkillCraft.Middlewares;
 using SkillCraft.Settings;
 
 namespace SkillCraft;
@@ -18,12 +21,26 @@ internal class Startup : StartupBase
   {
     base.ConfigureServices(services);
 
-    services.AddControllers() // TODO(fpion): ExceptionHandling
+    services.AddControllers(options => options.Filters.Add<ExceptionHandling>())
       .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+    // TODO(fpion): GraphQL
 
     CorsSettings corsSettings = _configuration.GetSection("Cors").Get<CorsSettings>() ?? new();
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
+
+    // TODO(fpion): Authentication
+
+    // TODO(fpion): Authorization
+
+    CookiesSettings cookiesSettings = _configuration.GetSection("Cookies").Get<CookiesSettings>() ?? new();
+    services.AddSingleton(cookiesSettings);
+    services.AddSession(options =>
+    {
+      options.Cookie.SameSite = cookiesSettings.Session.SameSite;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -32,6 +49,11 @@ internal class Startup : StartupBase
     {
       services.AddOpenApi();
     }
+
+    // TODO(fpion): persistence
+
+    services.AddDistributedMemoryCache();
+    services.AddSkillCraftApplication();
   }
 
   public override void Configure(IApplicationBuilder builder)
@@ -41,8 +63,32 @@ internal class Startup : StartupBase
       builder.UseOpenApi();
     }
 
+    //if (_configuration.GetValue<bool>("UseGraphQLAltair"))
+    //{
+    //  builder.UseGraphQLAltair();
+    //}
+    //if (_configuration.GetValue<bool>("UseGraphQLGraphiQL"))
+    //{
+    //  builder.UseGraphQLGraphiQL();
+    //}
+    //if (_configuration.GetValue<bool>("UseGraphQLPlayground"))
+    //{
+    //  builder.UseGraphQLPlayground();
+    //}
+    //if (_configuration.GetValue<bool>("UseGraphQLVoyager"))
+    //{
+    //  builder.UseGraphQLVoyager();
+    //} // TODO(fpion): GraphQL
+
     builder.UseHttpsRedirection();
     builder.UseCors();
+    builder.UseStaticFiles();
+    builder.UseSession();
+    builder.UseMiddleware<RenewSession>();
+    //builder.UseAuthentication(); // TODO(fpion): Authentication
+    //builder.UseAuthorization(); // TODO(fpion): Authorization
+
+    //builder.UseGraphQL<SkillCraftSchema>("/graphql", options => options.AuthenticationSchemes.AddRange(_authenticationSchemes)); // TODO(fpion): GraphQL
 
     if (builder is WebApplication application)
     {
