@@ -68,22 +68,19 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
 
   private async Task<SignInResult> HandleCredentialsAsync(CredentialsPayload credentials, string locale, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
   {
-    User user = await _userService.FindAsync(credentials.EmailAddress, cancellationToken)
-      ?? await _userService.CreateAsync(credentials.EmailAddress, cancellationToken);
-
-    if (user.Email == null)
+    User? user = await _userService.FindAsync(credentials.EmailAddress, cancellationToken);
+    if (user == null || !user.HasPassword)
     {
-      throw new InvalidOperationException($"The user 'Id={user.Id}' has no email.");
-    }
-    else if (!user.HasPassword)
-    {
-      CreatedToken createdToken = await _tokenService.CreateAsync(user.GetSubject(), user.Email, AuthenticationTokenType, cancellationToken);
+      Email email = user?.Email ?? new(credentials.EmailAddress);
+      CreatedToken createdToken = await _tokenService.CreateAsync(user?.GetSubject(), email, AuthenticationTokenType, cancellationToken);
       Dictionary<string, string> variables = new()
       {
         ["Token"] = createdToken.Token
       };
-      SentMessages sentMessages = await _messageService.SendAsync(PasswordlessTemplate, user, locale, variables, cancellationToken);
-      SentMessage sentMessage = new(sentMessages, user.Email);
+      SentMessages sentMessages = user == null
+        ? await _messageService.SendAsync(PasswordlessTemplate, email, locale, variables, cancellationToken)
+        : await _messageService.SendAsync(PasswordlessTemplate, user, locale, variables, cancellationToken);
+      SentMessage sentMessage = new(sentMessages, email);
       return SignInResult.AuthenticationLinkSent(sentMessage);
     }
     else if (credentials.Password == null)
@@ -133,19 +130,25 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
   private async Task<SignInResult> HandleTokenAsync(string token, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
   {
     ValidatedToken validatedToken = await _tokenService.ValidateAsync(token, AuthenticationTokenType, cancellationToken);
+    User user;
     if (validatedToken.Subject == null)
     {
-      throw new InvalidOperationException($"The claim '{nameof(validatedToken.Subject)}' is required.");
+      Email email = validatedToken.Email ?? throw new InvalidOperationException($"The '{nameof(validatedToken.Email)}' claims are required.");
+      email.IsVerified = true;
+      user = await _userService.CreateAsync(email, cancellationToken);
     }
-    Guid userId = Guid.Parse(validatedToken.Subject);
-    User user = await _userService.FindAsync(userId, cancellationToken);
-    if (validatedToken.Email != null && !validatedToken.Email.IsVerified)
+    else
     {
-      Email email = new(validatedToken.Email.Address)
+      Guid userId = Guid.Parse(validatedToken.Subject);
+      user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
+      if (validatedToken.Email != null && !validatedToken.Email.IsVerified)
       {
-        IsVerified = true
-      };
-      user = await _userService.UpdateEmailAsync(user, email, cancellationToken);
+        Email email = new(validatedToken.Email.Address)
+        {
+          IsVerified = true
+        };
+        user = await _userService.UpdateEmailAsync(user, email, cancellationToken);
+      }
     }
 
     return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
@@ -156,7 +159,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     OneTimePassword oneTimePassword = await _oneTimePasswordService.ValidateAsync(oneTimePasswordPayload, cancellationToken);
     oneTimePassword.EnsurePurpose(MultiFactorAuthenticationPurpose);
     Guid userId = oneTimePassword.GetUserId();
-    User user = await _userService.FindAsync(userId, cancellationToken);
+    User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
 
     return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
