@@ -146,7 +146,10 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
         {
           IsVerified = true
         };
-        user = await _userService.UpdateEmailAsync(user, email, cancellationToken);
+        if (user.Email == null || user.Email.Address != email.Address || user.Email.IsVerified != email.IsVerified)
+        {
+          user = await _userService.UpdateEmailAsync(user, email, cancellationToken);
+        }
       }
     }
 
