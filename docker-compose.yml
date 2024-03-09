@@ -17,6 +17,7 @@ services:
     restart: unless-stopped
     environment:
       DatabaseProvider: EntityFrameworkCorePostgreSQL
+      EnableBasicAuthentication: "true"
       EnableMigrations: "true"
       POSTGRESQLCONNSTR_Portal: "User ID=postgres;Password=veg37TPkBDGC85HJ;Host=skillcraft_postgres;Port=5432;Database=Portal;"
     ports:
