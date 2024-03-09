@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SkillCraft.Application\SkillCraft.Application.csproj" />
+    <ProjectReference Include="..\SkillCraft.Infrastructure\SkillCraft.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

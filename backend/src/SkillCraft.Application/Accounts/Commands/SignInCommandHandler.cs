@@ -21,11 +21,11 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
   private const string PasswordlessTemplate = "AccountAuthentication";
   private const string ProfileTokenType = "profile+jwt";
 
-  private readonly IMessageService _messageService; // TODO(fpion): inject
-  private readonly IOneTimePasswordService _oneTimePasswordService; // TODO(fpion): inject
-  private readonly ISessionService _sessionService; // TODO(fpion): inject
-  private readonly ITokenService _tokenService; // TODO(fpion): inject
-  private readonly IUserService _userService; // TODO(fpion): inject
+  private readonly IMessageService _messageService;
+  private readonly IOneTimePasswordService _oneTimePasswordService;
+  private readonly ISessionService _sessionService;
+  private readonly ITokenService _tokenService;
+  private readonly IUserService _userService;
   private readonly IUserSettingsResolver _userSettings; // TODO(fpion): inject
 
   public SignInCommandHandler(IMessageService messageService, IOneTimePasswordService oneTimePasswordService,
@@ -141,7 +141,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     {
       Guid userId = Guid.Parse(validatedToken.Subject);
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
-      if (validatedToken.Email != null && !validatedToken.Email.IsVerified)
+      if (validatedToken.Email != null) // TODO(fpion): optimize
       {
         Email email = new(validatedToken.Email.Address)
         {

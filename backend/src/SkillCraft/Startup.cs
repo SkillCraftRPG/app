@@ -1,6 +1,6 @@
-﻿using SkillCraft.Application;
-using SkillCraft.Extensions;
+﻿using SkillCraft.Extensions;
 using SkillCraft.Filters;
+using SkillCraft.Infrastructure;
 using SkillCraft.Middlewares;
 using SkillCraft.Settings;
 
@@ -53,7 +53,7 @@ internal class Startup : StartupBase
     // TODO(fpion): persistence
 
     services.AddDistributedMemoryCache();
-    services.AddSkillCraftApplication();
+    services.AddSkillCraftInfrastructure();
   }
 
   public override void Configure(IApplicationBuilder builder)
