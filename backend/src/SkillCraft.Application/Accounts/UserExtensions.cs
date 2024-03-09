@@ -1,7 +1,8 @@
 ﻿using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
+using SkillCraft.Contracts.Accounts;
 
-namespace SkillCraft.Contracts.Accounts;
+namespace SkillCraft.Application.Accounts;
 
 public static class UserExtensions
 {
