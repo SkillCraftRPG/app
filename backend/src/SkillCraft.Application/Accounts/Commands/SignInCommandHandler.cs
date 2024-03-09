@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Logitar.Identity.Contracts.Settings;
-using Logitar.Identity.Domain.Settings;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Passwords;
@@ -23,25 +22,25 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
 
   private readonly IMessageService _messageService;
   private readonly IOneTimePasswordService _oneTimePasswordService;
+  private readonly IRealmService _realmService;
   private readonly ISessionService _sessionService;
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
-  private readonly IUserSettingsResolver _userSettings; // TODO(fpion): inject
 
   public SignInCommandHandler(IMessageService messageService, IOneTimePasswordService oneTimePasswordService,
-    ISessionService sessionService, ITokenService tokenService, IUserService userService, IUserSettingsResolver userSettings)
+    IRealmService realmService, ISessionService sessionService, ITokenService tokenService, IUserService userService)
   {
     _messageService = messageService;
     _oneTimePasswordService = oneTimePasswordService;
+    _realmService = realmService;
     _sessionService = sessionService;
     _tokenService = tokenService;
     _userService = userService;
-    _userSettings = userSettings;
   }
 
   public async Task<SignInResult> Handle(SignInCommand command, CancellationToken cancellationToken)
   {
-    IUserSettings userSettings = _userSettings.Resolve();
+    IUserSettings userSettings = await _realmService.GetUserSettingsAsync(cancellationToken);
 
     SignInPayload payload = command.Payload;
     new SignInValidator(userSettings.Password).ValidateAndThrow(payload);
@@ -141,7 +140,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     {
       Guid userId = Guid.Parse(validatedToken.Subject);
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
-      if (validatedToken.Email != null) // TODO(fpion): optimize
+      if (validatedToken.Email != null) // ISSUE #8: Optimize User Email Update
       {
         Email email = new(validatedToken.Email.Address)
         {
@@ -166,7 +165,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
 
   private Task<SignInResult> CompleteProfileAsync(ProfilePayload profile, CancellationToken cancellationToken)
   {
-    throw new NotImplementedException(); // TODO(fpion): complete profile
+    throw new NotImplementedException(); // ISSUE #6: Complete User Profile
   }
 
   private async Task<SignInResult> EnsureProfileIsCompleted(User user, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)

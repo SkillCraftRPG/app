@@ -62,7 +62,11 @@ internal class Startup : StartupBase
     }
 
     services.AddDistributedMemoryCache();
-    services.AddSkillCraftInfrastructure();
+    services.AddSkillCraftInfrastructure(_configuration);
+
+    AuthenticationSettings authentication = _configuration.GetSection("Authentication").Get<AuthenticationSettings>() ?? new();
+    services.AddSingleton(authentication);
+    services.AddSingleton<Authentication.IAuthenticationService, Authentication.AuthenticationService>();
   }
 
   public override void Configure(IApplicationBuilder builder)

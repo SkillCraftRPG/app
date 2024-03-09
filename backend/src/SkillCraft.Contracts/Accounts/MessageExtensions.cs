@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Contracts.Messages;
+using System.Text;
 
 namespace SkillCraft.Contracts.Accounts;
 
@@ -14,8 +15,17 @@ public static class MessageExtensions
     {
       throw new ArgumentException("More than one message have been sent.", nameof(sentMessages));
     }
-    Guid id = sentMessages.Ids.Single();
+    _ = sentMessages.Ids.Single();
+    DateTime now = DateTime.UtcNow;
 
-    throw new NotImplementedException(); // TODO(fpion): implement
+    StringBuilder number = new();
+    number.Append("0000")
+      .Append('-')
+      .Append((now.Year % 100).ToString("D2"))
+      .Append(now.Month.ToString("D2"))
+      .Append(now.Day.ToString("D2"))
+      .Append('-')
+      .Append("00");
+    return number.ToString(); // ISSUE #7: Generate Confirmation Number
   }
 }
