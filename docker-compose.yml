@@ -1,10 +1,11 @@
 version: '3.8'
+name: skillcraftrpg-app
 services:
-  skillcraft_backend:
+  skillcraftrpg_app_backend:
     build:
       context: ./backend
       dockerfile: /src/SkillCraft/Dockerfile
-    image: skillcraft_backend
+    image: skillcraftrpg_app_backend
     container_name: SkillCraft_backend
     # depends_on:
     #   - skillcraft_mssql
