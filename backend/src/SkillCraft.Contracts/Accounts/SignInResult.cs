@@ -8,14 +8,14 @@ public record SignInResult
   public bool IsPasswordRequired { get; private set; }
   public SentMessage? MultiFactorAuthentication { get; private set; }
   public string? ProfileCompletionToken { get; private set; }
-  public SentMessage? SentMessage { get; private set; }
+  public SentMessage? SentMessage { get; private set; } // TODO(fpion): rename
   public Session? Session { get; private set; }
 
   private SignInResult()
   {
   }
 
-  public SignInResult(SentMessage sentMessage) : this()
+  public SignInResult(SentMessage sentMessage) : this() // TODO(fpion): transform into static method
   {
     SentMessage = sentMessage;
   }

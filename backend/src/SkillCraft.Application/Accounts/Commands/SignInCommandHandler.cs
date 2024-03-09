@@ -66,7 +66,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     throw new InvalidOperationException($"The {nameof(SignInPayload)} properties are all null.");
   }
 
-  private async Task<SignInResult> HandleCredentialsAsync(CredentialsPayload credentials, string? locale, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
+  private async Task<SignInResult> HandleCredentialsAsync(CredentialsPayload credentials, string locale, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
   {
     User user = await _userService.FindAsync(credentials.EmailAddress, cancellationToken)
       ?? await _userService.CreateAsync(credentials.EmailAddress, cancellationToken);
@@ -74,7 +74,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     SentMessage? sentMessage;
     if (user.Email == null)
     {
-      throw new InvalidCastException($"The user 'Id={user.Id}' has no email.");
+      throw new InvalidOperationException($"The user 'Id={user.Id}' has no email.");
     }
     else if (!user.HasPassword)
     {
@@ -116,7 +116,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
 
     return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
-  private async Task<SentMessage> SendMultiFactorAuthenticationEmailMessageAsync(User user, string? locale, CancellationToken cancellationToken)
+  private async Task<SentMessage> SendMultiFactorAuthenticationEmailMessageAsync(User user, string locale, CancellationToken cancellationToken)
   {
     if (user.Email == null)
     {

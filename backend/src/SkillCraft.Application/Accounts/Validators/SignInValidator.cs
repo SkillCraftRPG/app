@@ -9,7 +9,7 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
 {
   public SignInValidator(IPasswordSettings passwordSettings)
   {
-    When(x => !string.IsNullOrWhiteSpace(x.Locale), () => RuleFor(x => x.Locale!).SetValidator(new LocaleValidator()));
+    RuleFor(x => x.Locale).SetValidator(new LocaleValidator());
 
     When(x => x.Credentials != null, () => RuleFor(x => x.Credentials!).SetValidator(new CredentialsValidator()));
     When(x => x.OneTimePassword != null, () => RuleFor(x => x.OneTimePassword!).SetValidator(new OneTimePasswordValidator()));

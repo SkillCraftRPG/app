@@ -20,3 +20,6 @@ internal class ExceptionHandling : ExceptionFilterAttribute
     }
   }
 }
+
+// TODO(fpion): handle exceptions thrown by the SkillCraft system
+// TODO(fpion): handle exceptions thrown by the Portal system

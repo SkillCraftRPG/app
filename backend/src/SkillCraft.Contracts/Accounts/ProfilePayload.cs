@@ -10,7 +10,7 @@ public record ProfilePayload
   public string LastName { get; set; }
 
   public string? Password { get; set; }
-  public MultiFactorAuthenticationMode? MultiFactorAuthenticationMode { get; set; }
+  public MultiFactorAuthenticationMode MultiFactorAuthenticationMode { get; set; }
   public PhonePayload? Phone { get; set; }
 
   public DateTime? Birthdate { get; set; }

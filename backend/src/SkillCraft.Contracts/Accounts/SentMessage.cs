@@ -9,6 +9,10 @@ public record SentMessage
   public ContactType ContactType { get; set; }
   public string MaskedContact { get; set; }
 
+  public SentMessage() : this(new SentMessages(), new Email())
+  {
+  }
+
   public SentMessage(SentMessages sentMessages, Email email)
   {
     ConfirmationNumber = sentMessages.GenerateConfirmationNumber();
