@@ -34,4 +34,4 @@ internal class ExceptionHandling : ExceptionFilterAttribute
   }
 }
 
-// TODO(fpion): handle exceptions thrown by the Portal system
+// ISSUE #4: Portal Exception Handling

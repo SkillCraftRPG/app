@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GraphQL.Server.Ui.Altair" Version="7.7.1" />
+    <PackageReference Include="GraphQL.Server.Ui.GraphiQL" Version="7.7.1" />
+    <PackageReference Include="GraphQL.Server.Ui.Playground" Version="7.7.1" />
+    <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="7.7.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -28,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SkillCraft.GraphQL\SkillCraft.GraphQL.csproj" />
     <ProjectReference Include="..\SkillCraft.Infrastructure\SkillCraft.Infrastructure.csproj" />
   </ItemGroup>
 

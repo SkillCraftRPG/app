@@ -102,7 +102,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     return mfaMode switch
     {
       MultiFactorAuthenticationMode.Email => await SendMultiFactorAuthenticationEmailMessageAsync(user, locale, cancellationToken),
-      MultiFactorAuthenticationMode.Phone => throw new NotSupportedException(),// TODO(fpion): implement text messages (SMS)
+      MultiFactorAuthenticationMode.Phone => throw new NotSupportedException(), // ISSUE #5: Text message (SMS) multi-factor authentication
       _ => await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken),
     };
   }
