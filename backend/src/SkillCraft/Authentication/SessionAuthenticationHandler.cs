@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Extensions;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
 
 namespace SkillCraft.Authentication;
 

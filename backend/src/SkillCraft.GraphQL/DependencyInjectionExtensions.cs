@@ -2,7 +2,6 @@
 using GraphQL.Execution;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace SkillCraft.GraphQL;
 

@@ -7,8 +7,6 @@ using Microsoft.Extensions.Primitives;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Constants;
 using SkillCraft.Extensions;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
 
 namespace SkillCraft.Authentication;
 
