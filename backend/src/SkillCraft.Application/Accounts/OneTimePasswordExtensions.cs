@@ -55,7 +55,7 @@ public static class OneTimePasswordExtensions
     CustomAttribute? customAttribute = payload.CustomAttributes.SingleOrDefault(x => x.Key == PurposeKey);
     if (customAttribute == null)
     {
-      customAttribute = new(UserIdKey, purpose);
+      customAttribute = new(PurposeKey, purpose);
       payload.CustomAttributes.Add(customAttribute);
     }
     else

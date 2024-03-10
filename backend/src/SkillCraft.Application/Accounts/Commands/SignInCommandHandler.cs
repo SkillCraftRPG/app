@@ -59,7 +59,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     }
     else if (payload.Profile != null)
     {
-      return await CompleteProfileAsync(payload.Profile, cancellationToken);
+      return await CompleteProfileAsync(payload.Profile, command.SessionAttributes, cancellationToken);
     }
 
     throw new InvalidOperationException($"The {nameof(SignInPayload)} properties are all null.");
@@ -95,7 +95,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     }
     else
     {
-      await _userService.AuthenticateAsync(user, credentials.Password, cancellationToken);
+      user = await _userService.AuthenticateAsync(user, credentials.Password, cancellationToken);
     }
 
     return mfaMode switch
@@ -140,7 +140,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     {
       Guid userId = Guid.Parse(validatedToken.Subject);
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
-      if (validatedToken.Email != null) // ISSUE #8: Optimize User Email Update
+      if (validatedToken.Email != null)
       {
         Email email = new(validatedToken.Email.Address)
         {
@@ -166,9 +166,18 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
 
-  private Task<SignInResult> CompleteProfileAsync(ProfilePayload profile, CancellationToken cancellationToken)
+  private async Task<SignInResult> CompleteProfileAsync(ProfilePayload profile, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
   {
-    throw new NotImplementedException(); // ISSUE #6: Complete User Profile
+    ValidatedToken validatedToken = await _tokenService.ValidateAsync(profile.Token, ProfileTokenType, cancellationToken);
+    if (validatedToken.Subject == null)
+    {
+      throw new InvalidOperationException($"The claim '{validatedToken.Subject}' is required.");
+    }
+    Guid userId = Guid.Parse(validatedToken.Subject);
+    User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
+    user = await _userService.CompleteProfileAsync(user, profile, cancellationToken);
+
+    return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
 
   private async Task<SignInResult> EnsureProfileIsCompleted(User user, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
