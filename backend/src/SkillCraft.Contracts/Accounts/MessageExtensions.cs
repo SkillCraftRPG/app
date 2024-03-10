@@ -1,5 +1,4 @@
 ﻿using Logitar.Portal.Contracts.Messages;
-using System.Text;
 
 namespace SkillCraft.Contracts.Accounts;
 

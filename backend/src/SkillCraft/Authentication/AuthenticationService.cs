@@ -6,8 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using SkillCraft.Constants;
 using SkillCraft.Models.Account;
 using SkillCraft.Settings;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
 namespace SkillCraft.Authentication;
 
