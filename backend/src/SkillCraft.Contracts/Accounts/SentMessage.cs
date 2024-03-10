@@ -1,18 +1,23 @@
-﻿using Logitar.Portal.Contracts.Messages;
-using Logitar.Portal.Contracts.Users;
-
-namespace SkillCraft.Contracts.Accounts;
+﻿namespace SkillCraft.Contracts.Accounts;
 
 public record SentMessage
 {
-  public string ConfirmationNumber { get; }
-  public ContactType ContactType { get; }
-  public string MaskedContact { get; }
+  public string ConfirmationNumber { get; set; }
+  public ContactType ContactType { get; set; }
+  public string MaskedContact { get; set; }
 
-  public SentMessage(SentMessages sentMessages, Email email)
+  public SentMessage() : this(string.Empty, string.Empty)
   {
-    ConfirmationNumber = sentMessages.GenerateConfirmationNumber();
-    ContactType = ContactType.Email;
-    MaskedContact = email.Address;
+  }
+
+  public SentMessage(string confirmationNumber, string maskedContact) : this(confirmationNumber, default, maskedContact)
+  {
+  }
+
+  public SentMessage(string confirmationNumber, ContactType contactType, string maskedContact)
+  {
+    ConfirmationNumber = confirmationNumber;
+    ContactType = contactType;
+    MaskedContact = maskedContact;
   }
 }

@@ -33,9 +33,18 @@ public class AccountController : ControllerBase
 
   [Authorize]
   [HttpGet("profile")]
-  public ActionResult<User> GetProfile() // TODO(fpion): return type
+  public ActionResult<UserProfile> GetProfile()
   {
-    return Ok(User);
+    return Ok(User.ToUserProfile());
+  }
+
+  [Authorize]
+  [HttpPut("profile")]
+  public async Task<ActionResult<UserProfile>> SaveProfileAsync([FromBody] SaveProfilePayload payload, CancellationToken cancellationToken)
+  {
+    User user = await _mediator.Send(new SaveProfileCommand(User, payload), cancellationToken);
+    UserProfile profile = user.ToUserProfile();
+    return Ok(profile);
   }
 
   [HttpPost("sign/in")]

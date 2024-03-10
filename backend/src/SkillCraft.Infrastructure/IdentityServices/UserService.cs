@@ -22,38 +22,6 @@ internal class UserService : IUserService
     return await _userClient.AuthenticateAsync(payload, context);
   }
 
-  public async Task<User> CompleteProfileAsync(User user, ProfilePayload profile, CancellationToken cancellationToken)
-  {
-    UpdateUserPayload payload = new()
-    {
-      FirstName = new Modification<string>(profile.FirstName),
-      LastName = new Modification<string>(profile.LastName),
-      Locale = new Modification<string>(profile.Locale),
-      TimeZone = new Modification<string>(profile.TimeZone)
-    };
-    if (profile.Password != null)
-    {
-      payload.Password = new ChangePasswordPayload(profile.Password);
-    }
-    payload.SetMultiFactorAuthenticationMode(profile.MultiFactorAuthenticationMode);
-    if (profile.Phone != null)
-    {
-      payload.Phone = new Modification<PhonePayload>(profile.Phone);
-    }
-    if (profile.Birthdate.HasValue)
-    {
-      payload.Birthdate = new Modification<DateTime?>(profile.Birthdate.Value);
-    }
-    if (!string.IsNullOrWhiteSpace(profile.Gender))
-    {
-      payload.Gender = new Modification<string>(profile.Gender.Trim());
-    }
-    payload.CompleteProfile();
-    RequestContext context = new(user.Id.ToString(), cancellationToken);
-    return await _userClient.UpdateAsync(user.Id, payload, context)
-      ?? throw new InvalidOperationException($"The user 'Id={user.Id}' update returned null.");
-  }
-
   public async Task<User> CreateAsync(Email email, CancellationToken cancellationToken)
   {
     CreateUserPayload payload = new(email.Address)
@@ -74,6 +42,33 @@ internal class UserService : IUserService
   {
     RequestContext context = new(cancellationToken);
     return await _userClient.ReadAsync(id: null, uniqueName, identifier: null, context);
+  }
+
+  public async Task<User> SaveProfileAsync(User user, SaveProfilePayload profile, CancellationToken cancellationToken)
+  {
+    UpdateUserPayload payload = new()
+    {
+      Phone = new Modification<PhonePayload>(profile.Phone?.ToPhonePayload()),
+      FirstName = new Modification<string>(profile.FirstName),
+      LastName = new Modification<string>(profile.LastName),
+      Birthdate = new Modification<DateTime?>(profile.Birthdate),
+      Gender = new Modification<string>(profile.Gender),
+      Locale = new Modification<string>(profile.Locale),
+      TimeZone = new Modification<string>(profile.TimeZone)
+    };
+
+    if (profile is CompleteProfilePayload completedProfile)
+    {
+      if (completedProfile.Password != null)
+      {
+        payload.Password = new ChangePasswordPayload(completedProfile.Password);
+      }
+      payload.CompleteProfile();
+    }
+
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context)
+      ?? throw new InvalidOperationException($"The user 'Id={user.Id}' update returned null.");
   }
 
   public async Task<User> SignOutAsync(User user, CancellationToken cancellationToken)

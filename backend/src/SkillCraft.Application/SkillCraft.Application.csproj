@@ -27,6 +27,7 @@
   <ItemGroup>
     <Using Include="System.Globalization" />
     <Using Include="System.Reflection" />
+    <Using Include="System.Text" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Contracts.Messages;
+using Logitar.Portal.Contracts.Users;
 
 namespace SkillCraft.Contracts.Accounts;
 
@@ -26,5 +27,10 @@ public static class MessageExtensions
       .Append('-')
       .Append("00");
     return number.ToString(); // ISSUE #7: Generate Confirmation Number
+  }
+
+  public static SentMessage ToSentMessage(this SentMessages sentMessages, Email email)
+  {
+    return new SentMessage(sentMessages.GenerateConfirmationNumber(), ContactType.Email, email.Address);
   }
 }

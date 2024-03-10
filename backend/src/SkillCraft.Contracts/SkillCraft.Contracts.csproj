@@ -18,8 +18,4 @@
     <PackageReference Include="Logitar.Portal.Contracts" Version="4.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="System.Text" />
-  </ItemGroup>
-
 </Project>
