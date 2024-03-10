@@ -13,7 +13,7 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
 
     When(x => x.Credentials != null, () => RuleFor(x => x.Credentials!).SetValidator(new CredentialsValidator()));
     When(x => x.OneTimePassword != null, () => RuleFor(x => x.OneTimePassword!).SetValidator(new OneTimePasswordValidator()));
-    When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new ProfileValidator(passwordSettings)));
+    When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings)));
 
     RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(SignInValidator))
       .WithMessage(x => $"Exactly one of the following properties must be provided: {nameof(x.Credentials)}, {x.Token}, {x.OneTimePassword}, {x.Profile}.");

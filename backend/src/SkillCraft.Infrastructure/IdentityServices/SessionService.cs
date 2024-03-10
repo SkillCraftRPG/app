@@ -40,4 +40,11 @@ internal class SessionService : ISessionService
     RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _sessionClient.SignInAsync(payload, context);
   }
+
+  public async Task<Session> SignOutAsync(Session session, CancellationToken cancellationToken)
+  {
+    RequestContext context = new(session.User.Id.ToString(), cancellationToken);
+    return await _sessionClient.SignOutAsync(session.Id, context)
+      ?? throw new InvalidOperationException($"The session 'Id={session.Id}' sign-out returned null.");
+  }
 }

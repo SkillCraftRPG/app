@@ -6,13 +6,13 @@ namespace SkillCraft.Contracts.Accounts;
 
 public record SignInResult
 {
-  public SentMessage? AuthenticationLinkSentTo { get; private set; }
-  public bool IsPasswordRequired { get; private set; }
-  public OneTimePasswordValidation? OneTimePasswordValidation { get; private set; }
-  public string? ProfileCompletionToken { get; private set; }
-  public Session? Session { get; private set; }
+  public SentMessage? AuthenticationLinkSentTo { get; set; }
+  public bool IsPasswordRequired { get; set; }
+  public OneTimePasswordValidation? OneTimePasswordValidation { get; set; }
+  public string? ProfileCompletionToken { get; set; }
+  public Session? Session { get; set; }
 
-  private SignInResult()
+  public SignInResult()
   {
   }
 

@@ -79,7 +79,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
       SentMessages sentMessages = user == null
         ? await _messageService.SendAsync(PasswordlessTemplate, email, locale, variables, cancellationToken)
         : await _messageService.SendAsync(PasswordlessTemplate, user, locale, variables, cancellationToken);
-      SentMessage sentMessage = new(sentMessages, email);
+      SentMessage sentMessage = sentMessages.ToSentMessage(email);
       return SignInResult.AuthenticationLinkSent(sentMessage);
     }
     else if (credentials.Password == null)
@@ -122,7 +122,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
       ["OneTimePassword"] = oneTimePassword.Password
     };
     SentMessages sentMessages = await _messageService.SendAsync(MultiFactorAuthenticationTemplate, user, locale, variables, cancellationToken);
-    SentMessage sentMessage = new(sentMessages, user.Email);
+    SentMessage sentMessage = sentMessages.ToSentMessage(user.Email);
     return SignInResult.RequireOneTimePasswordValidation(oneTimePassword, sentMessage);
   }
 
@@ -166,7 +166,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
 
-  private async Task<SignInResult> CompleteProfileAsync(ProfilePayload profile, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
+  private async Task<SignInResult> CompleteProfileAsync(CompleteProfilePayload profile, IEnumerable<CustomAttribute> sessionAttributes, CancellationToken cancellationToken)
   {
     ValidatedToken validatedToken = await _tokenService.ValidateAsync(profile.Token, ProfileTokenType, cancellationToken);
     if (validatedToken.Subject == null)
@@ -175,7 +175,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInResul
     }
     Guid userId = Guid.Parse(validatedToken.Subject);
     User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new InvalidOperationException($"The user 'Id={userId}' could not be found.");
-    user = await _userService.CompleteProfileAsync(user, profile, cancellationToken);
+    user = await _userService.SaveProfileAsync(user, profile, cancellationToken);
 
     return await EnsureProfileIsCompleted(user, sessionAttributes, cancellationToken);
   }
