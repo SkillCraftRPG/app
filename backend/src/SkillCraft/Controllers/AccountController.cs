@@ -38,6 +38,20 @@ public class AccountController : ControllerBase
     return Ok(User);
   }
 
+  [HttpPost("sign/in")]
+  public async Task<ActionResult<SignInResponse<CurrentUser>>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
+  {
+    Contracts.Accounts.SignInResult result = await _mediator.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+    CurrentUser? currentUser = null;
+    if (result.Session != null)
+    {
+      currentUser = new(result.Session);
+      HttpContext.SignIn(result.Session);
+    }
+    SignInResponse<CurrentUser> response = new(result, currentUser);
+    return Ok(response);
+  }
+
   [HttpPost("token")]
   public async Task<ActionResult<SignInResponse<TokenResponse>>> GetTokenAsync([FromBody] GetTokenPayload payload, CancellationToken cancellationToken)
   {
@@ -57,20 +71,6 @@ public class AccountController : ControllerBase
       token = _authenticationService.GetTokenResponse(session);
     }
     SignInResponse<TokenResponse> response = new(result, token);
-    return Ok(response);
-  }
-
-  [HttpPost("sign/in")]
-  public async Task<ActionResult<SignInResponse<CurrentUser>>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
-  {
-    Contracts.Accounts.SignInResult result = await _mediator.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
-    CurrentUser? currentUser = null;
-    if (result.Session != null)
-    {
-      currentUser = new(result.Session);
-      HttpContext.SignIn(result.Session);
-    }
-    SignInResponse<CurrentUser> response = new(result, currentUser);
     return Ok(response);
   }
 
