@@ -10,12 +10,16 @@ public record SignInResponse<T>
   public string? ProfileCompletionToken { get; }
   public T? Success { get; }
 
-  public SignInResponse(SignInResult result, T? success)
+  public SignInResponse(SignInResult? result, T? success)
   {
-    AuthenticationLinkSentTo = result.AuthenticationLinkSentTo;
-    IsPasswordRequired = result.IsPasswordRequired;
-    OneTimePasswordValidation = result.OneTimePasswordValidation;
-    ProfileCompletionToken = result.ProfileCompletionToken;
+    if (result != null)
+    {
+      AuthenticationLinkSentTo = result.AuthenticationLinkSentTo;
+      IsPasswordRequired = result.IsPasswordRequired;
+      OneTimePasswordValidation = result.OneTimePasswordValidation;
+      ProfileCompletionToken = result.ProfileCompletionToken;
+    }
+
     Success = success;
   }
 }

@@ -1,5 +1,9 @@
-﻿using MediatR;
+﻿using Logitar.Portal.Contracts.Sessions;
+using Logitar.Portal.Contracts.Users;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SkillCraft.Application.Accounts;
 using SkillCraft.Application.Accounts.Commands;
 using SkillCraft.Authentication;
 using SkillCraft.Contracts.Accounts;
@@ -14,11 +18,46 @@ public class AccountController : ControllerBase
 {
   private readonly IAuthenticationService _authenticationService;
   private readonly IMediator _mediator;
+  private readonly ISessionService _sessionService;
+  private readonly IUserService _userService;
 
-  public AccountController(IAuthenticationService authenticationService, IMediator mediator)
+  private new User User => HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+
+  public AccountController(IAuthenticationService authenticationService, IMediator mediator, ISessionService sessionService, IUserService userService)
   {
     _authenticationService = authenticationService;
     _mediator = mediator;
+    _sessionService = sessionService;
+    _userService = userService;
+  }
+
+  [Authorize]
+  [HttpGet("profile")]
+  public ActionResult<User> GetProfile() // TODO(fpion): return type
+  {
+    return Ok(User);
+  }
+
+  [HttpPost("token")]
+  public async Task<ActionResult<SignInResponse<TokenResponse>>> GetTokenAsync([FromBody] GetTokenPayload payload, CancellationToken cancellationToken)
+  {
+    Contracts.Accounts.SignInResult? result = null;
+    TokenResponse? token = null;
+    if (string.IsNullOrWhiteSpace(payload.RefreshToken))
+    {
+      result = await _mediator.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+      if (result.Session != null)
+      {
+        token = _authenticationService.GetTokenResponse(result.Session);
+      }
+    }
+    else
+    {
+      Session session = await _sessionService.RenewAsync(payload.RefreshToken.Trim(), HttpContext.GetSessionCustomAttributes(), cancellationToken);
+      token = _authenticationService.GetTokenResponse(session);
+    }
+    SignInResponse<TokenResponse> response = new(result, token);
+    return Ok(response);
   }
 
   [HttpPost("sign/in")]
@@ -35,12 +74,25 @@ public class AccountController : ControllerBase
     return Ok(response);
   }
 
-  [HttpPost("token")]
-  public async Task<ActionResult<SignInResponse<TokenResponse>>> GetTokenAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
+  [Authorize]
+  [HttpPost("sign/out/all")]
+  public async Task<ActionResult> SignOutAllAsync(CancellationToken cancellationToken)
   {
-    Contracts.Accounts.SignInResult result = await _mediator.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
-    TokenResponse? token = result.Session == null ? null : _authenticationService.GetTokenResponse(result.Session);
-    SignInResponse<TokenResponse> response = new(result, token);
-    return Ok(response);
+    _ = await _userService.SignOutAsync(User, cancellationToken);
+    HttpContext.SignOut();
+    return NoContent();
+  }
+
+  [Authorize]
+  [HttpPost("sign/out")]
+  public async Task<ActionResult> SignOutAsync(CancellationToken cancellationToken)
+  {
+    Session? session = HttpContext.GetSession();
+    if (session != null)
+    {
+      _ = await _sessionService.SignOutAsync(session, cancellationToken);
+    }
+    HttpContext.SignOut();
+    return NoContent();
   }
 }

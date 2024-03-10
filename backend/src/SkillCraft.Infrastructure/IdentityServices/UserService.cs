@@ -76,6 +76,13 @@ internal class UserService : IUserService
     return await _userClient.ReadAsync(id: null, uniqueName, identifier: null, context);
   }
 
+  public async Task<User> SignOutAsync(User user, CancellationToken cancellationToken)
+  {
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.SignOutAsync(user.Id, context)
+      ?? throw new InvalidOperationException($"The user 'Id={user.Id}' sign-out returned null.");
+  }
+
   public async Task<User> UpdateEmailAsync(User user, Email email, CancellationToken cancellationToken)
   {
     UpdateUserPayload payload = new()

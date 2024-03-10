@@ -97,6 +97,7 @@ internal class AuthenticationService : IAuthenticationService
       IssuerSigningKey = GetSecurityKey(),
       ValidTypes = [AccessTokenType],
       ValidateIssuerSigningKey = true,
+      ValidateLifetime = true
     };
     if (_settings.Audience != null)
     {
