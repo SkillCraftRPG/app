@@ -22,6 +22,20 @@ internal class UserService : IUserService
     return await _userClient.AuthenticateAsync(payload, context);
   }
 
+  public async Task<User> ChangePasswordAsync(User user, Contracts.Accounts.ChangePasswordPayload payload, CancellationToken cancellationToken)
+  {
+    UpdateUserPayload updatePayload = new()
+    {
+      Password = new Logitar.Portal.Contracts.Users.ChangePasswordPayload(payload.New)
+      {
+        Current = payload.Current
+      }
+    };
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, updatePayload, context)
+      ?? throw new InvalidOperationException($"The user 'Id={user.Id}' update returned null.");
+  }
+
   public async Task<User> CreateAsync(Email email, CancellationToken cancellationToken)
   {
     CreateUserPayload payload = new(email.Address)
@@ -44,6 +58,14 @@ internal class UserService : IUserService
     return await _userClient.ReadAsync(id: null, uniqueName, identifier: null, context);
   }
 
+  public async Task<User> ResetPasswordAsync(Guid id, string password, CancellationToken cancellationToken)
+  {
+    ResetUserPasswordPayload payload = new(password);
+    RequestContext context = new(user: id.ToString(), cancellationToken);
+    return await _userClient.ResetPasswordAsync(id, payload, context)
+      ?? throw new InvalidOperationException($"The user 'Id={id}' password reset returned null.");
+  }
+
   public async Task<User> SaveProfileAsync(User user, SaveProfilePayload profile, CancellationToken cancellationToken)
   {
     UpdateUserPayload payload = new()
@@ -61,7 +83,7 @@ internal class UserService : IUserService
     {
       if (completedProfile.Password != null)
       {
-        payload.Password = new ChangePasswordPayload(completedProfile.Password);
+        payload.Password = new Logitar.Portal.Contracts.Users.ChangePasswordPayload(completedProfile.Password);
       }
       payload.CompleteProfile();
     }

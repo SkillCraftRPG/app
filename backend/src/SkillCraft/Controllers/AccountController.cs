@@ -32,6 +32,22 @@ public class AccountController : ControllerBase
   }
 
   [Authorize]
+  [HttpPut("password/change")]
+  public async Task<ActionResult<UserProfile>> ChangePasswordAsync([FromBody] Contracts.Accounts.ChangePasswordPayload payload, CancellationToken cancellationToken)
+  {
+    User user = await _mediator.Send(new ChangePasswordCommand(User, payload), cancellationToken);
+    UserProfile profile = user.ToUserProfile();
+    return Ok(profile);
+  }
+
+  [HttpPost("password/reset")]
+  public async Task<ActionResult> ResetPasswordAsync([FromBody] ResetPasswordPayload payload, CancellationToken cancellationToken)
+  {
+    await _mediator.Send(new ResetPasswordCommand(payload), cancellationToken);
+    return NoContent(); // ISSUE #15: Password Recovery Return Type
+  }
+
+  [Authorize]
   [HttpGet("profile")]
   public ActionResult<UserProfile> GetProfile()
   {
@@ -61,6 +77,28 @@ public class AccountController : ControllerBase
     return Ok(response);
   }
 
+  [Authorize]
+  [HttpPost("sign/out")]
+  public async Task<ActionResult> SignOutAsync(CancellationToken cancellationToken)
+  {
+    Session? session = HttpContext.GetSession();
+    if (session != null)
+    {
+      _ = await _sessionService.SignOutAsync(session, cancellationToken);
+    }
+    HttpContext.SignOut();
+    return NoContent();
+  }
+
+  [Authorize]
+  [HttpPost("sign/out/all")]
+  public async Task<ActionResult> SignOutAllAsync(CancellationToken cancellationToken)
+  {
+    _ = await _userService.SignOutAsync(User, cancellationToken);
+    HttpContext.SignOut();
+    return NoContent();
+  }
+
   [HttpPost("token")]
   public async Task<ActionResult<SignInResponse<TokenResponse>>> GetTokenAsync([FromBody] GetTokenPayload payload, CancellationToken cancellationToken)
   {
@@ -81,27 +119,5 @@ public class AccountController : ControllerBase
     }
     SignInResponse<TokenResponse> response = new(result, token);
     return Ok(response);
-  }
-
-  [Authorize]
-  [HttpPost("sign/out/all")]
-  public async Task<ActionResult> SignOutAllAsync(CancellationToken cancellationToken)
-  {
-    _ = await _userService.SignOutAsync(User, cancellationToken);
-    HttpContext.SignOut();
-    return NoContent();
-  }
-
-  [Authorize]
-  [HttpPost("sign/out")]
-  public async Task<ActionResult> SignOutAsync(CancellationToken cancellationToken)
-  {
-    Session? session = HttpContext.GetSession();
-    if (session != null)
-    {
-      _ = await _sessionService.SignOutAsync(session, cancellationToken);
-    }
-    HttpContext.SignOut();
-    return NoContent();
   }
 }
