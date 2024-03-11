@@ -30,4 +30,8 @@
     <Using Include="System.Text" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="SkillCraft.Application.UnitTests" />
+  </ItemGroup>
+
 </Project>
