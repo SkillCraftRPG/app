@@ -18,22 +18,22 @@ internal class InvalidOneTimePasswordPurpose : InvalidCredentialsException
     get => (string)Data[nameof(ExpectedPurpose)]!;
     private set => Data[nameof(ExpectedPurpose)] = value;
   }
-  public string ActualPurpose
+  public string? ActualPurpose
   {
-    get => (string)Data[nameof(ActualPurpose)]!;
+    get => (string?)Data[nameof(ActualPurpose)];
     private set => Data[nameof(ActualPurpose)] = value;
   }
 
   public InvalidOneTimePasswordPurpose(OneTimePassword oneTimePassword, string purpose) : base(BuildMessage(oneTimePassword, purpose))
   {
     OneTimePasswordId = oneTimePassword.Id;
-    ExpectedPurpose = oneTimePassword.GetPurpose();
-    ActualPurpose = purpose;
+    ExpectedPurpose = purpose;
+    ActualPurpose = oneTimePassword.TryGetPurpose();
   }
 
   private static string BuildMessage(OneTimePassword oneTimePassword, string purpose) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(OneTimePasswordId), oneTimePassword.Id)
-    .AddData(nameof(ExpectedPurpose), oneTimePassword.GetPurpose())
-    .AddData(nameof(ActualPurpose), purpose)
+    .AddData(nameof(ExpectedPurpose), purpose)
+    .AddData(nameof(ActualPurpose), oneTimePassword.TryGetPurpose(), "<null>")
     .Build();
 }

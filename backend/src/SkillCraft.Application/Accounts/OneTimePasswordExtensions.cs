@@ -38,7 +38,7 @@ public static class OneTimePasswordExtensions
   }
   public static bool HasPurpose(this OneTimePassword oneTimePassword, string purpose)
   {
-    return oneTimePassword.GetPurpose().Equals(purpose, StringComparison.OrdinalIgnoreCase);
+    return oneTimePassword.TryGetPurpose()?.Equals(purpose, StringComparison.OrdinalIgnoreCase) == true;
   }
   public static string GetPurpose(this OneTimePassword oneTimePassword)
   {
