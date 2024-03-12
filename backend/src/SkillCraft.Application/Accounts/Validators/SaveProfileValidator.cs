@@ -13,7 +13,7 @@ internal abstract class SaveProfileValidator<T> : AbstractValidator<T> where T :
     RuleFor(x => x.LastName).SetValidator(new PersonNameValidator());
 
     RuleFor(x => x.MultiFactorAuthenticationMode).IsInEnum();
-    When(x => x.MultiFactorAuthenticationMode == MultiFactorAuthenticationMode.Phone, () => RuleFor(x => x.Phone).NotNull());
+    When(x => x.MultiFactorAuthenticationMode == MultiFactorAuthenticationMode.Phone, () => RuleFor(x => x.Phone).NotNull().WithErrorCode(nameof(SaveProfileValidator)));
     When(x => x.Phone != null, () => RuleFor(x => x.Phone!).SetValidator(new PhoneValidator()));
 
     When(x => x.Birthdate.HasValue, () => RuleFor(x => x.Birthdate!.Value).SetValidator(new BirthdateValidator()));

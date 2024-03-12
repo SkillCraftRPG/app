@@ -8,17 +8,27 @@ namespace SkillCraft.Application.Accounts;
 [Trait(Traits.Category, Categories.Unit)]
 public class MessageExtensionsTests
 {
+  private const string Base12Table = "2345679ACDEF";
+
   private readonly Faker _faker = new();
 
-  [Fact(DisplayName = "GenerateConfirmationNumber: it should generate the correct confirmation number")]
-  public void GenerateConfirmationNumber_it_should_generate_the_correct_confirmation_number()
+  [Theory(DisplayName = "GenerateConfirmationNumber: it should generate the correct confirmation number")]
+  [InlineData("c52fff6f-c539-471f-95e9-4912a5a0031e", "DR96")]
+  public void GenerateConfirmationNumber_it_should_generate_the_correct_confirmation_number(string messageId, string expectedStart)
   {
-    SentMessages sentMessages = new([Guid.NewGuid()]);
-    string confirmationNumber = sentMessages.GenerateConfirmationNumber();
+    SentMessages sentMessages = new([Guid.Parse(messageId)]);
+    string[] parts = sentMessages.GenerateConfirmationNumber().Split('-');
+    Assert.Equal(3, parts.Length);
+
+    Assert.Equal(4, parts[0].Length);
+    Assert.Equal(expectedStart, parts[0]);
 
     DateTime now = DateTime.UtcNow;
-    string expected = $"0000-{now:yyMMdd}-00";
-    Assert.Equal(expected, confirmationNumber);
+    Assert.Equal(now.ToString("yyMMdd"), parts[1]);
+
+    Assert.Equal(2, parts[2].Length);
+    Assert.Equal(Base12Table[(now.Hour * 6 + (now.Minute / 10)) / 12], parts[2][0]);
+    Assert.Equal(Base12Table[(now.Hour * 6 + (now.Minute / 10)) % 12], parts[2][1]);
   }
 
   [Fact(DisplayName = "GenerateConfirmationNumber: it should throw ArgumentException when multiple messages were sent.")]
