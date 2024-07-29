@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using System.Globalization;
 
 namespace SkillCraft.Domain;
 
