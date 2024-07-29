@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E461F66B-1900-44A0-BDBA-B526E8946E4C}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Contracts", "src\SkillCraft.Contracts\SkillCraft.Contracts.csproj", "{670D8C24-5A63-4912-86DE-C9DF044528AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Domain", "src\SkillCraft.Domain\SkillCraft.Domain.csproj", "{8DC5E814-4786-41C5-B7AF-6EE70632760C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Application", "src\SkillCraft.Application\SkillCraft.Application.csproj", "{51A50519-DEDD-4191-8876-7408D93A7C3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Infrastructure", "src\SkillCraft.Infrastructure\SkillCraft.Infrastructure.csproj", "{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft", "src\SkillCraft\SkillCraft.csproj", "{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{670D8C24-5A63-4912-86DE-C9DF044528AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{670D8C24-5A63-4912-86DE-C9DF044528AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{670D8C24-5A63-4912-86DE-C9DF044528AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{670D8C24-5A63-4912-86DE-C9DF044528AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC5E814-4786-41C5-B7AF-6EE70632760C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC5E814-4786-41C5-B7AF-6EE70632760C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC5E814-4786-41C5-B7AF-6EE70632760C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC5E814-4786-41C5-B7AF-6EE70632760C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51A50519-DEDD-4191-8876-7408D93A7C3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A50519-DEDD-4191-8876-7408D93A7C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A50519-DEDD-4191-8876-7408D93A7C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A50519-DEDD-4191-8876-7408D93A7C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9209D91A-76AB-459E-BF46-E516182FE797}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,13 @@
+name: skillcraft
+services:
+  skillcraft_backend:
+    build:
+      context: ./backend
+      dockerfile: /src/SkillCraft/Dockerfile
+    image: skillcraft_backend
+    container_name: SkillCraft_backend
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_Environment: Development
+    ports:
+      - 8088:8080
