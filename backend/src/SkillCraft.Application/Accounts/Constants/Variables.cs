@@ -2,6 +2,6 @@
 
 internal static class Variables
 {
-  public const string OneTimePassword = nameof(OneTimePassword);
-  public const string Token = nameof(Token);
+  public const string OneTimePassword = "OneTimePassword";
+  public const string Token = "Token";
 }
