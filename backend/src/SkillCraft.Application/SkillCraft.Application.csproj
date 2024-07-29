@@ -15,8 +15,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SkillCraft.Contracts\SkillCraft.Contracts.csproj" />
     <ProjectReference Include="..\SkillCraft.Domain\SkillCraft.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Reflection" />
+    <Using Include="System.Text" />
   </ItemGroup>
 
 </Project>
