@@ -4,8 +4,6 @@ using SkillCraft.Constants;
 using SkillCraft.Contracts.Accounts;
 using SkillCraft.Extensions;
 using SkillCraft.Settings;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 
 namespace SkillCraft.Authentication;
 
