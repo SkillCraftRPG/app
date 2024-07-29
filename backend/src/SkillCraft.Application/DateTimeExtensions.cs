@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace SkillCraft.Application;
+﻿namespace SkillCraft.Application;
 
 public static class DateTimeExtensions // TODO(fpion): move to Logitar.NET
 {

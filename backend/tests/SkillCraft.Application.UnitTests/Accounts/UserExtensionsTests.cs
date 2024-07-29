@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;
-using System.Globalization;
 
 namespace SkillCraft.Application.Accounts;
 
