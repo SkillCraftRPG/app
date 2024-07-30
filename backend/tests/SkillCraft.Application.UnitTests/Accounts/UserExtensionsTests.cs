@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Logitar;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;

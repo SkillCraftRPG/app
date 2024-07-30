@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using FluentValidation.Results;
+using Logitar;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Passwords;
