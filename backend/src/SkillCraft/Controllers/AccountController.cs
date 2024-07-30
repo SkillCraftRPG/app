@@ -1,5 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Sessions;
+using Logitar.Portal.Contracts.Users;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Application.Accounts.Commands;
@@ -34,6 +36,30 @@ public class AccountController : ControllerBase
 
     SignInAccountResponse response = new(result);
     return Ok(response);
+  }
+
+  [Authorize]
+  [HttpPost("/auth/sign/out")]
+  public async Task<ActionResult> SignOutAsync(bool everywhere, CancellationToken cancellationToken)
+  {
+    if (everywhere)
+    {
+      User? user = HttpContext.GetUser();
+      if (user != null)
+      {
+        await _sender.Send(SignOutAccountCommand.User(user.Id), cancellationToken);
+      }
+    }
+    else
+    {
+      Guid? sessionId = HttpContext.GetSessionId();
+      if (sessionId.HasValue)
+      {
+        await _sender.Send(SignOutAccountCommand.Session(sessionId.Value), cancellationToken);
+      }
+    }
+
+    return NoContent();
   }
 
   [HttpPost("/auth/token")]
