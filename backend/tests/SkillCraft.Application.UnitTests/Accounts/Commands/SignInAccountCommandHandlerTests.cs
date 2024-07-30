@@ -219,6 +219,40 @@ public class SignInAccountCommandHandlerTests
     Assert.Null(result.Session);
   }
 
+  [Fact(DisplayName = "It should require the user to complete its profile (OTP).")]
+  public async Task It_should_require_the_user_to_complete_its_profile_Otp()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    _userService.Setup(x => x.FindAsync(user.Id, _cancellationToken)).ReturnsAsync(user);
+
+    OneTimePassword oneTimePassword = new()
+    {
+      Id = Guid.NewGuid()
+    };
+    oneTimePassword.CustomAttributes.Add(new("UserId", user.Id.ToString()));
+
+    SignInAccountPayload payload = new(_locale.Code)
+    {
+      OneTimePassword = new(oneTimePassword.Id, "123456")
+    };
+    _oneTimePasswordService.Setup(x => x.ValidateAsync(payload.OneTimePassword, Purposes.MultiFactorAuthentication, _cancellationToken)).ReturnsAsync(oneTimePassword);
+
+    CreatedToken createdToken = new("ProfileToken");
+    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+
+    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Equal(createdToken.Token, result.ProfileCompletionToken);
+    Assert.Null(result.Session);
+  }
+
   [Fact(DisplayName = "It should send an authentication email when the user does not exist.")]
   public async Task It_should_send_an_authentication_email_when_the_user_does_not_exist()
   {
@@ -356,6 +390,49 @@ public class SignInAccountCommandHandlerTests
     _publisher.Verify(x => x.Publish(It.Is<UserSignedInEvent>(e => e.Session.Equals(session)), _cancellationToken), Times.Once);
   }
 
+  [Fact(DisplayName = "It should sign-in the user (OTP).")]
+  public async Task It_should_sign_in_the_user_Otp()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", MultiFactorAuthenticationMode.None.ToString()));
+    user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.Now.ToISOString()));
+    _userService.Setup(x => x.FindAsync(user.Id, _cancellationToken)).ReturnsAsync(user);
+
+    OneTimePassword oneTimePassword = new()
+    {
+      Id = Guid.NewGuid()
+    };
+    oneTimePassword.CustomAttributes.Add(new("UserId", user.Id.ToString()));
+
+    SignInAccountPayload payload = new(_locale.Code)
+    {
+      OneTimePassword = new(oneTimePassword.Id, "123456")
+    };
+    _oneTimePasswordService.Setup(x => x.ValidateAsync(payload.OneTimePassword, Purposes.MultiFactorAuthentication, _cancellationToken)).ReturnsAsync(oneTimePassword);
+
+    CustomAttribute[] customAttributes =
+    [
+      new("AdditionalInformation", $@"{{""User-Agent"":""{_faker.Internet.UserAgent()}""}}"),
+      new("IpAddress", _faker.Internet.Ip())
+    ];
+    Session session = new(user);
+    _sessionService.Setup(x => x.CreateAsync(user, customAttributes, _cancellationToken)).ReturnsAsync(session);
+
+    SignInAccountCommand command = new(payload, customAttributes);
+    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Null(result.ProfileCompletionToken);
+    Assert.Same(session, result.Session);
+
+    _publisher.Verify(x => x.Publish(It.Is<UserSignedInEvent>(e => e.Session.Equals(session)), _cancellationToken), Times.Once);
+  }
+
   [Theory(DisplayName = "It should throw ArgumentException when sending MFA message and no contact.")]
   [InlineData(ContactType.Email)]
   [InlineData(ContactType.Phone)]
@@ -418,6 +495,28 @@ public class SignInAccountCommandHandlerTests
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.StartsWith($"The value '{validatedToken.Subject}' is not a valid Guid.", exception.Message);
     Assert.Equal("authenticationToken", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from OTP UserId.")]
+  public async Task It_should_throw_ArgumentException_when_the_user_could_not_be_found_from_Otp_UserId()
+  {
+    OneTimePassword oneTimePassword = new()
+    {
+      Id = Guid.NewGuid()
+    };
+    string userId = Guid.NewGuid().ToString();
+    oneTimePassword.CustomAttributes.Add(new("UserId", userId));
+
+    SignInAccountPayload payload = new(_locale.Code)
+    {
+      OneTimePassword = new(oneTimePassword.Id, "123456")
+    };
+    _oneTimePasswordService.Setup(x => x.ValidateAsync(payload.OneTimePassword, Purposes.MultiFactorAuthentication, _cancellationToken)).ReturnsAsync(oneTimePassword);
+
+    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.StartsWith($"The user 'Id={userId}' could not be found.", exception.Message);
+    Assert.Equal("payload", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from token subject.")]

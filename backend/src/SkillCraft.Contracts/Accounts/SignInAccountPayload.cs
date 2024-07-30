@@ -6,6 +6,7 @@ public record SignInAccountPayload
 
   public Credentials? Credentials { get; set; }
   public string? AuthenticationToken { get; set; }
+  public OneTimePasswordPayload? OneTimePassword { get; set; }
 
   public SignInAccountPayload() : this(string.Empty)
   {

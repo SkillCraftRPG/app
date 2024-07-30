@@ -52,6 +52,10 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     {
       return await HandleAuthenticationToken(payload.AuthenticationToken.Trim(), command.CustomAttributes, cancellationToken);
     }
+    else if (payload.OneTimePassword != null)
+    {
+      return await HandleOneTimePasswordAsync(payload.OneTimePassword, command.CustomAttributes, cancellationToken);
+    }
 
     throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}.", nameof(command));
   }
@@ -144,6 +148,15 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(authenticationToken));
       user = await _userService.UpdateAsync(user, email, cancellationToken);
     }
+
+    return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
+  }
+
+  private async Task<SignInAccountResult> HandleOneTimePasswordAsync(OneTimePasswordPayload payload, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  {
+    OneTimePassword oneTimePassword = await _oneTimePasswordService.ValidateAsync(payload, Purposes.MultiFactorAuthentication, cancellationToken);
+    Guid userId = oneTimePassword.GetUserId();
+    User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }

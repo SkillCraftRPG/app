@@ -19,6 +19,44 @@ public class UserExtensionsTests
   //  Assert.Contains(payload.CustomAttributes, c => c.Key == "ProfileCompletedOn" && DateTime.TryParse(c.Value, out _));
   //} // TODO(fpion): CompleteProfile
 
+  [Fact(DisplayName = "GetCustomAttribute: it should return the found value.")]
+  public void GetCustomAttribute_it_should_return_the_found_value()
+  {
+    string mfaMode = MultiFactorAuthenticationMode.Email.ToString();
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", mfaMode));
+    Assert.Equal(mfaMode, user.GetCustomAttribute("MultiFactorAuthenticationMode"));
+  }
+
+  [Fact(DisplayName = "GetCustomAttribute: it should throw ArgumentException when a custom attribute is not found.")]
+  public void GetCustomAttribute_it_should_throw_ArgumentException_when_a_custom_attribute_is_not_found()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    var exception = Assert.Throws<ArgumentException>(() => user.GetCustomAttribute("MultiFactorAuthenticationMode"));
+    Assert.StartsWith($"The user 'Id={user.Id}' has no custom attribute 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.Equal("user", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "GetCustomAttribute: it should throw ArgumentException when multiple custom attributes were found.")]
+  public void GetCustomAttribute_it_should_throw_ArgumentException_when_multiple_custom_attributes_were_found()
+  {
+    User user = new()
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Phone"));
+    var exception = Assert.Throws<ArgumentException>(() => user.GetCustomAttribute("MultiFactorAuthenticationMode"));
+    Assert.StartsWith($"The user 'Id={user.Id}' has 2 custom attributes 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.Equal("user", exception.ParamName);
+  }
+
   [Fact(DisplayName = "GetMultiFactorAuthenticationMode: it should return null when the user does not have the custom attribute.")]
   public void GetMultiFactorAuthenticationMode_it_should_return_null_when_the_user_does_not_have_the_custom_attribute()
   {
@@ -95,6 +133,41 @@ public class UserExtensionsTests
   //  };
   //  Assert.Equal(id, user.GetSubject());
   //} // TODO(fpion): GetSubject
+
+  [Fact(DisplayName = "HasCustomAttribute: it should return false when the custom attribute could not be found.")]
+  public void HasCustomAttribute_it_should_return_false_when_the_custom_attribute_could_not_be_found()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    Assert.False(user.HasCustomAttribute("MultiFactorAuthenticationMode"));
+  }
+
+  [Fact(DisplayName = "HasCustomAttribute: it should return true when the custom attribute was be found.")]
+  public void HasCustomAttribute_it_should_return_true_when_the_custom_attribute_was_found()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
+    Assert.True(user.HasCustomAttribute("MultiFactorAuthenticationMode"));
+  }
+
+  [Fact(DisplayName = "HasCustomAttribute: it should throw ArgumentException when multiple custom attributes were found.")]
+  public void HasCustomAttribute_it_should_throw_ArgumentException_when_multiple_custom_attributes_were_found()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Phone"));
+    var exception = Assert.Throws<ArgumentException>(() => user.HasCustomAttribute("MultiFactorAuthenticationMode"));
+    Assert.StartsWith($"The user 'Id={user.Id}' has 2 custom attributes 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.Equal("user", exception.ParamName);
+  }
 
   [Fact(DisplayName = "IsProfileCompleted: it should return false when the user profile is not completed.")]
   public void IsProfileCompleted_it_should_return_false_when_the_user_profile_is_not_completed()
@@ -233,10 +306,40 @@ public class UserExtensionsTests
   //  Assert.Equal(user.Locale, profile.Locale);
   //  Assert.Equal(user.TimeZone, profile.TimeZone);
   //} // TODO(fpion): ToUserProfile
-}
 
-/* TODO(fpion):
- * - GetCustomAttribute
- * - HasCustomAttribute
- * - TryGetCustomAttribute
- */
+  [Fact(DisplayName = "TryGetCustomAttribute: it return null when a custom attribute is not found.")]
+  public void TryGetCustomAttribute_it_should_throw_ArgumentException_when_a_custom_attribute_is_not_found()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    Assert.Null(user.TryGetCustomAttribute("MultiFactorAuthenticationMode"));
+  }
+
+  [Fact(DisplayName = "TryGetCustomAttribute: it should return the found value.")]
+  public void TryGetCustomAttribute_it_should_return_the_found_value()
+  {
+    string mfaMode = MultiFactorAuthenticationMode.Email.ToString();
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", mfaMode));
+    Assert.Equal(mfaMode, user.TryGetCustomAttribute("MultiFactorAuthenticationMode"));
+  }
+
+  [Fact(DisplayName = "TryGetCustomAttribute: it should throw ArgumentException when multiple custom attributes were found.")]
+  public void TryGetCustomAttribute_it_should_throw_ArgumentException_when_multiple_custom_attributes_were_found()
+  {
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
+    user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Phone"));
+    var exception = Assert.Throws<ArgumentException>(() => user.TryGetCustomAttribute("MultiFactorAuthenticationMode"));
+    Assert.StartsWith($"The user 'Id={user.Id}' has 2 custom attributes 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.Equal("user", exception.ParamName);
+  }
+}
