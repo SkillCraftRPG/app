@@ -4,6 +4,7 @@ using Logitar.Portal.Contracts.ApiKeys;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
 using Microsoft.Extensions.Primitives;
+using SkillCraft.Application.Logging;
 using SkillCraft.Constants;
 using SkillCraft.Settings;
 
@@ -80,9 +81,21 @@ internal static class HttpContextExtensions
   public static User? GetUser(this HttpContext context) => context.GetItem<User>(UserKey);
   private static T? GetItem<T>(this HttpContext context, object key) => context.Items.TryGetValue(key, out object? value) ? (T?)value : default;
 
-  public static void SetApiKey(this HttpContext context, ApiKey? apiKey) => context.SetItem(ApiKeyKey, apiKey);
-  public static void SetSession(this HttpContext context, Session? session) => context.SetItem(SessionKey, session);
-  public static void SetUser(this HttpContext context, User? user) => context.SetItem(UserKey, user);
+  public static void SetApiKey(this HttpContext context, ApiKey? apiKey)
+  {
+    context.SetItem(ApiKeyKey, apiKey);
+    context.GetLoggingService().SetApiKey(apiKey);
+  }
+  public static void SetSession(this HttpContext context, Session? session)
+  {
+    context.SetItem(SessionKey, session);
+    context.GetLoggingService().SetSession(session);
+  }
+  public static void SetUser(this HttpContext context, User? user)
+  {
+    context.SetItem(UserKey, user);
+    context.GetLoggingService().SetUser(user);
+  }
   private static void SetItem(this HttpContext context, object key, object? value)
   {
     if (value == null)
@@ -94,6 +107,8 @@ internal static class HttpContextExtensions
       context.Items[key] = value;
     }
   }
+
+  private static ILoggingService GetLoggingService(this HttpContext context) => context.RequestServices.GetRequiredService<ILoggingService>();
 
   public static Guid? GetSessionId(this HttpContext context)
   {

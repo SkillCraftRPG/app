@@ -2,6 +2,7 @@
 using Logitar.Portal.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using SkillCraft.Application;
 using SkillCraft.Authentication;
 using SkillCraft.Authorization;
 using SkillCraft.Constants;
@@ -12,6 +13,7 @@ using SkillCraft.Extensions;
 using SkillCraft.Filters;
 using SkillCraft.Infrastructure;
 using SkillCraft.Middlewares;
+using SkillCraft.MongoDB;
 using SkillCraft.Settings;
 
 namespace SkillCraft;
@@ -68,8 +70,12 @@ internal class Startup : StartupBase
     });
     services.AddDistributedMemoryCache();
 
-    services.AddControllers(options => options.Filters.Add<ExceptionHandling>())
-      .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    services.AddControllers(options =>
+    {
+      options.Filters.Add<ExceptionHandling>();
+      options.Filters.Add<OperationLogging>();
+    }).AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    services.AddSingleton<IActivityContextResolver, HttpActivityContextResolver>();
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -95,6 +101,7 @@ internal class Startup : StartupBase
       default:
         throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
+    services.AddSkillCraftWithMongoDB(_configuration);
 
     services.AddLogitarPortalClient(_configuration);
   }
@@ -109,6 +116,7 @@ internal class Startup : StartupBase
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseSession();
+    builder.UseMiddleware<Logging>();
     builder.UseMiddleware<RenewSession>();
     builder.UseAuthentication();
     builder.UseAuthorization();

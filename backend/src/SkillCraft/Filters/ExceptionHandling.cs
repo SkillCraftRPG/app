@@ -3,12 +3,20 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SkillCraft.Application;
+using SkillCraft.Application.Logging;
 using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Filters;
 
 internal class ExceptionHandling : ExceptionFilterAttribute
 {
+  private readonly ILoggingService _loggingService;
+
+  public ExceptionHandling(ILoggingService loggingService)
+  {
+    _loggingService = loggingService;
+  }
+
   public override void OnException(ExceptionContext context)
   {
     if (context.Exception is ValidationException validation)
@@ -29,6 +37,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
     else
     {
       base.OnException(context);
+    }
+
+    if (context.ExceptionHandled)
+    {
+      _loggingService.Report(context.Exception);
     }
   }
 }

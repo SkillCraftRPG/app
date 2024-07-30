@@ -1,8 +1,8 @@
 ﻿using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SkillCraft.Application;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Application.Accounts.Commands;
 using SkillCraft.Authentication;
@@ -16,20 +16,20 @@ namespace SkillCraft.Controllers;
 public class AccountController : ControllerBase
 {
   private readonly IOpenAuthenticationService _openAuthenticationService;
-  private readonly ISender _sender;
+  private readonly IRequestPipeline _requestPipeline;
   private readonly ISessionService _sessionService;
 
-  public AccountController(IOpenAuthenticationService openAuthenticationService, ISender sender, ISessionService sessionService)
+  public AccountController(IOpenAuthenticationService openAuthenticationService, IRequestPipeline requestPipeline, ISessionService sessionService)
   {
     _openAuthenticationService = openAuthenticationService;
-    _sender = sender;
+    _requestPipeline = requestPipeline;
     _sessionService = sessionService;
   }
 
   [HttpPost("/auth/sign/in")]
   public async Task<ActionResult<SignInResponse>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
   {
-    SignInCommandResult result = await _sender.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+    SignInCommandResult result = await _requestPipeline.ExecuteAsync(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
     if (result.Session != null)
     {
       HttpContext.SignIn(result.Session);
@@ -48,7 +48,7 @@ public class AccountController : ControllerBase
       User? user = HttpContext.GetUser();
       if (user != null)
       {
-        await _sender.Send(SignOutCommand.User(user.Id), cancellationToken);
+        await _requestPipeline.ExecuteAsync(SignOutCommand.User(user.Id), cancellationToken);
       }
     }
     else
@@ -56,7 +56,7 @@ public class AccountController : ControllerBase
       Guid? sessionId = HttpContext.GetSessionId();
       if (sessionId.HasValue)
       {
-        await _sender.Send(SignOutCommand.Session(sessionId.Value), cancellationToken);
+        await _requestPipeline.ExecuteAsync(SignOutCommand.Session(sessionId.Value), cancellationToken);
       }
     }
 
@@ -75,7 +75,7 @@ public class AccountController : ControllerBase
     }
     else
     {
-      SignInCommandResult result = await _sender.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+      SignInCommandResult result = await _requestPipeline.ExecuteAsync(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
       response = new(result);
       session = result.Session;
     }
