@@ -7,8 +7,8 @@ using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
 using MediatR;
 using SkillCraft.Application.Accounts.Constants;
-using SkillCraft.Application.Accounts.Events;
 using SkillCraft.Application.Accounts.Validators;
+using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
 using SkillCraft.Domain;
 
@@ -16,23 +16,23 @@ namespace SkillCraft.Application.Accounts.Commands;
 
 internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountCommand, SignInAccountResult>
 {
+  private readonly IActorService _actorService;
   private readonly IMessageService _messageService;
   private readonly IOneTimePasswordService _oneTimePasswordService;
-  private readonly IPublisher _publisher; // TODO(fpion): handler
   private readonly ISessionService _sessionService;
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
 
-  public SignInAccountCommandHandler(IMessageService messageService,
+  public SignInAccountCommandHandler(IActorService actorService,
+    IMessageService messageService,
     IOneTimePasswordService oneTimePasswordService,
-    IPublisher publisher,
     ISessionService sessionService,
     ITokenService tokenService,
     IUserService userService)
   {
+    _actorService = actorService;
     _messageService = messageService;
     _oneTimePasswordService = oneTimePasswordService;
-    _publisher = publisher;
     _sessionService = sessionService;
     _tokenService = tokenService;
     _userService = userService;
@@ -87,7 +87,7 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     if (multiFactorAuthenticationMode == MultiFactorAuthenticationMode.None && user.IsProfileCompleted())
     {
       Session session = await _sessionService.SignInAsync(user, credentials.Password, customAttributes, cancellationToken);
-      await _publisher.Publish(new UserSignedInEvent(session), cancellationToken);
+      await _actorService.SaveAsync(user, cancellationToken);
       return SignInAccountResult.Success(session);
     }
     else
@@ -170,7 +170,7 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     }
 
     Session session = await _sessionService.CreateAsync(user, customAttributes, cancellationToken);
-    await _publisher.Publish(new UserSignedInEvent(session), cancellationToken);
+    await _actorService.SaveAsync(user, cancellationToken);
     return SignInAccountResult.Success(session);
   }
 }

@@ -6,10 +6,9 @@ using Logitar.Portal.Contracts.Passwords;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
-using MediatR;
 using Moq;
 using SkillCraft.Application.Accounts.Constants;
-using SkillCraft.Application.Accounts.Events;
+using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
 using SkillCraft.Domain;
 
@@ -25,9 +24,9 @@ public class SignInAccountCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
   private readonly Faker _faker = new();
 
+  private readonly Mock<IActorService> _actorService = new();
   private readonly Mock<IMessageService> _messageService = new();
   private readonly Mock<IOneTimePasswordService> _oneTimePasswordService = new();
-  private readonly Mock<IPublisher> _publisher = new();
   private readonly Mock<ISessionService> _sessionService = new();
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
@@ -36,7 +35,7 @@ public class SignInAccountCommandHandlerTests
 
   public SignInAccountCommandHandlerTests()
   {
-    _handler = new(_messageService.Object, _oneTimePasswordService.Object, _publisher.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
+    _handler = new(_actorService.Object, _messageService.Object, _oneTimePasswordService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
   }
 
   [Fact(DisplayName = "It should create a new user.")]
@@ -342,7 +341,7 @@ public class SignInAccountCommandHandlerTests
     Assert.Null(result.ProfileCompletionToken);
     Assert.Same(session, result.Session);
 
-    _publisher.Verify(x => x.Publish(It.Is<UserSignedInEvent>(e => e.Session.Equals(session)), _cancellationToken), Times.Once);
+    _actorService.Verify(x => x.SaveAsync(user, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should sign-in the user (AuthenticationToken).")]
@@ -387,7 +386,7 @@ public class SignInAccountCommandHandlerTests
     Assert.Null(result.ProfileCompletionToken);
     Assert.Same(session, result.Session);
 
-    _publisher.Verify(x => x.Publish(It.Is<UserSignedInEvent>(e => e.Session.Equals(session)), _cancellationToken), Times.Once);
+    _actorService.Verify(x => x.SaveAsync(user, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should sign-in the user (OTP).")]
@@ -430,7 +429,7 @@ public class SignInAccountCommandHandlerTests
     Assert.Null(result.ProfileCompletionToken);
     Assert.Same(session, result.Session);
 
-    _publisher.Verify(x => x.Publish(It.Is<UserSignedInEvent>(e => e.Session.Equals(session)), _cancellationToken), Times.Once);
+    _actorService.Verify(x => x.SaveAsync(user, _cancellationToken), Times.Once);
   }
 
   [Theory(DisplayName = "It should throw ArgumentException when sending MFA message and no contact.")]

@@ -1,10 +1,15 @@
-﻿using Logitar.Portal.Client;
+﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Portal.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using SkillCraft.Authentication;
 using SkillCraft.Constants;
+using SkillCraft.EntityFrameworkCore;
+using SkillCraft.EntityFrameworkCore.PostgreSQL;
+using SkillCraft.EntityFrameworkCore.SqlServer;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
+using SkillCraft.Infrastructure;
 using SkillCraft.Middlewares;
 using SkillCraft.Settings;
 
@@ -27,17 +32,12 @@ internal class Startup : StartupBase
   {
     base.ConfigureServices(services);
 
-    services.AddControllers(options => options.Filters.Add<ExceptionHandling>())
-      .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
     CorsSettings corsSettings = _configuration.GetSection(CorsSettings.SectionKey).Get<CorsSettings>() ?? new();
     services.AddSingleton(corsSettings);
     services.AddCors(corsSettings);
 
     OpenAuthenticationSettings openAuthenticationSettings = _configuration.GetSection(OpenAuthenticationSettings.SectionKey).Get<OpenAuthenticationSettings>() ?? new();
     services.AddSingleton(openAuthenticationSettings);
-    services.AddSingleton<IOpenAuthenticationService, OpenAuthenticationService>();
-
     AuthenticationBuilder authenticationBuilder = services.AddAuthentication()
       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(Schemes.ApiKey, options => { })
       .AddScheme<BearerAuthenticationOptions, BearerAuthenticationHandler>(Schemes.Bearer, options => { })
@@ -46,6 +46,7 @@ internal class Startup : StartupBase
     {
       authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
     }
+    services.AddSingleton<IOpenAuthenticationService, OpenAuthenticationService>();
 
     services.AddAuthorizationBuilder()
       .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes)
@@ -54,12 +55,15 @@ internal class Startup : StartupBase
 
     CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);
-    services.AddDistributedMemoryCache();
     services.AddSession(options =>
     {
       options.Cookie.SameSite = cookiesSettings.Session.SameSite;
       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
+    services.AddDistributedMemoryCache();
+
+    services.AddControllers(options => options.Filters.Add<ExceptionHandling>())
+      .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
@@ -67,6 +71,23 @@ internal class Startup : StartupBase
     if (_enableOpenApi)
     {
       services.AddOpenApi();
+    }
+
+    DatabaseProvider databaseProvider = _configuration.GetValue<DatabaseProvider?>("DatabaseProvider") ?? DatabaseProvider.EntityFrameworkCoreSqlServer;
+    switch (databaseProvider)
+    {
+      case DatabaseProvider.EntityFrameworkCorePostgreSQL:
+        services.AddSkillCraftWithEntityFrameworkCorePostgreSQL(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<SkillCraftContext>();
+        break;
+      case DatabaseProvider.EntityFrameworkCoreSqlServer:
+        services.AddSkillCraftWithEntityFrameworkCoreSqlServer(_configuration);
+        healthChecks.AddDbContextCheck<EventContext>();
+        healthChecks.AddDbContextCheck<SkillCraftContext>();
+        break;
+      default:
+        throw new DatabaseProviderNotSupportedException(databaseProvider);
     }
 
     services.AddLogitarPortalClient(_configuration);
