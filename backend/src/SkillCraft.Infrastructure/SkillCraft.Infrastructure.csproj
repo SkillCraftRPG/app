@@ -15,7 +15,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Logitar.EventSourcing.Infrastructure" Version="6.0.0" />
+    <PackageReference Include="Logitar.Security" Version="6.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SkillCraft.Application\SkillCraft.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Security.Claims" />
   </ItemGroup>
 
 </Project>

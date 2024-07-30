@@ -14,13 +14,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Contracts", "src\SkillCraft.Contracts\SkillCraft.Contracts.csproj", "{670D8C24-5A63-4912-86DE-C9DF044528AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Domain", "src\SkillCraft.Domain\SkillCraft.Domain.csproj", "{8DC5E814-4786-41C5-B7AF-6EE70632760C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Domain", "src\SkillCraft.Domain\SkillCraft.Domain.csproj", "{8DC5E814-4786-41C5-B7AF-6EE70632760C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Application", "src\SkillCraft.Application\SkillCraft.Application.csproj", "{51A50519-DEDD-4191-8876-7408D93A7C3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Application", "src\SkillCraft.Application\SkillCraft.Application.csproj", "{51A50519-DEDD-4191-8876-7408D93A7C3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Infrastructure", "src\SkillCraft.Infrastructure\SkillCraft.Infrastructure.csproj", "{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Infrastructure", "src\SkillCraft.Infrastructure\SkillCraft.Infrastructure.csproj", "{A5BB92FB-A12D-4C18-BEC8-B6D715BE68F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft", "src\SkillCraft\SkillCraft.csproj", "{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft", "src\SkillCraft\SkillCraft.csproj", "{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7FBDBFF0-4B11-45C7-A500-8EAA0827E496}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Domain.UnitTests", "tests\SkillCraft.Domain.UnitTests\SkillCraft.Domain.UnitTests.csproj", "{9EB34322-42EA-424B-8EFB-084D2847A63A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Tests", "tests\SkillCraft.Tests\SkillCraft.Tests.csproj", "{89281C02-D241-4562-A3EB-42FC64263066}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Application.UnitTests", "tests\SkillCraft.Application.UnitTests\SkillCraft.Application.UnitTests.csproj", "{C21F4592-56D2-44DD-B31A-C10F71A7202D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{4B7F75E0-DBDC-4030-9A9E-EDCD52D2C8DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.Tools.Seeding", "tools\SkillCraft.Tools.Seeding\SkillCraft.Tools.Seeding.csproj", "{EF45C46B-C69A-4795-9EB4-DE0F09582E9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.EntityFrameworkCore", "src\SkillCraft.EntityFrameworkCore\SkillCraft.EntityFrameworkCore.csproj", "{89C4BF95-5F9B-4DE4-81D2-9483E34DE95C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.EntityFrameworkCore.SqlServer", "src\SkillCraft.EntityFrameworkCore.SqlServer\SkillCraft.EntityFrameworkCore.SqlServer.csproj", "{4E2A0F8B-5399-4DAC-A841-862F67D65D31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.EntityFrameworkCore.PostgreSQL", "src\SkillCraft.EntityFrameworkCore.PostgreSQL\SkillCraft.EntityFrameworkCore.PostgreSQL.csproj", "{64CB299B-09CE-425C-975E-CE3680C3E3A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,9 +66,43 @@ Global
 		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6E5D4BE-469A-4113-8E95-F0D2EEB8A05C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EB34322-42EA-424B-8EFB-084D2847A63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EB34322-42EA-424B-8EFB-084D2847A63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EB34322-42EA-424B-8EFB-084D2847A63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EB34322-42EA-424B-8EFB-084D2847A63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89281C02-D241-4562-A3EB-42FC64263066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89281C02-D241-4562-A3EB-42FC64263066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89281C02-D241-4562-A3EB-42FC64263066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89281C02-D241-4562-A3EB-42FC64263066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C21F4592-56D2-44DD-B31A-C10F71A7202D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C21F4592-56D2-44DD-B31A-C10F71A7202D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C21F4592-56D2-44DD-B31A-C10F71A7202D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C21F4592-56D2-44DD-B31A-C10F71A7202D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF45C46B-C69A-4795-9EB4-DE0F09582E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF45C46B-C69A-4795-9EB4-DE0F09582E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF45C46B-C69A-4795-9EB4-DE0F09582E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF45C46B-C69A-4795-9EB4-DE0F09582E9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89C4BF95-5F9B-4DE4-81D2-9483E34DE95C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C4BF95-5F9B-4DE4-81D2-9483E34DE95C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C4BF95-5F9B-4DE4-81D2-9483E34DE95C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C4BF95-5F9B-4DE4-81D2-9483E34DE95C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E2A0F8B-5399-4DAC-A841-862F67D65D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E2A0F8B-5399-4DAC-A841-862F67D65D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E2A0F8B-5399-4DAC-A841-862F67D65D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E2A0F8B-5399-4DAC-A841-862F67D65D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CB299B-09CE-425C-975E-CE3680C3E3A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CB299B-09CE-425C-975E-CE3680C3E3A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CB299B-09CE-425C-975E-CE3680C3E3A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CB299B-09CE-425C-975E-CE3680C3E3A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9EB34322-42EA-424B-8EFB-084D2847A63A} = {7FBDBFF0-4B11-45C7-A500-8EAA0827E496}
+		{89281C02-D241-4562-A3EB-42FC64263066} = {7FBDBFF0-4B11-45C7-A500-8EAA0827E496}
+		{C21F4592-56D2-44DD-B31A-C10F71A7202D} = {7FBDBFF0-4B11-45C7-A500-8EAA0827E496}
+		{EF45C46B-C69A-4795-9EB4-DE0F09582E9A} = {4B7F75E0-DBDC-4030-9A9E-EDCD52D2C8DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9209D91A-76AB-459E-BF46-E516182FE797}
