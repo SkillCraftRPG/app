@@ -17,7 +17,7 @@ internal class EventBus : IEventBus
 
   public async Task PublishAsync(DomainEvent change, CancellationToken cancellationToken)
   {
-    //_loggingService.Report(change); // TODO(fpion): logging
+    //_loggingService.Report(change); // ISSUE: https://github.com/SkillCraftRPG/app/issues/3
 
     await _publisher.Publish(change, cancellationToken);
   }

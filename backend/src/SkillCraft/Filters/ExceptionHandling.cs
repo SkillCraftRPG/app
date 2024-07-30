@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using SkillCraft.Application;
 using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Filters;
@@ -18,6 +19,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
         error.Add(new PropertyError(failure.ErrorCode, failure.ErrorMessage, failure.AttemptedValue, failure.PropertyName));
       }
       context.Result = new BadRequestObjectResult(error);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is BadRequestException badRequest)
+    {
+      context.Result = new BadRequestObjectResult(badRequest.Error);
       context.ExceptionHandled = true;
     }
     else

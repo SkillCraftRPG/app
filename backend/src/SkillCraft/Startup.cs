@@ -3,6 +3,7 @@ using Logitar.Portal.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using SkillCraft.Authentication;
+using SkillCraft.Authorization;
 using SkillCraft.Constants;
 using SkillCraft.EntityFrameworkCore;
 using SkillCraft.EntityFrameworkCore.PostgreSQL;
@@ -51,7 +52,12 @@ internal class Startup : StartupBase
     services.AddAuthorizationBuilder()
       .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes)
         .RequireAuthenticatedUser()
-        .Build()); // TODO(fpion): User Policy
+        .Build())
+      .AddPolicy(Policies.User, new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .AddRequirements(new UserAuthorizationRequirement())
+        .Build());
+    services.AddSingleton<IAuthorizationHandler, UserAuthorizationHandler>();
 
     CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);

@@ -1,9 +1,11 @@
 ﻿using Logitar;
+using Logitar.Portal.Contracts.Errors;
 using Logitar.Portal.Contracts.Passwords;
+using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Application.Accounts;
 
-public class InvalidOneTimePasswordPurposeException : Exception // TODO(fpion): InvalidCredentialsException
+public class InvalidOneTimePasswordPurposeException : BadRequestException
 {
   private const string ErrorMessage = "The specified purpose did not match the expected One-Time Passord (OTP) purpose.";
 
@@ -22,6 +24,8 @@ public class InvalidOneTimePasswordPurposeException : Exception // TODO(fpion): 
     get => (string?)Data[nameof(ActualPurpose)];
     private set => Data[nameof(ActualPurpose)] = value;
   }
+
+  public override Error Error => new InvalidCredentialsError();
 
   public InvalidOneTimePasswordPurposeException(OneTimePassword oneTimePassword, string purpose) : base(BuildMessage(oneTimePassword, purpose))
   {

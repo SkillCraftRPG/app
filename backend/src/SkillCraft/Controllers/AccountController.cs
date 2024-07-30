@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Application.Accounts.Commands;
 using SkillCraft.Authentication;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Accounts;
 using SkillCraft.Extensions;
 
@@ -88,7 +89,7 @@ public class AccountController : ControllerBase
   }
 
   [HttpGet("/profile")]
-  [Authorize] // TODO(fpion): User Policy
+  [Authorize(Policy = Policies.User)]
   public ActionResult<UserProfile> GetProfile()
   {
     User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");

@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Application;
 
-public static class DateTimeExtensions // TODO(fpion): move to Logitar.NET
+public static class DateTimeExtensions // ISSUE: https://github.com/SkillCraftRPG/app/issues/4
 {
   public static DateTime AsUniversalTime(this DateTime value)
   {

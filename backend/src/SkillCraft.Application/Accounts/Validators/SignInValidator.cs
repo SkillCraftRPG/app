@@ -12,10 +12,10 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
 
     When(x => x.Credentials != null, () => RuleFor(x => x.Credentials!).SetValidator(new CredentialsValidator()));
     When(x => x.OneTimePassword != null, () => RuleFor(x => x.OneTimePassword!).SetValidator(new OneTimePasswordValidator()));
-    //When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings))); // TODO(fpion): Profile
+    //When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings))); // ISSUE: https://github.com/SkillCraftRPG/app/issues/5
 
     RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(SignInValidator))
-      .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.OneTimePassword)}."); // TODO(fpion): Profile
+      .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.OneTimePassword)}."); // ISSUE: https://github.com/SkillCraftRPG/app/issues/5
   }
 
   private static bool BeAValidPayload(SignInPayload payload)
@@ -36,7 +36,7 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
     //if (payload.Profile != null)
     //{
     //  count++;
-    //} // TODO(fpion): Profile
+    //} // ISSUE: https://github.com/SkillCraftRPG/app/issues/5
     return count == 1;
   }
 }

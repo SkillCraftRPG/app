@@ -1,8 +1,10 @@
 ﻿using Logitar;
+using Logitar.Portal.Contracts.Errors;
+using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Application.Accounts;
 
-public class OneTimePasswordNotFoundException : Exception // TODO(fpion): InvalidCredentialsException
+public class OneTimePasswordNotFoundException : BadRequestException
 {
   private const string ErrorMessage = "The specified One-Time Password (OTP) could not be found.";
 
@@ -11,6 +13,8 @@ public class OneTimePasswordNotFoundException : Exception // TODO(fpion): Invali
     get => (Guid)Data[nameof(OneTimePasswordId)]!;
     private set => Data[nameof(OneTimePasswordId)] = value;
   }
+
+  public override Error Error => new InvalidCredentialsError();
 
   public OneTimePasswordNotFoundException(Guid oneTimePasswordId) : base(BuildMessage(oneTimePasswordId))
   {
