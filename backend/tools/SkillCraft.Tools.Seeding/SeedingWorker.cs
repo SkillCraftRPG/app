@@ -5,7 +5,7 @@ using SkillCraft.Tools.Seeding.Portal.Tasks;
 
 namespace SkillCraft.Tools.Seeding;
 
-internal class SeedingWorker : BackgroundService // TODO(fpion): refactor to CRPO
+internal class SeedingWorker : BackgroundService
 {
   private const string GenericErrorMessage = "An unhanded exception occurred.";
   private const int MaximumAttempts = 24;
