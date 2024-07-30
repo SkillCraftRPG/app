@@ -11,6 +11,16 @@ public class UserExtensionsTests
 {
   private readonly Faker _faker = new();
 
+  [Fact(DisplayName = "CompleteProfile: it should set the correct custom attribute on the payload.")]
+  public void CompleteProfile_it_should_set_the_correct_custom_attribute_on_the_payload()
+  {
+    UpdateUserPayload payload = new();
+    Assert.Empty(payload.CustomAttributes);
+
+    payload.CompleteProfile();
+    Assert.Contains(payload.CustomAttributes, c => c.Key == "ProfileCompletedOn" && DateTime.TryParse(c.Value, out _));
+  }
+
   [Fact(DisplayName = "GetCustomAttribute: it should return the found value.")]
   public void GetCustomAttribute_it_should_return_the_found_value()
   {
@@ -145,6 +155,37 @@ public class UserExtensionsTests
     User user = new(_faker.Person.UserName);
     user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.UtcNow.ToISOString()));
     Assert.True(user.IsProfileCompleted());
+  }
+
+  [Theory(DisplayName = "SetMultiFactorAuthenticationMode: it should the correct custom attribute on the payload")]
+  [InlineData(MultiFactorAuthenticationMode.Email)]
+  public void SetMultiFactorAuthenticationMode_it_should_the_correct_custom_attribute_on_the_payload(MultiFactorAuthenticationMode mfaMode)
+  {
+    UpdateUserPayload payload = new();
+    Assert.Empty(payload.CustomAttributes);
+
+    payload.SetMultiFactorAuthenticationMode(mfaMode);
+    Assert.Contains(payload.CustomAttributes, c => c.Key == nameof(MultiFactorAuthenticationMode) && c.Value == mfaMode.ToString());
+  }
+
+  [Fact(DisplayName = "ToUpdateUserPayload: it should return the correct payload.")]
+  public void ToUpdateUserPayload_it_should_return_the_correct_payload()
+  {
+    SaveProfilePayload payload = new(_faker.Person.FirstName, _faker.Person.LastName, _faker.Locale, "America/Montreal")
+    {
+      MiddleName = null,
+      Birthdate = _faker.Person.DateOfBirth,
+      Gender = _faker.Person.Gender.ToString().ToLower()
+    };
+    UpdateUserPayload update = payload.ToUpdateUserPayload();
+    Assert.Equal(payload.FirstName, update.FirstName?.Value);
+    Assert.NotNull(update.MiddleName);
+    Assert.Equal(payload.MiddleName, update.MiddleName.Value);
+    Assert.Equal(payload.LastName, update.LastName?.Value);
+    Assert.Equal(payload.Birthdate, update.Birthdate?.Value);
+    Assert.Equal(payload.Gender, update.Gender?.Value);
+    Assert.Equal(payload.Locale, update.Locale?.Value);
+    Assert.Equal(payload.TimeZone, update.TimeZone?.Value);
   }
 
   [Fact(DisplayName = "ToUserProfile: it should return the correct user profile.")]

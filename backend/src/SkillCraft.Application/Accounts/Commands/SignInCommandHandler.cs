@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Passwords;
+using Logitar.Portal.Contracts.Realms;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
@@ -10,7 +12,6 @@ using SkillCraft.Application.Accounts.Constants;
 using SkillCraft.Application.Accounts.Validators;
 using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Accounts.Commands;
 
@@ -19,6 +20,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   private readonly IActorService _actorService;
   private readonly IMessageService _messageService;
   private readonly IOneTimePasswordService _oneTimePasswordService;
+  private readonly IRealmService _realmService;
   private readonly ISessionService _sessionService;
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
@@ -26,6 +28,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   public SignInCommandHandler(IActorService actorService,
     IMessageService messageService,
     IOneTimePasswordService oneTimePasswordService,
+    IRealmService realmService,
     ISessionService sessionService,
     ITokenService tokenService,
     IUserService userService)
@@ -33,6 +36,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     _actorService = actorService;
     _messageService = messageService;
     _oneTimePasswordService = oneTimePasswordService;
+    _realmService = realmService;
     _sessionService = sessionService;
     _tokenService = tokenService;
     _userService = userService;
@@ -40,8 +44,10 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
 
   public async Task<SignInCommandResult> Handle(SignInCommand command, CancellationToken cancellationToken)
   {
+    Realm realm = await _realmService.FindAsync(cancellationToken);
+
     SignInPayload payload = command.Payload;
-    new SignInValidator().ValidateAndThrow(payload);
+    new SignInValidator(realm.PasswordSettings).ValidateAndThrow(payload);
     LocaleUnit locale = new(payload.Locale);
 
     if (payload.Credentials != null)
@@ -56,8 +62,12 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     {
       return await HandleOneTimePasswordAsync(payload.OneTimePassword, command.CustomAttributes, cancellationToken);
     }
+    else if (payload.Profile != null)
+    {
+      return await HandleProfileAsync(payload.Profile, command.CustomAttributes, cancellationToken);
+    }
 
-    throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}.", nameof(command));
+    throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}, {nameof(payload.OneTimePassword)}, {nameof(payload.Profile)}.", nameof(command));
   }
 
   private async Task<SignInCommandResult> HandleCredentialsAsync(Credentials credentials, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
@@ -140,10 +150,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     }
     else
     {
-      if (!Guid.TryParse(validatedToken.Subject, out Guid userId))
-      {
-        throw new ArgumentException($"The value '{validatedToken.Subject}' is not a valid Guid.", nameof(authenticationToken));
-      }
+      Guid userId = Guid.Parse(validatedToken.Subject);
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(authenticationToken));
       user = await _userService.UpdateAsync(user, email, cancellationToken);
     }
@@ -156,6 +163,21 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     OneTimePassword oneTimePassword = await _oneTimePasswordService.ValidateAsync(payload, Purposes.MultiFactorAuthentication, cancellationToken);
     Guid userId = oneTimePassword.GetUserId();
     User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
+
+    return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
+  }
+
+  private async Task<SignInCommandResult> HandleProfileAsync(CompleteProfilePayload payload, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  {
+    ValidatedToken validatedToken = await _tokenService.ValidateAsync(payload.Token, TokenTypes.Profile, cancellationToken);
+    if (validatedToken.Subject == null)
+    {
+      throw new ArgumentException($"The '{nameof(validatedToken.Subject)}' claim is required.", nameof(payload));
+    }
+    Guid userId = Guid.Parse(validatedToken.Subject);
+    User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
+    PhonePayload? phone = validatedToken.GetPhonePayload();
+    user = await _userService.CompleteProfileAsync(user, payload, phone, cancellationToken);
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }
