@@ -11,7 +11,7 @@ public static class UserExtensions
 
   internal static string GetCustomAttribute(this User user, string key)
   {
-    return user.TryGetCustomAttribute(key) ?? throw new ArgumentException($"The user 'Id={user.Id}' has no custom attribute '{key}'.", nameof(user));
+    return user.TryGetCustomAttribute(key) ?? throw new ArgumentException($"The user 'Id={user.Id}' has no '{key}' custom attribute.", nameof(user));
   }
   internal static bool HasCustomAttribute(this User user, string key) => user.TryGetCustomAttribute(key) != null;
   internal static string? TryGetCustomAttribute(this User user, string key)
@@ -33,7 +33,7 @@ public static class UserExtensions
     }
     else if (customAttributes.Count > 1)
     {
-      throw new ArgumentException($"The user 'Id={user.Id}' has {customAttributes.Count} custom attributes '{key}'.", nameof(user));
+      throw new ArgumentException($"The user 'Id={user.Id}' has {customAttributes.Count} '{key}' custom attributes.", nameof(user));
     }
 
     return customAttributes.Single().Value;

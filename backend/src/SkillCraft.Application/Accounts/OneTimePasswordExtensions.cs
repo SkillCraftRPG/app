@@ -14,7 +14,7 @@ public static class OneTimePasswordExtensions
 
   internal static string GetCustomAttribute(this OneTimePassword oneTimePassword, string key)
   {
-    return oneTimePassword.TryGetCustomAttribute(key) ?? throw new ArgumentException($"The One-Time Password 'Id={oneTimePassword.Id}' has no custom attribute '{key}'.", nameof(oneTimePassword));
+    return oneTimePassword.TryGetCustomAttribute(key) ?? throw new ArgumentException($"The One-Time Password (OTP) 'Id={oneTimePassword.Id}' has no '{key}' custom attribute.", nameof(oneTimePassword));
   }
   internal static bool HasCustomAttribute(this OneTimePassword oneTimePassword, string key) => oneTimePassword.TryGetCustomAttribute(key) != null;
   internal static string? TryGetCustomAttribute(this OneTimePassword oneTimePassword, string key)
@@ -36,7 +36,7 @@ public static class OneTimePasswordExtensions
     }
     else if (customAttributes.Count > 1)
     {
-      throw new ArgumentException($"The One-Time Password 'Id={oneTimePassword.Id}' has {customAttributes.Count} custom attributes '{key}'.", nameof(oneTimePassword));
+      throw new ArgumentException($"The One-Time Password (OTP) 'Id={oneTimePassword.Id}' has {customAttributes.Count} '{key}' custom attributes.", nameof(oneTimePassword));
     }
 
     return customAttributes.Single().Value;

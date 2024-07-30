@@ -30,7 +30,7 @@ public class UserExtensionsTests
       Id = Guid.NewGuid()
     };
     var exception = Assert.Throws<ArgumentException>(() => user.GetCustomAttribute("MultiFactorAuthenticationMode"));
-    Assert.StartsWith($"The user 'Id={user.Id}' has no custom attribute 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.StartsWith($"The user 'Id={user.Id}' has no 'MultiFactorAuthenticationMode' custom attribute.", exception.Message);
     Assert.Equal("user", exception.ParamName);
   }
 
@@ -44,7 +44,7 @@ public class UserExtensionsTests
     user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
     user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Phone"));
     var exception = Assert.Throws<ArgumentException>(() => user.GetCustomAttribute("MultiFactorAuthenticationMode"));
-    Assert.StartsWith($"The user 'Id={user.Id}' has 2 custom attributes 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.StartsWith($"The user 'Id={user.Id}' has 2 'MultiFactorAuthenticationMode' custom attributes.", exception.Message);
     Assert.Equal("user", exception.ParamName);
   }
 
@@ -70,7 +70,7 @@ public class UserExtensionsTests
     User user = new(_faker.Person.UserName);
     Assert.Empty(user.CustomAttributes);
     var exception = Assert.Throws<ArgumentException>(user.ToUserProfile);
-    Assert.StartsWith($"The user 'Id={user.Id}' has no custom attribute 'ProfileCompletedOn'.", exception.Message);
+    Assert.StartsWith($"The user 'Id={user.Id}' has no 'ProfileCompletedOn' custom attribute.", exception.Message);
     Assert.Equal("user", exception.ParamName);
   }
 
@@ -126,7 +126,7 @@ public class UserExtensionsTests
     user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
     user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Phone"));
     var exception = Assert.Throws<ArgumentException>(() => user.HasCustomAttribute("MultiFactorAuthenticationMode"));
-    Assert.StartsWith($"The user 'Id={user.Id}' has 2 custom attributes 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.StartsWith($"The user 'Id={user.Id}' has 2 'MultiFactorAuthenticationMode' custom attributes.", exception.Message);
     Assert.Equal("user", exception.ParamName);
   }
 
@@ -221,7 +221,7 @@ public class UserExtensionsTests
     user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Email"));
     user.CustomAttributes.Add(new("MultiFactorAuthenticationMode", "Phone"));
     var exception = Assert.Throws<ArgumentException>(() => user.TryGetCustomAttribute("MultiFactorAuthenticationMode"));
-    Assert.StartsWith($"The user 'Id={user.Id}' has 2 custom attributes 'MultiFactorAuthenticationMode'.", exception.Message);
+    Assert.StartsWith($"The user 'Id={user.Id}' has 2 'MultiFactorAuthenticationMode' custom attributes.", exception.Message);
     Assert.Equal("user", exception.ParamName);
   }
 }
