@@ -46,9 +46,10 @@ internal class Startup : StartupBase
       authenticationBuilder.AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(Schemes.Basic, options => { });
     }
 
-    services.AddAuthorizationBuilder().SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes)
-      .RequireAuthenticatedUser()
-      .Build());
+    services.AddAuthorizationBuilder()
+      .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes)
+        .RequireAuthenticatedUser()
+        .Build()); // TODO(fpion): User Policy
 
     CookiesSettings cookiesSettings = _configuration.GetSection(CookiesSettings.SectionKey).Get<CookiesSettings>() ?? new();
     services.AddSingleton(cookiesSettings);

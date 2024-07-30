@@ -88,7 +88,7 @@ public class AccountController : ControllerBase
   }
 
   [HttpGet("/profile")]
-  [Authorize]
+  [Authorize] // TODO(fpion): User Policy
   public ActionResult<UserProfile> GetProfile()
   {
     User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
