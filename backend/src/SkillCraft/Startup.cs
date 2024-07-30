@@ -53,7 +53,7 @@ internal class Startup : StartupBase
       .SetDefaultPolicy(new AuthorizationPolicyBuilder(_authenticationSchemes)
         .RequireAuthenticatedUser()
         .Build())
-      .AddPolicy(Policies.User, new AuthorizationPolicyBuilder()
+      .AddPolicy(Policies.User, new AuthorizationPolicyBuilder(_authenticationSchemes)
         .RequireAuthenticatedUser()
         .AddRequirements(new UserAuthorizationRequirement())
         .Build());
