@@ -55,5 +55,27 @@ public static class UserExtensions
 
     return mode;
   }
+
+  public static DateTime GetProfileCompleted(this User user) => DateTime.Parse(user.GetCustomAttribute(ProfileCompletedOnKey));
   public static bool IsProfileCompleted(this User user) => user.HasCustomAttribute(ProfileCompletedOnKey);
+
+  public static UserProfile ToUserProfile(this User user) => new()
+  {
+    CreatedOn = user.CreatedOn,
+    CompletedOn = user.GetProfileCompleted(),
+    UpdatedOn = user.UpdatedOn,
+    PasswordChangedOn = user.PasswordChangedOn,
+    AuthenticatedOn = user.AuthenticatedOn,
+    MultiFactorAuthenticationMode = user.GetMultiFactorAuthenticationMode() ?? MultiFactorAuthenticationMode.None,
+    EmailAddress = user.Email?.Address ?? user.UniqueName,
+    Phone = AccountPhone.TryCreate(user.Phone),
+    FirstName = user.FirstName ?? string.Empty,
+    MiddleName = user.MiddleName,
+    LastName = user.LastName ?? string.Empty,
+    FullName = user.FullName ?? string.Empty,
+    Birthdate = user.Birthdate,
+    Gender = user.Gender,
+    Locale = user.Locale ?? new Locale(),
+    TimeZone = user.TimeZone ?? string.Empty
+  };
 }

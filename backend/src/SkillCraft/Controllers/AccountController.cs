@@ -38,8 +38,8 @@ public class AccountController : ControllerBase
     return Ok(response);
   }
 
-  [Authorize]
   [HttpPost("/auth/sign/out")]
+  [Authorize]
   public async Task<ActionResult> SignOutAsync(bool everywhere, CancellationToken cancellationToken)
   {
     if (everywhere)
@@ -85,5 +85,13 @@ public class AccountController : ControllerBase
     }
 
     return Ok(response);
+  }
+
+  [HttpGet("/profile")]
+  [Authorize]
+  public ActionResult<UserProfile> GetProfile()
+  {
+    User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+    return Ok(user.ToUserProfile());
   }
 }

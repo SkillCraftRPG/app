@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;
 
@@ -105,34 +106,25 @@ public class UserExtensionsTests
   //  }
   //} // TODO(fpion): GetPhone
 
-  //[Fact(DisplayName = "GetProfileCompleted: it should return null when the user profile is not completed.")]
-  //public void GetProfileCompleted_it_should_return_null_when_the_user_profile_is_not_completed()
-  //{
-  //  User user = new(_faker.Person.UserName);
-  //  Assert.Empty(user.CustomAttributes);
-  //  Assert.Null(user.GetProfileCompleted());
-  //} // TODO(fpion): GetProfileCompleted
+  [Fact(DisplayName = "GetProfileCompleted: it should throw ArgumentException when the user profile is not completed.")]
+  public void GetProfileCompleted_it_should_throw_ArgumentException_when_the_user_profile_is_not_completed()
+  {
+    User user = new(_faker.Person.UserName);
+    Assert.Empty(user.CustomAttributes);
+    var exception = Assert.Throws<ArgumentException>(user.ToUserProfile);
+    Assert.StartsWith($"The user 'Id={user.Id}' has no custom attribute 'ProfileCompletedOn'.", exception.Message);
+    Assert.Equal("user", exception.ParamName);
+  }
 
-  //[Fact(DisplayName = "GetProfileCompleted: it should return the correct DateTime when the user profile is completed.")]
-  //public void GetProfileCompleted_it_should_return_the_correct_DateTime_when_the_user_profile_is_completed()
-  //{
-  //  DateTime profileCompletedOn = DateTime.UtcNow;
+  [Fact(DisplayName = "GetProfileCompleted: it should return the correct DateTime when the user profile is completed.")]
+  public void GetProfileCompleted_it_should_return_the_correct_DateTime_when_the_user_profile_is_completed()
+  {
+    DateTime profileCompletedOn = DateTime.UtcNow;
 
-  //  User user = new(_faker.Person.UserName);
-  //  user.CustomAttributes.Add(new("ProfileCompletedOn", profileCompletedOn.ToString("O", CultureInfo.InvariantCulture)));
-  //  Assert.Equal(profileCompletedOn, user.GetProfileCompleted()?.ToUniversalTime());
-  //} // TODO(fpion): GetProfileCompleted
-
-  //[Theory(DisplayName = "GetSubject: it should return the correct subject claim value.")]
-  //[InlineData("5de18c2f-ab63-4a48-a1d8-31c0220e745e")]
-  //public void GetSubject_it_should_return_the_correct_subject_claim_value(string id)
-  //{
-  //  User user = new(_faker.Person.UserName)
-  //  {
-  //    Id = Guid.Parse(id)
-  //  };
-  //  Assert.Equal(id, user.GetSubject());
-  //} // TODO(fpion): GetSubject
+    User user = new(_faker.Person.UserName);
+    user.CustomAttributes.Add(new("ProfileCompletedOn", profileCompletedOn.ToISOString()));
+    Assert.Equal(profileCompletedOn, user.GetProfileCompleted().ToUniversalTime());
+  }
 
   [Fact(DisplayName = "HasCustomAttribute: it should return false when the custom attribute could not be found.")]
   public void HasCustomAttribute_it_should_return_false_when_the_custom_attribute_could_not_be_found()
@@ -181,7 +173,7 @@ public class UserExtensionsTests
   public void IsProfileCompleted_it_should_return_true_when_the_user_profile_is_completed()
   {
     User user = new(_faker.Person.UserName);
-    user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture)));
+    user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.UtcNow.ToISOString()));
     Assert.True(user.IsProfileCompleted());
   }
 
@@ -264,48 +256,48 @@ public class UserExtensionsTests
   //  Assert.Null(result.VerifiedOn);
   //} // TODO(fpion): ToPhone
 
-  //[Fact(DisplayName = "ToUserProfile: it should return the correct user profile.")]
-  //public void ToUserProfile_it_should_return_the_correct_user_profile()
-  //{
-  //  DateTime completedOn = DateTime.Now.AddHours(-6);
-  //  User user = new(_faker.Person.UserName)
-  //  {
-  //    CreatedOn = DateTime.Now.AddDays(-1),
-  //    UpdatedOn = DateTime.Now,
-  //    PasswordChangedOn = DateTime.Now.AddMinutes(-10),
-  //    AuthenticatedOn = DateTime.Now.AddHours(-1),
-  //    Email = new Email(_faker.Person.Email),
-  //    Phone = new Phone(countryCode: "CA", "(514) 845-4636", extension: null, "+15148454636"),
-  //    FirstName = _faker.Person.FirstName,
-  //    LastName = _faker.Person.LastName,
-  //    FullName = _faker.Person.FullName,
-  //    Birthdate = _faker.Person.DateOfBirth,
-  //    Gender = _faker.Person.Gender.ToString().ToLower(),
-  //    Locale = new Locale("fr-CA"),
-  //    TimeZone = "America/Montreal"
-  //  };
-  //  user.CustomAttributes.Add(new CustomAttribute("MultiFactorAuthenticationMode", MultiFactorAuthenticationMode.Phone.ToString()));
-  //  user.CustomAttributes.Add(new CustomAttribute("ProfileCompletedOn", completedOn.ToString("O", CultureInfo.InvariantCulture)));
-  //  UserProfile profile = user.ToUserProfile();
-  //  Assert.NotNull(profile.Phone);
+  [Fact(DisplayName = "ToUserProfile: it should return the correct user profile.")]
+  public void ToUserProfile_it_should_return_the_correct_user_profile()
+  {
+    DateTime completedOn = DateTime.Now.AddHours(-6);
+    User user = new(_faker.Person.UserName)
+    {
+      CreatedOn = DateTime.Now.AddDays(-1),
+      UpdatedOn = DateTime.Now,
+      PasswordChangedOn = DateTime.Now.AddMinutes(-10),
+      AuthenticatedOn = DateTime.Now.AddHours(-1),
+      Email = new Email(_faker.Person.Email),
+      Phone = new Phone(countryCode: "CA", "(514) 845-4636", extension: null, "+15148454636"),
+      FirstName = _faker.Person.FirstName,
+      LastName = _faker.Person.LastName,
+      FullName = _faker.Person.FullName,
+      Birthdate = _faker.Person.DateOfBirth,
+      Gender = _faker.Person.Gender.ToString().ToLower(),
+      Locale = new Locale("fr-CA"),
+      TimeZone = "America/Montreal"
+    };
+    user.CustomAttributes.Add(new CustomAttribute("MultiFactorAuthenticationMode", MultiFactorAuthenticationMode.Phone.ToString()));
+    user.CustomAttributes.Add(new CustomAttribute("ProfileCompletedOn", completedOn.ToISOString()));
+    UserProfile profile = user.ToUserProfile();
+    Assert.NotNull(profile.Phone);
 
-  //  Assert.Equal(user.CreatedOn, profile.CreatedOn);
-  //  Assert.Equal(completedOn, profile.CompletedOn);
-  //  Assert.Equal(user.UpdatedOn, profile.UpdatedOn);
-  //  Assert.Equal(user.PasswordChangedOn, profile.PasswordChangedOn);
-  //  Assert.Equal(user.AuthenticatedOn, profile.AuthenticatedOn);
-  //  Assert.Equal(MultiFactorAuthenticationMode.Phone, profile.MultiFactorAuthenticationMode);
-  //  Assert.Equal(user.Email.Address, profile.EmailAddress);
-  //  Assert.Equal(user.Phone.CountryCode, profile.Phone.CountryCode);
-  //  Assert.Equal(user.Phone.Number, profile.Phone.Number);
-  //  Assert.Equal(user.FirstName, profile.FirstName);
-  //  Assert.Equal(user.LastName, profile.LastName);
-  //  Assert.Equal(user.FullName, profile.FullName);
-  //  Assert.Equal(user.Birthdate, profile.Birthdate);
-  //  Assert.Equal(user.Gender, profile.Gender);
-  //  Assert.Equal(user.Locale, profile.Locale);
-  //  Assert.Equal(user.TimeZone, profile.TimeZone);
-  //} // TODO(fpion): ToUserProfile
+    Assert.Equal(user.CreatedOn, profile.CreatedOn);
+    Assert.Equal(completedOn, profile.CompletedOn);
+    Assert.Equal(user.UpdatedOn, profile.UpdatedOn);
+    Assert.Equal(user.PasswordChangedOn, profile.PasswordChangedOn);
+    Assert.Equal(user.AuthenticatedOn, profile.AuthenticatedOn);
+    Assert.Equal(MultiFactorAuthenticationMode.Phone, profile.MultiFactorAuthenticationMode);
+    Assert.Equal(user.Email.Address, profile.EmailAddress);
+    Assert.Equal(user.Phone.CountryCode, profile.Phone.CountryCode);
+    Assert.Equal(user.Phone.Number, profile.Phone.Number);
+    Assert.Equal(user.FirstName, profile.FirstName);
+    Assert.Equal(user.LastName, profile.LastName);
+    Assert.Equal(user.FullName, profile.FullName);
+    Assert.Equal(user.Birthdate, profile.Birthdate);
+    Assert.Equal(user.Gender, profile.Gender);
+    Assert.Equal(user.Locale, profile.Locale);
+    Assert.Equal(user.TimeZone, profile.TimeZone);
+  }
 
   [Fact(DisplayName = "TryGetCustomAttribute: it return null when a custom attribute is not found.")]
   public void TryGetCustomAttribute_it_should_throw_ArgumentException_when_a_custom_attribute_is_not_found()
