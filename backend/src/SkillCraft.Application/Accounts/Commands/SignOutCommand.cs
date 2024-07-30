@@ -2,7 +2,7 @@
 
 namespace SkillCraft.Application.Accounts.Commands;
 
-public record SignOutCommand : IRequest
+public record SignOutCommand : Activity, IRequest<Unit>
 {
   public Guid? SessionId { get; private init; }
   public Guid? UserId { get; private init; }
