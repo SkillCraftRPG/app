@@ -14,7 +14,7 @@ using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Accounts.Commands;
 
-internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountCommand, SignInAccountResult>
+internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInCommandResult>
 {
   private readonly IActorService _actorService;
   private readonly IMessageService _messageService;
@@ -23,7 +23,7 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
 
-  public SignInAccountCommandHandler(IActorService actorService,
+  public SignInCommandHandler(IActorService actorService,
     IMessageService messageService,
     IOneTimePasswordService oneTimePasswordService,
     ISessionService sessionService,
@@ -38,10 +38,10 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     _userService = userService;
   }
 
-  public async Task<SignInAccountResult> Handle(SignInAccountCommand command, CancellationToken cancellationToken)
+  public async Task<SignInCommandResult> Handle(SignInCommand command, CancellationToken cancellationToken)
   {
-    SignInAccountPayload payload = command.Payload;
-    new SignInAccountValidator().ValidateAndThrow(payload);
+    SignInPayload payload = command.Payload;
+    new SignInValidator().ValidateAndThrow(payload);
     LocaleUnit locale = new(payload.Locale);
 
     if (payload.Credentials != null)
@@ -60,14 +60,13 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}.", nameof(command));
   }
 
-  private async Task<SignInAccountResult> HandleCredentialsAsync(Credentials credentials, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> HandleCredentialsAsync(Credentials credentials, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     User? user = await _userService.FindAsync(credentials.EmailAddress, cancellationToken);
     if (user == null || !user.HasPassword)
     {
-      Email? email = user?.Email ?? new(credentials.EmailAddress);
+      Email email = user?.Email ?? new(credentials.EmailAddress);
       CreatedToken authentication = await _tokenService.CreateAsync(user, email, TokenTypes.Authentication, cancellationToken);
-
       Dictionary<string, string> variables = new()
       {
         [Variables.Token] = authentication.Token
@@ -76,11 +75,11 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
         ? await _messageService.SendAsync(Templates.AccountAuthentication, email, locale, variables, cancellationToken)
         : await _messageService.SendAsync(Templates.AccountAuthentication, user, ContactType.Email, locale, variables, cancellationToken);
       SentMessage sentMessage = sentMessages.ToSentMessage(email);
-      return SignInAccountResult.AuthenticationLinkSent(sentMessage);
+      return SignInCommandResult.AuthenticationLinkSent(sentMessage);
     }
     else if (credentials.Password == null)
     {
-      return SignInAccountResult.RequirePassword();
+      return SignInCommandResult.RequirePassword();
     }
 
     MultiFactorAuthenticationMode? multiFactorAuthenticationMode = user.GetMultiFactorAuthenticationMode();
@@ -88,7 +87,7 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     {
       Session session = await _sessionService.SignInAsync(user, credentials.Password, customAttributes, cancellationToken);
       await _actorService.SaveAsync(user, cancellationToken);
-      return SignInAccountResult.Success(session);
+      return SignInCommandResult.Success(session);
     }
     else
     {
@@ -102,7 +101,7 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
       _ => await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken),
     };
   }
-  private async Task<SignInAccountResult> SendMultiFactorAuthenticationMessageAsync(User user, ContactType contactType, LocaleUnit locale, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> SendMultiFactorAuthenticationMessageAsync(User user, ContactType contactType, LocaleUnit locale, CancellationToken cancellationToken)
   {
     Contact contact = contactType switch
     {
@@ -122,28 +121,28 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     string template = Templates.GetMultiFactorAuthentication(contactType);
     SentMessages sentMessages = await _messageService.SendAsync(template, user, contactType, locale, variables, cancellationToken);
     SentMessage sentMessage = sentMessages.ToSentMessage(contact);
-    return SignInAccountResult.RequireOneTimePasswordValidation(oneTimePassword, sentMessage);
+    return SignInCommandResult.RequireOneTimePasswordValidation(oneTimePassword, sentMessage);
   }
 
-  private async Task<SignInAccountResult> HandleAuthenticationToken(string authenticationToken, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> HandleAuthenticationToken(string authenticationToken, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
-    ValidatedToken token = await _tokenService.ValidateAsync(authenticationToken, TokenTypes.Authentication, cancellationToken);
-    if (token.Email == null)
+    ValidatedToken validatedToken = await _tokenService.ValidateAsync(authenticationToken, TokenTypes.Authentication, cancellationToken);
+    if (validatedToken.Email == null)
     {
       throw new ArgumentException("The email claims are required.", nameof(authenticationToken));
     }
-    EmailPayload email = new(token.Email.Address, isVerified: true);
+    EmailPayload email = new(validatedToken.Email.Address, isVerified: true);
 
     User user;
-    if (token.Subject == null)
+    if (validatedToken.Subject == null)
     {
       user = await _userService.CreateAsync(email, cancellationToken);
     }
     else
     {
-      if (!Guid.TryParse(token.Subject, out Guid userId))
+      if (!Guid.TryParse(validatedToken.Subject, out Guid userId))
       {
-        throw new ArgumentException($"The value '{token.Subject}' is not a valid Guid.", nameof(authenticationToken));
+        throw new ArgumentException($"The value '{validatedToken.Subject}' is not a valid Guid.", nameof(authenticationToken));
       }
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(authenticationToken));
       user = await _userService.UpdateAsync(user, email, cancellationToken);
@@ -152,7 +151,7 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }
 
-  private async Task<SignInAccountResult> HandleOneTimePasswordAsync(OneTimePasswordPayload payload, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> HandleOneTimePasswordAsync(OneTimePasswordPayload payload, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     OneTimePassword oneTimePassword = await _oneTimePasswordService.ValidateAsync(payload, Purposes.MultiFactorAuthentication, cancellationToken);
     Guid userId = oneTimePassword.GetUserId();
@@ -161,16 +160,16 @@ internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountComman
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }
 
-  private async Task<SignInAccountResult> EnsureProfileIsCompletedAsync(User user, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  private async Task<SignInCommandResult> EnsureProfileIsCompletedAsync(User user, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     if (!user.IsProfileCompleted())
     {
       CreatedToken token = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
-      return SignInAccountResult.RequireProfileCompletion(token);
+      return SignInCommandResult.RequireProfileCompletion(token);
     }
 
     Session session = await _sessionService.CreateAsync(user, customAttributes, cancellationToken);
     await _actorService.SaveAsync(user, cancellationToken);
-    return SignInAccountResult.Success(session);
+    return SignInCommandResult.Success(session);
   }
 }

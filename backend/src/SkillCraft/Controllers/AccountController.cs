@@ -26,15 +26,15 @@ public class AccountController : ControllerBase
   }
 
   [HttpPost("/auth/sign/in")]
-  public async Task<ActionResult<SignInAccountResponse>> SignInAsync([FromBody] SignInAccountPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<SignInResponse>> SignInAsync([FromBody] SignInPayload payload, CancellationToken cancellationToken)
   {
-    SignInAccountResult result = await _sender.Send(new SignInAccountCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+    SignInCommandResult result = await _sender.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
     if (result.Session != null)
     {
       HttpContext.SignIn(result.Session);
     }
 
-    SignInAccountResponse response = new(result);
+    SignInResponse response = new(result);
     return Ok(response);
   }
 
@@ -47,7 +47,7 @@ public class AccountController : ControllerBase
       User? user = HttpContext.GetUser();
       if (user != null)
       {
-        await _sender.Send(SignOutAccountCommand.User(user.Id), cancellationToken);
+        await _sender.Send(SignOutCommand.User(user.Id), cancellationToken);
       }
     }
     else
@@ -55,7 +55,7 @@ public class AccountController : ControllerBase
       Guid? sessionId = HttpContext.GetSessionId();
       if (sessionId.HasValue)
       {
-        await _sender.Send(SignOutAccountCommand.Session(sessionId.Value), cancellationToken);
+        await _sender.Send(SignOutCommand.Session(sessionId.Value), cancellationToken);
       }
     }
 
@@ -74,7 +74,7 @@ public class AccountController : ControllerBase
     }
     else
     {
-      SignInAccountResult result = await _sender.Send(new SignInAccountCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
+      SignInCommandResult result = await _sender.Send(new SignInCommand(payload, HttpContext.GetSessionCustomAttributes()), cancellationToken);
       response = new(result);
       session = result.Session;
     }

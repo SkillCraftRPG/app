@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Accounts.Validators;
 
-internal class SignInAccountValidator : AbstractValidator<SignInAccountPayload>
+internal class SignInValidator : AbstractValidator<SignInPayload>
 {
-  public SignInAccountValidator()
+  public SignInValidator()
   {
     RuleFor(x => x.Locale).Locale();
 
@@ -14,11 +14,11 @@ internal class SignInAccountValidator : AbstractValidator<SignInAccountPayload>
     When(x => x.OneTimePassword != null, () => RuleFor(x => x.OneTimePassword!).SetValidator(new OneTimePasswordValidator()));
     //When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings))); // TODO(fpion): Profile
 
-    RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(SignInAccountValidator))
+    RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(SignInValidator))
       .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.OneTimePassword)}."); // TODO(fpion): Profile
   }
 
-  private static bool BeAValidPayload(SignInAccountPayload payload)
+  private static bool BeAValidPayload(SignInPayload payload)
   {
     int count = 0;
     if (payload.Credentials != null)

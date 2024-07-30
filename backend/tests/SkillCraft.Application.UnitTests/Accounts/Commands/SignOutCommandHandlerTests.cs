@@ -3,16 +3,16 @@
 namespace SkillCraft.Application.Accounts.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class SignOutAccountCommandHandlerTests
+public class SignOutCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
   private readonly Mock<ISessionService> _sessionService = new();
   private readonly Mock<IUserService> _userService = new();
 
-  private readonly SignOutAccountCommandHandler _handler;
+  private readonly SignOutCommandHandler _handler;
 
-  public SignOutAccountCommandHandlerTests()
+  public SignOutCommandHandlerTests()
   {
     _handler = new(_sessionService.Object, _userService.Object);
   }
@@ -20,7 +20,7 @@ public class SignOutAccountCommandHandlerTests
   [Fact(DisplayName = "It should sign-out the specified session.")]
   public async Task It_should_sign_out_the_specified_session()
   {
-    SignOutAccountCommand command = SignOutAccountCommand.Session(Guid.NewGuid());
+    SignOutCommand command = SignOutCommand.Session(Guid.NewGuid());
     await _handler.Handle(command, _cancellationToken);
 
     Assert.True(command.SessionId.HasValue);
@@ -33,7 +33,7 @@ public class SignOutAccountCommandHandlerTests
   [Fact(DisplayName = "It should sign-out the specified user.")]
   public async Task It_should_sign_out_the_specified_user()
   {
-    SignOutAccountCommand command = SignOutAccountCommand.User(Guid.NewGuid());
+    SignOutCommand command = SignOutCommand.User(Guid.NewGuid());
     await _handler.Handle(command, _cancellationToken);
 
     _sessionService.VerifyNoOtherCalls();

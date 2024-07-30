@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Accounts;
 
-public record SignInAccountResponse
+public record SignInResponse
 {
   public SentMessage? AuthenticationLinkSentTo { get; set; }
   public bool IsPasswordRequired { get; set; }
@@ -8,11 +8,11 @@ public record SignInAccountResponse
   public string? ProfileCompletionToken { get; set; }
   public CurrentUser? CurrentUser { get; set; }
 
-  public SignInAccountResponse()
+  public SignInResponse()
   {
   }
 
-  public SignInAccountResponse(SignInAccountResult result)
+  public SignInResponse(SignInCommandResult result)
   {
     AuthenticationLinkSentTo = result.AuthenticationLinkSentTo;
     IsPasswordRequired = result.IsPasswordRequired;

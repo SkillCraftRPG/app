@@ -15,7 +15,7 @@ using SkillCraft.Domain;
 namespace SkillCraft.Application.Accounts.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class SignInAccountCommandHandlerTests
+public class SignInCommandHandlerTests
 {
   private const string PasswordString = "P@s$W0rD";
 
@@ -31,9 +31,9 @@ public class SignInAccountCommandHandlerTests
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
 
-  private readonly SignInAccountCommandHandler _handler;
+  private readonly SignInCommandHandler _handler;
 
-  public SignInAccountCommandHandlerTests()
+  public SignInCommandHandlerTests()
   {
     _handler = new(_actorService.Object, _messageService.Object, _oneTimePasswordService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
   }
@@ -41,7 +41,7 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should create a new user.")]
   public async Task It_should_create_a_new_user()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       AuthenticationToken = "AuthenticationToken"
     };
@@ -64,8 +64,8 @@ public class SignInAccountCommandHandlerTests
     CreatedToken createdToken = new("ProfileToken");
     _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -113,12 +113,12 @@ public class SignInAccountCommandHandlerTests
         break;
     }
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName, PasswordString)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -138,12 +138,12 @@ public class SignInAccountCommandHandlerTests
     };
     _userService.Setup(x => x.FindAsync(user.UniqueName, _cancellationToken)).ReturnsAsync(user);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.True(result.IsPasswordRequired);
@@ -155,7 +155,7 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should require the user to complete its profile (AuthenticationToken).")]
   public async Task It_should_require_the_user_to_complete_its_profile_AuthenticationToken()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       AuthenticationToken = "AuthenticationToken"
     };
@@ -181,8 +181,8 @@ public class SignInAccountCommandHandlerTests
     CreatedToken createdToken = new("ProfileToken");
     _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -204,12 +204,12 @@ public class SignInAccountCommandHandlerTests
     CreatedToken createdToken = new("ProfileToken");
     _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName, PasswordString)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -233,7 +233,7 @@ public class SignInAccountCommandHandlerTests
     };
     oneTimePassword.CustomAttributes.Add(new("UserId", user.Id.ToString()));
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       OneTimePassword = new(oneTimePassword.Id, "123456")
     };
@@ -242,8 +242,8 @@ public class SignInAccountCommandHandlerTests
     CreatedToken createdToken = new("ProfileToken");
     _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -263,12 +263,12 @@ public class SignInAccountCommandHandlerTests
     _messageService.Setup(x => x.SendAsync(Templates.AccountAuthentication, email, _locale, It.Is<IReadOnlyDictionary<string, string>>(y => y.Single().Key == Variables.Token && y.Single().Value == createdToken.Token), _cancellationToken))
       .ReturnsAsync(sentMessages);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(email.Address)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Equal(sentMessages.ToSentMessage(email), result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -295,12 +295,12 @@ public class SignInAccountCommandHandlerTests
     _messageService.Setup(x => x.SendAsync(Templates.AccountAuthentication, user, ContactType.Email, _locale, It.Is<IReadOnlyDictionary<string, string>>(y => y.Single().Key == Variables.Token && y.Single().Value == createdToken.Token), _cancellationToken))
       .ReturnsAsync(sentMessages);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Equal(sentMessages.ToSentMessage(user.Email), result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -328,12 +328,12 @@ public class SignInAccountCommandHandlerTests
     Session session = new(user);
     _sessionService.Setup(x => x.SignInAsync(user, PasswordString, customAttributes, _cancellationToken)).ReturnsAsync(session);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName, PasswordString)
     };
-    SignInAccountCommand command = new(payload, customAttributes);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, customAttributes);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -347,7 +347,7 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should sign-in the user (AuthenticationToken).")]
   public async Task It_should_sign_in_the_user_AuthenticationToken()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       AuthenticationToken = "AuthenticationToken"
     };
@@ -377,8 +377,8 @@ public class SignInAccountCommandHandlerTests
     Session session = new(user);
     _sessionService.Setup(x => x.CreateAsync(user, customAttributes, _cancellationToken)).ReturnsAsync(session);
 
-    SignInAccountCommand command = new(payload, customAttributes);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, customAttributes);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -406,7 +406,7 @@ public class SignInAccountCommandHandlerTests
     };
     oneTimePassword.CustomAttributes.Add(new("UserId", user.Id.ToString()));
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       OneTimePassword = new(oneTimePassword.Id, "123456")
     };
@@ -420,8 +420,8 @@ public class SignInAccountCommandHandlerTests
     Session session = new(user);
     _sessionService.Setup(x => x.CreateAsync(user, customAttributes, _cancellationToken)).ReturnsAsync(session);
 
-    SignInAccountCommand command = new(payload, customAttributes);
-    SignInAccountResult result = await _handler.Handle(command, _cancellationToken);
+    SignInCommand command = new(payload, customAttributes);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.AuthenticationLinkSentTo);
     Assert.False(result.IsPasswordRequired);
@@ -447,11 +447,11 @@ public class SignInAccountCommandHandlerTests
     _userService.Setup(x => x.FindAsync(user.UniqueName, _cancellationToken)).ReturnsAsync(user);
     _userService.Setup(x => x.AuthenticateAsync(user, PasswordString, _cancellationToken)).ReturnsAsync(user);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName, PasswordString)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
 
     Assert.StartsWith($"The user 'Id={user.Id}' has no {contactType.ToString().ToLowerInvariant()}.", exception.Message);
@@ -461,7 +461,7 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should throw ArgumentException when the email claims are missing.")]
   public async Task It_should_throw_ArgumentException_when_the_email_claims_are_missing()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       AuthenticationToken = "AuthenticationToken"
     };
@@ -469,7 +469,7 @@ public class SignInAccountCommandHandlerTests
     ValidatedToken validatedToken = new();
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.StartsWith("The email claims are required.", exception.Message);
     Assert.Equal("authenticationToken", exception.ParamName);
@@ -478,7 +478,7 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should throw ArgumentException when the subject claim is not a valid Guid.")]
   public async Task It_should_throw_ArgumentException_when_the_subject_claim_is_not_a_valid_Guid()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       AuthenticationToken = "AuthenticationToken"
     };
@@ -490,7 +490,7 @@ public class SignInAccountCommandHandlerTests
     };
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.StartsWith($"The value '{validatedToken.Subject}' is not a valid Guid.", exception.Message);
     Assert.Equal("authenticationToken", exception.ParamName);
@@ -506,13 +506,13 @@ public class SignInAccountCommandHandlerTests
     string userId = Guid.NewGuid().ToString();
     oneTimePassword.CustomAttributes.Add(new("UserId", userId));
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       OneTimePassword = new(oneTimePassword.Id, "123456")
     };
     _oneTimePasswordService.Setup(x => x.ValidateAsync(payload.OneTimePassword, Purposes.MultiFactorAuthentication, _cancellationToken)).ReturnsAsync(oneTimePassword);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.StartsWith($"The user 'Id={userId}' could not be found.", exception.Message);
     Assert.Equal("payload", exception.ParamName);
@@ -521,7 +521,7 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from token subject.")]
   public async Task It_should_throw_ArgumentException_when_the_user_could_not_be_found_from_token_subject()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       AuthenticationToken = "AuthenticationToken"
     };
@@ -533,7 +533,7 @@ public class SignInAccountCommandHandlerTests
     };
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
 
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.StartsWith($"The user 'Id={validatedToken.Subject}' could not be found.", exception.Message);
     Assert.Equal("authenticationToken", exception.ParamName);
@@ -558,11 +558,11 @@ public class SignInAccountCommandHandlerTests
     };
     _oneTimePasswordService.Setup(x => x.CreateAsync(user, Purposes.MultiFactorAuthentication, _cancellationToken)).ReturnsAsync(oneTimePassword);
 
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(user.UniqueName, PasswordString)
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal($"The One-Time Password (OTP) 'Id={oneTimePassword.Id}' has no password.", exception.Message);
   }
@@ -570,14 +570,14 @@ public class SignInAccountCommandHandlerTests
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_it_not_valid()
   {
-    SignInAccountPayload payload = new(_locale.Code)
+    SignInPayload payload = new(_locale.Code)
     {
       Credentials = new(_faker.Person.Email),
       AuthenticationToken = "AuthenticationToken"
     };
-    SignInAccountCommand command = new(payload, CustomAttributes: []);
+    SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
-    Assert.Equal("SignInAccountValidator", error.ErrorCode);
+    Assert.Equal("SignInValidator", error.ErrorCode);
   }
 }

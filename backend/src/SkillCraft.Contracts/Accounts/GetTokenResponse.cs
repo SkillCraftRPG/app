@@ -12,7 +12,7 @@ public record GetTokenResponse
   {
   }
 
-  public GetTokenResponse(SignInAccountResult result)
+  public GetTokenResponse(SignInCommandResult result)
   {
     AuthenticationLinkSentTo = result.AuthenticationLinkSentTo;
     IsPasswordRequired = result.IsPasswordRequired;

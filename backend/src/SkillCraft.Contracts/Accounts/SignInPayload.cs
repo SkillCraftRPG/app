@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Accounts;
 
-public record SignInAccountPayload
+public record SignInPayload
 {
   public string Locale { get; set; }
 
@@ -8,11 +8,11 @@ public record SignInAccountPayload
   public string? AuthenticationToken { get; set; }
   public OneTimePasswordPayload? OneTimePassword { get; set; }
 
-  public SignInAccountPayload() : this(string.Empty)
+  public SignInPayload() : this(string.Empty)
   {
   }
 
-  public SignInAccountPayload(string locale)
+  public SignInPayload(string locale)
   {
     Locale = locale;
   }

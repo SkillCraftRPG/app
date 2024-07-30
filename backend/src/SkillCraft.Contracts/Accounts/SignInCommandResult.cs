@@ -4,7 +4,7 @@ using Logitar.Portal.Contracts.Tokens;
 
 namespace SkillCraft.Contracts.Accounts;
 
-public record SignInAccountResult
+public record SignInCommandResult
 {
   public SentMessage? AuthenticationLinkSentTo { get; set; }
   public bool IsPasswordRequired { get; set; }
@@ -12,27 +12,27 @@ public record SignInAccountResult
   public string? ProfileCompletionToken { get; set; }
   public Session? Session { get; set; }
 
-  public static SignInAccountResult AuthenticationLinkSent(SentMessage to) => new()
+  public static SignInCommandResult AuthenticationLinkSent(SentMessage to) => new()
   {
     AuthenticationLinkSentTo = to
   };
 
-  public static SignInAccountResult RequirePassword() => new()
+  public static SignInCommandResult RequirePassword() => new()
   {
     IsPasswordRequired = true
   };
 
-  public static SignInAccountResult RequireOneTimePasswordValidation(OneTimePassword oneTimePassword, SentMessage sentMessage) => new()
+  public static SignInCommandResult RequireOneTimePasswordValidation(OneTimePassword oneTimePassword, SentMessage sentMessage) => new()
   {
     OneTimePasswordValidation = new OneTimePasswordValidation(oneTimePassword.Id, sentMessage)
   };
 
-  public static SignInAccountResult RequireProfileCompletion(CreatedToken createdToken) => new()
+  public static SignInCommandResult RequireProfileCompletion(CreatedToken createdToken) => new()
   {
     ProfileCompletionToken = createdToken.Token
   };
 
-  public static SignInAccountResult Success(Session session) => new()
+  public static SignInCommandResult Success(Session session) => new()
   {
     Session = session
   };
