@@ -4,6 +4,7 @@ namespace SkillCraft.Application.Accounts;
 
 public interface IUserService
 {
+  Task<User> AuthenticateAsync(string uniqueName, string password, CancellationToken cancellationToken = default);
   Task<User> AuthenticateAsync(User user, string password, CancellationToken cancellationToken = default);
   Task<User> CreateAsync(EmailPayload email, CancellationToken cancellationToken = default);
   Task<User?> FindAsync(string emailAddress, CancellationToken cancellationToken = default);
