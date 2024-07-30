@@ -59,6 +59,8 @@ public static class UserExtensions
   public static DateTime GetProfileCompleted(this User user) => DateTime.Parse(user.GetCustomAttribute(ProfileCompletedOnKey));
   public static bool IsProfileCompleted(this User user) => user.HasCustomAttribute(ProfileCompletedOnKey);
 
+  public static string GetSubject(this User user) => user.Id.ToString();
+
   public static UserProfile ToUserProfile(this User user) => new()
   {
     CreatedOn = user.CreatedOn,

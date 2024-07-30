@@ -2,7 +2,7 @@
 
 namespace SkillCraft.Application;
 
-public static class ServiceCollectionExtensions
+public static class DependencyInjectionExtensions
 {
   public static IServiceCollection AddSkillCraftApplication(this IServiceCollection services)
   {

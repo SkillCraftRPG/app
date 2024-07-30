@@ -126,6 +126,17 @@ public class UserExtensionsTests
     Assert.Equal(profileCompletedOn, user.GetProfileCompleted().ToUniversalTime());
   }
 
+  [Theory(DisplayName = "GetSubject: it should return the correct subject claim value.")]
+  [InlineData("5de18c2f-ab63-4a48-a1d8-31c0220e745e")]
+  public void GetSubject_it_should_return_the_correct_subject_claim_value(string id)
+  {
+    User user = new(_faker.Person.UserName)
+    {
+      Id = Guid.Parse(id)
+    };
+    Assert.Equal(id, user.GetSubject());
+  }
+
   [Fact(DisplayName = "HasCustomAttribute: it should return false when the custom attribute could not be found.")]
   public void HasCustomAttribute_it_should_return_false_when_the_custom_attribute_could_not_be_found()
   {

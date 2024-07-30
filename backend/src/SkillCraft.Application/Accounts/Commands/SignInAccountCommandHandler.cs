@@ -16,12 +16,12 @@ namespace SkillCraft.Application.Accounts.Commands;
 
 internal class SignInAccountCommandHandler : IRequestHandler<SignInAccountCommand, SignInAccountResult>
 {
-  private readonly IMessageService _messageService; // TODO(fpion): implement
-  private readonly IOneTimePasswordService _oneTimePasswordService; // TODO(fpion): implement
+  private readonly IMessageService _messageService;
+  private readonly IOneTimePasswordService _oneTimePasswordService;
   private readonly IPublisher _publisher; // TODO(fpion): handler
-  private readonly ISessionService _sessionService; // TODO(fpion): implement
-  private readonly ITokenService _tokenService; // TODO(fpion): implement
-  private readonly IUserService _userService; // TODO(fpion): implement
+  private readonly ISessionService _sessionService;
+  private readonly ITokenService _tokenService;
+  private readonly IUserService _userService;
 
   public SignInAccountCommandHandler(IMessageService messageService,
     IOneTimePasswordService oneTimePasswordService,

@@ -126,3 +126,10 @@ public class OneTimePasswordExtensionsTests
     Assert.Equal("oneTimePassword", exception.ParamName);
   }
 }
+
+// TODO(fpion): EnsurePurpose
+// TODO(fpion): GetPurpose
+// TODO(fpion): HasPurpose
+// TODO(fpion): SetPurpose
+// TODO(fpion): SetUserId
+// TODO(fpion): TryGetPurpose

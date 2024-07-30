@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Logitar.Portal.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using SkillCraft.Authentication;
 using SkillCraft.Constants;
@@ -67,6 +68,8 @@ internal class Startup : StartupBase
     {
       services.AddOpenApi();
     }
+
+    services.AddLogitarPortalClient(_configuration);
   }
 
   public override void Configure(IApplicationBuilder builder)

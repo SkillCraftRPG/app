@@ -16,7 +16,7 @@ public class AccountController : ControllerBase
 {
   private readonly IOpenAuthenticationService _openAuthenticationService;
   private readonly ISender _sender;
-  private readonly ISessionService _sessionService; // TODO(fpion): implement
+  private readonly ISessionService _sessionService;
 
   public AccountController(IOpenAuthenticationService openAuthenticationService, ISender sender, ISessionService sessionService)
   {
