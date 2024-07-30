@@ -1,7 +1,7 @@
-﻿using Logitar.Portal.Contracts.Messages;
+﻿using Logitar.Identity.Domain.Shared;
+using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Accounts;
 

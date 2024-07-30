@@ -7,7 +7,6 @@ using SkillCraft.Application.Caching;
 using SkillCraft.Infrastructure.Caching;
 using SkillCraft.Infrastructure.IdentityServices;
 using SkillCraft.Infrastructure.Settings;
-using System.Text.Json.Serialization;
 
 namespace SkillCraft.Infrastructure;
 
@@ -32,6 +31,7 @@ public static class DependencyInjectionExtensions
       .AddTransient<IApiKeyService, ApiKeyService>()
       .AddTransient<IMessageService, MessageService>()
       .AddTransient<IOneTimePasswordService, OneTimePasswordService>()
+      .AddTransient<IRealmService, RealmService>()
       .AddTransient<ISessionService, SessionService>()
       .AddTransient<ITokenService, TokenService>()
       .AddTransient<IUserService, UserService>();

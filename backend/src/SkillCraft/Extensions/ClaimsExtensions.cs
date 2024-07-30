@@ -3,6 +3,7 @@ using Logitar.Portal.Contracts.Roles;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
 using Logitar.Security.Claims;
+using SkillCraft.Application.Accounts;
 
 namespace SkillCraft.Extensions;
 
@@ -36,7 +37,7 @@ internal static class ClaimsExtensions
   {
     ClaimsIdentity identity = new(authenticationType);
 
-    identity.AddClaim(new(Rfc7519ClaimNames.Subject, user.Id.ToString()));
+    identity.AddClaim(new(Rfc7519ClaimNames.Subject, user.GetSubject()));
     identity.AddClaim(new(Rfc7519ClaimNames.Username, user.UniqueName));
     identity.AddClaim(ClaimHelper.Create(Rfc7519ClaimNames.UpdatedAt, user.UpdatedOn));
 

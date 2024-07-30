@@ -1,4 +1,6 @@
-﻿using Logitar.Portal.Contracts;
+﻿using Logitar;
+using Logitar.Identity.Contracts;
+using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;
 
@@ -55,11 +57,31 @@ public static class UserExtensions
 
     return mode;
   }
+  public static void SetMultiFactorAuthenticationMode(this UpdateUserPayload payload, MultiFactorAuthenticationMode mode)
+  {
+    payload.CustomAttributes.Add(new CustomAttributeModification(MultiFactorAuthenticationModeKey, mode.ToString()));
+  }
 
+  public static void CompleteProfile(this UpdateUserPayload payload)
+  {
+    string completedOn = DateTime.UtcNow.ToISOString();
+    payload.CustomAttributes.Add(new CustomAttributeModification(ProfileCompletedOnKey, completedOn));
+  }
   public static DateTime GetProfileCompleted(this User user) => DateTime.Parse(user.GetCustomAttribute(ProfileCompletedOnKey));
   public static bool IsProfileCompleted(this User user) => user.HasCustomAttribute(ProfileCompletedOnKey);
 
   public static string GetSubject(this User user) => user.Id.ToString();
+
+  public static UpdateUserPayload ToUpdateUserPayload(this SaveProfilePayload payload) => new()
+  {
+    FirstName = new Modification<string>(payload.FirstName),
+    MiddleName = new Modification<string>(payload.MiddleName),
+    LastName = new Modification<string>(payload.LastName),
+    Birthdate = new Modification<DateTime?>(payload.Birthdate),
+    Gender = new Modification<string>(payload.Gender),
+    Locale = new Modification<string>(payload.Locale),
+    TimeZone = new Modification<string>(payload.TimeZone)
+  };
 
   public static UserProfile ToUserProfile(this User user) => new()
   {

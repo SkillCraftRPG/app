@@ -1,21 +1,22 @@
 ﻿using FluentValidation;
+using Logitar.Identity.Contracts.Settings;
+using Logitar.Identity.Domain.Shared;
 using SkillCraft.Contracts.Accounts;
-using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Accounts.Validators;
 
 internal class SignInValidator : AbstractValidator<SignInPayload>
 {
-  public SignInValidator()
+  public SignInValidator(IPasswordSettings passwordSettings)
   {
-    RuleFor(x => x.Locale).Locale();
+    RuleFor(x => x.Locale).SetValidator(new LocaleValidator());
 
     When(x => x.Credentials != null, () => RuleFor(x => x.Credentials!).SetValidator(new CredentialsValidator()));
     When(x => x.OneTimePassword != null, () => RuleFor(x => x.OneTimePassword!).SetValidator(new OneTimePasswordValidator()));
-    //When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings))); // ISSUE: https://github.com/SkillCraftRPG/app/issues/5
+    When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings)));
 
     RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(SignInValidator))
-      .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.OneTimePassword)}."); // ISSUE: https://github.com/SkillCraftRPG/app/issues/5
+      .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.OneTimePassword)}, {nameof(x.Profile)}.");
   }
 
   private static bool BeAValidPayload(SignInPayload payload)
@@ -33,10 +34,10 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
     {
       count++;
     }
-    //if (payload.Profile != null)
-    //{
-    //  count++;
-    //} // ISSUE: https://github.com/SkillCraftRPG/app/issues/5
+    if (payload.Profile != null)
+    {
+      count++;
+    }
     return count == 1;
   }
 }

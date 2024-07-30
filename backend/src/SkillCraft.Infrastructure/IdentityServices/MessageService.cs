@@ -1,10 +1,10 @@
-﻿using Logitar.Portal.Contracts;
+﻿using Logitar.Identity.Domain.Shared;
+using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Users;
 using Microsoft.Extensions.Configuration;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Contracts.Accounts;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Infrastructure.IdentityServices;
 

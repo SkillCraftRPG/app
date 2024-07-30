@@ -2,6 +2,7 @@
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Application.Accounts;
+using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Infrastructure.IdentityServices;
 
@@ -23,6 +24,23 @@ internal class UserService : IUserService
     AuthenticateUserPayload payload = new(uniqueName, password);
     RequestContext context = new(cancellationToken);
     return await _userClient.AuthenticateAsync(payload, context);
+  }
+
+  public async Task<User> CompleteProfileAsync(User user, CompleteProfilePayload profile, PhonePayload? phone, CancellationToken cancellationToken)
+  {
+    UpdateUserPayload payload = profile.ToUpdateUserPayload();
+    if (profile.Password != null)
+    {
+      payload.Password = new ChangePasswordPayload(profile.Password);
+    }
+    if (phone != null)
+    {
+      payload.Phone = new Modification<PhonePayload>(phone);
+    }
+    payload.CompleteProfile();
+    payload.SetMultiFactorAuthenticationMode(profile.MultiFactorAuthenticationMode);
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
 
   public async Task<User> CreateAsync(EmailPayload email, CancellationToken cancellationToken)

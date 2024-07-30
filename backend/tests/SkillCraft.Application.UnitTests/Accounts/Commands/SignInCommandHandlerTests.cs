@@ -1,17 +1,18 @@
 ﻿using Bogus;
 using FluentValidation.Results;
 using Logitar;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Passwords;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
+using Logitar.Security.Claims;
 using Moq;
 using SkillCraft.Application.Accounts.Constants;
 using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Accounts.Commands;
 
@@ -19,6 +20,7 @@ namespace SkillCraft.Application.Accounts.Commands;
 public class SignInCommandHandlerTests
 {
   private const string PasswordString = "P@s$W0rD";
+  private const string TimeZoneId = "America/Montreal";
 
   private static readonly LocaleUnit _locale = new("fr");
 
@@ -28,15 +30,79 @@ public class SignInCommandHandlerTests
   private readonly Mock<IActorService> _actorService = new();
   private readonly Mock<IMessageService> _messageService = new();
   private readonly Mock<IOneTimePasswordService> _oneTimePasswordService = new();
+  private readonly Mock<IRealmService> _realmService = new();
   private readonly Mock<ISessionService> _sessionService = new();
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
 
   private readonly SignInCommandHandler _handler;
 
+  private readonly RealmMock _realm = new();
+
   public SignInCommandHandlerTests()
   {
-    _handler = new(_actorService.Object, _messageService.Object, _oneTimePasswordService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
+    _realmService.Setup(x => x.FindAsync(_cancellationToken)).ReturnsAsync(_realm);
+
+    _handler = new(_actorService.Object, _messageService.Object, _oneTimePasswordService.Object, _realmService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
+  }
+
+  [Theory(DisplayName = "It should complete the user profile and sign-in the user.")]
+  [InlineData(null, null, null, false)]
+  [InlineData(null, "CA", "12345", true)]
+  [InlineData("+15148454636", null, null, false)]
+  [InlineData("+15148454636", "CA", "12345", true)]
+  public async Task It_should_complete_the_user_profile_and_sign_in_the_user(string? phoneNumber, string? phoneCountryCode, string? phoneExtension, bool isPhoneVerified)
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      Profile = new CompleteProfilePayload("ProfileToken", _faker.Person.FirstName, _faker.Person.LastName, _locale.Code, TimeZoneId)
+    };
+
+    User user = new(_faker.Person.UserName)
+    {
+      Id = Guid.NewGuid()
+    };
+    user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.Now.ToISOString()));
+    _userService.Setup(x => x.FindAsync(user.Id, _cancellationToken)).ReturnsAsync(user);
+
+    ValidatedToken validatedToken = new()
+    {
+      Subject = user.GetSubject()
+    };
+    PhonePayload? phone = null;
+    if (phoneNumber != null)
+    {
+      phone = new(phoneCountryCode, phoneNumber, phoneExtension, isPhoneVerified);
+
+      validatedToken.Claims.Add(new TokenClaim(ClaimNames.PhoneNumberRaw, phone.Number));
+      validatedToken.Claims.Add(new TokenClaim(Rfc7519ClaimNames.IsPhoneVerified, phone.IsVerified.ToString()));
+
+      if (phone.CountryCode != null)
+      {
+        validatedToken.Claims.Add(new TokenClaim(ClaimNames.PhoneCountryCode, phone.CountryCode));
+      }
+
+      validatedToken.Claims.Add(new TokenClaim(Rfc7519ClaimNames.PhoneNumber, phone.Extension == null ? phone.Number : $"{phone.Number};ext={phone.Extension}"));
+    }
+    _tokenService.Setup(x => x.ValidateAsync(payload.Profile.Token, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(validatedToken);
+    _userService.Setup(x => x.CompleteProfileAsync(user, payload.Profile, phone, _cancellationToken)).ReturnsAsync(user);
+
+    CustomAttribute[] customAttributes =
+    [
+      new("AdditionalInformation", $@"{{""User-Agent"":""{_faker.Internet.UserAgent()}""}}"),
+      new("IpAddress", _faker.Internet.Ip())
+    ];
+    Session session = new(user);
+    _sessionService.Setup(x => x.CreateAsync(user, customAttributes, _cancellationToken)).ReturnsAsync(session);
+
+    SignInCommand command = new(payload, customAttributes);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Null(result.ProfileCompletionToken);
+    Assert.Same(session, result.Session);
   }
 
   [Fact(DisplayName = "It should create a new user.")]
@@ -174,7 +240,7 @@ public class SignInCommandHandlerTests
 
     ValidatedToken validatedToken = new()
     {
-      Subject = user.Id.ToString(),
+      Subject = user.GetSubject(),
       Email = user.Email
     };
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
@@ -365,7 +431,7 @@ public class SignInCommandHandlerTests
 
     ValidatedToken validatedToken = new()
     {
-      Subject = user.Id.ToString(),
+      Subject = user.GetSubject(),
       Email = user.Email
     };
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
@@ -476,25 +542,21 @@ public class SignInCommandHandlerTests
     Assert.Equal("authenticationToken", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentException when the subject claim is not a valid Guid.")]
-  public async Task It_should_throw_ArgumentException_when_the_subject_claim_is_not_a_valid_Guid()
+  [Fact(DisplayName = "It should throw ArgumentException when the subject claim is missing.")]
+  public async Task It_should_throw_ArgumentException_when_the_subject_claim_is_missing()
   {
     SignInPayload payload = new(_locale.Code)
     {
-      AuthenticationToken = "AuthenticationToken"
+      Profile = new CompleteProfilePayload("ProfileToken", _faker.Person.FirstName, _faker.Person.LastName, _locale.Code, TimeZoneId)
     };
 
-    ValidatedToken validatedToken = new()
-    {
-      Subject = _faker.Person.Email,
-      Email = new Email(_faker.Person.Email)
-    };
-    _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
+    ValidatedToken validatedToken = new();
+    _tokenService.Setup(x => x.ValidateAsync(payload.Profile.Token, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(validatedToken);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.StartsWith($"The value '{validatedToken.Subject}' is not a valid Guid.", exception.Message);
-    Assert.Equal("authenticationToken", exception.ParamName);
+    Assert.StartsWith("The 'Subject' claim is required.", exception.Message);
+    Assert.Equal("payload", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from OTP UserId.")]
@@ -519,8 +581,8 @@ public class SignInCommandHandlerTests
     Assert.Equal("payload", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from token subject.")]
-  public async Task It_should_throw_ArgumentException_when_the_user_could_not_be_found_from_token_subject()
+  [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from authentication token subject.")]
+  public async Task It_should_throw_ArgumentException_when_the_user_could_not_be_found_from_authentication_token_subject()
   {
     SignInPayload payload = new(_locale.Code)
     {
@@ -538,6 +600,26 @@ public class SignInCommandHandlerTests
     var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.StartsWith($"The user 'Id={validatedToken.Subject}' could not be found.", exception.Message);
     Assert.Equal("authenticationToken", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentException when the user could not be found from profile token subject.")]
+  public async Task It_should_throw_ArgumentException_when_the_user_could_not_be_found_from_profile_token_subject()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      Profile = new CompleteProfilePayload("ProfileToken", _faker.Person.FirstName, _faker.Person.LastName, _locale.Code, TimeZoneId)
+    };
+
+    ValidatedToken validatedToken = new()
+    {
+      Subject = Guid.Empty.ToString()
+    };
+    _tokenService.Setup(x => x.ValidateAsync(payload.Profile.Token, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(validatedToken);
+
+    SignInCommand command = new(payload, CustomAttributes: []);
+    var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.StartsWith($"The user 'Id={validatedToken.Subject}' could not be found.", exception.Message);
+    Assert.Equal("payload", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw InvalidOperationException when the created OTP has no password.")]

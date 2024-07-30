@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace SkillCraft.Application;
+﻿namespace SkillCraft.Application;
 
 public interface IActivity
 {
