@@ -48,7 +48,7 @@ public class AccountController : ControllerBase
       User? user = HttpContext.GetUser();
       if (user != null)
       {
-        await _requestPipeline.ExecuteAsync(SignOutCommand.SignOutUser(user.Id), cancellationToken);
+        await _requestPipeline.ExecuteAsync(SignOutCommand.User(user.Id), cancellationToken);
       }
     }
     else

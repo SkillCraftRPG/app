@@ -12,8 +12,6 @@ public abstract record Activity : IActivity
   protected ActivityContext Context => _context ?? throw new InvalidOperationException($"The activity has not been contextualized. You must call the '{nameof(Contextualize)}' method once.");
 
   [JsonIgnore]
-  public User User => Context.User ?? throw new InvalidOperationException("An authenticated user is required.");
-  [JsonIgnore]
   public Actor Actor
   {
     get
@@ -47,4 +45,7 @@ public abstract record Activity : IActivity
 
     _context = context;
   }
+
+  public User GetUser() => TryGetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+  public User? TryGetUser() => Context.User;
 }
