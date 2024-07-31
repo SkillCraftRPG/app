@@ -2,7 +2,6 @@
 using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Passwords;
 using Logitar.Portal.Contracts.Users;
-using System.Text.Json;
 
 namespace SkillCraft.Application.Accounts;
 

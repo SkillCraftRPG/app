@@ -1,10 +1,12 @@
-﻿using Logitar.Identity.Domain.Shared;
+﻿using FluentValidation;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Passwords;
 using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
 using MediatR;
 using SkillCraft.Application.Accounts.Constants;
+using SkillCraft.Application.Accounts.Validators;
 using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Application.Accounts.Commands;
@@ -30,7 +32,7 @@ internal class VerifyPhoneCommandHandler : IRequestHandler<VerifyPhoneCommand, V
   public async Task<VerifyPhoneResult> Handle(VerifyPhoneCommand command, CancellationToken cancellationToken)
   {
     VerifyPhonePayload payload = command.Payload;
-    // TODO(fpion): validate payload
+    new VerifyPhoneValidator().ValidateAndThrow(payload);
 
     LocaleUnit locale = new(payload.Locale);
     User user = await FindUserAsync(payload.ProfileCompletionToken, cancellationToken);

@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FluentValidation.Results;
 using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts.Messages;
 using Logitar.Portal.Contracts.Passwords;
@@ -7,7 +8,6 @@ using Logitar.Portal.Contracts.Users;
 using Moq;
 using SkillCraft.Application.Accounts.Constants;
 using SkillCraft.Contracts.Accounts;
-using System.Text.Json;
 
 namespace SkillCraft.Application.Accounts.Commands;
 
@@ -36,7 +36,7 @@ public class VerifyPhoneCommandHandlerTests
   [Fact(DisplayName = "It should handle a One-Time Password.")]
   public async Task It_should_handle_a_One_Time_Password()
   {
-    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken", new OneTimePasswordPayload());
+    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken", new OneTimePasswordPayload(Guid.NewGuid(), "123456"));
     Assert.NotNull(payload.OneTimePassword);
 
     User user = new(_faker.Person.UserName)
@@ -118,7 +118,7 @@ public class VerifyPhoneCommandHandlerTests
   [Fact(DisplayName = "It should throw ArgumentException when the user cannot be found.")]
   public async Task It_should_throw_ArgumentException_when_the_user_cannot_be_found()
   {
-    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken", new AccountPhone());
+    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken", new AccountPhone("CA", "(514) 845-4636"));
     Guid userId = Guid.NewGuid();
     ValidatedToken validatedToken = new()
     {
@@ -135,7 +135,7 @@ public class VerifyPhoneCommandHandlerTests
   [Fact(DisplayName = "It should throw InvalidOneTimePasswordUserException when the token and OTP user do not match.")]
   public async Task It_should_throw_InvalidOneTimePasswordUserException_when_the_token_and_Otp_user_do_not_match()
   {
-    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken", new OneTimePasswordPayload());
+    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken", new OneTimePasswordPayload(Guid.NewGuid(), "123456"));
     Assert.NotNull(payload.OneTimePassword);
 
     User user = new(_faker.Person.UserName)
@@ -193,5 +193,19 @@ public class VerifyPhoneCommandHandlerTests
     VerifyPhoneCommand command = new(payload);
     var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal($"The One-Time Password (OTP) 'Id={oneTimePassword.Id}' has no password.", exception.Message);
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
+  public async Task It_should_throw_ValidationException_when_the_payload_it_not_valid()
+  {
+    VerifyPhonePayload payload = new(_locale.Code, "ProfileCompletionToken")
+    {
+      Phone = new("CA", "(514) 845-4636"),
+      OneTimePassword = new(Guid.NewGuid(), "123456")
+    };
+    VerifyPhoneCommand command = new(payload);
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
+    ValidationFailure error = Assert.Single(exception.Errors);
+    Assert.Equal("VerifyPhoneValidator", error.ErrorCode);
   }
 }
