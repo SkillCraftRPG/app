@@ -6,6 +6,7 @@ namespace SkillCraft.Application.Accounts;
 
 public static class OneTimePasswordExtensions
 {
+  private const string PhoneKey = "Phone";
   private const string PurposeKey = "Purpose";
   private const string UserIdKey = "UserId";
 
@@ -37,6 +38,17 @@ public static class OneTimePasswordExtensions
     }
 
     return customAttributes.Single().Value;
+  }
+
+  public static Phone GetPhone(this OneTimePassword oneTimePassword)
+  {
+    string json = oneTimePassword.GetCustomAttribute(PhoneKey);
+    return JsonSerializer.Deserialize<Phone>(json) ?? throw new ArgumentException($"The phone could not be deserialized.{Environment.NewLine}Json: {json}", nameof(oneTimePassword));
+  }
+  public static void SetPhone(this CreateOneTimePasswordPayload payload, Phone phone)
+  {
+    string json = JsonSerializer.Serialize(phone);
+    payload.CustomAttributes.Add(new CustomAttribute(PhoneKey, json));
   }
 
   public static void EnsurePurpose(this OneTimePassword oneTimePassword, string purpose)

@@ -1,4 +1,6 @@
-﻿namespace SkillCraft.Contracts.Accounts;
+﻿using Logitar.Portal.Contracts.Tokens;
+
+namespace SkillCraft.Contracts.Accounts;
 
 public record VerifyPhoneResult
 {
@@ -12,6 +14,10 @@ public record VerifyPhoneResult
   public VerifyPhoneResult(OneTimePasswordValidation oneTimePasswordValidation) : this()
   {
     OneTimePasswordValidation = oneTimePasswordValidation;
+  }
+
+  public VerifyPhoneResult(CreatedToken profileCompletion) : this(profileCompletion.Token)
+  {
   }
 
   public VerifyPhoneResult(string profileCompletionToken) : this()

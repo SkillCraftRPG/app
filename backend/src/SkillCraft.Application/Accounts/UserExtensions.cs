@@ -1,5 +1,6 @@
 ﻿using Logitar;
 using Logitar.Identity.Contracts;
+using Logitar.Identity.Domain.Users;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;
@@ -76,6 +77,13 @@ public static class UserExtensions
   public static bool IsProfileCompleted(this User user) => user.HasCustomAttribute(ProfileCompletedOnKey);
 
   public static string GetSubject(this User user) => user.Id.ToString();
+
+  public static Phone ToPhone(this AccountPhone source)
+  {
+    Phone phone = new(source.CountryCode, source.Number, extension: null, e164Formatted: string.Empty);
+    phone.E164Formatted = phone.FormatToE164();
+    return phone;
+  }
 
   public static UpdateUserPayload ToUpdateUserPayload(this SaveProfilePayload payload) => new()
   {

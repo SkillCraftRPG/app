@@ -5,7 +5,7 @@ public record VerifyPhonePayload
   public string Locale { get; set; }
   public string ProfileCompletionToken { get; set; }
 
-  public string? PhoneNumber { get; set; }
+  public AccountPhone? Phone { get; set; }
   public OneTimePasswordPayload? OneTimePassword { get; set; }
 
   public VerifyPhonePayload() : this(string.Empty, string.Empty)
@@ -18,9 +18,9 @@ public record VerifyPhonePayload
     ProfileCompletionToken = profileCompletionToken;
   }
 
-  public VerifyPhonePayload(string locale, string profileCompletionToken, string? phoneNumber) : this(locale, profileCompletionToken)
+  public VerifyPhonePayload(string locale, string profileCompletionToken, AccountPhone? phone) : this(locale, profileCompletionToken)
   {
-    PhoneNumber = phoneNumber;
+    Phone = phone;
   }
 
   public VerifyPhonePayload(string locale, string profileCompletionToken, OneTimePasswordPayload? oneTimePassword) : this(locale, profileCompletionToken)

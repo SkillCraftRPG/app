@@ -1,6 +1,8 @@
 ﻿using Bogus;
+using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Passwords;
 using Logitar.Portal.Contracts.Users;
+using System.Text.Json;
 
 namespace SkillCraft.Application.Accounts;
 
@@ -88,6 +90,19 @@ public class OneTimePasswordExtensionsTests
     Assert.Equal("oneTimePassword", exception.ParamName);
   }
 
+  [Fact(DisplayName = "GetPhone: it should return the correct phone.")]
+  public void GetPhone_it_should_return_the_correct_phone()
+  {
+    Phone phone = new("CA", "(514) 845-4636", extension: null, "+15148454636");
+    string json = @"{""CountryCode"":""CA"",""Number"":""(514) 845-4636"",""E164Formatted"":""+15148454636""}";
+
+    OneTimePassword oneTimePassword = new();
+    oneTimePassword.CustomAttributes.Add(new("Phone", json));
+
+    Phone result = oneTimePassword.GetPhone();
+    Assert.Equal(phone, result);
+  }
+
   [Fact(DisplayName = "GetPurpose: it should return the purpose when the One-Time Password has one.")]
   public void GetPurpose_it_should_return_the_purpose_when_the_One_Time_Password_has_one()
   {
@@ -173,6 +188,22 @@ public class OneTimePasswordExtensionsTests
     OneTimePassword password = new();
     password.CustomAttributes.Add(new("Purpose", Purpose.ToUpper()));
     Assert.True(password.HasPurpose(Purpose.ToLower()));
+  }
+
+  [Fact(DisplayName = "SetPhone: it should add the correct custom attribute.")]
+  public void SetPhone_it_should_add_the_correct_custom_attribute()
+  {
+    Phone phone = new("CA", "(514) 845-4636", extension: null, "+15148454636")
+    {
+      IsVerified = true,
+      VerifiedBy = Actor.System,
+      VerifiedOn = DateTime.Now
+    };
+    CreateOneTimePasswordPayload payload = new();
+    payload.SetPhone(phone);
+
+    string json = JsonSerializer.Serialize(phone);
+    Assert.Equal(json, Assert.Single(payload.CustomAttributes, c => c.Key == "Phone").Value);
   }
 
   [Fact(DisplayName = "SetPurpose: it should add the correct custom attribute.")]

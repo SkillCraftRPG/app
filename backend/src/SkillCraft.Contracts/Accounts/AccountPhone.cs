@@ -4,21 +4,23 @@ namespace SkillCraft.Contracts.Accounts;
 
 public record AccountPhone
 {
-  public string? CountryCode { get; set; }
+  private const string DefaultCountryCode = "CA";
+
+  public string CountryCode { get; set; }
   public string Number { get; set; }
 
-  public AccountPhone() : this(string.Empty)
+  public AccountPhone() : this(string.Empty, string.Empty)
   {
   }
 
-  public AccountPhone(IPhone phone) : this(phone.Number, phone.CountryCode)
+  public AccountPhone(IPhone phone) : this(phone.CountryCode ?? DefaultCountryCode, phone.Number)
   {
   }
 
-  public AccountPhone(string number, string? countryCode = null)
+  public AccountPhone(string countryCode, string number)
   {
-    Number = number;
     CountryCode = countryCode;
+    Number = number;
   }
 
   public static AccountPhone? TryCreate(IPhone? phone) => phone == null ? null : new(phone);
