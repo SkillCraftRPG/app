@@ -137,11 +137,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   private async Task<SignInCommandResult> HandleAuthenticationToken(string authenticationToken, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     ValidatedToken validatedToken = await _tokenService.ValidateAsync(authenticationToken, TokenTypes.Authentication, cancellationToken);
-    if (validatedToken.Email == null)
-    {
-      throw new ArgumentException("The email claims are required.", nameof(authenticationToken));
-    }
-    EmailPayload email = new(validatedToken.Email.Address, isVerified: true);
+    EmailPayload email = validatedToken.GetEmailPayload();
+    email.IsVerified = true;
 
     User user;
     if (validatedToken.Subject == null)
@@ -152,7 +149,11 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     {
       Guid userId = validatedToken.GetUserId();
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(authenticationToken));
-      user = await _userService.UpdateAsync(user, email, cancellationToken);
+
+      if (user.Email == null || !user.Email.IsEqualTo(email))
+      {
+        user = await _userService.UpdateAsync(user, email, cancellationToken);
+      }
     }
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
@@ -176,8 +177,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     }
     Guid userId = validatedToken.GetUserId();
     User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
-    PhonePayload? phone = validatedToken.GetPhonePayload();
-    user = await _userService.CompleteProfileAsync(user, payload, phone, cancellationToken);
+    user = await _userService.CompleteProfileAsync(user, payload, cancellationToken); // TODO(fpion): Phone
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }

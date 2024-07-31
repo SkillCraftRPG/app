@@ -26,16 +26,12 @@ internal class UserService : IUserService
     return await _userClient.AuthenticateAsync(payload, context);
   }
 
-  public async Task<User> CompleteProfileAsync(User user, CompleteProfilePayload profile, PhonePayload? phone, CancellationToken cancellationToken)
+  public async Task<User> CompleteProfileAsync(User user, CompleteProfilePayload profile, CancellationToken cancellationToken)
   {
     UpdateUserPayload payload = profile.ToUpdateUserPayload();
     if (profile.Password != null)
     {
       payload.Password = new ChangePasswordPayload(profile.Password);
-    }
-    if (phone != null)
-    {
-      payload.Phone = new Modification<PhonePayload>(phone);
     }
     payload.CompleteProfile();
     payload.SetMultiFactorAuthenticationMode(profile.MultiFactorAuthenticationMode);
@@ -73,16 +69,11 @@ internal class UserService : IUserService
 
   public async Task<User> UpdateAsync(User user, EmailPayload email, CancellationToken cancellationToken)
   {
-    if (user.Email == null || user.Email.Address != email.Address || user.Email.IsVerified != email.IsVerified)
+    UpdateUserPayload payload = new()
     {
-      UpdateUserPayload payload = new()
-      {
-        Email = new Modification<EmailPayload>(email)
-      };
-      RequestContext context = new(user.Id.ToString(), cancellationToken);
-      return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
-    }
-
-    return user;
+      Email = new Modification<EmailPayload>(email)
+    };
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
 }

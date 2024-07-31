@@ -3,4 +3,4 @@ using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Application.Accounts.Commands;
 
-public record VerifyPhoneCommand(VerifyPhonePayload Payload) : Activity, IRequest<VerifyPhoneResult>;
+public record VerifyPhoneCommand(VerifyPhonePayload Payload) : Activity, IRequest<VerifyPhoneResult>; // TODO(fpion): Handler

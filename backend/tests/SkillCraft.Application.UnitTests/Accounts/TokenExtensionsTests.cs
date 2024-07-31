@@ -1,41 +1,67 @@
-﻿using Logitar.Portal.Contracts.Tokens;
+﻿using Bogus;
+using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
-using Logitar.Security.Claims;
-using SkillCraft.Application.Accounts.Constants;
 
 namespace SkillCraft.Application.Accounts;
 
 [Trait(Traits.Category, Categories.Unit)]
 public class TokenExtensionsTests
 {
-  [Theory(DisplayName = "GetPhonePayload: it should return the correct phone from token claims.")]
-  [InlineData(null, "(514) 845-4636", null, "+15148454636", false)]
-  [InlineData("CA", "(514) 845-4636", "98772", "+15148454636", true)]
-  [InlineData("CA", "(514) 845-4636", "98772", "", false)]
-  [InlineData("CA", "          ", null, "+15148454636", false)]
-  public void GetPhonePayload_it_should_return_the_correct_phone_from_token_claims(string? countryCode, string number, string? extension, string e164Formatted, bool isVerified)
+  private readonly Faker _faker = new();
+
+  [Fact(DisplayName = "GetEmailPayload: it should return the correct email payload.")]
+  public void GetEmailPayload_it_should_return_the_correct_email_payload()
+  {
+    ValidatedToken validatedToken = new()
+    {
+      Email = new(_faker.Person.Email)
+      {
+        IsVerified = true
+      }
+    };
+    EmailPayload payload = validatedToken.GetEmailPayload();
+    Assert.Equal(validatedToken.Email.Address, payload.Address);
+    Assert.Equal(validatedToken.Email.IsVerified, payload.IsVerified);
+  }
+
+  [Fact(DisplayName = "GetEmailPayload: it should throw ArgumentException when the email claims are missing.")]
+  public void GetEmailPayload_it_should_throw_ArgumentException_when_the_email_claims_are_missing()
   {
     ValidatedToken validatedToken = new();
-    if (countryCode != null)
-    {
-      validatedToken.Claims.Add(new TokenClaim(ClaimNames.PhoneCountryCode, countryCode));
-    }
-    validatedToken.Claims.Add(new TokenClaim(ClaimNames.PhoneNumberRaw, number));
-    validatedToken.Claims.Add(new TokenClaim(Rfc7519ClaimNames.PhoneNumber, extension == null ? e164Formatted : $"{e164Formatted};ext={extension}"));
-    validatedToken.Claims.Add(new TokenClaim(Rfc7519ClaimNames.IsPhoneVerified, isVerified.ToString().ToLower(), ClaimValueTypes.Boolean));
+    var exception = Assert.Throws<ArgumentException>(() => validatedToken.GetEmailPayload());
+    Assert.StartsWith("The Email is required.", exception.Message);
+    Assert.Equal("validatedToken", exception.ParamName);
+  }
 
-    PhonePayload? phone = validatedToken.GetPhonePayload();
-    if (string.IsNullOrWhiteSpace(number))
+  [Fact(DisplayName = "GetUserId: it should return the user ID.")]
+  public void GetUserId_it_should_return_the_user_Id()
+  {
+    Guid userId = Guid.NewGuid();
+    ValidatedToken validatedToken = new()
     {
-      Assert.Null(phone);
-    }
-    else
+      Subject = userId.ToString()
+    };
+    Assert.Equal(userId, validatedToken.GetUserId());
+  }
+
+  [Fact(DisplayName = "GetUserId: it should throw ArgumentException when the subject claim is missing.")]
+  public void GetUserId_it_should_throw_ArgumentException_when_the_subject_claim_is_missing()
+  {
+    ValidatedToken validatedToken = new();
+    var exception = Assert.Throws<ArgumentException>(() => validatedToken.GetUserId());
+    Assert.StartsWith("The 'Subject' claim is required.", exception.Message);
+    Assert.Equal("validatedToken", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "GetUserId: it should throw ArgumentException when the subject is not a valid Guid.")]
+  public void GetUserId_it_should_throw_ArgumentException_when_the_subject_is_not_a_valid_Guid()
+  {
+    ValidatedToken validatedToken = new()
     {
-      Assert.NotNull(phone);
-      Assert.Equal(countryCode, phone.CountryCode);
-      Assert.Equal(number, phone.Number);
-      Assert.Equal(extension, phone.Extension);
-      Assert.Equal(isVerified, phone.IsVerified);
-    }
+      Subject = _faker.Person.UserName
+    };
+    var exception = Assert.Throws<ArgumentException>(() => validatedToken.GetUserId());
+    Assert.StartsWith($"The Subject claim value '{validatedToken.Subject}' is not a valid Guid.", exception.Message);
+    Assert.Equal("validatedToken", exception.ParamName);
   }
 }
