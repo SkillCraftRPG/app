@@ -29,7 +29,7 @@ internal class ChangePhoneCommandHandler : IRequestHandler<ChangePhoneCommand, C
     new ChangePhoneValidator().ValidateAndThrow(payload);
 
     LocaleUnit locale = new(payload.Locale);
-    User user = command.User;
+    User user = command.GetUser();
 
     if (payload.Phone != null)
     {
