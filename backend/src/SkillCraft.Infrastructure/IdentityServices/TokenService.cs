@@ -1,12 +1,16 @@
 ﻿using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
+using Logitar.Security.Claims;
 using SkillCraft.Application.Accounts;
+using SkillCraft.Application.Accounts.Constants;
 
 namespace SkillCraft.Infrastructure.IdentityServices;
 
 internal class TokenService : ITokenService
 {
+  private const string BooleanClaimValueType = "http://www.w3.org/2001/XMLSchema#boolean";
+
   private readonly ITokenClient _tokenClient;
 
   public TokenService(ITokenClient tokenClient)
@@ -41,7 +45,13 @@ internal class TokenService : ITokenService
     }
     if (phone != null)
     {
-      // TODO(fpion): implement
+      if (phone.CountryCode != null)
+      {
+        payload.Claims.Add(new TokenClaim(ClaimNames.PhoneCountryCode, phone.CountryCode));
+      }
+      payload.Claims.Add(new TokenClaim(ClaimNames.PhoneNumberRaw, phone.Number));
+      payload.Claims.Add(new TokenClaim(Rfc7519ClaimNames.PhoneNumber, phone.FormatToE164WithExtension()));
+      payload.Claims.Add(new TokenClaim(Rfc7519ClaimNames.IsPhoneVerified, phone.IsVerified.ToString().ToLowerInvariant(), BooleanClaimValueType));
     }
     RequestContext context = new(cancellationToken);
     return await _tokenClient.CreateAsync(payload, context);

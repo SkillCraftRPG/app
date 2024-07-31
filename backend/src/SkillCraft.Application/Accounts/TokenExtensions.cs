@@ -1,10 +1,29 @@
 ﻿using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
+using Logitar.Security.Claims;
+using SkillCraft.Application.Accounts.Constants;
 
 namespace SkillCraft.Application.Accounts;
 
-internal static class TokenExtensions
+public static class TokenExtensions
 {
+  private const string PhoneExtensionPrefix = ";ext=";
+
+  public static string FormatToE164WithExtension(this Phone phone)
+  {
+    StringBuilder formatted = new();
+
+    formatted.Append(phone.E164Formatted);
+
+    if (phone.Extension != null)
+    {
+      formatted.Append(PhoneExtensionPrefix);
+      formatted.Append(phone.Extension);
+    }
+
+    return formatted.ToString();
+  }
+
   public static EmailPayload GetEmailPayload(this ValidatedToken validatedToken)
   {
     if (validatedToken.Email == null)
@@ -29,5 +48,50 @@ internal static class TokenExtensions
     }
 
     return userId;
+  }
+
+  public static Phone ParsePhone(this TokenClaim claim)
+  {
+    Phone phone = new();
+
+    int index = claim.Value.IndexOf(PhoneExtensionPrefix);
+    if (index < 0)
+    {
+      phone.Number = phone.E164Formatted = claim.Value;
+    }
+    else
+    {
+      phone.Number = phone.E164Formatted = claim.Value[..index];
+      phone.Extension = claim.Value[(index + PhoneExtensionPrefix.Length)..];
+    }
+
+    return phone;
+  }
+
+  public static PhonePayload? TryGetPhonePayload(this ValidatedToken validatedToken)
+  {
+    PhonePayload payload = new();
+
+    foreach (TokenClaim claim in validatedToken.Claims)
+    {
+      switch (claim.Name)
+      {
+        case ClaimNames.PhoneCountryCode:
+          payload.CountryCode = claim.Value;
+          break;
+        case ClaimNames.PhoneNumberRaw:
+          payload.Number = claim.Value;
+          break;
+        case Rfc7519ClaimNames.PhoneNumber:
+          Phone phone = claim.ParsePhone();
+          payload.Extension = phone.Extension;
+          break;
+        case Rfc7519ClaimNames.IsPhoneVerified:
+          payload.IsVerified = bool.Parse(claim.Value);
+          break;
+      }
+    }
+
+    return string.IsNullOrWhiteSpace(payload.Number) ? null : payload;
   }
 }

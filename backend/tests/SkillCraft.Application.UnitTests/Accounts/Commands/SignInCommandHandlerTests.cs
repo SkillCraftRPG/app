@@ -85,7 +85,7 @@ public class SignInCommandHandlerTests
       validatedToken.Claims.Add(new TokenClaim(Rfc7519ClaimNames.PhoneNumber, phone.Extension == null ? phone.Number : $"{phone.Number};ext={phone.Extension}"));
     }
     _tokenService.Setup(x => x.ValidateAsync(payload.Profile.Token, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(validatedToken);
-    _userService.Setup(x => x.CompleteProfileAsync(user, payload.Profile, _cancellationToken)).ReturnsAsync(user);
+    _userService.Setup(x => x.CompleteProfileAsync(user, payload.Profile, phone, _cancellationToken)).ReturnsAsync(user);
 
     CustomAttribute[] customAttributes =
     [

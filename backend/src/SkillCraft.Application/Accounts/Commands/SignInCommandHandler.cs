@@ -177,7 +177,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     }
     Guid userId = validatedToken.GetUserId();
     User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
-    user = await _userService.CompleteProfileAsync(user, payload, cancellationToken); // TODO(fpion): Phone
+    PhonePayload? phone = validatedToken.TryGetPhonePayload();
+    user = await _userService.CompleteProfileAsync(user, payload, phone, cancellationToken);
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
   }
