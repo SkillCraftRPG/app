@@ -5,6 +5,7 @@ using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
 using Moq;
 using SkillCraft.Application.Accounts.Constants;
+using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Application.Accounts.Commands;
@@ -17,7 +18,9 @@ public class ResetPasswordCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
   private readonly Faker _faker = new();
 
+  private readonly Mock<IActorService> _actorService = new();
   private readonly Mock<IMessageService> _messageService = new();
+  private readonly Mock<ISessionService> _sessionService = new();
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
 
@@ -25,7 +28,7 @@ public class ResetPasswordCommandHandlerTests
 
   public ResetPasswordCommandHandlerTests()
   {
-    _handler = new(_messageService.Object, _tokenService.Object, _userService.Object);
+    _handler = new(_actorService.Object, _messageService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
   }
 
   [Fact(DisplayName = "It should fake sending a message when the user is not found.")]

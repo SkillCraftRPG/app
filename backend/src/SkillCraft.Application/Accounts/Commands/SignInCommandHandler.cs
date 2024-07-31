@@ -194,5 +194,5 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     Session session = await _sessionService.CreateAsync(user, customAttributes, cancellationToken);
     await _actorService.SaveAsync(user, cancellationToken);
     return SignInCommandResult.Success(session);
-  }
+  } // TODO(fpion): refactor
 }
