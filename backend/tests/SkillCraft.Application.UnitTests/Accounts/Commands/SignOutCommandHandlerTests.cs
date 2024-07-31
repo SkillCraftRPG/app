@@ -33,7 +33,7 @@ public class SignOutCommandHandlerTests
   [Fact(DisplayName = "It should sign-out the specified user.")]
   public async Task It_should_sign_out_the_specified_user()
   {
-    SignOutCommand command = SignOutCommand.User(Guid.NewGuid());
+    SignOutCommand command = SignOutCommand.SignOutUser(Guid.NewGuid());
     await _handler.Handle(command, _cancellationToken);
 
     _sessionService.VerifyNoOtherCalls();

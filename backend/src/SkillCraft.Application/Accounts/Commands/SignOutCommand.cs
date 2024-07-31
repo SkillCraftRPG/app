@@ -16,7 +16,7 @@ public record SignOutCommand : Activity, IRequest<Unit>
     SessionId = id
   };
 
-  public static SignOutCommand User(Guid id) => new()
+  public static SignOutCommand SignOutUser(Guid id) => new()
   {
     UserId = id
   };

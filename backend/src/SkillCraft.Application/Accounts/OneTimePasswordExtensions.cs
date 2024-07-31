@@ -45,6 +45,11 @@ public static class OneTimePasswordExtensions
     string json = oneTimePassword.GetCustomAttribute(PhoneKey);
     return JsonSerializer.Deserialize<Phone>(json) ?? throw new ArgumentException($"The phone could not be deserialized.{Environment.NewLine}Json: {json}", nameof(oneTimePassword));
   }
+  public static PhonePayload GetPhonePayload(this OneTimePassword oneTimePassword, bool isVerified = false)
+  {
+    Phone phone = oneTimePassword.GetPhone();
+    return new PhonePayload(phone.CountryCode, phone.Number, phone.Extension, isVerified);
+  }
   public static void SetPhone(this CreateOneTimePasswordPayload payload, Phone phone)
   {
     string json = JsonSerializer.Serialize(phone);

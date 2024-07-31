@@ -48,7 +48,7 @@ public class AccountController : ControllerBase
       User? user = HttpContext.GetUser();
       if (user != null)
       {
-        await _requestPipeline.ExecuteAsync(SignOutCommand.User(user.Id), cancellationToken);
+        await _requestPipeline.ExecuteAsync(SignOutCommand.SignOutUser(user.Id), cancellationToken);
       }
     }
     else
@@ -86,6 +86,14 @@ public class AccountController : ControllerBase
     }
 
     return Ok(response);
+  }
+
+  [HttpPut("/phone/change")]
+  [Authorize(Policy = Policies.User)]
+  public async Task<ActionResult<ChangePhoneResult>> ChangePhoneAsync([FromBody] ChangePhonePayload payload, CancellationToken cancellationToken)
+  {
+    ChangePhoneResult result = await _requestPipeline.ExecuteAsync(new ChangePhoneCommand(payload), cancellationToken);
+    return Ok(result);
   }
 
   [HttpPost("/phone/verify")]

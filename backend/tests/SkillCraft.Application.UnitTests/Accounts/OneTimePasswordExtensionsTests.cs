@@ -102,6 +102,19 @@ public class OneTimePasswordExtensionsTests
     Assert.Equal(phone, result);
   }
 
+  [Fact(DisplayName = "GetPhonePayload: it should return the correct phone payload.")]
+  public void GetPhonePayload_it_should_return_the_correct_phone_payload()
+  {
+    Phone phone = new("CA", "(514) 845-4636", extension: null, "+15148454636");
+    string json = @"{""CountryCode"":""CA"",""Number"":""(514) 845-4636"",""E164Formatted"":""+15148454636""}";
+
+    OneTimePassword oneTimePassword = new();
+    oneTimePassword.CustomAttributes.Add(new("Phone", json));
+
+    PhonePayload result = oneTimePassword.GetPhonePayload();
+    Assert.True(phone.IsEqualTo(result));
+  }
+
   [Fact(DisplayName = "GetPurpose: it should return the purpose when the One-Time Password has one.")]
   public void GetPurpose_it_should_return_the_purpose_when_the_One_Time_Password_has_one()
   {

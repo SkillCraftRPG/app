@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
+using Logitar.Portal.Contracts.Users;
 
 namespace SkillCraft.Application;
 
@@ -10,6 +11,8 @@ public abstract record Activity : IActivity
   [JsonIgnore]
   protected ActivityContext Context => _context ?? throw new InvalidOperationException($"The activity has not been contextualized. You must call the '{nameof(Contextualize)}' method once.");
 
+  [JsonIgnore]
+  public User User => Context.User ?? throw new InvalidOperationException("An authenticated user is required.");
   [JsonIgnore]
   public Actor Actor
   {

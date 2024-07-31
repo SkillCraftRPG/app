@@ -153,12 +153,32 @@ public class UserExtensionsTests
     Assert.False(email.IsEqualTo(payload2));
   }
 
+  [Fact(DisplayName = "IsEqualTo: it should return false when the phones are not equal.")]
+  public void IsEqualTo_it_should_return_false_when_the_phones_are_not_equal()
+  {
+    Phone phone = new("CA", "(514) 845-4636", null, "+5148454636");
+
+    PhonePayload payload1 = new(phone.CountryCode, phone.Number, phone.Extension, !phone.IsVerified);
+    Assert.False(phone.IsEqualTo(payload1));
+
+    PhonePayload payload2 = new(phone.CountryCode, phone.Number, "12345", phone.IsVerified);
+    Assert.False(phone.IsEqualTo(payload2));
+  }
+
   [Fact(DisplayName = "IsEqualTo: it should return true when the emails are equal.")]
   public void IsEqualTo_it_should_return_true_when_the_emails_are_equal()
   {
     Email email = new(_faker.Person.Email);
     EmailPayload payload = new(_faker.Person.Email, email.IsVerified);
     Assert.True(email.IsEqualTo(payload));
+  }
+
+  [Fact(DisplayName = "IsEqualTo: it should return true when the phones are equal.")]
+  public void IsEqualTo_it_should_return_true_when_the_phones_are_equal()
+  {
+    Phone phone = new("CA", "(514) 845-4636", "12345", "+5148454636");
+    PhonePayload payload = new(phone.CountryCode, phone.Number, phone.Extension, phone.IsVerified);
+    Assert.True(phone.IsEqualTo(payload));
   }
 
   [Fact(DisplayName = "IsProfileCompleted: it should return false when the user profile is not completed.")]

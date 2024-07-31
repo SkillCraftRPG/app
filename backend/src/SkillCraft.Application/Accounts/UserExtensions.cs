@@ -46,6 +46,11 @@ public static class UserExtensions
   {
     return email.Address == other.Address && email.IsVerified == other.IsVerified;
   }
+  public static bool IsEqualTo(this Phone phone, PhonePayload other)
+  {
+    return phone.CountryCode == other.CountryCode && phone.Number == other.Number
+      && phone.Extension == other.Extension && phone.IsVerified == other.IsVerified;
+  }
 
   public static MultiFactorAuthenticationMode? GetMultiFactorAuthenticationMode(this User user)
   {
