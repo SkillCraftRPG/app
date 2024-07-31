@@ -24,6 +24,10 @@ internal class TokenService : ITokenService
   {
     return await CreateAsync(user?.GetSubject(), email, phone: null, type, cancellationToken);
   }
+  public async Task<CreatedToken> CreateAsync(User? user, Phone phone, string type, CancellationToken cancellationToken)
+  {
+    return await CreateAsync(user?.GetSubject(), email: null, phone, type, cancellationToken);
+  }
   private async Task<CreatedToken> CreateAsync(string? subject, Email? email, Phone? phone, string type, CancellationToken cancellationToken)
   {
     CreateTokenPayload payload = new()
@@ -56,7 +60,7 @@ internal class TokenService : ITokenService
   {
     return await ValidateAsync(token, consume: true, type, cancellationToken);
   }
-  private async Task<ValidatedToken> ValidateAsync(string token, bool consume, string type, CancellationToken cancellationToken)
+  public async Task<ValidatedToken> ValidateAsync(string token, bool consume, string type, CancellationToken cancellationToken)
   {
     ValidateTokenPayload payload = new(token)
     {

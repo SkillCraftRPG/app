@@ -150,7 +150,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     }
     else
     {
-      Guid userId = Guid.Parse(validatedToken.Subject);
+      Guid userId = validatedToken.GetUserId();
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(authenticationToken));
       user = await _userService.UpdateAsync(user, email, cancellationToken);
     }
@@ -174,7 +174,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     {
       throw new ArgumentException($"The '{nameof(validatedToken.Subject)}' claim is required.", nameof(payload));
     }
-    Guid userId = Guid.Parse(validatedToken.Subject);
+    Guid userId = validatedToken.GetUserId();
     User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
     PhonePayload? phone = validatedToken.GetPhonePayload();
     user = await _userService.CompleteProfileAsync(user, payload, phone, cancellationToken);

@@ -24,12 +24,12 @@ public record SignInCommandResult
 
   public static SignInCommandResult RequireOneTimePasswordValidation(OneTimePassword oneTimePassword, SentMessage sentMessage) => new()
   {
-    OneTimePasswordValidation = new OneTimePasswordValidation(oneTimePassword.Id, sentMessage)
+    OneTimePasswordValidation = new OneTimePasswordValidation(oneTimePassword, sentMessage)
   };
 
-  public static SignInCommandResult RequireProfileCompletion(CreatedToken createdToken) => new()
+  public static SignInCommandResult RequireProfileCompletion(CreatedToken profileCompletion) => new()
   {
-    ProfileCompletionToken = createdToken.Token
+    ProfileCompletionToken = profileCompletion.Token
   };
 
   public static SignInCommandResult Success(Session session) => new()

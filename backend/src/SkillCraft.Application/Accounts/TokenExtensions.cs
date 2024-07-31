@@ -39,4 +39,19 @@ internal static class TokenExtensions
     }
     return phone;
   }
+
+  public static Guid GetUserId(this ValidatedToken validatedToken)
+  {
+    if (validatedToken.Subject == null)
+    {
+      throw new ArgumentException($"The '{nameof(validatedToken.Subject)}' claim is required.", nameof(validatedToken));
+    }
+
+    if (!Guid.TryParse(validatedToken.Subject, out Guid userId))
+    {
+      throw new ArgumentException($"The Subject claim value '{validatedToken.Subject}' is not a valid Guid.", nameof(validatedToken));
+    }
+
+    return userId;
+  }
 }
