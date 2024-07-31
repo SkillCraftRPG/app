@@ -80,4 +80,14 @@ internal class UserService : IUserService
     RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
+
+  public async Task<User> UpdateAsync(User user, PhonePayload phone, CancellationToken cancellationToken)
+  {
+    UpdateUserPayload payload = new()
+    {
+      Phone = new Modification<PhonePayload>(phone)
+    };
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
+  }
 }

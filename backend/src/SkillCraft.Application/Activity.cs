@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
+using Logitar.Portal.Contracts.Users;
 
 namespace SkillCraft.Application;
 
@@ -44,4 +45,7 @@ public abstract record Activity : IActivity
 
     _context = context;
   }
+
+  public User GetUser() => TryGetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
+  public User? TryGetUser() => Context.User;
 }

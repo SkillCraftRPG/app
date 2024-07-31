@@ -13,4 +13,5 @@ public interface IUserService
   Task<User?> FindAsync(Guid id, CancellationToken cancellationToken = default);
   Task SignOutAsync(Guid id, CancellationToken cancellationToken = default);
   Task<User> UpdateAsync(User user, EmailPayload email, CancellationToken cancellationToken = default);
+  Task<User> UpdateAsync(User user, PhonePayload phone, CancellationToken cancellationToken = default);
 }
