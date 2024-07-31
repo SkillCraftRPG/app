@@ -186,8 +186,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   {
     if (!user.IsProfileCompleted())
     {
-      CreatedToken token = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
-      return SignInCommandResult.RequireProfileCompletion(token);
+      CreatedToken profileCompletion = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
+      return SignInCommandResult.RequireProfileCompletion(profileCompletion);
     }
 
     Session session = await _sessionService.CreateAsync(user, customAttributes, cancellationToken);
