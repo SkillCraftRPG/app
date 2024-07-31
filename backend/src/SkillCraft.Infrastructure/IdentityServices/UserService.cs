@@ -73,16 +73,11 @@ internal class UserService : IUserService
 
   public async Task<User> UpdateAsync(User user, EmailPayload email, CancellationToken cancellationToken)
   {
-    if (user.Email == null || user.Email.Address != email.Address || user.Email.IsVerified != email.IsVerified)
+    UpdateUserPayload payload = new()
     {
-      UpdateUserPayload payload = new()
-      {
-        Email = new Modification<EmailPayload>(email)
-      };
-      RequestContext context = new(user.Id.ToString(), cancellationToken);
-      return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
-    }
-
-    return user;
+      Email = new Modification<EmailPayload>(email)
+    };
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
 }

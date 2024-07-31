@@ -1,5 +1,6 @@
 ﻿using Logitar;
 using Logitar.Identity.Contracts;
+using Logitar.Identity.Domain.Users;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Accounts;
@@ -41,6 +42,11 @@ public static class UserExtensions
     return customAttributes.Single().Value;
   }
 
+  public static bool IsEqualTo(this Email email, EmailPayload other)
+  {
+    return email.Address == other.Address && email.IsVerified == other.IsVerified;
+  }
+
   public static MultiFactorAuthenticationMode? GetMultiFactorAuthenticationMode(this User user)
   {
     MultiFactorAuthenticationMode mode;
@@ -67,10 +73,17 @@ public static class UserExtensions
     string completedOn = DateTime.UtcNow.ToISOString();
     payload.CustomAttributes.Add(new CustomAttributeModification(ProfileCompletedOnKey, completedOn));
   }
-  public static DateTime GetProfileCompleted(this User user) => DateTime.Parse(user.GetCustomAttribute(ProfileCompletedOnKey));
+  public static DateTime GetProfileCompleted(this User user) => DateTime.Parse(user.GetCustomAttribute(ProfileCompletedOnKey)).AsUniversalTime();
   public static bool IsProfileCompleted(this User user) => user.HasCustomAttribute(ProfileCompletedOnKey);
 
   public static string GetSubject(this User user) => user.Id.ToString();
+
+  public static Phone ToPhone(this AccountPhone source)
+  {
+    Phone phone = new(source.CountryCode, source.Number, extension: null, e164Formatted: string.Empty);
+    phone.E164Formatted = phone.FormatToE164();
+    return phone;
+  }
 
   public static UpdateUserPayload ToUpdateUserPayload(this SaveProfilePayload payload) => new()
   {

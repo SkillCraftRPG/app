@@ -236,7 +236,6 @@ public class SignInCommandHandlerTests
       }
     };
     _userService.Setup(x => x.FindAsync(user.Id, _cancellationToken)).ReturnsAsync(user);
-    _userService.Setup(x => x.UpdateAsync(user, It.Is<EmailPayload>(e => e.Address == user.Email.Address && e.IsVerified), _cancellationToken)).ReturnsAsync(user);
 
     ValidatedToken validatedToken = new()
     {
@@ -256,6 +255,8 @@ public class SignInCommandHandlerTests
     Assert.Null(result.OneTimePasswordValidation);
     Assert.Equal(createdToken.Token, result.ProfileCompletionToken);
     Assert.Null(result.Session);
+
+    _userService.Verify(x => x.UpdateAsync(It.IsAny<User>(), It.IsAny<EmailPayload>(), It.IsAny<CancellationToken>()), Times.Never);
   }
 
   [Fact(DisplayName = "It should require the user to complete its profile (Credentials).")]
@@ -525,23 +526,6 @@ public class SignInCommandHandlerTests
     Assert.Equal("user", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentException when the email claims are missing.")]
-  public async Task It_should_throw_ArgumentException_when_the_email_claims_are_missing()
-  {
-    SignInPayload payload = new(_locale.Code)
-    {
-      AuthenticationToken = "AuthenticationToken"
-    };
-
-    ValidatedToken validatedToken = new();
-    _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
-
-    SignInCommand command = new(payload, CustomAttributes: []);
-    var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.StartsWith("The email claims are required.", exception.Message);
-    Assert.Equal("authenticationToken", exception.ParamName);
-  }
-
   [Fact(DisplayName = "It should throw ArgumentException when the subject claim is missing.")]
   public async Task It_should_throw_ArgumentException_when_the_subject_claim_is_missing()
   {
@@ -662,5 +646,50 @@ public class SignInCommandHandlerTests
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     ValidationFailure error = Assert.Single(exception.Errors);
     Assert.Equal("SignInValidator", error.ErrorCode);
+  }
+
+  [Fact(DisplayName = "It should update an user email when it has changed.")]
+  public async Task It_should_update_an_user_email_when_it_has_changed()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      AuthenticationToken = "AuthenticationToken"
+    };
+
+    User user = new(_faker.Person.Email)
+    {
+      Id = Guid.NewGuid(),
+      Email = new(_faker.Person.Email)
+      {
+        IsVerified = false
+      }
+    };
+    EmailPayload email = new(user.Email.Address, isVerified: true);
+    _userService.Setup(x => x.FindAsync(user.Id, _cancellationToken)).ReturnsAsync(user);
+    _userService.Setup(x => x.UpdateAsync(user, email, _cancellationToken)).ReturnsAsync(user);
+
+    ValidatedToken validatedToken = new()
+    {
+      Subject = user.GetSubject(),
+      Email = new Email(user.Email.Address)
+      {
+        IsVerified = false
+      }
+    };
+    _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
+
+    CreatedToken createdToken = new("ProfileToken");
+    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Equal(createdToken.Token, result.ProfileCompletionToken);
+    Assert.Null(result.Session);
+
+    _userService.Verify(x => x.UpdateAsync(user, email, _cancellationToken), Times.Once);
   }
 }

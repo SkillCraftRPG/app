@@ -6,9 +6,7 @@ namespace SkillCraft.Application.Accounts;
 
 public static class OneTimePasswordExtensions
 {
-  private const string PhoneCountryCodeKey = "PhoneCountryCode";
-  private const string PhoneNumberKey = "PhoneNumber";
-  private const string PhoneE164FormattedKey = "PhoneE164Formatted";
+  private const string PhoneKey = "Phone";
   private const string PurposeKey = "Purpose";
   private const string UserIdKey = "UserId";
 
@@ -42,14 +40,15 @@ public static class OneTimePasswordExtensions
     return customAttributes.Single().Value;
   }
 
+  public static Phone GetPhone(this OneTimePassword oneTimePassword)
+  {
+    string json = oneTimePassword.GetCustomAttribute(PhoneKey);
+    return JsonSerializer.Deserialize<Phone>(json) ?? throw new ArgumentException($"The phone could not be deserialized.{Environment.NewLine}Json: {json}", nameof(oneTimePassword));
+  }
   public static void SetPhone(this CreateOneTimePasswordPayload payload, Phone phone)
   {
-    if (phone.CountryCode != null)
-    {
-      payload.CustomAttributes.Add(new CustomAttribute(PhoneCountryCodeKey, phone.CountryCode));
-    }
-    payload.CustomAttributes.Add(new CustomAttribute(PhoneNumberKey, phone.Number));
-    payload.CustomAttributes.Add(new CustomAttribute(PhoneE164FormattedKey, phone.E164Formatted));
+    string json = JsonSerializer.Serialize(phone);
+    payload.CustomAttributes.Add(new CustomAttribute(PhoneKey, json));
   }
 
   public static void EnsurePurpose(this OneTimePassword oneTimePassword, string purpose)
@@ -72,5 +71,10 @@ public static class OneTimePasswordExtensions
   public static void SetUserId(this CreateOneTimePasswordPayload payload, User user)
   {
     payload.CustomAttributes.Add(new CustomAttribute(UserIdKey, user.Id.ToString()));
+  }
+  public static Guid? TryGetUserId(this OneTimePassword oneTimePassword)
+  {
+    string? value = oneTimePassword.TryGetCustomAttribute(UserIdKey);
+    return value == null ? null : Guid.Parse(value);
   }
 }

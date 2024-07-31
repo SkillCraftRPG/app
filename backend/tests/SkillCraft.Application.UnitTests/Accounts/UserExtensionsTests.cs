@@ -141,6 +141,26 @@ public class UserExtensionsTests
     Assert.Equal("user", exception.ParamName);
   }
 
+  [Fact(DisplayName = "IsEqualTo: it should return false when the emails are not equal.")]
+  public void IsEqualTo_it_should_return_false_when_the_emails_are_not_equal()
+  {
+    Email email = new(_faker.Person.Email);
+
+    EmailPayload payload1 = new(_faker.Person.Email, !email.IsVerified);
+    Assert.False(email.IsEqualTo(payload1));
+
+    EmailPayload payload2 = new(_faker.Internet.Email(), email.IsVerified);
+    Assert.False(email.IsEqualTo(payload2));
+  }
+
+  [Fact(DisplayName = "IsEqualTo: it should return true when the emails are equal.")]
+  public void IsEqualTo_it_should_return_true_when_the_emails_are_equal()
+  {
+    Email email = new(_faker.Person.Email);
+    EmailPayload payload = new(_faker.Person.Email, email.IsVerified);
+    Assert.True(email.IsEqualTo(payload));
+  }
+
   [Fact(DisplayName = "IsProfileCompleted: it should return false when the user profile is not completed.")]
   public void IsProfileCompleted_it_should_return_false_when_the_user_profile_is_not_completed()
   {
@@ -166,6 +186,18 @@ public class UserExtensionsTests
 
     payload.SetMultiFactorAuthenticationMode(mfaMode);
     Assert.Contains(payload.CustomAttributes, c => c.Key == nameof(MultiFactorAuthenticationMode) && c.Value == mfaMode.ToString());
+  }
+
+  [Theory(DisplayName = "ToPhone: it should return the correct phone.")]
+  [InlineData("CA", "(514) 845-4636", "+15148454636")]
+  public void ToPhone_it_should_return_the_correct_phone(string countryCode, string number, string e164Formatted)
+  {
+    AccountPhone phone = new(countryCode, number);
+    Phone result = phone.ToPhone();
+    Assert.Equal(countryCode, result.CountryCode);
+    Assert.Equal(number, result.Number);
+    Assert.Null(result.Extension);
+    Assert.Equal(e164Formatted, result.E164Formatted);
   }
 
   [Fact(DisplayName = "ToUpdateUserPayload: it should return the correct payload.")]
@@ -214,7 +246,7 @@ public class UserExtensionsTests
     Assert.NotNull(profile.Phone);
 
     Assert.Equal(user.CreatedOn, profile.CreatedOn);
-    Assert.Equal(completedOn, profile.CompletedOn);
+    Assert.Equal(completedOn.AsUniversalTime(), profile.CompletedOn);
     Assert.Equal(user.UpdatedOn, profile.UpdatedOn);
     Assert.Equal(user.PasswordChangedOn, profile.PasswordChangedOn);
     Assert.Equal(user.AuthenticatedOn, profile.AuthenticatedOn);

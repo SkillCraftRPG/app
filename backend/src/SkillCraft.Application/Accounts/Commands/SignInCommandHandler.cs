@@ -137,11 +137,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   private async Task<SignInCommandResult> HandleAuthenticationToken(string authenticationToken, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
     ValidatedToken validatedToken = await _tokenService.ValidateAsync(authenticationToken, TokenTypes.Authentication, cancellationToken);
-    if (validatedToken.Email == null)
-    {
-      throw new ArgumentException("The email claims are required.", nameof(authenticationToken));
-    }
-    EmailPayload email = new(validatedToken.Email.Address, isVerified: true);
+    EmailPayload email = validatedToken.GetEmailPayload();
+    email.IsVerified = true;
 
     User user;
     if (validatedToken.Subject == null)
@@ -150,9 +147,13 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     }
     else
     {
-      Guid userId = Guid.Parse(validatedToken.Subject);
+      Guid userId = validatedToken.GetUserId();
       user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(authenticationToken));
-      user = await _userService.UpdateAsync(user, email, cancellationToken);
+
+      if (user.Email == null || !user.Email.IsEqualTo(email))
+      {
+        user = await _userService.UpdateAsync(user, email, cancellationToken);
+      }
     }
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
@@ -174,9 +175,9 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     {
       throw new ArgumentException($"The '{nameof(validatedToken.Subject)}' claim is required.", nameof(payload));
     }
-    Guid userId = Guid.Parse(validatedToken.Subject);
+    Guid userId = validatedToken.GetUserId();
     User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
-    PhonePayload? phone = validatedToken.GetPhonePayload();
+    PhonePayload? phone = validatedToken.TryGetPhonePayload();
     user = await _userService.CompleteProfileAsync(user, payload, phone, cancellationToken);
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
@@ -186,8 +187,8 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   {
     if (!user.IsProfileCompleted())
     {
-      CreatedToken token = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
-      return SignInCommandResult.RequireProfileCompletion(token);
+      CreatedToken profileCompletion = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
+      return SignInCommandResult.RequireProfileCompletion(profileCompletion);
     }
 
     Session session = await _sessionService.CreateAsync(user, customAttributes, cancellationToken);

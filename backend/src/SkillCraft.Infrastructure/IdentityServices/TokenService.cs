@@ -9,6 +9,8 @@ namespace SkillCraft.Infrastructure.IdentityServices;
 
 internal class TokenService : ITokenService
 {
+  private const string BooleanClaimValueType = "http://www.w3.org/2001/XMLSchema#boolean";
+
   private readonly ITokenClient _tokenClient;
 
   public TokenService(ITokenClient tokenClient)
@@ -23,6 +25,10 @@ internal class TokenService : ITokenService
   public async Task<CreatedToken> CreateAsync(User? user, Email email, string type, CancellationToken cancellationToken)
   {
     return await CreateAsync(user?.GetSubject(), email, phone: null, type, cancellationToken);
+  }
+  public async Task<CreatedToken> CreateAsync(User? user, Phone phone, string type, CancellationToken cancellationToken)
+  {
+    return await CreateAsync(user?.GetSubject(), email: null, phone, type, cancellationToken);
   }
   private async Task<CreatedToken> CreateAsync(string? subject, Email? email, Phone? phone, string type, CancellationToken cancellationToken)
   {
@@ -44,9 +50,8 @@ internal class TokenService : ITokenService
         payload.Claims.Add(new TokenClaim(ClaimNames.PhoneCountryCode, phone.CountryCode));
       }
       payload.Claims.Add(new TokenClaim(ClaimNames.PhoneNumberRaw, phone.Number));
-      string phoneNumber = phone.Extension == null ? phone.E164Formatted : $"{phone.E164Formatted};ext={phone.Extension}";
-      payload.Claims.Add(new TokenClaim(Rfc7519ClaimNames.PhoneNumber, phoneNumber));
-      payload.Claims.Add(new TokenClaim(Rfc7519ClaimNames.IsPhoneVerified, phone.IsVerified.ToString().ToLower(), ClaimValueTypes.Boolean));
+      payload.Claims.Add(new TokenClaim(Rfc7519ClaimNames.PhoneNumber, phone.FormatToE164WithExtension()));
+      payload.Claims.Add(new TokenClaim(Rfc7519ClaimNames.IsPhoneVerified, phone.IsVerified.ToString().ToLowerInvariant(), BooleanClaimValueType));
     }
     RequestContext context = new(cancellationToken);
     return await _tokenClient.CreateAsync(payload, context);
@@ -56,7 +61,7 @@ internal class TokenService : ITokenService
   {
     return await ValidateAsync(token, consume: true, type, cancellationToken);
   }
-  private async Task<ValidatedToken> ValidateAsync(string token, bool consume, string type, CancellationToken cancellationToken)
+  public async Task<ValidatedToken> ValidateAsync(string token, bool consume, string type, CancellationToken cancellationToken)
   {
     ValidateTokenPayload payload = new(token)
     {
