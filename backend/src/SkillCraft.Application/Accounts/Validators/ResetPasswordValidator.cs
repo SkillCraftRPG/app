@@ -13,7 +13,6 @@ internal class ResetPasswordValidator : AbstractValidator<ResetPasswordPayload>
 
     When(x => x.Reset != null, () => RuleFor(x => x.Reset!).SetValidator(new ResetPayloadValidator(passwordSettings)));
 
-
     RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(ResetPasswordValidator))
       .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.EmailAddress)}, {nameof(x.Reset)}.");
   }
