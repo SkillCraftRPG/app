@@ -5,9 +5,7 @@ public record ResetPasswordPayload
   public string Locale { get; set; }
 
   public string? EmailAddress { get; set; }
-
-  public string? Token { get; set; } // TODO(fpion): not nullable, same object as Password
-  public string? Password { get; set; } // TODO(fpion): not nullable, same object as Token
+  public ResetPayload? Reset { get; set; }
 
   public ResetPasswordPayload() : this(string.Empty)
   {
@@ -23,9 +21,8 @@ public record ResetPasswordPayload
     EmailAddress = emailAddress;
   }
 
-  public ResetPasswordPayload(string locale, string token, string password) : this(locale)
+  public ResetPasswordPayload(string locale, ResetPayload reset) : this(locale)
   {
-    Token = token;
-    Password = password;
+    Reset = reset;
   }
 }

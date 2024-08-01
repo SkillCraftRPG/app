@@ -42,12 +42,12 @@ internal class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordComman
     {
       return await HandleEmailAddressAsync(payload.EmailAddress.Trim(), locale, cancellationToken);
     }
-    else if (!string.IsNullOrEmpty(payload.Token) && !string.IsNullOrWhiteSpace(payload.Password))
+    else if (payload.Reset != null)
     {
-      return await HandleNewPasswordAsync(payload.Token.Trim(), payload.Password, command.CustomAttributes, cancellationToken);
+      return await HandleResetAsync(payload.Reset, command.CustomAttributes, cancellationToken);
     }
 
-    throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.EmailAddress)}.", nameof(command)); // TODO(fpion): implement
+    throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.EmailAddress)}, {nameof(payload.Reset)}.", nameof(command));
   }
 
   private async Task<ResetPasswordResult> HandleEmailAddressAsync(string emailAddress, LocaleUnit locale, CancellationToken cancellationToken)
@@ -55,11 +55,11 @@ internal class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordComman
     SentMessages sentMessages;
 
     User? user = await _userService.FindAsync(emailAddress, cancellationToken);
-    if (user == null)
+    if (user == null || !user.HasPassword)
     {
       sentMessages = new([Guid.NewGuid()]);
     }
-    else // TODO(fpion): can we reset the password of an user without any password?
+    else
     {
       CreatedToken passwordRecovery = await _tokenService.CreateAsync(user, TokenTypes.PasswordRecovery, cancellationToken);
       Dictionary<string, string> variables = new()
@@ -74,26 +74,15 @@ internal class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordComman
     return ResetPasswordResult.RecoveryLinkSent(sentMessage);
   }
 
-  private async Task<ResetPasswordResult> HandleNewPasswordAsync(string token, string password, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken) // TODO(fpion): rename
+  private async Task<ResetPasswordResult> HandleResetAsync(ResetPayload payload, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
   {
-    ValidatedToken validatedToken = await _tokenService.ValidateAsync(token, TokenTypes.PasswordRecovery, cancellationToken);
+    ValidatedToken validatedToken = await _tokenService.ValidateAsync(payload.Token, TokenTypes.PasswordRecovery, cancellationToken);
     Guid userId = validatedToken.GetUserId();
-    User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(token));
-    user = await _userService.ResetPasswordAsync(user, password, cancellationToken);
-
-    return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
-  }
-
-  private async Task<ResetPasswordResult> EnsureProfileIsCompletedAsync(User user, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
-  {
-    if (!user.IsProfileCompleted())
-    {
-      CreatedToken profileCompletion = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
-      return ResetPasswordResult.RequireProfileCompletion(profileCompletion);
-    }
+    User user = await _userService.FindAsync(userId, cancellationToken) ?? throw new ArgumentException($"The user 'Id={userId}' could not be found.", nameof(payload));
+    user = await _userService.ResetPasswordAsync(user, payload.Password, cancellationToken);
 
     Session session = await _sessionService.CreateAsync(user, customAttributes, cancellationToken);
-    await _actorService.SaveAsync(user, cancellationToken); // TODO(fpion): is it really necessary?
+    await _actorService.SaveAsync(user, cancellationToken);
     return ResetPasswordResult.Success(session);
-  } // TODO(fpion): refactor
+  }
 }
