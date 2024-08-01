@@ -1,11 +1,14 @@
-﻿using Logitar.Identity.Domain.Shared;
+﻿using FluentValidation;
+using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
+using Logitar.Portal.Contracts.Realms;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Tokens;
 using Logitar.Portal.Contracts.Users;
 using MediatR;
 using SkillCraft.Application.Accounts.Constants;
+using SkillCraft.Application.Accounts.Validators;
 using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
 
@@ -15,18 +18,21 @@ internal class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordComman
 {
   private readonly IActorService _actorService;
   private readonly IMessageService _messageService;
+  private readonly IRealmService _realmService;
   private readonly ISessionService _sessionService;
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
 
   public ResetPasswordCommandHandler(IActorService actorService,
     IMessageService messageService,
+    IRealmService realmService,
     ISessionService sessionService,
     ITokenService tokenService,
     IUserService userService)
   {
     _actorService = actorService;
     _messageService = messageService;
+    _realmService = realmService;
     _sessionService = sessionService;
     _tokenService = tokenService;
     _userService = userService;
@@ -34,8 +40,10 @@ internal class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordComman
 
   public async Task<ResetPasswordResult> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
   {
+    Realm realm = await _realmService.FindAsync(cancellationToken);
+
     ResetPasswordPayload payload = command.Payload;
-    // TODO(fpion): validate payload
+    new ResetPasswordValidator(realm.PasswordSettings).ValidateAndThrow(payload);
     LocaleUnit locale = new(payload.Locale);
 
     if (!string.IsNullOrWhiteSpace(payload.EmailAddress))

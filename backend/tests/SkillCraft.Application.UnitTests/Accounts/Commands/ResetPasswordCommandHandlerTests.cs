@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using FluentValidation.Results;
 using Logitar.Identity.Domain.Shared;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Messages;
@@ -24,15 +25,20 @@ public class ResetPasswordCommandHandlerTests
 
   private readonly Mock<IActorService> _actorService = new();
   private readonly Mock<IMessageService> _messageService = new();
+  private readonly Mock<IRealmService> _realmService = new();
   private readonly Mock<ISessionService> _sessionService = new();
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
 
   private readonly ResetPasswordCommandHandler _handler;
 
+  private readonly RealmMock _realm = new();
+
   public ResetPasswordCommandHandlerTests()
   {
-    _handler = new(_actorService.Object, _messageService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
+    _handler = new(_actorService.Object, _messageService.Object, _realmService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
+
+    _realmService.Setup(x => x.FindAsync(_cancellationToken)).ReturnsAsync(_realm);
   }
 
   [Fact(DisplayName = "It should fake sending a message when the user has no password.")]
@@ -156,5 +162,19 @@ public class ResetPasswordCommandHandlerTests
     var exception = await Assert.ThrowsAsync<ArgumentException>(() => _handler.Handle(command, _cancellationToken));
     Assert.StartsWith($"The user 'Id={userId}' could not be found.", exception.Message);
     Assert.Equal("payload", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
+  public async Task It_should_throw_ValidationException_when_the_payload_it_not_valid()
+  {
+    ResetPasswordPayload payload = new(_locale.Code)
+    {
+      EmailAddress = _faker.Person.Email,
+      Reset = new ResetPayload("PasswordRecoveryToken", PasswordString)
+    };
+    ResetPasswordCommand command = new(payload, CustomAttributes: []);
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
+    ValidationFailure error = Assert.Single(exception.Errors);
+    Assert.Equal("ResetPasswordValidator", error.ErrorCode);
   }
 }
