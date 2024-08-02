@@ -66,13 +66,32 @@ public class UserExtensionsTests
     Assert.Null(user.GetMultiFactorAuthenticationMode());
   }
 
+  [Fact(DisplayName = "GetUserType: it should return default when the user does not have the custom attribute.")]
+  public void GetUserType_it_should_return_default_when_the_user_does_not_have_the_custom_attribute()
+  {
+    User user = new(_faker.Person.UserName);
+    Assert.Equal(default, user.GetUserType());
+  }
+
   [Theory(DisplayName = "GetMultiFactorAuthenticationMode: it should return the correct value when the user has the custom attribute.")]
+  [InlineData(MultiFactorAuthenticationMode.None)]
+  [InlineData(MultiFactorAuthenticationMode.Email)]
   [InlineData(MultiFactorAuthenticationMode.Phone)]
   public void GetMultiFactorAuthenticationMode_it_should_return_the_correct_value_when_the_user_has_the_custom_attribute(MultiFactorAuthenticationMode mfaMode)
   {
     User user = new(_faker.Person.UserName);
     user.CustomAttributes.Add(new(nameof(MultiFactorAuthenticationMode), mfaMode.ToString()));
     Assert.Equal(mfaMode, user.GetMultiFactorAuthenticationMode());
+  }
+
+  [Theory(DisplayName = "GetUserType: it should return the correct value when the user has the custom attribute.")]
+  [InlineData(UserType.Player)]
+  [InlineData(UserType.Gamemaster)]
+  public void GetUserType_it_should_return_the_correct_value_when_the_user_has_the_custom_attribute(UserType userType)
+  {
+    User user = new(_faker.Person.UserName);
+    user.CustomAttributes.Add(new(nameof(UserType), userType.ToString()));
+    Assert.Equal(userType, user.GetUserType());
   }
 
   [Fact(DisplayName = "GetProfileCompleted: it should throw ArgumentException when the user profile is not completed.")]
@@ -198,7 +217,9 @@ public class UserExtensionsTests
   }
 
   [Theory(DisplayName = "SetMultiFactorAuthenticationMode: it should the correct custom attribute on the payload")]
+  [InlineData(MultiFactorAuthenticationMode.None)]
   [InlineData(MultiFactorAuthenticationMode.Email)]
+  [InlineData(MultiFactorAuthenticationMode.Phone)]
   public void SetMultiFactorAuthenticationMode_it_should_the_correct_custom_attribute_on_the_payload(MultiFactorAuthenticationMode mfaMode)
   {
     UpdateUserPayload payload = new();
@@ -206,6 +227,18 @@ public class UserExtensionsTests
 
     payload.SetMultiFactorAuthenticationMode(mfaMode);
     Assert.Contains(payload.CustomAttributes, c => c.Key == nameof(MultiFactorAuthenticationMode) && c.Value == mfaMode.ToString());
+  }
+
+  [Theory(DisplayName = "SetUserType: it should the correct custom attribute on the payload")]
+  [InlineData(UserType.Player)]
+  [InlineData(UserType.Gamemaster)]
+  public void SetUserType_it_should_the_correct_custom_attribute_on_the_payload(UserType userType)
+  {
+    UpdateUserPayload payload = new();
+    Assert.Empty(payload.CustomAttributes);
+
+    payload.SetUserType(userType);
+    Assert.Contains(payload.CustomAttributes, c => c.Key == nameof(UserType) && c.Value == userType.ToString());
   }
 
   [Theory(DisplayName = "ToPhone: it should return the correct phone.")]
@@ -244,6 +277,8 @@ public class UserExtensionsTests
   public void ToUserProfile_it_should_return_the_correct_user_profile()
   {
     DateTime completedOn = DateTime.Now.AddHours(-6);
+    MultiFactorAuthenticationMode mfaMode = MultiFactorAuthenticationMode.Phone;
+    UserType userType = UserType.Gamemaster;
     User user = new(_faker.Person.UserName)
     {
       CreatedOn = DateTime.Now.AddDays(-1),
@@ -260,8 +295,9 @@ public class UserExtensionsTests
       Locale = new Locale("fr-CA"),
       TimeZone = "America/Montreal"
     };
-    user.CustomAttributes.Add(new CustomAttribute("MultiFactorAuthenticationMode", MultiFactorAuthenticationMode.Phone.ToString()));
+    user.CustomAttributes.Add(new CustomAttribute("MultiFactorAuthenticationMode", mfaMode.ToString()));
     user.CustomAttributes.Add(new CustomAttribute("ProfileCompletedOn", completedOn.ToISOString()));
+    user.CustomAttributes.Add(new CustomAttribute("UserType", userType.ToString()));
     UserProfile profile = user.ToUserProfile();
     Assert.NotNull(profile.Phone);
 
@@ -270,7 +306,7 @@ public class UserExtensionsTests
     Assert.Equal(user.UpdatedOn, profile.UpdatedOn);
     Assert.Equal(user.PasswordChangedOn, profile.PasswordChangedOn);
     Assert.Equal(user.AuthenticatedOn, profile.AuthenticatedOn);
-    Assert.Equal(MultiFactorAuthenticationMode.Phone, profile.MultiFactorAuthenticationMode);
+    Assert.Equal(mfaMode, profile.MultiFactorAuthenticationMode);
     Assert.Equal(user.Email.Address, profile.EmailAddress);
     Assert.Equal(user.Phone.CountryCode, profile.Phone.CountryCode);
     Assert.Equal(user.Phone.Number, profile.Phone.Number);
@@ -281,6 +317,7 @@ public class UserExtensionsTests
     Assert.Equal(user.Gender, profile.Gender);
     Assert.Equal(user.Locale, profile.Locale);
     Assert.Equal(user.TimeZone, profile.TimeZone);
+    Assert.Equal(userType, profile.UserType);
   }
 
   [Fact(DisplayName = "TryGetCustomAttribute: it return null when a custom attribute is not found.")]
