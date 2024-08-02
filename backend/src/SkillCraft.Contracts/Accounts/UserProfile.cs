@@ -25,6 +25,8 @@ public record UserProfile
   public Locale Locale { get; set; }
   public string TimeZone { get; set; }
 
+  public UserType UserType { get; set; }
+
   public UserProfile() : this(string.Empty, string.Empty, string.Empty, string.Empty, new Locale(), string.Empty)
   {
   }

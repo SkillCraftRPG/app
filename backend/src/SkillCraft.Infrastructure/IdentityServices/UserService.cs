@@ -39,6 +39,7 @@ internal class UserService : IUserService
     }
     payload.CompleteProfile();
     payload.SetMultiFactorAuthenticationMode(profile.MultiFactorAuthenticationMode);
+    payload.SetUserType(profile.UserType);
     RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
