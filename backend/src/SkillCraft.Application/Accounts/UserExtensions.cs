@@ -11,6 +11,7 @@ public static class UserExtensions
 {
   private const string MultiFactorAuthenticationModeKey = nameof(MultiFactorAuthenticationMode);
   private const string ProfileCompletedOnKey = "ProfileCompletedOn";
+  private const string UserTypeKey = nameof(UserType);
 
   internal static string GetCustomAttribute(this User user, string key)
   {
@@ -83,6 +84,23 @@ public static class UserExtensions
 
   public static string GetSubject(this User user) => user.Id.ToString();
 
+  public static UserType GetUserType(this User user)
+  {
+    UserType type = default;
+
+    string? value = user.TryGetCustomAttribute(UserTypeKey);
+    if (value != null && !Enum.TryParse(value, out type) || !Enum.IsDefined(type))
+    {
+      throw new ArgumentException($"The value '{value}' is not valid for custom attribute '{UserTypeKey}' (UserId={user.Id}).");
+    }
+
+    return type;
+  }
+  public static void SetUserType(this UpdateUserPayload payload, UserType type)
+  {
+    payload.CustomAttributes.Add(new CustomAttributeModification(UserTypeKey, type.ToString()));
+  }
+
   public static Phone ToPhone(this AccountPhone source)
   {
     Phone phone = new(source.CountryCode, source.Number, extension: null, e164Formatted: string.Empty);
@@ -118,6 +136,7 @@ public static class UserExtensions
     Birthdate = user.Birthdate,
     Gender = user.Gender,
     Locale = user.Locale ?? new Locale(),
-    TimeZone = user.TimeZone ?? string.Empty
+    TimeZone = user.TimeZone ?? string.Empty,
+    UserType = user.GetUserType()
   };
 }

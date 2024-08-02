@@ -11,6 +11,8 @@ public record SaveProfilePayload
   public string Locale { get; set; }
   public string TimeZone { get; set; }
 
+  public UserType UserType { get; set; }
+
   public SaveProfilePayload() : this(string.Empty, string.Empty, string.Empty, string.Empty)
   {
   }
