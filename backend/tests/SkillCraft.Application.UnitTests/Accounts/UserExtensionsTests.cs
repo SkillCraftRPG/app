@@ -66,13 +66,6 @@ public class UserExtensionsTests
     Assert.Null(user.GetMultiFactorAuthenticationMode());
   }
 
-  [Fact(DisplayName = "GetUserType: it should return default when the user does not have the custom attribute.")]
-  public void GetUserType_it_should_return_default_when_the_user_does_not_have_the_custom_attribute()
-  {
-    User user = new(_faker.Person.UserName);
-    Assert.Equal(default, user.GetUserType());
-  }
-
   [Theory(DisplayName = "GetMultiFactorAuthenticationMode: it should return the correct value when the user has the custom attribute.")]
   [InlineData(MultiFactorAuthenticationMode.None)]
   [InlineData(MultiFactorAuthenticationMode.Email)]
@@ -82,6 +75,13 @@ public class UserExtensionsTests
     User user = new(_faker.Person.UserName);
     user.CustomAttributes.Add(new(nameof(MultiFactorAuthenticationMode), mfaMode.ToString()));
     Assert.Equal(mfaMode, user.GetMultiFactorAuthenticationMode());
+  }
+
+  [Fact(DisplayName = "GetUserType: it should return default when the user does not have the custom attribute.")]
+  public void GetUserType_it_should_return_default_when_the_user_does_not_have_the_custom_attribute()
+  {
+    User user = new(_faker.Person.UserName);
+    Assert.Equal(default, user.GetUserType());
   }
 
   [Theory(DisplayName = "GetUserType: it should return the correct value when the user has the custom attribute.")]
