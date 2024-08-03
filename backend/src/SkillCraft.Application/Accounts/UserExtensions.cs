@@ -108,6 +108,11 @@ public static class UserExtensions
     return phone;
   }
 
+  public static ChangePasswordPayload ToChangePasswordPayload(this ChangeAccountPasswordPayload payload) => new(payload.New)
+  {
+    Current = payload.Current
+  };
+
   public static UpdateUserPayload ToUpdateUserPayload(this SaveProfilePayload payload)
   {
     UpdateUserPayload updatePayload = new()

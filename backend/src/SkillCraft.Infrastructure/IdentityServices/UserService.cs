@@ -26,6 +26,16 @@ internal class UserService : IUserService
     return await _userClient.AuthenticateAsync(payload, context);
   }
 
+  public async Task<User> ChangePasswordAsync(User user, ChangeAccountPasswordPayload input, CancellationToken cancellationToken)
+  {
+    UpdateUserPayload payload = new()
+    {
+      Password = input.ToChangePasswordPayload()
+    };
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
+  }
+
   public async Task<User> CompleteProfileAsync(User user, CompleteProfilePayload profile, PhonePayload? phone, CancellationToken cancellationToken)
   {
     UpdateUserPayload payload = profile.ToUpdateUserPayload();
