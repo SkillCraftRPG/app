@@ -88,6 +88,14 @@ public class AccountController : ControllerBase
     return Ok(response);
   }
 
+  [HttpPut("/password/change")]
+  [Authorize(Policy = Policies.User)]
+  public async Task<ActionResult<UserProfile>> ChangePasswordAsync([FromBody] ChangeAccountPasswordPayload payload, CancellationToken cancellationToken)
+  {
+    User user = await _requestPipeline.ExecuteAsync(new ChangePasswordCommand(payload), cancellationToken);
+    return Ok(user.ToUserProfile());
+  }
+
   [HttpPost("/password/reset")]
   public async Task<ActionResult<ResetPasswordResponse>> ResetPasswordAsync([FromBody] ResetPasswordPayload payload, CancellationToken cancellationToken)
   {

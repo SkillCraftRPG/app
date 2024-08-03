@@ -253,6 +253,15 @@ public class UserExtensionsTests
     Assert.Equal(e164Formatted, result.E164Formatted);
   }
 
+  [Fact(DisplayName = "ToChangePasswordPayload: it should return the correct payload.")]
+  public void ToChangePasswordPayload_it_should_return_the_correct_payload()
+  {
+    ChangeAccountPasswordPayload payload = new("Current", "New");
+    ChangePasswordPayload result = payload.ToChangePasswordPayload();
+    Assert.Equal(payload.Current, result.Current);
+    Assert.Equal(payload.New, result.New);
+  }
+
   [Fact(DisplayName = "ToUpdateUserPayload: it should return the correct payload.")]
   public void ToUpdateUserPayload_it_should_return_the_correct_payload()
   {
