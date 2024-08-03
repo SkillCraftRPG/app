@@ -29,6 +29,7 @@ public static class DependencyInjectionExtensions
   {
     return services
       .AddTransient<IApiKeyService, ApiKeyService>()
+      .AddTransient<IGoogleService, GoogleService>()
       .AddTransient<IMessageService, MessageService>()
       .AddTransient<IOneTimePasswordService, OneTimePasswordService>()
       .AddTransient<IRealmService, RealmService>()

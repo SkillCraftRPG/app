@@ -12,6 +12,7 @@ using Logitar.Security.Claims;
 using Moq;
 using SkillCraft.Application.Accounts.Constants;
 using SkillCraft.Application.Actors;
+using SkillCraft.Application.Settings;
 using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Application.Accounts.Commands;
@@ -28,6 +29,7 @@ public class SignInCommandHandlerTests
   private readonly Faker _faker = new();
 
   private readonly Mock<IActorService> _actorService = new();
+  private readonly Mock<IGoogleService> _googleService = new();
   private readonly Mock<IMessageService> _messageService = new();
   private readonly Mock<IOneTimePasswordService> _oneTimePasswordService = new();
   private readonly Mock<IRealmService> _realmService = new();
@@ -35,6 +37,7 @@ public class SignInCommandHandlerTests
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
 
+  private readonly SignInSettings _settings = new(TimeZoneId);
   private readonly SignInCommandHandler _handler;
 
   private readonly RealmMock _realm = new();
@@ -43,7 +46,39 @@ public class SignInCommandHandlerTests
   {
     _realmService.Setup(x => x.FindAsync(_cancellationToken)).ReturnsAsync(_realm);
 
-    _handler = new(_actorService.Object, _messageService.Object, _oneTimePasswordService.Object, _realmService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
+    _handler = new(_actorService.Object, _googleService.Object, _messageService.Object, _oneTimePasswordService.Object, _realmService.Object, _sessionService.Object, _settings, _tokenService.Object, _userService.Object);
+  }
+
+  [Fact(DisplayName = "It should assign a new identifier to the found user without identifier (Google).")]
+  public async Task It_should_assign_a_new_identifier_to_the_found_user_without_identifier_Google()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      GoogleIdToken = "GoogleIdToken"
+    };
+
+    EmailPayload email = new(_faker.Person.Email, isVerified: true);
+    GoogleIdentity identity = new("GoogleUserId", email, FirstName: null, LastName: null, Locale: null, Picture: null);
+    _googleService.Setup(x => x.GetIdentityAsync(payload.GoogleIdToken, _cancellationToken)).ReturnsAsync(identity);
+
+    User user = new(_faker.Person.UserName)
+    {
+      Email = new(_faker.Person.Email)
+      {
+        IsVerified = true
+      }
+    };
+    user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.Now.ToISOString()));
+    _userService.Setup(x => x.FindAsync(user.Email.Address, _cancellationToken)).ReturnsAsync(user);
+    _userService.Setup(x => x.SaveIdentifierAsync(user, It.Is<CustomIdentifier>(i => i.Key == "Google" && i.Value == identity.Id), _cancellationToken)).ReturnsAsync(user);
+
+    Session session = new(user);
+    _sessionService.Setup(x => x.CreateAsync(user, It.IsAny<IEnumerable<CustomAttribute>>(), _cancellationToken)).ReturnsAsync(session);
+
+    SignInCommand command = new(payload, CustomAttributes: []);
+    _ = await _handler.Handle(command, _cancellationToken);
+
+    _userService.Verify(x => x.SaveIdentifierAsync(user, It.Is<CustomIdentifier>(i => i.Key == "Google" && i.Value == identity.Id), _cancellationToken), Times.Once);
   }
 
   [Theory(DisplayName = "It should complete the user profile and sign-in the user.")]
@@ -103,6 +138,97 @@ public class SignInCommandHandlerTests
     Assert.Null(result.OneTimePasswordValidation);
     Assert.Null(result.ProfileCompletionToken);
     Assert.Same(session, result.Session);
+  }
+
+  [Fact(DisplayName = "It should complete the user profile from Google identity.")]
+  public async Task It_should_complete_the_user_profile_from_Google_identity()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      GoogleIdToken = "GoogleIdToken"
+    };
+
+    EmailPayload email = new(_faker.Person.Email, isVerified: true);
+    GoogleIdentity identity = new("GoogleUserId", email, _faker.Person.FirstName, _faker.Person.LastName, _faker.Locale, _faker.Person.Avatar);
+    _googleService.Setup(x => x.GetIdentityAsync(payload.GoogleIdToken, _cancellationToken)).ReturnsAsync(identity);
+
+    User user = new(_faker.Person.UserName)
+    {
+      Email = new(_faker.Person.Email),
+      FirstName = identity.FirstName,
+      LastName = identity.LastName,
+      Birthdate = _faker.Person.DateOfBirth,
+      Gender = _faker.Person.Gender.ToString().ToLowerInvariant(),
+      Locale = new(_locale.Code),
+      TimeZone = TimeZoneId,
+      Picture = identity.Picture
+    };
+    user.CustomAttributes.Add(new(nameof(MultiFactorAuthenticationMode), MultiFactorAuthenticationMode.None.ToString()));
+    user.CustomAttributes.Add(new(nameof(UserType), UserType.Player.ToString()));
+    user.CustomIdentifiers.Add(new("Google", identity.Id));
+    _userService.Setup(x => x.FindAsync(user.CustomIdentifiers.Single(), _cancellationToken)).ReturnsAsync(user);
+    _userService.Setup(x => x.CompleteProfileAsync(user, It.Is<CompleteProfilePayload>(y => y.Token == payload.GoogleIdToken
+        && y.FirstName == identity.FirstName && y.LastName == identity.LastName
+        && y.Locale == _locale.Code && y.TimeZone == TimeZoneId && y.Picture == identity.Picture), null, _cancellationToken)
+      )
+     .Callback(() => user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.Now.ToISOString())))
+     .ReturnsAsync(user);
+
+    CustomAttribute[] customAttributes =
+    [
+      new("AdditionalInformation", $@"{{""User-Agent"":""{_faker.Internet.UserAgent()}""}}"),
+      new("IpAddress", _faker.Internet.Ip())
+    ];
+    Session session = new(user);
+    _sessionService.Setup(x => x.CreateAsync(user, customAttributes, _cancellationToken)).ReturnsAsync(session);
+
+    SignInCommand command = new(payload, customAttributes);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Null(result.ProfileCompletionToken);
+    Assert.Same(session, result.Session);
+
+    _userService.Verify(x => x.CompleteProfileAsync(user, It.Is<CompleteProfilePayload>(y => y.Token == payload.GoogleIdToken
+      && y.FirstName == identity.FirstName && y.LastName == identity.LastName
+      && y.Locale == _locale.Code && y.TimeZone == TimeZoneId && y.Picture == identity.Picture), null, _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should create a new user from Google identity.")]
+  public async Task It_should_create_a_new_user_from_Google_identity()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      GoogleIdToken = "GoogleIdToken"
+    };
+
+    EmailPayload email = new(_faker.Person.Email, isVerified: true);
+    GoogleIdentity identity = new("GoogleUserId", email, FirstName: null, LastName: null, Locale: null, Picture: null);
+    _googleService.Setup(x => x.GetIdentityAsync(payload.GoogleIdToken, _cancellationToken)).ReturnsAsync(identity);
+
+    User user = new(_faker.Person.UserName)
+    {
+      Email = new(email.Address)
+      {
+        IsVerified = email.IsVerified
+      }
+    };
+    user.CustomIdentifiers.Add(new("Google", identity.Id));
+    _userService.Setup(x => x.CreateAsync(email, user.CustomIdentifiers.Single(), _cancellationToken)).ReturnsAsync(user);
+
+    CreatedToken profileCompletion = new("ProfileCompletionToken");
+    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(profileCompletion);
+
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Equal(profileCompletion.Token, result.ProfileCompletionToken);
+    Assert.Null(result.Session);
   }
 
   [Fact(DisplayName = "It should create a new user.")]
@@ -286,6 +412,35 @@ public class SignInCommandHandlerTests
     Assert.Null(result.Session);
   }
 
+  [Fact(DisplayName = "It should require the user to complete its profile (GoogleIdToken).")]
+  public async Task It_should_require_the_user_to_complete_its_profile_GoogleIdToken()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      GoogleIdToken = "GoogleIdToken"
+    };
+
+    EmailPayload email = new(_faker.Person.Email, isVerified: true);
+    GoogleIdentity identity = new("GoogleUserId", email, FirstName: null, LastName: null, Locale: null, Picture: null);
+    _googleService.Setup(x => x.GetIdentityAsync(payload.GoogleIdToken, _cancellationToken)).ReturnsAsync(identity);
+
+    User user = new(_faker.Person.UserName);
+    user.CustomIdentifiers.Add(new("Google", identity.Id));
+    _userService.Setup(x => x.FindAsync(user.CustomIdentifiers.Single(), _cancellationToken)).ReturnsAsync(user);
+
+    CreatedToken profileCompletion = new("ProfileCompletionToken");
+    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(profileCompletion);
+
+    SignInCommand command = new(payload, CustomAttributes: []);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Equal(profileCompletion.Token, result.ProfileCompletionToken);
+    Assert.Null(result.Session);
+  }
+
   [Fact(DisplayName = "It should require the user to complete its profile (OTP).")]
   public async Task It_should_require_the_user_to_complete_its_profile_Otp()
   {
@@ -455,6 +610,41 @@ public class SignInCommandHandlerTests
     Assert.Same(session, result.Session);
 
     _actorService.Verify(x => x.SaveAsync(user, _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should sign-in the user (GoogleIdToken).")]
+  public async Task It_should_sign_in_the_user_GoogleIdToken()
+  {
+    SignInPayload payload = new(_locale.Code)
+    {
+      GoogleIdToken = "GoogleIdToken"
+    };
+
+    EmailPayload email = new(_faker.Person.Email, isVerified: true);
+    GoogleIdentity identity = new("GoogleUserId", email, FirstName: null, LastName: null, Locale: null, Picture: null);
+    _googleService.Setup(x => x.GetIdentityAsync(payload.GoogleIdToken, _cancellationToken)).ReturnsAsync(identity);
+
+    User user = new(_faker.Person.UserName);
+    user.CustomAttributes.Add(new("ProfileCompletedOn", DateTime.Now.ToISOString()));
+    user.CustomIdentifiers.Add(new("Google", identity.Id));
+    _userService.Setup(x => x.FindAsync(user.CustomIdentifiers.Single(), _cancellationToken)).ReturnsAsync(user);
+
+    CustomAttribute[] customAttributes =
+    [
+      new("AdditionalInformation", $@"{{""User-Agent"":""{_faker.Internet.UserAgent()}""}}"),
+      new("IpAddress", _faker.Internet.Ip())
+    ];
+    Session session = new(user);
+    _sessionService.Setup(x => x.CreateAsync(user, customAttributes, _cancellationToken)).ReturnsAsync(session);
+
+    SignInCommand command = new(payload, customAttributes);
+    SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
+
+    Assert.Null(result.AuthenticationLinkSentTo);
+    Assert.False(result.IsPasswordRequired);
+    Assert.Null(result.OneTimePasswordValidation);
+    Assert.Null(result.ProfileCompletionToken);
+    Assert.Same(session, result.Session);
   }
 
   [Fact(DisplayName = "It should sign-in the user (OTP).")]

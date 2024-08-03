@@ -271,6 +271,7 @@ public class UserExtensionsTests
       MiddleName = null,
       Birthdate = _faker.Person.DateOfBirth,
       Gender = _faker.Person.Gender.ToString().ToLower(),
+      Picture = _faker.Person.Avatar,
       UserType = UserType.Gamemaster
     };
     UpdateUserPayload update = payload.ToUpdateUserPayload();
@@ -282,6 +283,7 @@ public class UserExtensionsTests
     Assert.Equal(payload.Gender, update.Gender?.Value);
     Assert.Equal(payload.Locale, update.Locale?.Value);
     Assert.Equal(payload.TimeZone, update.TimeZone?.Value);
+    Assert.Equal(payload.Picture, update.Picture?.Value);
 
     Assert.Equal(2, update.CustomAttributes.Count);
     Assert.Contains(update.CustomAttributes, c => c.Key == nameof(MultiFactorAuthenticationMode) && c.Value == payload.MultiFactorAuthenticationMode.ToString());
@@ -308,7 +310,8 @@ public class UserExtensionsTests
       Birthdate = _faker.Person.DateOfBirth,
       Gender = _faker.Person.Gender.ToString().ToLower(),
       Locale = new Locale("fr-CA"),
-      TimeZone = "America/Montreal"
+      TimeZone = "America/Montreal",
+      Picture = _faker.Person.Avatar
     };
     user.CustomAttributes.Add(new CustomAttribute("MultiFactorAuthenticationMode", mfaMode.ToString()));
     user.CustomAttributes.Add(new CustomAttribute("ProfileCompletedOn", completedOn.ToISOString()));
@@ -332,6 +335,7 @@ public class UserExtensionsTests
     Assert.Equal(user.Gender, profile.Gender);
     Assert.Equal(user.Locale, profile.Locale);
     Assert.Equal(user.TimeZone, profile.TimeZone);
+    Assert.Equal(user.Picture, profile.Picture);
     Assert.Equal(userType, profile.UserType);
   }
 

@@ -54,10 +54,18 @@ internal class UserService : IUserService
 
   public async Task<User> CreateAsync(EmailPayload email, CancellationToken cancellationToken)
   {
+    return await CreateAsync(email, identifier: null, cancellationToken);
+  }
+  public async Task<User> CreateAsync(EmailPayload email, CustomIdentifier? identifier, CancellationToken cancellationToken)
+  {
     CreateUserPayload payload = new(email.Address)
     {
       Email = email
     };
+    if (identifier != null)
+    {
+      payload.CustomIdentifiers.Add(identifier);
+    }
     RequestContext context = new(cancellationToken);
     return await _userClient.CreateAsync(payload, context);
   }
@@ -74,6 +82,12 @@ internal class UserService : IUserService
     return await _userClient.ReadAsync(id, uniqueName: null, identifier: null, context);
   }
 
+  public async Task<User?> FindAsync(CustomIdentifier identifier, CancellationToken cancellationToken)
+  {
+    RequestContext context = new(cancellationToken);
+    return await _userClient.ReadAsync(id: null, uniqueName: null, identifier, context);
+  }
+
   public async Task<User> ResetPasswordAsync(User user, string password, CancellationToken cancellationToken)
   {
     ResetUserPasswordPayload payload = new(password);
@@ -81,7 +95,14 @@ internal class UserService : IUserService
     return await _userClient.ResetPasswordAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
 
-  public async Task<User> SaveProfileAsync(User user, SaveProfilePayload profile, CancellationToken cancellationToken = default)
+  public async Task<User> SaveIdentifierAsync(User user, CustomIdentifier identifier, CancellationToken cancellationToken)
+  {
+    SaveUserIdentifierPayload payload = new(identifier.Value);
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.SaveIdentifierAsync(user.Id, identifier.Key, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
+  }
+
+  public async Task<User> SaveProfileAsync(User user, SaveProfilePayload profile, CancellationToken cancellationToken)
   {
     UpdateUserPayload payload = profile.ToUpdateUserPayload();
     RequestContext context = new(user.Id.ToString(), cancellationToken);
