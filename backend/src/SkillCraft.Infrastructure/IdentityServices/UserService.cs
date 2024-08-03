@@ -38,8 +38,6 @@ internal class UserService : IUserService
       payload.Phone = new Modification<PhonePayload>(phone);
     }
     payload.CompleteProfile();
-    payload.SetMultiFactorAuthenticationMode(profile.MultiFactorAuthenticationMode);
-    payload.SetUserType(profile.UserType);
     RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
@@ -71,6 +69,13 @@ internal class UserService : IUserService
     ResetUserPasswordPayload payload = new(password);
     RequestContext context = new(user.Id.ToString(), cancellationToken);
     return await _userClient.ResetPasswordAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
+  }
+
+  public async Task<User> SaveProfileAsync(User user, SaveProfilePayload profile, CancellationToken cancellationToken = default)
+  {
+    UpdateUserPayload payload = profile.ToUpdateUserPayload();
+    RequestContext context = new(user.Id.ToString(), cancellationToken);
+    return await _userClient.UpdateAsync(user.Id, payload, context) ?? throw new InvalidOperationException($"The user 'Id={user.Id}' could not be found.");
   }
 
   public async Task SignOutAsync(Guid id, CancellationToken cancellationToken)

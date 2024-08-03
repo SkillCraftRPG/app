@@ -9,6 +9,8 @@ internal abstract class SaveProfileValidatorBase<T> : AbstractValidator<T> where
 {
   public SaveProfileValidatorBase()
   {
+    RuleFor(x => x.MultiFactorAuthenticationMode).IsInEnum();
+
     RuleFor(x => x.FirstName).SetValidator(new PersonNameValidator());
     When(x => !string.IsNullOrWhiteSpace(x.MiddleName), () => RuleFor(x => x.MiddleName!).SetValidator(new PersonNameValidator()));
     RuleFor(x => x.LastName).SetValidator(new PersonNameValidator());
@@ -17,5 +19,7 @@ internal abstract class SaveProfileValidatorBase<T> : AbstractValidator<T> where
     When(x => !string.IsNullOrWhiteSpace(x.Gender), () => RuleFor(x => x.Gender!).SetValidator(new GenderValidator()));
     RuleFor(x => x.Locale).SetValidator(new LocaleValidator());
     RuleFor(x => x.TimeZone).SetValidator(new TimeZoneValidator());
+
+    RuleFor(x => x.UserType).IsInEnum();
   }
 }
