@@ -122,4 +122,12 @@ public class AccountController : ControllerBase
     User user = HttpContext.GetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
     return Ok(user.ToUserProfile());
   }
+
+  [HttpPut("/profile")]
+  [Authorize(Policy = Policies.User)]
+  public async Task<ActionResult<UserProfile>> SaveProfileAsync([FromBody] SaveProfilePayload payload, CancellationToken cancellationToken)
+  {
+    User user = await _requestPipeline.ExecuteAsync(new SaveProfileCommand(payload), cancellationToken);
+    return Ok(user.ToUserProfile());
+  }
 }

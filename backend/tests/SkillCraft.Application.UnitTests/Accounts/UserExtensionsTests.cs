@@ -258,9 +258,11 @@ public class UserExtensionsTests
   {
     SaveProfilePayload payload = new(_faker.Person.FirstName, _faker.Person.LastName, _faker.Locale, "America/Montreal")
     {
+      MultiFactorAuthenticationMode = MultiFactorAuthenticationMode.Phone,
       MiddleName = null,
       Birthdate = _faker.Person.DateOfBirth,
-      Gender = _faker.Person.Gender.ToString().ToLower()
+      Gender = _faker.Person.Gender.ToString().ToLower(),
+      UserType = UserType.Gamemaster
     };
     UpdateUserPayload update = payload.ToUpdateUserPayload();
     Assert.Equal(payload.FirstName, update.FirstName?.Value);
@@ -271,6 +273,10 @@ public class UserExtensionsTests
     Assert.Equal(payload.Gender, update.Gender?.Value);
     Assert.Equal(payload.Locale, update.Locale?.Value);
     Assert.Equal(payload.TimeZone, update.TimeZone?.Value);
+
+    Assert.Equal(2, update.CustomAttributes.Count);
+    Assert.Contains(update.CustomAttributes, c => c.Key == nameof(MultiFactorAuthenticationMode) && c.Value == payload.MultiFactorAuthenticationMode.ToString());
+    Assert.Contains(update.CustomAttributes, c => c.Key == nameof(UserType) && c.Value == payload.UserType.ToString());
   }
 
   [Fact(DisplayName = "ToUserProfile: it should return the correct user profile.")]

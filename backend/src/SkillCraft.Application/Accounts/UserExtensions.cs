@@ -108,16 +108,22 @@ public static class UserExtensions
     return phone;
   }
 
-  public static UpdateUserPayload ToUpdateUserPayload(this SaveProfilePayload payload) => new()
+  public static UpdateUserPayload ToUpdateUserPayload(this SaveProfilePayload payload)
   {
-    FirstName = new Modification<string>(payload.FirstName),
-    MiddleName = new Modification<string>(payload.MiddleName),
-    LastName = new Modification<string>(payload.LastName),
-    Birthdate = new Modification<DateTime?>(payload.Birthdate),
-    Gender = new Modification<string>(payload.Gender),
-    Locale = new Modification<string>(payload.Locale),
-    TimeZone = new Modification<string>(payload.TimeZone)
-  };
+    UpdateUserPayload updatePayload = new()
+    {
+      FirstName = new Modification<string>(payload.FirstName),
+      MiddleName = new Modification<string>(payload.MiddleName),
+      LastName = new Modification<string>(payload.LastName),
+      Birthdate = new Modification<DateTime?>(payload.Birthdate),
+      Gender = new Modification<string>(payload.Gender),
+      Locale = new Modification<string>(payload.Locale),
+      TimeZone = new Modification<string>(payload.TimeZone)
+    };
+    updatePayload.SetMultiFactorAuthenticationMode(payload.MultiFactorAuthenticationMode);
+    updatePayload.SetUserType(payload.UserType);
+    return updatePayload;
+  }
 
   public static UserProfile ToUserProfile(this User user) => new()
   {

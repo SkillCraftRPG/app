@@ -12,6 +12,5 @@ internal class CompleteProfileValidator : SaveProfileValidatorBase<CompleteProfi
     RuleFor(x => x.Token).NotEmpty();
 
     When(x => x.Password != null, () => RuleFor(x => x.Password!).SetValidator(new PasswordValidator(passwordSettings)));
-    RuleFor(x => x.MultiFactorAuthenticationMode).IsInEnum();
   }
 }
