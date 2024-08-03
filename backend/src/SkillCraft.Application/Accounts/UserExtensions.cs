@@ -123,7 +123,8 @@ public static class UserExtensions
       Birthdate = new Modification<DateTime?>(payload.Birthdate),
       Gender = new Modification<string>(payload.Gender),
       Locale = new Modification<string>(payload.Locale),
-      TimeZone = new Modification<string>(payload.TimeZone)
+      TimeZone = new Modification<string>(payload.TimeZone),
+      Picture = new Modification<string>(payload.Picture)
     };
     updatePayload.SetMultiFactorAuthenticationMode(payload.MultiFactorAuthenticationMode);
     updatePayload.SetUserType(payload.UserType);
@@ -148,6 +149,7 @@ public static class UserExtensions
     Gender = user.Gender,
     Locale = user.Locale ?? new Locale(),
     TimeZone = user.TimeZone ?? string.Empty,
+    Picture = user.Picture,
     UserType = user.GetUserType()
   };
 }

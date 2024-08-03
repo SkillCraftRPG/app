@@ -11,6 +11,7 @@ using MediatR;
 using SkillCraft.Application.Accounts.Constants;
 using SkillCraft.Application.Accounts.Validators;
 using SkillCraft.Application.Actors;
+using SkillCraft.Application.Settings;
 using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Application.Accounts.Commands;
@@ -18,26 +19,32 @@ namespace SkillCraft.Application.Accounts.Commands;
 internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInCommandResult>
 {
   private readonly IActorService _actorService;
+  private readonly IGoogleService _googleService;
   private readonly IMessageService _messageService;
   private readonly IOneTimePasswordService _oneTimePasswordService;
   private readonly IRealmService _realmService;
   private readonly ISessionService _sessionService;
+  private readonly SignInSettings _settings;
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
 
   public SignInCommandHandler(IActorService actorService,
+    IGoogleService googleService,
     IMessageService messageService,
     IOneTimePasswordService oneTimePasswordService,
     IRealmService realmService,
     ISessionService sessionService,
+    SignInSettings settings,
     ITokenService tokenService,
     IUserService userService)
   {
     _actorService = actorService;
+    _googleService = googleService;
     _messageService = messageService;
     _oneTimePasswordService = oneTimePasswordService;
     _realmService = realmService;
     _sessionService = sessionService;
+    _settings = settings;
     _tokenService = tokenService;
     _userService = userService;
   }
@@ -58,6 +65,10 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
     {
       return await HandleAuthenticationToken(payload.AuthenticationToken.Trim(), command.CustomAttributes, cancellationToken);
     }
+    else if (!string.IsNullOrWhiteSpace(payload.GoogleIdToken))
+    {
+      return await HandleGoogleIdTokenAsync(payload.GoogleIdToken.Trim(), locale, command.CustomAttributes, cancellationToken);
+    }
     else if (payload.OneTimePassword != null)
     {
       return await HandleOneTimePasswordAsync(payload.OneTimePassword, command.CustomAttributes, cancellationToken);
@@ -67,7 +78,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
       return await HandleProfileAsync(payload.Profile, command.CustomAttributes, cancellationToken);
     }
 
-    throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}, {nameof(payload.OneTimePassword)}, {nameof(payload.Profile)}.", nameof(command));
+    throw new ArgumentException($"Exactly one of the following must be specified: {nameof(payload.Credentials)}, {nameof(payload.AuthenticationToken)}, {nameof(payload.GoogleIdToken)}, {nameof(payload.OneTimePassword)}, {nameof(payload.Profile)}.", nameof(command));
   }
 
   private async Task<SignInCommandResult> HandleCredentialsAsync(Credentials credentials, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
@@ -154,6 +165,37 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
       {
         user = await _userService.UpdateAsync(user, email, cancellationToken);
       }
+    }
+
+    return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);
+  }
+
+  private async Task<SignInCommandResult> HandleGoogleIdTokenAsync(string googleIdToken, LocaleUnit locale, IEnumerable<CustomAttribute> customAttributes, CancellationToken cancellationToken)
+  {
+    GoogleIdentity identity = await _googleService.GetIdentityAsync(googleIdToken, cancellationToken);
+
+    CustomIdentifier identifier = new(Identifiers.Google, identity.Id);
+    User? user = await _userService.FindAsync(identifier, cancellationToken);
+    if (user == null)
+    {
+      user = await _userService.FindAsync(identity.Email.Address, cancellationToken);
+      if (user == null)
+      {
+        user = await _userService.CreateAsync(identity.Email, identifier, cancellationToken);
+      }
+      else
+      {
+        user = await _userService.SaveIdentifierAsync(user, identifier, cancellationToken);
+      }
+    }
+
+    if (!user.IsProfileCompleted() && identity.FirstName != null && identity.LastName != null)
+    {
+      CompleteProfilePayload payload = new(googleIdToken, identity.FirstName, identity.LastName, locale.Code, _settings.DefaultTimeZone)
+      {
+        Picture = identity.Picture
+      };
+      user = await _userService.CompleteProfileAsync(user, payload, phone: null, cancellationToken);
     }
 
     return await EnsureProfileIsCompletedAsync(user, customAttributes, cancellationToken);

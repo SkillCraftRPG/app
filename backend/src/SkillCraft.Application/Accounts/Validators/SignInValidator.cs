@@ -16,7 +16,7 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
     When(x => x.Profile != null, () => RuleFor(x => x.Profile!).SetValidator(new CompleteProfileValidator(passwordSettings)));
 
     RuleFor(x => x).Must(BeAValidPayload).WithErrorCode(nameof(SignInValidator))
-      .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.OneTimePassword)}, {nameof(x.Profile)}.");
+      .WithMessage(x => $"Exactly one of the following must be specified: {nameof(x.Credentials)}, {nameof(x.AuthenticationToken)}, {nameof(x.GoogleIdToken)}, {nameof(x.OneTimePassword)}, {nameof(x.Profile)}.");
   }
 
   private static bool BeAValidPayload(SignInPayload payload)
@@ -27,6 +27,10 @@ internal class SignInValidator : AbstractValidator<SignInPayload>
       count++;
     }
     if (!string.IsNullOrWhiteSpace(payload.AuthenticationToken))
+    {
+      count++;
+    }
+    if (!string.IsNullOrWhiteSpace(payload.GoogleIdToken))
     {
       count++;
     }

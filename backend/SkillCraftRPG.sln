@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.EntityFrameworkC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.EntityFrameworkCore.PostgreSQL", "src\SkillCraft.EntityFrameworkCore.PostgreSQL\SkillCraft.EntityFrameworkCore.PostgreSQL.csproj", "{64CB299B-09CE-425C-975E-CE3680C3E3A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.MongoDB", "src\SkillCraft.MongoDB\SkillCraft.MongoDB.csproj", "{D8E40ACC-8515-4F58-A5C5-C20268D74984}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.MongoDB", "src\SkillCraft.MongoDB\SkillCraft.MongoDB.csproj", "{D8E40ACC-8515-4F58-A5C5-C20268D74984}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
