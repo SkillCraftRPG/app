@@ -5,7 +5,7 @@ using SkillCraft.Domain.Worlds.Events;
 
 namespace SkillCraft.Domain.Worlds;
 
-public class WorldAggregate : AggregateRoot
+public class WorldAggregate : AggregateRoot, ISizeable
 {
   private WorldUpdatedEvent _updatedEvent = new();
 
@@ -52,6 +52,8 @@ public class WorldAggregate : AggregateRoot
       }
     }
   }
+
+  public int Size => UniqueSlug.Value.Length + (DisplayName?.Value.Length ?? 0) + (Description?.Value.Length ?? 0);
 
   public WorldAggregate() : base()
   {

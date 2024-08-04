@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
+using SkillCraft.Application.Storage;
 using SkillCraft.Domain.Worlds;
 using SkillCraft.Domain.Worlds.Events;
 
@@ -7,10 +8,12 @@ namespace SkillCraft.Application.Worlds.Commands;
 
 internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
 {
+  private readonly IStorageService _storageService;
   private readonly IWorldRepository _worldRepository;
 
-  public SaveWorldCommandHandler(IWorldRepository worldRepository)
+  public SaveWorldCommandHandler(IStorageService storageService, IWorldRepository worldRepository)
   {
+    _storageService = storageService;
     _worldRepository = worldRepository;
   }
 
@@ -36,6 +39,8 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
         throw new UniqueSlugAlreadyUsedException(world.UniqueSlug, nameof(world.UniqueSlug));
       }
     }
+
+    await _storageService.Async(world, command.PreviousSize, cancellationToken);
 
     await _worldRepository.SaveAsync(world, cancellationToken);
   }

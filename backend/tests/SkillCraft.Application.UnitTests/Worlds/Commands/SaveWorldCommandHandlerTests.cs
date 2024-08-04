@@ -1,4 +1,5 @@
 ﻿using Moq;
+using SkillCraft.Application.Storage;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
 
@@ -9,13 +10,14 @@ public class SaveWorldCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
+  private readonly Mock<IStorageService> _storageService = new();
   private readonly Mock<IWorldRepository> _worldRepository = new();
 
   private readonly SaveWorldCommandHandler _handler;
 
   public SaveWorldCommandHandlerTests()
   {
-    _handler = new(_worldRepository.Object);
+    _handler = new(_storageService.Object, _worldRepository.Object);
   }
 
   [Fact(DisplayName = "It should save the world when the unique name has not changed.")]
@@ -27,6 +29,7 @@ public class SaveWorldCommandHandlerTests
     SaveWorldCommand command = new(world);
     await _handler.Handle(command, _cancellationToken);
 
+    _storageService.Verify(x => x.Async(world, 0, _cancellationToken), Times.Once);
     _worldRepository.Verify(x => x.SaveAsync(world, _cancellationToken), Times.Once);
     _worldRepository.VerifyNoOtherCalls();
   }
@@ -40,6 +43,7 @@ public class SaveWorldCommandHandlerTests
     SaveWorldCommand command = new(world);
     await _handler.Handle(command, _cancellationToken);
 
+    _storageService.Verify(x => x.Async(world, 0, _cancellationToken), Times.Once);
     _worldRepository.Verify(x => x.SaveAsync(world, _cancellationToken), Times.Once);
   }
 
