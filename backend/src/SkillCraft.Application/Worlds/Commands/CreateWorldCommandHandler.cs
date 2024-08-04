@@ -25,7 +25,6 @@ internal class CreateWorldCommandHandler : IRequestHandler<CreateWorldCommand, W
     new CreateWorldValidator().ValidateAndThrow(payload);
 
     // TODO(fpion): 403
-    // TODO(fpion): Storage Limitation
 
     WorldAggregate world = new(new SlugUnit(payload.UniqueSlug), command.ActorId)
     {
@@ -36,7 +35,7 @@ internal class CreateWorldCommandHandler : IRequestHandler<CreateWorldCommand, W
 
     await _sender.Send(new SaveWorldCommand(world), cancellationToken);
 
-    // TODO(fpion): Storage Limitation
+    // TODO(fpion): reserve storage
 
     return await _worldQuerier.ReadAsync(world, cancellationToken);
   }
