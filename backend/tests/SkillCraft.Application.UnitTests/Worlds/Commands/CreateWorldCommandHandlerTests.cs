@@ -39,7 +39,8 @@ public class CreateWorldCommandHandlerTests
     World result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(world, result);
 
-    _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.World.OwnerId.ToGuid() == context.User.Id
+    _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.PreviousSize == 0
+      && y.World.OwnerId.ToGuid() == context.User.Id
       && y.World.UniqueSlug.Value == payload.UniqueSlug
       && y.World.DisplayName != null && y.World.DisplayName.Value == payload.DisplayName.Trim()
       && y.World.Description != null && y.World.Description.Value == payload.Description.Trim()
