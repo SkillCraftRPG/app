@@ -14,4 +14,6 @@ public record SlugUnit
     Value = value.Trim();
     new SlugUnitValidator().ValidateAndThrow(this);
   }
+
+  public static SlugUnit? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value.Trim());
 }
