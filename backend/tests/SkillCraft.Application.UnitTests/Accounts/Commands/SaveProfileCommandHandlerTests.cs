@@ -35,8 +35,7 @@ public class SaveProfileCommandHandlerTests
     _userService.Setup(x => x.SaveProfileAsync(user, payload, _cancellationToken)).ReturnsAsync(user);
 
     SaveProfileCommand command = new(payload);
-    ActivityContext context = new(ApiKey: null, Session: null, user);
-    command.Contextualize(context);
+    command.Contextualize(new ActivityContextMock(user));
     User result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Same(result, user);

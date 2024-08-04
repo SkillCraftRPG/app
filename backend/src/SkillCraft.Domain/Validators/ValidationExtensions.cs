@@ -2,7 +2,7 @@
 
 namespace SkillCraft.Domain.Validators;
 
-internal static class ValidationExtensions
+public static class ValidationExtensions
 {
   public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
