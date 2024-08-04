@@ -10,6 +10,7 @@ public static class DependencyInjectionExtensions
   public static IServiceCollection AddSkillCraftWithEntityFrameworkCore(this IServiceCollection services)
   {
     return services
+      .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
       .AddSkillCraftInfrastructure()
       .AddScoped<IActorService, ActorService>();
   }

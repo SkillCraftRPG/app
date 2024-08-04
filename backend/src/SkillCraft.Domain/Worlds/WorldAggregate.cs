@@ -11,6 +11,8 @@ public class WorldAggregate : AggregateRoot
 
   public new WorldId Id => new(base.Id);
 
+  public ActorId OwnerId { get; private set; }
+
   private SlugUnit? _uniqueSlug = null;
   public SlugUnit UniqueSlug
   {
@@ -61,6 +63,8 @@ public class WorldAggregate : AggregateRoot
   }
   protected virtual void Apply(WorldCreatedEvent @event)
   {
+    OwnerId = @event.ActorId;
+
     _uniqueSlug = @event.UniqueSlug;
   }
 

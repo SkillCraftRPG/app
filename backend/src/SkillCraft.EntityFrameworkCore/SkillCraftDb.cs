@@ -17,4 +17,23 @@ internal static class SkillCraftDb
     public static readonly ColumnId PictureUrl = new(nameof(ActorEntity.PictureUrl), Table);
     public static readonly ColumnId Type = new(nameof(ActorEntity.Type), Table);
   }
+
+  public static class Worlds
+  {
+    public static readonly TableId Table = new(nameof(SkillCraftContext.Worlds));
+
+    public static readonly ColumnId AggregateId = new(nameof(WorldEntity.AggregateId), Table);
+    public static readonly ColumnId CreatedBy = new(nameof(WorldEntity.CreatedBy), Table);
+    public static readonly ColumnId CreatedOn = new(nameof(WorldEntity.CreatedOn), Table);
+    public static readonly ColumnId UpdatedBy = new(nameof(WorldEntity.UpdatedBy), Table);
+    public static readonly ColumnId UpdatedOn = new(nameof(WorldEntity.UpdatedOn), Table);
+    public static readonly ColumnId Version = new(nameof(WorldEntity.Version), Table);
+
+    public static readonly ColumnId Description = new(nameof(WorldEntity.Description), Table);
+    public static readonly ColumnId DisplayName = new(nameof(WorldEntity.DisplayName), Table);
+    public static readonly ColumnId Id = new(nameof(WorldEntity.Id), Table);
+    public static readonly ColumnId OwnerId = new(nameof(WorldEntity.OwnerId), Table);
+    public static readonly ColumnId UniqueSlug = new(nameof(WorldEntity.UniqueSlug), Table);
+    public static readonly ColumnId WorldId = new(nameof(WorldEntity.WorldId), Table);
+  }
 }
