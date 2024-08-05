@@ -20,7 +20,7 @@ internal class PermissionService : IPermissionService
     int count = await _worldQuerier.CountOwnedAsync(user, cancellationToken);
     if (count >= _accountSettings.WorldLimit)
     {
-      throw new NotImplementedException(); // TODO(fpion): implement
+      throw new PermissionDeniedException(Action.Create, EntityType.World, user);
     }
   }
 }

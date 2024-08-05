@@ -46,6 +46,14 @@ internal class ExceptionHandling : ExceptionFilterAttribute
       context.Result = new ConflictObjectResult(conflict.Error);
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is ForbiddenException forbidden)
+    {
+      context.Result = new JsonResult(forbidden.Error)
+      {
+        StatusCode = StatusCodes.Status403Forbidden
+      };
+      context.ExceptionHandled = true;
+    }
     else if (context.Exception is HttpFailureException<JsonApiResult> portal) // ISSUE: https://github.com/SkillCraftRPG/app/issues/10
     {
       Error? error = null;

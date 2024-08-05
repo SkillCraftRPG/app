@@ -31,6 +31,13 @@ public class WorldController : ControllerBase
     return Created(uri, world);
   }
 
+  [HttpDelete("{id}")]
+  public async Task<ActionResult<World>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+  {
+    await Task.Delay(1, cancellationToken);
+    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+  }
+
   [HttpGet("{id}")]
   public async Task<ActionResult<World>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
