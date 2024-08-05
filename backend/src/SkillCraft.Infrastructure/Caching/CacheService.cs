@@ -2,16 +2,19 @@
 using Logitar.Portal.Contracts.Actors;
 using Microsoft.Extensions.Caching.Memory;
 using SkillCraft.Application.Caching;
+using SkillCraft.Infrastructure.Settings;
 
 namespace SkillCraft.Infrastructure.Caching;
 
 internal class CacheService : ICacheService
 {
   private readonly IMemoryCache _memoryCache;
+  private readonly CachingSettings _settings;
 
-  public CacheService(IMemoryCache memoryCache)
+  public CacheService(IMemoryCache memoryCache, CachingSettings settings)
   {
     _memoryCache = memoryCache;
+    _settings = settings;
   }
 
   public Actor? GetActor(ActorId id)
@@ -22,10 +25,20 @@ internal class CacheService : ICacheService
   public void SetActor(Actor actor)
   {
     string key = GetActorKey(new ActorId(actor.Id));
-    SetItem(key, actor);
+    SetItem(key, actor, _settings.ActorLifetime);
   }
   private static string GetActorKey(ActorId id) => $"Actor.Id:{id}";
 
   private T? GetItem<T>(object key) => _memoryCache.TryGetValue(key, out object? value) ? (T?)value : default;
-  private void SetItem<T>(object key, T value) => _memoryCache.Set(key, value);
+  private void SetItem<T>(object key, T value, TimeSpan? lifetime = null)
+  {
+    if (lifetime.HasValue)
+    {
+      _memoryCache.Set(key, value, lifetime.Value);
+    }
+    else
+    {
+      _memoryCache.Set(key, value);
+    }
+  }
 }

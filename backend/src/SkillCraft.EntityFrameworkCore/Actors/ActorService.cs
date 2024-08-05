@@ -63,17 +63,25 @@ internal class ActorService : IActorService
 
   public async Task SaveAsync(User user, CancellationToken cancellationToken)
   {
-    ActorEntity? actor = await _context.Actors.SingleOrDefaultAsync(x => x.Id == user.Id, cancellationToken);
-    if (actor == null)
+    Actor actor = new(user);
+    ActorId id = new(actor.Id);
+
+    ActorEntity? entity = await _context.Actors.SingleOrDefaultAsync(x => x.Id == actor.Id, cancellationToken);
+    if (entity == null)
     {
-      actor = new(user);
-      _context.Actors.Add(actor);
+      entity = new(actor);
+      _context.Actors.Add(entity);
     }
     else
     {
-      actor.Update(user);
+      entity.Update(actor);
     }
 
     await _context.SaveChangesAsync(cancellationToken);
+
+    if (_cacheService.GetActor(id) != null)
+    {
+      _cacheService.SetActor(actor);
+    }
   }
 }

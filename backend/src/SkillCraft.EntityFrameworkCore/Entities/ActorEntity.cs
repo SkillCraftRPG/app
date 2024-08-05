@@ -1,5 +1,4 @@
 ﻿using Logitar.Portal.Contracts.Actors;
-using Logitar.Portal.Contracts.Users;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
@@ -15,27 +14,27 @@ internal class ActorEntity
   public string? EmailAddress { get; private set; }
   public string? PictureUrl { get; private set; }
 
-  public ActorEntity(User user)
+  public ActorEntity(Actor actor)
   {
-    Id = user.Id;
-    Type = ActorType.User;
+    Id = actor.Id;
+    Type = actor.Type;
 
-    Update(user);
+    Update(actor);
   }
 
   private ActorEntity()
   {
   }
 
-  public void Update(User user)
+  public void Update(Actor actor)
   {
-    if (user.Id != Id || Type != ActorType.User)
+    if (actor.Id != Id || actor.Type != Type)
     {
-      throw new ArgumentException($"The actor '{ActorType.User}.Id={user.Id}' was not expected. The expected actor is '{Type}.Id={Id}'.", nameof(user));
+      throw new ArgumentException($"The actor '{actor.Type}.Id={actor.Id}' was not expected. The expected actor is '{Type}.Id={Id}'.", nameof(actor));
     }
 
-    DisplayName = user.FullName ?? user.UniqueName;
-    EmailAddress = user.Email?.Address;
-    PictureUrl = user.Picture;
+    DisplayName = actor.DisplayName;
+    EmailAddress = actor.EmailAddress;
+    PictureUrl = actor.PictureUrl;
   }
 }
