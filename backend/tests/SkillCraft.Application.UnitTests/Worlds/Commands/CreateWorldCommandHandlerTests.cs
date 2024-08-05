@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using Moq;
+using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain.Worlds;
 
@@ -11,6 +12,7 @@ public class CreateWorldCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
+  private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
   private readonly Mock<IWorldQuerier> _worldQuerier = new();
 
@@ -18,7 +20,7 @@ public class CreateWorldCommandHandlerTests
 
   public CreateWorldCommandHandlerTests()
   {
-    _handler = new(_sender.Object, _worldQuerier.Object);
+    _handler = new(_permissionService.Object, _sender.Object, _worldQuerier.Object);
   }
 
   [Fact(DisplayName = "It should save a new world.")]
@@ -38,6 +40,8 @@ public class CreateWorldCommandHandlerTests
     command.Contextualize(context);
     World result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(world, result);
+
+    _permissionService.Verify(x => x.EnsureCanCreateWorldAsync(context.User, _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.PreviousSize == 0
       && y.World.OwnerId.ToGuid() == context.User.Id

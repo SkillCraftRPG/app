@@ -4,6 +4,6 @@ namespace SkillCraft.Application.Storage;
 
 public interface IStorageService // TODO(fpion): implement
 {
-  Task Async(ISizeable sizeable, CancellationToken cancellationToken); // TODO(fpion): rename, rename argument
-  Task Async(ISizeable sizeable, int previousSize, CancellationToken cancellationToken); // TODO(fpion): rename, rename argument
+  Task Async(IStoredEntity entity, CancellationToken cancellationToken); // TODO(fpion): rename
+  Task Async(IStoredEntity entity, int previousSize, CancellationToken cancellationToken); // TODO(fpion): rename
 }

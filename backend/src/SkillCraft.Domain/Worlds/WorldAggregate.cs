@@ -5,7 +5,7 @@ using SkillCraft.Domain.Worlds.Events;
 
 namespace SkillCraft.Domain.Worlds;
 
-public class WorldAggregate : AggregateRoot, ISizeable
+public class WorldAggregate : AggregateRoot, IStoredEntity
 {
   private WorldUpdatedEvent _updatedEvent = new();
 

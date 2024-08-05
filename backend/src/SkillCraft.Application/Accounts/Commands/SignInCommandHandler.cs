@@ -18,33 +18,34 @@ namespace SkillCraft.Application.Accounts.Commands;
 
 internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInCommandResult>
 {
+  private readonly AccountSettings _accountSettings;
   private readonly IActorService _actorService;
   private readonly IGoogleService _googleService;
   private readonly IMessageService _messageService;
   private readonly IOneTimePasswordService _oneTimePasswordService;
   private readonly IRealmService _realmService;
   private readonly ISessionService _sessionService;
-  private readonly SignInSettings _settings;
   private readonly ITokenService _tokenService;
   private readonly IUserService _userService;
 
-  public SignInCommandHandler(IActorService actorService,
+  public SignInCommandHandler(
+    AccountSettings accountSettings,
+    IActorService actorService,
     IGoogleService googleService,
     IMessageService messageService,
     IOneTimePasswordService oneTimePasswordService,
     IRealmService realmService,
     ISessionService sessionService,
-    SignInSettings settings,
     ITokenService tokenService,
     IUserService userService)
   {
+    _accountSettings = accountSettings;
     _actorService = actorService;
     _googleService = googleService;
     _messageService = messageService;
     _oneTimePasswordService = oneTimePasswordService;
     _realmService = realmService;
     _sessionService = sessionService;
-    _settings = settings;
     _tokenService = tokenService;
     _userService = userService;
   }
@@ -191,7 +192,7 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
 
     if (!user.IsProfileCompleted() && identity.FirstName != null && identity.LastName != null)
     {
-      CompleteProfilePayload payload = new(googleIdToken, identity.FirstName, identity.LastName, locale.Code, _settings.DefaultTimeZone)
+      CompleteProfilePayload payload = new(googleIdToken, identity.FirstName, identity.LastName, locale.Code, _accountSettings.DefaultTimeZone)
       {
         Picture = identity.Picture
       };

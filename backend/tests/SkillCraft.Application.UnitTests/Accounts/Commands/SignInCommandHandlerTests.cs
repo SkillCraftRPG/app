@@ -28,6 +28,7 @@ public class SignInCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
   private readonly Faker _faker = new();
 
+  private readonly AccountSettings _accountSettings = new(TimeZoneId);
   private readonly Mock<IActorService> _actorService = new();
   private readonly Mock<IGoogleService> _googleService = new();
   private readonly Mock<IMessageService> _messageService = new();
@@ -37,7 +38,6 @@ public class SignInCommandHandlerTests
   private readonly Mock<ITokenService> _tokenService = new();
   private readonly Mock<IUserService> _userService = new();
 
-  private readonly SignInSettings _settings = new(TimeZoneId);
   private readonly SignInCommandHandler _handler;
 
   private readonly RealmMock _realm = new();
@@ -46,7 +46,7 @@ public class SignInCommandHandlerTests
   {
     _realmService.Setup(x => x.FindAsync(_cancellationToken)).ReturnsAsync(_realm);
 
-    _handler = new(_actorService.Object, _googleService.Object, _messageService.Object, _oneTimePasswordService.Object, _realmService.Object, _sessionService.Object, _settings, _tokenService.Object, _userService.Object);
+    _handler = new(_accountSettings, _actorService.Object, _googleService.Object, _messageService.Object, _oneTimePasswordService.Object, _realmService.Object, _sessionService.Object, _tokenService.Object, _userService.Object);
   }
 
   [Fact(DisplayName = "It should assign a new identifier to the found user without identifier (Google).")]
