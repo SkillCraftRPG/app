@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Actors;
+using SkillCraft.Application.Storage;
 using SkillCraft.Application.Worlds;
 using SkillCraft.EntityFrameworkCore.Actors;
 using SkillCraft.EntityFrameworkCore.Queries;
 using SkillCraft.EntityFrameworkCore.Repositories;
+using SkillCraft.EntityFrameworkCore.Storage;
 using SkillCraft.Infrastructure;
 
 namespace SkillCraft.EntityFrameworkCore;
@@ -17,7 +19,8 @@ public static class DependencyInjectionExtensions
       .AddSkillCraftInfrastructure()
       .AddQueriers()
       .AddRepositories()
-      .AddScoped<IActorService, ActorService>();
+      .AddScoped<IActorService, ActorService>()
+      .AddScoped<IStorageService, StorageService>();
   }
 
   private static IServiceCollection AddQueriers(this IServiceCollection services)

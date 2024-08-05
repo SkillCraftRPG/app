@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
+namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 {
     /// <inheritdoc />
     public partial class CreateWorldTable : Migration
@@ -14,19 +15,20 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                 name: "Worlds",
                 columns: table => new
                 {
-                    WorldId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OwnerId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    UniqueSlug = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AggregateId = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    WorldId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OwnerId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    UniqueSlug = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    UniqueSlugNormalized = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    DisplayName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    AggregateId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Version = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,7 +70,12 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Worlds_UniqueSlug",
                 table: "Worlds",
-                column: "UniqueSlug",
+                column: "UniqueSlug");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Worlds_UniqueSlugNormalized",
+                table: "Worlds",
+                column: "UniqueSlugNormalized",
                 unique: true);
 
             migrationBuilder.CreateIndex(

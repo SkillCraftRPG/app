@@ -1,5 +1,8 @@
-﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+﻿using Logitar;
+using Logitar.Data;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
@@ -8,14 +11,32 @@ namespace SkillCraft.EntityFrameworkCore.Repositories;
 
 internal class WorldRepository : Logitar.EventSourcing.EntityFrameworkCore.Relational.AggregateRepository, IWorldRepository
 {
-  public WorldRepository(IEventBus eventBus, EventContext eventContext, IEventSerializer eventSerializer)
+  private static readonly string AggregateType = typeof(WorldAggregate).GetNamespaceQualifiedName();
+
+  private readonly ISqlHelper _sqlHelper;
+
+  public WorldRepository(IEventBus eventBus, EventContext eventContext, IEventSerializer eventSerializer, ISqlHelper sqlHelper)
     : base(eventBus, eventContext, eventSerializer)
   {
+    _sqlHelper = sqlHelper;
   }
 
-  public Task<WorldAggregate?> LoadAsync(SlugUnit slug, CancellationToken cancellationToken)
+  public async Task<WorldAggregate?> LoadAsync(SlugUnit uniqueSlug, CancellationToken cancellationToken)
   {
-    throw new NotImplementedException(); // TODO(fpion): implement
+    IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table)
+      .Join(SkillCraftDb.Worlds.AggregateId, EventDb.Events.AggregateId,
+        new OperatorCondition(EventDb.Events.AggregateType, Operators.IsEqualTo(AggregateType))
+      )
+      .Where(SkillCraftDb.Worlds.UniqueSlugNormalized, Operators.IsEqualTo(SkillCraftDb.Normalize(uniqueSlug.Value)))
+      .SelectAll(EventDb.Events.Table)
+      .Build();
+
+    EventEntity[] events = await EventContext.Events.FromQuery(query)
+      .AsNoTracking()
+      .OrderBy(e => e.Version)
+      .ToArrayAsync(cancellationToken);
+
+    return Load<WorldAggregate>(events.Select(EventSerializer.Deserialize)).SingleOrDefault();
   }
 
   public async Task SaveAsync(WorldAggregate world, CancellationToken cancellationToken)

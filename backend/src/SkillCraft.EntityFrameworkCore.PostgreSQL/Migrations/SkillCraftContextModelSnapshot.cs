@@ -110,6 +110,11 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<string>("UniqueSlugNormalized")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -137,7 +142,9 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.HasIndex("UniqueSlug")
+                    b.HasIndex("UniqueSlug");
+
+                    b.HasIndex("UniqueSlugNormalized")
                         .IsUnique();
 
                     b.HasIndex("UpdatedBy");

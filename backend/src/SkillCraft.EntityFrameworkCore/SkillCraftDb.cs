@@ -34,6 +34,9 @@ internal static class SkillCraftDb
     public static readonly ColumnId Id = new(nameof(WorldEntity.Id), Table);
     public static readonly ColumnId OwnerId = new(nameof(WorldEntity.OwnerId), Table);
     public static readonly ColumnId UniqueSlug = new(nameof(WorldEntity.UniqueSlug), Table);
+    public static readonly ColumnId UniqueSlugNormalized = new(nameof(WorldEntity.UniqueSlugNormalized), Table);
     public static readonly ColumnId WorldId = new(nameof(WorldEntity.WorldId), Table);
   }
+
+  public static string Normalize(string value) => value.Trim().ToUpperInvariant();
 }

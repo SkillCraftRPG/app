@@ -11,6 +11,11 @@ internal class WorldEntity : AggregateEntity
   public string OwnerId { get; private set; } = string.Empty;
 
   public string UniqueSlug { get; private set; } = string.Empty;
+  public string UniqueSlugNormalized
+  {
+    get => SkillCraftDb.Normalize(UniqueSlug);
+    private set { }
+  }
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
