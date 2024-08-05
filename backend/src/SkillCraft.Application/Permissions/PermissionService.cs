@@ -17,6 +17,10 @@ internal class PermissionService : IPermissionService
 
   public async Task EnsureCanCreateWorldAsync(User user, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken); // TODO(fpion): implement
+    int count = await _worldQuerier.CountOwnedAsync(user, cancellationToken);
+    if (count >= _accountSettings.WorldLimit)
+    {
+      throw new NotImplementedException(); // TODO(fpion): implement
+    }
   }
 }

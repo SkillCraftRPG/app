@@ -1,4 +1,5 @@
-﻿using SkillCraft.Domain.Worlds.Events;
+﻿using Logitar.EventSourcing;
+using SkillCraft.Domain.Worlds.Events;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
@@ -25,6 +26,8 @@ internal class WorldEntity : AggregateEntity
 
     UniqueSlug = @event.UniqueSlug.Value;
   }
+
+  public override IEnumerable<ActorId> GetActorIds() => base.GetActorIds().Concat([new(OwnerId)]);
 
   public void Update(WorldUpdatedEvent @event)
   {

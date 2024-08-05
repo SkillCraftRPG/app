@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Worlds.Commands;
+using SkillCraft.Application.Worlds.Queries;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Extensions;
+using SkillCraft.Models.Worlds;
 
 namespace SkillCraft.Controllers;
 
@@ -51,10 +53,10 @@ public class WorldController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<SearchResults<World>>> SearchAsync(CancellationToken cancellationToken)
+  public async Task<ActionResult<SearchResults<World>>> SearchAsync([FromQuery] SearchWorldsParameters parameters, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    SearchResults<World> worlds = await _requestPipeline.ExecuteAsync(new SearchWorldsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(worlds);
   }
 
   [HttpPatch]

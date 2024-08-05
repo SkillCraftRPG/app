@@ -27,6 +27,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarEventSourcingWithEntityFrameworkCorePostgreSQL(connectionString)
       .AddSkillCraftWithEntityFrameworkCore()
-      .AddDbContext<SkillCraftContext>(options => options.UseNpgsql(connectionString, b => b.MigrationsAssembly("SkillCraft.EntityFrameworkCore.PostgreSQL")));
+      .AddDbContext<SkillCraftContext>(options => options.UseNpgsql(connectionString, b => b.MigrationsAssembly("SkillCraft.EntityFrameworkCore.PostgreSQL")))
+      .AddSingleton<ISqlHelper, PostgresHelper>();
   }
 }

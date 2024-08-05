@@ -26,7 +26,7 @@ internal abstract class AggregateEntity
     CreatedOn = @event.OccurredOn.AsUniversalTime();
   }
 
-  protected IEnumerable<ActorId> GetActorIds() => [new(CreatedBy), new(UpdatedBy)];
+  public virtual IEnumerable<ActorId> GetActorIds() => [new(CreatedBy), new(UpdatedBy)];
 
   protected void Update(DomainEvent @event)
   {

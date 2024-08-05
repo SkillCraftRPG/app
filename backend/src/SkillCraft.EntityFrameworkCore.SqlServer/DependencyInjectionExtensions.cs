@@ -27,6 +27,7 @@ public static class DependencyInjectionExtensions
     return services
       .AddLogitarEventSourcingWithEntityFrameworkCoreSqlServer(connectionString)
       .AddSkillCraftWithEntityFrameworkCore()
-      .AddDbContext<SkillCraftContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("SkillCraft.EntityFrameworkCore.SqlServer")));
+      .AddDbContext<SkillCraftContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("SkillCraft.EntityFrameworkCore.SqlServer")))
+      .AddSingleton<ISqlHelper, SqlServerHelper>();
   }
 }
