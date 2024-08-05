@@ -5,7 +5,7 @@ using SkillCraft.Domain.Storage;
 
 namespace SkillCraft.Application.Storage;
 
-internal class StorageService : IStorageService // TODO(fpion): unit tests
+internal class StorageService : IStorageService
 {
   private readonly AccountSettings _accountSettings;
   private readonly IStorageRepository _storageRepository;
