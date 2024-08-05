@@ -3,7 +3,6 @@ using Logitar.Data;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using SkillCraft.Application.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
 

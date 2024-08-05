@@ -1,9 +1,10 @@
-﻿using SkillCraft.Domain;
+﻿using Logitar.Portal.Contracts.Users;
+using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Storage;
 
 public interface IStorageService
 {
-  Task Async(IStoredEntity entity, CancellationToken cancellationToken = default); // TODO(fpion): rename
-  Task Async(IStoredEntity entity, int previousSize, CancellationToken cancellationToken = default); // TODO(fpion): rename
+  Task EnsureAvailableAsync(User user, IStoredEntity entity, CancellationToken cancellationToken = default);
+  Task EnsureAvailableAsync(User user, IStoredEntity entity, int previousSize, CancellationToken cancellationToken = default);
 }

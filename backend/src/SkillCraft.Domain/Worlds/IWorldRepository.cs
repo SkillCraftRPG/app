@@ -1,7 +1,4 @@
-﻿using SkillCraft.Domain;
-using SkillCraft.Domain.Worlds;
-
-namespace SkillCraft.Application.Worlds;
+﻿namespace SkillCraft.Domain.Worlds;
 
 public interface IWorldRepository
 {

@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing;
+using Logitar.Portal.Contracts.Users;
 using MediatR;
 using SkillCraft.Application.Storage;
 using SkillCraft.Domain.Worlds;
@@ -19,6 +20,7 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
 
   public async Task Handle(SaveWorldCommand command, CancellationToken cancellationToken)
   {
+    User user = command.User;
     WorldAggregate world = command.World;
 
     bool hasUniqueSlugChanged = false;
@@ -40,8 +42,10 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
       }
     }
 
-    await _storageService.Async(world, command.PreviousSize, cancellationToken);
+    await _storageService.EnsureAvailableAsync(user, world, command.PreviousSize, cancellationToken);
 
     await _worldRepository.SaveAsync(world, cancellationToken);
+
+    // TODO(fpion): reserve storage
   }
 }

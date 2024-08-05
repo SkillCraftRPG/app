@@ -4,6 +4,7 @@ public record AccountSettings
 {
   public const string SectionKey = "Account";
 
+  public long AllocatedBytes { get; set; }
   public string DefaultTimeZone { get; set; }
   public int WorldLimit { get; set; }
 

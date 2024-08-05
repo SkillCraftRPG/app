@@ -54,6 +54,14 @@ internal class ExceptionHandling : ExceptionFilterAttribute
       };
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is PaymentRequiredException paymentRequired)
+    {
+      context.Result = new JsonResult(paymentRequired.Error)
+      {
+        StatusCode = StatusCodes.Status402PaymentRequired
+      };
+      context.ExceptionHandled = true;
+    }
     else if (context.Exception is HttpFailureException<JsonApiResult> portal) // ISSUE: https://github.com/SkillCraftRPG/app/issues/10
     {
       Error? error = null;
