@@ -42,4 +42,19 @@ internal class StorageService : IStorageService
       }
     }
   }
+
+  public async Task UpdateAsync(IStoredEntity entity, CancellationToken cancellationToken)
+  {
+    StorageAggregate? storage = await _storageRepository.LoadAsync(entity.WorldId, cancellationToken);
+    if (storage == null)
+    {
+      WorldAggregate world = await _worldRepository.LoadAsync(entity.WorldId, cancellationToken)
+        ?? throw new InvalidOperationException($"The world aggregate 'Id={entity.WorldId}' could not be found.");
+      storage = StorageAggregate.Initialize(world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+    }
+
+    storage.Store(entity);
+
+    await _storageRepository.SaveAsync(storage, cancellationToken);
+  }
 }

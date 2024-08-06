@@ -44,6 +44,6 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
 
     await _worldRepository.SaveAsync(world, cancellationToken);
 
-    // TODO(fpion): reserve storage
+    await _storageService.UpdateAsync(world, cancellationToken);
   }
 }

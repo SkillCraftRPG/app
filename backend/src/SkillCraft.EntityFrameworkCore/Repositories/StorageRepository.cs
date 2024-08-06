@@ -37,4 +37,13 @@ internal class StorageRepository : Logitar.EventSourcing.EntityFrameworkCore.Rel
 
     return Load<StorageAggregate>(events.Select(EventSerializer.Deserialize)).SingleOrDefault();
   }
+
+  public async Task SaveAsync(StorageAggregate storage, CancellationToken cancellationToken)
+  {
+    await base.SaveAsync(storage, cancellationToken);
+  }
+  public async Task SaveAsync(IEnumerable<StorageAggregate> storages, CancellationToken cancellationToken)
+  {
+    await base.SaveAsync(storages, cancellationToken);
+  }
 }

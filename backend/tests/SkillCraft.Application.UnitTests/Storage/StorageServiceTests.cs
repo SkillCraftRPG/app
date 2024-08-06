@@ -3,6 +3,7 @@ using Moq;
 using SkillCraft.Application.Settings;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Storage;
+using SkillCraft.Domain.Storage.Events;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Storage;
@@ -82,5 +83,38 @@ public class StorageServiceTests
     Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
     Assert.Equal(_accountSettings.AllocatedBytes, exception.AvailableBytes);
     Assert.Equal(entity.Size - previousSize, exception.RequiredBytes);
+  }
+
+  [Fact(DisplayName = "UpdateAsync: it should initialize the storage when it does not exist.")]
+  public async Task UpdateAsync_it_should_initialize_the_storage_when_it_does_not_exist()
+  {
+    _accountSettings.AllocatedBytes = 1024;
+    _worldRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(_world);
+
+    StoredEntityMock entity = new(_world.Id, EntityType.World, _world.Id.ToGuid(), _world.Size);
+    await _service.UpdateAsync(entity, _cancellationToken);
+
+    Func<DomainEvent, bool> isStorageInitializedEvent = change => change is StorageInitializedEvent e && e.UserId == _world.OwnerId.ToGuid() && e.AllocatedBytes == _accountSettings.AllocatedBytes;
+    Func<DomainEvent, bool> isEntityStoredEvent = change => change is EntityStoredEvent e && e.WorldId == _world.Id && e.EntityType == entity.EntityType && e.EntityId == entity.EntityId && e.Size == entity.Size && e.UsedBytes == entity.Size; ;
+    _storageRepository.Verify(x => x.SaveAsync(It.Is<StorageAggregate>(y => y.Changes.Count == 2
+      && y.Changes.Any(isStorageInitializedEvent)
+      && y.Changes.Any(isEntityStoredEvent)
+    ), _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "UpdateAsync: it should update the storage when it exists.")]
+  public async Task UpdateAsync_it_should_update_the_storage_when_it_exists()
+  {
+    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), allocatedBytes: 1024);
+    storage.ClearChanges();
+    _storageRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(storage);
+
+    StoredEntityMock entity = new(_world.Id, EntityType.World, _world.Id.ToGuid(), _world.Size);
+    await _service.UpdateAsync(entity, _cancellationToken);
+
+    _worldRepository.Verify(x => x.LoadAsync(It.IsAny<WorldId>(), It.IsAny<CancellationToken>()), Times.Never);
+
+    Func<DomainEvent, bool> isEntityStoredEvent = change => change is EntityStoredEvent e && e.WorldId == _world.Id && e.EntityType == entity.EntityType && e.EntityId == entity.EntityId && e.Size == entity.Size && e.UsedBytes == entity.Size; ;
+    _storageRepository.Verify(x => x.SaveAsync(It.Is<StorageAggregate>(y => y.Changes.Count == 1 && y.Changes.Any(isEntityStoredEvent)), _cancellationToken), Times.Once);
   }
 }

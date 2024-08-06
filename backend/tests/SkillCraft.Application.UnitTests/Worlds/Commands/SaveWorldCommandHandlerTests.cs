@@ -30,6 +30,8 @@ public class SaveWorldCommandHandlerTests
     await _handler.Handle(command, _cancellationToken);
 
     _storageService.Verify(x => x.EnsureAvailableAsync(world, 0, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.UpdateAsync(world, _cancellationToken), Times.Once);
+
     _worldRepository.Verify(x => x.SaveAsync(world, _cancellationToken), Times.Once);
     _worldRepository.VerifyNoOtherCalls();
   }
@@ -44,6 +46,8 @@ public class SaveWorldCommandHandlerTests
     await _handler.Handle(command, _cancellationToken);
 
     _storageService.Verify(x => x.EnsureAvailableAsync(world, 0, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.UpdateAsync(world, _cancellationToken), Times.Once);
+
     _worldRepository.Verify(x => x.SaveAsync(world, _cancellationToken), Times.Once);
   }
 

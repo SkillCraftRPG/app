@@ -26,4 +26,9 @@ internal class StorageSummaryEntity
   private StorageSummaryEntity()
   {
   }
+
+  public void Update(EntityStoredEvent @event)
+  {
+    UsedBytes = @event.UsedBytes;
+  }
 }

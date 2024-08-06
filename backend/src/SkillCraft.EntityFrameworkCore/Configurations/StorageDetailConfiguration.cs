@@ -16,7 +16,7 @@ internal class StorageDetailConfiguration : IEntityTypeConfiguration<StorageDeta
     builder.HasIndex(x => x.UserId);
     builder.HasIndex(x => x.WorldId);
     builder.HasIndex(x => new { x.EntityType, x.EntityId }).IsUnique();
-    builder.HasIndex(x => x.UsedBytes);
+    builder.HasIndex(x => x.Size);
 
     builder.Property(x => x.EntityType).HasMaxLength(-1).HasConversion(new EnumToStringConverter<EntityType>());
 

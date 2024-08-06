@@ -3,13 +3,15 @@ using SkillCraft.Domain.Storage.Events;
 
 namespace SkillCraft.Domain.Storage;
 
-public class StorageAggregate : AggregateRoot
+public class StorageAggregate : AggregateRoot // TODO(fpion): unit tests
 {
   public Guid UserId { get; private set; }
 
   public long AllocatedBytes { get; private set; }
-  public long UsedBytes => 0; // TODO(fpion): computed
+  public long UsedBytes => _storedEntities.Values.Sum(e => e.Size);
   public long AvailableBytes => AllocatedBytes - UsedBytes;
+
+  private readonly Dictionary<string, StoredEntity> _storedEntities = [];
 
   public StorageAggregate() : base()
   {
@@ -44,4 +46,26 @@ public class StorageAggregate : AggregateRoot
 
     AllocatedBytes = @event.AllocatedBytes;
   }
+
+  public void Store(IStoredEntity entity)
+  {
+    string key = GetEntityKey(entity);
+    if (!_storedEntities.TryGetValue(key, out StoredEntity? existing) || existing.WorldId != entity.WorldId || existing.Size != entity.Size)
+    {
+      long usedBytes = UsedBytes + entity.Size;
+      if (existing != null)
+      {
+        usedBytes -= existing.Size;
+      }
+
+      Raise(EntityStoredEvent.From(entity, usedBytes), new ActorId(UserId));
+    }
+  }
+  protected virtual void Apply(EntityStoredEvent @event)
+  {
+    string key = GetEntityKey(@event.EntityType, @event.EntityId);
+    _storedEntities[key] = new StoredEntity(@event.WorldId, @event.Size);
+  }
+  private static string GetEntityKey(IStoredEntity entity) => GetEntityKey(entity.EntityType, entity.EntityId);
+  private static string GetEntityKey(EntityType entityType, Guid entityId) => $"{entityType}.Id:{entityId}";
 }
