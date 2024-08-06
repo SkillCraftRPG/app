@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SkillCraft.Application\SkillCraft.Application.csproj" />
-    <ProjectReference Include="..\SkillCraft.Tests\SkillCraft.Tests.csproj" />
+    <ProjectReference Include="..\SkillCraft.Domain.UnitTests\SkillCraft.Domain.UnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

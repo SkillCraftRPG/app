@@ -40,7 +40,7 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
       }
     }
 
-    await _storageService.EnsureAvailableAsync(world, command.PreviousSize, cancellationToken);
+    await _storageService.EnsureAvailableAsync(world, cancellationToken);
 
     await _worldRepository.SaveAsync(world, cancellationToken);
 

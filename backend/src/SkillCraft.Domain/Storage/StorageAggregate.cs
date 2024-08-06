@@ -3,15 +3,21 @@ using SkillCraft.Domain.Storage.Events;
 
 namespace SkillCraft.Domain.Storage;
 
-public class StorageAggregate : AggregateRoot // TODO(fpion): unit tests
+public class StorageAggregate : AggregateRoot
 {
   public Guid UserId { get; private set; }
 
   public long AllocatedBytes { get; private set; }
-  public long UsedBytes => _storedEntities.Values.Sum(e => e.Size);
+  public long UsedBytes => _storedEntities.Values.Sum(entity => entity.Size);
   public long AvailableBytes => AllocatedBytes - UsedBytes;
 
   private readonly Dictionary<string, StoredEntity> _storedEntities = [];
+  public long GetSize(IStoredEntity entity) => GetSize(entity.EntityType, entity.EntityId);
+  public long GetSize(EntityType entityType, Guid entityId)
+  {
+    string key = GetEntityKey(entityType, entityId);
+    return _storedEntities.TryGetValue(key, out StoredEntity? entity) ? entity.Size : 0;
+  }
 
   public StorageAggregate() : base()
   {
@@ -29,7 +35,7 @@ public class StorageAggregate : AggregateRoot // TODO(fpion): unit tests
     }
     if (allocatedBytes < 1)
     {
-      throw new ArgumentException("The allocated bytes shall be a positive integer value.", nameof(allocatedBytes));
+      throw new ArgumentException("The allocated bytes must be a positive integer value.", nameof(allocatedBytes));
     }
 
     AggregateId aggregateId = new(userId);
@@ -50,7 +56,7 @@ public class StorageAggregate : AggregateRoot // TODO(fpion): unit tests
   public void Store(IStoredEntity entity)
   {
     string key = GetEntityKey(entity);
-    if (!_storedEntities.TryGetValue(key, out StoredEntity? existing) || existing.WorldId != entity.WorldId || existing.Size != entity.Size)
+    if (!_storedEntities.TryGetValue(key, out StoredEntity? existing) || existing.Size != entity.Size)
     {
       long usedBytes = UsedBytes + entity.Size;
       if (existing != null)

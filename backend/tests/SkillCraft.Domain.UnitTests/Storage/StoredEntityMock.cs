@@ -1,9 +1,8 @@
-﻿using SkillCraft.Domain;
-using SkillCraft.Domain.Worlds;
+﻿using SkillCraft.Domain.Worlds;
 
-namespace SkillCraft.Application.Storage;
+namespace SkillCraft.Domain.Storage;
 
-internal class StoredEntityMock : IStoredEntity
+public class StoredEntityMock : IStoredEntity
 {
   public WorldId WorldId { get; }
 

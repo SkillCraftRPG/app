@@ -7,6 +7,8 @@ namespace SkillCraft.Application.Storage;
 
 internal class StorageService : IStorageService
 {
+  private readonly Dictionary<WorldId, StorageAggregate> _cache = [];
+
   private readonly AccountSettings _accountSettings;
   private readonly IStorageRepository _storageRepository;
   private readonly IWorldRepository _worldRepository;
@@ -20,41 +22,43 @@ internal class StorageService : IStorageService
 
   public async Task EnsureAvailableAsync(IStoredEntity entity, CancellationToken cancellationToken)
   {
-    await EnsureAvailableAsync(entity, previousSize: 0, cancellationToken);
-  }
-  public async Task EnsureAvailableAsync(IStoredEntity entity, int previousSize, CancellationToken cancellationToken)
-  {
-    int requiredBytes = entity.Size - previousSize;
-    if (requiredBytes > 0)
+    StorageAggregate storage = await LoadOrInitializeAsync(entity.WorldId, cancellationToken);
+
+    long previousBytes = storage.GetSize(entity);
+    long requiredBytes = entity.Size - previousBytes;
+    if (requiredBytes > 0 && requiredBytes > storage.AvailableBytes)
     {
-      StorageAggregate? storage = await _storageRepository.LoadAsync(entity.WorldId, cancellationToken);
-      long availableBytes = storage?.AvailableBytes ?? _accountSettings.AllocatedBytes;
-      if (requiredBytes > availableBytes)
-      {
-        Guid? userId = storage?.UserId;
-        if (!userId.HasValue)
-        {
-          WorldAggregate world = await _worldRepository.LoadAsync(entity.WorldId, cancellationToken)
-            ?? throw new InvalidOperationException($"The world aggregate 'Id={entity.WorldId}' could not be found.");
-          userId = world.OwnerId.ToGuid();
-        }
-        throw new NotEnoughAvailableStorageException(userId.Value, availableBytes, requiredBytes);
-      }
+      throw new NotEnoughAvailableStorageException(storage, requiredBytes);
     }
+
+    _cache[entity.WorldId] = storage;
   }
 
   public async Task UpdateAsync(IStoredEntity entity, CancellationToken cancellationToken)
   {
-    StorageAggregate? storage = await _storageRepository.LoadAsync(entity.WorldId, cancellationToken);
-    if (storage == null)
+    if (!_cache.TryGetValue(entity.WorldId, out StorageAggregate? storage))
     {
-      WorldAggregate world = await _worldRepository.LoadAsync(entity.WorldId, cancellationToken)
-        ?? throw new InvalidOperationException($"The world aggregate 'Id={entity.WorldId}' could not be found.");
-      storage = StorageAggregate.Initialize(world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+      storage = await LoadOrInitializeAsync(entity.WorldId, cancellationToken);
     }
 
     storage.Store(entity);
 
     await _storageRepository.SaveAsync(storage, cancellationToken);
+
+    _cache[entity.WorldId] = storage;
+  }
+
+  private async Task<StorageAggregate> LoadOrInitializeAsync(WorldId worldId, CancellationToken cancellationToken)
+  {
+    StorageAggregate? storage = await _storageRepository.LoadAsync(worldId, cancellationToken);
+    if (storage == null)
+    {
+      WorldAggregate world = await _worldRepository.LoadAsync(worldId, cancellationToken)
+        ?? throw new InvalidOperationException($"The world aggregate 'Id={worldId}' could not be found.");
+
+      storage = StorageAggregate.Initialize(world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+    }
+
+    return storage;
   }
 }
