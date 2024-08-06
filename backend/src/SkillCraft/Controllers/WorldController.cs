@@ -35,28 +35,28 @@ public class WorldController : ControllerBase
   public async Task<ActionResult<World>> DeleteAsync(Guid id, CancellationToken cancellationToken)
   {
     await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<World>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
   }
 
   [HttpGet("unique-slug:{uniqueSlug}")]
   public async Task<ActionResult<World>> ReadAsync(string uniqueSlug, CancellationToken cancellationToken)
   {
     await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
   }
 
   [HttpPut]
   public async Task<ActionResult<World>> ReplaceAsync(Guid id, [FromBody] ReplaceWorldPayload payload, long? version, CancellationToken cancellationToken)
   {
     await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
   }
 
   [HttpGet]
@@ -70,6 +70,6 @@ public class WorldController : ControllerBase
   public async Task<ActionResult<World>> UpdateAsync(Guid id, [FromBody] UpdateWorldPayload payload, CancellationToken cancellationToken)
   {
     await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
   }
 }
