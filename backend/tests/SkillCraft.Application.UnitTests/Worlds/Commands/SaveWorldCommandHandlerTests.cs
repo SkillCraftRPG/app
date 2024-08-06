@@ -15,8 +15,6 @@ public class SaveWorldCommandHandlerTests
 
   private readonly SaveWorldCommandHandler _handler;
 
-  private readonly UserMock _user = new();
-
   public SaveWorldCommandHandlerTests()
   {
     _handler = new(_storageService.Object, _worldRepository.Object);
@@ -28,10 +26,10 @@ public class SaveWorldCommandHandlerTests
     WorldAggregate world = new(new SlugUnit("new-world"));
     world.ClearChanges();
 
-    SaveWorldCommand command = new(_user, world);
+    SaveWorldCommand command = new(world);
     await _handler.Handle(command, _cancellationToken);
 
-    _storageService.Verify(x => x.EnsureAvailableAsync(_user, world, 0, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.EnsureAvailableAsync(world, 0, _cancellationToken), Times.Once);
     _worldRepository.Verify(x => x.SaveAsync(world, _cancellationToken), Times.Once);
     _worldRepository.VerifyNoOtherCalls();
   }
@@ -42,10 +40,10 @@ public class SaveWorldCommandHandlerTests
     WorldAggregate world = new(new SlugUnit("new-world"));
     _worldRepository.Setup(x => x.LoadAsync(world.UniqueSlug, _cancellationToken)).ReturnsAsync(world);
 
-    SaveWorldCommand command = new(_user, world);
+    SaveWorldCommand command = new(world);
     await _handler.Handle(command, _cancellationToken);
 
-    _storageService.Verify(x => x.EnsureAvailableAsync(_user, world, 0, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.EnsureAvailableAsync(world, 0, _cancellationToken), Times.Once);
     _worldRepository.Verify(x => x.SaveAsync(world, _cancellationToken), Times.Once);
   }
 
@@ -57,7 +55,7 @@ public class SaveWorldCommandHandlerTests
     WorldAggregate other = new(world.UniqueSlug);
     _worldRepository.Setup(x => x.LoadAsync(world.UniqueSlug, _cancellationToken)).ReturnsAsync(other);
 
-    SaveWorldCommand command = new(_user, world);
+    SaveWorldCommand command = new(world);
     var exception = await Assert.ThrowsAsync<UniqueSlugAlreadyUsedException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(world.UniqueSlug.Value, exception.UniqueSlug);
     Assert.Equal("UniqueSlug", exception.PropertyName);

@@ -53,6 +53,9 @@ public class WorldAggregate : AggregateRoot, IStoredEntity
     }
   }
 
+  public WorldId WorldId => Id;
+  public EntityType EntityType { get; } = EntityType.World;
+  public Guid EntityId => Id.ToGuid();
   public int Size => UniqueSlug.Value.Length + (DisplayName?.Value.Length ?? 0) + (Description?.Value.Length ?? 0);
 
   public WorldAggregate() : base()

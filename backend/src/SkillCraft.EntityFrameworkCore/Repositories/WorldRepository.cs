@@ -20,6 +20,11 @@ internal class WorldRepository : Logitar.EventSourcing.EntityFrameworkCore.Relat
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<WorldAggregate?> LoadAsync(WorldId id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<WorldAggregate>(id.AggregateId, cancellationToken);
+  }
+
   public async Task<WorldAggregate?> LoadAsync(SlugUnit uniqueSlug, CancellationToken cancellationToken)
   {
     IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table)

@@ -1,6 +1,5 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Errors;
-using Logitar.Portal.Contracts.Users;
 
 namespace SkillCraft.Application.Storage;
 
@@ -35,16 +34,16 @@ public class NotEnoughAvailableStorageException : PaymentRequiredException
     }
   }
 
-  public NotEnoughAvailableStorageException(User user, long availableBytes, long requiredBytes)
-    : base(BuildMessage(user, availableBytes, requiredBytes))
+  public NotEnoughAvailableStorageException(Guid userId, long availableBytes, long requiredBytes)
+    : base(BuildMessage(userId, availableBytes, requiredBytes))
   {
-    UserId = user.Id;
+    UserId = userId;
     AvailableBytes = availableBytes;
     RequiredBytes = requiredBytes;
   }
 
-  private static string BuildMessage(User user, long availableBytes, long requiredBytes) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(UserId), user.Id)
+  private static string BuildMessage(Guid userId, long availableBytes, long requiredBytes) => new ErrorMessageBuilder(ErrorMessage)
+    .AddData(nameof(UserId), userId)
     .AddData(nameof(AvailableBytes), availableBytes)
     .AddData(nameof(RequiredBytes), requiredBytes)
     .Build();

@@ -1,6 +1,9 @@
-﻿using Moq;
+﻿using Logitar.EventSourcing;
+using Moq;
 using SkillCraft.Application.Settings;
+using SkillCraft.Domain;
 using SkillCraft.Domain.Storage;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Storage;
 
@@ -12,14 +15,17 @@ public class StorageServiceTests
 
   private readonly AccountSettings _accountSettings = new();
   private readonly Mock<IStorageRepository> _storageRepository = new();
+  private readonly Mock<IWorldRepository> _worldRepository = new();
 
   private readonly StorageService _service;
 
-  private readonly UserMock _user = new();
+  private readonly WorldAggregate _world;
 
   public StorageServiceTests()
   {
-    _service = new(_accountSettings, _storageRepository.Object);
+    _service = new(_accountSettings, _storageRepository.Object, _worldRepository.Object);
+
+    _world = new(new SlugUnit("new-world"), ActorId.NewId());
   }
 
   [Theory(DisplayName = "EnsureAvailableAsync: it should not check storage when zero or negative bytes are required.")]
@@ -29,8 +35,8 @@ public class StorageServiceTests
   {
     Assert.True(requiredBytes <= 0);
 
-    StoredEntityMock entity = new(requiredBytes);
-    await _service.EnsureAvailableAsync(_user, entity, 0, _cancellationToken);
+    StoredEntityMock entity = new(_world.Id, _world.EntityType, _world.EntityId, requiredBytes);
+    await _service.EnsureAvailableAsync(entity, 0, _cancellationToken);
 
     _storageRepository.VerifyNoOtherCalls();
   }
@@ -40,17 +46,17 @@ public class StorageServiceTests
   [InlineData(true)]
   public async Task EnsureAvailableAsync_it_should_succeed_when_there_is_enough_available_storage(bool summaryExists)
   {
-    StoredEntityMock entity = new(_random.Next(1, byte.MaxValue + 1));
+    StoredEntityMock entity = new(_world.Id, _world.EntityType, _world.EntityId, _random.Next(1, byte.MaxValue + 1));
     int previousSize = entity.Size / 2;
     _accountSettings.AllocatedBytes = entity.Size * 3 / 4;
 
     if (summaryExists)
     {
-      StorageAggregate storage = StorageAggregate.Initialize(_user.Id, _accountSettings.AllocatedBytes);
-      _storageRepository.Setup(x => x.LoadAsync(_user.Id, _cancellationToken)).ReturnsAsync(storage);
+      StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+      _storageRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(storage);
     }
 
-    await _service.EnsureAvailableAsync(_user, entity, previousSize, _cancellationToken);
+    await _service.EnsureAvailableAsync(entity, previousSize, _cancellationToken);
   }
 
   [Theory(DisplayName = "EnsureAvailableAsync: it should throw NotEnoughAvailableStorageException when there is not enough storage.")]
@@ -58,18 +64,22 @@ public class StorageServiceTests
   [InlineData(true)]
   public async Task EnsureAvailableAsync_it_should_throw_NotEnoughAvailableStorageException_when_there_is_not_enough_storage(bool summaryExists)
   {
-    StoredEntityMock entity = new(_random.Next(1, byte.MaxValue + 1));
+    StoredEntityMock entity = new(_world.Id, _world.EntityType, _world.EntityId, _random.Next(1, byte.MaxValue + 1));
     int previousSize = entity.Size / 2;
     _accountSettings.AllocatedBytes = entity.Size / 4;
 
     if (summaryExists)
     {
-      StorageAggregate storage = StorageAggregate.Initialize(_user.Id, _accountSettings.AllocatedBytes);
-      _storageRepository.Setup(x => x.LoadAsync(_user.Id, _cancellationToken)).ReturnsAsync(storage);
+      StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+      _storageRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(storage);
+    }
+    else
+    {
+      _worldRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(_world);
     }
 
-    var exception = await Assert.ThrowsAsync<NotEnoughAvailableStorageException>(async () => await _service.EnsureAvailableAsync(_user, entity, previousSize, _cancellationToken));
-    Assert.Equal(_user.Id, exception.UserId);
+    var exception = await Assert.ThrowsAsync<NotEnoughAvailableStorageException>(async () => await _service.EnsureAvailableAsync(entity, previousSize, _cancellationToken));
+    Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
     Assert.Equal(_accountSettings.AllocatedBytes, exception.AvailableBytes);
     Assert.Equal(entity.Size - previousSize, exception.RequiredBytes);
   }

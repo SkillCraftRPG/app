@@ -2,6 +2,7 @@
 using Logitar.Portal.Contracts.Errors;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Permissions;
 

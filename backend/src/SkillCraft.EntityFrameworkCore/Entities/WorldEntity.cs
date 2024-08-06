@@ -19,6 +19,8 @@ internal class WorldEntity : AggregateEntity
   public string? DisplayName { get; private set; }
   public string? Description { get; private set; }
 
+  public List<StorageDetailEntity> StorageDetails { get; private set; } = [];
+
   private WorldEntity() : base()
   {
   }

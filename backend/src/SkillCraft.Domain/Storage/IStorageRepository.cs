@@ -1,6 +1,8 @@
-﻿namespace SkillCraft.Domain.Storage;
+﻿using SkillCraft.Domain.Worlds;
+
+namespace SkillCraft.Domain.Storage;
 
 public interface IStorageRepository
 {
-  Task<StorageAggregate?> LoadAsync(Guid userId, CancellationToken cancellationToken = default);
+  Task<StorageAggregate?> LoadAsync(WorldId worldId, CancellationToken cancellationToken = default);
 }
