@@ -23,9 +23,10 @@ internal class StorageRepository : Logitar.EventSourcing.EntityFrameworkCore.Rel
   public async Task<StorageAggregate?> LoadAsync(WorldId worldId, CancellationToken cancellationToken)
   {
     IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table)
-      .Join(SkillCraftDb.Worlds.OwnerId, EventDb.Events.AggregateId,
+      .Join(SkillCraftDb.StorageSummaries.AggregateId, EventDb.Events.AggregateId,
         new OperatorCondition(EventDb.Events.AggregateType, Operators.IsEqualTo(AggregateType))
       )
+      .Join(SkillCraftDb.Worlds.OwnerId, SkillCraftDb.StorageSummaries.UserId)
       .Where(SkillCraftDb.Worlds.AggregateId, Operators.IsEqualTo(worldId.Value))
       .SelectAll(EventDb.Events.Table)
       .Build();

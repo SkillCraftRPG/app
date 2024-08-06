@@ -2,7 +2,7 @@
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
-internal class StorageSummaryEntity
+internal class StorageSummaryEntity : AggregateEntity
 {
   public int StorageSummaryId { get; private set; }
 
@@ -16,19 +16,21 @@ internal class StorageSummaryEntity
     private set { }
   }
 
-  public StorageSummaryEntity(StorageInitializedEvent @event)
+  private StorageSummaryEntity() : base()
+  {
+  }
+
+  public StorageSummaryEntity(StorageInitializedEvent @event) : base(@event)
   {
     UserId = @event.UserId;
 
     AllocatedBytes = @event.AllocatedBytes;
   }
 
-  private StorageSummaryEntity()
-  {
-  }
-
   public void Update(EntityStoredEvent @event)
   {
+    base.Update(@event);
+
     UsedBytes = @event.UsedBytes;
   }
 }

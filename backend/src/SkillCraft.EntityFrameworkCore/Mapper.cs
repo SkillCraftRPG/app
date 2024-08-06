@@ -59,6 +59,6 @@ internal class Mapper
     destination.UpdatedOn = source.UpdatedOn.AsUniversalTime();
   }
 
-  private Actor FindActor(string id) => FindActor(new ActorId(id));
+  private Actor FindActor(Guid id) => FindActor(new ActorId(id));
   private Actor FindActor(ActorId id) => _actors.TryGetValue(id, out Actor? actor) ? actor : _system;
 }

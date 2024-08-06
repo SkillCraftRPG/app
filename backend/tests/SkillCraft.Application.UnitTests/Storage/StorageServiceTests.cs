@@ -5,7 +5,6 @@ using SkillCraft.Domain;
 using SkillCraft.Domain.Storage;
 using SkillCraft.Domain.Storage.Events;
 using SkillCraft.Domain.Worlds;
-using System.Reflection;
 
 namespace SkillCraft.Application.Storage;
 
@@ -47,7 +46,7 @@ public class StorageServiceTests
   [Fact(DisplayName = "EnsureAvailableAsync: it should cache the existing aggregate when there is enough storage.")]
   public async Task EnsureAvailableAsync_it_should_cache_the_existing_aggregate_when_there_is_enough_storage()
   {
-    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId, _accountSettings.AllocatedBytes);
     _storageRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(storage);
 
     StoredEntityMock previousEntity = new(_world.Id, EntityType.World, _world.Id.ToGuid(), _random.Next(1, (int)storage.AllocatedBytes / 2));
@@ -72,7 +71,7 @@ public class StorageServiceTests
   [Fact(DisplayName = "EnsureAvailableAsync: it should throw NotEnoughAvailableStorageException when there is not enough storage.")]
   public async Task EnsureAvailableAsync_it_should_throw_NotEnoughAvailableStorageException_when_there_is_not_enough_storage()
   {
-    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId, _accountSettings.AllocatedBytes);
     _storageRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(storage);
 
     StoredEntityMock previousEntity = new(_world.Id, EntityType.World, _world.Id.ToGuid(), _random.Next(1, (int)storage.AllocatedBytes));
@@ -88,7 +87,7 @@ public class StorageServiceTests
   [Fact(DisplayName = "UpdateAsync: it should reuse a cached storage.")]
   public async Task UpdateAsync_it_should_reuse_a_cached_storage()
   {
-    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId, _accountSettings.AllocatedBytes);
 
     Dictionary<WorldId, StorageAggregate>? cache = _service.GetType()
       .GetField("_cache", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -114,7 +113,7 @@ public class StorageServiceTests
 
     Func<DomainEvent, bool> isEntityStoredEvent = change => change is EntityStoredEvent e && e.WorldId == entity.WorldId
       && e.EntityType == entity.EntityType && e.EntityId == entity.EntityId && e.Size == entity.Size && e.UsedBytes == entity.Size;
-    _storageRepository.Verify(x => x.SaveAsync(It.Is<StorageAggregate>(y => y.UserId == _world.OwnerId.ToGuid()
+    _storageRepository.Verify(x => x.SaveAsync(It.Is<StorageAggregate>(y => y.UserId == _world.OwnerId
       && y.AllocatedBytes == _accountSettings.AllocatedBytes
       && y.Changes.Count == 2 && y.Changes.Any(isEntityStoredEvent)), _cancellationToken), Times.Once);
 
@@ -124,7 +123,7 @@ public class StorageServiceTests
   [Fact(DisplayName = "UpdateAsync: it should store an entity in an existing storage when it did exist.")]
   public async Task UpdateAsync_it_should_store_an_entity_in_an_existing_storage_when_it_did_exist()
   {
-    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+    StorageAggregate storage = StorageAggregate.Initialize(_world.OwnerId, _accountSettings.AllocatedBytes);
     _storageRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(storage);
 
     StoredEntityMock previousEntity = new(_world.Id, EntityType.World, _world.Id.ToGuid(), _random.Next(1, (int)_accountSettings.AllocatedBytes / 2));
@@ -137,7 +136,7 @@ public class StorageServiceTests
 
     Func<DomainEvent, bool> isEntityStoredEvent = change => change is EntityStoredEvent e && e.WorldId == currentEntity.WorldId
       && e.EntityType == currentEntity.EntityType && e.EntityId == currentEntity.EntityId && e.Size == currentEntity.Size && e.UsedBytes == currentEntity.Size;
-    _storageRepository.Verify(x => x.SaveAsync(It.Is<StorageAggregate>(y => y.UserId == _world.OwnerId.ToGuid()
+    _storageRepository.Verify(x => x.SaveAsync(It.Is<StorageAggregate>(y => y.UserId == _world.OwnerId
       && y.AllocatedBytes == _accountSettings.AllocatedBytes
       && y.Changes.Count == 3 && y.Changes.Any(isEntityStoredEvent)), _cancellationToken), Times.Once);
 
@@ -164,7 +163,7 @@ public class StorageServiceTests
     if (storage == null)
     {
       storage = cached.Value;
-      Assert.Equal(_world.OwnerId.ToGuid(), storage.UserId);
+      Assert.Equal(_world.OwnerId, storage.UserId);
       Assert.Equal(_accountSettings.AllocatedBytes, storage.AllocatedBytes);
     }
     else

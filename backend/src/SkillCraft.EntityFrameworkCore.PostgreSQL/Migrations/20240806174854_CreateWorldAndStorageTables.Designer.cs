@@ -11,8 +11,8 @@ using SkillCraft.EntityFrameworkCore;
 namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 {
     [DbContext(typeof(SkillCraftContext))]
-    [Migration("20240805014312_CreateWorldTable")]
-    partial class CreateWorldTable
+    [Migration("20240806174854_CreateWorldAndStorageTables")]
+    partial class CreateWorldAndStorageTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,6 +72,112 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.ToTable("Actors", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.StorageDetailEntity", b =>
+                {
+                    b.Property<int>("StorageDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StorageDetailId"));
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("StorageDetailId");
+
+                    b.HasIndex("Size");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorldId");
+
+                    b.HasIndex("EntityType", "EntityId")
+                        .IsUnique();
+
+                    b.ToTable("StorageDetails", (string)null);
+                });
+
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.StorageSummaryEntity", b =>
+                {
+                    b.Property<int>("StorageSummaryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StorageSummaryId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<long>("AllocatedBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AvailableBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("UsedBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("StorageSummaryId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("AllocatedBytes");
+
+                    b.HasIndex("AvailableBytes");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("UsedBytes");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.HasIndex("Version");
+
+                    b.ToTable("StorageSummaries", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", b =>
                 {
                     b.Property<int>("WorldId")
@@ -85,10 +191,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
@@ -103,10 +207,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("UniqueSlug")
                         .IsRequired()
@@ -118,10 +220,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp with time zone");
@@ -157,6 +257,22 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.HasIndex("Version");
 
                     b.ToTable("Worlds", (string)null);
+                });
+
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.StorageDetailEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("StorageDetails")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("World");
+                });
+
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", b =>
+                {
+                    b.Navigation("StorageDetails");
                 });
 #pragma warning restore 612, 618
         }

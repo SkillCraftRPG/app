@@ -8,7 +8,7 @@ internal class WorldEntity : AggregateEntity
   public int WorldId { get; private set; }
   public Guid Id { get; private set; }
 
-  public string OwnerId { get; private set; } = string.Empty;
+  public Guid OwnerId { get; private set; }
 
   public string UniqueSlug { get; private set; } = string.Empty;
   public string UniqueSlugNormalized
@@ -29,7 +29,7 @@ internal class WorldEntity : AggregateEntity
   {
     Id = @event.AggregateId.ToGuid();
 
-    OwnerId = @event.ActorId.Value;
+    OwnerId = @event.ActorId.ToGuid();
 
     UniqueSlug = @event.UniqueSlug.Value;
   }

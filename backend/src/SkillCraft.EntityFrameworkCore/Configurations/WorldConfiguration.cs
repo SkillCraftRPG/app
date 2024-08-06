@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Logitar.Identity.Domain.Shared;
+﻿using Logitar.Identity.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SkillCraft.Domain;
@@ -22,7 +21,6 @@ internal class WorldConfiguration : AggregateConfiguration<WorldEntity>, IEntity
     builder.HasIndex(x => x.UniqueSlugNormalized).IsUnique();
     builder.HasIndex(x => x.DisplayName);
 
-    builder.Property(x => x.OwnerId).HasMaxLength(ActorId.MaximumLength);
     builder.Property(x => x.UniqueSlug).HasMaxLength(SlugUnit.MaximumLength);
     builder.Property(x => x.UniqueSlugNormalized).HasMaxLength(SlugUnit.MaximumLength);
     builder.Property(x => x.DisplayName).HasMaxLength(DisplayNameUnit.MaximumLength);

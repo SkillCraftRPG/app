@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using SkillCraft.Domain;
+﻿using SkillCraft.Domain;
 using SkillCraft.Domain.Storage.Events;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
@@ -19,7 +18,7 @@ internal class StorageDetailEntity
 
   public StorageDetailEntity(WorldEntity world, EntityStoredEvent @event)
   {
-    UserId = new ActorId(world.OwnerId).ToGuid();
+    UserId = world.OwnerId;
     World = world;
     WorldId = world.WorldId;
 

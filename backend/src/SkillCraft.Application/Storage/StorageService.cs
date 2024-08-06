@@ -56,7 +56,7 @@ internal class StorageService : IStorageService
       WorldAggregate world = await _worldRepository.LoadAsync(worldId, cancellationToken)
         ?? throw new InvalidOperationException($"The world aggregate 'Id={worldId}' could not be found.");
 
-      storage = StorageAggregate.Initialize(world.OwnerId.ToGuid(), _accountSettings.AllocatedBytes);
+      storage = StorageAggregate.Initialize(world.OwnerId, _accountSettings.AllocatedBytes);
     }
 
     return storage;

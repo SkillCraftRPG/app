@@ -8,10 +8,10 @@ internal abstract class AggregateEntity
   public string AggregateId { get; private set; } = string.Empty;
   public long Version { get; private set; }
 
-  public string CreatedBy { get; private set; } = string.Empty;
+  public Guid CreatedBy { get; private set; }
   public DateTime CreatedOn { get; private set; }
 
-  public string UpdatedBy { get; private set; } = string.Empty;
+  public Guid UpdatedBy { get; private set; }
   public DateTime UpdatedOn { get; private set; }
 
   protected AggregateEntity()
@@ -22,7 +22,7 @@ internal abstract class AggregateEntity
   {
     AggregateId = @event.AggregateId.Value;
 
-    CreatedBy = @event.ActorId.Value;
+    CreatedBy = @event.ActorId.ToGuid();
     CreatedOn = @event.OccurredOn.AsUniversalTime();
   }
 
@@ -32,7 +32,7 @@ internal abstract class AggregateEntity
   {
     Version = @event.Version;
 
-    UpdatedBy = @event.ActorId.Value;
+    UpdatedBy = @event.ActorId.ToGuid();
     UpdatedOn = @event.OccurredOn.AsUniversalTime();
   }
 }

@@ -27,9 +27,7 @@ internal class WorldQuerier : IWorldQuerier
 
   public async Task<int> CountOwnedAsync(User user, CancellationToken cancellationToken)
   {
-    string ownerId = new ActorId(user.Id).Value;
-
-    return await _worlds.AsNoTracking().Where(x => x.OwnerId == ownerId).CountAsync(cancellationToken);
+    return await _worlds.AsNoTracking().Where(x => x.OwnerId == user.Id).CountAsync(cancellationToken);
   }
 
   public async Task<World> ReadAsync(WorldAggregate world, CancellationToken cancellationToken)
@@ -51,10 +49,8 @@ internal class WorldQuerier : IWorldQuerier
 
   public async Task<SearchResults<World>> SearchAsync(User user, SearchWorldsPayload payload, CancellationToken cancellationToken)
   {
-    string ownerId = new ActorId(user.Id).Value;
-
     IQueryBuilder builder = _sqlHelper.QueryFrom(SkillCraftDb.Worlds.Table).SelectAll(SkillCraftDb.Worlds.Table)
-      .Where(SkillCraftDb.Worlds.OwnerId, Operators.IsEqualTo(ownerId))
+      .Where(SkillCraftDb.Worlds.OwnerId, Operators.IsEqualTo(user.Id.ToString()))
       .ApplyIdFilter(payload, SkillCraftDb.Worlds.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Worlds.UniqueSlug, SkillCraftDb.Worlds.DisplayName);
 

@@ -15,7 +15,5 @@ internal abstract class AggregateConfiguration<T> where T : AggregateEntity
     builder.HasIndex(x => x.UpdatedOn);
 
     builder.Property(x => x.AggregateId).HasMaxLength(AggregateId.MaximumLength);
-    builder.Property(x => x.CreatedBy).HasMaxLength(ActorId.MaximumLength);
-    builder.Property(x => x.UpdatedBy).HasMaxLength(ActorId.MaximumLength);
   }
 }

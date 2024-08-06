@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Domain.Storage.Events;
 using SkillCraft.EntityFrameworkCore.Entities;
@@ -34,10 +33,9 @@ internal class EntityStoredEventHandler : INotificationHandler<EntityStoredEvent
       entity.Update(@event);
     }
 
-    Guid userId = new ActorId(world.OwnerId).ToGuid();
     StorageSummaryEntity summary = await _context.StorageSummaries
-      .SingleOrDefaultAsync(x => x.UserId == userId, cancellationToken)
-      ?? throw new InvalidOperationException($"The storage summary entity 'UserId={userId}' could not be found.");
+      .SingleOrDefaultAsync(x => x.UserId == world.OwnerId, cancellationToken)
+      ?? throw new InvalidOperationException($"The storage summary entity 'UserId={world.OwnerId}' could not be found.");
     summary.Update(@event);
 
     await _context.SaveChangesAsync(cancellationToken);

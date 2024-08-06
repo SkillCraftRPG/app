@@ -18,7 +18,7 @@ internal class StorageDetailConfiguration : IEntityTypeConfiguration<StorageDeta
     builder.HasIndex(x => new { x.EntityType, x.EntityId }).IsUnique();
     builder.HasIndex(x => x.Size);
 
-    builder.Property(x => x.EntityType).HasMaxLength(-1).HasConversion(new EnumToStringConverter<EntityType>());
+    builder.Property(x => x.EntityType).HasMaxLength(16).HasConversion(new EnumToStringConverter<EntityType>());
 
     builder.HasOne(x => x.World).WithMany(x => x.StorageDetails)
       .HasPrincipalKey(x => x.WorldId).HasForeignKey(x => x.WorldId)
