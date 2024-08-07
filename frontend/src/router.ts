@@ -13,6 +13,13 @@ const router = createRouter({
       component: HomeView,
       meta: { isPublic: true },
     },
+    // Account
+    {
+      name: "SignIn",
+      path: "/sign-in",
+      component: () => import("./views/account/SignInView.vue"),
+      meta: { isPublic: true },
+    },
     // NotFound
     {
       name: "NotFound",
