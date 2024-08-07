@@ -2,6 +2,7 @@
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Permissions;
 
@@ -22,6 +23,22 @@ internal class PermissionService : IPermissionService
     if (count >= _accountSettings.WorldLimit)
     {
       throw new PermissionDeniedException(Action.Create, EntityType.World, user);
+    }
+  }
+
+  public void EnsureCanDeleteWorld(User user, WorldAggregate world)
+  {
+    if (world.OwnerId != user.Id)
+    {
+      throw new PermissionDeniedException(Action.Delete, EntityType.World, user, entityId: world.Id.ToGuid());
+    }
+  }
+
+  public void EnsureCanUpdateWorld(User user, WorldAggregate world)
+  {
+    if (world.OwnerId != user.Id)
+    {
+      throw new PermissionDeniedException(Action.Update, EntityType.World, user, entityId: world.Id.ToGuid());
     }
   }
 }

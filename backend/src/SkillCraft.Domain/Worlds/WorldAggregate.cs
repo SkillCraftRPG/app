@@ -76,6 +76,14 @@ public class WorldAggregate : AggregateRoot, IStoredEntity
     _uniqueSlug = @event.UniqueSlug;
   }
 
+  public void Delete(ActorId actorId = default)
+  {
+    if (!IsDeleted)
+    {
+      Raise(new WorldDeletedEvent(), actorId);
+    }
+  }
+
   public void Update(ActorId actorId = default)
   {
     if (_updatedEvent.HasChanges)

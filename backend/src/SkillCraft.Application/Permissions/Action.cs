@@ -2,5 +2,7 @@
 
 public enum Action
 {
-  Create
+  Create,
+  Delete,
+  Update
 }

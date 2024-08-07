@@ -3,6 +3,7 @@
 public interface IWorldRepository
 {
   Task<WorldAggregate?> LoadAsync(WorldId id, CancellationToken cancellationToken = default);
+  Task<WorldAggregate?> LoadAsync(WorldId id, long version, CancellationToken cancellationToken = default);
   Task<WorldAggregate?> LoadAsync(SlugUnit uniqueSlug, CancellationToken cancellationToken = default);
 
   Task SaveAsync(WorldAggregate world, CancellationToken cancellationToken = default);

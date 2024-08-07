@@ -12,6 +12,7 @@ public interface IWorldQuerier
   Task<World> ReadAsync(WorldAggregate world, CancellationToken cancellationToken = default);
   Task<World?> ReadAsync(WorldId id, CancellationToken cancellationToken = default);
   Task<World?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<World?> ReadAsync(string uniqueSlug, CancellationToken cancellationToken = default);
 
   Task<SearchResults<World>> SearchAsync(User user, SearchWorldsPayload payload, CancellationToken cancellationToken = default);
 }

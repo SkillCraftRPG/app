@@ -34,6 +34,17 @@ internal class StorageService : IStorageService
     _cache[entity.WorldId] = storage;
   }
 
+  public async Task DeleteAsync(IStoredEntity entity, CancellationToken cancellationToken)
+  {
+    StorageAggregate? storage = await _storageRepository.LoadAsync(entity.WorldId, cancellationToken);
+    if (storage != null)
+    {
+      // TODO(fpion): implement
+
+      await _storageRepository.SaveAsync(storage, cancellationToken);
+    }
+  }
+
   public async Task UpdateAsync(IStoredEntity entity, CancellationToken cancellationToken)
   {
     if (!_cache.TryGetValue(entity.WorldId, out StorageAggregate? storage))

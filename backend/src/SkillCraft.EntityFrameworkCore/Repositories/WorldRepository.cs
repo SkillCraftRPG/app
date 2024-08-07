@@ -24,6 +24,10 @@ internal class WorldRepository : Logitar.EventSourcing.EntityFrameworkCore.Relat
   {
     return await LoadAsync<WorldAggregate>(id.AggregateId, cancellationToken);
   }
+  public async Task<WorldAggregate?> LoadAsync(WorldId id, long version, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<WorldAggregate>(id.AggregateId, version, cancellationToken);
+  }
 
   public async Task<WorldAggregate?> LoadAsync(SlugUnit uniqueSlug, CancellationToken cancellationToken)
   {

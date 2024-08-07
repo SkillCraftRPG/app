@@ -47,6 +47,16 @@ internal class WorldQuerier : IWorldQuerier
     return world == null ? null : await MapAsync(world, cancellationToken);
   }
 
+  public async Task<World?> ReadAsync(string uniqueSlug, CancellationToken cancellationToken)
+  {
+    string uniqueSlugNormalized = SkillCraftDb.Normalize(uniqueSlug);
+
+    WorldEntity? world = await _worlds.AsNoTracking()
+      .SingleOrDefaultAsync(x => x.UniqueSlugNormalized == uniqueSlugNormalized, cancellationToken);
+
+    return world == null ? null : await MapAsync(world, cancellationToken);
+  }
+
   public async Task<SearchResults<World>> SearchAsync(User user, SearchWorldsPayload payload, CancellationToken cancellationToken)
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(SkillCraftDb.Worlds.Table).SelectAll(SkillCraftDb.Worlds.Table)

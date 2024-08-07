@@ -34,29 +34,29 @@ public class WorldController : ControllerBase
   [HttpDelete("{id}")]
   public async Task<ActionResult<World>> DeleteAsync(Guid id, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
+    World? world = await _requestPipeline.ExecuteAsync(new DeleteWorldCommand(id), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<World>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
+    World? world = await _requestPipeline.ExecuteAsync(new ReadWorldQuery(id, UniqueSlug: null), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
   }
 
   [HttpGet("unique-slug:{uniqueSlug}")]
   public async Task<ActionResult<World>> ReadAsync(string uniqueSlug, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
+    World? world = await _requestPipeline.ExecuteAsync(new ReadWorldQuery(Id: null, uniqueSlug), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
   }
 
   [HttpPut]
   public async Task<ActionResult<World>> ReplaceAsync(Guid id, [FromBody] ReplaceWorldPayload payload, long? version, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
+    World? world = await _requestPipeline.ExecuteAsync(new ReplaceWorldCommand(id, payload, version), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
   }
 
   [HttpGet]
@@ -69,7 +69,7 @@ public class WorldController : ControllerBase
   [HttpPatch]
   public async Task<ActionResult<World>> UpdateAsync(Guid id, [FromBody] UpdateWorldPayload payload, CancellationToken cancellationToken)
   {
-    await Task.Delay(1, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // ISSUE: https://github.com/SkillCraftRPG/app/issues/19
+    World? world = await _requestPipeline.ExecuteAsync(new UpdateWorldCommand(id, payload), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
   }
 }
