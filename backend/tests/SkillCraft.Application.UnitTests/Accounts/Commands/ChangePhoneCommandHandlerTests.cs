@@ -61,8 +61,7 @@ public class ChangePhoneCommandHandlerTests
     _userService.Setup(x => x.UpdateAsync(user, phone, _cancellationToken)).ReturnsAsync(user);
 
     ChangePhoneCommand command = new(payload);
-    ActivityContext context = new(ApiKey: null, Session: null, user);
-    command.Contextualize(context);
+    command.Contextualize(new ActivityContextMock(user));
     ChangePhoneResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(result.OneTimePasswordValidation);
@@ -97,8 +96,7 @@ public class ChangePhoneCommandHandlerTests
       .ReturnsAsync(sentMessages);
 
     ChangePhoneCommand command = new(payload);
-    ActivityContext context = new(ApiKey: null, Session: null, user);
-    command.Contextualize(context);
+    command.Contextualize(new ActivityContextMock(user));
     ChangePhoneResult result = await _handler.Handle(command, _cancellationToken);
 
     Assert.NotNull(result.OneTimePasswordValidation);
@@ -128,8 +126,7 @@ public class ChangePhoneCommandHandlerTests
     _oneTimePasswordService.Setup(x => x.ValidateAsync(payload.OneTimePassword, Purposes.ContactVerification, _cancellationToken)).ReturnsAsync(oneTimePassword);
 
     ChangePhoneCommand command = new(payload);
-    ActivityContext context = new(ApiKey: null, Session: null, user);
-    command.Contextualize(context);
+    command.Contextualize(new ActivityContextMock(user));
     var exception = await Assert.ThrowsAsync<InvalidOneTimePasswordUserException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(oneTimePassword.Id, exception.OneTimePasswordId);
     Assert.Equal(user.Id, exception.ActualUserId);
@@ -156,8 +153,7 @@ public class ChangePhoneCommandHandlerTests
     _oneTimePasswordService.Setup(x => x.CreateAsync(user, phone, Purposes.ContactVerification, _cancellationToken)).ReturnsAsync(oneTimePassword);
 
     ChangePhoneCommand command = new(payload);
-    ActivityContext context = new(ApiKey: null, Session: null, user);
-    command.Contextualize(context);
+    command.Contextualize(new ActivityContextMock(user));
     var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal($"The One-Time Password (OTP) 'Id={oneTimePassword.Id}' has no password.", exception.Message);
   }

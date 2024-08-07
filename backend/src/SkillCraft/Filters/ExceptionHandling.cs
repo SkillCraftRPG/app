@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using Logitar;
 using Logitar.Net.Http;
+using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -39,6 +41,33 @@ internal class ExceptionHandling : ExceptionFilterAttribute
     else if (context.Exception is BadRequestException badRequest)
     {
       context.Result = new BadRequestObjectResult(badRequest.Error);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is ConflictException conflict)
+    {
+      context.Result = new ConflictObjectResult(conflict.Error);
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is ForbiddenException forbidden)
+    {
+      context.Result = new JsonResult(forbidden.Error)
+      {
+        StatusCode = StatusCodes.Status403Forbidden
+      };
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is PaymentRequiredException paymentRequired)
+    {
+      context.Result = new JsonResult(paymentRequired.Error)
+      {
+        StatusCode = StatusCodes.Status402PaymentRequired
+      };
+      context.ExceptionHandled = true;
+    }
+    else if (context.Exception is TooManyResultsException tooManyResults)
+    {
+      Error error = new(tooManyResults.GetErrorCode(), TooManyResultsException.ErrorMessage);
+      context.Result = new BadRequestObjectResult(error);
       context.ExceptionHandled = true;
     }
     else if (context.Exception is HttpFailureException<JsonApiResult> portal) // ISSUE: https://github.com/SkillCraftRPG/app/issues/10

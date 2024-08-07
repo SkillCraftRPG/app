@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Logging;
+using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Settings;
+using SkillCraft.Application.Storage;
 
 namespace SkillCraft.Application;
 
@@ -13,9 +15,11 @@ public static class DependencyInjectionExtensions
     return services
       .AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
       .AddSingleton<ILoggingSettings>(InitializeLoggingSettings)
-      .AddSingleton(InitializeSignInSettings)
+      .AddSingleton(InitializeAccountSettings)
       .AddScoped<ILoggingService, LoggingService>()
-      .AddTransient<IRequestPipeline, RequestPipeline>();
+      .AddTransient<IPermissionService, PermissionService>()
+      .AddTransient<IRequestPipeline, RequestPipeline>()
+      .AddTransient<IStorageService, StorageService>();
   }
 
   private static LoggingSettings InitializeLoggingSettings(IServiceProvider serviceProvider)
@@ -24,9 +28,9 @@ public static class DependencyInjectionExtensions
     return configuration.GetSection("ApplicationLogging").Get<LoggingSettings>() ?? new();
   }
 
-  private static SignInSettings InitializeSignInSettings(IServiceProvider serviceProvider)
+  private static AccountSettings InitializeAccountSettings(IServiceProvider serviceProvider)
   {
     IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    return configuration.GetSection(SignInSettings.SectionKey).Get<SignInSettings>() ?? new();
+    return configuration.GetSection(AccountSettings.SectionKey).Get<AccountSettings>() ?? new();
   }
 }

@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Logitar.Portal.Contracts.Users;
 using Moq;
+using SkillCraft.Application.Actors;
 using SkillCraft.Contracts.Accounts;
 
 namespace SkillCraft.Application.Accounts.Commands;
@@ -12,13 +13,14 @@ public class SaveProfileCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
   private readonly Faker _faker = new();
 
+  private readonly Mock<IActorService> _actorService = new();
   private readonly Mock<IUserService> _userService = new();
 
   private readonly SaveProfileCommandHandler _handler;
 
   public SaveProfileCommandHandlerTests()
   {
-    _handler = new(_userService.Object);
+    _handler = new(_actorService.Object, _userService.Object);
   }
 
   [Fact(DisplayName = "It should save the user profile.")]
@@ -35,11 +37,12 @@ public class SaveProfileCommandHandlerTests
     _userService.Setup(x => x.SaveProfileAsync(user, payload, _cancellationToken)).ReturnsAsync(user);
 
     SaveProfileCommand command = new(payload);
-    ActivityContext context = new(ApiKey: null, Session: null, user);
-    command.Contextualize(context);
+    command.Contextualize(new ActivityContextMock(user));
     User result = await _handler.Handle(command, _cancellationToken);
 
     Assert.Same(result, user);
+
+    _actorService.Verify(x => x.SaveAsync(user, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

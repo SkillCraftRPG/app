@@ -33,11 +33,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SkillCraft.Application\SkillCraft.Application.csproj" />
-    <ProjectReference Include="..\SkillCraft.Tests\SkillCraft.Tests.csproj" />
+    <ProjectReference Include="..\SkillCraft.Domain.UnitTests\SkillCraft.Domain.UnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="System.Globalization" />
+    <Using Include="System.Reflection" />
     <Using Include="System.Security.Claims" />
     <Using Include="System.Text.Json" />
     <Using Include="Xunit" />
