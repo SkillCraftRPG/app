@@ -230,7 +230,11 @@ internal class SignInCommandHandler : IRequestHandler<SignInCommand, SignInComma
   {
     if (!user.IsProfileCompleted())
     {
-      CreatedToken profileCompletion = await _tokenService.CreateAsync(user, TokenTypes.Profile, cancellationToken);
+      if (user.Email == null)
+      {
+        throw new ArgumentException($"The {nameof(user.Email)} is required.", nameof(user));
+      }
+      CreatedToken profileCompletion = await _tokenService.CreateAsync(user, user.Email, TokenTypes.Profile, cancellationToken);
       return SignInCommandResult.RequireProfileCompletion(profileCompletion);
     }
 
