@@ -219,7 +219,7 @@ public class SignInCommandHandlerTests
     _userService.Setup(x => x.CreateAsync(email, user.CustomIdentifiers.Single(), _cancellationToken)).ReturnsAsync(user);
 
     CreatedToken profileCompletion = new("ProfileCompletionToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(profileCompletion);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(profileCompletion);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
@@ -255,7 +255,7 @@ public class SignInCommandHandlerTests
     _userService.Setup(x => x.CreateAsync(It.Is<EmailPayload>(e => e.Address == user.Email.Address && e.IsVerified), _cancellationToken)).ReturnsAsync(user);
 
     CreatedToken createdToken = new("ProfileToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
@@ -371,7 +371,7 @@ public class SignInCommandHandlerTests
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
 
     CreatedToken createdToken = new("ProfileToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
@@ -390,13 +390,18 @@ public class SignInCommandHandlerTests
   {
     User user = new(_faker.Person.Email)
     {
-      HasPassword = true
+      Id = Guid.NewGuid(),
+      HasPassword = true,
+      Email = new(_faker.Person.Email)
+      {
+        IsVerified = true
+      }
     };
     _userService.Setup(x => x.FindAsync(user.UniqueName, _cancellationToken)).ReturnsAsync(user);
     _userService.Setup(x => x.AuthenticateAsync(user, PasswordString, _cancellationToken)).ReturnsAsync(user);
 
     CreatedToken createdToken = new("ProfileToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
     SignInPayload payload = new(_locale.Code)
     {
@@ -424,12 +429,19 @@ public class SignInCommandHandlerTests
     GoogleIdentity identity = new("GoogleUserId", email, FirstName: null, LastName: null, Locale: null, Picture: null);
     _googleService.Setup(x => x.GetIdentityAsync(payload.GoogleIdToken, _cancellationToken)).ReturnsAsync(identity);
 
-    User user = new(_faker.Person.UserName);
+    User user = new(_faker.Person.UserName)
+    {
+      Id = Guid.NewGuid(),
+      Email = new(_faker.Person.Email)
+      {
+        IsVerified = true
+      }
+    };
     user.CustomIdentifiers.Add(new("Google", identity.Id));
     _userService.Setup(x => x.FindAsync(user.CustomIdentifiers.Single(), _cancellationToken)).ReturnsAsync(user);
 
     CreatedToken profileCompletion = new("ProfileCompletionToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(profileCompletion);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(profileCompletion);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
@@ -446,7 +458,11 @@ public class SignInCommandHandlerTests
   {
     User user = new(_faker.Person.Email)
     {
-      Id = Guid.NewGuid()
+      Id = Guid.NewGuid(),
+      Email = new(_faker.Person.Email)
+      {
+        IsVerified = true
+      }
     };
     _userService.Setup(x => x.FindAsync(user.Id, _cancellationToken)).ReturnsAsync(user);
 
@@ -463,7 +479,7 @@ public class SignInCommandHandlerTests
     _oneTimePasswordService.Setup(x => x.ValidateAsync(payload.OneTimePassword, Purposes.MultiFactorAuthentication, _cancellationToken)).ReturnsAsync(oneTimePassword);
 
     CreatedToken createdToken = new("ProfileToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     SignInCommandResult result = await _handler.Handle(command, _cancellationToken);
@@ -869,7 +885,7 @@ public class SignInCommandHandlerTests
     _tokenService.Setup(x => x.ValidateAsync(payload.AuthenticationToken, TokenTypes.Authentication, _cancellationToken)).ReturnsAsync(validatedToken);
 
     CreatedToken createdToken = new("ProfileToken");
-    _tokenService.Setup(x => x.CreateAsync(user, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
+    _tokenService.Setup(x => x.CreateAsync(user, user.Email, TokenTypes.Profile, _cancellationToken)).ReturnsAsync(createdToken);
 
     SignInCommand command = new(payload, CustomAttributes: []);
     SignInCommandResult result = await _handler.Handle(command, _cancellationToken);

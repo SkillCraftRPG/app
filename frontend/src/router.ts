@@ -11,14 +11,29 @@ const router = createRouter({
       name: "Home",
       path: "/",
       component: HomeView,
-      meta: { isPublic: true },
     },
     // Account
+    {
+      name: "Profile",
+      path: "/profile",
+      component: () => import("./views/account/ProfileView.vue"),
+    },
+    {
+      name: "ProfileCompletion",
+      path: "/profile/complete/:token",
+      component: () => import("./views/account/ProfileCompletion.vue"),
+      meta: { isPublic: true },
+    },
     {
       name: "SignIn",
       path: "/sign-in",
       component: () => import("./views/account/SignInView.vue"),
       meta: { isPublic: true },
+    },
+    {
+      name: "SignOut",
+      path: "/sign-out",
+      component: () => import("./views/account/SignOutView.vue"),
     },
     // NotFound
     {

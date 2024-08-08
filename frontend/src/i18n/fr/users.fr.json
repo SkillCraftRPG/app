@@ -1,6 +1,104 @@
 {
+  "authenticationLink": {
+    "Email": "Un lien d’authentification a été envoyé à votre adresse courriel",
+    "Phone": "Un lien d’authentification a été envoyé à votre numéro de téléphone",
+    "confirmationNumber": "En cas de problème, veuillez contacter notre équipe de support. Votre numéro de confirmation est",
+    "help": "Vous pouvez fermer cet onglet. Si vous n’avez pas reçu de message, vérifiez votre courrier indésirable.",
+    "sent": "Lien d’authentification envoyé"
+  },
+  "birthdate": "Date de naissance",
+  "email": {
+    "address": "Adresse courriel"
+  },
+  "gender": {
+    "label": "Genre",
+    "options": {
+      "female": "Femme",
+      "male": "Homme",
+      "other": "Autre"
+    },
+    "placeholder": "Sélectionnez votre genre"
+  },
+  "locale": {
+    "label": "Langue de communication",
+    "placeholder": "Sélectionnez votre langue de communication préférée"
+  },
+  "names": {
+    "first": "Prénom",
+    "full": "Nom complet",
+    "last": "Nom de famille",
+    "middle": "Nom intermédiaire",
+    "nick": "Surnom"
+  },
+  "password": {
+    "confirm": "Confirmation du mot de passe",
+    "label": "Mot de passe",
+    "new": "Nouveau mot de passe"
+  },
+  "profile": {
+    "complete": "Complétez votre profil",
+    "identification": {
+      "lead": "Comment vous appelez-vous ?",
+      "title": "Identification"
+    },
+    "personal": {
+      "lead": "Dîtes-nous en plus à propos de vous.",
+      "title": "Renseignements personnels"
+    },
+    "progress": "Progression de la complétion du profil de l’utilisateur",
+    "security": {
+      "lead": "Aidez-nous à sécuriser votre compte.",
+      "multiFactorAuthentication": {
+        "Email": {
+          "help": "Un code à six chiffres sera envoyé à votre adresse courriel.",
+          "label": "Par courriel"
+        },
+        "None": {
+          "help": "L’authentification à deux facteurs ne sera pas activée.",
+          "label": "Désactivé"
+        },
+        "Phone": {
+          "help": "Un code à six chiffres sera envoyé à votre numéro de téléphone.",
+          "label": "Par téléphone"
+        },
+        "label": "Authentification à deux facteurs"
+      },
+      "password": {
+        "less": {
+          "help": "Vous vous connecterez en cliquant sur un lien envoyé à votre adresse courriel.",
+          "label": "Sans mot de passe"
+        },
+        "with": {
+          "help": "Vous devrez entrer votre mot de passe afin de vous connecter.",
+          "label": "Avec mot de passe"
+        }
+      },
+      "title": "Sécurité"
+    },
+    "usage": {
+      "lead": "Dîtes-nous quelle sera votre utilisation principale de l’application.",
+      "title": "Utilisation",
+      "type": {
+        "Gamemaster": {
+          "help": "Vous serez le maître de jeu qui dirigera une ou plusieurs campagnes.",
+          "label": "Maître de jeu"
+        },
+        "Player": {
+          "help": "Vous jouerez des personnages au sein d’une campagne d’un maître de jeu.",
+          "label": "Joueur"
+        }
+      }
+    }
+  },
   "signIn": {
+    "failed": "Connexion échouée !",
+    "invalidCredentials": "Veuillez vérifier que vous avez bien entré votre adresse courriel et mot de passe.",
+    "submit": "Se connecter",
     "title": "Connexion"
   },
-  "signOut": "Déconnexion"
+  "signOut": "Déconnexion",
+  "timeZone": {
+    "label": "Fuseau horaire",
+    "placeholder": "Sélectionnez votre fuseau horaire"
+  }
 }

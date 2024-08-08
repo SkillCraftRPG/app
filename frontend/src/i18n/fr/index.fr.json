@@ -1,9 +1,14 @@
 {
   "actions": {
-    "close": "Fermer"
+    "back": "Retour",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "complete": "Compléter",
+    "continue": "Poursuivre"
   },
   "brand": "SkillCraftRPG",
   "copyright": "© SkillCraftRPG {version} {year}.",
+  "loading": "Chargement…",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",
     "lead": "Page introuvable",
