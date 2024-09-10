@@ -44,14 +44,14 @@ internal class ActorService : IActorService
 
     if (missingIds.Count > 0)
     {
-      ActorEntity[] entities = await _context.Actors.AsNoTracking()
+      UserEntity[] users = await _context.Users.AsNoTracking()
         .Where(a => missingIds.Contains(a.Id))
         .ToArrayAsync(cancellationToken);
 
-      foreach (ActorEntity entity in entities)
+      foreach (UserEntity user in users)
       {
-        Actor actor = Mapper.ToActor(entity);
-        ActorId id = new(entity.Id);
+        Actor actor = Mapper.ToActor(user);
+        ActorId id = new(user.Id);
 
         actors[id] = actor;
         _cacheService.SetActor(actor);
@@ -63,24 +63,23 @@ internal class ActorService : IActorService
 
   public async Task SaveAsync(User user, CancellationToken cancellationToken)
   {
-    Actor actor = new(user);
-    ActorId id = new(actor.Id);
-
-    ActorEntity? entity = await _context.Actors.SingleOrDefaultAsync(x => x.Id == actor.Id, cancellationToken);
+    UserEntity? entity = await _context.Users.SingleOrDefaultAsync(x => x.Id == user.Id, cancellationToken);
     if (entity == null)
     {
-      entity = new(actor);
-      _context.Actors.Add(entity);
+      entity = new(user);
+      _context.Users.Add(entity);
     }
     else
     {
-      entity.Update(actor);
+      entity.Update(user);
     }
 
     await _context.SaveChangesAsync(cancellationToken);
 
+    ActorId id = new(user.Id);
     if (_cacheService.GetActor(id) != null)
     {
+      Actor actor = new(user);
       _cacheService.SetActor(actor);
     }
   }
