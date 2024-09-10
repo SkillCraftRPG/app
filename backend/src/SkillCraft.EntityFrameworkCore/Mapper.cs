@@ -1,8 +1,5 @@
-﻿using Logitar;
-using Logitar.EventSourcing;
-using Logitar.Portal.Contracts;
+﻿using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
-using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
 
 namespace SkillCraft.EntityFrameworkCore;
@@ -33,31 +30,6 @@ internal class Mapper
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
   };
-
-  public World ToWorld(WorldEntity source)
-  {
-    World destination = new(FindActor(source.OwnerId), source.UniqueSlug)
-    {
-      DisplayName = source.DisplayName,
-      Description = source.Description
-    };
-
-    MapAggregate(source, destination);
-
-    return destination;
-  }
-
-  private void MapAggregate(AggregateEntity source, Aggregate destination)
-  {
-    destination.Id = new AggregateId(source.AggregateId).ToGuid();
-    destination.Version = source.Version;
-
-    destination.CreatedBy = FindActor(source.CreatedBy);
-    destination.CreatedOn = source.CreatedOn.AsUniversalTime();
-
-    destination.UpdatedBy = FindActor(source.UpdatedBy);
-    destination.UpdatedOn = source.UpdatedOn.AsUniversalTime();
-  }
 
   private Actor FindActor(Guid id) => FindActor(new ActorId(id));
   private Actor FindActor(ActorId id) => _actors.TryGetValue(id, out Actor? actor) ? actor : _system;
