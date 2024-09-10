@@ -9,7 +9,7 @@ public class SkillCraftContext : DbContext
   {
   }
 
-  internal DbSet<ActorEntity> Actors { get; private set; }
+  internal DbSet<UserEntity> Users { get; private set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

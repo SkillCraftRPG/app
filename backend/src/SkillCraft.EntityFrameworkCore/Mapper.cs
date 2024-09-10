@@ -22,10 +22,10 @@ internal class Mapper
     }
   }
 
-  public static Actor ToActor(ActorEntity source) => new(source.DisplayName)
+  public static Actor ToActor(UserEntity source) => new(source.DisplayName)
   {
     Id = source.Id,
-    Type = source.Type,
+    Type = ActorType.User,
     IsDeleted = source.IsDeleted,
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
