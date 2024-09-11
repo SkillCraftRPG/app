@@ -41,11 +41,10 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
       }
     }
 
-    EntityMetadata entity = EntityMetadata.From(world);
-    await _storageService.EnsureAvailableAsync(entity, cancellationToken);
+    await _storageService.EnsureAvailableAsync(world, cancellationToken);
 
     await _worldRepository.SaveAsync(world, cancellationToken);
 
-    await _storageService.UpdateAsync(entity, cancellationToken);
+    await _storageService.UpdateAsync(world, cancellationToken);
   }
 }

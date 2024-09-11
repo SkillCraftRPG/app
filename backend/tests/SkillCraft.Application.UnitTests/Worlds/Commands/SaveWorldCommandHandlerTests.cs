@@ -32,9 +32,8 @@ public class SaveWorldCommandHandlerTests
 
     _worldRepository.Verify(x => x.SaveAsync(_world, _cancellationToken), Times.Once);
 
-    EntityMetadata entity = EntityMetadata.From(_world);
-    _storageService.Verify(x => x.EnsureAvailableAsync(entity, _cancellationToken), Times.Once);
-    _storageService.Verify(x => x.UpdateAsync(entity, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.EnsureAvailableAsync(_world, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.UpdateAsync(_world, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw SlugAlreadyUsedException when the slug is already used.")]

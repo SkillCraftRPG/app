@@ -23,6 +23,17 @@ internal class StorageService : IStorageService
   {
     Storage storage = await LoadOrInitializeAsync(entity.WorldId, cancellationToken);
 
+    EnsureAvailable(storage, entity);
+  }
+  public async Task EnsureAvailableAsync(World world, CancellationToken cancellationToken)
+  {
+    Storage storage = await LoadOrInitializeAsync(world, cancellationToken);
+
+    EntityMetadata entity = EntityMetadata.From(world);
+    EnsureAvailable(storage, entity);
+  }
+  private static void EnsureAvailable(Storage storage, EntityMetadata entity)
+  {
     long previousBytes = storage.GetSize(entity.StorageKey);
     long requiredBytes = entity.Size - previousBytes;
     if (requiredBytes > 0 && requiredBytes > storage.AvailableBytes)
@@ -35,6 +46,17 @@ internal class StorageService : IStorageService
   {
     Storage storage = await LoadOrInitializeAsync(entity.WorldId, cancellationToken);
 
+    await UpdateAsync(storage, entity, cancellationToken);
+  }
+  public async Task UpdateAsync(World world, CancellationToken cancellationToken)
+  {
+    Storage storage = await LoadOrInitializeAsync(world, cancellationToken);
+
+    EntityMetadata entity = EntityMetadata.From(world);
+    await UpdateAsync(storage, entity, cancellationToken);
+  }
+  private async Task UpdateAsync(Storage storage, EntityMetadata entity, CancellationToken cancellationToken)
+  {
     storage.Store(entity.StorageKey, entity.Size, entity.WorldId);
 
     await _storageRepository.SaveAsync(storage, cancellationToken);
@@ -57,6 +79,20 @@ internal class StorageService : IStorageService
     }
 
     _cache[worldId] = storage;
+
+    return storage;
+  }
+  private async Task<Storage> LoadOrInitializeAsync(World world, CancellationToken cancellationToken)
+  {
+    if (_cache.TryGetValue(world.Id, out Storage? storage))
+    {
+      return storage;
+    }
+
+    storage = await _storageRepository.LoadAsync(world.Id, cancellationToken)
+      ?? Storage.Initialize(world.OwnerId, _accountSettings.AllocatedBytes);
+
+    _cache[world.Id] = storage;
 
     return storage;
   }
