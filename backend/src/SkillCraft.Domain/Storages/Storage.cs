@@ -31,10 +31,7 @@ public class Storage : AggregateRoot
 
   public static Storage Initialize(UserId userId, long allocatedBytes)
   {
-    if (allocatedBytes < 0)
-    {
-      throw new ArgumentOutOfRangeException(nameof(allocatedBytes));
-    }
+    ArgumentOutOfRangeException.ThrowIfNegative(allocatedBytes, nameof(allocatedBytes));
 
     return new Storage(userId, allocatedBytes);
   }
