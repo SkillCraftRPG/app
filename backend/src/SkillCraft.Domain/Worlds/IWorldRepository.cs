@@ -2,6 +2,8 @@
 
 public interface IWorldRepository
 {
+  Task<IReadOnlyCollection<World>> LoadAsync(CancellationToken cancellationToken = default);
+
   Task<World?> LoadAsync(WorldId id, CancellationToken cancellationToken = default);
   Task<World?> LoadAsync(WorldId id, long? version, CancellationToken cancellationToken = default);
 

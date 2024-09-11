@@ -2,5 +2,6 @@
 
 internal enum Action
 {
-  Create
+  Create,
+  Preview
 }

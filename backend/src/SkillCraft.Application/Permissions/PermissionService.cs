@@ -38,5 +38,18 @@ internal class PermissionService : IPermissionService
     }
   }
 
+  public Task EnsureCanPreviewAsync(Activity activity, WorldModel entity, CancellationToken cancellationToken)
+  {
+    User user = activity.GetUser();
+    WorldModel? world = activity.TryGetWorld();
+
+    if ((world != null && !world.Equals(entity)) || !IsOwner(user, entity))
+    {
+      throw new PermissionDeniedException(Action.Preview, EntityType.World, user, world, entity.Id);
+    }
+
+    return Task.CompletedTask;
+  }
+
   private static bool IsOwner(User user, WorldModel world) => world.Owner.Id == user.Id;
 }

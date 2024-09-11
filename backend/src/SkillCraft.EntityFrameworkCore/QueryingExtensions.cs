@@ -10,7 +10,7 @@ internal static class QueryingExtensions
   {
     if (payload.Ids.Count > 0)
     {
-      IEnumerable<string> ids = payload.Ids.Select(id => id.ToString()).Distinct().ToArray();
+      string[] ids = payload.Ids.Select(id => id.ToString()).Distinct().ToArray();
       query.Where(column, Operators.IsIn(ids));
     }
 
