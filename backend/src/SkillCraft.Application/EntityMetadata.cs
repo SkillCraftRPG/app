@@ -4,7 +4,7 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application;
 
-public class EntityMetadata
+public record EntityMetadata
 {
   public WorldId WorldId { get; }
 
