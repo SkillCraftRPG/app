@@ -21,6 +21,8 @@ internal class WorldEntity : AggregateEntity
   public string? Name { get; private set; }
   public string? Description { get; private set; }
 
+  public List<StorageDetailEntity> StorageDetails { get; private set; } = [];
+
   public WorldEntity(UserEntity owner, World.CreatedEvent @event) : base(@event)
   {
     Id = @event.AggregateId.ToGuid();

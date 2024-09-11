@@ -18,13 +18,29 @@ internal static class StorageEvents
 
     public async Task Handle(Storage.EntityStoredEvent @event, CancellationToken cancellationToken)
     {
+      Guid ownerId = @event.AggregateId.ToGuid();
       StorageSummaryEntity summary = await _context.StorageSummaries
-        .SingleOrDefaultAsync(x => x.OwnerId == @event.AggregateId.ToGuid(), cancellationToken)
-        ?? throw new InvalidOperationException($"The storage summary '' could not be found.");
-
+        .SingleOrDefaultAsync(x => x.OwnerId == ownerId, cancellationToken)
+        ?? throw new InvalidOperationException($"The storage summary 'OwnerId={ownerId}' could not be found.");
       summary.Store(@event);
 
-      // TODO(fpion): StorageDetailEntity
+      StorageDetailEntity? detail = await _context.StorageDetails
+        .SingleOrDefaultAsync(x => x.EntityType == @event.Key.Type && x.EntityId == @event.Key.Id, cancellationToken);
+      if (detail == null)
+      {
+        Guid worldId = @event.Entity.WorldId.ToGuid();
+        WorldEntity world = await _context.Worlds
+          .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
+          ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
+
+        detail = new(world, @event);
+
+        _context.StorageDetails.Add(detail);
+      }
+      else
+      {
+        detail.Update(@event);
+      }
 
       await _context.SaveChangesAsync(cancellationToken);
     }

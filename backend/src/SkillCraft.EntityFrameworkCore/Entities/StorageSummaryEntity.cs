@@ -35,6 +35,4 @@ internal class StorageSummaryEntity : AggregateEntity
 
     UsedBytes = @event.UsedBytes;
   }
-
-  // TODO(fpion): migration
 }
