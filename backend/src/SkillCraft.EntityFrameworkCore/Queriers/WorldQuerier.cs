@@ -1,5 +1,8 @@
-﻿using Logitar.EventSourcing;
+﻿using Logitar.Data;
+using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
+using Logitar.Portal.Contracts.Search;
+using Logitar.Portal.Contracts.Users;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Worlds;
@@ -13,11 +16,13 @@ namespace SkillCraft.EntityFrameworkCore.Queriers;
 internal class WorldQuerier : IWorldQuerier
 {
   private readonly IActorService _actorService;
+  private readonly ISqlHelper _sqlHelper;
   private readonly DbSet<WorldEntity> _worlds;
 
-  public WorldQuerier(IActorService actorService, SkillCraftContext context)
+  public WorldQuerier(IActorService actorService, SkillCraftContext context, ISqlHelper sqlHelper)
   {
     _actorService = actorService;
+    _sqlHelper = sqlHelper;
     _worlds = context.Worlds;
   }
 
@@ -51,6 +56,47 @@ internal class WorldQuerier : IWorldQuerier
       .SingleOrDefaultAsync(x => x.SlugNormalized == slugNormalized, cancellationToken);
 
     return world == null ? null : await MapAsync(world, cancellationToken);
+  }
+
+  public async Task<SearchResults<WorldModel>> SearchAsync(User user, SearchWorldsPayload payload, CancellationToken cancellationToken)
+  {
+    IQueryBuilder builder = _sqlHelper.QueryFrom(SkillCraftDb.Worlds.Table).SelectAll(SkillCraftDb.Worlds.Table)
+      .ApplyIdFilter(payload, SkillCraftDb.Worlds.Id);
+    _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Worlds.Slug, SkillCraftDb.Worlds.Name);
+
+    IQueryable<WorldEntity> query = _worlds.FromQuery(builder).AsNoTracking();
+
+    long total = await query.LongCountAsync(cancellationToken);
+
+    IOrderedQueryable<WorldEntity>? ordered = null;
+    foreach (WorldSortOption sort in payload.Sort)
+    {
+      switch (sort.Field)
+      {
+        case WorldSort.Name:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Name) : ordered.ThenBy(x => x.Name));
+          break;
+        case WorldSort.Slug:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.Slug) : query.OrderBy(x => x.Slug))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Slug) : ordered.ThenBy(x => x.Slug));
+          break;
+        case WorldSort.UpdatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.UpdatedOn) : query.OrderBy(x => x.UpdatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.UpdatedOn) : ordered.ThenBy(x => x.UpdatedOn));
+          break;
+      }
+    }
+    query = ordered ?? query;
+    query = query.ApplyPaging(payload);
+
+    WorldEntity[] worlds = await query.ToArrayAsync(cancellationToken);
+    IEnumerable<WorldModel> items = await MapAsync(worlds, cancellationToken);
+
+    return new SearchResults<WorldModel>(items, total);
   }
 
   private async Task<WorldModel> MapAsync(WorldEntity world, CancellationToken cancellationToken)

@@ -20,6 +20,11 @@ internal class WorldRepository : Logitar.EventSourcing.EntityFrameworkCore.Relat
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<World>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await LoadAsync<World>(cancellationToken)).ToArray();
+  }
+
   public async Task<World?> LoadAsync(WorldId id, CancellationToken cancellationToken)
   {
     return await LoadAsync(id, version: null, cancellationToken);

@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Logging;
+using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore;
 using SkillCraft.EntityFrameworkCore.SqlServer;
 using SkillCraft.Infrastructure;
@@ -22,6 +25,7 @@ public abstract class IntegrationTests : IAsyncLifetime
 {
   private readonly DatabaseProvider _databaseProvider;
   private readonly User _user;
+  private readonly WorldModel _world;
 
   protected Actor Actor => new(_user);
   protected CancellationToken CancellationToken { get; }
@@ -69,7 +73,12 @@ public abstract class IntegrationTests : IAsyncLifetime
       Email = new Email(Faker.Person.Email),
       Picture = Faker.Person.Avatar
     };
-    ActivityContext activityContext = new(ApiKey: null, Session: null, _user, World: null);
+    _world = new(Actor, "ungar")
+    {
+      Id = Guid.NewGuid(),
+      Name = "Ungar"
+    };
+    ActivityContext activityContext = new(ApiKey: null, Session: null, _user, _world);
     services.AddSingleton<IActivityContextResolver>(new TestActivityContextResolver(activityContext));
     services.AddSingleton<ILogRepository, FakeLogRepository>();
 
@@ -80,7 +89,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     SkillCraftContext = ServiceProvider.GetRequiredService<SkillCraftContext>();
   }
 
-  public async Task InitializeAsync()
+  public virtual async Task InitializeAsync()
   {
     await MigrateAsync();
     await EmptyDatabaseAsync();
@@ -124,7 +133,17 @@ public abstract class IntegrationTests : IAsyncLifetime
   {
     IActorService actorService = ServiceProvider.GetRequiredService<IActorService>();
     await actorService.SaveAsync(_user);
+
+    IWorldRepository worldRepository = ServiceProvider.GetRequiredService<IWorldRepository>();
+    UserId userId = new(_user.Id);
+    World world = new(new Slug(_world.Slug), userId, new WorldId(_world.Id))
+    {
+      Name = Name.TryCreate(_world.Name),
+      Description = Description.TryCreate(_world.Description)
+    };
+    world.Update(userId);
+    await worldRepository.SaveAsync(world);
   }
 
-  public Task DisposeAsync() => Task.CompletedTask;
+  public virtual Task DisposeAsync() => Task.CompletedTask;
 }

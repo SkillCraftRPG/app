@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Logitar.Portal.Contracts.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Worlds.Commands;
+using SkillCraft.Application.Worlds.Queries;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Extensions;
+using SkillCraft.Models.Worlds;
 
 namespace SkillCraft.Controllers;
 
@@ -26,5 +29,26 @@ public class WorldController : ControllerBase
     Uri location = HttpContext.BuildLocation("worlds/{id}", [new KeyValuePair<string, string>("id", world.Id.ToString())]);
 
     return Created(location, world);
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<WorldModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    WorldModel? world = await _pipeline.ExecuteAsync(new ReadWorldQuery(id, Slug: null), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
+  }
+
+  [HttpGet("slug:{slug}")]
+  public async Task<ActionResult<WorldModel>> ReadAsync(string slug, CancellationToken cancellationToken)
+  {
+    WorldModel? world = await _pipeline.ExecuteAsync(new ReadWorldQuery(Id: null, slug), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<WorldModel>>> SearchAsync([FromQuery] SearchWorldsParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<WorldModel> worlds = await _pipeline.ExecuteAsync(new SearchWorldsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(worlds);
   }
 }
