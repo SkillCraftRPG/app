@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Worlds.Validators;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
@@ -11,11 +12,13 @@ public record CreateWorldCommand(CreateWorldPayload Payload) : Activity, IReques
 
 internal class CreateWorldCommandHandler : IRequestHandler<CreateWorldCommand, WorldModel>
 {
+  private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
   private readonly IWorldQuerier _worldQuerier;
 
-  public CreateWorldCommandHandler(ISender sender, IWorldQuerier worldQuerier)
+  public CreateWorldCommandHandler(IPermissionService permissionService, ISender sender, IWorldQuerier worldQuerier)
   {
+    _permissionService = permissionService;
     _sender = sender;
     _worldQuerier = worldQuerier;
   }
@@ -25,7 +28,7 @@ internal class CreateWorldCommandHandler : IRequestHandler<CreateWorldCommand, W
     CreateWorldPayload payload = command.Payload;
     new CreateWorldValidator().ValidateAndThrow(payload);
 
-    // TODO(fpion): permissions
+    await _permissionService.EnsureCanCreateAsync(command, EntityType.World, cancellationToken);
 
     UserId userId = command.GetUserId();
     World world = new(new Slug(payload.Slug), userId)

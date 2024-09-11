@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Contracts.Users;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 
 namespace SkillCraft.Application;
@@ -28,4 +29,7 @@ public abstract record Activity : IActivity
   public User GetUser() => TryGetUser() ?? throw new InvalidOperationException("An authenticated user is required.");
   public UserId GetUserId() => new(GetUser().Id);
   public User? TryGetUser() => Context.User;
+
+  public WorldModel GetWorld() => TryGetWorld() ?? throw new InvalidOperationException("The world is required.");
+  public WorldModel? TryGetWorld() => Context.World;
 }
