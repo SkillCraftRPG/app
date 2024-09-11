@@ -26,4 +26,8 @@
     <Using Include="System.Reflection" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="SkillCraft.IntegrationTests" />
+  </ItemGroup>
+
 </Project>

@@ -5,6 +5,7 @@ using SkillCraft.Application;
 using SkillCraft.Application.Accounts;
 using SkillCraft.Application.Caching;
 using SkillCraft.Infrastructure.Caching;
+using SkillCraft.Infrastructure.Converters;
 using SkillCraft.Infrastructure.IdentityServices;
 using SkillCraft.Infrastructure.Settings;
 
@@ -45,5 +46,11 @@ public static class DependencyInjectionExtensions
   }
 
   private static EventSerializer InitializeEventSerializer(IServiceProvider serviceProvider) => new(serviceProvider.GetJsonConverters());
-  public static IEnumerable<JsonConverter> GetJsonConverters(this IServiceProvider _) => [];
+  public static IEnumerable<JsonConverter> GetJsonConverters(this IServiceProvider _) =>
+  [
+    new DescriptionConverter(),
+    new NameConverter(),
+    new SlugConverter(),
+    new UserIdConverter()
+  ];
 }

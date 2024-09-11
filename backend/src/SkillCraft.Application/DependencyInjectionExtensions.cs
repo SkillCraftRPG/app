@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Logging;
+using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Settings;
+using SkillCraft.Application.Storages;
 
 namespace SkillCraft.Application;
 
@@ -15,6 +17,8 @@ public static class DependencyInjectionExtensions
       .AddSingleton<ILoggingSettings>(InitializeLoggingSettings)
       .AddSingleton(InitializeAccountSettings)
       .AddScoped<ILoggingService, LoggingService>()
+      .AddScoped<IStorageService, StorageService>()
+      .AddTransient<IPermissionService, PermissionService>()
       .AddTransient<IRequestPipeline, RequestPipeline>();
   }
 

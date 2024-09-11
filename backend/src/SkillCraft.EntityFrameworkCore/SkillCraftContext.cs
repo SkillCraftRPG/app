@@ -9,7 +9,10 @@ public class SkillCraftContext : DbContext
   {
   }
 
+  internal DbSet<StorageDetailEntity> StorageDetails { get; private set; }
+  internal DbSet<StorageSummaryEntity> StorageSummaries { get; private set; }
   internal DbSet<UserEntity> Users { get; private set; }
+  internal DbSet<WorldEntity> Worlds { get; private set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

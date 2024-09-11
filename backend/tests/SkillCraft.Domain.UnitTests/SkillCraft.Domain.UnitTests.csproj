@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Using Include="System.Globalization" />
+    <Using Include="System.Reflection" />
     <Using Include="Xunit" />
   </ItemGroup>
 
