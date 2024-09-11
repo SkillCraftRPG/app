@@ -1,4 +1,6 @@
-﻿namespace SkillCraft.Application.Permissions;
+﻿using SkillCraft.Domain;
+
+namespace SkillCraft.Application.Permissions;
 
 public interface IPermissionService
 {

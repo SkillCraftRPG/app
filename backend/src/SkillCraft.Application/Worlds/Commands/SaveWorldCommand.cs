@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
+using SkillCraft.Application.Storages;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Worlds.Commands;
@@ -8,10 +9,12 @@ internal record SaveWorldCommand(World World) : IRequest;
 
 internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
 {
+  private readonly IStorageService _storageService;
   private readonly IWorldRepository _worldRepository;
 
-  public SaveWorldCommandHandler(IWorldRepository worldRepository)
+  public SaveWorldCommandHandler(IStorageService storageService, IWorldRepository worldRepository)
   {
+    _storageService = storageService;
     _worldRepository = worldRepository;
   }
 
@@ -38,10 +41,11 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
       }
     }
 
-    // TODO(fpion): ensure has enough storage
+    EntityMetadata entity = EntityMetadata.From(world);
+    await _storageService.EnsureAvailableAsync(entity, cancellationToken);
 
     await _worldRepository.SaveAsync(world, cancellationToken);
 
-    // TODO(fpion): update storage
+    await _storageService.UpdateAsync(entity, cancellationToken);
   }
 }

@@ -13,6 +13,7 @@ internal class UserEntity
   public string? EmailAddress { get; private set; }
   public string? PictureUrl { get; private set; }
 
+  public StorageSummaryEntity? StorageSummary { get; private set; }
   public List<WorldEntity> Worlds { get; private set; } = [];
 
   public UserEntity(User user)

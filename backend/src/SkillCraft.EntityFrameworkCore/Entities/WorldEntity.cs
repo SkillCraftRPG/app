@@ -40,6 +40,8 @@ internal class WorldEntity : AggregateEntity
 
   public void Update(World.UpdatedEvent @event)
   {
+    base.Update(@event);
+
     if (@event.Slug != null)
     {
       Slug = @event.Slug.Value;
