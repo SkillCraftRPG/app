@@ -90,6 +90,8 @@ public class World : AggregateRoot
     }
   }
 
+  public override string ToString() => $"{Name?.Value ?? Slug.Value} | {base.ToString()}";
+
   public class CreatedEvent : DomainEvent, INotification
   {
     public UserId OwnerId { get; }
