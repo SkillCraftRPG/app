@@ -15,5 +15,7 @@ public record Description
     new DescriptionValidator().ValidateAndThrow(this);
   }
 
+  public static Description? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
+
   public override string ToString() => Value;
 }

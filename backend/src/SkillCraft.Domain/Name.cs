@@ -15,5 +15,7 @@ public record Name
     new NameValidator().ValidateAndThrow(this);
   }
 
+  public static Name? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
+
   public override string ToString() => Value;
 }

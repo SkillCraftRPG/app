@@ -15,5 +15,7 @@ public record Slug
     new SlugValidator().ValidateAndThrow(this);
   }
 
+  public static Slug? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
+
   public override string ToString() => Value;
 }
