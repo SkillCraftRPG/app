@@ -51,6 +51,7 @@ public static class DependencyInjectionExtensions
     new DescriptionConverter(),
     new NameConverter(),
     new SlugConverter(),
-    new UserIdConverter()
+    new UserIdConverter(),
+    new WorldIdConverter()
   ];
 }

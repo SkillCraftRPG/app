@@ -45,7 +45,7 @@ public class ReplaceWorldCommandHandlerTests
       Description = "    "
     };
     ReplaceWorldCommand command = new(world.Id.ToGuid(), payload, version);
-    ActivityContextMock.Contextualize(command);
+    command.Contextualize();
 
     WorldModel model = new();
     _worldQuerier.Setup(x => x.ReadAsync(world, _cancellationToken)).ReturnsAsync(model);

@@ -1,4 +1,5 @@
 ﻿using SkillCraft.Domain;
+using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
 
@@ -23,6 +24,12 @@ public record EntityMetadata
     StorageKey = new(type, id);
 
     Size = size;
+  }
+
+  public static EntityMetadata From(Education education)
+  {
+    long size = education.Name.Value.Length + (education.Description?.Value.Length ?? 0) + 4 + 8;
+    return new EntityMetadata(education.WorldId, EntityType.Education, education.Id.ToGuid(), size);
   }
 
   public static EntityMetadata From(World world)

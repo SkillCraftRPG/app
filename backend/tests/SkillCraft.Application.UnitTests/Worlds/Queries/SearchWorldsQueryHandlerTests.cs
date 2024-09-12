@@ -23,7 +23,7 @@ public class SearchWorldsQueryHandlerTests
   {
     SearchWorldsPayload payload = new();
     SearchWorldsQuery query = new(payload);
-    ActivityContextMock.Contextualize(query);
+    query.Contextualize();
 
     SearchResults<WorldModel> results = new();
     _worldQuerier.Setup(x => x.SearchAsync(query.GetUser(), payload, _cancellationToken)).ReturnsAsync(results);
