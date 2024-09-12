@@ -7,6 +7,7 @@ using SkillCraft.Application.Worlds.Commands;
 using SkillCraft.Application.Worlds.Queries;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Permissions;
 
@@ -115,5 +116,64 @@ public class PermissionServiceTests
     Assert.Equal(user.Id, exception.UserId);
     Assert.Equal(world.Id, exception.WorldId);
     Assert.Equal(otherWorld.Id, exception.EntityId);
+  }
+
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should succeed when the user can update the world.")]
+  public async Task EnsureCanUpdateAsync_it_should_succeed_when_the_user_can_update_the_world()
+  {
+    UserMock user = new(_faker);
+    World world = new(new Slug("new-world"), new UserId(user.Id));
+    WorldModel model = new(new Actor(user), world.Slug.Value)
+    {
+      Id = world.Id.ToGuid()
+    };
+    ActivityContext context = new(ApiKey: null, Session: null, user, model);
+    ReadWorldQuery query = new(model.Id, model.Slug);
+    query.Contextualize(context);
+
+    await _service.EnsureCanUpdateAsync(query, world, _cancellationToken);
+  }
+
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should throw PermissionDeniedException when the user does not own the world.")]
+  public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_user_does_not_own_the_world()
+  {
+    UserMock user = new(_faker);
+    World world = new(new Slug("new-world"), new UserId(Actor.System.Id));
+    WorldModel model = new(Actor.System, world.Slug.Value)
+    {
+      Id = world.Id.ToGuid()
+    };
+    ActivityContext context = new(ApiKey: null, Session: null, user, model);
+    ReadWorldQuery query = new(model.Id, model.Slug);
+    query.Contextualize(context);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanUpdateAsync(query, world, _cancellationToken));
+    Assert.Equal(Action.Update, exception.Action);
+    Assert.Equal(EntityType.World, exception.EntityType);
+    Assert.Equal(user.Id, exception.UserId);
+    Assert.Equal(model.Id, exception.WorldId);
+    Assert.Equal(model.Id, exception.EntityId);
+  }
+
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should throw PermissionDeniedException when the world is not the same as the context.")]
+  public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_world_is_not_the_same_as_the_context()
+  {
+    UserMock user = new(_faker);
+    WorldModel model = new(new Actor(user), "new-world")
+    {
+      Id = Guid.NewGuid()
+    };
+    ActivityContext context = new(ApiKey: null, Session: null, user, model);
+    ReadWorldQuery query = new(model.Id, model.Slug);
+    query.Contextualize(context);
+
+    World otherWorld = new(new Slug(model.Slug), new UserId(user.Id));
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanUpdateAsync(query, otherWorld, _cancellationToken));
+    Assert.Equal(Action.Update, exception.Action);
+    Assert.Equal(EntityType.World, exception.EntityType);
+    Assert.Equal(user.Id, exception.UserId);
+    Assert.Equal(model.Id, exception.WorldId);
+    Assert.Equal(otherWorld.Id.ToGuid(), exception.EntityId);
   }
 }

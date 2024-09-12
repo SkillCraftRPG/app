@@ -3,6 +3,7 @@ using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Permissions;
 
@@ -51,5 +52,19 @@ internal class PermissionService : IPermissionService
     return Task.CompletedTask;
   }
 
+  public Task EnsureCanUpdateAsync(Activity activity, World world, CancellationToken cancellationToken)
+  {
+    User user = activity.GetUser();
+    WorldModel? model = activity.TryGetWorld();
+
+    if ((model != null && world.Id.ToGuid() != model.Id) || !IsOwner(user, world))
+    {
+      throw new PermissionDeniedException(Action.Update, EntityType.World, user, model, world.Id.ToGuid());
+    }
+
+    return Task.CompletedTask;
+  }
+
+  private static bool IsOwner(User user, World world) => world.OwnerId.ToGuid() == user.Id;
   private static bool IsOwner(User user, WorldModel world) => world.Owner.Id == user.Id;
 }

@@ -45,10 +45,24 @@ public class WorldController : ControllerBase
     return world == null ? NotFound() : Ok(world);
   }
 
+  [HttpPut("{id}")]
+  public async Task<ActionResult<WorldModel>> ReplaceAsync(Guid id, [FromBody] ReplaceWorldPayload payload, long? version, CancellationToken cancellationToken)
+  {
+    WorldModel? world = await _pipeline.ExecuteAsync(new ReplaceWorldCommand(id, payload, version), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
+  }
+
   [HttpGet]
   public async Task<ActionResult<SearchResults<WorldModel>>> SearchAsync([FromQuery] SearchWorldsParameters parameters, CancellationToken cancellationToken)
   {
     SearchResults<WorldModel> worlds = await _pipeline.ExecuteAsync(new SearchWorldsQuery(parameters.ToPayload()), cancellationToken);
     return Ok(worlds);
+  }
+
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<WorldModel>> UpdateAsync(Guid id, [FromBody] UpdateWorldPayload payload, CancellationToken cancellationToken)
+  {
+    WorldModel? world = await _pipeline.ExecuteAsync(new UpdateWorldCommand(id, payload), cancellationToken);
+    return world == null ? NotFound() : Ok(world);
   }
 }
