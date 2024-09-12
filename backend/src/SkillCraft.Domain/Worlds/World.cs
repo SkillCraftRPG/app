@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
+using SkillCraft.Contracts;
 
 namespace SkillCraft.Domain.Worlds;
 

@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SkillCraft.Contracts\SkillCraft.Contracts.csproj" />
     <ProjectReference Include="..\SkillCraft.Domain\SkillCraft.Domain.csproj" />
   </ItemGroup>
 

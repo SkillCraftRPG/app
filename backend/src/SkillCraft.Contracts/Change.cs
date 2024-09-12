@@ -1,4 +1,4 @@
-﻿namespace SkillCraft.Domain;
+﻿namespace SkillCraft.Contracts;
 
 public record Change<T>
 {
