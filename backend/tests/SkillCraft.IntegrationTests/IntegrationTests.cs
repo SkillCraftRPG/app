@@ -107,6 +107,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     StringBuilder statement = new();
     TableId[] tables =
     [
+      EntityFrameworkCore.SkillCraftDb.Educations.Table,
       EntityFrameworkCore.SkillCraftDb.StorageDetails.Table,
       EntityFrameworkCore.SkillCraftDb.StorageSummaries.Table,
       EntityFrameworkCore.SkillCraftDb.Worlds.Table,
