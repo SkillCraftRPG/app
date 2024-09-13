@@ -2,5 +2,6 @@
 
 public enum EntityType
 {
+  Education,
   World
 }

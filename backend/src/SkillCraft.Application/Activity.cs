@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application;
 
@@ -31,5 +32,6 @@ public abstract record Activity : IActivity
   public User? TryGetUser() => Context.User;
 
   public WorldModel GetWorld() => TryGetWorld() ?? throw new InvalidOperationException("The world is required.");
+  public WorldId GetWorldId() => new(GetWorld().Id);
   public WorldModel? TryGetWorld() => Context.World;
 }

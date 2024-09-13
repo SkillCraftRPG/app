@@ -34,7 +34,7 @@ internal class StorageService : IStorageService
   }
   private static void EnsureAvailable(Storage storage, EntityMetadata entity)
   {
-    long previousBytes = storage.GetSize(entity.StorageKey);
+    long previousBytes = storage.GetSize(entity.Key);
     long requiredBytes = entity.Size - previousBytes;
     if (requiredBytes > 0 && requiredBytes > storage.AvailableBytes)
     {
@@ -57,7 +57,7 @@ internal class StorageService : IStorageService
   }
   private async Task UpdateAsync(Storage storage, EntityMetadata entity, CancellationToken cancellationToken)
   {
-    storage.Store(entity.StorageKey, entity.Size, entity.WorldId);
+    storage.Store(entity.Key, entity.Size, entity.WorldId);
 
     await _storageRepository.SaveAsync(storage, cancellationToken);
   }

@@ -30,6 +30,7 @@ public abstract class IntegrationTests : IAsyncLifetime
   protected Actor Actor => new(_user);
   protected CancellationToken CancellationToken { get; }
   protected Faker Faker { get; } = new();
+  protected World World { get; }
 
   protected IConfiguration Configuration { get; }
   protected IServiceProvider ServiceProvider { get; }
@@ -73,10 +74,15 @@ public abstract class IntegrationTests : IAsyncLifetime
       Email = new Email(Faker.Person.Email),
       Picture = Faker.Person.Avatar
     };
-    _world = new(Actor, "ungar")
+    World = new(new Slug("ungar"), new UserId(_user.Id))
     {
-      Id = Guid.NewGuid(),
-      Name = "Ungar"
+      Name = new Name("Ungar")
+    };
+    World.Update(World.OwnerId);
+    _world = new(Actor, World.Slug.Value)
+    {
+      Id = World.Id.ToGuid(),
+      Name = World.Name.Value
     };
     ActivityContext activityContext = new(ApiKey: null, Session: null, _user, _world);
     services.AddSingleton<IActivityContextResolver>(new TestActivityContextResolver(activityContext));
@@ -107,6 +113,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     StringBuilder statement = new();
     TableId[] tables =
     [
+      EntityFrameworkCore.SkillCraftDb.Educations.Table,
       EntityFrameworkCore.SkillCraftDb.StorageDetails.Table,
       EntityFrameworkCore.SkillCraftDb.StorageSummaries.Table,
       EntityFrameworkCore.SkillCraftDb.Worlds.Table,
@@ -135,14 +142,7 @@ public abstract class IntegrationTests : IAsyncLifetime
     await actorService.SaveAsync(_user);
 
     IWorldRepository worldRepository = ServiceProvider.GetRequiredService<IWorldRepository>();
-    UserId userId = new(_user.Id);
-    World world = new(new Slug(_world.Slug), userId, new WorldId(_world.Id))
-    {
-      Name = Name.TryCreate(_world.Name),
-      Description = Description.TryCreate(_world.Description)
-    };
-    world.Update(userId);
-    await worldRepository.SaveAsync(world);
+    await worldRepository.SaveAsync(World);
   }
 
   public virtual Task DisposeAsync() => Task.CompletedTask;

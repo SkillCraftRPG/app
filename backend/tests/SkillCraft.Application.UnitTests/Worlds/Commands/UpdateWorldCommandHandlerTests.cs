@@ -68,7 +68,7 @@ public class UpdateWorldCommandHandlerTests
       Description = new Change<string>("    ")
     };
     UpdateWorldCommand command = new(world.Id.ToGuid(), payload);
-    ActivityContextMock.Contextualize(command);
+    command.Contextualize();
 
     WorldModel model = new();
     _worldQuerier.Setup(x => x.ReadAsync(world, _cancellationToken)).ReturnsAsync(model);

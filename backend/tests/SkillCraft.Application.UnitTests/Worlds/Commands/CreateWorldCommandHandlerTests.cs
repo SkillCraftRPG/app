@@ -33,7 +33,7 @@ public class CreateWorldCommandHandlerTests
       Description = "    "
     };
     CreateWorldCommand command = new(payload);
-    ActivityContextMock.Contextualize(command);
+    command.Contextualize();
 
     WorldModel model = new();
     _worldQuerier.Setup(x => x.ReadAsync(It.Is<World>(y => y.Slug.Value == payload.Slug

@@ -2,6 +2,7 @@
 using Logitar.EventSourcing;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
+using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -33,6 +34,24 @@ internal class Mapper
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
   };
+
+  public EducationModel ToEducation(EducationEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    EducationModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Skill = source.Skill,
+      WealthMultiplier = source.WealthMultiplier
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public WorldModel ToWorld(WorldEntity source)
   {

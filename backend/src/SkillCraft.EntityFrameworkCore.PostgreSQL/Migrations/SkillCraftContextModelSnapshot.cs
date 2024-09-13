@@ -21,6 +21,84 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.EducationEntity", b =>
+                {
+                    b.Property<int>("EducationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EducationId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Skill")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<double?>("WealthMultiplier")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("EducationId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("WorldId");
+
+                    b.ToTable("Educations", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.StorageDetailEntity", b =>
                 {
                     b.Property<int>("StorageDetailId")
@@ -264,6 +342,17 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.ToTable("Worlds", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.EducationEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Educations")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("World");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.StorageDetailEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.UserEntity", "Owner")
@@ -316,6 +405,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", b =>
                 {
+                    b.Navigation("Educations");
+
                     b.Navigation("StorageDetails");
                 });
 #pragma warning restore 612, 618
