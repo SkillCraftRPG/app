@@ -4,6 +4,7 @@ using Logitar.Portal.Contracts.Configurations;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Application.Caching;
+using SkillCraft.Contracts.Worlds;
 
 namespace SkillCraft.Application.Logging;
 
@@ -73,6 +74,14 @@ public class LoggingService : ILoggingService
     if (_log != null)
     {
       _log.UserId = user?.Id;
+    }
+  }
+
+  public void SetWorld(WorldModel? world)
+  {
+    if (_log != null)
+    {
+      _log.WorldId = world?.Id;
     }
   }
 

@@ -15,7 +15,7 @@ internal class HttpActivityContextResolver : IActivityContextResolver
 
   public Task<ActivityContext> ResolveAsync(CancellationToken cancellationToken)
   {
-    ActivityContext context = new(Context.GetApiKey(), Context.GetSession(), Context.GetUser(), World: null);
+    ActivityContext context = new(Context.GetApiKey(), Context.GetSession(), Context.GetUser(), Context.GetWorld());
     return Task.FromResult(context);
   }
 }

@@ -45,6 +45,7 @@ public class Log
   public Guid? ApiKeyId { get; set; }
   public Guid? UserId { get; set; }
   public Guid? SessionId { get; set; }
+  public Guid? WorldId { get; set; }
 
   private readonly List<DomainEvent> _events = [];
   public IReadOnlyCollection<DomainEvent> Events => _events.AsReadOnly();

@@ -118,6 +118,7 @@ internal class Startup : StartupBase
     builder.UseSession();
     builder.UseMiddleware<Logging>();
     builder.UseMiddleware<RenewSession>();
+    builder.UseMiddleware<ResolveWorld>();
     builder.UseAuthentication();
     builder.UseAuthorization();
 

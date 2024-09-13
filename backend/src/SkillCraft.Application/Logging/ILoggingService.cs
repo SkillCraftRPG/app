@@ -2,6 +2,7 @@
 using Logitar.Portal.Contracts.ApiKeys;
 using Logitar.Portal.Contracts.Sessions;
 using Logitar.Portal.Contracts.Users;
+using SkillCraft.Contracts.Worlds;
 
 namespace SkillCraft.Application.Logging;
 
@@ -15,5 +16,6 @@ public interface ILoggingService
   void SetApiKey(ApiKey? apiKey);
   void SetSession(Session? session);
   void SetUser(User? user);
+  void SetWorld(WorldModel? world);
   Task CloseAndSaveAsync(int statusCode, CancellationToken cancellationToken = default);
 }
