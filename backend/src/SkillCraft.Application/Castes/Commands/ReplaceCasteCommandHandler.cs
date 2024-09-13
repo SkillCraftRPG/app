@@ -39,7 +39,7 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
       return null;
     }
 
-    await _permissionService.EnsureCanUpdateAsync(command, EntityMetadata.From(caste), cancellationToken);
+    await _permissionService.EnsureCanUpdateAsync(command, caste.GetMetadata(), cancellationToken);
 
     Caste? reference = null;
     if (command.Version.HasValue)

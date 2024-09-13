@@ -8,6 +8,7 @@ public record Name
   public const int MaximumLength = byte.MaxValue;
 
   public string Value { get; }
+  public int Size => Value.Length;
 
   public Name(string value)
   {

@@ -41,7 +41,7 @@ internal class ReplaceEducationCommandHandler : IRequestHandler<ReplaceEducation
       return null;
     }
 
-    await _permissionService.EnsureCanUpdateAsync(command, EntityMetadata.From(education), cancellationToken);
+    await _permissionService.EnsureCanUpdateAsync(command, education.GetMetadata(), cancellationToken);
 
     Education? reference = null;
     if (command.Version.HasValue)

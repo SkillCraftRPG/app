@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
 using SkillCraft.Contracts;
 using SkillCraft.Domain.Castes;
+using System.Text.Json;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
@@ -18,7 +19,26 @@ internal class CasteEntity : AggregateEntity
   public Skill? Skill { get; private set; }
   public string? WealthRoll { get; private set; }
 
-  // TODO(fpion): Traits
+  public Dictionary<Guid, TraitEntity> Traits { get; private set; } = [];
+  public string? TraitsSerialized
+  {
+    get => Traits.Count == 0 ? null : JsonSerializer.Serialize(Traits);
+    private set
+    {
+      Traits.Clear();
+      if (value != null)
+      {
+        Dictionary<Guid, TraitEntity>? traits = JsonSerializer.Deserialize<Dictionary<Guid, TraitEntity>>(value);
+        if (traits != null)
+        {
+          foreach (KeyValuePair<Guid, TraitEntity> trait in traits)
+          {
+            Traits[trait.Key] = trait.Value;
+          }
+        }
+      }
+    }
+  }
 
   public CasteEntity(WorldEntity world, Caste.CreatedEvent @event) : base(@event)
   {
@@ -65,5 +85,7 @@ internal class CasteEntity : AggregateEntity
     {
       WealthRoll = @event.WealthRoll.Value?.Value;
     }
+
+    // TODO(fpion): Traits
   }
 }

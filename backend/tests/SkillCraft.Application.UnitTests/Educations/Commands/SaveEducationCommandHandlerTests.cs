@@ -31,7 +31,7 @@ public class SaveEducationCommandHandlerTests
 
     _educationRepository.Verify(x => x.SaveAsync(_education, _cancellationToken), Times.Once);
 
-    EntityMetadata entity = EntityMetadata.From(_education);
+    EntityMetadata entity = _education.GetMetadata();
     _storageService.Verify(x => x.EnsureAvailableAsync(entity, _cancellationToken), Times.Once);
     _storageService.Verify(x => x.UpdateAsync(entity, _cancellationToken), Times.Once);
   }

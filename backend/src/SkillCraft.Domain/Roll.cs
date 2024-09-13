@@ -5,6 +5,7 @@ public record Roll
   public const int MaximumLength = byte.MaxValue;
 
   public string Value { get; }
+  public int Size => Value.Length;
 
   public Roll(string value)
   {

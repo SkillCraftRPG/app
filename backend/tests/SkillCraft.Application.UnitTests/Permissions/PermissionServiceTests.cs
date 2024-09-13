@@ -2,6 +2,7 @@
 using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Users;
 using Moq;
+using SkillCraft.Application.Educations;
 using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
@@ -158,11 +159,11 @@ public class PermissionServiceTests
   public async Task EnsureCanUpdateAsync_it_should_succeed_when_the_user_owns_the_world_and_the_entity_is_in_that_world()
   {
     Education education = new(_userWorld.Id, new Name("Classique"), _userWorld.OwnerId);
-    EntityMetadata entity = EntityMetadata.From(education);
 
     UpdateEducationCommand command = new(education.Id.ToGuid(), new UpdateEducationPayload());
     command.Contextualize(_user, _userWorld);
 
+    EntityMetadata entity = education.GetMetadata();
     await _service.EnsureCanUpdateAsync(command, entity, _cancellationToken);
   }
 
@@ -170,7 +171,7 @@ public class PermissionServiceTests
   public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_entity_is_not_in_the_world()
   {
     Education education = new(_userWorld.Id, new Name("Classique"), _userWorld.OwnerId);
-    EntityMetadata entity = EntityMetadata.From(education);
+    EntityMetadata entity = education.GetMetadata();
 
     UpdateEducationCommand command = new(education.Id.ToGuid(), new UpdateEducationPayload());
     command.Contextualize(_user, _otherWorld);
@@ -187,7 +188,7 @@ public class PermissionServiceTests
   public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_user_does_not_own_the_world_Entity()
   {
     Education education = new(_otherWorld.Id, new Name("Classique"), _otherWorld.OwnerId);
-    EntityMetadata entity = EntityMetadata.From(education);
+    EntityMetadata entity = education.GetMetadata();
 
     UpdateEducationCommand command = new(education.Id.ToGuid(), new UpdateEducationPayload());
     command.Contextualize(_user, _otherWorld);

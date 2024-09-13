@@ -22,7 +22,7 @@ internal class ReadCasteQueryHandler : IRequestHandler<ReadCasteQuery, CasteMode
     CasteModel? caste = await _casteQuerier.ReadAsync(query.Id, cancellationToken);
     if (caste != null)
     {
-      await _permissionService.EnsureCanPreviewAsync(query, EntityMetadata.From(caste), cancellationToken);
+      await _permissionService.EnsureCanPreviewAsync(query, caste.GetMetadata(), cancellationToken);
     }
 
     return caste;

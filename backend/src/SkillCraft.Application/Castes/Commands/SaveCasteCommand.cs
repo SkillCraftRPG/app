@@ -21,7 +21,7 @@ internal class SaveCasteCommandHandler : IRequestHandler<SaveCasteCommand>
   {
     Caste caste = command.Caste;
 
-    EntityMetadata entity = EntityMetadata.From(caste);
+    EntityMetadata entity = caste.GetMetadata();
     await _storageService.EnsureAvailableAsync(entity, cancellationToken);
 
     await _casteRepository.SaveAsync(caste, cancellationToken);

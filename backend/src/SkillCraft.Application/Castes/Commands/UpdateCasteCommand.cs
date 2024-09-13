@@ -39,7 +39,7 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
       return null;
     }
 
-    await _permissionService.EnsureCanUpdateAsync(command, EntityMetadata.From(caste), cancellationToken);
+    await _permissionService.EnsureCanUpdateAsync(command, caste.GetMetadata(), cancellationToken);
 
     if (!string.IsNullOrWhiteSpace(payload.Name))
     {

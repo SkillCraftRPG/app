@@ -21,7 +21,7 @@ internal class SaveEducationCommandHandler : IRequestHandler<SaveEducationComman
   {
     Education education = command.Education;
 
-    EntityMetadata entity = EntityMetadata.From(education);
+    EntityMetadata entity = education.GetMetadata();
     await _storageService.EnsureAvailableAsync(entity, cancellationToken);
 
     await _educationRepository.SaveAsync(education, cancellationToken);

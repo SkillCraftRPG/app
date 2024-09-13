@@ -19,10 +19,12 @@ internal class CasteConfiguration : AggregateConfiguration<CasteEntity>, IEntity
     builder.HasIndex(x => x.Id).IsUnique();
     builder.HasIndex(x => x.Name);
 
+    builder.Ignore(x => x.Traits);
+
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
     builder.Property(x => x.Skill).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Skill>());
     builder.Property(x => x.WealthRoll).HasMaxLength(Roll.MaximumLength);
-    // TODO(fpion): Traits
+    builder.Property(x => x.TraitsSerialized).HasColumnName(SkillCraftDb.Castes.Traits.Name);
 
     builder.HasOne(x => x.World).WithMany(x => x.Castes)
       .HasPrincipalKey(x => x.WorldId).HasForeignKey(x => x.WorldId)
