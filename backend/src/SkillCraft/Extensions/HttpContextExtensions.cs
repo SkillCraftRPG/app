@@ -6,6 +6,7 @@ using Logitar.Portal.Contracts.Users;
 using Microsoft.Extensions.Primitives;
 using SkillCraft.Application.Logging;
 using SkillCraft.Constants;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Settings;
 
 namespace SkillCraft.Extensions;
@@ -16,6 +17,7 @@ internal static class HttpContextExtensions
   private const string SessionKey = nameof(Session);
   private const string SessionIdKey = "SessionId";
   private const string UserKey = nameof(User);
+  private const string WorldKey = "World";
 
   public static Uri GetBaseUri(this HttpContext context)
   {
@@ -79,6 +81,7 @@ internal static class HttpContextExtensions
   public static ApiKey? GetApiKey(this HttpContext context) => context.GetItem<ApiKey>(ApiKeyKey);
   public static Session? GetSession(this HttpContext context) => context.GetItem<Session>(SessionKey);
   public static User? GetUser(this HttpContext context) => context.GetItem<User>(UserKey);
+  public static WorldModel? GetWorld(this HttpContext context) => context.GetItem<WorldModel>(WorldKey);
   private static T? GetItem<T>(this HttpContext context, object key) => context.Items.TryGetValue(key, out object? value) ? (T?)value : default;
 
   public static void SetApiKey(this HttpContext context, ApiKey? apiKey)
@@ -95,6 +98,11 @@ internal static class HttpContextExtensions
   {
     context.SetItem(UserKey, user);
     context.GetLoggingService().SetUser(user);
+  }
+  public static void SetWorld(this HttpContext context, WorldModel? world)
+  {
+    context.SetItem(WorldKey, world);
+    context.GetLoggingService().SetWorld(world);
   }
   private static void SetItem(this HttpContext context, object key, object? value)
   {

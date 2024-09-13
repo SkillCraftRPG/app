@@ -43,6 +43,7 @@ internal class LogEntity
   public string? ApiKeyId { get; private set; }
   public string? UserId { get; private set; }
   public string? SessionId { get; private set; }
+  public string? WorldId { get; private set; }
 
   [BsonRepresentation(BsonType.String)]
   public List<string> EventIds { get; private set; } = [];
@@ -86,6 +87,7 @@ internal class LogEntity
     ApiKeyId = log.ApiKeyId?.ToString();
     UserId = log.UserId?.ToString();
     SessionId = log.SessionId?.ToString();
+    WorldId = log.WorldId?.ToString();
 
     foreach (DomainEvent @event in log.Events)
     {

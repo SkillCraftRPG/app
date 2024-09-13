@@ -13,6 +13,7 @@ internal static class OpenApiExtensions
     services.AddSwaggerGen(config =>
     {
       config.AddSecurity();
+      config.OperationFilter<AddHeaderParameters>();
       config.SwaggerDoc(name: $"v{Api.Version.Major}", new OpenApiInfo
       {
         Contact = new OpenApiContact
