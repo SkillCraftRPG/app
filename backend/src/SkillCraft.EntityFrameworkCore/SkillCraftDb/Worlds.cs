@@ -17,6 +17,7 @@ internal static class Worlds
   public static readonly ColumnId Description = new(nameof(WorldEntity.Description), Table);
   public static readonly ColumnId Id = new(nameof(WorldEntity.Id), Table);
   public static readonly ColumnId Name = new(nameof(WorldEntity.Name), Table);
+  public static readonly ColumnId OwnerId = new(nameof(WorldEntity.OwnerId), Table);
   public static readonly ColumnId Slug = new(nameof(WorldEntity.Slug), Table);
   public static readonly ColumnId SlugNormalized = new(nameof(WorldEntity.SlugNormalized), Table);
   public static readonly ColumnId UserId = new(nameof(WorldEntity.UserId), Table);

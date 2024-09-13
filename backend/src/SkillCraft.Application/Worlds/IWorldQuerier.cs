@@ -1,5 +1,4 @@
 ﻿using Logitar.Portal.Contracts.Search;
-using Logitar.Portal.Contracts.Users;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
@@ -15,5 +14,5 @@ public interface IWorldQuerier
   Task<WorldModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
   Task<WorldModel?> ReadAsync(string slug, CancellationToken cancellationToken = default);
 
-  Task<SearchResults<WorldModel>> SearchAsync(User user, SearchWorldsPayload payload, CancellationToken cancellationToken = default);
+  Task<SearchResults<WorldModel>> SearchAsync(UserId userId, SearchWorldsPayload payload, CancellationToken cancellationToken = default);
 }

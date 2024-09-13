@@ -20,6 +20,15 @@ internal static class ActivityExtensions
     activity.Contextualize(context);
   }
 
+  public static void Contextualize(this Activity activity, World world)
+  {
+    UserMock user = new()
+    {
+      Id = world.OwnerId.ToGuid()
+    };
+    activity.Contextualize(user, world);
+  }
+
   public static void Contextualize(this Activity activity, User user, World? world)
   {
     WorldModel? model = ToModel(user, world);

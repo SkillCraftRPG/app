@@ -1,4 +1,5 @@
-﻿using SkillCraft.Domain;
+﻿using SkillCraft.Contracts.Educations;
+using SkillCraft.Domain;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Worlds;
 
@@ -29,6 +30,11 @@ public record EntityMetadata
   {
     long size = education.Name.Value.Length + (education.Description?.Value.Length ?? 0) + 4 + 8;
     return new EntityMetadata(education.WorldId, EntityType.Education, education.Id.ToGuid(), size);
+  }
+  public static EntityMetadata From(EducationModel education)
+  {
+    long size = education.Name.Length + (education.Description?.Length ?? 0) + 4 + 8;
+    return new EntityMetadata(new WorldId(education.World.Id), EntityType.Education, education.Id, size);
   }
 
   public static EntityMetadata From(World world)

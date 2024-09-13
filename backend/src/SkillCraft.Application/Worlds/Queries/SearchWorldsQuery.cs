@@ -17,6 +17,6 @@ internal class SearchWorldsQueryHandler : IRequestHandler<SearchWorldsQuery, Sea
 
   public async Task<SearchResults<WorldModel>> Handle(SearchWorldsQuery query, CancellationToken cancellationToken)
   {
-    return await _worldQuerier.SearchAsync(query.GetUser(), query.Payload, cancellationToken);
+    return await _worldQuerier.SearchAsync(query.GetUserId(), query.Payload, cancellationToken);
   }
 }

@@ -37,7 +37,11 @@ internal class Mapper
 
   public EducationModel ToEducation(EducationEntity source)
   {
-    EducationModel destination = new(source.Name)
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    EducationModel destination = new(world, source.Name)
     {
       Description = source.Description,
       Skill = source.Skill,

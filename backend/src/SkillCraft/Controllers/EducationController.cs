@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Logitar.Portal.Contracts.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Educations.Commands;
+using SkillCraft.Application.Educations.Queries;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Extensions;
+using SkillCraft.Models.Educations;
 
 namespace SkillCraft.Controllers;
 
@@ -28,11 +31,25 @@ public class EducationController : ControllerBase // TODO(fpion): World(Filter)A
     return Created(location, education);
   }
 
+  [HttpGet("{id}")]
+  public async Task<ActionResult<EducationModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  {
+    EducationModel? education = await _pipeline.ExecuteAsync(new ReadEducationQuery(id), cancellationToken);
+    return education == null ? NotFound() : Ok(education);
+  }
+
   [HttpPut("{id}")]
   public async Task<ActionResult<EducationModel>> ReplaceAsync(Guid id, [FromBody] ReplaceEducationPayload payload, long? version, CancellationToken cancellationToken)
   {
     EducationModel? education = await _pipeline.ExecuteAsync(new ReplaceEducationCommand(id, payload, version), cancellationToken);
     return education == null ? NotFound() : Ok(education);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<EducationModel>>> SearchAsync([FromQuery] SearchEducationsParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<EducationModel> worlds = await _pipeline.ExecuteAsync(new SearchEducationsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(worlds);
   }
 
   [HttpPatch("{id}")]

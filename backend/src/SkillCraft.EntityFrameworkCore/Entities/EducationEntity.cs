@@ -1,4 +1,5 @@
-﻿using SkillCraft.Contracts;
+﻿using Logitar.EventSourcing;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Educations;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
@@ -29,6 +30,16 @@ internal class EducationEntity : AggregateEntity
 
   private EducationEntity() : base()
   {
+  }
+
+  public override IEnumerable<ActorId> GetActorIds()
+  {
+    List<ActorId> actorIds = base.GetActorIds().ToList();
+    if (World != null)
+    {
+      actorIds.AddRange(World.GetActorIds());
+    }
+    return actorIds.AsReadOnly();
   }
 
   public void Update(Education.UpdatedEvent @event)

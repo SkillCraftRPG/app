@@ -26,7 +26,7 @@ public class SearchWorldsQueryHandlerTests
     query.Contextualize();
 
     SearchResults<WorldModel> results = new();
-    _worldQuerier.Setup(x => x.SearchAsync(query.GetUser(), payload, _cancellationToken)).ReturnsAsync(results);
+    _worldQuerier.Setup(x => x.SearchAsync(query.GetUserId(), payload, _cancellationToken)).ReturnsAsync(results);
 
     SearchResults<WorldModel> worlds = await _handler.Handle(query, _cancellationToken);
 

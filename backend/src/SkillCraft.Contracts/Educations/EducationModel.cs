@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Contracts;
+using SkillCraft.Contracts.Worlds;
 
 namespace SkillCraft.Contracts.Educations;
 
@@ -10,13 +11,17 @@ public class EducationModel : Aggregate
   public Skill? Skill { get; set; }
   public double? WealthMultiplier { get; set; }
 
-  public EducationModel() : this(string.Empty)
+  public WorldModel World { get; set; }
+
+  public EducationModel() : this(new WorldModel(), string.Empty)
   {
   }
 
-  public EducationModel(string name)
+  public EducationModel(WorldModel world, string name)
   {
     Name = name;
+
+    World = world;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";

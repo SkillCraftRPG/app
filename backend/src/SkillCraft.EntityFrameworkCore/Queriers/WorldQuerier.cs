@@ -2,7 +2,6 @@
 using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Search;
-using Logitar.Portal.Contracts.Users;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Worlds;
@@ -58,9 +57,10 @@ internal class WorldQuerier : IWorldQuerier
     return world == null ? null : await MapAsync(world, cancellationToken);
   }
 
-  public async Task<SearchResults<WorldModel>> SearchAsync(User user, SearchWorldsPayload payload, CancellationToken cancellationToken)
+  public async Task<SearchResults<WorldModel>> SearchAsync(UserId userId, SearchWorldsPayload payload, CancellationToken cancellationToken)
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(SkillCraftDb.Worlds.Table).SelectAll(SkillCraftDb.Worlds.Table)
+      .Where(SkillCraftDb.Worlds.OwnerId, Operators.IsEqualTo(userId.ToGuid()))
       .ApplyIdFilter(payload, SkillCraftDb.Worlds.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Worlds.Slug, SkillCraftDb.Worlds.Name);
 
