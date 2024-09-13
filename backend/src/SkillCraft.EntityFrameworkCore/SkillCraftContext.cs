@@ -9,6 +9,7 @@ public class SkillCraftContext : DbContext
   {
   }
 
+  internal DbSet<CasteEntity> Castes { get; private set; }
   internal DbSet<EducationEntity> Educations { get; private set; }
   internal DbSet<StorageDetailEntity> StorageDetails { get; private set; }
   internal DbSet<StorageSummaryEntity> StorageSummaries { get; private set; }
