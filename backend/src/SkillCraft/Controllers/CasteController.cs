@@ -6,14 +6,16 @@ using SkillCraft.Application.Castes.Commands;
 using SkillCraft.Application.Castes.Queries;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Extensions;
+using SkillCraft.Filters;
 using SkillCraft.Models.Castes;
 
 namespace SkillCraft.Controllers;
 
 [ApiController]
 [Authorize]
+[RequireWorld]
 [Route("castes")]
-public class CasteController : ControllerBase // TODO(fpion): World(Filter)Attribute
+public class CasteController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
 
