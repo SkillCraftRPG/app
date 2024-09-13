@@ -27,4 +27,18 @@ public class EducationController : ControllerBase // TODO(fpion): World(Filter)A
 
     return Created(location, education);
   }
+
+  [HttpPut("{id}")]
+  public async Task<ActionResult<EducationModel>> ReplaceAsync(Guid id, [FromBody] ReplaceEducationPayload payload, long? version, CancellationToken cancellationToken)
+  {
+    EducationModel? education = await _pipeline.ExecuteAsync(new ReplaceEducationCommand(id, payload, version), cancellationToken);
+    return education == null ? NotFound() : Ok(education);
+  }
+
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<EducationModel>> UpdateAsync(Guid id, [FromBody] UpdateEducationPayload payload, CancellationToken cancellationToken)
+  {
+    EducationModel? education = await _pipeline.ExecuteAsync(new UpdateEducationCommand(id, payload), cancellationToken);
+    return education == null ? NotFound() : Ok(education);
+  }
 }

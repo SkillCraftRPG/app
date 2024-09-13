@@ -17,7 +17,11 @@ internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCo
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
-  public UpdateEducationCommandHandler(IEducationQuerier educationQuerier, IEducationRepository educationRepository, IPermissionService permissionService, ISender sender)
+  public UpdateEducationCommandHandler(
+    IEducationQuerier educationQuerier,
+    IEducationRepository educationRepository,
+    IPermissionService permissionService,
+    ISender sender)
   {
     _educationQuerier = educationQuerier;
     _educationRepository = educationRepository;
