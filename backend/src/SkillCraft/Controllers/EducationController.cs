@@ -6,14 +6,16 @@ using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Educations.Queries;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Extensions;
+using SkillCraft.Filters;
 using SkillCraft.Models.Educations;
 
 namespace SkillCraft.Controllers;
 
 [ApiController]
 [Authorize]
+[RequireWorld]
 [Route("educations")]
-public class EducationController : ControllerBase // TODO(fpion): World(Filter)Attribute
+public class EducationController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
 
