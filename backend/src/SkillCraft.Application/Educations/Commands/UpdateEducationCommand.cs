@@ -60,8 +60,8 @@ internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCo
     {
       education.WealthMultiplier = payload.WealthMultiplier.Value;
     }
-    education.Update(command.GetUserId());
 
+    education.Update(command.GetUserId());
     await _sender.Send(new SaveEducationCommand(education), cancellationToken);
 
     return await _educationQuerier.ReadAsync(education, cancellationToken);

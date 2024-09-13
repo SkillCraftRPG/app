@@ -37,8 +37,8 @@ internal class CreateEducationCommandHandler : IRequestHandler<CreateEducationCo
       Skill = payload.Skill,
       WealthMultiplier = payload.WealthMultiplier
     };
-    education.Update(userId);
 
+    education.Update(userId);
     await _sender.Send(new SaveEducationCommand(education), cancellationToken);
 
     return await _educationQuerier.ReadAsync(education, cancellationToken);

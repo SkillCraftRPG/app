@@ -12,10 +12,10 @@ public record ReplaceEducationCommand(Guid Id, ReplaceEducationPayload Payload, 
 
 internal class ReplaceEducationCommandHandler : IRequestHandler<ReplaceEducationCommand, EducationModel?>
 {
-  private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
   private readonly IEducationQuerier _educationQuerier;
   private readonly IEducationRepository _educationRepository;
+  private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public ReplaceEducationCommandHandler(
     IEducationQuerier educationQuerier,
@@ -23,10 +23,10 @@ internal class ReplaceEducationCommandHandler : IRequestHandler<ReplaceEducation
     IPermissionService permissionService,
     ISender sender)
   {
-    _permissionService = permissionService;
-    _sender = sender;
     _educationQuerier = educationQuerier;
     _educationRepository = educationRepository;
+    _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<EducationModel?> Handle(ReplaceEducationCommand command, CancellationToken cancellationToken)
@@ -69,8 +69,8 @@ internal class ReplaceEducationCommandHandler : IRequestHandler<ReplaceEducation
     {
       education.WealthMultiplier = payload.WealthMultiplier;
     }
-    education.Update(command.GetUserId());
 
+    education.Update(command.GetUserId());
     await _sender.Send(new SaveEducationCommand(education), cancellationToken);
 
     return await _educationQuerier.ReadAsync(education, cancellationToken);
