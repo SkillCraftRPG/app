@@ -11,6 +11,20 @@ internal class EducationRepository : Logitar.EventSourcing.EntityFrameworkCore.R
   {
   }
 
+  public async Task<IReadOnlyCollection<Education>> LoadAsync(CancellationToken cancellationToken)
+  {
+    return (await LoadAsync<Education>(cancellationToken)).ToArray();
+  }
+
+  public async Task<Education?> LoadAsync(EducationId id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync(id, version: null, cancellationToken);
+  }
+  public async Task<Education?> LoadAsync(EducationId id, long? version, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<Education>(id.AggregateId, version, cancellationToken);
+  }
+
   public async Task SaveAsync(Education education, CancellationToken cancellationToken)
   {
     await base.SaveAsync(education, cancellationToken);

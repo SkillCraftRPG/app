@@ -10,6 +10,7 @@ using SkillCraft.Application.Worlds.Queries;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Permissions;
@@ -153,8 +154,54 @@ public class PermissionServiceTests
     await _service.EnsureCanUpdateAsync(command, _userWorld, _cancellationToken);
   }
 
-  [Fact(DisplayName = "EnsureCanUpdateAsync: it should throw PermissionDeniedException when the user does not own the world.")]
-  public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_user_does_not_own_the_world()
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should succeed when the user owns the world and the entity is in that world.")]
+  public async Task EnsureCanUpdateAsync_it_should_succeed_when_the_user_owns_the_world_and_the_entity_is_in_that_world()
+  {
+    Education education = new(_userWorld.Id, new Name("Classique"), _userWorld.OwnerId);
+    EntityMetadata entity = EntityMetadata.From(education);
+
+    UpdateEducationCommand command = new(education.Id.ToGuid(), new UpdateEducationPayload());
+    command.Contextualize(_user, _userWorld);
+
+    await _service.EnsureCanUpdateAsync(command, entity, _cancellationToken);
+  }
+
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should throw PermissionDeniedException when the entity is not in the world.")]
+  public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_entity_is_not_in_the_world()
+  {
+    Education education = new(_userWorld.Id, new Name("Classique"), _userWorld.OwnerId);
+    EntityMetadata entity = EntityMetadata.From(education);
+
+    UpdateEducationCommand command = new(education.Id.ToGuid(), new UpdateEducationPayload());
+    command.Contextualize(_user, _otherWorld);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanUpdateAsync(command, entity, _cancellationToken));
+    Assert.Equal(Action.Update, exception.Action);
+    Assert.Equal(EntityType.Education, exception.EntityType);
+    Assert.Equal(_user.Id, exception.UserId);
+    Assert.Equal(_otherWorld.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(education.Id.ToGuid(), exception.EntityId);
+  }
+
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should throw PermissionDeniedException when the user does not own the world (Entity).")]
+  public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_user_does_not_own_the_world_Entity()
+  {
+    Education education = new(_otherWorld.Id, new Name("Classique"), _otherWorld.OwnerId);
+    EntityMetadata entity = EntityMetadata.From(education);
+
+    UpdateEducationCommand command = new(education.Id.ToGuid(), new UpdateEducationPayload());
+    command.Contextualize(_user, _otherWorld);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanUpdateAsync(command, entity, _cancellationToken));
+    Assert.Equal(Action.Update, exception.Action);
+    Assert.Equal(EntityType.Education, exception.EntityType);
+    Assert.Equal(_user.Id, exception.UserId);
+    Assert.Equal(_otherWorld.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(education.Id.ToGuid(), exception.EntityId);
+  }
+
+  [Fact(DisplayName = "EnsureCanUpdateAsync: it should throw PermissionDeniedException when the user does not own the world (World).")]
+  public async Task EnsureCanUpdateAsync_it_should_throw_PermissionDeniedException_when_the_user_does_not_own_the_world_World()
   {
     UpdateWorldCommand command = new(_otherWorld.Id.ToGuid(), new UpdateWorldPayload());
     command.Contextualize(_user, _otherWorld);

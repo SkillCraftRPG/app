@@ -52,6 +52,18 @@ internal class PermissionService : IPermissionService
     return Task.CompletedTask;
   }
 
+  public Task EnsureCanUpdateAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
+  {
+    User user = activity.GetUser();
+    WorldModel world = activity.GetWorld();
+
+    if (entity.WorldId.ToGuid() != world.Id || !IsOwner(user, world))
+    {
+      throw new PermissionDeniedException(Action.Update, entity.Key.Type, user, world, entity.Key.Id);
+    }
+
+    return Task.CompletedTask;
+  }
   public Task EnsureCanUpdateAsync(Activity activity, World world, CancellationToken cancellationToken)
   {
     User user = activity.GetUser();

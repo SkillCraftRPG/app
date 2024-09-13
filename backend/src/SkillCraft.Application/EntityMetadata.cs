@@ -1,6 +1,5 @@
 ﻿using SkillCraft.Domain;
 using SkillCraft.Domain.Educations;
-using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application;
@@ -11,7 +10,7 @@ public record EntityMetadata
 
   public EntityType Type { get; }
   public Guid Id { get; }
-  public EntityKey StorageKey { get; }
+  public EntityKey Key { get; }
 
   public long Size { get; }
 
@@ -21,7 +20,7 @@ public record EntityMetadata
 
     Type = type;
     Id = id;
-    StorageKey = new(type, id);
+    Key = new(type, id);
 
     Size = size;
   }
