@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
@@ -30,7 +32,7 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
   public async Task<CasteModel?> Handle(UpdateCasteCommand command, CancellationToken cancellationToken)
   {
     UpdateCastePayload payload = command.Payload;
-    //new UpdateCasteValidator().ValidateAndThrow(payload); // TODO(fpion): implement
+    new UpdateCasteValidator().ValidateAndThrow(payload);
 
     CasteId id = new(command.Id);
     Caste? caste = await _casteRepository.LoadAsync(id, cancellationToken);
@@ -59,9 +61,37 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
       caste.WealthRoll = Roll.TryCreate(payload.WealthRoll.Value);
     }
 
+    SetTraits(caste, payload);
+
     caste.Update(command.GetUserId());
     await _sender.Send(new SaveCasteCommand(caste), cancellationToken);
 
     return await _casteQuerier.ReadAsync(caste, cancellationToken);
+  }
+
+  private static void SetTraits(Caste caste, UpdateCastePayload payload)
+  {
+    foreach (UpdateTraitPayload traitPayload in payload.Traits)
+    {
+      if (traitPayload.Remove)
+      {
+        if (traitPayload.Id.HasValue)
+        {
+          caste.RemoveTrait(traitPayload.Id.Value);
+        }
+      }
+      else
+      {
+        Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+        if (traitPayload.Id.HasValue)
+        {
+          caste.SetTrait(traitPayload.Id.Value, trait);
+        }
+        else
+        {
+          caste.AddTrait(trait);
+        }
+      }
+    }
   }
 }

@@ -47,8 +47,16 @@ internal class Mapper
       Description = source.Description,
       Skill = source.Skill,
       WealthRoll = source.WealthRoll
-      // TODO(fpion): Traits
     };
+
+    foreach (KeyValuePair<Guid, TraitEntity> trait in source.Traits)
+    {
+      destination.Traits.Add(new TraitModel(trait.Value.Name)
+      {
+        Id = trait.Key,
+        Description = trait.Value.Description
+      });
+    }
 
     MapAggregate(source, destination);
 

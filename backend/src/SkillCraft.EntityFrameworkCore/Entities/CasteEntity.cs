@@ -86,6 +86,16 @@ internal class CasteEntity : AggregateEntity
       WealthRoll = @event.WealthRoll.Value?.Value;
     }
 
-    // TODO(fpion): Traits
+    foreach (KeyValuePair<Guid, Trait?> trait in @event.Traits)
+    {
+      if (trait.Value == null)
+      {
+        Traits.Remove(trait.Key);
+      }
+      else
+      {
+        Traits[trait.Key] = new TraitEntity(trait.Value.Name.Value, trait.Value.Description?.Value);
+      }
+    }
   }
 }

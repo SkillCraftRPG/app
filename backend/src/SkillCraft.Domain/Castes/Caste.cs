@@ -72,7 +72,8 @@ public class Caste : AggregateRoot
     }
   }
 
-  // TODO(fpion): Traits
+  private readonly Dictionary<Guid, Trait> _traits = [];
+  public IReadOnlyDictionary<Guid, Trait> Traits => _traits.AsReadOnly();
 
   public Caste() : base()
   {
@@ -87,6 +88,27 @@ public class Caste : AggregateRoot
     WorldId = @event.WorldId;
 
     _name = @event.Name;
+  }
+
+  public void AddTrait(Trait trait) => SetTrait(Guid.NewGuid(), trait);
+  public void RemoveTrait(Guid id)
+  {
+    ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
+
+    if (_traits.Remove(id))
+    {
+      _updatedEvent.Traits[id] = null;
+    }
+  }
+  public void SetTrait(Guid id, Trait trait)
+  {
+    ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
+
+    if (!_traits.TryGetValue(id, out Trait? existingTrait) || existingTrait != trait)
+    {
+      _traits[id] = trait;
+      _updatedEvent.Traits[id] = trait;
+    }
   }
 
   public void Update(UserId userId)
@@ -116,6 +138,18 @@ public class Caste : AggregateRoot
     {
       _wealthRoll = @event.WealthRoll.Value;
     }
+
+    foreach (KeyValuePair<Guid, Trait?> trait in @event.Traits)
+    {
+      if (trait.Value == null)
+      {
+        _traits.Remove(trait.Key);
+      }
+      else
+      {
+        _traits[trait.Key] = trait.Value;
+      }
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -142,6 +176,8 @@ public class Caste : AggregateRoot
     public Change<Skill?>? Skill { get; set; }
     public Change<Roll>? WealthRoll { get; set; }
 
-    public bool HasChanges => Name != null || Description != null || Skill != null || WealthRoll != null;
+    public Dictionary<Guid, Trait?> Traits { get; set; } = [];
+
+    public bool HasChanges => Name != null || Description != null || Skill != null || WealthRoll != null || Traits.Count > 0;
   }
 }

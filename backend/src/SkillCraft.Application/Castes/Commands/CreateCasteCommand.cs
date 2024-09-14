@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
@@ -24,7 +26,7 @@ internal class CreateCasteCommandHandler : IRequestHandler<CreateCasteCommand, C
   public async Task<CasteModel> Handle(CreateCasteCommand command, CancellationToken cancellationToken)
   {
     CreateCastePayload payload = command.Payload;
-    //new CreateCasteValidator().ValidateAndThrow(payload); // TODO(fpion): implement
+    new CreateCasteValidator().ValidateAndThrow(payload);
 
     await _permissionService.EnsureCanCreateAsync(command, EntityType.Caste, cancellationToken);
 
@@ -36,11 +38,27 @@ internal class CreateCasteCommandHandler : IRequestHandler<CreateCasteCommand, C
       WealthRoll = Roll.TryCreate(payload.WealthRoll)
     };
 
-    // TODO(fpion): Traits
+    SetTraits(caste, payload);
 
     caste.Update(userId);
     await _sender.Send(new SaveCasteCommand(caste), cancellationToken);
 
     return await _casteQuerier.ReadAsync(caste, cancellationToken);
+  }
+
+  private static void SetTraits(Caste caste, CreateCastePayload payload)
+  {
+    foreach (TraitPayload traitPayload in payload.Traits)
+    {
+      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+      if (traitPayload.Id.HasValue)
+      {
+        caste.SetTrait(traitPayload.Id.Value, trait);
+      }
+      else
+      {
+        caste.AddTrait(trait);
+      }
+    }
   }
 }

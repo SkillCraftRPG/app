@@ -8,7 +8,7 @@ public record UpdateCastePayload
   public Change<Skill>? Skill { get; set; }
   public Change<string>? WealthRoll { get; set; }
 
-  public List<TraitModel> Traits { get; set; } // TODO(fpion): how to remove a trait?
+  public List<UpdateTraitPayload> Traits { get; set; }
 
   public UpdateCastePayload() : this(string.Empty)
   {

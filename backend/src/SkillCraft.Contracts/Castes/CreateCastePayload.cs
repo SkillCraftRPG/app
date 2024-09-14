@@ -8,7 +8,7 @@ public record CreateCastePayload
   public Skill? Skill { get; set; }
   public string? WealthRoll { get; set; }
 
-  public List<TraitModel> Traits { get; set; }
+  public List<TraitPayload> Traits { get; set; }
 
   public CreateCastePayload() : this(string.Empty)
   {

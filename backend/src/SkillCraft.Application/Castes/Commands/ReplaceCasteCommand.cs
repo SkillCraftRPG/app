@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
@@ -30,7 +32,7 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
   public async Task<CasteModel?> Handle(ReplaceCasteCommand command, CancellationToken cancellationToken)
   {
     ReplaceCastePayload payload = command.Payload;
-    //new ReplaceCasteValidator().ValidateAndThrow(payload); // TODO(fpion): implement
+    new ReplaceCasteValidator().ValidateAndThrow(payload);
 
     CasteId id = new(command.Id);
     Caste? caste = await _casteRepository.LoadAsync(id, cancellationToken);
@@ -69,11 +71,40 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
       caste.WealthRoll = wealthRoll;
     }
 
-    // TODO(fpion): Traits
+    SetTraits(caste, reference, payload);
+
     caste.Update(command.GetUserId());
 
     await _sender.Send(new SaveCasteCommand(caste), cancellationToken);
 
     return await _casteQuerier.ReadAsync(caste, cancellationToken);
+  }
+
+  private static void SetTraits(Caste caste, Caste reference, ReplaceCastePayload payload)
+  {
+    foreach (TraitPayload traitPayload in payload.Traits)
+    {
+      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+      if (traitPayload.Id.HasValue)
+      {
+        if (!reference.Traits.TryGetValue(traitPayload.Id.Value, out Trait? existingTrait) || existingTrait != trait)
+        {
+          caste.SetTrait(traitPayload.Id.Value, trait);
+        }
+      }
+      else
+      {
+        caste.AddTrait(trait);
+      }
+    }
+
+    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
+    foreach (Guid traitId in reference.Traits.Keys)
+    {
+      if (!traitIds.Contains(traitId))
+      {
+        caste.RemoveTrait(traitId);
+      }
+    }
   }
 }

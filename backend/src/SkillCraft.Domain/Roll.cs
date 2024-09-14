@@ -1,4 +1,7 @@
-﻿namespace SkillCraft.Domain;
+﻿using FluentValidation;
+using SkillCraft.Domain.Validators;
+
+namespace SkillCraft.Domain;
 
 public record Roll
 {
@@ -10,7 +13,7 @@ public record Roll
   public Roll(string value)
   {
     Value = value.Trim();
-    //new RollValidator().ValidateAndThrow(this); // TODO(fpion): implement
+    new RollValidator().ValidateAndThrow(this);
   }
 
   public static Roll? TryCreate(string? value) => string.IsNullOrWhiteSpace(value) ? null : new(value);
