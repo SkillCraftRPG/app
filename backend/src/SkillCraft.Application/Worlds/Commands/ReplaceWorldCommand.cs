@@ -61,8 +61,8 @@ internal class ReplaceWorldCommandHandler : IRequestHandler<ReplaceWorldCommand,
     {
       world.Description = description;
     }
-    world.Update(command.GetUserId());
 
+    world.Update(command.GetUserId());
     await _sender.Send(new SaveWorldCommand(world), cancellationToken);
 
     return await _worldQuerier.ReadAsync(world, cancellationToken);

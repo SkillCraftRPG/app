@@ -36,8 +36,8 @@ internal class CreateWorldCommandHandler : IRequestHandler<CreateWorldCommand, W
       Name = Name.TryCreate(payload.Name),
       Description = Description.TryCreate(payload.Description)
     };
-    world.Update(userId);
 
+    world.Update(userId);
     await _sender.Send(new SaveWorldCommand(world), cancellationToken);
 
     return await _worldQuerier.ReadAsync(world, cancellationToken);

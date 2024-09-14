@@ -1,5 +1,6 @@
 ﻿using Logitar;
 using Microsoft.Extensions.DependencyInjection;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Educations;
@@ -31,7 +32,7 @@ public class ReplaceEducationCommandTests : IntegrationTests
     ReplaceEducationPayload payload = new(" Classique ")
     {
       Description = "    ",
-      Skill = Contracts.Skill.Knowledge,
+      Skill = Skill.Knowledge,
       WealthMultiplier = 12.0
     };
     ReplaceEducationCommand command = new(education.Id.ToGuid(), payload, version);

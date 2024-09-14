@@ -1,4 +1,5 @@
 ﻿using SkillCraft.Application.Settings;
+using SkillCraft.Application.Worlds;
 using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
 
@@ -29,7 +30,7 @@ internal class StorageService : IStorageService
   {
     Storage storage = await LoadOrInitializeAsync(world, cancellationToken);
 
-    EntityMetadata entity = EntityMetadata.From(world);
+    EntityMetadata entity = world.GetMetadata();
     EnsureAvailable(storage, entity);
   }
   private static void EnsureAvailable(Storage storage, EntityMetadata entity)
@@ -52,7 +53,7 @@ internal class StorageService : IStorageService
   {
     Storage storage = await LoadOrInitializeAsync(world, cancellationToken);
 
-    EntityMetadata entity = EntityMetadata.From(world);
+    EntityMetadata entity = world.GetMetadata();
     await UpdateAsync(storage, entity, cancellationToken);
   }
   private async Task UpdateAsync(Storage storage, EntityMetadata entity, CancellationToken cancellationToken)

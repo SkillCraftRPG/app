@@ -50,6 +50,7 @@ public static class DependencyInjectionExtensions
   [
     new DescriptionConverter(),
     new NameConverter(),
+    new RollConverter(),
     new SlugConverter(),
     new UserIdConverter(),
     new WorldIdConverter()

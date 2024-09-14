@@ -22,7 +22,7 @@ internal class ReadEducationQueryHandler : IRequestHandler<ReadEducationQuery, E
     EducationModel? education = await _educationQuerier.ReadAsync(query.Id, cancellationToken);
     if (education != null)
     {
-      await _permissionService.EnsureCanPreviewAsync(query, EntityMetadata.From(education), cancellationToken);
+      await _permissionService.EnsureCanPreviewAsync(query, education.GetMetadata(), cancellationToken);
     }
 
     return education;

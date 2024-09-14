@@ -51,8 +51,8 @@ internal class UpdateWorldCommandHandler : IRequestHandler<UpdateWorldCommand, W
     {
       world.Description = Description.TryCreate(payload.Description.Value);
     }
-    world.Update(command.GetUserId());
 
+    world.Update(command.GetUserId());
     await _sender.Send(new SaveWorldCommand(world), cancellationToken);
 
     return await _worldQuerier.ReadAsync(world, cancellationToken);

@@ -1,5 +1,6 @@
 ﻿using Moq;
 using SkillCraft.Application.Settings;
+using SkillCraft.Application.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
@@ -32,7 +33,7 @@ public class StorageServiceTests
   [Fact(DisplayName = "EnsureAvailableAsync(EntityMetadata): it should succeed when there is enough storage.")]
   public async Task EnsureAvailableAsyncEntityMetadata_it_should_succeed_when_there_is_enough_storage()
   {
-    EntityMetadata entity = EntityMetadata.From(_world);
+    EntityMetadata entity = _world.GetMetadata();
 
     await _service.EnsureAvailableAsync(entity, _cancellationToken);
   }
@@ -49,7 +50,7 @@ public class StorageServiceTests
   {
     _accountSettings.AllocatedBytes = 0;
 
-    EntityMetadata entity = EntityMetadata.From(_world);
+    EntityMetadata entity = _world.GetMetadata();
 
     var exception = await Assert.ThrowsAsync<NotEnoughAvailableStorageException>(async () => await _service.EnsureAvailableAsync(entity, _cancellationToken));
     Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
@@ -66,7 +67,7 @@ public class StorageServiceTests
     Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
     Assert.Equal(_accountSettings.AllocatedBytes, exception.AvailableBytes);
 
-    EntityMetadata entity = EntityMetadata.From(_world);
+    EntityMetadata entity = _world.GetMetadata();
     Assert.Equal(entity.Size, exception.RequiredBytes);
   }
 
@@ -74,7 +75,7 @@ public class StorageServiceTests
   public async Task LoadOrInitializeAsyncEntityMetadata_it_should_throw_InvalidOperationException_when_the_world_could_not_be_found()
   {
     World world = new(_world.Slug, _world.OwnerId);
-    EntityMetadata entity = EntityMetadata.From(world);
+    EntityMetadata entity = world.GetMetadata();
 
     var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _service.EnsureAvailableAsync(entity, _cancellationToken));
     Assert.StartsWith($"The world 'Id={world.Id}' could not be found.", exception.Message);
@@ -86,7 +87,7 @@ public class StorageServiceTests
   [Fact(DisplayName = "UpdateAsync(EntityMetadata): it should update the storage.")]
   public async Task UpdateAsyncEntityMetadata_it_should_update_the_storage()
   {
-    EntityMetadata entity = EntityMetadata.From(_world);
+    EntityMetadata entity = _world.GetMetadata();
 
     await _service.UpdateAsync(entity, _cancellationToken);
 
@@ -100,7 +101,7 @@ public class StorageServiceTests
   {
     await _service.UpdateAsync(_world, _cancellationToken);
 
-    EntityMetadata entity = EntityMetadata.From(_world);
+    EntityMetadata entity = _world.GetMetadata();
     _storageRepository.Verify(x => x.SaveAsync(It.Is<Storage>(y => y.UserId == _world.OwnerId
       && y.AllocatedBytes == _accountSettings.AllocatedBytes
       && y.UsedBytes == entity.Size), _cancellationToken), Times.Once);

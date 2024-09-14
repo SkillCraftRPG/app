@@ -41,7 +41,7 @@ internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCo
       return null;
     }
 
-    await _permissionService.EnsureCanUpdateAsync(command, EntityMetadata.From(education), cancellationToken);
+    await _permissionService.EnsureCanUpdateAsync(command, education.GetMetadata(), cancellationToken);
 
     if (!string.IsNullOrWhiteSpace(payload.Name))
     {
@@ -60,8 +60,8 @@ internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCo
     {
       education.WealthMultiplier = payload.WealthMultiplier.Value;
     }
-    education.Update(command.GetUserId());
 
+    education.Update(command.GetUserId());
     await _sender.Send(new SaveEducationCommand(education), cancellationToken);
 
     return await _educationQuerier.ReadAsync(education, cancellationToken);
