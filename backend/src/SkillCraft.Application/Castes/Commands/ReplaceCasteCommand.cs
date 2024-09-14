@@ -82,6 +82,15 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
 
   private static void SetTraits(Caste caste, Caste reference, ReplaceCastePayload payload)
   {
+    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
+    foreach (Guid traitId in reference.Traits.Keys)
+    {
+      if (!traitIds.Contains(traitId))
+      {
+        caste.RemoveTrait(traitId);
+      }
+    }
+
     foreach (TraitPayload traitPayload in payload.Traits)
     {
       Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
@@ -95,15 +104,6 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
       else
       {
         caste.AddTrait(trait);
-      }
-    }
-
-    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
-    foreach (Guid traitId in reference.Traits.Keys)
-    {
-      if (!traitIds.Contains(traitId))
-      {
-        caste.RemoveTrait(traitId);
       }
     }
   }
