@@ -39,23 +39,27 @@ public class CreateCasteCommandHandlerTests
     CreateCastePayload payload = new(" Artisan ")
     {
       Description = "    ",
-      Skill = Skill.Knowledge
+      Skill = Skill.Knowledge,
+      WealthRoll = "8d6",
+      Traits = [new TraitPayload { Name = "Professionnel" }]
     };
     CreateCasteCommand command = new(payload);
     command.Contextualize(_user, _world);
 
     CasteModel model = new();
-    _casteQuerier.Setup(x => x.ReadAsync(It.Is<Caste>(y => y.Name.Value == payload.Name.Trim()
-      && y.Description == null && y.WorldId == command.GetWorldId()
-    ), _cancellationToken)).ReturnsAsync(model);
+    _casteQuerier.Setup(x => x.ReadAsync(It.IsAny<Caste>(), _cancellationToken)).ReturnsAsync(model);
 
     CasteModel result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(result, model);
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Caste, _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SaveCasteCommand>(y => y.Caste.Name.Value == payload.Name.Trim()
-      && y.Caste.Description == null && y.Caste.WorldId == command.GetWorldId()), _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(It.Is<SaveCasteCommand>(y => y.Caste.WorldId == _world.Id
+      && y.Caste.Name.Value == payload.Name.Trim()
+      && y.Caste.Description == null
+      && y.Caste.Skill == payload.Skill
+      && y.Caste.WealthRoll != null && y.Caste.WealthRoll.Value == payload.WealthRoll
+      && y.Caste.Traits.Single().Value.Name.Value == payload.Traits.Single().Name), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

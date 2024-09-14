@@ -36,10 +36,7 @@ public class CreateWorldCommandHandlerTests
     command.Contextualize();
 
     WorldModel model = new();
-    _worldQuerier.Setup(x => x.ReadAsync(It.Is<World>(y => y.Slug.Value == payload.Slug
-      && y.Name != null && y.Name.Value == payload.Name.Trim() && y.Description == null
-      && y.OwnerId == command.GetUserId()
-    ), _cancellationToken)).ReturnsAsync(model);
+    _worldQuerier.Setup(x => x.ReadAsync(It.IsAny<World>(), _cancellationToken)).ReturnsAsync(model);
 
     WorldModel result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(result, model);
@@ -47,7 +44,8 @@ public class CreateWorldCommandHandlerTests
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.World, _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.World.Slug.Value == payload.Slug
-      && y.World.Name != null && y.World.Name.Value == payload.Name.Trim() && y.World.Description == null
+      && y.World.Name != null && y.World.Name.Value == payload.Name.Trim()
+      && y.World.Description == null
       && y.World.OwnerId == command.GetUserId()), _cancellationToken), Times.Once);
   }
 

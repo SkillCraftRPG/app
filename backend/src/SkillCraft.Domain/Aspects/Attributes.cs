@@ -12,6 +12,10 @@ public record Attributes : IAttributes
   public Attribute? Optional1 { get; }
   public Attribute? Optional2 { get; }
 
+  public Attributes(IAttributes attributes) : this(attributes.Mandatory1, attributes.Mandatory2, attributes.Optional1, attributes.Optional2)
+  {
+  }
+
   public Attributes(Attribute? mandatory1, Attribute? mandatory2, Attribute? optional1, Attribute? optional2)
   {
     Mandatory1 = mandatory1;

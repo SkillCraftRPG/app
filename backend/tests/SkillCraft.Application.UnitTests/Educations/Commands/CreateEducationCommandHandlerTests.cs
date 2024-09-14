@@ -39,23 +39,25 @@ public class CreateEducationCommandHandlerTests
     CreateEducationPayload payload = new(" Classique ")
     {
       Description = "    ",
-      Skill = Skill.Knowledge
+      Skill = Skill.Knowledge,
+      WealthMultiplier = 12.0
     };
     CreateEducationCommand command = new(payload);
     command.Contextualize(_user, _world);
 
     EducationModel model = new();
-    _educationQuerier.Setup(x => x.ReadAsync(It.Is<Education>(y => y.Name.Value == payload.Name.Trim()
-      && y.Description == null && y.WorldId == command.GetWorldId()
-    ), _cancellationToken)).ReturnsAsync(model);
+    _educationQuerier.Setup(x => x.ReadAsync(It.IsAny<Education>(), _cancellationToken)).ReturnsAsync(model);
 
     EducationModel result = await _handler.Handle(command, _cancellationToken);
     Assert.Same(result, model);
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Education, _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.Name.Value == payload.Name.Trim()
-      && y.Education.Description == null && y.Education.WorldId == command.GetWorldId()), _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.WorldId == _world.Id
+      && y.Education.Name.Value == payload.Name.Trim()
+      && y.Education.Description == null
+      && y.Education.Skill == payload.Skill
+      && y.Education.WealthMultiplier == payload.WealthMultiplier), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
