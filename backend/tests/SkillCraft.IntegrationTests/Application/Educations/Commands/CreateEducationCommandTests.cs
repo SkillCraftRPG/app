@@ -32,5 +32,7 @@ public class CreateEducationCommandTests : IntegrationTests
 
     Assert.Equal(payload.Name.Trim(), model.Name);
     Assert.Null(model.Description);
+    Assert.Equal(payload.Skill, model.Skill);
+    Assert.Equal(payload.WealthMultiplier, model.WealthMultiplier);
   }
 }
