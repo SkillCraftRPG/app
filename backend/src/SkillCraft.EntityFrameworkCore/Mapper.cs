@@ -2,6 +2,7 @@
 using Logitar.EventSourcing;
 using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
+using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Worlds;
@@ -35,6 +36,34 @@ internal class Mapper
     EmailAddress = source.EmailAddress,
     PictureUrl = source.PictureUrl
   };
+
+  public AspectModel ToAspect(AspectEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    AspectModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Attributes = new AttributesModel
+      {
+        Mandatory1 = source.MandatoryAttribute1,
+        Mandatory2 = source.MandatoryAttribute2,
+        Optional1 = source.OptionalAttribute1,
+        Optional2 = source.OptionalAttribute2
+      },
+      Skills = new SkillsModel
+      {
+        Discounted1 = source.DiscountedSkill1,
+        Discounted2 = source.DiscountedSkill2
+      }
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
 
   public CasteModel ToCaste(CasteEntity source)
   {

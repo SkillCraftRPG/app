@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Actors;
+using SkillCraft.Application.Aspects;
 using SkillCraft.Application.Castes;
 using SkillCraft.Application.Educations;
 using SkillCraft.Application.Worlds;
+using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Storages;
@@ -29,6 +31,7 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddQueriers(this IServiceCollection services)
   {
     return services
+      .AddScoped<IAspectQuerier, AspectQuerier>()
       .AddScoped<ICasteQuerier, CasteQuerier>()
       .AddScoped<IEducationQuerier, EducationQuerier>()
       .AddScoped<IWorldQuerier, WorldQuerier>();
@@ -37,6 +40,7 @@ public static class DependencyInjectionExtensions
   private static IServiceCollection AddRepositories(this IServiceCollection services)
   {
     return services
+      .AddScoped<IAspectRepository, AspectRepository>()
       .AddScoped<ICasteRepository, CasteRepository>()
       .AddScoped<IEducationRepository, EducationRepository>()
       .AddScoped<IStorageRepository, StorageRepository>()
