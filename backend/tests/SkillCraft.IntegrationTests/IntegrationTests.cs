@@ -117,6 +117,7 @@ public abstract class IntegrationTests : IAsyncLifetime
       EntityFrameworkCore.SkillCraftDb.Castes.Table,
       EntityFrameworkCore.SkillCraftDb.Customizations.Table,
       EntityFrameworkCore.SkillCraftDb.Educations.Table,
+      EntityFrameworkCore.SkillCraftDb.Languages.Table,
       EntityFrameworkCore.SkillCraftDb.StorageDetails.Table,
       EntityFrameworkCore.SkillCraftDb.StorageSummaries.Table,
       EntityFrameworkCore.SkillCraftDb.Worlds.Table,

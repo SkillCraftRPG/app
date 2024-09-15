@@ -57,7 +57,7 @@ public class UpdateCasteCommandHandlerTests
   [Fact(DisplayName = "It should update an existing caste.")]
   public async Task It_should_update_an_existing_caste()
   {
-    Caste caste = new(_world.Id, new Name("classic"), _world.OwnerId)
+    Caste caste = new(_world.Id, new Name("artisan"), _world.OwnerId)
     {
       Description = new Description("Peu peuvent se vanter d’avoir reçu une éducation traditionnelle comme celle du personnage. Il a suivi un parcours scolaire conforme et sans dérogation ayant mené à une instruction de haute qualité. Malgré son manque d’expériences personnelles, son grand savoir lui permet de se débrouiller même dans les situations les plus difficiles.")
     };
@@ -66,7 +66,7 @@ public class UpdateCasteCommandHandlerTests
 
     UpdateCastePayload payload = new()
     {
-      Name = " Classique ",
+      Name = " Artisan ",
       Description = new Change<string>("    "),
       Skill = new Change<Skill?>(Skill.Craft),
       WealthRoll = new Change<string>("8d6")

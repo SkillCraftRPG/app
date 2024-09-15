@@ -16,7 +16,7 @@ public class ReadCasteQueryHandlerTests
 
   private readonly ReadCasteQueryHandler _handler;
 
-  private readonly CasteModel _caste = new(new WorldModel(), "Classique") { Id = Guid.NewGuid() };
+  private readonly CasteModel _caste = new(new WorldModel(), "Artisan") { Id = Guid.NewGuid() };
 
   public ReadCasteQueryHandlerTests()
   {
