@@ -73,13 +73,16 @@ public class Aspect : AggregateRoot
 
   public Aspect(WorldId worldId, Name name, UserId userId, AspectId? id = null) : base(id?.AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(worldId, name, new Attributes(), new Skills()), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
     WorldId = @event.WorldId;
 
     _name = @event.Name;
+
+    _attributes = @event.Attributes;
+    _skills = @event.Skills;
   }
 
   public void Update(UserId userId)
@@ -119,11 +122,17 @@ public class Aspect : AggregateRoot
 
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public Attributes Attributes { get; }
+    public Skills Skills { get; }
+
+    public CreatedEvent(WorldId worldId, Name name, Attributes attributes, Skills skills)
     {
       WorldId = worldId;
 
       Name = name;
+
+      Attributes = attributes;
+      Skills = skills;
     }
   }
 

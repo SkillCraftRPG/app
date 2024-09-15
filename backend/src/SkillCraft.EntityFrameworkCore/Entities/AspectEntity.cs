@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using SkillCraft.Contracts;
+using SkillCraft.Contracts.Aspects;
 using SkillCraft.Domain.Aspects;
 using Attribute = SkillCraft.Contracts.Attribute;
 
@@ -32,6 +33,9 @@ internal class AspectEntity : AggregateEntity
     WorldId = world.WorldId;
 
     Name = @event.Name.Value;
+
+    SetAttributes(@event.Attributes);
+    SetSkills(@event.Skills);
   }
 
   private AspectEntity() : base()
@@ -63,15 +67,25 @@ internal class AspectEntity : AggregateEntity
 
     if (@event.Attributes != null)
     {
-      MandatoryAttribute1 = @event.Attributes.Mandatory1;
-      MandatoryAttribute2 = @event.Attributes.Mandatory2;
-      OptionalAttribute1 = @event.Attributes.Optional1;
-      OptionalAttribute2 = @event.Attributes.Optional2;
+      SetAttributes(@event.Attributes);
     }
     if (@event.Skills != null)
     {
-      DiscountedSkill1 = @event.Skills.Discounted1;
-      DiscountedSkill2 = @event.Skills.Discounted2;
+      SetSkills(@event.Skills);
     }
+  }
+
+  private void SetAttributes(IAttributes attributes)
+  {
+    MandatoryAttribute1 = attributes.Mandatory1;
+    MandatoryAttribute2 = attributes.Mandatory2;
+    OptionalAttribute1 = attributes.Optional1;
+    OptionalAttribute2 = attributes.Optional2;
+  }
+
+  private void SetSkills(ISkills skills)
+  {
+    DiscountedSkill1 = skills.Discounted1;
+    DiscountedSkill2 = skills.Discounted2;
   }
 }

@@ -31,19 +31,16 @@ public class ReplaceEducationCommandHandlerTests
   [Fact(DisplayName = "It should replace an existing education.")]
   public async Task It_should_replace_an_existing_education()
   {
-    Education reference = new(_world.Id, new Name("classic"), _world.OwnerId);
-    long version = reference.Version;
-    _educationRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
-
-    Education education = new(_world.Id, reference.Name, _world.OwnerId, reference.Id);
+    Education education = new(_world.Id, new Name("classic"), _world.OwnerId);
     _educationRepository.Setup(x => x.LoadAsync(education.Id, _cancellationToken)).ReturnsAsync(education);
 
-    Skill skill = Skill.Knowledge;
-    education.Skill = skill;
-    education.Update(_world.OwnerId);
-
-    ReplaceEducationPayload payload = new(" Classique ");
-    ReplaceEducationCommand command = new(education.Id.ToGuid(), payload, version);
+    ReplaceEducationPayload payload = new(" Classique ")
+    {
+      Description = "  Peu peuvent se vanter d’avoir reçu une éducation traditionnelle comme celle du personnage. Il a suivi un parcours scolaire conforme et sans dérogation ayant mené à une instruction de haute qualité. Malgré son manque d’expériences personnelles, son grand savoir lui permet de se débrouiller même dans les situations les plus difficiles.  ",
+      Skill = Skill.Knowledge,
+      WealthMultiplier = 12.0
+    };
+    ReplaceEducationCommand command = new(education.Id.ToGuid(), payload, Version: null);
     command.Contextualize();
 
     EducationModel model = new();
@@ -60,13 +57,15 @@ public class ReplaceEducationCommandHandlerTests
 
     _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.Equals(education)
       && y.Education.Name.Value == payload.Name.Trim()
-      && y.Education.Skill == Skill.Knowledge), _cancellationToken), Times.Once);
+      && y.Education.Description != null && y.Education.Description.Value == payload.Description.Trim()
+      && y.Education.Skill == payload.Skill
+      && y.Education.WealthMultiplier == payload.WealthMultiplier), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return null when the education could not be found.")]
   public async Task It_should_return_null_when_the_education_could_not_be_found()
   {
-    ReplaceEducationPayload payload = new("new-slug");
+    ReplaceEducationPayload payload = new("Classique");
     ReplaceEducationCommand command = new(Guid.Empty, payload, Version: null);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
@@ -87,5 +86,47 @@ public class ReplaceEducationCommandHandlerTests
     Assert.Equal("GreaterThanValidator", error.ErrorCode);
     Assert.Equal("WealthMultiplier.Value", error.PropertyName);
     Assert.Equal(payload.WealthMultiplier, error.AttemptedValue);
+  }
+
+  [Fact(DisplayName = "It should update an existing education from a reference.")]
+  public async Task It_should_update_an_existing_education_from_a_reference()
+  {
+    Education reference = new(_world.Id, new Name("classic"), _world.OwnerId);
+    long version = reference.Version;
+    _educationRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
+
+    Education education = new(_world.Id, reference.Name, _world.OwnerId, reference.Id);
+    _educationRepository.Setup(x => x.LoadAsync(education.Id, _cancellationToken)).ReturnsAsync(education);
+
+    Skill skill = Skill.Knowledge;
+    education.Skill = skill;
+    education.Update(_world.OwnerId);
+
+    ReplaceEducationPayload payload = new(" Classique ")
+    {
+      Description = "  Peu peuvent se vanter d’avoir reçu une éducation traditionnelle comme celle du personnage. Il a suivi un parcours scolaire conforme et sans dérogation ayant mené à une instruction de haute qualité. Malgré son manque d’expériences personnelles, son grand savoir lui permet de se débrouiller même dans les situations les plus difficiles.  ",
+      Skill = null,
+      WealthMultiplier = 12.0
+    };
+    ReplaceEducationCommand command = new(education.Id.ToGuid(), payload, version);
+    command.Contextualize();
+
+    EducationModel model = new();
+    _educationQuerier.Setup(x => x.ReadAsync(education, _cancellationToken)).ReturnsAsync(model);
+
+    EducationModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
+
+    _permissionService.Verify(x => x.EnsureCanUpdateAsync(
+      command,
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Education && y.Key.Id == education.Id.ToGuid() && y.Size > 0),
+      _cancellationToken), Times.Once);
+
+    _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.Equals(education)
+      && y.Education.Name.Value == payload.Name.Trim()
+      && y.Education.Description != null && y.Education.Description.Value == payload.Description.Trim()
+      && y.Education.Skill == Skill.Knowledge
+      && y.Education.WealthMultiplier == payload.WealthMultiplier), _cancellationToken), Times.Once);
   }
 }

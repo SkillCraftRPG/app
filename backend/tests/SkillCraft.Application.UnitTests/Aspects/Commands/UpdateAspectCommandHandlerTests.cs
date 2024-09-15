@@ -60,9 +60,9 @@ public class UpdateAspectCommandHandlerTests
   [Fact(DisplayName = "It should update an existing aspect.")]
   public async Task It_should_update_an_existing_aspect()
   {
-    Aspect aspect = new(_world.Id, new Name("lynx-eye"), _world.OwnerId)
+    Aspect aspect = new(_world.Id, new Name("oeil-de-lynx"), _world.OwnerId)
     {
-      Description = new Description("Doté d’une excellente vue…")
+      Description = new Description("Doté d’une excellente vision…")
     };
     aspect.Update(_world.OwnerId);
     _aspectRepository.Setup(x => x.LoadAsync(aspect.Id, _cancellationToken)).ReturnsAsync(aspect);
