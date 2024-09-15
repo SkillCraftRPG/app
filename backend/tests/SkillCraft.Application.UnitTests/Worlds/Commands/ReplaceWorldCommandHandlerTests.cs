@@ -28,6 +28,58 @@ public class ReplaceWorldCommandHandlerTests
   [Fact(DisplayName = "It should replace an existing world.")]
   public async Task It_should_replace_an_existing_world()
   {
+    World world = new(new Slug("old-world"), UserId.NewId());
+    _worldRepository.Setup(x => x.LoadAsync(world.Id, _cancellationToken)).ReturnsAsync(world);
+
+    ReplaceWorldPayload payload = new("new-world")
+    {
+      Name = " The New World ",
+      Description = "  This is the new world.  "
+    };
+    ReplaceWorldCommand command = new(world.Id.ToGuid(), payload, Version: null);
+    command.Contextualize();
+
+    WorldModel model = new();
+    _worldQuerier.Setup(x => x.ReadAsync(world, _cancellationToken)).ReturnsAsync(model);
+
+    WorldModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
+
+    _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, world, _cancellationToken), Times.Once);
+
+    _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.World.Equals(world)
+      && y.World.Slug.Value == payload.Slug
+      && y.World.Name != null && y.World.Name.Value == payload.Name.Trim()
+      && y.World.Description != null && y.World.Description.Value == payload.Description.Trim()), _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should return null when the world could not be found.")]
+  public async Task It_should_return_null_when_the_world_could_not_be_found()
+  {
+    ReplaceWorldPayload payload = new("new-slug");
+    ReplaceWorldCommand command = new(Guid.Empty, payload, Version: null);
+
+    Assert.Null(await _handler.Handle(command, _cancellationToken));
+  }
+
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
+  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
+  {
+    ReplaceWorldPayload payload = new("new-world!");
+    ReplaceWorldCommand command = new(Guid.Empty, payload, Version: null);
+
+    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
+
+    ValidationFailure error = Assert.Single(exception.Errors);
+    Assert.Equal("SlugValidator", error.ErrorCode);
+    Assert.Equal("Slug", error.PropertyName);
+    Assert.Equal(payload.Slug, error.AttemptedValue);
+  }
+
+  [Fact(DisplayName = "It should update an existing world from a reference.")]
+  public async Task It_should_update_an_existing_world_from_a_reference()
+  {
     World reference = new(new Slug("new-world"), UserId.NewId());
     long version = reference.Version;
     _worldRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
@@ -57,30 +109,8 @@ public class ReplaceWorldCommandHandlerTests
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, world, _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.World.Equals(world)
+      && y.World.Slug.Value == payload.Slug
       && y.World.Name != null && y.World.Name.Value == payload.Name.Trim()
       && y.World.Description == description), _cancellationToken), Times.Once);
-  }
-
-  [Fact(DisplayName = "It should return null when the world could not be found.")]
-  public async Task It_should_return_null_when_the_world_could_not_be_found()
-  {
-    ReplaceWorldPayload payload = new("new-slug");
-    ReplaceWorldCommand command = new(Guid.Empty, payload, Version: null);
-
-    Assert.Null(await _handler.Handle(command, _cancellationToken));
-  }
-
-  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
-  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
-  {
-    ReplaceWorldPayload payload = new("new-world!");
-    ReplaceWorldCommand command = new(Guid.Empty, payload, Version: null);
-
-    var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-
-    ValidationFailure error = Assert.Single(exception.Errors);
-    Assert.Equal("SlugValidator", error.ErrorCode);
-    Assert.Equal("Slug", error.PropertyName);
-    Assert.Equal(payload.Slug, error.AttemptedValue);
   }
 }

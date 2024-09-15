@@ -21,6 +21,7 @@ internal class WorldEntity : AggregateEntity
   public string? Name { get; private set; }
   public string? Description { get; private set; }
 
+  public List<AspectEntity> Aspects { get; private set; } = [];
   public List<CasteEntity> Castes { get; private set; } = [];
   public List<EducationEntity> Educations { get; private set; } = [];
   public List<StorageDetailEntity> StorageDetails { get; private set; } = [];

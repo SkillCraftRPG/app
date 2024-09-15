@@ -1,7 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using SkillCraft.Contracts;
 using SkillCraft.Domain.Castes;
-using System.Text.Json;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
