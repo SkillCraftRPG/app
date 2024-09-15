@@ -17,6 +17,8 @@ public class AttributesValidator : AbstractValidator<IAttributes>
 
   public override ValidationResult Validate(ValidationContext<IAttributes> context)
   {
+    const string errorMessage = "Each property must specify a different attribute. An attribute can only be specified by one property.";
+
     ValidationResult result = base.Validate(context);
 
     Dictionary<Attribute, List<string>> properties = new(capacity: 4);
@@ -31,7 +33,7 @@ public class AttributesValidator : AbstractValidator<IAttributes>
       {
         foreach (string propertyName in property.Value)
         {
-          result.Errors.Add(new ValidationFailure(propertyName, "TODO(fpion): document", property.Key)
+          result.Errors.Add(new ValidationFailure(propertyName, errorMessage, property.Key)
           {
             ErrorCode = "AttributesValidator"
           });

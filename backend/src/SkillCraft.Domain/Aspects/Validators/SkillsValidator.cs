@@ -14,16 +14,18 @@ public class SkillsValidator : AbstractValidator<ISkills>
 
   public override ValidationResult Validate(ValidationContext<ISkills> context)
   {
+    const string errorMessage = "Each property must specify a different skill. A skill can only be specified by one property.";
+
     ValidationResult result = base.Validate(context);
 
     ISkills skills = context.InstanceToValidate;
     if (skills.Discounted1.HasValue && skills.Discounted1.Value == skills.Discounted2)
     {
-      result.Errors.Add(new ValidationFailure(nameof(skills.Discounted1), "TODO(fpion): document", skills.Discounted1.Value)
+      result.Errors.Add(new ValidationFailure(nameof(skills.Discounted1), errorMessage, skills.Discounted1.Value)
       {
         ErrorCode = "SkillsValidator"
       });
-      result.Errors.Add(new ValidationFailure(nameof(skills.Discounted2), "TODO(fpion): document", skills.Discounted2.Value)
+      result.Errors.Add(new ValidationFailure(nameof(skills.Discounted2), errorMessage, skills.Discounted2.Value)
       {
         ErrorCode = "SkillsValidator"
       });
