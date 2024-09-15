@@ -11,8 +11,8 @@ public class ReadCasteQueryHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ICasteQuerier> _casteQuerier = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
 
   private readonly ReadCasteQueryHandler _handler;
 

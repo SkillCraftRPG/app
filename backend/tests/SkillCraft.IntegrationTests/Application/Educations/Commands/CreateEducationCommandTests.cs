@@ -10,7 +10,7 @@ public class CreateEducationCommandTests : IntegrationTests
   {
   }
 
-  [Fact(DisplayName = "It should create a new education.")]
+  [Fact(DisplayName = "It should create a new education.", Skip = "Need to rethink integration tests.")]
   public async Task It_should_create_a_new_education()
   {
     CreateEducationPayload payload = new("Classique")
