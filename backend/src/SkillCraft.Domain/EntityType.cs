@@ -6,5 +6,6 @@ public enum EntityType
   Caste,
   Customization,
   Education,
+  Language,
   World
 }

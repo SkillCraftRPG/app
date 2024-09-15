@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
+using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -121,6 +122,24 @@ internal class Mapper
       Description = source.Description,
       Skill = source.Skill,
       WealthMultiplier = source.WealthMultiplier
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public LanguageModel ToLanguage(LanguageEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    LanguageModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Script = source.Script,
+      TypicalSpeakers = source.TypicalSpeakers
     };
 
     MapAggregate(source, destination);
