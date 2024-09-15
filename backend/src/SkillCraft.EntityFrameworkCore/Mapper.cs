@@ -4,6 +4,7 @@ using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
+using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
@@ -86,6 +87,23 @@ internal class Mapper
         Description = trait.Value.Description
       });
     }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public CustomizationModel ToCustomization(CustomizationEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    CustomizationModel destination = new(world, source.Name)
+    {
+      Type = source.Type,
+      Description = source.Description
+    };
 
     MapAggregate(source, destination);
 

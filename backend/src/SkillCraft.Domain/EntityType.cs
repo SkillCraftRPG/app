@@ -4,6 +4,7 @@ public enum EntityType
 {
   Aspect,
   Caste,
+  Customization,
   Education,
   World
 }
