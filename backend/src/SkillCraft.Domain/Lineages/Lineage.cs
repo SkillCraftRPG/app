@@ -42,13 +42,27 @@ public class Lineage : AggregateRoot
     }
   }
 
+  private Attributes? _attributes = null;
+  public Attributes Attributes
+  {
+    get => _attributes ?? throw new InvalidOperationException($"The {nameof(Attributes)} has not been initialized yet.");
+    set
+    {
+      if (_attributes != value)
+      {
+        _attributes = value;
+        _updatedEvent.Attributes = value;
+      }
+    }
+  }
+
   public Lineage() : base()
   {
   }
 
   public Lineage(WorldId worldId, Lineage? parent, Name name, UserId userId, LineageId? id = null) : base(id?.AggregateId)
   {
-    Raise(new CreatedEvent(worldId, parent?.Id, name), userId.ActorId);
+    Raise(new CreatedEvent(worldId, parent?.Id, name, new Attributes()), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -57,6 +71,8 @@ public class Lineage : AggregateRoot
     ParentId = @event.ParentId;
 
     _name = @event.Name;
+
+    _attributes = @event.Attributes;
   }
 
   public void Update(UserId userId)
@@ -77,6 +93,11 @@ public class Lineage : AggregateRoot
     {
       _description = @event.Description.Value;
     }
+
+    if (@event.Attributes != null)
+    {
+      _attributes = @event.Attributes;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -89,13 +110,17 @@ public class Lineage : AggregateRoot
 
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, LineageId? parentId, Name name)
+    public Attributes Attributes { get; }
+
+    public CreatedEvent(WorldId worldId, LineageId? parentId, Name name, Attributes attributes)
     {
       WorldId = worldId;
 
       ParentId = parentId;
 
       Name = name;
+
+      Attributes = attributes;
     }
   }
 
@@ -104,6 +129,8 @@ public class Lineage : AggregateRoot
     public Name? Name { get; set; }
     public Change<Description>? Description { get; set; }
 
-    public bool HasChanges => Name != null || Description != null;
+    public Attributes? Attributes { get; set; }
+
+    public bool HasChanges => Name != null || Description != null || Attributes != null;
   }
 }

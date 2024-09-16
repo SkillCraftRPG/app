@@ -8,6 +8,8 @@ public class LineageModel : Aggregate
   public string Name { get; set; }
   public string? Description { get; set; }
 
+  public AttributesModel Attributes { get; set; }
+
   public LineageModel? Parent { get; set; }
 
   public WorldModel World { get; set; }
@@ -19,6 +21,8 @@ public class LineageModel : Aggregate
   public LineageModel(WorldModel world, string name)
   {
     Name = name;
+
+    Attributes = new();
 
     World = world;
   }

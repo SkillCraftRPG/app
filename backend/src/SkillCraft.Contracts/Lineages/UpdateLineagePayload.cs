@@ -4,4 +4,6 @@ public record UpdateLineagePayload
 {
   public string? Name { get; set; }
   public Change<string>? Description { get; set; }
+
+  public AttributesModel? Attributes { get; set; }
 }

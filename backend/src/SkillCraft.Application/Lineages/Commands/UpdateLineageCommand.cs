@@ -52,6 +52,11 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       lineage.Description = Description.TryCreate(payload.Description.Value);
     }
 
+    if (payload.Attributes != null)
+    {
+      lineage.Attributes = new Attributes(payload.Attributes);
+    }
+
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 

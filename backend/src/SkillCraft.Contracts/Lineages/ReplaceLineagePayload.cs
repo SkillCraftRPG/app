@@ -5,6 +5,8 @@ public record ReplaceLineagePayload
   public string Name { get; set; }
   public string? Description { get; set; }
 
+  public AttributesModel Attributes { get; set; }
+
   public ReplaceLineagePayload() : this(string.Empty)
   {
   }
@@ -12,5 +14,7 @@ public record ReplaceLineagePayload
   public ReplaceLineagePayload(string name)
   {
     Name = name;
+
+    Attributes = new();
   }
 }

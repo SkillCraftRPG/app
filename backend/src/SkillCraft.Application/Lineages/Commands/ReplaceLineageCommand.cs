@@ -61,6 +61,12 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
       lineage.Description = description;
     }
 
+    Attributes attributes = new(payload.Attributes);
+    if (attributes != reference.Attributes)
+    {
+      lineage.Attributes = attributes;
+    }
+
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 

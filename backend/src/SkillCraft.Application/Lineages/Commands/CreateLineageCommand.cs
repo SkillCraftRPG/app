@@ -47,7 +47,8 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     UserId userId = command.GetUserId();
     Lineage lineage = new(command.GetWorldId(), parent, new Name(payload.Name), userId)
     {
-      Description = Description.TryCreate(payload.Description)
+      Description = Description.TryCreate(payload.Description),
+      Attributes = new(payload.Attributes)
     };
 
     lineage.Update(userId);
