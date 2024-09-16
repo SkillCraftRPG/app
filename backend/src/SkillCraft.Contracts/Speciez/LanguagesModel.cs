@@ -8,6 +8,10 @@ public record LanguagesModel
   public int Extra { get; set; }
   public string? Text { get; set; }
 
+  public LanguagesModel() : this([])
+  {
+  }
+
   public LanguagesModel(IEnumerable<LanguageModel> languages)
   {
     Languages = languages.ToList();
