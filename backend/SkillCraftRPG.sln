@@ -42,7 +42,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.EntityFrameworkC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.MongoDB", "src\SkillCraft.MongoDB\SkillCraft.MongoDB.csproj", "{D8E40ACC-8515-4F58-A5C5-C20268D74984}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.IntegrationTests", "tests\SkillCraft.IntegrationTests\SkillCraft.IntegrationTests.csproj", "{0B647925-C668-4B2C-95D0-F0CEB688A066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.IntegrationTests", "tests\SkillCraft.IntegrationTests\SkillCraft.IntegrationTests.csproj", "{0B647925-C668-4B2C-95D0-F0CEB688A066}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.GraphQL", "src\SkillCraft.GraphQL\SkillCraft.GraphQL.csproj", "{2B837FBD-DEBD-4C3A-A918-345806454AA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,6 +108,10 @@ Global
 		{0B647925-C668-4B2C-95D0-F0CEB688A066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B647925-C668-4B2C-95D0-F0CEB688A066}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B647925-C668-4B2C-95D0-F0CEB688A066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

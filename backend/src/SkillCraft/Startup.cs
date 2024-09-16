@@ -11,6 +11,7 @@ using SkillCraft.EntityFrameworkCore.PostgreSQL;
 using SkillCraft.EntityFrameworkCore.SqlServer;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
+using SkillCraft.GraphQL;
 using SkillCraft.Infrastructure;
 using SkillCraft.Middlewares;
 using SkillCraft.MongoDB;
@@ -77,6 +78,8 @@ internal class Startup : StartupBase
     }).AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     services.AddSingleton<IActivityContextResolver, HttpActivityContextResolver>();
 
+    services.AddSkillCraftGraphQL(_configuration);
+
     services.AddApplicationInsightsTelemetry();
     IHealthChecksBuilder healthChecks = services.AddHealthChecks();
 
@@ -113,6 +116,23 @@ internal class Startup : StartupBase
       builder.UseOpenApi();
     }
 
+    if (_configuration.GetValue<bool>("EnableGraphQLAltair"))
+    {
+      builder.UseGraphQLAltair();
+    }
+    if (_configuration.GetValue<bool>("EnableGraphQLGraphiQL"))
+    {
+      builder.UseGraphQLGraphiQL();
+    }
+    if (_configuration.GetValue<bool>("EnableGraphQLPlayground"))
+    {
+      builder.UseGraphQLPlayground();
+    }
+    if (_configuration.GetValue<bool>("EnableGraphQLVoyager"))
+    {
+      builder.UseGraphQLVoyager();
+    }
+
     builder.UseHttpsRedirection();
     builder.UseCors();
     builder.UseSession();
@@ -121,6 +141,8 @@ internal class Startup : StartupBase
     builder.UseMiddleware<ResolveWorld>();
     builder.UseAuthentication();
     builder.UseAuthorization();
+
+    builder.UseGraphQL<SkillCraftSchema>("/graphql", options => options.AuthenticationSchemes.AddRange(_authenticationSchemes));
 
     if (builder is WebApplication application)
     {
