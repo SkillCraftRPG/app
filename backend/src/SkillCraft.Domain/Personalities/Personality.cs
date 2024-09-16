@@ -85,6 +85,7 @@ public class Personality : AggregateRoot
       throw new ArgumentException("The customization must be a gift.", nameof(gift));
     }
 
+    GiftId = gift?.Id;
     _updatedEvent.GiftId = new Change<CustomizationId?>(gift?.Id);
   }
 
