@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SkillCraft.Domain.Personalitys;
+using SkillCraft.Domain.Personalities;
 using SkillCraft.EntityFrameworkCore.Entities;
 
 namespace SkillCraft.EntityFrameworkCore.Handlers;

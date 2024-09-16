@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Personalities;
 using SkillCraft.Contracts.Personalities;
-using SkillCraft.Domain.Personalitys;
+using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
 

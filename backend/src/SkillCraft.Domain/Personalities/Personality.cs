@@ -6,7 +6,7 @@ using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Worlds;
 using Attribute = SkillCraft.Contracts.Attribute;
 
-namespace SkillCraft.Domain.Personalitys;
+namespace SkillCraft.Domain.Personalities;
 
 public class Personality : AggregateRoot
 {

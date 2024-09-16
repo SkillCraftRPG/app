@@ -1,5 +1,5 @@
 ﻿using Logitar.EventSourcing;
-using SkillCraft.Domain.Personalitys;
+using SkillCraft.Domain.Personalities;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;

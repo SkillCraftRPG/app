@@ -1,6 +1,6 @@
 ﻿using Logitar.EventSourcing;
 
-namespace SkillCraft.Domain.Personalitys;
+namespace SkillCraft.Domain.Personalities;
 
 public readonly struct PersonalityId
 {

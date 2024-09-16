@@ -1,6 +1,6 @@
 ﻿using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Personalitys;
+using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Personalities;

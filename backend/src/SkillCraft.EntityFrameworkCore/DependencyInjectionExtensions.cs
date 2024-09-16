@@ -12,7 +12,7 @@ using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Languages;
-using SkillCraft.Domain.Personalitys;
+using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore.Actors;

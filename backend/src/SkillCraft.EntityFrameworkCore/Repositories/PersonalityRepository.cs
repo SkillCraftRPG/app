@@ -1,6 +1,6 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
-using SkillCraft.Domain.Personalitys;
+using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.EntityFrameworkCore.Repositories;
 
@@ -29,8 +29,8 @@ internal class PersonalityRepository : Logitar.EventSourcing.EntityFrameworkCore
   {
     await base.SaveAsync(personality, cancellationToken);
   }
-  public async Task SaveAsync(IEnumerable<Personality> personalitys, CancellationToken cancellationToken)
+  public async Task SaveAsync(IEnumerable<Personality> personalities, CancellationToken cancellationToken)
   {
-    await base.SaveAsync(personalitys, cancellationToken);
+    await base.SaveAsync(personalities, cancellationToken);
   }
 }

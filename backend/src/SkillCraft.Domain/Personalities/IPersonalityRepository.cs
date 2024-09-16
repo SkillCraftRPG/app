@@ -1,4 +1,4 @@
-﻿namespace SkillCraft.Domain.Personalitys;
+﻿namespace SkillCraft.Domain.Personalities;
 
 public interface IPersonalityRepository
 {
@@ -8,5 +8,5 @@ public interface IPersonalityRepository
   Task<Personality?> LoadAsync(PersonalityId id, long? version, CancellationToken cancellationToken = default);
 
   Task SaveAsync(Personality personality, CancellationToken cancellationToken = default);
-  Task SaveAsync(IEnumerable<Personality> personalitys, CancellationToken cancellationToken = default);
+  Task SaveAsync(IEnumerable<Personality> personalities, CancellationToken cancellationToken = default);
 }
