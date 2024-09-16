@@ -7,5 +7,6 @@ public enum EntityType
   Customization,
   Education,
   Language,
+  Personality,
   World
 }

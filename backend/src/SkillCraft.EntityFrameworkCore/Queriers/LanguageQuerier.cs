@@ -49,7 +49,7 @@ internal class LanguageQuerier : ILanguageQuerier
       .Join(SkillCraftDb.Worlds.WorldId, SkillCraftDb.Languages.WorldId)
       .Where(SkillCraftDb.Worlds.Id, Operators.IsEqualTo(worldId.ToGuid()))
       .ApplyIdFilter(payload, SkillCraftDb.Languages.Id);
-    _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Languages.Name);
+    _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Languages.Name, SkillCraftDb.Languages.Script, SkillCraftDb.Languages.TypicalSpeakers);
 
     IQueryable<LanguageEntity> query = _languages.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);

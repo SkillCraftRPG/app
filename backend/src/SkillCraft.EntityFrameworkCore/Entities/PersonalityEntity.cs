@@ -1,37 +1,35 @@
 ﻿using Logitar.EventSourcing;
-using SkillCraft.Contracts.Customizations;
-using SkillCraft.Domain.Customizations;
+using SkillCraft.Domain.Personalitys;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
-internal class CustomizationEntity : AggregateEntity
+internal class PersonalityEntity : AggregateEntity
 {
-  public int CustomizationId { get; private set; }
+  public int PersonalityId { get; private set; }
   public Guid Id { get; private set; }
 
   public WorldEntity? World { get; private set; }
   public int WorldId { get; private set; }
 
-  public CustomizationType Type { get; private set; }
-
   public string Name { get; private set; } = string.Empty;
   public string? Description { get; private set; }
 
-  public List<PersonalityEntity> Personalities { get; private set; } = [];
+  public Attribute? Attribute { get; private set; }
+  public CustomizationEntity? Gift { get; private set; }
+  public int? GiftId { get; private set; }
 
-  public CustomizationEntity(WorldEntity world, Customization.CreatedEvent @event) : base(@event)
+  public PersonalityEntity(WorldEntity world, Personality.CreatedEvent @event) : base(@event)
   {
     Id = @event.AggregateId.ToGuid();
 
     World = world;
     WorldId = world.WorldId;
 
-    Type = @event.Type;
-
     Name = @event.Name.Value;
   }
 
-  private CustomizationEntity() : base()
+  private PersonalityEntity() : base()
   {
   }
 
@@ -42,10 +40,14 @@ internal class CustomizationEntity : AggregateEntity
     {
       actorIds.AddRange(World.GetActorIds());
     }
+    if (Gift != null)
+    {
+      actorIds.AddRange(Gift.GetActorIds());
+    }
     return actorIds.AsReadOnly();
   }
 
-  public void Update(Customization.UpdatedEvent @event)
+  public void Update(Personality.UpdatedEvent @event, CustomizationEntity? gift)
   {
     base.Update(@event);
 
@@ -56,6 +58,16 @@ internal class CustomizationEntity : AggregateEntity
     if (@event.Description != null)
     {
       Description = @event.Description.Value?.Value;
+    }
+
+    if (@event.Attribute != null)
+    {
+      Attribute = @event.Attribute.Value;
+    }
+    if (@event.GiftId != null)
+    {
+      Gift = gift;
+      GiftId = gift?.CustomizationId;
     }
   }
 }

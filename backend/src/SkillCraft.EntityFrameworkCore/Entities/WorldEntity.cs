@@ -26,6 +26,7 @@ internal class WorldEntity : AggregateEntity
   public List<CustomizationEntity> Customizations { get; private set; } = [];
   public List<EducationEntity> Educations { get; private set; } = [];
   public List<LanguageEntity> Languages { get; private set; } = [];
+  public List<PersonalityEntity> Personalities { get; private set; } = [];
   public List<StorageDetailEntity> StorageDetails { get; private set; } = [];
 
   public WorldEntity(UserEntity owner, World.CreatedEvent @event) : base(@event)
