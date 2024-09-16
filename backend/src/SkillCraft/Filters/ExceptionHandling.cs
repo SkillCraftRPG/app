@@ -56,6 +56,11 @@ internal class ExceptionHandling : ExceptionFilterAttribute
       };
       context.ExceptionHandled = true;
     }
+    else if (context.Exception is NotFoundException notFound)
+    {
+      context.Result = new NotFoundObjectResult(notFound.Error);
+      context.ExceptionHandled = true;
+    }
     else if (context.Exception is PaymentRequiredException paymentRequired)
     {
       context.Result = new JsonResult(paymentRequired.Error)

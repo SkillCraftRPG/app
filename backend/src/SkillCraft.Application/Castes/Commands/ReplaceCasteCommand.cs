@@ -12,10 +12,10 @@ public record ReplaceCasteCommand(Guid Id, ReplaceCastePayload Payload, long? Ve
 
 internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand, CasteModel?>
 {
-  private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
   private readonly ICasteQuerier _casteQuerier;
   private readonly ICasteRepository _casteRepository;
+  private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public ReplaceCasteCommandHandler(
     ICasteQuerier casteQuerier,
@@ -23,10 +23,10 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
     IPermissionService permissionService,
     ISender sender)
   {
-    _permissionService = permissionService;
-    _sender = sender;
     _casteQuerier = casteQuerier;
     _casteRepository = casteRepository;
+    _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<CasteModel?> Handle(ReplaceCasteCommand command, CancellationToken cancellationToken)
@@ -74,7 +74,6 @@ internal class ReplaceCasteCommandHandler : IRequestHandler<ReplaceCasteCommand,
     SetTraits(caste, reference, payload);
 
     caste.Update(command.GetUserId());
-
     await _sender.Send(new SaveCasteCommand(caste), cancellationToken);
 
     return await _casteQuerier.ReadAsync(caste, cancellationToken);

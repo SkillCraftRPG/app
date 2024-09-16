@@ -4,7 +4,10 @@ using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
+using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
+using SkillCraft.Contracts.Languages;
+using SkillCraft.Contracts.Personalities;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -92,6 +95,23 @@ internal class Mapper
     return destination;
   }
 
+  public CustomizationModel ToCustomization(CustomizationEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    CustomizationModel destination = new(world, source.Name)
+    {
+      Type = source.Type,
+      Description = source.Description
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
   public EducationModel ToEducation(EducationEntity source)
   {
     WorldModel world = source.World == null
@@ -103,6 +123,48 @@ internal class Mapper
       Description = source.Description,
       Skill = source.Skill,
       WealthMultiplier = source.WealthMultiplier
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public LanguageModel ToLanguage(LanguageEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    LanguageModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Script = source.Script,
+      TypicalSpeakers = source.TypicalSpeakers
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public PersonalityModel ToPersonality(PersonalityEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    if (source.GiftId.HasValue && source.Gift == null)
+    {
+      throw new ArgumentException($"The {nameof(source.Gift)} is required.", nameof(source));
+    }
+    CustomizationModel? gift = source.Gift == null ? null : ToCustomization(source.Gift);
+
+    PersonalityModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Attribute = source.Attribute,
+      Gift = gift
     };
 
     MapAggregate(source, destination);

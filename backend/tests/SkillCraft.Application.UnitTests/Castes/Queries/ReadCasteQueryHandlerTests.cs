@@ -11,12 +11,12 @@ public class ReadCasteQueryHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ICasteQuerier> _casteQuerier = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
 
   private readonly ReadCasteQueryHandler _handler;
 
-  private readonly CasteModel _caste = new(new WorldModel(), "Classique") { Id = Guid.NewGuid() };
+  private readonly CasteModel _caste = new(new WorldModel(), "Artisan") { Id = Guid.NewGuid() };
 
   public ReadCasteQueryHandlerTests()
   {

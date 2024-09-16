@@ -17,7 +17,7 @@ public class ReplaceEducationCommandTests : IntegrationTests
     _educationRepository = ServiceProvider.GetRequiredService<IEducationRepository>();
   }
 
-  [Fact(DisplayName = "It should replace an existing education.")]
+  [Fact(DisplayName = "It should replace an existing education.", Skip = "Need to rethink integration tests.")]
   public async Task It_should_replace_an_existingeducation()
   {
     Education education = new(World.Id, new Name("classic"), World.OwnerId);

@@ -11,8 +11,8 @@ public class ReadAspectQueryHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<IAspectQuerier> _aspectQuerier = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
 
   private readonly ReadAspectQueryHandler _handler;
 

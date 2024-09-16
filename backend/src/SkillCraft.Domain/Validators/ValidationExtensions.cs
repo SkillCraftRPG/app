@@ -22,10 +22,22 @@ public static class ValidationExtensions
       .SetValidator(new RollPropertyValidator<T>());
   }
 
+  public static IRuleBuilderOptions<T, string> Script<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty()
+      .MaximumLength(Languages.Script.MaximumLength);
+  }
+
   public static IRuleBuilderOptions<T, string> Slug<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty()
       .MaximumLength(Domain.Slug.MaximumLength)
       .SetValidator(new SlugPropertyValidator<T>());
+  }
+
+  public static IRuleBuilderOptions<T, string> TypicalSpeakers<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty()
+      .MaximumLength(Languages.TypicalSpeakers.MaximumLength);
   }
 }

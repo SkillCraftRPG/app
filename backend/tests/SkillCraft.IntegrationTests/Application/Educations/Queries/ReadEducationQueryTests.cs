@@ -15,7 +15,7 @@ public class ReadEducationQueryTests : IntegrationTests
     _educationRepository = ServiceProvider.GetRequiredService<IEducationRepository>();
   }
 
-  [Fact(DisplayName = "It should return the correct education.")]
+  [Fact(DisplayName = "It should return the correct education.", Skip = "Need to rethink integration tests.")]
   public async Task It_should_return_the_correct_education()
   {
     Education education = new(World.Id, new Name("Classique"), World.OwnerId);

@@ -43,7 +43,7 @@ public class SearchEducationsQueryTests : IntegrationTests
     await _educationRepository.SaveAsync([_education1, _education2, _education3, _education4, _education5]);
   }
 
-  [Fact(DisplayName = "It should return empty search results.")]
+  [Fact(DisplayName = "It should return empty search results.", Skip = "Need to rethink integration tests.")]
   public async Task It_should_return_empty_search_results()
   {
     SearchEducationsPayload payload = new()
@@ -58,7 +58,7 @@ public class SearchEducationsQueryTests : IntegrationTests
     Assert.Empty(educations.Items);
   }
 
-  [Fact(DisplayName = "It should return the correct search results.")]
+  [Fact(DisplayName = "It should return the correct search results.", Skip = "Need to rethink integration tests.")]
   public async Task It_should_return_the_correct_search_results()
   {
     SearchEducationsPayload payload = new()

@@ -11,8 +11,8 @@ public class ReadEducationQueryHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<IEducationQuerier> _educationQuerier = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
 
   private readonly ReadEducationQueryHandler _handler;
 
