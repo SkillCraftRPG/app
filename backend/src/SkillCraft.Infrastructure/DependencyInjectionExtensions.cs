@@ -50,10 +50,12 @@ public static class DependencyInjectionExtensions
   [
     new CustomizationIdConverter(),
     new DescriptionConverter(),
+    new LanguageIdConverter(),
     new NameConverter(),
     new RollConverter(),
     new ScriptConverter(),
     new SlugConverter(),
+    new SpeciesIdConverter(),
     new TypicalSpeakersConverter(),
     new UserIdConverter(),
     new WorldIdConverter()
