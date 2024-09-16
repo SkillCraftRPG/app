@@ -8,6 +8,7 @@ public record CreateLineagePayload
   public string? Description { get; set; }
 
   public AttributesModel Attributes { get; set; }
+  public List<TraitPayload> Traits { get; set; }
 
   public CreateLineagePayload() : this(string.Empty)
   {
@@ -18,5 +19,6 @@ public record CreateLineagePayload
     Name = name;
 
     Attributes = new();
+    Traits = [];
   }
 }

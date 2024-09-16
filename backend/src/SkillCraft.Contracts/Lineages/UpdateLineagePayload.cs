@@ -6,4 +6,5 @@ public record UpdateLineagePayload
   public Change<string>? Description { get; set; }
 
   public AttributesModel? Attributes { get; set; }
+  public List<UpdateTraitPayload> Traits { get; set; } = [];
 }

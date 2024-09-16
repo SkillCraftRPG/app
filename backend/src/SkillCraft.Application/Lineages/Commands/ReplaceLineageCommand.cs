@@ -67,9 +67,39 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
       lineage.Attributes = attributes;
     }
 
+    SetTraits(lineage, reference, payload);
+
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
+  }
+
+  private static void SetTraits(Lineage lineage, Lineage reference, ReplaceLineagePayload payload)
+  {
+    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
+    foreach (Guid traitId in reference.Traits.Keys)
+    {
+      if (!traitIds.Contains(traitId))
+      {
+        lineage.RemoveTrait(traitId);
+      }
+    }
+
+    foreach (TraitPayload traitPayload in payload.Traits)
+    {
+      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+      if (traitPayload.Id.HasValue)
+      {
+        if (!reference.Traits.TryGetValue(traitPayload.Id.Value, out Trait? existingTrait) || existingTrait != trait)
+        {
+          lineage.SetTrait(traitPayload.Id.Value, trait);
+        }
+      }
+      else
+      {
+        lineage.AddTrait(trait);
+      }
+    }
   }
 }

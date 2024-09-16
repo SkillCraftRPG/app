@@ -55,6 +55,8 @@ public class Lineage : AggregateRoot
       }
     }
   }
+  private readonly Dictionary<Guid, Trait> _traits = [];
+  public IReadOnlyDictionary<Guid, Trait> Traits => _traits.AsReadOnly();
 
   public Lineage() : base()
   {
@@ -73,6 +75,27 @@ public class Lineage : AggregateRoot
     _name = @event.Name;
 
     _attributes = @event.Attributes;
+  }
+
+  public void AddTrait(Trait trait) => SetTrait(Guid.NewGuid(), trait);
+  public void RemoveTrait(Guid id)
+  {
+    ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
+
+    if (_traits.Remove(id))
+    {
+      _updatedEvent.Traits[id] = null;
+    }
+  }
+  public void SetTrait(Guid id, Trait trait)
+  {
+    ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
+
+    if (!_traits.TryGetValue(id, out Trait? existingTrait) || existingTrait != trait)
+    {
+      _traits[id] = trait;
+      _updatedEvent.Traits[id] = trait;
+    }
   }
 
   public void Update(UserId userId)
@@ -97,6 +120,17 @@ public class Lineage : AggregateRoot
     if (@event.Attributes != null)
     {
       _attributes = @event.Attributes;
+    }
+    foreach (KeyValuePair<Guid, Trait?> trait in @event.Traits)
+    {
+      if (trait.Value == null)
+      {
+        _traits.Remove(trait.Key);
+      }
+      else
+      {
+        _traits[trait.Key] = trait.Value;
+      }
     }
   }
 
@@ -130,7 +164,8 @@ public class Lineage : AggregateRoot
     public Change<Description>? Description { get; set; }
 
     public Attributes? Attributes { get; set; }
+    public Dictionary<Guid, Trait?> Traits { get; set; } = [];
 
-    public bool HasChanges => Name != null || Description != null || Attributes != null;
+    public bool HasChanges => Name != null || Description != null || Attributes != null || Traits.Count > 0;
   }
 }

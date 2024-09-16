@@ -9,6 +9,7 @@ public class LineageModel : Aggregate
   public string? Description { get; set; }
 
   public AttributesModel Attributes { get; set; }
+  public List<TraitModel> Traits { get; set; }
 
   public LineageModel? Parent { get; set; }
 
@@ -23,6 +24,7 @@ public class LineageModel : Aggregate
     Name = name;
 
     Attributes = new();
+    Traits = [];
 
     World = world;
   }

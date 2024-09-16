@@ -57,9 +57,37 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       lineage.Attributes = new Attributes(payload.Attributes);
     }
 
+    SetTraits(lineage, payload);
+
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
+  }
+
+  private static void SetTraits(Lineage lineage, UpdateLineagePayload payload)
+  {
+    foreach (UpdateTraitPayload traitPayload in payload.Traits)
+    {
+      if (traitPayload.Remove)
+      {
+        if (traitPayload.Id.HasValue)
+        {
+          lineage.RemoveTrait(traitPayload.Id.Value);
+        }
+      }
+      else
+      {
+        Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+        if (traitPayload.Id.HasValue)
+        {
+          lineage.SetTrait(traitPayload.Id.Value, trait);
+        }
+        else
+        {
+          lineage.AddTrait(trait);
+        }
+      }
+    }
   }
 }
