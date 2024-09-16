@@ -38,7 +38,7 @@ internal class PersonalityQuerier : IPersonalityQuerier
   {
     PersonalityEntity? personality = await _personalities.AsNoTracking()
       .Include(x => x.World)
-      .Include(x => x.Gift)
+      .Include(x => x.Gift).ThenInclude(x => x!.World)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     return personality == null ? null : await MapAsync(personality, cancellationToken);
@@ -54,7 +54,7 @@ internal class PersonalityQuerier : IPersonalityQuerier
 
     IQueryable<PersonalityEntity> query = _personalities.FromQuery(builder).AsNoTracking()
       .Include(x => x.World)
-      .Include(x => x.Gift);
+      .Include(x => x.Gift).ThenInclude(x => x!.World);
 
     long total = await query.LongCountAsync(cancellationToken);
 
