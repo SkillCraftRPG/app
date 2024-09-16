@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Speciez;
 
-public record Attributes : IAttributes
+public record AttributesModel : IAttributes
 {
   public int Agility { get; set; }
   public int Coordination { get; set; }
