@@ -11,6 +11,8 @@ public class Lineage : AggregateRoot
 
   public new LineageId Id => new(base.Id);
 
+  public LineageId? ParentId { get; private set; }
+
   public WorldId WorldId { get; private set; }
 
   private Name? _name = null;
@@ -44,13 +46,15 @@ public class Lineage : AggregateRoot
   {
   }
 
-  public Lineage(WorldId worldId, Name name, UserId userId, LineageId? id = null) : base(id?.AggregateId)
+  public Lineage(WorldId worldId, Lineage? parent, Name name, UserId userId, LineageId? id = null) : base(id?.AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(worldId, parent?.Id, name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
     WorldId = @event.WorldId;
+
+    ParentId = @event.ParentId;
 
     _name = @event.Name;
   }
@@ -81,11 +85,15 @@ public class Lineage : AggregateRoot
   {
     public WorldId WorldId { get; }
 
+    public LineageId? ParentId { get; }
+
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public CreatedEvent(WorldId worldId, LineageId? parentId, Name name)
     {
       WorldId = worldId;
+
+      ParentId = parentId;
 
       Name = name;
     }

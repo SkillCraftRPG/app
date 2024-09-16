@@ -8,6 +8,8 @@ public class LineageModel : Aggregate
   public string Name { get; set; }
   public string? Description { get; set; }
 
+  public LineageModel? Parent { get; set; }
+
   public WorldModel World { get; set; }
 
   public LineageModel() : this(new WorldModel(), string.Empty)

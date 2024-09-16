@@ -13,12 +13,18 @@ public record CreateLineageCommand(CreateLineagePayload Payload) : Activity, IRe
 internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageCommand, LineageModel>
 {
   private readonly ILineageQuerier _lineageQuerier;
+  private readonly ILineageRepository _lineageRepository;
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
-  public CreateLineageCommandHandler(ILineageQuerier lineageQuerier, IPermissionService permissionService, ISender sender)
+  public CreateLineageCommandHandler(
+    ILineageQuerier lineageQuerier,
+    ILineageRepository lineageRepository,
+    IPermissionService permissionService,
+    ISender sender)
   {
     _lineageQuerier = lineageQuerier;
+    _lineageRepository = lineageRepository;
     _permissionService = permissionService;
     _sender = sender;
   }
@@ -30,8 +36,16 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
 
     await _permissionService.EnsureCanCreateAsync(command, EntityType.Lineage, cancellationToken);
 
+    Lineage? parent = null;
+    if (payload.ParentId.HasValue)
+    {
+      LineageId parentId = new(payload.ParentId.Value);
+      parent = await _lineageRepository.LoadAsync(parentId, cancellationToken)
+        ?? throw new AggregateNotFoundException<Lineage>(parentId.AggregateId, nameof(payload.ParentId));
+    }
+
     UserId userId = command.GetUserId();
-    Lineage lineage = new(command.GetWorldId(), new Name(payload.Name), userId)
+    Lineage lineage = new(command.GetWorldId(), parent, new Name(payload.Name), userId)
     {
       Description = Description.TryCreate(payload.Description)
     };
