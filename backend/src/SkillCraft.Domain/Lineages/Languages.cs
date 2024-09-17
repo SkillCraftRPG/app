@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using Logitar;
+﻿using Logitar;
 using SkillCraft.Domain.Languages;
-using SkillCraft.Domain.Lineages.Validators;
+using System.Collections.Immutable;
 
 namespace SkillCraft.Domain.Lineages;
 
@@ -9,7 +8,10 @@ public record Languages
 {
   public const int MaximumLength = byte.MaxValue;
 
-  public IReadOnlySet<LanguageId> Ids { get; }
+  [JsonIgnore]
+  private readonly ImmutableHashSet<LanguageId> _ids;
+
+  public IEnumerable<LanguageId> Ids => _ids;
   public int Extra { get; }
   public string? Text { get; }
 
@@ -26,9 +28,10 @@ public record Languages
   [JsonConstructor]
   public Languages(IEnumerable<LanguageId> ids, int extra, string? text)
   {
-    Ids = ids.Distinct().ToHashSet();
+    _ids = ImmutableHashSet.Create(ids.ToArray());
     Extra = extra;
     Text = text?.CleanTrim();
-    new LanguagesValidator().ValidateAndThrow(this);
   }
+
+  public bool Has(LanguageId id) => _ids.Contains(id);
 }
