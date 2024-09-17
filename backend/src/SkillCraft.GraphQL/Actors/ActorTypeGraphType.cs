@@ -8,7 +8,7 @@ internal class ActorTypeGraphType : EnumerationGraphType<ActorType>
   public ActorTypeGraphType()
   {
     Name = nameof(ActorType);
-    Description = "The possible actor types.";
+    Description = "Represents the available actor types.";
 
     AddValue(ActorType.ApiKey, "The actor is an API key.");
     AddValue(ActorType.System, "The actor is the system.");
