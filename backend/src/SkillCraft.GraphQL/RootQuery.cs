@@ -1,4 +1,5 @@
 ﻿using GraphQL.Types;
+using SkillCraft.GraphQL.Aspects;
 using SkillCraft.GraphQL.Worlds;
 
 namespace SkillCraft.GraphQL;
@@ -9,6 +10,7 @@ internal class RootQuery : ObjectGraphType
   {
     Name = nameof(RootQuery);
 
+    AspectQueries.Register(this);
     WorldQueries.Register(this);
   }
 }
