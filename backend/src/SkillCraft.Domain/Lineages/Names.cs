@@ -26,16 +26,28 @@ public record Names
     IReadOnlyDictionary<string, IReadOnlyCollection<string>> custom)
   {
     Text = text?.CleanTrim();
-    Family = family.Distinct().OrderBy(x => x).ToArray().AsReadOnly();
-    Female = female.Distinct().OrderBy(x => x).ToArray().AsReadOnly();
-    Male = male.Distinct().OrderBy(x => x).ToArray().AsReadOnly();
-    Unisex = unisex.Distinct().OrderBy(x => x).ToArray().AsReadOnly();
+    Family = Clean(family);
+    Female = Clean(female);
+    Male = Clean(male);
+    Unisex = Clean(unisex);
 
     Dictionary<string, List<string>> customNames = new(capacity: custom.Count);
     foreach (KeyValuePair<string, IReadOnlyCollection<string>> category in custom)
     {
-      customNames[category.Key.Trim()] = [.. category.Value.Distinct().OrderBy(x => x)];
+      IReadOnlyCollection<string> values = Clean(category.Value);
+      if (values.Count > 0)
+      {
+        customNames[category.Key.Trim()] = [.. values];
+      }
     }
     Custom = customNames.ToDictionary(x => x.Key, x => (IReadOnlyCollection<string>)x.Value.AsReadOnly()).AsReadOnly();
   }
+
+  private static IReadOnlyCollection<string> Clean(IEnumerable<string> names) => names
+    .Where(name => !string.IsNullOrWhiteSpace(name))
+    .Select(name => name.Trim())
+    .Distinct()
+    .OrderBy(name => name)
+    .ToArray()
+    .AsReadOnly();
 }
