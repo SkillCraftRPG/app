@@ -19,7 +19,7 @@ public record Languages
   }
 
   public Languages(IEnumerable<Language> languages, int extra, string? text)
-    : this(languages.Select(l => l.Id), extra, text)
+    : this(languages.Select(language => language.Id), extra, text)
   {
   }
 
