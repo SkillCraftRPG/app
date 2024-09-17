@@ -71,6 +71,7 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     SetTraits(lineage, reference, payload);
 
     await SetLanguagesAsync(lineage, reference, payload.Languages, cancellationToken);
+    SetNames(lineage, reference, payload.Names);
 
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
@@ -86,6 +87,20 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     if (languages != reference.Languages)
     {
       lineage.Languages = languages;
+    }
+  }
+
+  private static void SetNames(Lineage lineage, Lineage reference, NamesModel payload)
+  {
+    Dictionary<string, IReadOnlyCollection<string>> custom = new(capacity: payload.Custom.Count);
+    foreach (NameCategory category in payload.Custom)
+    {
+      custom[category.Key] = category.Values;
+    }
+    Names names = new(payload.Text, payload.Family, payload.Female, payload.Male, payload.Unisex, custom);
+    if (names != reference.Names)
+    {
+      lineage.Names = names;
     }
   }
 

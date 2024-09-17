@@ -1,9 +1,13 @@
-﻿using Logitar;
+﻿using FluentValidation;
+using Logitar;
+using SkillCraft.Domain.Lineages.Validators;
 
 namespace SkillCraft.Domain.Lineages;
 
 public record Names
 {
+  public const int MaximumLength = byte.MaxValue;
+
   public string? Text { get; }
   public IReadOnlyCollection<string> Family { get; }
   public IReadOnlyCollection<string> Female { get; }
@@ -41,6 +45,8 @@ public record Names
       }
     }
     Custom = customNames.ToDictionary(x => x.Key, x => (IReadOnlyCollection<string>)x.Value.AsReadOnly()).AsReadOnly();
+
+    new NamesValidator().ValidateAndThrow(this);
   }
 
   private static IReadOnlyCollection<string> Clean(IEnumerable<string> names) => names

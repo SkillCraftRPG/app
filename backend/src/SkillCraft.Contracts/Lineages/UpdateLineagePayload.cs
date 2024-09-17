@@ -9,4 +9,5 @@ public record UpdateLineagePayload
   public List<UpdateTraitPayload> Traits { get; set; } = [];
 
   public UpdateLanguagesPayload Languages { get; set; } = new();
+  public UpdateNamesPayload Names { get; set; } = new();
 }

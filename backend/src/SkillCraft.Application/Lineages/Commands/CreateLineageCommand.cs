@@ -55,6 +55,7 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     SetTraits(lineage, payload);
 
     await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
+    SetNames(lineage, payload.Names);
 
     lineage.Update(userId);
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
@@ -67,6 +68,16 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     IReadOnlyCollection<Language> languages = payload.Ids.Count == 0 ? []
       : await _sender.Send(new FindLanguagesQuery(payload.Ids), cancellationToken);
     lineage.Languages = new Domain.Lineages.Languages(languages, payload.Extra, payload.Text);
+  }
+
+  private static void SetNames(Lineage lineage, NamesModel payload)
+  {
+    Dictionary<string, IReadOnlyCollection<string>> custom = new(capacity: payload.Custom.Count);
+    foreach (NameCategory category in payload.Custom)
+    {
+      custom[category.Key] = category.Values;
+    }
+    lineage.Names = new Names(payload.Text, payload.Family, payload.Female, payload.Male, payload.Unisex, custom);
   }
 
   private static void SetTraits(Lineage lineage, CreateLineagePayload payload)

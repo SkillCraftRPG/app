@@ -11,6 +11,7 @@ public record CreateLineagePayload
   public List<TraitPayload> Traits { get; set; }
 
   public LanguagesPayload Languages { get; set; }
+  public NamesModel Names { get; set; }
 
   public CreateLineagePayload() : this(string.Empty)
   {
@@ -24,5 +25,6 @@ public record CreateLineagePayload
     Traits = [];
 
     Languages = new();
+    Names = new();
   }
 }

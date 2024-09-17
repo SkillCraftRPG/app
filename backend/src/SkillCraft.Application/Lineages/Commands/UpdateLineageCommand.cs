@@ -54,21 +54,19 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       lineage.Description = Description.TryCreate(payload.Description.Value);
     }
 
-    if (payload.Attributes != null)
-    {
-      lineage.Attributes = new Attributes(
-        payload.Attributes.Agility ?? lineage.Attributes.Agility,
-        payload.Attributes.Coordination ?? lineage.Attributes.Coordination,
-        payload.Attributes.Intellect ?? lineage.Attributes.Intellect,
-        payload.Attributes.Presence ?? lineage.Attributes.Presence,
-        payload.Attributes.Sensitivity ?? lineage.Attributes.Sensitivity,
-        payload.Attributes.Spirit ?? lineage.Attributes.Spirit,
-        payload.Attributes.Vigor ?? lineage.Attributes.Vigor,
-        payload.Attributes.Extra ?? lineage.Attributes.Extra);
-    }
+    lineage.Attributes = new Attributes(
+      payload.Attributes.Agility ?? lineage.Attributes.Agility,
+      payload.Attributes.Coordination ?? lineage.Attributes.Coordination,
+      payload.Attributes.Intellect ?? lineage.Attributes.Intellect,
+      payload.Attributes.Presence ?? lineage.Attributes.Presence,
+      payload.Attributes.Sensitivity ?? lineage.Attributes.Sensitivity,
+      payload.Attributes.Spirit ?? lineage.Attributes.Spirit,
+      payload.Attributes.Vigor ?? lineage.Attributes.Vigor,
+      payload.Attributes.Extra ?? lineage.Attributes.Extra);
     SetTraits(lineage, payload);
 
     await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
+    SetNames(lineage, payload.Names);
 
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
@@ -94,6 +92,27 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     }
 
     lineage.Languages = languages;
+  }
+
+  private static void SetNames(Lineage lineage, UpdateNamesPayload payload)
+  {
+    Dictionary<string, IReadOnlyCollection<string>> custom = new(lineage.Names.Custom);
+    if (payload.Custom != null)
+    {
+      custom = new(capacity: payload.Custom.Count);
+      foreach (NameCategory category in payload.Custom)
+      {
+        custom[category.Key] = category.Values;
+      }
+    }
+
+    lineage.Names = new Names(
+      payload.Text == null ? lineage.Names.Text : payload.Text.Value,
+      payload.Family ?? lineage.Names.Family,
+      payload.Female ?? lineage.Names.Female,
+      payload.Male ?? lineage.Names.Male,
+      payload.Unisex ?? lineage.Names.Unisex,
+      custom);
   }
 
   private static void SetTraits(Lineage lineage, UpdateLineagePayload payload)
