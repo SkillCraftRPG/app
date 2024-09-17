@@ -1,7 +1,5 @@
-﻿using FluentValidation;
-using Logitar;
+﻿using Logitar;
 using SkillCraft.Domain.Languages;
-using SkillCraft.Domain.Lineages.Validators;
 
 namespace SkillCraft.Domain.Lineages;
 
@@ -9,7 +7,7 @@ public record Languages
 {
   public const int MaximumLength = byte.MaxValue;
 
-  public IReadOnlySet<LanguageId> Ids { get; }
+  public IReadOnlyCollection<LanguageId> Ids { get; }
   public int Extra { get; }
   public string? Text { get; }
 
@@ -23,12 +21,16 @@ public record Languages
   {
   }
 
-  [JsonConstructor]
   public Languages(IEnumerable<LanguageId> ids, int extra, string? text)
+    : this(ids.ToArray(), extra, text)
   {
-    Ids = ids.Distinct().ToHashSet();
+  }
+
+  [JsonConstructor]
+  public Languages(IReadOnlyCollection<LanguageId> ids, int extra, string? text)
+  {
+    Ids = ids.Distinct().ToArray().AsReadOnly();
     Extra = extra;
     Text = text?.CleanTrim();
-    new LanguagesValidator().ValidateAndThrow(this);
   }
 }
