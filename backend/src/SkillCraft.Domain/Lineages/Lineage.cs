@@ -71,6 +71,19 @@ public class Lineage : AggregateRoot
       }
     }
   }
+  private Names _names = new();
+  public Names Names
+  {
+    get => _names;
+    set
+    {
+      if (_names != value)
+      {
+        _names = value;
+        _updatedEvent.Names = value;
+      }
+    }
+  }
 
   public Lineage() : base()
   {
@@ -154,6 +167,10 @@ public class Lineage : AggregateRoot
     {
       _languages = @event.Languages;
     }
+    if (@event.Names != null)
+    {
+      _names = @event.Names;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -185,9 +202,10 @@ public class Lineage : AggregateRoot
     public Dictionary<Guid, Trait?> Traits { get; set; } = [];
 
     public Languages? Languages { get; set; }
+    public Names? Names { get; set; }
 
     public bool HasChanges => Name != null || Description != null
       || Attributes != null || Traits.Count > 0
-      || Languages != null;
+      || Languages != null || Names != null;
   }
 }
