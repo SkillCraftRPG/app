@@ -11,6 +11,8 @@ public class LineageModel : Aggregate
   public AttributesModel Attributes { get; set; }
   public List<TraitModel> Traits { get; set; }
 
+  public LanguagesModel Languages { get; set; }
+
   public LineageModel? Parent { get; set; }
 
   public WorldModel World { get; set; }
@@ -25,6 +27,8 @@ public class LineageModel : Aggregate
 
     Attributes = new();
     Traits = [];
+
+    Languages = new();
 
     World = world;
   }

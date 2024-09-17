@@ -8,6 +8,8 @@ public record ReplaceLineagePayload
   public AttributesModel Attributes { get; set; }
   public List<TraitPayload> Traits { get; set; }
 
+  public LanguagesPayload Languages { get; set; }
+
   public ReplaceLineagePayload() : this(string.Empty)
   {
   }
@@ -18,5 +20,7 @@ public record ReplaceLineagePayload
 
     Attributes = new();
     Traits = [];
+
+    Languages = new();
   }
 }

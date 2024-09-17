@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Languages.Queries;
 using SkillCraft.Application.Lineages.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 
 namespace SkillCraft.Application.Lineages.Commands;
@@ -66,13 +68,25 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     {
       lineage.Attributes = attributes;
     }
-
     SetTraits(lineage, reference, payload);
+
+    await SetLanguagesAsync(lineage, reference, payload.Languages, cancellationToken);
 
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
+  }
+
+  private async Task SetLanguagesAsync(Lineage lineage, Lineage reference, LanguagesPayload payload, CancellationToken cancellationToken)
+  {
+    IReadOnlyCollection<Language> items = payload.Ids.Count == 0 ? []
+      : await _sender.Send(new FindLanguagesQuery(payload.Ids), cancellationToken);
+    Domain.Lineages.Languages languages = new(items, payload.Extra, payload.Text);
+    if (languages != reference.Languages)
+    {
+      lineage.Languages = languages;
+    }
   }
 
   private static void SetTraits(Lineage lineage, Lineage reference, ReplaceLineagePayload payload)

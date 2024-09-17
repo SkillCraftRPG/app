@@ -42,10 +42,10 @@ public class Lineage : AggregateRoot
     }
   }
 
-  private Attributes? _attributes = null;
+  private Attributes _attributes = new();
   public Attributes Attributes
   {
-    get => _attributes ?? throw new InvalidOperationException($"The {nameof(Attributes)} has not been initialized yet.");
+    get => _attributes;
     set
     {
       if (_attributes != value)
@@ -58,13 +58,32 @@ public class Lineage : AggregateRoot
   private readonly Dictionary<Guid, Trait> _traits = [];
   public IReadOnlyDictionary<Guid, Trait> Traits => _traits.AsReadOnly();
 
+  private Languages _languages = new();
+  public Languages Languages
+  {
+    get => _languages;
+    set
+    {
+      if (_languages != value)
+      {
+        _languages = value;
+        _updatedEvent.Languages = value;
+      }
+    }
+  }
+
   public Lineage() : base()
   {
   }
 
   public Lineage(WorldId worldId, Lineage? parent, Name name, UserId userId, LineageId? id = null) : base(id?.AggregateId)
   {
-    Raise(new CreatedEvent(worldId, parent?.Id, name, new Attributes()), userId.ActorId);
+    if (parent?.ParentId != null)
+    {
+      throw new NotImplementedException(); // TODO(fpion): typed exception
+    }
+
+    Raise(new CreatedEvent(worldId, parent?.Id, name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -73,8 +92,6 @@ public class Lineage : AggregateRoot
     ParentId = @event.ParentId;
 
     _name = @event.Name;
-
-    _attributes = @event.Attributes;
   }
 
   public void AddTrait(Trait trait) => SetTrait(Guid.NewGuid(), trait);
@@ -132,6 +149,11 @@ public class Lineage : AggregateRoot
         _traits[trait.Key] = trait.Value;
       }
     }
+
+    if (@event.Languages != null)
+    {
+      _languages = @event.Languages;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -144,17 +166,13 @@ public class Lineage : AggregateRoot
 
     public Name Name { get; }
 
-    public Attributes Attributes { get; }
-
-    public CreatedEvent(WorldId worldId, LineageId? parentId, Name name, Attributes attributes)
+    public CreatedEvent(WorldId worldId, LineageId? parentId, Name name)
     {
       WorldId = worldId;
 
       ParentId = parentId;
 
       Name = name;
-
-      Attributes = attributes;
     }
   }
 
@@ -166,6 +184,10 @@ public class Lineage : AggregateRoot
     public Attributes? Attributes { get; set; }
     public Dictionary<Guid, Trait?> Traits { get; set; } = [];
 
-    public bool HasChanges => Name != null || Description != null || Attributes != null || Traits.Count > 0;
+    public Languages? Languages { get; set; }
+
+    public bool HasChanges => Name != null || Description != null
+      || Attributes != null || Traits.Count > 0
+      || Languages != null;
   }
 }

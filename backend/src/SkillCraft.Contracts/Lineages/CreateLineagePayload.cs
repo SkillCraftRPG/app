@@ -10,6 +10,8 @@ public record CreateLineagePayload
   public AttributesModel Attributes { get; set; }
   public List<TraitPayload> Traits { get; set; }
 
+  public LanguagesPayload Languages { get; set; }
+
   public CreateLineagePayload() : this(string.Empty)
   {
   }
@@ -20,5 +22,7 @@ public record CreateLineagePayload
 
     Attributes = new();
     Traits = [];
+
+    Languages = new();
   }
 }
