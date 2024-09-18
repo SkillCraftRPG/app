@@ -7,7 +7,7 @@ namespace SkillCraft.Domain.Lineages;
 
 public record Languages
 {
-  public const int MaximumLength = byte.MaxValue;
+  public const int MaximumLength = ushort.MaxValue;
 
   public IReadOnlyCollection<LanguageId> Ids { get; }
   public int Extra { get; }

@@ -99,11 +99,7 @@ public class CreateLineageCommandHandlerTests
       Languages = new() { Extra = 1 },
       Names = new() { Text = "les humains portent généralement un prénom et un nom de famille." },
       Speeds = new() { Walk = 6 },
-      Size = new()
-      {
-        Category = SizeCategory.Medium,
-        Roll = "140+2d20"
-      },
+      Size = new(SizeCategory.Medium, "140+2d20"),
       Weight = new()
       {
         Starved = "11+1d4",
