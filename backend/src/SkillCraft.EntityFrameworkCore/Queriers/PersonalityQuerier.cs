@@ -37,8 +37,8 @@ internal class PersonalityQuerier : IPersonalityQuerier
   public async Task<PersonalityModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     PersonalityEntity? personality = await _personalities.AsNoTracking()
+      .Include(x => x.Gift)
       .Include(x => x.World)
-      .Include(x => x.Gift).ThenInclude(x => x!.World)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     return personality == null ? null : await MapAsync(personality, cancellationToken);
@@ -53,8 +53,8 @@ internal class PersonalityQuerier : IPersonalityQuerier
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Personalities.Name);
 
     IQueryable<PersonalityEntity> query = _personalities.FromQuery(builder).AsNoTracking()
-      .Include(x => x.World)
-      .Include(x => x.Gift).ThenInclude(x => x!.World);
+      .Include(x => x.Gift)
+      .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);
 
