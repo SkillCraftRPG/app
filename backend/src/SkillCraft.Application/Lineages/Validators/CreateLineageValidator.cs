@@ -21,5 +21,6 @@ internal class CreateLineageValidator : AbstractValidator<CreateLineagePayload>
     // TODO(fpion): Names
 
     RuleFor(x => x.Speeds).SetValidator(new SpeedsValidator());
+    RuleFor(x => x.Size).SetValidator(new SizeValidator());
   }
 }

@@ -78,6 +78,11 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     {
       lineage.Speeds = speeds;
     }
+    Size size = new(payload.Size.Category, new Roll(payload.Size.Roll));
+    if (size != reference.Size)
+    {
+      lineage.Size = size;
+    }
 
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);

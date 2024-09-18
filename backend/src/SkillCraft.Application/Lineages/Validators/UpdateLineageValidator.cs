@@ -18,5 +18,6 @@ internal class UpdateLineageValidator : AbstractValidator<UpdateLineagePayload>
     // TODO(fpion): Names
 
     RuleFor(x => x.Speeds).SetValidator(new UpdateSpeedsValidator());
+    RuleFor(x => x.Size).SetValidator(new UpdateSizeValidator());
   }
 }

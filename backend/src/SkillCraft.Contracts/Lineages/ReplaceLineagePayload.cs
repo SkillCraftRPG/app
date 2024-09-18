@@ -12,6 +12,7 @@ public record ReplaceLineagePayload
   public NamesModel Names { get; set; }
 
   public SpeedsModel Speeds { get; set; }
+  public SizeModel Size { get; set; }
 
   public ReplaceLineagePayload() : this(string.Empty)
   {
@@ -28,5 +29,6 @@ public record ReplaceLineagePayload
     Names = new();
 
     Speeds = new();
+    Size = new();
   }
 }

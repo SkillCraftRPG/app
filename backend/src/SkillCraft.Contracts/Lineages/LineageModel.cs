@@ -15,6 +15,7 @@ public class LineageModel : Aggregate
   public NamesModel Names { get; set; }
 
   public SpeedsModel Speeds { get; set; }
+  public SizeModel Size { get; set; }
 
   public LineageModel? Parent { get; set; }
 
@@ -35,6 +36,7 @@ public class LineageModel : Aggregate
     Names = new();
 
     Speeds = new();
+    Size = new();
 
     World = world;
   }
