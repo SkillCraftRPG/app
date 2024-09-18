@@ -15,7 +15,7 @@ internal class UpdateLineageValidator : AbstractValidator<UpdateLineagePayload>
     RuleForEach(x => x.Traits).SetValidator(new UpdateTraitValidator());
 
     When(x => x.Languages != null, () => RuleFor(x => x.Languages!).SetValidator(new UpdateLanguagesValidator()));
-    // TODO(fpion): Names
+    When(x => x.Names != null, () => RuleFor(x => x.Names).SetValidator(new UpdateNamesValidator()));
 
     RuleFor(x => x.Speeds).SetValidator(new UpdateSpeedsValidator());
     RuleFor(x => x.Size).SetValidator(new UpdateSizeValidator());

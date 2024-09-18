@@ -14,6 +14,22 @@ public record Names
   public IReadOnlyCollection<string> Male { get; }
   public IReadOnlyCollection<string> Unisex { get; }
   public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Custom { get; }
+  public long Size
+  {
+    get
+    {
+      long size = Text?.Length ?? 0;
+      size += Family.Sum(x => x.Length);
+      size += Female.Sum(x => x.Length);
+      size += Male.Sum(x => x.Length);
+      size += Unisex.Sum(x => x.Length);
+      foreach (KeyValuePair<string, IReadOnlyCollection<string>> custom in Custom)
+      {
+        size += custom.Key.Length + custom.Value.Sum(x => x.Length);
+      }
+      return size;
+    }
+  }
 
   public Names()
     : this(text: null, family: [], female: [], male: [], unisex: [], custom: new Dictionary<string, IReadOnlyCollection<string>>())

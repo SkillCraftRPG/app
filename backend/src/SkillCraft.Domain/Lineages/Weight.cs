@@ -7,6 +7,7 @@ public record Weight
   public Roll? Normal { get; }
   public Roll? Overweight { get; }
   public Roll? Obese { get; }
+  public int Size => (Starved?.Size ?? 0) + (Skinny?.Size ?? 0) + (Normal?.Size ?? 0) + (Overweight?.Size ?? 0) + (Obese?.Size ?? 0);
 
   public Weight() : this(null, null, null, null, null)
   {

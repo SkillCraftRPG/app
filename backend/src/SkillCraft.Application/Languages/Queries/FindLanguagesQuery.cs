@@ -28,7 +28,7 @@ internal class FindLanguagesQueryHandler : IRequestHandler<FindLanguagesQuery, I
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new LanguagesNotFoundException(missingIds, nameof(query.Ids));
     }
 
     return languages;

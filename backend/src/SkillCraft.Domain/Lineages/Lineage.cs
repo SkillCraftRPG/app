@@ -11,9 +11,9 @@ public class Lineage : AggregateRoot
 
   public new LineageId Id => new(base.Id);
 
-  public LineageId? ParentId { get; private set; }
-
   public WorldId WorldId { get; private set; }
+
+  public LineageId? ParentId { get; private set; }
 
   private Name? _name = null;
   public Name Name
@@ -146,7 +146,7 @@ public class Lineage : AggregateRoot
   {
     if (parent?.ParentId != null)
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new ArgumentException("The parent lineage cannot have a parent lineage.", nameof(parent));
     }
 
     Raise(new CreatedEvent(worldId, parent?.Id, name), userId.ActorId);

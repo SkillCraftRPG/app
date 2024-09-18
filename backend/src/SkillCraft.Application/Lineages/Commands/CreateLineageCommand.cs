@@ -44,6 +44,10 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
       LineageId parentId = new(payload.ParentId.Value);
       parent = await _lineageRepository.LoadAsync(parentId, cancellationToken)
         ?? throw new AggregateNotFoundException<Lineage>(parentId.AggregateId, nameof(payload.ParentId));
+      if (parent.ParentId.HasValue)
+      {
+        throw new InvalidParentLineageException(parent, nameof(payload.ParentId));
+      }
     }
 
     UserId userId = command.GetUserId();
