@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using SkillCraft.Contracts;
+using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain.Lineages;
 
@@ -86,8 +87,80 @@ internal class LineageEntity : AggregateEntity
     {
       actorIds.AddRange(Species.GetActorIds());
     }
+    foreach (LanguageEntity language in Languages)
+    {
+      actorIds.AddRange(language.GetActorIds());
+    }
     return actorIds.AsReadOnly();
   }
+
+  public AgesModel GetAges() => new()
+  {
+    Adolescent = AdolescentAge,
+    Adult = AdultAge,
+    Mature = MatureAge,
+    Venerable = VenerableAge
+  };
+  public AttributesModel GetAttributes() => new()
+  {
+    Agility = Agility,
+    Coordination = Coordination,
+    Intellect = Intellect,
+    Presence = Presence,
+    Sensitivity = Sensitivity,
+    Spirit = Spirit,
+    Vigor = Vigor,
+    Extra = ExtraAttributes
+  };
+  public LanguagesModel GetLanguages(Func<LanguageEntity, LanguageModel> map)
+  {
+    IEnumerable<LanguageModel> languages = Languages.Select(map).OrderBy(x => x.Name);
+    return new LanguagesModel(languages)
+    {
+      Extra = ExtraLanguages,
+      Text = LanguagesText
+    };
+  }
+  public NamesModel GetNames()
+  {
+    Dictionary<string, List<string>> custom = (CustomNames == null ? null : JsonSerializer.Deserialize<Dictionary<string, List<string>>>(CustomNames)) ?? [];
+    return new NamesModel
+    {
+      Text = NamesText,
+      Family = (FamilyNames == null ? null : JsonSerializer.Deserialize<List<string>>(FamilyNames)) ?? [],
+      Female = (FemaleNames == null ? null : JsonSerializer.Deserialize<List<string>>(FemaleNames)) ?? [],
+      Male = (MaleNames == null ? null : JsonSerializer.Deserialize<List<string>>(MaleNames)) ?? [],
+      Unisex = (UnisexNames == null ? null : JsonSerializer.Deserialize<List<string>>(UnisexNames)) ?? [],
+      Custom = [.. custom.Select(x => new NameCategory(x.Key, x.Value)).OrderBy(x => x.Key)]
+    };
+  }
+  public SizeModel GetSize() => new(SizeCategory, SizeRoll);
+  public SpeedsModel GetSpeeds() => new()
+  {
+    Walk = WalkSpeed,
+    Climb = ClimbSpeed,
+    Swim = SwimSpeed,
+    Fly = FlySpeed,
+    Hover = HoverSpeed,
+    Burrow = BurrowSpeed
+  };
+  public List<TraitModel> GetTraits()
+  {
+    Dictionary<Guid, TraitEntity> traits = DeserializeTraits();
+    return [.. traits.Select(trait => new TraitModel(trait.Value.Name)
+    {
+      Id = trait.Key,
+      Description = trait.Value.Description
+    }).OrderBy(x => x.Name)];
+  }
+  public WeightModel GetWeight() => new()
+  {
+    Starved = StarvedRoll,
+    Skinny = SkinnyRoll,
+    Normal = NormalRoll,
+    Overweight = OverweightRoll,
+    Obese = ObeseRoll
+  };
 
   public void Update(Lineage.UpdatedEvent @event)
   {

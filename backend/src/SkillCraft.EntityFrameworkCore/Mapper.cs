@@ -151,7 +151,33 @@ internal class Mapper
 
   public LineageModel ToLineage(LineageEntity source)
   {
-    throw new NotImplementedException(); // TODO(fpion): implement
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    if (source.ParentId.HasValue && source.Species == null)
+    {
+      throw new ArgumentException($"The {nameof(source.Species)} is required.", nameof(source));
+    }
+    LineageModel? parent = source.Species == null ? null : ToLineage(source.Species);
+
+    LineageModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Attributes = source.GetAttributes(),
+      Traits = source.GetTraits(),
+      Languages = source.GetLanguages(ToLanguage),
+      Names = source.GetNames(),
+      Speeds = source.GetSpeeds(),
+      Size = source.GetSize(),
+      Weight = source.GetWeight(),
+      Ages = source.GetAges(),
+      Parent = parent
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
   }
 
   public PersonalityModel ToPersonality(PersonalityEntity source)
