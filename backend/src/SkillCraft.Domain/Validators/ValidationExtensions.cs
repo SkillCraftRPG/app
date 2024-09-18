@@ -9,10 +9,22 @@ public static class ValidationExtensions
     return ruleBuilder.NotEmpty();
   }
 
+  public static IRuleBuilderOptions<T, string> LanguagesText<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty()
+      .MaximumLength(Lineages.Languages.MaximumLength);
+  }
+
   public static IRuleBuilderOptions<T, string> Name<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty()
       .MaximumLength(Domain.Name.MaximumLength);
+  }
+
+  public static IRuleBuilderOptions<T, string> NamesText<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty()
+      .MaximumLength(Lineages.Names.MaximumLength);
   }
 
   public static IRuleBuilderOptions<T, string> Roll<T>(this IRuleBuilder<T, string> ruleBuilder)

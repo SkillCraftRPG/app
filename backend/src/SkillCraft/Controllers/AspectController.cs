@@ -34,7 +34,7 @@ public class AspectController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<AspectModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<AspectModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     AspectModel? aspect = await _pipeline.ExecuteAsync(new ReadAspectQuery(id), cancellationToken);
     return aspect == null ? NotFound() : Ok(aspect);

@@ -20,6 +20,4 @@ public record CreateCastePayload
 
     Traits = [];
   }
-
-  public override string ToString() => $"{Name} | {base.ToString()}";
 }

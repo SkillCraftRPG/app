@@ -34,7 +34,7 @@ public class CustomizationController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<CustomizationModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<CustomizationModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     CustomizationModel? customization = await _pipeline.ExecuteAsync(new ReadCustomizationQuery(id), cancellationToken);
     return customization == null ? NotFound() : Ok(customization);

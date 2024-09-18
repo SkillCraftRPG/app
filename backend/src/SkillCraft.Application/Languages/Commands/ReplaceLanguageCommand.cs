@@ -12,10 +12,10 @@ public record ReplaceLanguageCommand(Guid Id, ReplaceLanguagePayload Payload, lo
 
 internal class ReplaceLanguageCommandHandler : IRequestHandler<ReplaceLanguageCommand, LanguageModel?>
 {
-  private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
   private readonly ILanguageQuerier _languageQuerier;
   private readonly ILanguageRepository _languageRepository;
+  private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public ReplaceLanguageCommandHandler(
     ILanguageQuerier languageQuerier,
@@ -23,10 +23,10 @@ internal class ReplaceLanguageCommandHandler : IRequestHandler<ReplaceLanguageCo
     IPermissionService permissionService,
     ISender sender)
   {
-    _permissionService = permissionService;
-    _sender = sender;
     _languageQuerier = languageQuerier;
     _languageRepository = languageRepository;
+    _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<LanguageModel?> Handle(ReplaceLanguageCommand command, CancellationToken cancellationToken)

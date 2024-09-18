@@ -34,7 +34,7 @@ public class CasteController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<CasteModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<CasteModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     CasteModel? caste = await _pipeline.ExecuteAsync(new ReadCasteQuery(id), cancellationToken);
     return caste == null ? NotFound() : Ok(caste);
