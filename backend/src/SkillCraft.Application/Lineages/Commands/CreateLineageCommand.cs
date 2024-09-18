@@ -50,7 +50,8 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     Lineage lineage = new(command.GetWorldId(), parent, new Name(payload.Name), userId)
     {
       Description = Description.TryCreate(payload.Description),
-      Attributes = new(payload.Attributes)
+      Attributes = new Attributes(payload.Attributes),
+      Speeds = new Speeds(payload.Speeds)
     };
     SetTraits(lineage, payload);
 

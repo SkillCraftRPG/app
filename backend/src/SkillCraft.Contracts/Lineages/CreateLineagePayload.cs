@@ -13,6 +13,8 @@ public record CreateLineagePayload
   public LanguagesPayload Languages { get; set; }
   public NamesModel Names { get; set; }
 
+  public SpeedsModel Speeds { get; set; }
+
   public CreateLineagePayload() : this(string.Empty)
   {
   }
@@ -26,5 +28,7 @@ public record CreateLineagePayload
 
     Languages = new();
     Names = new();
+
+    Speeds = new();
   }
 }

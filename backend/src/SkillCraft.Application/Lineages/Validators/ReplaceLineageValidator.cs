@@ -16,5 +16,8 @@ internal class ReplaceLineageValidator : AbstractValidator<ReplaceLineagePayload
     RuleForEach(x => x.Traits).SetValidator(new TraitValidator());
 
     RuleFor(x => x.Languages).SetValidator(new LanguagesValidator());
+    // TODO(fpion): Names
+
+    RuleFor(x => x.Speeds).SetValidator(new SpeedsValidator());
   }
 }

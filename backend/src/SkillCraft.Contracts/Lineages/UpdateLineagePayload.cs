@@ -10,4 +10,6 @@ public record UpdateLineagePayload
 
   public UpdateLanguagesPayload Languages { get; set; } = new();
   public UpdateNamesPayload Names { get; set; } = new();
+
+  public UpdateSpeedsPayload Speeds { get; set; } = new();
 }

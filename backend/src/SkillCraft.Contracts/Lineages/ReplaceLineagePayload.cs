@@ -11,6 +11,8 @@ public record ReplaceLineagePayload
   public LanguagesPayload Languages { get; set; }
   public NamesModel Names { get; set; }
 
+  public SpeedsModel Speeds { get; set; }
+
   public ReplaceLineagePayload() : this(string.Empty)
   {
   }
@@ -24,5 +26,7 @@ public record ReplaceLineagePayload
 
     Languages = new();
     Names = new();
+
+    Speeds = new();
   }
 }

@@ -68,6 +68,14 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
     SetNames(lineage, payload.Names);
 
+    lineage.Speeds = new Speeds(
+      payload.Speeds.Walk ?? lineage.Speeds.Walk,
+      payload.Speeds.Climb ?? lineage.Speeds.Climb,
+      payload.Speeds.Swim ?? lineage.Speeds.Swim,
+      payload.Speeds.Fly ?? lineage.Speeds.Fly,
+      payload.Speeds.Hover ?? lineage.Speeds.Hover,
+      payload.Speeds.Burrow ?? lineage.Speeds.Burrow);
+
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 

@@ -85,6 +85,20 @@ public class Lineage : AggregateRoot
     }
   }
 
+  private Speeds _speeds = new();
+  public Speeds Speeds
+  {
+    get => _speeds;
+    set
+    {
+      if (_speeds != value)
+      {
+        _speeds = value;
+        _updatedEvent.Speeds = value;
+      }
+    }
+  }
+
   public Lineage() : base()
   {
   }
@@ -171,6 +185,11 @@ public class Lineage : AggregateRoot
     {
       _names = @event.Names;
     }
+
+    if (@event.Speeds != null)
+    {
+      _speeds = @event.Speeds;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -204,8 +223,10 @@ public class Lineage : AggregateRoot
     public Languages? Languages { get; set; }
     public Names? Names { get; set; }
 
+    public Speeds? Speeds { get; set; }
+
     public bool HasChanges => Name != null || Description != null
-      || Attributes != null || Traits.Count > 0
-      || Languages != null || Names != null;
+      || Attributes != null || Traits.Count > 0 || Languages != null || Names != null
+      || Speeds != null;
   }
 }

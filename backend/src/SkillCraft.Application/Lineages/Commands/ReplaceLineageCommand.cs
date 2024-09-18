@@ -73,6 +73,12 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     await SetLanguagesAsync(lineage, reference, payload.Languages, cancellationToken);
     SetNames(lineage, reference, payload.Names);
 
+    Speeds speeds = new(payload.Speeds);
+    if (speeds != reference.Speeds)
+    {
+      lineage.Speeds = speeds;
+    }
+
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
