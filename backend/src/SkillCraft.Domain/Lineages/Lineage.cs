@@ -124,6 +124,19 @@ public class Lineage : AggregateRoot
       }
     }
   }
+  private Ages _ages = new();
+  public Ages Ages
+  {
+    get => _ages;
+    set
+    {
+      if (_ages != value)
+      {
+        _ages = value;
+        _updatedEvent.Ages = value;
+      }
+    }
+  }
 
   public Lineage() : base()
   {
@@ -224,6 +237,10 @@ public class Lineage : AggregateRoot
     {
       _weight = @event.Weight;
     }
+    if (@event.Ages != null)
+    {
+      _ages = @event.Ages;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -260,9 +277,10 @@ public class Lineage : AggregateRoot
     public Speeds? Speeds { get; set; }
     public Size? Size { get; set; }
     public Weight? Weight { get; set; }
+    public Ages? Ages { get; set; }
 
     public bool HasChanges => Name != null || Description != null
       || Attributes != null || Traits.Count > 0 || Languages != null || Names != null
-      || Speeds != null || Size != null || Weight != null;
+      || Speeds != null || Size != null || Weight != null || Ages != null;
   }
 }

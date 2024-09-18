@@ -8,10 +8,10 @@ internal class WeightValidator : AbstractValidator<WeightModel>
 {
   public WeightValidator()
   {
-    RuleFor(x => x.Starved).Roll();
-    RuleFor(x => x.Skinny).Roll();
-    RuleFor(x => x.Normal).Roll();
-    RuleFor(x => x.Overweight).Roll();
-    RuleFor(x => x.Obese).Roll();
+    When(x => !string.IsNullOrWhiteSpace(x.Starved), () => RuleFor(x => x.Starved!).Roll());
+    When(x => !string.IsNullOrWhiteSpace(x.Skinny), () => RuleFor(x => x.Skinny!).Roll());
+    When(x => !string.IsNullOrWhiteSpace(x.Normal), () => RuleFor(x => x.Normal!).Roll());
+    When(x => !string.IsNullOrWhiteSpace(x.Overweight), () => RuleFor(x => x.Overweight!).Roll());
+    When(x => !string.IsNullOrWhiteSpace(x.Obese), () => RuleFor(x => x.Obese!).Roll());
   }
 }

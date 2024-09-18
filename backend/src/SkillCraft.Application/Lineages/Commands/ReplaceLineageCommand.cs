@@ -78,20 +78,25 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     {
       lineage.Speeds = speeds;
     }
-    Size size = new(payload.Size.Category, new Roll(payload.Size.Roll));
+    Size size = new(payload.Size.Category, Roll.TryCreate(payload.Size.Roll));
     if (size != reference.Size)
     {
       lineage.Size = size;
     }
     Weight weight = new(
-      new Roll(payload.Weight.Starved),
-      new Roll(payload.Weight.Skinny),
-      new Roll(payload.Weight.Normal),
-      new Roll(payload.Weight.Overweight),
-      new Roll(payload.Weight.Obese));
+      Roll.TryCreate(payload.Weight.Starved),
+      Roll.TryCreate(payload.Weight.Skinny),
+      Roll.TryCreate(payload.Weight.Normal),
+      Roll.TryCreate(payload.Weight.Overweight),
+      Roll.TryCreate(payload.Weight.Obese));
     if (weight != reference.Weight)
     {
       lineage.Weight = weight;
+    }
+    Ages ages = new(payload.Ages);
+    if (ages != reference.Ages)
+    {
+      lineage.Ages = ages;
     }
 
     lineage.Update(command.GetUserId());

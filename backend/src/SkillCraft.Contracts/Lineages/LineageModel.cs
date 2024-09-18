@@ -17,6 +17,7 @@ public class LineageModel : Aggregate
   public SpeedsModel Speeds { get; set; }
   public SizeModel Size { get; set; }
   public WeightModel Weight { get; set; }
+  public AgesModel Ages { get; set; }
 
   public LineageModel? Parent { get; set; }
 
@@ -39,6 +40,7 @@ public class LineageModel : Aggregate
     Speeds = new();
     Size = new();
     Weight = new();
+    Ages = new();
 
     World = world;
   }

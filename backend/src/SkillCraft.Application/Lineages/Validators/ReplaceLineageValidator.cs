@@ -21,5 +21,6 @@ internal class ReplaceLineageValidator : AbstractValidator<ReplaceLineagePayload
     RuleFor(x => x.Speeds).SetValidator(new SpeedsValidator());
     RuleFor(x => x.Size).SetValidator(new SizeValidator());
     RuleFor(x => x.Weight).SetValidator(new WeightValidator());
+    RuleFor(x => x.Ages).SetValidator(new AgesValidator());
   }
 }

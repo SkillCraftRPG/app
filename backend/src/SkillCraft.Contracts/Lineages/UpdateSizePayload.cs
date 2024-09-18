@@ -3,5 +3,5 @@
 public record UpdateSizePayload
 {
   public SizeCategory? Category { get; set; }
-  public string? Roll { get; set; }
+  public Change<string>? Roll { get; set; }
 }

@@ -16,6 +16,7 @@ public record CreateLineagePayload
   public SpeedsModel Speeds { get; set; }
   public SizeModel Size { get; set; }
   public WeightModel Weight { get; set; }
+  public AgesModel Ages { get; set; }
 
   public CreateLineagePayload() : this(string.Empty)
   {
@@ -34,5 +35,6 @@ public record CreateLineagePayload
     Speeds = new();
     Size = new();
     Weight = new();
+    Ages = new();
   }
 }

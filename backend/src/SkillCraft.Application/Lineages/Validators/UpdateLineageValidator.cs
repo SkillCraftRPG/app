@@ -20,5 +20,6 @@ internal class UpdateLineageValidator : AbstractValidator<UpdateLineagePayload>
     RuleFor(x => x.Speeds).SetValidator(new UpdateSpeedsValidator());
     RuleFor(x => x.Size).SetValidator(new UpdateSizeValidator());
     RuleFor(x => x.Weight).SetValidator(new UpdateWeightValidator());
+    RuleFor(x => x.Ages).SetValidator(new UpdateAgesValidator());
   }
 }

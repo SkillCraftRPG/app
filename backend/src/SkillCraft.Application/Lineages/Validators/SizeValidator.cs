@@ -9,6 +9,6 @@ internal class SizeValidator : AbstractValidator<SizeModel>
   public SizeValidator()
   {
     RuleFor(x => x.Category).IsInEnum();
-    RuleFor(x => x.Roll).Roll();
+    When(x => !string.IsNullOrWhiteSpace(x.Roll), () => RuleFor(x => x.Roll!).Roll());
   }
 }

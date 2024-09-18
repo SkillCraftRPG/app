@@ -21,11 +21,11 @@ public class WeightTests
     string json = @"{""Starved"":""11+1d4"",""Skinny"":""15+1d4"",""Normal"":""19+1d6"",""Overweight"":""26+1d6"",""Obese"":""32+1d10""}";
     Weight? weight = JsonSerializer.Deserialize<Weight>(json, _options);
     Assert.NotNull(weight);
-    Assert.Equal("11+1d4", weight.Starved.Value);
-    Assert.Equal("15+1d4", weight.Skinny.Value);
-    Assert.Equal("19+1d6", weight.Normal.Value);
-    Assert.Equal("26+1d6", weight.Overweight.Value);
-    Assert.Equal("32+1d10", weight.Obese.Value);
+    Assert.Equal("11+1d4", weight.Starved?.Value);
+    Assert.Equal("15+1d4", weight.Skinny?.Value);
+    Assert.Equal("19+1d6", weight.Normal?.Value);
+    Assert.Equal("26+1d6", weight.Overweight?.Value);
+    Assert.Equal("32+1d10", weight.Obese?.Value);
   }
 
   [Fact(DisplayName = "It should handle null deserialization correctly.")]
