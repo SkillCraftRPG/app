@@ -3,7 +3,7 @@ using SkillCraft.Domain.Languages;
 
 namespace SkillCraft.Application.Languages.Queries;
 
-internal record FindLanguagesQuery(IEnumerable<Guid> Ids) : IRequest<IReadOnlyCollection<Language>>; // TODO(fpion): unit tests
+internal record FindLanguagesQuery(IEnumerable<Guid> Ids) : IRequest<IReadOnlyCollection<Language>>;
 
 internal class FindLanguagesQueryHandler : IRequestHandler<FindLanguagesQuery, IReadOnlyCollection<Language>>
 {
