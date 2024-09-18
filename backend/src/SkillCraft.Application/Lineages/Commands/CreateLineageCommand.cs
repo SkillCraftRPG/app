@@ -42,7 +42,7 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     if (payload.ParentId.HasValue)
     {
       LineageId parentId = new(payload.ParentId.Value);
-      parent = await _lineageRepository.LoadAsync(parentId, cancellationToken)
+      parent = await _lineageRepository.LoadAsync(parentId, cancellationToken) // TODO(fpion): ensure in same world and user can preview
         ?? throw new AggregateNotFoundException<Lineage>(parentId.AggregateId, nameof(payload.ParentId));
       if (parent.ParentId.HasValue)
       {

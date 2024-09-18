@@ -66,7 +66,7 @@ internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonali
       if (payload.GiftId.Value.HasValue)
       {
         CustomizationId giftId = new(payload.GiftId.Value.Value);
-        gift = await _customizationRepository.LoadAsync(giftId, cancellationToken)
+        gift = await _customizationRepository.LoadAsync(giftId, cancellationToken) // TODO(fpion): ensure in same world and user can preview
           ?? throw new AggregateNotFoundException<Customization>(giftId.AggregateId, nameof(payload.GiftId));
       }
       personality.SetGift(gift);
