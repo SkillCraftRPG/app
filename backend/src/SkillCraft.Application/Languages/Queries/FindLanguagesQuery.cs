@@ -22,7 +22,7 @@ internal class FindLanguagesQueryHandler : IRequestHandler<FindLanguagesQuery, I
     }
 
     IEnumerable<LanguageId> ids = query.Ids.Select(id => new LanguageId(id)).Distinct();
-    IReadOnlyCollection<Language> languages = await _languageRepository.LoadAsync(ids, cancellationToken);
+    IReadOnlyCollection<Language> languages = await _languageRepository.LoadAsync(ids, cancellationToken); // TODO(fpion): ensure in same world and user can preview
 
     IEnumerable<Guid> foundIds = languages.Select(language => language.Id.ToGuid()).Distinct();
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();

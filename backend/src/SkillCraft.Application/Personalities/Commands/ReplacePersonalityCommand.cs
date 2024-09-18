@@ -75,7 +75,7 @@ internal class ReplacePersonalityCommandHandler : IRequestHandler<ReplacePersona
       Customization? gift = null;
       if (giftId.HasValue)
       {
-        gift = await _customizationRepository.LoadAsync(giftId.Value, cancellationToken)
+        gift = await _customizationRepository.LoadAsync(giftId.Value, cancellationToken) // TODO(fpion): ensure in same world and user can preview
           ?? throw new AggregateNotFoundException<Customization>(giftId.Value.AggregateId, nameof(payload.GiftId));
       }
       personality.SetGift(gift);

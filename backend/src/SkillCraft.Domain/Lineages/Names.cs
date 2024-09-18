@@ -6,7 +6,7 @@ namespace SkillCraft.Domain.Lineages;
 
 public record Names
 {
-  public const int MaximumLength = byte.MaxValue;
+  public const int MaximumLength = ushort.MaxValue;
 
   public string? Text { get; }
   public IReadOnlyCollection<string> Family { get; }
@@ -14,6 +14,8 @@ public record Names
   public IReadOnlyCollection<string> Male { get; }
   public IReadOnlyCollection<string> Unisex { get; }
   public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Custom { get; }
+
+  [JsonIgnore]
   public long Size
   {
     get

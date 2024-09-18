@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Domain.Lineages.Validators;
 
@@ -6,7 +7,7 @@ internal class NamesValidator : AbstractValidator<Names>
 {
   public NamesValidator()
   {
-    When(x => x.Text != null, () => RuleFor(x => x.Text!).NotEmpty().MaximumLength(Names.MaximumLength));
+    When(x => x.Text != null, () => RuleFor(x => x.Text!).NamesText());
     RuleForEach(x => x.Family).NotEmpty();
     RuleForEach(x => x.Female).NotEmpty();
     RuleForEach(x => x.Male).NotEmpty();
