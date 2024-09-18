@@ -75,7 +75,15 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       payload.Speeds.Fly ?? lineage.Speeds.Fly,
       payload.Speeds.Hover ?? lineage.Speeds.Hover,
       payload.Speeds.Burrow ?? lineage.Speeds.Burrow);
-    lineage.Size = new Size(payload.Size.Category ?? lineage.Size.Category, Roll.TryCreate(payload.Size.Roll) ?? lineage.Size.Roll);
+    lineage.Size = new Size(
+      payload.Size.Category ?? lineage.Size.Category,
+      Roll.TryCreate(payload.Size.Roll) ?? lineage.Size.Roll);
+    lineage.Weight = new Weight(
+      Roll.TryCreate(payload.Weight.Starved) ?? lineage.Weight.Starved,
+      Roll.TryCreate(payload.Weight.Skinny) ?? lineage.Weight.Skinny,
+      Roll.TryCreate(payload.Weight.Normal) ?? lineage.Weight.Normal,
+      Roll.TryCreate(payload.Weight.Overweight) ?? lineage.Weight.Overweight,
+      Roll.TryCreate(payload.Weight.Obese) ?? lineage.Weight.Obese);
 
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);

@@ -52,7 +52,13 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
       Description = Description.TryCreate(payload.Description),
       Attributes = new Attributes(payload.Attributes),
       Speeds = new Speeds(payload.Speeds),
-      Size = new Size(payload.Size.Category, new Roll(payload.Size.Roll))
+      Size = new Size(payload.Size.Category, new Roll(payload.Size.Roll)),
+      Weight = new Weight(
+        new Roll(payload.Weight.Starved),
+        new Roll(payload.Weight.Skinny),
+        new Roll(payload.Weight.Normal),
+        new Roll(payload.Weight.Overweight),
+        new Roll(payload.Weight.Obese))
     };
     SetTraits(lineage, payload);
 

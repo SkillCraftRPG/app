@@ -83,6 +83,16 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     {
       lineage.Size = size;
     }
+    Weight weight = new(
+      new Roll(payload.Weight.Starved),
+      new Roll(payload.Weight.Skinny),
+      new Roll(payload.Weight.Normal),
+      new Roll(payload.Weight.Overweight),
+      new Roll(payload.Weight.Obese));
+    if (weight != reference.Weight)
+    {
+      lineage.Weight = weight;
+    }
 
     lineage.Update(command.GetUserId());
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);

@@ -42,7 +42,7 @@ public class UpdateCasteCommandHandlerTests
   {
     UpdateCastePayload payload = new()
     {
-      WealthRoll = new Change<string>("8d6+7")
+      WealthRoll = new Change<string>("8d6+")
     };
     UpdateCasteCommand command = new(Guid.Empty, payload);
 

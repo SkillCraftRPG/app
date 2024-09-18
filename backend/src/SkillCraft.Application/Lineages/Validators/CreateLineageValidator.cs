@@ -22,5 +22,6 @@ internal class CreateLineageValidator : AbstractValidator<CreateLineagePayload>
 
     RuleFor(x => x.Speeds).SetValidator(new SpeedsValidator());
     RuleFor(x => x.Size).SetValidator(new SizeValidator());
+    RuleFor(x => x.Weight).SetValidator(new WeightValidator());
   }
 }

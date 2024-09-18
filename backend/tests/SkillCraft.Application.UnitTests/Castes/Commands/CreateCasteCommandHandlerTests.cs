@@ -67,7 +67,7 @@ public class CreateCasteCommandHandlerTests
   {
     CreateCastePayload payload = new("Artisan")
     {
-      WealthRoll = "8d6+7"
+      WealthRoll = "8d6+"
     };
     CreateCasteCommand command = new(payload);
 

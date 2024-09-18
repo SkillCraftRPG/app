@@ -13,4 +13,6 @@ public record UpdateLineagePayload
 
   public UpdateSpeedsPayload Speeds { get; set; } = new();
   public UpdateSizePayload Size { get; set; } = new();
+  public UpdateWeightPayload Weight { get; set; } = new();
+
 }
