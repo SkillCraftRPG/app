@@ -1,5 +1,7 @@
-﻿using Logitar;
+﻿using FluentValidation;
+using Logitar;
 using SkillCraft.Domain.Languages;
+using SkillCraft.Domain.Lineages.Validators;
 
 namespace SkillCraft.Domain.Lineages;
 
@@ -32,5 +34,6 @@ public record Languages
     Ids = ids.Distinct().ToArray().AsReadOnly();
     Extra = extra;
     Text = text?.CleanTrim();
+    new LanguagesValidator().ValidateAndThrow(this);
   }
 }
