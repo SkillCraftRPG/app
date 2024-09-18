@@ -3,7 +3,7 @@ using SkillCraft.Contracts;
 
 namespace SkillCraft.GraphQL;
 
-internal class SkillGraphType : EnumerationGraphType<Skill> // TODO(fpion): document
+internal class SkillGraphType : EnumerationGraphType<Skill>
 {
   public SkillGraphType()
   {
