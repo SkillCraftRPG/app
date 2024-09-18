@@ -30,7 +30,7 @@ internal class LineageEntity : AggregateEntity
   public int ExtraAttributes { get; private set; }
   public string? Traits { get; private set; }
 
-  // TODO(fpion): LanguageIds
+  public List<LanguageEntity> Languages { get; private set; } = [];
   public int ExtraLanguages { get; private set; }
   public string? LanguagesText { get; private set; }
   public string? NamesText { get; private set; }

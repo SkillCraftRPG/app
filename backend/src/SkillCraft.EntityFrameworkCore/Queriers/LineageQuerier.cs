@@ -37,6 +37,8 @@ internal class LineageQuerier : ILineageQuerier
   public async Task<LineageModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     LineageEntity? lineage = await _lineages.AsNoTracking()
+      .Include(x => x.Languages)
+      .Include(x => x.Species)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 

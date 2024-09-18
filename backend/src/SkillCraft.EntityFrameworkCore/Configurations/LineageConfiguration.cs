@@ -37,5 +37,11 @@ internal class LineageConfiguration : AggregateConfiguration<LineageEntity>, IEn
     builder.HasOne(x => x.Species).WithMany(x => x.Nations)
       .HasPrincipalKey(x => x.LineageId).HasForeignKey(x => x.ParentId)
       .OnDelete(DeleteBehavior.Restrict);
+    builder.HasMany(x => x.Languages).WithMany(x => x.Lineages)
+      .UsingEntity<LineageLanguageEntity>(b =>
+      {
+        b.ToTable(SkillCraftDb.LineageLanguages.Table.Table ?? string.Empty, SkillCraftDb.LineageLanguages.Table.Schema);
+        b.HasKey(x => new { x.LineageId, x.LanguageId });
+      });
   }
 }
