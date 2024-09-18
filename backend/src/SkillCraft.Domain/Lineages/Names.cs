@@ -14,6 +14,8 @@ public record Names
   public IReadOnlyCollection<string> Male { get; }
   public IReadOnlyCollection<string> Unisex { get; }
   public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Custom { get; }
+
+  [JsonIgnore]
   public long Size
   {
     get

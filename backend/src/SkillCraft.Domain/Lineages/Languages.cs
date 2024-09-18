@@ -13,6 +13,7 @@ public record Languages
   public int Extra { get; }
   public string? Text { get; }
 
+  [JsonIgnore]
   public int Size => (Ids.Count * 4) + 4 + (Text?.Length ?? 0);
 
   public Languages()
