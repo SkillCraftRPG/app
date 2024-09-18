@@ -34,7 +34,7 @@ public class PersonalityController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<PersonalityModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<PersonalityModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     PersonalityModel? personality = await _pipeline.ExecuteAsync(new ReadPersonalityQuery(id), cancellationToken);
     return personality == null ? NotFound() : Ok(personality);

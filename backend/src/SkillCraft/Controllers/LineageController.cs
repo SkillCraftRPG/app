@@ -34,7 +34,7 @@ public class LineageController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<LineageModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<LineageModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     LineageModel? lineage = await _pipeline.ExecuteAsync(new ReadLineageQuery(id), cancellationToken);
     return lineage == null ? NotFound() : Ok(lineage);

@@ -34,7 +34,7 @@ public class LanguageController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<LanguageModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<LanguageModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     LanguageModel? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(id), cancellationToken);
     return language == null ? NotFound() : Ok(language);

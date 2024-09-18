@@ -34,7 +34,7 @@ public class EducationController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<EducationModel>> SearchAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<ActionResult<EducationModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     EducationModel? education = await _pipeline.ExecuteAsync(new ReadEducationQuery(id), cancellationToken);
     return education == null ? NotFound() : Ok(education);
