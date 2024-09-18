@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillCraft.IntegrationTests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.Infrastructure.UnitTests", "tests\SkillCraft.Infrastructure.UnitTests\SkillCraft.Infrastructure.UnitTests.csproj", "{AB824C40-BF92-4871-ACF0-E500D64E40E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillCraft.GraphQL", "src\SkillCraft.GraphQL\SkillCraft.GraphQL.csproj", "{2B837FBD-DEBD-4C3A-A918-345806454AA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,10 @@ Global
 		{AB824C40-BF92-4871-ACF0-E500D64E40E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB824C40-BF92-4871-ACF0-E500D64E40E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB824C40-BF92-4871-ACF0-E500D64E40E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B837FBD-DEBD-4C3A-A918-345806454AA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

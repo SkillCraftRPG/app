@@ -41,6 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SkillCraft.EntityFrameworkCore.PostgreSQL\SkillCraft.EntityFrameworkCore.PostgreSQL.csproj" />
     <ProjectReference Include="..\SkillCraft.EntityFrameworkCore.SqlServer\SkillCraft.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\SkillCraft.GraphQL\SkillCraft.GraphQL.csproj" />
     <ProjectReference Include="..\SkillCraft.MongoDB\SkillCraft.MongoDB.csproj" />
   </ItemGroup>
 
