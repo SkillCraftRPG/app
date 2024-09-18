@@ -7,6 +7,7 @@ using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Languages;
+using SkillCraft.Contracts.Lineages;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
@@ -49,7 +50,7 @@ internal class Mapper
     AspectModel destination = new(world, source.Name)
     {
       Description = source.Description,
-      Attributes = new AttributesModel
+      Attributes = new Contracts.Aspects.AttributesModel
       {
         Mandatory1 = source.MandatoryAttribute1,
         Mandatory2 = source.MandatoryAttribute2,
@@ -83,7 +84,7 @@ internal class Mapper
 
     foreach (KeyValuePair<Guid, TraitEntity> trait in source.Traits)
     {
-      destination.Traits.Add(new TraitModel(trait.Value.Name)
+      destination.Traits.Add(new Contracts.Castes.TraitModel(trait.Value.Name)
       {
         Id = trait.Key,
         Description = trait.Value.Description
@@ -141,6 +142,37 @@ internal class Mapper
       Description = source.Description,
       Script = source.Script,
       TypicalSpeakers = source.TypicalSpeakers
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public LineageModel ToLineage(LineageEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    if (source.ParentId.HasValue && source.Species == null)
+    {
+      throw new ArgumentException($"The {nameof(source.Species)} is required.", nameof(source));
+    }
+    LineageModel? parent = source.Species == null ? null : ToLineage(source.Species);
+
+    LineageModel destination = new(world, source.Name)
+    {
+      Description = source.Description,
+      Attributes = source.GetAttributes(),
+      Traits = source.GetTraits(),
+      Languages = source.GetLanguages(ToLanguage),
+      Names = source.GetNames(),
+      Speeds = source.GetSpeeds(),
+      Size = source.GetSize(),
+      Weight = source.GetWeight(),
+      Ages = source.GetAges(),
+      Parent = parent
     };
 
     MapAggregate(source, destination);

@@ -438,6 +438,209 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.ToTable("Languages", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LineageEntity", b =>
+                {
+                    b.Property<int>("LineageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LineageId"));
+
+                    b.Property<int?>("AdolescentAge")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("AdultAge")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("Agility")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BurrowSpeed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ClimbSpeed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Coordination")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CustomNames")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ExtraAttributes")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExtraLanguages")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FamilyNames")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FemaleNames")
+                        .HasColumnType("text");
+
+                    b.Property<int>("FlySpeed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("HoverSpeed")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Intellect")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LanguagesText")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("MaleNames")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MatureAge")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("NamesText")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("NormalRoll")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("ObeseRoll")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("OverweightRoll")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Presence")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Sensitivity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SizeCategory")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("SizeRoll")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("SkinnyRoll")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("Spirit")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StarvedRoll")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("SwimSpeed")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Traits")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UnisexNames")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("VenerableAge")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Vigor")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WalkSpeed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LineageId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("WorldId");
+
+                    b.ToTable("Lineages", (string)null);
+                });
+
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LineageLanguageEntity", b =>
+                {
+                    b.Property<int>("LineageId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("LineageId", "LanguageId");
+
+                    b.HasIndex("LanguageId");
+
+                    b.ToTable("LineageLanguages", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PersonalityEntity", b =>
                 {
                     b.Property<int>("PersonalityId")
@@ -816,6 +1019,39 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Navigation("World");
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LineageEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.LineageEntity", "Species")
+                        .WithMany("Nations")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Lineages")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Species");
+
+                    b.Navigation("World");
+                });
+
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LineageLanguageEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.LanguageEntity", null)
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.LineageEntity", null)
+                        .WithMany()
+                        .HasForeignKey("LineageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PersonalityEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.CustomizationEntity", "Gift")
@@ -880,6 +1116,11 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Navigation("Personalities");
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LineageEntity", b =>
+                {
+                    b.Navigation("Nations");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.UserEntity", b =>
                 {
                     b.Navigation("StorageDetails");
@@ -900,6 +1141,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Navigation("Educations");
 
                     b.Navigation("Languages");
+
+                    b.Navigation("Lineages");
 
                     b.Navigation("Personalities");
 
