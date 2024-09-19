@@ -57,12 +57,14 @@ internal class PermissionService : IPermissionService
   }
   public async Task EnsureCanPreviewAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken)
   {
-    if (entityType != EntityType.World)
+    if (entityType == EntityType.World)
     {
-      User user = activity.GetUser();
-      WorldModel world = activity.GetWorld();
-      await EnsureIsOwnerOrHasPermissionAsync(user, world, Action.Preview, entityType, entityId: null, cancellationToken);
+      throw new ArgumentOutOfRangeException(nameof(entityType));
     }
+
+    User user = activity.GetUser();
+    WorldModel world = activity.GetWorld();
+    await EnsureIsOwnerOrHasPermissionAsync(user, world, Action.Preview, entityType, entityId: null, cancellationToken);
   }
   public Task EnsureCanPreviewAsync(Activity activity, WorldModel world, CancellationToken cancellationToken)
   {

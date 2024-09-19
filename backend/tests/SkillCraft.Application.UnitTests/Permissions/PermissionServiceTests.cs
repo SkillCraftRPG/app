@@ -7,6 +7,7 @@ using SkillCraft.Application.Castes.Commands;
 using SkillCraft.Application.Customizations.Commands;
 using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Languages.Commands;
+using SkillCraft.Application.Lineages.Queries;
 using SkillCraft.Application.Personalities.Commands;
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
@@ -295,6 +296,55 @@ public class PermissionServiceTests
   #endregion
 
   #region EnsureCanPreviewAsync(EntityType)
+  [Fact(DisplayName = "EnsureCanPreviewAsync(EntityType): it should succeed when the user has the permission.")]
+  public async Task EnsureCanPreviewAsyncEntityType_it_should_succeed_when_the_user_has_the_permission()
+  {
+    ReadLineageQuery query = new(Guid.NewGuid());
+    query.Contextualize(_otherUser, _world);
+
+    _permissionQuerier.Setup(x => x.HasAsync(_otherUser, _world, Action.Preview, EntityType.Lineage, null, _cancellationToken)).ReturnsAsync(true);
+
+    await _service.EnsureCanPreviewAsync(query, EntityType.Lineage, _cancellationToken);
+
+    _permissionQuerier.Verify(x => x.HasAsync(_otherUser, _world, Action.Preview, EntityType.Lineage, null, _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "EnsureCanPreviewAsync(EntityType): it should succeed when the user is the world owner.")]
+  public async Task EnsureCanPreviewAsyncEntityType_it_should_succeed_when_the_user_is_the_world_owner()
+  {
+    ReadLineageQuery query = new(Guid.NewGuid());
+    query.Contextualize(_user, _world);
+
+    await _service.EnsureCanPreviewAsync(query, EntityType.Lineage, _cancellationToken);
+
+    EnsurePermissionQuerierHasAsyncHasNeverBeenCalled();
+  }
+
+  [Fact(DisplayName = "EnsureCanPreviewAsync(EntityType): it should throw ArgumentOutOfRangeException when the type is world.")]
+  public async Task EnsureCanPreviewAsyncEntityType_it_should_throw_ArgumentOutOfRangeException_when_the_type_is_world()
+  {
+    ReadWorldQuery query = new(_world.Id, _world.Slug);
+    query.Contextualize(_user);
+
+    var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await _service.EnsureCanPreviewAsync(query, EntityType.World, _cancellationToken));
+    Assert.Equal("entityType", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "EnsureCanPreviewAsync(EntityType): it should throw PermissionDeniedException when the user does not have the permission.")]
+  public async Task EnsureCanPreviewAsyncEntityType_it_should_throw_PermissionDeniedException_when_the_user_does_not_have_the_permission()
+  {
+    ReadLineageQuery query = new(Guid.NewGuid());
+    query.Contextualize(_otherUser, _world);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanPreviewAsync(query, EntityType.Lineage, _cancellationToken));
+    Assert.Equal(Action.Preview, exception.Action);
+    Assert.Equal(EntityType.Lineage, exception.EntityType);
+    Assert.Equal(_otherUser.Id, exception.UserId);
+    Assert.Equal(_world.Id, exception.WorldId);
+    Assert.Null(exception.EntityId);
+
+    _permissionQuerier.Verify(x => x.HasAsync(_otherUser, _world, Action.Preview, EntityType.Lineage, null, _cancellationToken), Times.Once);
+  }
   #endregion
 
   #region EnsureCanPreviewAsync(World)
