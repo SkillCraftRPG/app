@@ -11,7 +11,6 @@ public class TalentModel : Aggregate
   public string? Description { get; set; }
 
   public bool AllowMultiplePurchases { get; set; }
-  public TalentModel? RequiredTalent { get; set; }
 
   public WorldModel World { get; set; }
 
