@@ -6,6 +6,7 @@ using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Educations;
 using SkillCraft.Application.Languages;
 using SkillCraft.Application.Lineages;
+using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Domain.Aspects;
@@ -45,6 +46,7 @@ public static class DependencyInjectionExtensions
       .AddScoped<IEducationQuerier, EducationQuerier>()
       .AddScoped<ILanguageQuerier, LanguageQuerier>()
       .AddScoped<ILineageQuerier, LineageQuerier>()
+      .AddScoped<IPermissionQuerier, PermissionQuerier>()
       .AddScoped<IPersonalityQuerier, PersonalityQuerier>()
       .AddScoped<IWorldQuerier, WorldQuerier>();
   }
