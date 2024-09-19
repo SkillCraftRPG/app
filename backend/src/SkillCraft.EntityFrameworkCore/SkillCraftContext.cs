@@ -19,6 +19,7 @@ public class SkillCraftContext : DbContext
   internal DbSet<PersonalityEntity> Personalities { get; private set; }
   internal DbSet<StorageDetailEntity> StorageDetails { get; private set; }
   internal DbSet<StorageSummaryEntity> StorageSummaries { get; private set; }
+  internal DbSet<TalentEntity> Talents { get; private set; }
   internal DbSet<UserEntity> Users { get; private set; }
   internal DbSet<WorldEntity> Worlds { get; private set; }
 

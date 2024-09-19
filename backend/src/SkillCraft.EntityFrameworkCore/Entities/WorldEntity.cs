@@ -29,6 +29,7 @@ internal class WorldEntity : AggregateEntity
   public List<LineageEntity> Lineages { get; private set; } = [];
   public List<PersonalityEntity> Personalities { get; private set; } = [];
   public List<StorageDetailEntity> StorageDetails { get; private set; } = [];
+  public List<TalentEntity> Talents { get; private set; } = [];
 
   public WorldEntity(UserEntity owner, World.CreatedEvent @event) : base(@event)
   {
