@@ -55,8 +55,8 @@ public class Lineage : AggregateRoot
       }
     }
   }
-  private readonly Dictionary<Guid, Trait> _traits = [];
-  public IReadOnlyDictionary<Guid, Trait> Traits => _traits.AsReadOnly();
+  private readonly Dictionary<Guid, Feature> _features = [];
+  public IReadOnlyDictionary<Guid, Feature> Features => _features.AsReadOnly();
 
   private Languages _languages = new();
   public Languages Languages
@@ -160,24 +160,24 @@ public class Lineage : AggregateRoot
     _name = @event.Name;
   }
 
-  public void AddTrait(Trait trait) => SetTrait(Guid.NewGuid(), trait);
-  public void RemoveTrait(Guid id)
+  public void AddFeature(Feature feature) => SetFeature(Guid.NewGuid(), feature);
+  public void RemoveFeature(Guid id)
   {
     ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
 
-    if (_traits.Remove(id))
+    if (_features.Remove(id))
     {
-      _updatedEvent.Traits[id] = null;
+      _updatedEvent.Features[id] = null;
     }
   }
-  public void SetTrait(Guid id, Trait trait)
+  public void SetFeature(Guid id, Feature feature)
   {
     ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
 
-    if (!_traits.TryGetValue(id, out Trait? existingTrait) || existingTrait != trait)
+    if (!_features.TryGetValue(id, out Feature? existingFeature) || existingFeature != feature)
     {
-      _traits[id] = trait;
-      _updatedEvent.Traits[id] = trait;
+      _features[id] = feature;
+      _updatedEvent.Features[id] = feature;
     }
   }
 
@@ -204,15 +204,15 @@ public class Lineage : AggregateRoot
     {
       _attributes = @event.Attributes;
     }
-    foreach (KeyValuePair<Guid, Trait?> trait in @event.Traits)
+    foreach (KeyValuePair<Guid, Feature?> feature in @event.Features)
     {
-      if (trait.Value == null)
+      if (feature.Value == null)
       {
-        _traits.Remove(trait.Key);
+        _features.Remove(feature.Key);
       }
       else
       {
-        _traits[trait.Key] = trait.Value;
+        _features[feature.Key] = feature.Value;
       }
     }
 
@@ -269,7 +269,7 @@ public class Lineage : AggregateRoot
     public Change<Description>? Description { get; set; }
 
     public AttributeBonuses? Attributes { get; set; }
-    public Dictionary<Guid, Trait?> Traits { get; set; } = [];
+    public Dictionary<Guid, Feature?> Features { get; set; } = [];
 
     public Languages? Languages { get; set; }
     public Names? Names { get; set; }
@@ -280,7 +280,7 @@ public class Lineage : AggregateRoot
     public Ages? Ages { get; set; }
 
     public bool HasChanges => Name != null || Description != null
-      || Attributes != null || Traits.Count > 0 || Languages != null || Names != null
+      || Attributes != null || Features.Count > 0 || Languages != null || Names != null
       || Speeds != null || Size != null || Weight != null || Ages != null;
   }
 }
