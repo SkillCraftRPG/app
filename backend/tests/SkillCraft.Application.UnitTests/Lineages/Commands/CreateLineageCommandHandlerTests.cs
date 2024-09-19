@@ -75,7 +75,7 @@ public class CreateLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description != null && y.Lineage.Description.Value == payload.Description.Trim()
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Traits.AreEqualTo(payload.Traits)
+      && y.Lineage.Features.AreEqualTo(payload.Features)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)
@@ -91,10 +91,10 @@ public class CreateLineageCommandHandlerTests
     {
       Description = "    ",
       Attributes = new() { Extra = 2 },
-      Traits =
+      Features =
       [
-        new TraitPayload("Apprentissage accéléré.") { Description = "Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.)." },
-        new TraitPayload("Versatilité.") { Description = "Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence." }
+        new FeaturePayload("Apprentissage accéléré.") { Description = "Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.)." },
+        new FeaturePayload("Versatilité.") { Description = "Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence." }
       ],
       Languages = new() { Extra = 1 },
       Names = new() { Text = "les humains portent généralement un prénom et un nom de famille." },
@@ -124,7 +124,7 @@ public class CreateLineageCommandHandlerTests
     _sender.Verify(x => x.Send(It.Is<SaveLineageCommand>(y => y.Lineage.ParentId == null
       && y.Lineage.Name.Value == payload.Name.Trim() && y.Lineage.Description == null
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Traits.AreEqualTo(payload.Traits)
+      && y.Lineage.Features.AreEqualTo(payload.Features)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)

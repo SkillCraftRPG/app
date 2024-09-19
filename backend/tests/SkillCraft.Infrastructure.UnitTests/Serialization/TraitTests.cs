@@ -5,11 +5,11 @@ using SkillCraft.Infrastructure.Converters;
 namespace SkillCraft.Infrastructure.Serialization;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class CasteTraitTests
+public class TraitTests
 {
   private readonly JsonSerializerOptions _options = new();
 
-  public CasteTraitTests()
+  public TraitTests()
   {
     _options.Converters.Add(new DescriptionConverter());
     _options.Converters.Add(new NameConverter());

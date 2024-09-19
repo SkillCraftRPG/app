@@ -155,7 +155,7 @@ internal class Mapper
     {
       Description = source.Description,
       Attributes = source.GetAttributes(),
-      Traits = source.GetTraits(),
+      Features = source.GetFeatures(),
       Languages = source.GetLanguages(ToLanguage),
       Names = source.GetNames(),
       Speeds = source.GetSpeeds(),

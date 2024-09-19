@@ -3,11 +3,11 @@
 namespace SkillCraft.Infrastructure.Serialization;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class LineageAttributesTests
+public class AttributeBonusesTests
 {
   private readonly JsonSerializerOptions _options = new();
 
-  public LineageAttributesTests()
+  public AttributeBonusesTests()
   {
     _options.Converters.Add(new JsonStringEnumConverter());
   }
