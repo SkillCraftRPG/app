@@ -13,7 +13,7 @@ internal class AspectGraphType : AggregateGraphType<AspectModel>
     Field(x => x.Description)
       .Description("The description of the aspect.");
 
-    Field(x => x.Attributes, type: typeof(NonNullGraphType<AttributesGraphType>))
+    Field(x => x.Attributes, type: typeof(NonNullGraphType<AttributeSelectionGraphType>))
       .Description("The attribute selection of the aspect.");
     Field(x => x.Skills, type: typeof(NonNullGraphType<SkillsGraphType>))
       .Description("The skill selection of the aspect.");

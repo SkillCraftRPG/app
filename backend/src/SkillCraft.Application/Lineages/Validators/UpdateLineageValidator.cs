@@ -11,7 +11,7 @@ internal class UpdateLineageValidator : AbstractValidator<UpdateLineagePayload>
     When(x => !string.IsNullOrWhiteSpace(x.Name), () => RuleFor(x => x.Name!).Name());
     When(x => !string.IsNullOrWhiteSpace(x.Description?.Value), () => RuleFor(x => x.Description!.Value!).Description());
 
-    When(x => x.Attributes != null, () => RuleFor(x => x.Attributes!).SetValidator(new UpdateAttributesValidator()));
+    When(x => x.Attributes != null, () => RuleFor(x => x.Attributes!).SetValidator(new UpdateAttributeBonusesValidator()));
     RuleForEach(x => x.Traits).SetValidator(new UpdateTraitValidator());
 
     When(x => x.Languages != null, () => RuleFor(x => x.Languages!).SetValidator(new UpdateLanguagesValidator()));

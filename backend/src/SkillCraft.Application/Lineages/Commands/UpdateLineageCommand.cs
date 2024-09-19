@@ -54,7 +54,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       lineage.Description = Description.TryCreate(payload.Description.Value);
     }
 
-    lineage.Attributes = new Attributes(
+    lineage.Attributes = new AttributeBonuses(
       payload.Attributes.Agility ?? lineage.Attributes.Agility,
       payload.Attributes.Coordination ?? lineage.Attributes.Coordination,
       payload.Attributes.Intellect ?? lineage.Attributes.Intellect,

@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Aspects;
 
-public record AttributesModel : IAttributes
+public record AttributeSelectionModel : IAttributeSelection
 {
   public Attribute? Mandatory1 { get; set; }
   public Attribute? Mandatory2 { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Aspects;
 
-public interface IAttributes
+public interface IAttributeSelection
 {
   Attribute? Mandatory1 { get; }
   Attribute? Mandatory2 { get; }

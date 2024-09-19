@@ -63,7 +63,7 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
       lineage.Description = description;
     }
 
-    Attributes attributes = new(payload.Attributes);
+    AttributeBonuses attributes = new(payload.Attributes);
     if (attributes != reference.Attributes)
     {
       lineage.Attributes = attributes;

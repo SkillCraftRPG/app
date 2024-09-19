@@ -39,7 +39,7 @@ public class CreateAspectCommandHandlerTests
     CreateAspectPayload payload = new(" Œil-de-lynx ")
     {
       Description = "    ",
-      Attributes = new AttributesModel
+      Attributes = new AttributeSelectionModel
       {
         Mandatory1 = Attribute.Coordination,
         Mandatory2 = Attribute.Sensitivity,
@@ -79,7 +79,7 @@ public class CreateAspectCommandHandlerTests
   {
     CreateAspectPayload payload = new("Œil-de-lynx")
     {
-      Attributes = new AttributesModel
+      Attributes = new AttributeSelectionModel
       {
         Mandatory1 = Attribute.Coordination,
         Mandatory2 = Attribute.Sensitivity,

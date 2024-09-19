@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Lineages;
 
-public record AttributesModel : IAttributes
+public record AttributeBonusesModel : IAttributeBonuses
 {
   public int Agility { get; set; }
   public int Coordination { get; set; }

@@ -5,9 +5,9 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Domain.Aspects.Validators;
 
-public class AttributesValidator : AbstractValidator<IAttributes>
+public class AttributeSelectionValidator : AbstractValidator<IAttributeSelection>
 {
-  public AttributesValidator()
+  public AttributeSelectionValidator()
   {
     When(x => x.Mandatory1.HasValue, () => RuleFor(x => x.Mandatory1!.Value).IsInEnum());
     When(x => x.Mandatory2.HasValue, () => RuleFor(x => x.Mandatory2!.Value).IsInEnum());
@@ -15,14 +15,14 @@ public class AttributesValidator : AbstractValidator<IAttributes>
     When(x => x.Optional2.HasValue, () => RuleFor(x => x.Optional2!.Value).IsInEnum());
   }
 
-  public override ValidationResult Validate(ValidationContext<IAttributes> context)
+  public override ValidationResult Validate(ValidationContext<IAttributeSelection> context)
   {
     const string errorMessage = "Each property must specify a different attribute. An attribute can only be specified by one property.";
 
     ValidationResult result = base.Validate(context);
 
     Dictionary<Attribute, List<string>> properties = new(capacity: 4);
-    IAttributes attributes = context.InstanceToValidate;
+    IAttributeSelection attributes = context.InstanceToValidate;
     Fill(attributes.Mandatory1, nameof(attributes.Mandatory1), properties);
     Fill(attributes.Mandatory2, nameof(attributes.Mandatory2), properties);
     Fill(attributes.Optional1, nameof(attributes.Optional1), properties);

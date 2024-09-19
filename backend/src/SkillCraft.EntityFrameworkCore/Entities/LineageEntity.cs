@@ -101,7 +101,7 @@ internal class LineageEntity : AggregateEntity
     Mature = MatureAge,
     Venerable = VenerableAge
   };
-  public AttributesModel GetAttributes() => new()
+  public AttributeBonusesModel GetAttributes() => new()
   {
     Agility = Agility,
     Coordination = Coordination,
@@ -217,7 +217,7 @@ internal class LineageEntity : AggregateEntity
     MatureAge = ages.Mature;
     VenerableAge = ages.Venerable;
   }
-  private void SetAttributes(IAttributes attributes)
+  private void SetAttributes(IAttributeBonuses attributes)
   {
     Agility = attributes.Agility;
     Coordination = attributes.Coordination;

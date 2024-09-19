@@ -3,9 +3,9 @@ using SkillCraft.Contracts.Lineages;
 
 namespace SkillCraft.Domain.Lineages.Validators;
 
-public class AttributesValidator : AbstractValidator<IAttributes>
+public class AttributeBonusesValidator : AbstractValidator<IAttributeBonuses>
 {
-  public AttributesValidator()
+  public AttributeBonusesValidator()
   {
     RuleFor(x => x.Agility).InclusiveBetween(0, 2);
     RuleFor(x => x.Coordination).InclusiveBetween(0, 2);
@@ -18,7 +18,7 @@ public class AttributesValidator : AbstractValidator<IAttributes>
     RuleFor(x => x.Extra).GreaterThanOrEqualTo(0).LessThanOrEqualTo(attributes => GetExtraMaximumValue(attributes));
   }
 
-  private static int GetExtraMaximumValue(IAttributes attributes)
+  private static int GetExtraMaximumValue(IAttributeBonuses attributes)
   {
     int maximum = 7;
     if (attributes.Agility > 0)

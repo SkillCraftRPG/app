@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Lineages;
 
-public record UpdateAttributesPayload
+public record UpdateAttributeBonusesPayload
 {
   public int? Agility { get; set; }
   public int? Coordination { get; set; }

@@ -50,18 +50,8 @@ internal class Mapper
     AspectModel destination = new(world, source.Name)
     {
       Description = source.Description,
-      Attributes = new Contracts.Aspects.AttributesModel
-      {
-        Mandatory1 = source.MandatoryAttribute1,
-        Mandatory2 = source.MandatoryAttribute2,
-        Optional1 = source.OptionalAttribute1,
-        Optional2 = source.OptionalAttribute2
-      },
-      Skills = new SkillsModel
-      {
-        Discounted1 = source.DiscountedSkill1,
-        Discounted2 = source.DiscountedSkill2
-      }
+      Attributes = source.GetAttributes(),
+      Skills = source.GetSkills()
     };
 
     MapAggregate(source, destination);

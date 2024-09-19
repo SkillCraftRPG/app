@@ -42,8 +42,8 @@ public class Lineage : AggregateRoot
     }
   }
 
-  private Attributes _attributes = new();
-  public Attributes Attributes
+  private AttributeBonuses _attributes = new();
+  public AttributeBonuses Attributes
   {
     get => _attributes;
     set
@@ -268,7 +268,7 @@ public class Lineage : AggregateRoot
     public Name? Name { get; set; }
     public Change<Description>? Description { get; set; }
 
-    public Attributes? Attributes { get; set; }
+    public AttributeBonuses? Attributes { get; set; }
     public Dictionary<Guid, Trait?> Traits { get; set; } = [];
 
     public Languages? Languages { get; set; }

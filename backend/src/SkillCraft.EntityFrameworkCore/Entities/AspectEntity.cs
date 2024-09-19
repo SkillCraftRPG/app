@@ -33,9 +33,6 @@ internal class AspectEntity : AggregateEntity
     WorldId = world.WorldId;
 
     Name = @event.Name.Value;
-
-    SetAttributes(@event.Attributes);
-    SetSkills(@event.Skills);
   }
 
   private AspectEntity() : base()
@@ -51,6 +48,19 @@ internal class AspectEntity : AggregateEntity
     }
     return actorIds.AsReadOnly();
   }
+
+  public AttributeSelectionModel GetAttributes() => new()
+  {
+    Mandatory1 = MandatoryAttribute1,
+    Mandatory2 = MandatoryAttribute2,
+    Optional1 = OptionalAttribute1,
+    Optional2 = OptionalAttribute2
+  };
+  public SkillsModel GetSkills() => new()
+  {
+    Discounted1 = DiscountedSkill1,
+    Discounted2 = DiscountedSkill2
+  };
 
   public void Update(Aspect.UpdatedEvent @event)
   {
@@ -74,15 +84,13 @@ internal class AspectEntity : AggregateEntity
       SetSkills(@event.Skills);
     }
   }
-
-  private void SetAttributes(IAttributes attributes)
+  private void SetAttributes(IAttributeSelection attributes)
   {
     MandatoryAttribute1 = attributes.Mandatory1;
     MandatoryAttribute2 = attributes.Mandatory2;
     OptionalAttribute1 = attributes.Optional1;
     OptionalAttribute2 = attributes.Optional2;
   }
-
   private void SetSkills(ISkills skills)
   {
     DiscountedSkill1 = skills.Discounted1;

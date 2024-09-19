@@ -8,7 +8,7 @@ public class LineageModel : Aggregate
   public string Name { get; set; }
   public string? Description { get; set; }
 
-  public AttributesModel Attributes { get; set; }
+  public AttributeBonusesModel Attributes { get; set; }
   public List<TraitModel> Traits { get; set; }
 
   public LanguagesModel Languages { get; set; }

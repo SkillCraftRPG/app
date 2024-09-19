@@ -71,7 +71,7 @@ public class UpdateAspectCommandHandlerTests
     {
       Name = " Œil-de-lynx ",
       Description = new Change<string>("    "),
-      Attributes = new AttributesModel
+      Attributes = new AttributeSelectionModel
       {
         Mandatory1 = Attribute.Coordination,
         Mandatory2 = Attribute.Sensitivity,
