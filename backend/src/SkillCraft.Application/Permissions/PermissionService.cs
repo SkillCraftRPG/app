@@ -93,8 +93,7 @@ internal class PermissionService : IPermissionService
     }
 
     User user = activity.GetUser();
-    WorldModel world;
-    world = activity.GetWorld();
+    WorldModel world = activity.GetWorld();
     if (!entity.ResidesIn(world))
     {
       throw new PermissionDeniedException(action, entity.Type, user, world, entity.Id);
@@ -120,7 +119,10 @@ internal class PermissionService : IPermissionService
     WorldModel model = new()
     {
       Id = world.Id.ToGuid(),
-      Owner = new Actor(user)
+      Owner = new Actor
+      {
+        Id = world.OwnerId.ToGuid()
+      }
     };
     await EnsureIsOwnerOrHasPermissionAsync(user, model, action, EntityType.World, model.Id, cancellationToken);
   }
