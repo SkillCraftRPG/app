@@ -40,10 +40,10 @@ public class Aspect : AggregateRoot
     }
   }
 
-  private Attributes? _attributes = null;
-  public Attributes Attributes
+  private AttributeSelection _attributes = new();
+  public AttributeSelection Attributes
   {
-    get => _attributes ?? throw new InvalidOperationException($"The {nameof(Attributes)} has not been initialized yet.");
+    get => _attributes;
     set
     {
       if (_attributes != value)
@@ -53,10 +53,10 @@ public class Aspect : AggregateRoot
       }
     }
   }
-  private Skills? _skills = null;
+  private Skills _skills = new();
   public Skills Skills
   {
-    get => _skills ?? throw new InvalidOperationException($"The {nameof(Skills)} has not been initialized yet.");
+    get => _skills;
     set
     {
       if (_skills != value)
@@ -73,16 +73,13 @@ public class Aspect : AggregateRoot
 
   public Aspect(WorldId worldId, Name name, UserId userId, AspectId? id = null) : base(id?.AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name, new Attributes(), new Skills()), userId.ActorId);
+    Raise(new CreatedEvent(worldId, name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
     WorldId = @event.WorldId;
 
     _name = @event.Name;
-
-    _attributes = @event.Attributes;
-    _skills = @event.Skills;
   }
 
   public void Update(UserId userId)
@@ -122,17 +119,11 @@ public class Aspect : AggregateRoot
 
     public Name Name { get; }
 
-    public Attributes Attributes { get; }
-    public Skills Skills { get; }
-
-    public CreatedEvent(WorldId worldId, Name name, Attributes attributes, Skills skills)
+    public CreatedEvent(WorldId worldId, Name name)
     {
       WorldId = worldId;
 
       Name = name;
-
-      Attributes = attributes;
-      Skills = skills;
     }
   }
 
@@ -141,7 +132,7 @@ public class Aspect : AggregateRoot
     public Name? Name { get; set; }
     public Change<Description>? Description { get; set; }
 
-    public Attributes? Attributes { get; set; }
+    public AttributeSelection? Attributes { get; set; }
     public Skills? Skills { get; set; }
 
     public bool HasChanges => Name != null || Description != null || Attributes != null || Skills != null;

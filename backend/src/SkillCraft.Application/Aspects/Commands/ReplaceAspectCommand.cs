@@ -61,7 +61,7 @@ internal class ReplaceAspectCommandHandler : IRequestHandler<ReplaceAspectComman
       aspect.Description = description;
     }
 
-    Attributes attributes = new(payload.Attributes);
+    AttributeSelection attributes = new(payload.Attributes);
     if (attributes != reference.Attributes)
     {
       aspect.Attributes = attributes;

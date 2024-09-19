@@ -54,7 +54,7 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
 
     if (payload.Attributes != null)
     {
-      aspect.Attributes = new Attributes(payload.Attributes);
+      aspect.Attributes = new AttributeSelection(payload.Attributes);
     }
     if (payload.Skills != null)
     {

@@ -12,7 +12,7 @@ internal class ReplaceAspectValidator : AbstractValidator<ReplaceAspectPayload>
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());
 
-    RuleFor(x => x.Attributes).SetValidator(new AttributesValidator());
+    RuleFor(x => x.Attributes).SetValidator(new AttributeSelectionValidator());
     RuleFor(x => x.Skills).SetValidator(new SkillsValidator());
   }
 }

@@ -3,11 +3,11 @@ using SkillCraft.Contracts.Aspects;
 
 namespace SkillCraft.GraphQL.Aspects;
 
-internal class AttributesGraphType : ObjectGraphType<AttributesModel>
+internal class AttributeSelectionGraphType : ObjectGraphType<AttributeSelectionModel>
 {
-  public AttributesGraphType()
+  public AttributeSelectionGraphType()
   {
-    Name = "Attributes";
+    Name = "AttributeSelection";
     Description = "Represents the attribute selection of an aspect.";
 
     Field(x => x.Mandatory1, type: typeof(AttributeGraphType))

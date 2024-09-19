@@ -37,7 +37,7 @@ public class ReplaceAspectCommandHandlerTests
     ReplaceAspectPayload payload = new(" Œil-de-lynx ")
     {
       Description = "  Doté d’une excellente vision…  ",
-      Attributes = new AttributesModel
+      Attributes = new AttributeSelectionModel
       {
         Mandatory1 = Attribute.Coordination,
         Mandatory2 = Attribute.Sensitivity,
@@ -90,7 +90,7 @@ public class ReplaceAspectCommandHandlerTests
   {
     ReplaceAspectPayload payload = new("Œil-de-lynx")
     {
-      Attributes = new AttributesModel
+      Attributes = new AttributeSelectionModel
       {
         Mandatory1 = Attribute.Coordination,
         Mandatory2 = Attribute.Sensitivity,
@@ -123,7 +123,7 @@ public class ReplaceAspectCommandHandlerTests
 
     ReplaceAspectPayload payload = new(" Œil-de-lynx ")
     {
-      Attributes = new AttributesModel
+      Attributes = new AttributeSelectionModel
       {
         Mandatory1 = Attribute.Coordination,
         Mandatory2 = Attribute.Sensitivity,

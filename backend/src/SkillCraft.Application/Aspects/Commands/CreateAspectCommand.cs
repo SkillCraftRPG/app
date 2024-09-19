@@ -34,7 +34,7 @@ internal class CreateAspectCommandHandler : IRequestHandler<CreateAspectCommand,
     Aspect aspect = new(command.GetWorldId(), new Name(payload.Name), userId)
     {
       Description = Description.TryCreate(payload.Description),
-      Attributes = new Attributes(payload.Attributes),
+      Attributes = new AttributeSelection(payload.Attributes),
       Skills = new Skills(payload.Skills)
     };
 
