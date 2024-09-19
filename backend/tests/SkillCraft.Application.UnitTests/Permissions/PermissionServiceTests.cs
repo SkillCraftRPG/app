@@ -11,6 +11,7 @@ using SkillCraft.Application.Personalities.Commands;
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Application.Worlds.Commands;
+using SkillCraft.Application.Worlds.Queries;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Customizations;
@@ -287,6 +288,62 @@ public class PermissionServiceTests
     Assert.Equal(_user.Id, exception.UserId);
     Assert.Null(exception.WorldId);
     Assert.Null(exception.EntityId);
+  }
+  #endregion
+
+  #region EnsureCanPreviewAsync(EntityMetadata)
+  #endregion
+
+  #region EnsureCanPreviewAsync(EntityType)
+  #endregion
+
+  #region EnsureCanPreviewAsync(World)
+  [Fact(DisplayName = "EnsureCanPreviewAsync(World): it should succeed when the user is the world owner.")]
+  public async Task EnsureCanPreviewAsyncWorld_it_should_succeed_when_the_user_is_the_world_owner()
+  {
+    ReadWorldQuery query = new(_world.Id, _world.Slug);
+    query.Contextualize(_user, _world);
+
+    await _service.EnsureCanPreviewAsync(query, _world, _cancellationToken);
+
+    EnsurePermissionQuerierHasAsyncHasNeverBeenCalled();
+  }
+
+  [Fact(DisplayName = "EnsureCanPreviewAsync(World): it should throw PermissionDeniedException when the user is not the world owner.")]
+  public async Task EnsureCanPreviewAsyncWorld_it_should_throw_PermissionDeniedException_when_the_user_is_not_the_world_owner()
+  {
+    ReadWorldQuery query = new(_world.Id, _world.Slug);
+    query.Contextualize(_otherUser);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanPreviewAsync(query, _world, _cancellationToken));
+    Assert.Equal(Action.Preview, exception.Action);
+    Assert.Equal(EntityType.World, exception.EntityType);
+    Assert.Equal(_otherUser.Id, exception.UserId);
+    Assert.Null(exception.WorldId);
+    Assert.Equal(_world.Id, exception.EntityId);
+
+    EnsurePermissionQuerierHasAsyncHasNeverBeenCalled();
+  }
+
+  [Fact(DisplayName = "EnsureCanPreviewAsync(World): it should throw PermissionDeniedException when the worlds are not the same.")]
+  public async Task EnsureCanPreviewAsyncWorld_it_should_throw_PermissionDeniedException_when_the_worlds_are_not_the_same()
+  {
+    WorldModel world = new(new Actor(_otherUser), "hyrule")
+    {
+      Id = Guid.NewGuid()
+    };
+
+    ReadWorldQuery query = new(world.Id, world.Slug);
+    query.Contextualize(_otherUser, _world);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanPreviewAsync(query, world, _cancellationToken));
+    Assert.Equal(Action.Preview, exception.Action);
+    Assert.Equal(EntityType.World, exception.EntityType);
+    Assert.Equal(_otherUser.Id, exception.UserId);
+    Assert.Equal(_world.Id, exception.WorldId);
+    Assert.Equal(world.Id, exception.EntityId);
+
+    EnsurePermissionQuerierHasAsyncHasNeverBeenCalled();
   }
   #endregion
 
