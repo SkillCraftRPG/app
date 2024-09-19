@@ -37,7 +37,7 @@ internal class LineageQuerier : ILineageQuerier
   public async Task<LineageModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     LineageEntity? lineage = await _lineages.AsNoTracking()
-      .Include(x => x.Languages)
+      .Include(x => x.Languages).ThenInclude(x => x.World)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -53,7 +53,7 @@ internal class LineageQuerier : ILineageQuerier
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Lineages.Name);
 
     IQueryable<LineageEntity> query = _lineages.FromQuery(builder).AsNoTracking()
-      .Include(x => x.Languages)
+      .Include(x => x.Languages).ThenInclude(x => x.World)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);
