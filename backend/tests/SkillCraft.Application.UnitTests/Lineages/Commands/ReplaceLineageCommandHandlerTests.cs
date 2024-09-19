@@ -39,10 +39,10 @@ public class ReplaceLineageCommandHandlerTests
     {
       Description = "  Les Ashtavrins sont des humanoïdes similaires aux humains. […]  ",
       Attributes = new() { Presence = 1, Spirit = 1, Extra = 1 },
-      Traits =
+      Features =
       [
-        new TraitPayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
-        new TraitPayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
+        new FeaturePayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
+        new FeaturePayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
       ],
       Languages = new() { Ids = [], Extra = 1 },
       Names = new()
@@ -75,7 +75,7 @@ public class ReplaceLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description != null && y.Lineage.Description.Value == payload.Description.CleanTrim()
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Traits.AreEqualTo(payload.Traits)
+      && y.Lineage.Features.AreEqualTo(payload.Features)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)
@@ -136,10 +136,10 @@ public class ReplaceLineageCommandHandlerTests
     {
       Description = "    ",
       Attributes = new() { Presence = 1, Spirit = 1, Extra = 1 },
-      Traits =
+      Features =
       [
-        new TraitPayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
-        new TraitPayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
+        new FeaturePayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
+        new FeaturePayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
       ],
       Languages = new() { Ids = [], Extra = 1 },
       Names = new()
@@ -172,7 +172,7 @@ public class ReplaceLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description == description
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Traits.AreEqualTo(payload.Traits)
+      && y.Lineage.Features.AreEqualTo(payload.Features)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)

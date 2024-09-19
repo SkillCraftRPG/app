@@ -63,7 +63,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       payload.Attributes.Spirit ?? lineage.Attributes.Spirit,
       payload.Attributes.Vigor ?? lineage.Attributes.Vigor,
       payload.Attributes.Extra ?? lineage.Attributes.Extra);
-    SetTraits(lineage, payload);
+    SetFeatures(lineage, payload);
 
     await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
     SetNames(lineage, payload.Names);
@@ -94,6 +94,32 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
+  }
+
+  private static void SetFeatures(Lineage lineage, UpdateLineagePayload payload)
+  {
+    foreach (UpdateFeaturePayload featurePayload in payload.Features)
+    {
+      if (featurePayload.Remove)
+      {
+        if (featurePayload.Id.HasValue)
+        {
+          lineage.RemoveFeature(featurePayload.Id.Value);
+        }
+      }
+      else
+      {
+        Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
+        if (featurePayload.Id.HasValue)
+        {
+          lineage.SetFeature(featurePayload.Id.Value, feature);
+        }
+        else
+        {
+          lineage.AddFeature(feature);
+        }
+      }
+    }
   }
 
   private async Task SetLanguagesAsync(Lineage lineage, UpdateLanguagesPayload payload, CancellationToken cancellationToken)
@@ -135,31 +161,5 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       payload.Male ?? lineage.Names.Male,
       payload.Unisex ?? lineage.Names.Unisex,
       custom);
-  }
-
-  private static void SetTraits(Lineage lineage, UpdateLineagePayload payload)
-  {
-    foreach (UpdateTraitPayload traitPayload in payload.Traits)
-    {
-      if (traitPayload.Remove)
-      {
-        if (traitPayload.Id.HasValue)
-        {
-          lineage.RemoveTrait(traitPayload.Id.Value);
-        }
-      }
-      else
-      {
-        Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
-        if (traitPayload.Id.HasValue)
-        {
-          lineage.SetTrait(traitPayload.Id.Value, trait);
-        }
-        else
-        {
-          lineage.AddTrait(trait);
-        }
-      }
-    }
   }
 }

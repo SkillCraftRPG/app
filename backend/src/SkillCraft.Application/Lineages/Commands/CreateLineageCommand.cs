@@ -65,7 +65,7 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
         Roll.TryCreate(payload.Weight.Obese)),
       Ages = new Ages(payload.Ages)
     };
-    SetTraits(lineage, payload);
+    SetFeatures(lineage, payload);
 
     await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
     SetNames(lineage, payload.Names);
@@ -74,6 +74,22 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
+  }
+
+  private static void SetFeatures(Lineage lineage, CreateLineagePayload payload)
+  {
+    foreach (FeaturePayload featurePayload in payload.Features)
+    {
+      Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
+      if (featurePayload.Id.HasValue)
+      {
+        lineage.SetFeature(featurePayload.Id.Value, feature);
+      }
+      else
+      {
+        lineage.AddFeature(feature);
+      }
+    }
   }
 
   private async Task SetLanguagesAsync(Lineage lineage, LanguagesPayload payload, CancellationToken cancellationToken)
@@ -91,21 +107,5 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
       custom[category.Key] = category.Values;
     }
     lineage.Names = new Names(payload.Text, payload.Family, payload.Female, payload.Male, payload.Unisex, custom);
-  }
-
-  private static void SetTraits(Lineage lineage, CreateLineagePayload payload)
-  {
-    foreach (TraitPayload traitPayload in payload.Traits)
-    {
-      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
-      if (traitPayload.Id.HasValue)
-      {
-        lineage.SetTrait(traitPayload.Id.Value, trait);
-      }
-      else
-      {
-        lineage.AddTrait(trait);
-      }
-    }
   }
 }

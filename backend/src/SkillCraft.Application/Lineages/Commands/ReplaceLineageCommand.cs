@@ -68,7 +68,7 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     {
       lineage.Attributes = attributes;
     }
-    SetTraits(lineage, reference, payload);
+    SetFeatures(lineage, reference, payload);
 
     await SetLanguagesAsync(lineage, reference, payload.Languages, cancellationToken);
     SetNames(lineage, reference, payload.Names);
@@ -105,6 +105,34 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
   }
 
+  private static void SetFeatures(Lineage lineage, Lineage reference, ReplaceLineagePayload payload)
+  {
+    HashSet<Guid> featureIds = payload.Features.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
+    foreach (Guid featureId in reference.Features.Keys)
+    {
+      if (!featureIds.Contains(featureId))
+      {
+        lineage.RemoveFeature(featureId);
+      }
+    }
+
+    foreach (FeaturePayload featurePayload in payload.Features)
+    {
+      Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
+      if (featurePayload.Id.HasValue)
+      {
+        if (!reference.Features.TryGetValue(featurePayload.Id.Value, out Feature? existingFeature) || existingFeature != feature)
+        {
+          lineage.SetFeature(featurePayload.Id.Value, feature);
+        }
+      }
+      else
+      {
+        lineage.AddFeature(feature);
+      }
+    }
+  }
+
   private async Task SetLanguagesAsync(Lineage lineage, Lineage reference, LanguagesPayload payload, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Language> items = payload.Ids.Count == 0 ? []
@@ -127,34 +155,6 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     if (names != reference.Names)
     {
       lineage.Names = names;
-    }
-  }
-
-  private static void SetTraits(Lineage lineage, Lineage reference, ReplaceLineagePayload payload)
-  {
-    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
-    foreach (Guid traitId in reference.Traits.Keys)
-    {
-      if (!traitIds.Contains(traitId))
-      {
-        lineage.RemoveTrait(traitId);
-      }
-    }
-
-    foreach (TraitPayload traitPayload in payload.Traits)
-    {
-      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
-      if (traitPayload.Id.HasValue)
-      {
-        if (!reference.Traits.TryGetValue(traitPayload.Id.Value, out Trait? existingTrait) || existingTrait != trait)
-        {
-          lineage.SetTrait(traitPayload.Id.Value, trait);
-        }
-      }
-      else
-      {
-        lineage.AddTrait(trait);
-      }
     }
   }
 }

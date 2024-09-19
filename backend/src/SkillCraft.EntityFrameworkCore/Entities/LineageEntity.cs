@@ -29,7 +29,7 @@ internal class LineageEntity : AggregateEntity
   public int Spirit { get; private set; }
   public int Vigor { get; private set; }
   public int ExtraAttributes { get; private set; }
-  public string? Traits { get; private set; }
+  public string? Features { get; private set; }
 
   public List<LanguageEntity> Languages { get; private set; } = [];
   public int ExtraLanguages { get; private set; }
@@ -112,6 +112,15 @@ internal class LineageEntity : AggregateEntity
     Vigor = Vigor,
     Extra = ExtraAttributes
   };
+  public List<FeatureModel> GetFeatures()
+  {
+    Dictionary<Guid, FeatureEntity> features = DeserializeFeatures();
+    return [.. features.Select(feature => new FeatureModel(feature.Value.Name)
+    {
+      Id = feature.Key,
+      Description = feature.Value.Description
+    }).OrderBy(x => x.Name)];
+  }
   public LanguagesModel GetLanguages(Func<LanguageEntity, LanguageModel> map)
   {
     IEnumerable<LanguageModel> languages = Languages.Select(map).OrderBy(x => x.Name);
@@ -144,15 +153,6 @@ internal class LineageEntity : AggregateEntity
     Hover = HoverSpeed,
     Burrow = BurrowSpeed
   };
-  public List<TraitModel> GetTraits()
-  {
-    Dictionary<Guid, TraitEntity> traits = DeserializeTraits();
-    return [.. traits.Select(trait => new TraitModel(trait.Value.Name)
-    {
-      Id = trait.Key,
-      Description = trait.Value.Description
-    }).OrderBy(x => x.Name)];
-  }
   public WeightModel GetWeight() => new()
   {
     Starved = StarvedRoll,
@@ -179,9 +179,9 @@ internal class LineageEntity : AggregateEntity
     {
       SetAttributes(@event.Attributes);
     }
-    if (@event.Traits.Count > 0)
+    if (@event.Features.Count > 0)
     {
-      SetTraits(@event.Traits);
+      SetFeatures(@event.Features);
     }
 
     if (@event.Languages != null)
@@ -228,6 +228,22 @@ internal class LineageEntity : AggregateEntity
     Vigor = attributes.Vigor;
     ExtraAttributes = attributes.Extra;
   }
+  private void SetFeatures(Dictionary<Guid, Feature?> features)
+  {
+    Dictionary<Guid, FeatureEntity> entities = DeserializeFeatures();
+    foreach (KeyValuePair<Guid, Feature?> feature in features)
+    {
+      if (feature.Value == null)
+      {
+        entities.Remove(feature.Key);
+      }
+      else
+      {
+        entities[feature.Key] = new FeatureEntity(feature.Value.Name.Value, feature.Value.Description?.Value);
+      }
+    }
+    Features = entities.Count == 0 ? null : JsonSerializer.Serialize(entities);
+  }
   private void SetLanguages(Languages languages)
   {
     ExtraLanguages = languages.Extra;
@@ -256,22 +272,6 @@ internal class LineageEntity : AggregateEntity
     HoverSpeed = speeds.Hover;
     BurrowSpeed = speeds.Burrow;
   }
-  private void SetTraits(Dictionary<Guid, Trait?> traits)
-  {
-    Dictionary<Guid, TraitEntity> entities = DeserializeTraits();
-    foreach (KeyValuePair<Guid, Trait?> trait in traits)
-    {
-      if (trait.Value == null)
-      {
-        entities.Remove(trait.Key);
-      }
-      else
-      {
-        entities[trait.Key] = new TraitEntity(trait.Value.Name.Value, trait.Value.Description?.Value);
-      }
-    }
-    Traits = entities.Count == 0 ? null : JsonSerializer.Serialize(entities);
-  }
   private void SetWeight(Weight weight)
   {
     StarvedRoll = weight.Starved?.Value;
@@ -281,8 +281,8 @@ internal class LineageEntity : AggregateEntity
     ObeseRoll = weight.Obese?.Value;
   }
 
-  private Dictionary<Guid, TraitEntity> DeserializeTraits()
+  private Dictionary<Guid, FeatureEntity> DeserializeFeatures()
   {
-    return (Traits == null ? null : JsonSerializer.Deserialize<Dictionary<Guid, TraitEntity>>(Traits)) ?? [];
+    return (Features == null ? null : JsonSerializer.Deserialize<Dictionary<Guid, FeatureEntity>>(Features)) ?? [];
   }
 }
