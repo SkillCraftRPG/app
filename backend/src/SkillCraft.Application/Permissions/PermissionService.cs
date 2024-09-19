@@ -78,6 +78,15 @@ internal class PermissionService : IPermissionService
 
   public async Task EnsureCanUpdateAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
   {
+    await EnsureCanAsync(Action.Update, activity, entity, cancellationToken);
+  }
+  public async Task EnsureCanUpdateAsync(Activity activity, World world, CancellationToken cancellationToken)
+  {
+    await EnsureCanAsync(Action.Update, activity, world, cancellationToken);
+  }
+
+  private async Task EnsureCanAsync(Action action, Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
+  {
     if (entity.Type == EntityType.World)
     {
       throw new ArgumentException($"The entity type must not be '{EntityType.World}'.", nameof(entity));
@@ -88,22 +97,22 @@ internal class PermissionService : IPermissionService
     world = activity.GetWorld();
     if (!entity.ResidesIn(world))
     {
-      throw new PermissionDeniedException(Action.Update, entity.Type, user, world, entity.Id);
+      throw new PermissionDeniedException(action, entity.Type, user, world, entity.Id);
     }
 
-    await EnsureIsOwnerOrHasPermissionAsync(user, world, Action.Update, entity.Type, entity.Id, cancellationToken);
+    await EnsureIsOwnerOrHasPermissionAsync(user, world, action, entity.Type, entity.Id, cancellationToken);
   }
-  public async Task EnsureCanUpdateAsync(Activity activity, World world, CancellationToken cancellationToken)
+  private async Task EnsureCanAsync(Action action, Activity activity, World world, CancellationToken cancellationToken)
   {
     User user = activity.GetUser();
     WorldModel? otherWorld = activity.TryGetWorld();
     Guid worldId = world.Id.ToGuid();
     if (otherWorld != null && otherWorld.Id != worldId)
     {
-      throw new PermissionDeniedException(Action.Update, EntityType.World, user, otherWorld, worldId);
+      throw new PermissionDeniedException(action, EntityType.World, user, otherWorld, worldId);
     }
 
-    await EnsureIsOwnerOrHasPermissionAsync(user, world, Action.Update, cancellationToken);
+    await EnsureIsOwnerOrHasPermissionAsync(user, world, action, cancellationToken);
   }
 
   private async Task EnsureIsOwnerOrHasPermissionAsync(User user, World world, Action action, CancellationToken cancellationToken)
