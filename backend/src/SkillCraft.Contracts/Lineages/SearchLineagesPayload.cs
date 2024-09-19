@@ -4,5 +4,7 @@ namespace SkillCraft.Contracts.Lineages;
 
 public record SearchLineagesPayload : SearchPayload
 {
+  // TODO(fpion): ParentId
+
   public new List<LineageSortOption> Sort { get; set; } = [];
 }

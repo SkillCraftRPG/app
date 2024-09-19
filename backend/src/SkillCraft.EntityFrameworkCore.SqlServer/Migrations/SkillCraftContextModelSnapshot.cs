@@ -492,6 +492,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<string>("FamilyNames")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Features")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FemaleNames")
                         .HasColumnType("nvarchar(max)");
 
@@ -508,8 +511,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LanguagesText")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(65535)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaleNames")
                         .HasColumnType("nvarchar(max)");
@@ -523,8 +526,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("NamesText")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(65535)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalRoll")
                         .HasMaxLength(255)
@@ -569,9 +572,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.Property<int>("SwimSpeed")
                         .HasColumnType("int");
-
-                    b.Property<string>("Traits")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnisexNames")
                         .HasColumnType("nvarchar(max)");

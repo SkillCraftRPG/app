@@ -38,7 +38,6 @@ internal class LineageQuerier : ILineageQuerier
   {
     LineageEntity? lineage = await _lineages.AsNoTracking()
       .Include(x => x.Languages)
-      .Include(x => x.Species)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -54,6 +53,7 @@ internal class LineageQuerier : ILineageQuerier
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Lineages.Name);
 
     IQueryable<LineageEntity> query = _lineages.FromQuery(builder).AsNoTracking()
+      .Include(x => x.Languages)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);
