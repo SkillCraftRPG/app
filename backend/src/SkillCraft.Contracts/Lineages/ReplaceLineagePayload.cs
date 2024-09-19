@@ -5,7 +5,7 @@ public record ReplaceLineagePayload
   public string Name { get; set; }
   public string? Description { get; set; }
 
-  public AttributesModel Attributes { get; set; }
+  public AttributeBonusesModel Attributes { get; set; }
   public List<TraitPayload> Traits { get; set; }
 
   public LanguagesPayload Languages { get; set; }

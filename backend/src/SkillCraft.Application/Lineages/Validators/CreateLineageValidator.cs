@@ -14,7 +14,7 @@ internal class CreateLineageValidator : AbstractValidator<CreateLineagePayload>
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());
 
-    RuleFor(x => x.Attributes).SetValidator(new AttributesValidator());
+    RuleFor(x => x.Attributes).SetValidator(new AttributeBonusesValidator());
     RuleForEach(x => x.Traits).SetValidator(new TraitValidator());
 
     RuleFor(x => x.Languages).SetValidator(new LanguagesValidator());

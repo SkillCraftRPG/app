@@ -3,9 +3,9 @@ using SkillCraft.Contracts.Lineages;
 
 namespace SkillCraft.Application.Lineages.Validators;
 
-internal class UpdateAttributesValidator : AbstractValidator<UpdateAttributesPayload>
+internal class UpdateAttributeBonusesValidator : AbstractValidator<UpdateAttributeBonusesPayload>
 {
-  public UpdateAttributesValidator()
+  public UpdateAttributeBonusesValidator()
   {
     When(x => x.Agility.HasValue, () => RuleFor(x => x.Agility!.Value).InclusiveBetween(0, 2));
     When(x => x.Coordination.HasValue, () => RuleFor(x => x.Coordination!.Value).InclusiveBetween(0, 2));
@@ -18,7 +18,7 @@ internal class UpdateAttributesValidator : AbstractValidator<UpdateAttributesPay
     When(x => x.Extra.HasValue, () => RuleFor(x => x.Extra!.Value).GreaterThanOrEqualTo(0).LessThanOrEqualTo(attributes => GetExtraMaximumValue(attributes)));
   }
 
-  private static int GetExtraMaximumValue(UpdateAttributesPayload payload)
+  private static int GetExtraMaximumValue(UpdateAttributeBonusesPayload payload)
   {
     int maximum = 7;
     if (payload.Agility > 0)

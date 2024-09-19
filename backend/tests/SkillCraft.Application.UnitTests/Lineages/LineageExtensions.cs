@@ -11,7 +11,7 @@ internal static class LineageExtensions
     && left.Mature == right.Mature
     && left.Venerable == right.Venerable;
 
-  public static bool AreEqualTo(this IAttributes left, IAttributes right) => left.Agility == right.Agility
+  public static bool AreEqualTo(this IAttributeBonuses left, IAttributeBonuses right) => left.Agility == right.Agility
     && left.Coordination == right.Coordination
     && left.Intellect == right.Intellect
     && left.Presence == right.Presence

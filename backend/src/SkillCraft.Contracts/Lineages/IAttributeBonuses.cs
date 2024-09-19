@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Lineages;
 
-public interface IAttributes
+public interface IAttributeBonuses
 {
   int Agility { get; }
   int Coordination { get; }

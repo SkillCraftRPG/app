@@ -71,7 +71,7 @@ public class UpdateLineageCommandHandlerTests
     {
       Name = " Gnome ",
       Description = new Change<string>("  Les gnomes sont des humanoïdes de petite taille, généralement poilus et barbus, similairement aux nains. Ce sont des élémentaires associés à la Terre qu’on peut retrouver dans d’étonnants habitats partageant une certaine clandestinité, à l’écart des regards et de la lumière du grand jour. Les gnomes sont des êtres curieux et habiles de leurs mains, possédant une certaine vivacité d’esprit ainsi qu’une bonne résilience face à la magie.  "),
-      Attributes = new UpdateAttributesPayload
+      Attributes = new UpdateAttributeBonusesPayload
       {
         Coordination = 1,
         Intellect = 1
