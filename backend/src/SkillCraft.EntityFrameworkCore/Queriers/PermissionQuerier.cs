@@ -2,17 +2,12 @@
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Worlds;
 using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.EntityFrameworkCore.Queriers;
 
 internal class PermissionQuerier : IPermissionQuerier
 {
-  public Task<bool> HasAsync(User user, Action action, World world, CancellationToken cancellationToken)
-  {
-    return Task.FromResult(false);
-  }
   public Task<bool> HasAsync(User user, WorldModel world, Action action, EntityType? entityType, Guid? entityId, CancellationToken cancellationToken)
   {
     return Task.FromResult(false);
