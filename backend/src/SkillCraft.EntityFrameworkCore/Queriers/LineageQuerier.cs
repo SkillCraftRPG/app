@@ -52,6 +52,21 @@ internal class LineageQuerier : ILineageQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Lineages.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Lineages.Name);
 
+    if (payload.ParentId.HasValue)
+    {
+      TableId parent = new(SkillCraftDb.Lineages.Table.Schema, SkillCraftDb.Lineages.Table.Table ?? string.Empty, "Parent");
+      builder.Join(
+        new ColumnId(SkillCraftDb.Lineages.LineageId.Name ?? string.Empty, parent),
+        SkillCraftDb.Lineages.ParentId,
+        new OperatorCondition(
+          new ColumnId(SkillCraftDb.Lineages.Id.Name ?? string.Empty, parent),
+          Operators.IsEqualTo(payload.ParentId.Value)));
+    }
+    else
+    {
+      builder.Where(SkillCraftDb.Lineages.ParentId, Operators.IsNull());
+    }
+
     IQueryable<LineageEntity> query = _lineages.FromQuery(builder).AsNoTracking()
       .Include(x => x.Languages).ThenInclude(x => x.World)
       .Include(x => x.World);

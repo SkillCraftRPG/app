@@ -1,4 +1,5 @@
 ﻿using Logitar.Portal.Contracts.Search;
+using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Models.Search;
 
@@ -6,11 +7,15 @@ namespace SkillCraft.Models.Lineages;
 
 public record SearchLineagesParameters : SearchParameters
 {
-  // TODO(fpion): ParentId
+  [FromQuery(Name = "parent")]
+  public Guid? ParentId { get; set; }
 
   public SearchLineagesPayload ToPayload()
   {
-    SearchLineagesPayload payload = new();
+    SearchLineagesPayload payload = new()
+    {
+      ParentId = ParentId
+    };
     Fill(payload);
 
     foreach (SortOption sort in ((SearchPayload)payload).Sort)
