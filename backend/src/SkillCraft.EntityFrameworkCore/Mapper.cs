@@ -145,12 +145,6 @@ internal class Mapper
       ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
       : ToWorld(source.World);
 
-    if (source.ParentId.HasValue && source.Species == null)
-    {
-      throw new ArgumentException($"The {nameof(source.Species)} is required.", nameof(source));
-    }
-    LineageModel? parent = source.Species == null ? null : ToLineage(source.Species);
-
     LineageModel destination = new(world, source.Name)
     {
       Description = source.Description,
@@ -161,8 +155,7 @@ internal class Mapper
       Speeds = source.GetSpeeds(),
       Size = source.GetSize(),
       Weight = source.GetWeight(),
-      Ages = source.GetAges(),
-      Parent = parent
+      Ages = source.GetAges()
     };
 
     MapAggregate(source, destination);

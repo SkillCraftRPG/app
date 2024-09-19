@@ -19,8 +19,6 @@ public class LineageModel : Aggregate
   public WeightModel Weight { get; set; }
   public AgesModel Ages { get; set; }
 
-  public LineageModel? Parent { get; set; }
-
   public WorldModel World { get; set; }
 
   public LineageModel() : this(new WorldModel(), string.Empty)

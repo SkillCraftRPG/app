@@ -6,6 +6,8 @@ namespace SkillCraft.Models.Lineages;
 
 public record SearchLineagesParameters : SearchParameters
 {
+  // TODO(fpion): ParentId
+
   public SearchLineagesPayload ToPayload()
   {
     SearchLineagesPayload payload = new();
