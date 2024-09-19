@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Application.Permissions;
 
-internal enum Action
+public enum Action
 {
   Create,
   Preview,

@@ -9,6 +9,9 @@ public record EntityMetadata
   public EntityKey Key { get; }
   public long Size { get; }
 
+  public EntityType Type => Key.Type;
+  public Guid Id => Key.Id;
+
   public EntityMetadata(WorldId worldId, EntityKey key, long size)
   {
     ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size, nameof(size));
