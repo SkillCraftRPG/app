@@ -7,9 +7,11 @@ namespace SkillCraft.Application.Permissions;
 public interface IPermissionService
 {
   Task EnsureCanCreateAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken = default);
-  Task EnsureCanPreviewAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken = default);
+
   Task EnsureCanPreviewAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken = default);
+  Task EnsureCanPreviewAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken = default);
   Task EnsureCanPreviewAsync(Activity activity, WorldModel world, CancellationToken cancellationToken = default);
+
   Task EnsureCanUpdateAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken = default);
   Task EnsureCanUpdateAsync(Activity activity, World world, CancellationToken cancellationToken = default);
 }
