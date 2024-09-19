@@ -58,10 +58,20 @@ internal static class LineageEvents
     {
       Guid id = @event.AggregateId.ToGuid();
       LineageEntity lineage = await _context.Lineages
+        .Include(x => x.Languages)
         .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
         ?? throw new InvalidOperationException($"The lineage entity 'Id={id}' could not be found.");
 
-      lineage.Update(@event);
+      LanguageEntity[] languages = [];
+      if (@event.Languages != null && @event.Languages.Ids.Count > 0)
+      {
+        HashSet<Guid> languageIds = @event.Languages.Ids.Select(id => id.ToGuid()).ToHashSet();
+        languages = await _context.Languages
+          .Where(x => languageIds.Contains(x.Id))
+          .ToArrayAsync(cancellationToken);
+      }
+
+      lineage.Update(@event, languages);
 
       await _context.SaveChangesAsync(cancellationToken);
     }

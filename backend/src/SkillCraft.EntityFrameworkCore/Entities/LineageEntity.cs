@@ -162,7 +162,7 @@ internal class LineageEntity : AggregateEntity
     Obese = ObeseRoll
   };
 
-  public void Update(Lineage.UpdatedEvent @event)
+  public void Update(Lineage.UpdatedEvent @event, IReadOnlyCollection<LanguageEntity> languages)
   {
     base.Update(@event);
 
@@ -186,7 +186,7 @@ internal class LineageEntity : AggregateEntity
 
     if (@event.Languages != null)
     {
-      SetLanguages(@event.Languages);
+      SetLanguages(@event.Languages, languages);
     }
     if (@event.Names != null)
     {
@@ -244,9 +244,11 @@ internal class LineageEntity : AggregateEntity
     }
     Features = entities.Count == 0 ? null : JsonSerializer.Serialize(entities);
   }
-  private void SetLanguages(Languages languages)
+  private void SetLanguages(Languages languages, IReadOnlyCollection<LanguageEntity> entities)
   {
-    // TODO(fpion): Languages
+    Languages.Clear();
+    Languages.AddRange(entities);
+
     ExtraLanguages = languages.Extra;
     LanguagesText = languages.Text;
   }
