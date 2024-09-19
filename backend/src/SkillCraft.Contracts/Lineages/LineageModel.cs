@@ -9,7 +9,7 @@ public class LineageModel : Aggregate
   public string? Description { get; set; }
 
   public AttributeBonusesModel Attributes { get; set; }
-  public List<TraitModel> Traits { get; set; }
+  public List<FeatureModel> Features { get; set; }
 
   public LanguagesModel Languages { get; set; }
   public NamesModel Names { get; set; }
@@ -32,7 +32,7 @@ public class LineageModel : Aggregate
     Name = name;
 
     Attributes = new();
-    Traits = [];
+    Features = [];
 
     Languages = new();
     Names = new();
