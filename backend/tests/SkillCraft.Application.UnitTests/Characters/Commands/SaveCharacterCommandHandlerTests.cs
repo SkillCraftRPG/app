@@ -31,7 +31,8 @@ public class SaveCharacterCommandHandlerTests
     Lineage species = new(world.Id, parent: null, new Name("Humain"), world.OwnerId);
     Lineage nation = new(world.Id, species, new Name("Orrin"), world.OwnerId);
     Personality personality = new(world.Id, new Name("Courroucé"), world.OwnerId);
-    Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName), nation, height: 1.84, weight: 84.6, age: 30, personality, world.OwnerId);
+    Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName),
+      nation, height: 1.84, weight: 84.6, age: 30, personality, customizations: [], world.OwnerId);
 
     SaveCharacterCommand command = new(character);
 

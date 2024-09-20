@@ -30,7 +30,7 @@ internal class FindLanguagesQueryHandler : IRequestHandler<FindLanguagesQuery, I
     Activity activity = query.Activity;
     await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Language, cancellationToken);
 
-    IEnumerable<LanguageId> ids = query.Ids.Select(id => new LanguageId(id)).Distinct();
+    IEnumerable<LanguageId> ids = query.Ids.Distinct().Select(id => new LanguageId(id));
     IReadOnlyCollection<Language> languages = await _languageRepository.LoadAsync(ids, cancellationToken);
 
     WorldId worldId = activity.GetWorldId();
