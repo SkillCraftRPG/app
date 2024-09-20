@@ -17,7 +17,6 @@ public class UpdatePersonalityCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<ICustomizationRepository> _customizationRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<IPersonalityQuerier> _personalityQuerier = new();
   private readonly Mock<IPersonalityRepository> _personalityRepository = new();
@@ -26,14 +25,10 @@ public class UpdatePersonalityCommandHandlerTests
   private readonly UpdatePersonalityCommandHandler _handler;
 
   private readonly WorldMock _world = new();
-  private readonly Customization _reflexes;
 
   public UpdatePersonalityCommandHandlerTests()
   {
-    _handler = new(_customizationRepository.Object, _permissionService.Object, _personalityQuerier.Object, _personalityRepository.Object, _sender.Object);
-
-    _reflexes = new(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId);
-    _customizationRepository.Setup(x => x.LoadAsync(_reflexes.Id, _cancellationToken)).ReturnsAsync(_reflexes);
+    _handler = new(_permissionService.Object, _personalityQuerier.Object, _personalityRepository.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the personality could not be found.")]
@@ -43,24 +38,6 @@ public class UpdatePersonalityCommandHandlerTests
     UpdatePersonalityCommand command = new(Guid.Empty, payload);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
-  }
-
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the gift could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_gift_could_not_be_found()
-  {
-    Personality personality = new(_world.Id, new Name("Agile"), _world.OwnerId);
-    _personalityRepository.Setup(x => x.LoadAsync(personality.Id, _cancellationToken)).ReturnsAsync(personality);
-
-    UpdatePersonalityPayload payload = new()
-    {
-      GiftId = new Change<Guid?>(Guid.NewGuid())
-    };
-    UpdatePersonalityCommand command = new(personality.Id.ToGuid(), payload);
-
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Customization>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.NotNull(payload.GiftId.Value);
-    Assert.Equal(new CustomizationId(payload.GiftId.Value.Value).Value, exception.Id);
-    Assert.Equal("GiftId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -84,7 +61,7 @@ public class UpdatePersonalityCommandHandlerTests
   public async Task It_should_update_an_existing_personality_without_gift()
   {
     Personality personality = new(_world.Id, new Name("agile"), _world.OwnerId);
-    personality.SetGift(_reflexes);
+    personality.SetGift(new Customization(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId));
     personality.Update(_world.OwnerId);
     _personalityRepository.Setup(x => x.LoadAsync(personality.Id, _cancellationToken)).ReturnsAsync(personality);
 
@@ -110,8 +87,10 @@ public class UpdatePersonalityCommandHandlerTests
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Description.Value);
-    _sender.Verify(x => x.Send(It.Is<SavePersonalityCommand>(y => y.Personality.GiftId == null
-      && y.Personality.Description != null && y.Personality.Description.Value == payload.Description.Value.Trim()), _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Activity == command && y.Personality == personality && y.Id == null), _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(It.Is<SavePersonalityCommand>(y => y.Personality.Name.Value == payload.Name.Trim()
+      && y.Personality.Description != null && y.Personality.Description.Value == payload.Description.Value.Trim()
+      && y.Personality.Attribute == payload.Attribute.Value), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should update an existing personality.")]
@@ -129,7 +108,7 @@ public class UpdatePersonalityCommandHandlerTests
       Name = " Agile ",
       Description = new Change<string>("    "),
       Attribute = new Change<Attribute?>(Attribute.Agility),
-      GiftId = new Change<Guid?>(_reflexes.Id.ToGuid())
+      GiftId = new Change<Guid?>(Guid.NewGuid())
     };
     UpdatePersonalityCommand command = new(personality.Id.ToGuid(), payload);
     command.Contextualize();
@@ -145,10 +124,10 @@ public class UpdatePersonalityCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.Id.ToGuid() && y.Size > 0),
       _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Activity == command && y.Personality == personality && y.Id == payload.GiftId.Value), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SavePersonalityCommand>(y => y.Personality.Equals(personality)
       && y.Personality.Name.Value == payload.Name.Trim()
       && y.Personality.Description == null
-      && y.Personality.Attribute == payload.Attribute.Value
-      && y.Personality.GiftId == _reflexes.Id), _cancellationToken), Times.Once);
+      && y.Personality.Attribute == payload.Attribute.Value), _cancellationToken), Times.Once);
   }
 }
