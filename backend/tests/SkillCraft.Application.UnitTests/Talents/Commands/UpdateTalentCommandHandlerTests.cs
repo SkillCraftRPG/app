@@ -70,7 +70,7 @@ public class UpdateTalentCommandHandlerTests
       Name = " Tolérance à l’alcool II ",
       Description = new Change<string>("  Augmente de manière permanente de +1 le seuil de tolérance à l’alcool du personnage. La durée de ses gueules de bois est également réduite de moitié.  "),
       AllowMultiplePurchases = false,
-      RequiredTalentId = null // TODO(fpion): implement
+      RequiredTalentId = new Change<Guid?>(Guid.NewGuid())
     };
     UpdateTalentCommand command = new(talent.Id.ToGuid(), payload);
     command.Contextualize();
@@ -87,11 +87,12 @@ public class UpdateTalentCommandHandlerTests
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Description.Value);
+    _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Talent == talent
+      && y.Id == payload.RequiredTalentId.Value), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.Equals(talent)
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Value.Trim()
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
-      // TODO(fpion): RequiredTalentId
       ), _cancellationToken), Times.Once);
   }
 }

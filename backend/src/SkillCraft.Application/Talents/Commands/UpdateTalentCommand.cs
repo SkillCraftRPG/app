@@ -56,8 +56,10 @@ internal class UpdateTalentCommandHandler : IRequestHandler<UpdateTalentCommand,
     {
       talent.AllowMultiplePurchases = payload.AllowMultiplePurchases.Value;
     }
-
-    // TODO(fpion): SetRequiredTalent
+    if (payload.RequiredTalentId != null)
+    {
+      await _sender.Send(new SetRequiredTalentCommand(command, talent, payload.RequiredTalentId.Value), cancellationToken);
+    }
 
     talent.Update(command.GetUserId());
     await _sender.Send(new SaveTalentCommand(talent), cancellationToken);

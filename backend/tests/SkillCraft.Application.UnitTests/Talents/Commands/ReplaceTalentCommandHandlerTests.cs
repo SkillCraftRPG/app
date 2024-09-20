@@ -61,11 +61,11 @@ public class ReplaceTalentCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.Id.ToGuid() && y.Size > 0),
       _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Talent == talent && y.Id == null), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.Equals(talent)
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Trim()
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
-      //&& y.Talent.RequiredTalentId == null // TODO(fpion): implement
       ), _cancellationToken), Times.Once);
   }
 
@@ -117,7 +117,7 @@ public class ReplaceTalentCommandHandlerTests
     {
       Description = "    ",
       AllowMultiplePurchases = false,
-      RequiredTalentId = null // TODO(fpion): implement
+      RequiredTalentId = Guid.NewGuid()
     };
     ReplaceTalentCommand command = new(talent.Id.ToGuid(), payload, version);
     command.Contextualize();
@@ -134,11 +134,12 @@ public class ReplaceTalentCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.Id.ToGuid() && y.Size > 0),
       _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Talent == talent
+      && y.Id == payload.RequiredTalentId), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.Equals(talent)
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description == description
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
-      // TODO(fpion): RequiredTalentId
       ), _cancellationToken), Times.Once);
   }
 }

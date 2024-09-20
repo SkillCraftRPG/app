@@ -18,7 +18,6 @@ public class CreateTalentCommandHandlerTests
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
   private readonly Mock<ITalentQuerier> _talentQuerier = new();
-  private readonly Mock<ITalentRepository> _talentRepository = new();
 
   private readonly CreateTalentCommandHandler _handler;
 
@@ -27,7 +26,7 @@ public class CreateTalentCommandHandlerTests
 
   public CreateTalentCommandHandlerTests()
   {
-    _handler = new(_permissionService.Object, _sender.Object, _talentQuerier.Object, _talentRepository.Object);
+    _handler = new(_permissionService.Object, _sender.Object, _talentQuerier.Object);
 
     _user = new UserMock();
     _world = new(new Slug("ungar"), new UserId(_user.Id));
@@ -36,13 +35,10 @@ public class CreateTalentCommandHandlerTests
   [Fact(DisplayName = "It should create a new talent with a required talent.")]
   public async Task It_should_create_a_new_talent_with_a_required_talent()
   {
-    Talent requiredTalent = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
-    _talentRepository.Setup(x => x.LoadAsync(requiredTalent.Id, _cancellationToken)).ReturnsAsync(requiredTalent);
-
     CreateTalentPayload payload = new(" Formation martiale ")
     {
       Description = "    ",
-      RequiredTalentId = requiredTalent.Id.ToGuid()
+      RequiredTalentId = Guid.NewGuid()
     };
     CreateTalentCommand command = new(payload);
     command.Contextualize(_user, _world);
@@ -55,8 +51,8 @@ public class CreateTalentCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Talent, _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Id == payload.RequiredTalentId), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.WorldId == _world.Id
-      && y.Talent.RequiredTalentId == requiredTalent.Id
       && y.Talent.Tier == payload.Tier
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description == null
@@ -82,8 +78,8 @@ public class CreateTalentCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Talent, _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.IsAny<SetRequiredTalentCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.WorldId == _world.Id
-      && y.Talent.RequiredTalentId == null
       && y.Talent.Tier == payload.Tier
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description == null

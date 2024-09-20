@@ -36,8 +36,10 @@ internal class CreateTalentCommandHandler : IRequestHandler<CreateTalentCommand,
       Description = Description.TryCreate(payload.Description),
       AllowMultiplePurchases = payload.AllowMultiplePurchases
     };
-
-    // TODO(fpion): SetRequiredTalent
+    if (payload.RequiredTalentId.HasValue)
+    {
+      await _sender.Send(new SetRequiredTalentCommand(command, talent, payload.RequiredTalentId.Value), cancellationToken);
+    }
 
     talent.Update(userId);
     await _sender.Send(new SaveTalentCommand(talent), cancellationToken);
