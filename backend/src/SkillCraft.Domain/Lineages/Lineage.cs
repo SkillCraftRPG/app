@@ -144,9 +144,16 @@ public class Lineage : AggregateRoot
 
   public Lineage(WorldId worldId, Lineage? parent, Name name, UserId userId, LineageId? id = null) : base(id?.AggregateId)
   {
-    if (parent?.ParentId != null)
+    if (parent != null)
     {
-      throw new ArgumentException("The parent lineage cannot have a parent lineage.", nameof(parent));
+      if (parent.WorldId != worldId)
+      {
+        throw new ArgumentException("The parent lineage does not reside in the same world as the lineage.", nameof(parent));
+      }
+      else if (parent.ParentId.HasValue)
+      {
+        throw new ArgumentException("The parent lineage cannot have a parent lineage.", nameof(parent));
+      }
     }
 
     Raise(new CreatedEvent(worldId, parent?.Id, name), userId.ActorId);

@@ -7,6 +7,8 @@ using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Worlds;
+using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Lineages.Commands;
 
@@ -38,20 +40,26 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
 
     await _permissionService.EnsureCanCreateAsync(command, EntityType.Lineage, cancellationToken);
 
+    WorldId worldId = command.GetWorldId();
+
     Lineage? parent = null;
     if (payload.ParentId.HasValue)
     {
       LineageId parentId = new(payload.ParentId.Value);
-      parent = await _lineageRepository.LoadAsync(parentId, cancellationToken) // TODO(fpion): ensure in same world and user can preview
+      parent = await _lineageRepository.LoadAsync(parentId, cancellationToken)
         ?? throw new AggregateNotFoundException<Lineage>(parentId.AggregateId, nameof(payload.ParentId));
-      if (parent.ParentId.HasValue)
+      if (parent.WorldId != worldId)
+      {
+        throw new PermissionDeniedException(Action.Preview, EntityType.Lineage, command.GetUser(), command.GetWorld(), parent.Id.ToGuid());
+      }
+      else if (parent.ParentId.HasValue)
       {
         throw new InvalidParentLineageException(parent, nameof(payload.ParentId));
       }
     }
 
     UserId userId = command.GetUserId();
-    Lineage lineage = new(command.GetWorldId(), parent, new Name(payload.Name), userId)
+    Lineage lineage = new(worldId, parent, new Name(payload.Name), userId)
     {
       Description = Description.TryCreate(payload.Description),
       Attributes = new AttributeBonuses(payload.Attributes),

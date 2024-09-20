@@ -11,6 +11,7 @@ using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Worlds;
+using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Lineages.Commands;
 
@@ -148,8 +149,8 @@ public class CreateLineageCommandHandlerTests
     Assert.Equal("ParentId", exception.PropertyName);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the parent is a nation (not a species).")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_parent_is_a_nation_not_a_species()
+  [Fact(DisplayName = "It should throw InvalidParentLineageException when the parent is a nation (not a species).")]
+  public async Task It_should_throw_InvalidParentLineageException_when_the_parent_is_a_nation_not_a_species()
   {
     Lineage species = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId);
     Lineage nation = new(_world.Id, species, new Name("Orrin"), _world.OwnerId);
@@ -165,6 +166,27 @@ public class CreateLineageCommandHandlerTests
     var exception = await Assert.ThrowsAsync<InvalidParentLineageException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(payload.ParentId.Value, exception.ParentId);
     Assert.Equal("ParentId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw PermissionDeniedException when the parent resides in another world.")]
+  public async Task It_should_throw_PermissionDeniedException_when_the_parent_resides_in_another_world()
+  {
+    Lineage species = new(WorldId.NewId(), parent: null, new Name("Humain"), UserId.NewId());
+    _lineageRepository.Setup(x => x.LoadAsync(species.Id, _cancellationToken)).ReturnsAsync(species);
+
+    CreateLineagePayload payload = new("Sophithéon")
+    {
+      ParentId = species.Id.ToGuid()
+    };
+    CreateLineageCommand command = new(payload);
+    command.Contextualize(_user, _world);
+
+    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(Action.Preview, exception.Action);
+    Assert.Equal(EntityType.Lineage, exception.EntityType);
+    Assert.Equal(_user.Id, exception.UserId);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(species.Id.ToGuid(), exception.EntityId);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
