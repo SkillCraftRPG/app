@@ -3,10 +3,8 @@ using Logitar.Portal.Contracts.Users;
 using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
 using Attribute = SkillCraft.Contracts.Attribute;
@@ -18,7 +16,6 @@ public class CreatePersonalityCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<ICustomizationRepository> _customizationRepository = new();
   private readonly Mock<IPersonalityQuerier> _personalityQuerier = new();
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
@@ -27,17 +24,13 @@ public class CreatePersonalityCommandHandlerTests
 
   private readonly User _user;
   private readonly World _world;
-  private readonly Customization _reflexes;
 
   public CreatePersonalityCommandHandlerTests()
   {
-    _handler = new(_customizationRepository.Object, _permissionService.Object, _personalityQuerier.Object, _sender.Object);
+    _handler = new(_permissionService.Object, _personalityQuerier.Object, _sender.Object);
 
     _user = new UserMock();
     _world = new(new Slug("ungar"), new UserId(_user.Id));
-
-    _reflexes = new(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId);
-    _customizationRepository.Setup(x => x.LoadAsync(_reflexes.Id, _cancellationToken)).ReturnsAsync(_reflexes);
   }
 
   [Fact(DisplayName = "It should create a new personality without gift.")]
@@ -55,6 +48,7 @@ public class CreatePersonalityCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Personality, _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.IsAny<SetGiftCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     _sender.Verify(x => x.Send(It.Is<SavePersonalityCommand>(y => y.Personality.GiftId == null), _cancellationToken), Times.Once);
   }
 
@@ -65,7 +59,7 @@ public class CreatePersonalityCommandHandlerTests
     {
       Description = "    ",
       Attribute = Attribute.Agility,
-      GiftId = _reflexes.Id.ToGuid()
+      GiftId = Guid.NewGuid()
     };
     CreatePersonalityCommand command = new(payload);
     command.Contextualize(_user, _world);
@@ -78,26 +72,11 @@ public class CreatePersonalityCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Personality, _cancellationToken), Times.Once);
 
+    _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Activity == command && y.Id == payload.GiftId), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(It.Is<SavePersonalityCommand>(y => y.Personality.WorldId == _world.Id
       && y.Personality.Name.Value == payload.Name.Trim()
       && y.Personality.Description == null
-      && y.Personality.Attribute == payload.Attribute
-      && y.Personality.GiftId == _reflexes.Id), _cancellationToken), Times.Once);
-  }
-
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the gift could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_gift_could_not_be_found()
-  {
-    CreatePersonalityPayload payload = new(" Agile ")
-    {
-      GiftId = Guid.NewGuid()
-    };
-    CreatePersonalityCommand command = new(payload);
-    command.Contextualize(_user, _world);
-
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Customization>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(new CustomizationId(payload.GiftId.Value).Value, exception.Id);
-    Assert.Equal("GiftId", exception.PropertyName);
+      && y.Personality.Attribute == payload.Attribute), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
