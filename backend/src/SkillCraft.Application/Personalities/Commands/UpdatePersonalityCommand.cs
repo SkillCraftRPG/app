@@ -4,7 +4,6 @@ using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities.Validators;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Personalities.Commands;
@@ -13,20 +12,17 @@ public record UpdatePersonalityCommand(Guid Id, UpdatePersonalityPayload Payload
 
 internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonalityCommand, PersonalityModel?>
 {
-  private readonly ICustomizationRepository _customizationRepository;
   private readonly IPermissionService _permissionService;
   private readonly IPersonalityQuerier _personalityQuerier;
   private readonly IPersonalityRepository _personalityRepository;
   private readonly ISender _sender;
 
   public UpdatePersonalityCommandHandler(
-    ICustomizationRepository customizationRepository,
     IPermissionService permissionService,
     IPersonalityQuerier personalityQuerier,
     IPersonalityRepository personalityRepository,
     ISender sender)
   {
-    _customizationRepository = customizationRepository;
     _permissionService = permissionService;
     _personalityQuerier = personalityQuerier;
     _personalityRepository = personalityRepository;
@@ -62,14 +58,7 @@ internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonali
     }
     if (payload.GiftId != null)
     {
-      Customization? gift = null;
-      if (payload.GiftId.Value.HasValue)
-      {
-        CustomizationId giftId = new(payload.GiftId.Value.Value);
-        gift = await _customizationRepository.LoadAsync(giftId, cancellationToken) // TODO(fpion): ensure in same world and user can preview
-          ?? throw new AggregateNotFoundException<Customization>(giftId.AggregateId, nameof(payload.GiftId));
-      }
-      personality.SetGift(gift);
+      await _sender.Send(new SetGiftCommand(command, personality, payload.GiftId.Value), cancellationToken);
     }
 
     personality.Update(command.GetUserId());

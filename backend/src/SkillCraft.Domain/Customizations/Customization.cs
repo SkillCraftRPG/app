@@ -49,6 +49,11 @@ public class Customization : AggregateRoot
 
   public Customization(WorldId worldId, CustomizationType type, Name name, UserId userId, CustomizationId? id = null) : base(id?.AggregateId)
   {
+    if (!Enum.IsDefined(type))
+    {
+      throw new ArgumentOutOfRangeException(nameof(type));
+    }
+
     Raise(new CreatedEvent(worldId, type, name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)

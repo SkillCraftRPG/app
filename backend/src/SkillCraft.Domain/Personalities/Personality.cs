@@ -80,13 +80,23 @@ public class Personality : AggregateRoot
 
   public void SetGift(Customization? gift)
   {
-    if (gift != null && gift.Type != CustomizationType.Gift)
+    if (gift != null)
     {
-      throw new ArgumentException("The customization must be a gift.", nameof(gift));
+      if (WorldId != gift.WorldId)
+      {
+        throw new ArgumentException("The gift does not reside in the same world as the personality.", nameof(gift));
+      }
+      else if (gift.Type != CustomizationType.Gift)
+      {
+        throw new ArgumentException("The customization is not a gift.", nameof(gift));
+      }
     }
 
-    GiftId = gift?.Id;
-    _updatedEvent.GiftId = new Change<CustomizationId?>(gift?.Id);
+    if (GiftId != gift?.Id)
+    {
+      GiftId = gift?.Id;
+      _updatedEvent.GiftId = new Change<CustomizationId?>(gift?.Id);
+    }
   }
 
   public void Update(UserId userId)

@@ -4,7 +4,6 @@ using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities.Validators;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Personalities.Commands;
@@ -13,18 +12,12 @@ public record CreatePersonalityCommand(CreatePersonalityPayload Payload) : Activ
 
 internal class CreatePersonalityCommandHandler : IRequestHandler<CreatePersonalityCommand, PersonalityModel>
 {
-  private readonly ICustomizationRepository _customizationRepository;
   private readonly IPermissionService _permissionService;
   private readonly IPersonalityQuerier _personalityQuerier;
   private readonly ISender _sender;
 
-  public CreatePersonalityCommandHandler(
-    ICustomizationRepository customizationRepository,
-    IPermissionService permissionService,
-    IPersonalityQuerier personalityQuerier,
-    ISender sender)
+  public CreatePersonalityCommandHandler(IPermissionService permissionService, IPersonalityQuerier personalityQuerier, ISender sender)
   {
-    _customizationRepository = customizationRepository;
     _permissionService = permissionService;
     _personalityQuerier = personalityQuerier;
     _sender = sender;
@@ -45,10 +38,7 @@ internal class CreatePersonalityCommandHandler : IRequestHandler<CreatePersonali
     };
     if (payload.GiftId.HasValue)
     {
-      CustomizationId giftId = new(payload.GiftId.Value);
-      Customization gift = await _customizationRepository.LoadAsync(giftId, cancellationToken) // TODO(fpion): ensure in same world and user can preview
-        ?? throw new AggregateNotFoundException<Customization>(giftId.AggregateId, nameof(payload.GiftId));
-      personality.SetGift(gift);
+      await _sender.Send(new SetGiftCommand(command, personality, payload.GiftId.Value), cancellationToken);
     }
 
     personality.Update(userId);

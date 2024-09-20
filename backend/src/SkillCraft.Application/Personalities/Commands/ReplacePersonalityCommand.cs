@@ -13,20 +13,17 @@ public record ReplacePersonalityCommand(Guid Id, ReplacePersonalityPayload Paylo
 
 internal class ReplacePersonalityCommandHandler : IRequestHandler<ReplacePersonalityCommand, PersonalityModel?>
 {
-  private readonly ICustomizationRepository _customizationRepository;
   private readonly IPermissionService _permissionService;
   private readonly IPersonalityQuerier _personalityQuerier;
   private readonly IPersonalityRepository _personalityRepository;
   private readonly ISender _sender;
 
   public ReplacePersonalityCommandHandler(
-    ICustomizationRepository customizationRepository,
     IPermissionService permissionService,
     IPersonalityQuerier personalityQuerier,
     IPersonalityRepository personalityRepository,
     ISender sender)
   {
-    _customizationRepository = customizationRepository;
     _permissionService = permissionService;
     _personalityQuerier = personalityQuerier;
     _personalityRepository = personalityRepository;
@@ -72,13 +69,7 @@ internal class ReplacePersonalityCommandHandler : IRequestHandler<ReplacePersona
     CustomizationId? giftId = payload.GiftId.HasValue ? new(payload.GiftId.Value) : null;
     if (giftId != reference.GiftId)
     {
-      Customization? gift = null;
-      if (giftId.HasValue)
-      {
-        gift = await _customizationRepository.LoadAsync(giftId.Value, cancellationToken) // TODO(fpion): ensure in same world and user can preview
-          ?? throw new AggregateNotFoundException<Customization>(giftId.Value.AggregateId, nameof(payload.GiftId));
-      }
-      personality.SetGift(gift);
+      await _sender.Send(new SetGiftCommand(command, personality, payload.GiftId), cancellationToken);
     }
 
     personality.Update(command.GetUserId());
