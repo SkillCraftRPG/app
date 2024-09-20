@@ -15,5 +15,11 @@ internal class CreateCharacterValidator : AbstractValidator<CreateCharacterPaylo
     RuleFor(x => x.Height).GreaterThan(0.0);
     RuleFor(x => x.Weight).GreaterThan(0.0);
     RuleFor(x => x.Age).GreaterThan(0);
+
+    RuleFor(x => x.PersonalityId).NotEmpty();
+    RuleFor(x => x.CustomizationIds).Must(x => x.Count % 2 == 0)
+      .WithErrorCode("CustomizationsValidator")
+      .WithMessage("'{PropertyName}' must be an equal number of gift and disability identifiers.");
+    RuleForEach(x => x.CustomizationIds).NotEmpty();
   }
 }

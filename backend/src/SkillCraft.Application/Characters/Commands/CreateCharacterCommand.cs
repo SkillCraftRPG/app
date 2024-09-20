@@ -4,11 +4,13 @@ using MediatR;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Personalities;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -20,6 +22,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
   private readonly ILineageQuerier _lineageQuerier;
   private readonly ILineageRepository _lineageRepository;
   private readonly IPermissionService _permissionService;
+  private readonly IPersonalityRepository _personalityRepository;
   private readonly ISender _sender;
 
   public CreateCharacterCommandHandler(
@@ -27,12 +30,14 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     ILineageQuerier lineageQuerier,
     ILineageRepository lineageRepository,
     IPermissionService permissionService,
+    IPersonalityRepository personalityRepository,
     ISender sender)
   {
     _characterQuerier = characterQuerier;
     _lineageQuerier = lineageQuerier;
     _lineageRepository = lineageRepository;
     _permissionService = permissionService;
+    _personalityRepository = personalityRepository;
     _sender = sender;
   }
 
@@ -44,6 +49,9 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     await _permissionService.EnsureCanCreateAsync(command, EntityType.Character, cancellationToken);
 
     Lineage lineage = await ResolveLineageAsync(command, payload.LineageId, cancellationToken);
+    Personality personality = await ResolvePersonalityAsync(command, payload.PersonalityId, cancellationToken);
+
+    // TODO(fpion): CustomizationIds
 
     Character character = new(
       command.GetWorldId(),
@@ -53,6 +61,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       payload.Height,
       payload.Weight,
       payload.Age,
+      personality,
       command.GetUserId());
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
@@ -83,5 +92,16 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     }
 
     return lineage;
+  }
+
+  private async Task<Personality> ResolvePersonalityAsync(Activity activity, Guid id, CancellationToken cancellationToken)
+  {
+    PersonalityId personalityId = new(id);
+    Personality personality = await _personalityRepository.LoadAsync(personalityId, cancellationToken)
+      ?? throw new AggregateNotFoundException<Personality>(personalityId.AggregateId, nameof(CreateCharacterPayload.PersonalityId));
+
+    await _permissionService.EnsureCanPreviewAsync(activity, personality.GetMetadata(), cancellationToken);
+
+    return personality;
   }
 }

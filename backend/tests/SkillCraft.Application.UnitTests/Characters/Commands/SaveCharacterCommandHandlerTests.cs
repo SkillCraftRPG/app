@@ -4,6 +4,7 @@ using SkillCraft.Application.Storages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -29,7 +30,8 @@ public class SaveCharacterCommandHandlerTests
     WorldMock world = new();
     Lineage species = new(world.Id, parent: null, new Name("Humain"), world.OwnerId);
     Lineage nation = new(world.Id, species, new Name("Orrin"), world.OwnerId);
-    Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName), nation, height: 1.84, weight: 84.6, age: 30, world.OwnerId);
+    Personality personality = new(world.Id, new Name("Courroucé"), world.OwnerId);
+    Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName), nation, height: 1.84, weight: 84.6, age: 30, personality, world.OwnerId);
 
     SaveCharacterCommand command = new(character);
 

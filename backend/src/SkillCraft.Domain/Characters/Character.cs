@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
 using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Domain.Characters;
@@ -20,12 +21,23 @@ public class Character : AggregateRoot
   public double Weight { get; private set; }
   public int Age { get; private set; }
 
+  public PersonalityId PersonalityId { get; private set; }
+
   public Character() : base()
   {
   }
 
-  public Character(WorldId worldId, Name name, PlayerName? player, Lineage lineage, double height, double weight, int age, UserId userId, CharacterId? id = null)
-    : base(id?.AggregateId)
+  public Character(
+    WorldId worldId,
+    Name name,
+    PlayerName? player,
+    Lineage lineage,
+    double height,
+    double weight,
+    int age,
+    Personality personality,
+    UserId userId,
+    CharacterId? id = null) : base(id?.AggregateId)
   {
     if (lineage.WorldId != worldId)
     {
@@ -34,8 +46,12 @@ public class Character : AggregateRoot
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0.0, nameof(height));
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(weight, 0.0, nameof(weight));
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(age, 0, nameof(age));
+    if (personality.WorldId != worldId)
+    {
+      throw new ArgumentException("The personality does not reside in the same world as the character.", nameof(personality));
+    }
 
-    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age), userId.ActorId);
+    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -48,6 +64,8 @@ public class Character : AggregateRoot
     Height = @event.Height;
     Weight = @event.Weight;
     Age = @event.Age;
+
+    PersonalityId = @event.PersonalityId;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -64,7 +82,9 @@ public class Character : AggregateRoot
     public double Weight { get; }
     public int Age { get; }
 
-    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age)
+    public PersonalityId PersonalityId { get; }
+
+    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age, PersonalityId personalityId)
     {
       WorldId = worldId;
 
@@ -75,6 +95,8 @@ public class Character : AggregateRoot
       Height = height;
       Weight = weight;
       Age = age;
+
+      PersonalityId = personalityId;
     }
   }
 }

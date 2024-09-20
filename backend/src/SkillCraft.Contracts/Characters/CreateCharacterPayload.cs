@@ -14,6 +14,9 @@ public record CreateCharacterPayload
 
   // TODO(fpion): Lineage.Languages.Extra
 
+  public Guid PersonalityId { get; set; }
+  public List<Guid> CustomizationIds { get; set; }
+
   public CreateCharacterPayload() : this(string.Empty)
   {
   }
@@ -21,5 +24,7 @@ public record CreateCharacterPayload
   public CreateCharacterPayload(string name)
   {
     Name = name;
+
+    CustomizationIds = [];
   }
 }

@@ -53,6 +53,7 @@ public static class DependencyInjectionExtensions
     new LanguageIdConverter(),
     new LineageIdConverter(),
     new NameConverter(),
+    new PersonalityIdConverter(),
     new PlayerNameConverter(),
     new RollConverter(),
     new ScriptConverter(),
