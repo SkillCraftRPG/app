@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using Logitar.Portal.Contracts.Search;
 using MediatR;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Characters;
+using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Lineages;
@@ -15,17 +17,20 @@ public record CreateCharacterCommand(CreateCharacterPayload Payload) : Activity,
 internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCommand, CharacterModel>
 {
   private readonly ICharacterQuerier _characterQuerier;
+  private readonly ILineageQuerier _lineageQuerier;
   private readonly ILineageRepository _lineageRepository;
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
   public CreateCharacterCommandHandler(
     ICharacterQuerier characterQuerier,
+    ILineageQuerier lineageQuerier,
     ILineageRepository lineageRepository,
     IPermissionService permissionService,
     ISender sender)
   {
     _characterQuerier = characterQuerier;
+    _lineageQuerier = lineageQuerier;
     _lineageRepository = lineageRepository;
     _permissionService = permissionService;
     _sender = sender;
@@ -65,7 +70,16 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
 
     if (lineage.ParentId == null)
     {
-      // TODO(fpion): ensure has no children (nations)
+      SearchLineagesPayload payload = new()
+      {
+        ParentId = lineage.Id.ToGuid(),
+        Limit = 1
+      };
+      SearchResults<LineageModel> results = await _lineageQuerier.SearchAsync(activity.GetWorldId(), payload, cancellationToken);
+      if (results.Total > 0)
+      {
+        throw new InvalidCharacterLineageException(lineage, nameof(CreateCharacterPayload.LineageId));
+      }
     }
 
     return lineage;

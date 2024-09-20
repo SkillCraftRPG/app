@@ -1,13 +1,17 @@
 ﻿using Bogus;
 using FluentValidation.Results;
 using Logitar.EventSourcing;
+using Logitar.Portal.Contracts.Search;
 using MediatR;
 using Moq;
+using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Characters;
+using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -18,6 +22,7 @@ public class CreateCharacterCommandHandlerTests
   private readonly Faker _faker = new();
 
   private readonly Mock<ICharacterQuerier> _characterQuerier = new();
+  private readonly Mock<ILineageQuerier> _lineageQuerier = new();
   private readonly Mock<ILineageRepository> _lineageRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
@@ -32,6 +37,7 @@ public class CreateCharacterCommandHandlerTests
   {
     _handler = new(
       _characterQuerier.Object,
+      _lineageQuerier.Object,
       _lineageRepository.Object,
       _permissionService.Object,
       _sender.Object);
@@ -69,6 +75,8 @@ public class CreateCharacterCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _nation.WorldId && y.Type == EntityType.Lineage && y.Id == _nation.Id.ToGuid() && y.Size > 0),
       _cancellationToken), Times.Once);
 
+    _lineageQuerier.Verify(x => x.SearchAsync(It.IsAny<WorldId>(), It.IsAny<SearchLineagesPayload>(), It.IsAny<CancellationToken>()), Times.Never);
+
     _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.WorldId == _world.Id
       && y.Character.Name.Value == payload.Name.Trim()
       && y.Character.Player != null && y.Character.Player.Value == payload.Player.Trim()
@@ -93,6 +101,28 @@ public class CreateCharacterCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Lineage>>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(new AggregateId(payload.LineageId).Value, exception.Id);
+    Assert.Equal("LineageId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw InvalidCharacterLineageException when the lineage has nations.")]
+  public async Task It_should_throw_InvalidCharacterLineageException_when_the_lineage_has_nations()
+  {
+    CreateCharacterPayload payload = new("Heracles Aetos")
+    {
+      LineageId = _species.Id.ToGuid(),
+      Height = 1.84,
+      Weight = 84.6,
+      Age = 30
+    };
+    CreateCharacterCommand command = new(payload);
+    command.Contextualize(_world);
+
+    SearchResults<LineageModel> results = new([new LineageModel { Id = Guid.NewGuid() }]);
+    _lineageQuerier.Setup(x => x.SearchAsync(_world.Id, It.Is<SearchLineagesPayload>(y => y.ParentId == payload.LineageId), _cancellationToken))
+      .ReturnsAsync(results);
+
+    var exception = await Assert.ThrowsAsync<InvalidCharacterLineageException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(payload.LineageId, exception.Id);
     Assert.Equal("LineageId", exception.PropertyName);
   }
 
