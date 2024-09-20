@@ -18,6 +18,7 @@ public class CreateTalentCommandHandlerTests
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
   private readonly Mock<ITalentQuerier> _talentQuerier = new();
+  private readonly Mock<ITalentRepository> _talentRepository = new();
 
   private readonly CreateTalentCommandHandler _handler;
 
@@ -26,14 +27,44 @@ public class CreateTalentCommandHandlerTests
 
   public CreateTalentCommandHandlerTests()
   {
-    _handler = new(_permissionService.Object, _sender.Object, _talentQuerier.Object);
+    _handler = new(_permissionService.Object, _sender.Object, _talentQuerier.Object, _talentRepository.Object);
 
     _user = new UserMock();
     _world = new(new Slug("ungar"), new UserId(_user.Id));
   }
 
-  [Fact(DisplayName = "It should create a new talent without required talent.")]
-  public async Task It_should_create_a_new_talent_without_required_talent()
+  [Fact(DisplayName = "It should create a new talent with a required talent.")]
+  public async Task It_should_create_a_new_talent_with_a_required_talent()
+  {
+    Talent requiredTalent = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
+    _talentRepository.Setup(x => x.LoadAsync(requiredTalent.Id, _cancellationToken)).ReturnsAsync(requiredTalent);
+
+    CreateTalentPayload payload = new(" Formation martiale ")
+    {
+      Description = "    ",
+      RequiredTalentId = requiredTalent.Id.ToGuid()
+    };
+    CreateTalentCommand command = new(payload);
+    command.Contextualize(_user, _world);
+
+    TalentModel model = new();
+    _talentQuerier.Setup(x => x.ReadAsync(It.IsAny<Talent>(), _cancellationToken)).ReturnsAsync(model);
+
+    TalentModel result = await _handler.Handle(command, _cancellationToken);
+    Assert.Same(result, model);
+
+    _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Talent, _cancellationToken), Times.Once);
+
+    _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.WorldId == _world.Id
+      && y.Talent.RequiredTalentId == requiredTalent.Id
+      && y.Talent.Tier == payload.Tier
+      && y.Talent.Name.Value == payload.Name.Trim()
+      && y.Talent.Description == null
+      && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases), _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should create a new talent without a required talent.")]
+  public async Task It_should_create_a_new_talent_without_a_required_talent()
   {
     CreateTalentPayload payload = new(" Expertise ")
     {
