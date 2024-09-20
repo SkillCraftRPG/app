@@ -24,7 +24,7 @@ public class PersonalityTests
   {
     Customization gift = new(WorldId.NewId(), CustomizationType.Gift, new Name("Féroce"), UserId.NewId());
     var exception = Assert.Throws<ArgumentException>(() => _personality.SetGift(gift));
-    Assert.StartsWith("The gift does not reside in the same world than the personality.", exception.Message);
+    Assert.StartsWith("The gift does not reside in the same world as the personality.", exception.Message);
     Assert.Equal("gift", exception.ParamName);
   }
 
