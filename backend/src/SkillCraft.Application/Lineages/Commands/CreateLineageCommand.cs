@@ -75,7 +75,7 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     };
     SetFeatures(lineage, payload);
 
-    await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
+    await SetLanguagesAsync(command, lineage, payload.Languages, cancellationToken);
     SetNames(lineage, payload.Names);
 
     lineage.Update(userId);
@@ -100,10 +100,10 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     }
   }
 
-  private async Task SetLanguagesAsync(Lineage lineage, LanguagesPayload payload, CancellationToken cancellationToken)
+  private async Task SetLanguagesAsync(Activity activity, Lineage lineage, LanguagesPayload payload, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Language> languages = payload.Ids.Count == 0 ? []
-      : await _sender.Send(new FindLanguagesQuery(payload.Ids), cancellationToken);
+      : await _sender.Send(new FindLanguagesQuery(activity, payload.Ids), cancellationToken);
     lineage.Languages = new Domain.Lineages.Languages(languages, payload.Extra, payload.Text);
   }
 

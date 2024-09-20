@@ -65,7 +65,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       payload.Attributes.Extra ?? lineage.Attributes.Extra);
     SetFeatures(lineage, payload);
 
-    await SetLanguagesAsync(lineage, payload.Languages, cancellationToken);
+    await SetLanguagesAsync(command, lineage, payload.Languages, cancellationToken);
     SetNames(lineage, payload.Names);
 
     lineage.Speeds = new Speeds(
@@ -122,7 +122,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     }
   }
 
-  private async Task SetLanguagesAsync(Lineage lineage, UpdateLanguagesPayload payload, CancellationToken cancellationToken)
+  private async Task SetLanguagesAsync(Activity activity, Lineage lineage, UpdateLanguagesPayload payload, CancellationToken cancellationToken)
   {
     int extra = payload.Extra ?? lineage.Languages.Extra;
     string? text = payload.Text == null ? lineage.Languages.Text : payload.Text.Value;
@@ -135,7 +135,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     else
     {
       IReadOnlyCollection<Language> items = payload.Ids.Count == 0 ? []
-        : await _sender.Send(new FindLanguagesQuery(payload.Ids), cancellationToken);
+        : await _sender.Send(new FindLanguagesQuery(activity, payload.Ids), cancellationToken);
       languages = new(items, extra, text);
     }
 

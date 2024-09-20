@@ -70,7 +70,7 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     }
     SetFeatures(lineage, reference, payload);
 
-    await SetLanguagesAsync(lineage, reference, payload.Languages, cancellationToken);
+    await SetLanguagesAsync(command, lineage, reference, payload.Languages, cancellationToken);
     SetNames(lineage, reference, payload.Names);
 
     Speeds speeds = new(payload.Speeds);
@@ -133,10 +133,10 @@ internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageComm
     }
   }
 
-  private async Task SetLanguagesAsync(Lineage lineage, Lineage reference, LanguagesPayload payload, CancellationToken cancellationToken)
+  private async Task SetLanguagesAsync(Activity activity, Lineage lineage, Lineage reference, LanguagesPayload payload, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Language> items = payload.Ids.Count == 0 ? []
-      : await _sender.Send(new FindLanguagesQuery(payload.Ids), cancellationToken);
+      : await _sender.Send(new FindLanguagesQuery(activity, payload.Ids), cancellationToken);
     Domain.Lineages.Languages languages = new(items, payload.Extra, payload.Text);
     if (languages != reference.Languages)
     {

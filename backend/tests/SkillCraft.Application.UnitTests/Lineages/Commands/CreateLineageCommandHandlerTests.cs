@@ -45,8 +45,6 @@ public class CreateLineageCommandHandlerTests
     _lineageRepository.Setup(x => x.LoadAsync(species.Id, _cancellationToken)).ReturnsAsync(species);
 
     Language language = new(_world.Id, new Name("Orrinique"), _world.OwnerId);
-    _sender.Setup(x => x.Send(It.Is<FindLanguagesQuery>(y => Assert.Single(y.Ids) == language.Id.ToGuid()), _cancellationToken)).ReturnsAsync([language]);
-
     CreateLineagePayload payload = new(" Orrin ")
     {
       ParentId = species.Id.ToGuid(),
@@ -63,6 +61,8 @@ public class CreateLineageCommandHandlerTests
     };
     CreateLineageCommand command = new(payload);
     command.Contextualize(_user, _world);
+    _sender.Setup(x => x.Send(It.Is<FindLanguagesQuery>(y => y.Activity == command && Assert.Single(y.Ids) == language.Id.ToGuid()), _cancellationToken))
+      .ReturnsAsync([language]);
 
     LineageModel model = new();
     _lineageQuerier.Setup(x => x.ReadAsync(It.IsAny<Lineage>(), _cancellationToken)).ReturnsAsync(model);
