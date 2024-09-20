@@ -71,6 +71,7 @@ public class CreateCharacterCommandHandlerTests
     _sender.Setup(x => x.Send(It.Is<ResolvePersonalityQuery>(y => y.Activity == command && y.Id == payload.PersonalityId), _cancellationToken)).ReturnsAsync(_personality);
     _sender.Setup(x => x.Send(It.Is<ResolveCustomizationsQuery>(y => y.Activity == command
       && y.Personality == _personality && y.Ids == payload.CustomizationIds), _cancellationToken)).ReturnsAsync(_customizations);
+    _sender.Setup(x => x.Send(It.Is<ResolveAspectsQuery>(y => y.Activity == command && y.Ids == payload.AspectIds), _cancellationToken)).ReturnsAsync(_aspects);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -88,7 +89,8 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.Weight == payload.Weight
       && y.Character.Age == payload.Age
       && y.Character.PersonalityId == _personality.Id
-      && y.Character.CustomizationIds.SequenceEqual(_customizations.Select(x => x.Id))), _cancellationToken), Times.Once);
+      && y.Character.CustomizationIds.SequenceEqual(_customizations.Select(x => x.Id))
+      && y.Character.AspectIds.SequenceEqual(_aspects.Select(x => x.Id))), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

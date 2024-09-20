@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
 using SkillCraft.Contracts.Customizations;
+using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
@@ -26,6 +27,8 @@ public class Character : AggregateRoot
   public PersonalityId PersonalityId { get; private set; }
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
 
+  public IReadOnlyCollection<AspectId> AspectIds { get; private set; } = [];
+
   public Character() : base()
   {
   }
@@ -40,6 +43,7 @@ public class Character : AggregateRoot
     int age,
     Personality personality,
     IEnumerable<Customization> customizations,
+    IEnumerable<Aspect> aspects,
     UserId userId,
     CharacterId? id = null) : base(id?.AggregateId)
   {
@@ -55,8 +59,9 @@ public class Character : AggregateRoot
       throw new ArgumentException("The personality does not reside in the same world as the character.", nameof(personality));
     }
     IReadOnlyCollection<CustomizationId> customizationIds = GetCustomizationIds(personality, customizations);
+    IReadOnlyCollection<AspectId> aspectIds = GetAspectIds(worldId, aspects);
 
-    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds), userId.ActorId);
+    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -72,9 +77,33 @@ public class Character : AggregateRoot
 
     PersonalityId = @event.PersonalityId;
     CustomizationIds = @event.CustomizationIds;
+
+    AspectIds = @event.AspectIds;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
+
+  private static IReadOnlyCollection<AspectId> GetAspectIds(WorldId worldId, IEnumerable<Aspect> aspects)
+  {
+    HashSet<AspectId> aspectIds = new(capacity: aspects.Count());
+    foreach (Aspect aspect in aspects)
+    {
+      if (!aspectIds.Contains(aspect.Id))
+      {
+        aspectIds.Add(aspect.Id);
+
+        if (aspect.WorldId != worldId)
+        {
+          throw new ArgumentException("One or more aspects do not reside in the same world as the character.", nameof(aspects));
+        }
+      }
+    }
+    if (aspectIds.Count != 2)
+    {
+      throw new ArgumentException("Exactly 2 different aspects should be provided.", nameof(aspects));
+    }
+    return aspectIds;
+  }
 
   private static IReadOnlyCollection<CustomizationId> GetCustomizationIds(Personality personality, IEnumerable<Customization> customizations)
   {
@@ -129,8 +158,10 @@ public class Character : AggregateRoot
     public PersonalityId PersonalityId { get; }
     public IReadOnlyCollection<CustomizationId> CustomizationIds { get; }
 
+    public IReadOnlyCollection<AspectId> AspectIds { get; }
+
     public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
-      PersonalityId personalityId, IReadOnlyCollection<CustomizationId> customizationIds)
+      PersonalityId personalityId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds)
     {
       WorldId = worldId;
 
@@ -144,6 +175,8 @@ public class Character : AggregateRoot
 
       PersonalityId = personalityId;
       CustomizationIds = customizationIds;
+
+      AspectIds = aspectIds;
     }
   }
 }

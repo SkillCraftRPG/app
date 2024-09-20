@@ -5,6 +5,7 @@ using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Lineages;
@@ -39,6 +40,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     IReadOnlyCollection<Customization> customizations = await _sender.Send(
       new ResolveCustomizationsQuery(command, personality, payload.CustomizationIds),
       cancellationToken);
+    IReadOnlyCollection<Aspect> aspects = await _sender.Send(new ResolveAspectsQuery(command, payload.AspectIds), cancellationToken);
 
     Character character = new(
       command.GetWorldId(),
@@ -50,6 +52,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       payload.Age,
       personality,
       customizations,
+      aspects,
       command.GetUserId());
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);

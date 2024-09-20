@@ -1,4 +1,5 @@
-﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+﻿using Logitar.EventSourcing;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using SkillCraft.Domain.Aspects;
 
@@ -23,6 +24,12 @@ internal class AspectRepository : Logitar.EventSourcing.EntityFrameworkCore.Rela
   public async Task<Aspect?> LoadAsync(AspectId id, long? version, CancellationToken cancellationToken)
   {
     return await LoadAsync<Aspect>(id.AggregateId, version, cancellationToken);
+  }
+
+  public async Task<IReadOnlyCollection<Aspect>> LoadAsync(IEnumerable<AspectId> ids, CancellationToken cancellationToken)
+  {
+    IEnumerable<AggregateId> aggregateIds = ids.Distinct().Select(id => id.AggregateId);
+    return (await LoadAsync<Aspect>(aggregateIds, cancellationToken)).ToArray();
   }
 
   public async Task SaveAsync(Aspect aspect, CancellationToken cancellationToken)

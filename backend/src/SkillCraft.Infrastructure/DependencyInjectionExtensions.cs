@@ -48,6 +48,7 @@ public static class DependencyInjectionExtensions
   private static EventSerializer InitializeEventSerializer(IServiceProvider serviceProvider) => new(serviceProvider.GetJsonConverters());
   public static IEnumerable<JsonConverter> GetJsonConverters(this IServiceProvider _) =>
   [
+    new AspectIdConverter(),
     new CustomizationIdConverter(),
     new DescriptionConverter(),
     new LanguageIdConverter(),
