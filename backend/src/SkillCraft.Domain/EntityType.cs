@@ -9,5 +9,6 @@ public enum EntityType
   Language,
   Lineage,
   Personality,
+  Talent,
   World
 }

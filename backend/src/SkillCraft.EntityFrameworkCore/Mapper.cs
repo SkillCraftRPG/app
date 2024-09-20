@@ -9,6 +9,7 @@ using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -74,7 +75,7 @@ internal class Mapper
 
     foreach (KeyValuePair<Guid, TraitEntity> trait in source.Traits)
     {
-      destination.Traits.Add(new Contracts.Castes.TraitModel(trait.Value.Name)
+      destination.Traits.Add(new TraitModel(trait.Value.Name)
       {
         Id = trait.Key,
         Description = trait.Value.Description
@@ -180,6 +181,24 @@ internal class Mapper
       Description = source.Description,
       Attribute = source.Attribute,
       Gift = gift
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public TalentModel ToTalent(TalentEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    TalentModel destination = new(world, source.Name)
+    {
+      Tier = source.Tier,
+      Description = source.Description,
+      AllowMultiplePurchases = source.AllowMultiplePurchases
     };
 
     MapAggregate(source, destination);

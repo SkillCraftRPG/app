@@ -12,10 +12,10 @@ public record ReplaceCustomizationCommand(Guid Id, ReplaceCustomizationPayload P
 
 internal class ReplaceCustomizationCommandHandler : IRequestHandler<ReplaceCustomizationCommand, CustomizationModel?>
 {
-  private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
   private readonly ICustomizationQuerier _customizationQuerier;
   private readonly ICustomizationRepository _customizationRepository;
+  private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public ReplaceCustomizationCommandHandler(
     ICustomizationQuerier customizationQuerier,
@@ -23,10 +23,10 @@ internal class ReplaceCustomizationCommandHandler : IRequestHandler<ReplaceCusto
     IPermissionService permissionService,
     ISender sender)
   {
-    _permissionService = permissionService;
-    _sender = sender;
     _customizationQuerier = customizationQuerier;
     _customizationRepository = customizationRepository;
+    _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<CustomizationModel?> Handle(ReplaceCustomizationCommand command, CancellationToken cancellationToken)

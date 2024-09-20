@@ -833,6 +833,88 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("StorageSummaries", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.TalentEntity", b =>
+                {
+                    b.Property<int>("TalentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TalentId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("AllowMultiplePurchases")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("RequiredTalentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tier")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TalentId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("RequiredTalentId");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("WorldId");
+
+                    b.ToTable("Talents", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.UserEntity", b =>
                 {
                     b.Property<int>("UserId")
@@ -1100,6 +1182,24 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.TalentEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.TalentEntity", "RequiredTalent")
+                        .WithMany("RequiringTalents")
+                        .HasForeignKey("RequiredTalentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Talents")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RequiredTalent");
+
+                    b.Navigation("World");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.UserEntity", "Owner")
@@ -1119,6 +1219,11 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LineageEntity", b =>
                 {
                     b.Navigation("Nations");
+                });
+
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.TalentEntity", b =>
+                {
+                    b.Navigation("RequiringTalents");
                 });
 
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.UserEntity", b =>
@@ -1147,6 +1252,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("Personalities");
 
                     b.Navigation("StorageDetails");
+
+                    b.Navigation("Talents");
                 });
 #pragma warning restore 612, 618
         }

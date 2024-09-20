@@ -47,6 +47,11 @@ public static class ValidationExtensions
       .SetValidator(new SlugPropertyValidator<T>());
   }
 
+  public static IRuleBuilderOptions<T, int> Tier<T>(this IRuleBuilder<T, int> ruleBuilder)
+  {
+    return ruleBuilder.InclusiveBetween(0, 3);
+  }
+
   public static IRuleBuilderOptions<T, string> TypicalSpeakers<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty()

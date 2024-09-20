@@ -6,6 +6,7 @@ using SkillCraft.GraphQL.Educations;
 using SkillCraft.GraphQL.Languages;
 using SkillCraft.GraphQL.Lineages;
 using SkillCraft.GraphQL.Personalities;
+using SkillCraft.GraphQL.Talents;
 using SkillCraft.GraphQL.Worlds;
 
 namespace SkillCraft.GraphQL;
@@ -23,6 +24,7 @@ internal class RootQuery : ObjectGraphType
     LanguageQueries.Register(this);
     LineageQueries.Register(this);
     PersonalityQueries.Register(this);
+    TalentQueries.Register(this);
     WorldQueries.Register(this);
   }
 }

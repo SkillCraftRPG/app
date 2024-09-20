@@ -8,6 +8,7 @@ using SkillCraft.Application.Languages;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities;
+using SkillCraft.Application.Talents;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
@@ -17,6 +18,7 @@ using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Storages;
+using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore.Actors;
 using SkillCraft.EntityFrameworkCore.Queriers;
@@ -48,6 +50,7 @@ public static class DependencyInjectionExtensions
       .AddScoped<ILineageQuerier, LineageQuerier>()
       .AddScoped<IPermissionQuerier, PermissionQuerier>()
       .AddScoped<IPersonalityQuerier, PersonalityQuerier>()
+      .AddScoped<ITalentQuerier, TalentQuerier>()
       .AddScoped<IWorldQuerier, WorldQuerier>();
   }
 
@@ -62,6 +65,7 @@ public static class DependencyInjectionExtensions
       .AddScoped<ILineageRepository, LineageRepository>()
       .AddScoped<IPersonalityRepository, PersonalityRepository>()
       .AddScoped<IStorageRepository, StorageRepository>()
+      .AddScoped<ITalentRepository, TalentRepository>()
       .AddScoped<IWorldRepository, WorldRepository>();
   }
 }
