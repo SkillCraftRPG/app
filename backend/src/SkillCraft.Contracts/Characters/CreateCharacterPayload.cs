@@ -17,6 +17,8 @@ public record CreateCharacterPayload
   public Guid PersonalityId { get; set; }
   public List<Guid> CustomizationIds { get; set; }
 
+  public List<Guid> AspectIds { get; set; }
+
   public CreateCharacterPayload() : this(string.Empty)
   {
   }
@@ -26,5 +28,6 @@ public record CreateCharacterPayload
     Name = name;
 
     CustomizationIds = [];
+    AspectIds = [];
   }
 }

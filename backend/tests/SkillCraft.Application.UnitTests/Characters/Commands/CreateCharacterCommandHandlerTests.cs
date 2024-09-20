@@ -6,6 +6,7 @@ using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Lineages;
@@ -29,6 +30,7 @@ public class CreateCharacterCommandHandlerTests
   private readonly Lineage _lineage;
   private readonly Personality _personality;
   private readonly Customization[] _customizations;
+  private readonly Aspect[] _aspects;
 
   public CreateCharacterCommandHandlerTests()
   {
@@ -40,6 +42,11 @@ public class CreateCharacterCommandHandlerTests
     [
       new Customization(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId),
       new Customization(_world.Id, CustomizationType.Disability, new Name("Pauvreté"), _world.OwnerId)
+    ];
+    _aspects =
+    [
+      new Aspect(_world.Id, new Name("Farouche"), _world.OwnerId),
+      new Aspect(_world.Id, new Name("Gymnaste"), _world.OwnerId)
     ];
   }
 
@@ -54,7 +61,8 @@ public class CreateCharacterCommandHandlerTests
       Weight = 84.6,
       Age = 30,
       PersonalityId = _personality.Id.ToGuid(),
-      CustomizationIds = _customizations.Select(x => x.Id.ToGuid()).ToList()
+      CustomizationIds = _customizations.Select(x => x.Id.ToGuid()).ToList(),
+      AspectIds = _aspects.Select(x => x.Id.ToGuid()).ToList()
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
@@ -86,6 +94,7 @@ public class CreateCharacterCommandHandlerTests
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
+    Guid aspectId = Guid.NewGuid();
     CreateCharacterPayload payload = new("Heracles Aetos")
     {
       LineageId = Guid.NewGuid(),
@@ -93,14 +102,16 @@ public class CreateCharacterCommandHandlerTests
       Weight = 84.6,
       Age = 30,
       PersonalityId = Guid.Empty,
-      CustomizationIds = [Guid.Empty]
+      CustomizationIds = [Guid.Empty],
+      AspectIds = [aspectId, aspectId]
     };
     CreateCharacterCommand command = new(payload);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(2, exception.Errors.Count());
+    Assert.Equal(3, exception.Errors.Count());
 
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "PersonalityId" && (Guid?)e.AttemptedValue == payload.PersonalityId);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "CustomizationIds[0]");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "CreateCharacterValidator" && e.PropertyName == "AspectIds");
   }
 }
