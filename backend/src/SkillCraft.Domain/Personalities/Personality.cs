@@ -84,7 +84,7 @@ public class Personality : AggregateRoot
     {
       if (WorldId != gift.WorldId)
       {
-        throw new ArgumentException("The gift does not reside in the same world than the personality.", nameof(gift));
+        throw new ArgumentException("The gift does not reside in the same world as the personality.", nameof(gift));
       }
       else if (gift.Type != CustomizationType.Gift)
       {
