@@ -81,9 +81,16 @@ public class Talent : AggregateRoot
 
   public void SetRequiredTalent(Talent? requiredTalent)
   {
-    if (requiredTalent != null && requiredTalent.Tier > Tier)
+    if (requiredTalent != null)
     {
-      throw new ArgumentException("The required talent tier must be inferior or equal to the requiring talent tier.", nameof(requiredTalent));
+      if (requiredTalent.WorldId != WorldId)
+      {
+        throw new ArgumentException("The required talent does not reside in the same world as the requiring talent.", nameof(requiredTalent));
+      }
+      else if (requiredTalent.Tier > Tier)
+      {
+        throw new ArgumentException("The required talent tier must be inferior or equal to the requiring talent tier.", nameof(requiredTalent));
+      }
     }
 
     if (RequiredTalentId != requiredTalent?.Id)
