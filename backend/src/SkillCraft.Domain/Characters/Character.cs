@@ -29,6 +29,9 @@ public class Character : AggregateRoot
 
   public IReadOnlyCollection<AspectId> AspectIds { get; private set; } = [];
 
+  private BaseAttributes? _baseAttributes = null;
+  public BaseAttributes BaseAttributes => _baseAttributes ?? throw new InvalidOperationException($"The {nameof(BaseAttributes)} has not been initialized yet.");
+
   public Character() : base()
   {
   }
@@ -44,6 +47,7 @@ public class Character : AggregateRoot
     Personality personality,
     IEnumerable<Customization> customizations,
     IEnumerable<Aspect> aspects,
+    BaseAttributes baseAttributes,
     UserId userId,
     CharacterId? id = null) : base(id?.AggregateId)
   {
@@ -61,7 +65,7 @@ public class Character : AggregateRoot
     IReadOnlyCollection<CustomizationId> customizationIds = GetCustomizationIds(personality, customizations);
     IReadOnlyCollection<AspectId> aspectIds = GetAspectIds(worldId, aspects);
 
-    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds), userId.ActorId);
+    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -79,6 +83,8 @@ public class Character : AggregateRoot
     CustomizationIds = @event.CustomizationIds;
 
     AspectIds = @event.AspectIds;
+
+    _baseAttributes = @event.BaseAttributes;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -160,8 +166,10 @@ public class Character : AggregateRoot
 
     public IReadOnlyCollection<AspectId> AspectIds { get; }
 
-    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
-      PersonalityId personalityId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds)
+    public BaseAttributes BaseAttributes { get; }
+
+    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age, PersonalityId personalityId,
+      IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds, BaseAttributes baseAttributes)
     {
       WorldId = worldId;
 
@@ -177,6 +185,8 @@ public class Character : AggregateRoot
       CustomizationIds = customizationIds;
 
       AspectIds = aspectIds;
+
+      BaseAttributes = baseAttributes;
     }
   }
 }

@@ -24,6 +24,6 @@ internal class CreateCharacterValidator : AbstractValidator<CreateCharacterPaylo
       .WithErrorCode(nameof(CreateCharacterValidator))
       .WithMessage("'{PropertyName}' must contain exactly 2 different aspect identifiers.");
 
-    RuleFor(x => x.Attributes).SetValidator(new BaseAttributesValidator());
+    RuleFor(x => x.Attributes).SetValidator(new BaseAttributesPayloadValidator());
   }
 }

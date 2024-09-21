@@ -11,6 +11,7 @@ using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -21,6 +22,7 @@ public class CreateCharacterCommandHandlerTests
   private readonly Faker _faker = new();
 
   private readonly Mock<ICharacterQuerier> _characterQuerier = new();
+  private readonly Mock<ILineageRepository> _lineageRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
 
@@ -31,10 +33,13 @@ public class CreateCharacterCommandHandlerTests
   private readonly Personality _personality;
   private readonly Customization[] _customizations;
   private readonly Aspect[] _aspects;
+  private readonly BaseAttributes _baseAttributes = new(agility: 9, coordination: 9, intellect: 6, presence: 10, sensitivity: 7, spirit: 6, vigor: 10,
+      best: Attribute.Agility, worst: Attribute.Sensitivity, mandatory: [Attribute.Agility, Attribute.Vigor],
+      optional: [Attribute.Coordination, Attribute.Vigor], extra: [Attribute.Agility, Attribute.Vigor]);
 
   public CreateCharacterCommandHandlerTests()
   {
-    _handler = new(_characterQuerier.Object, _permissionService.Object, _sender.Object);
+    _handler = new(_characterQuerier.Object, _lineageRepository.Object, _permissionService.Object, _sender.Object);
 
     _lineage = new(_world.Id, parent: null, new Name("Orrin"), _world.OwnerId);
     _personality = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
@@ -62,7 +67,21 @@ public class CreateCharacterCommandHandlerTests
       Age = 30,
       PersonalityId = _personality.Id.ToGuid(),
       CustomizationIds = _customizations.Select(x => x.Id.ToGuid()).ToList(),
-      AspectIds = _aspects.Select(x => x.Id.ToGuid()).ToList()
+      AspectIds = _aspects.Select(x => x.Id.ToGuid()).ToList(),
+      Attributes = new()
+      {
+        Agility = _baseAttributes.Agility,
+        Coordination = _baseAttributes.Coordination,
+        Intellect = _baseAttributes.Intellect,
+        Presence = _baseAttributes.Presence,
+        Sensitivity = _baseAttributes.Sensitivity,
+        Spirit = _baseAttributes.Spirit,
+        Vigor = _baseAttributes.Vigor,
+        Best = _baseAttributes.Best,
+        Worst = _baseAttributes.Worst,
+        Optional = [.. _baseAttributes.Optional],
+        Extra = [.. _baseAttributes.Extra]
+      }
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
@@ -72,6 +91,8 @@ public class CreateCharacterCommandHandlerTests
     _sender.Setup(x => x.Send(It.Is<ResolveCustomizationsQuery>(y => y.Activity == command
       && y.Personality == _personality && y.Ids == payload.CustomizationIds), _cancellationToken)).ReturnsAsync(_customizations);
     _sender.Setup(x => x.Send(It.Is<ResolveAspectsQuery>(y => y.Activity == command && y.Ids == payload.AspectIds), _cancellationToken)).ReturnsAsync(_aspects);
+    _sender.Setup(x => x.Send(It.Is<ResolveBaseAttributesQuery>(y => y.Payload == payload.Attributes && y.Aspects == _aspects
+      && y.Lineage == _lineage && y.Parent == null), _cancellationToken)).ReturnsAsync(_baseAttributes);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -90,7 +111,8 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.Age == payload.Age
       && y.Character.PersonalityId == _personality.Id
       && y.Character.CustomizationIds.SequenceEqual(_customizations.Select(x => x.Id))
-      && y.Character.AspectIds.SequenceEqual(_aspects.Select(x => x.Id))), _cancellationToken), Times.Once);
+      && y.Character.AspectIds.SequenceEqual(_aspects.Select(x => x.Id))
+      && y.Character.BaseAttributes == _baseAttributes), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -105,15 +127,35 @@ public class CreateCharacterCommandHandlerTests
       Age = 30,
       PersonalityId = Guid.Empty,
       CustomizationIds = [Guid.Empty],
-      AspectIds = [aspectId, aspectId]
+      AspectIds = [aspectId, aspectId],
+      Attributes = new()
+      {
+        Agility = 12,
+        Coordination = 10,
+        Intellect = 10,
+        Presence = 10,
+        Sensitivity = 10,
+        Spirit = 8,
+        Vigor = 10,
+        Best = Attribute.Agility,
+        Worst = Attribute.Agility,
+        Optional = [Attribute.Coordination, Attribute.Sensitivity, Attribute.Spirit, Attribute.Vigor],
+        Extra = [(Attribute)(-1)]
+      }
     };
     CreateCharacterCommand command = new(payload);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(3, exception.Errors.Count());
+    Assert.Equal(9, exception.Errors.Count());
 
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "PersonalityId" && (Guid?)e.AttemptedValue == payload.PersonalityId);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "CustomizationIds[0]");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "CreateCharacterValidator" && e.PropertyName == "AspectIds");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "InclusiveBetweenValidator" && e.PropertyName == "Attributes.Agility" && (int?)e.AttemptedValue == payload.Attributes.Agility);
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "BaseAttributeScoreSumValidator" && e.PropertyName == "Attributes");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEqualValidator" && e.PropertyName == "Attributes.Best" && (Attribute?)e.AttemptedValue == payload.Attributes.Best);
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEqualValidator" && e.PropertyName == "Attributes.Worst" && (Attribute?)e.AttemptedValue == payload.Attributes.Worst);
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "OptionalAttributesValidator" && e.PropertyName == "Attributes.Optional");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Attributes.Extra[0]" && (Attribute?)e.AttemptedValue == payload.Attributes.Extra.Single());
   }
 }

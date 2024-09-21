@@ -6,6 +6,7 @@ using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -37,8 +38,11 @@ public class SaveCharacterCommandHandlerTests
       new(world.Id, new Name("Farouche"), world.OwnerId),
       new(world.Id, new Name("Gymnaste"), world.OwnerId)
     ];
+    BaseAttributes baseAttributes = new(agility: 9, coordination: 9, intellect: 6, presence: 10, sensitivity: 7, spirit: 6, vigor: 10,
+      best: Attribute.Agility, worst: Attribute.Sensitivity, mandatory: [Attribute.Agility, Attribute.Vigor], optional: [Attribute.Coordination, Attribute.Vigor],
+      extra: [Attribute.Agility, Attribute.Vigor]);
     Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName),
-      nation, height: 1.84, weight: 84.6, age: 30, personality, customizations: [], aspects, world.OwnerId);
+      nation, height: 1.84, weight: 84.6, age: 30, personality, customizations: [], aspects, baseAttributes, world.OwnerId);
 
     SaveCharacterCommand command = new(character);
 
