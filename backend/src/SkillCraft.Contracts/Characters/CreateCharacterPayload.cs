@@ -9,7 +9,6 @@ public record CreateCharacterPayload
   public double Height { get; set; }
   public double Weight { get; set; }
   public int Age { get; set; }
-
   // TODO(fpion): Lineage.Languages.Extra
 
   public Guid PersonalityId { get; set; }
@@ -18,6 +17,9 @@ public record CreateCharacterPayload
   public List<Guid> AspectIds { get; set; }
 
   public BaseAttributesPayload Attributes { get; set; }
+
+  public Guid CasteId { get; set; }
+  public Guid EducationId { get; set; }
 
   public CreateCharacterPayload() : this(string.Empty)
   {
