@@ -39,17 +39,14 @@ internal class ResolveBaseAttributesQueryHandler : IRequestHandler<ResolveBaseAt
       }
     }
 
-    if (!mandatoryAttributes.Contains(payload.Best))
+    if (!mandatoryAttributes.Remove(payload.Best))
     {
       throw new NotImplementedException(); // TODO(fpion): implement
     }
-    if (!mandatoryAttributes.Contains(payload.Worst))
+    if (!mandatoryAttributes.Remove(payload.Worst))
     {
       throw new NotImplementedException(); // TODO(fpion): implement
     }
-    mandatoryAttributes.Remove(payload.Best);
-    mandatoryAttributes.Remove(payload.Worst);
-
     foreach (Attribute optionalAttribute in payload.Optional)
     {
       if (!optionalAttributes.Remove(optionalAttribute))
