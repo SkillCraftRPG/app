@@ -49,6 +49,8 @@ public static class DependencyInjectionExtensions
   public static IEnumerable<JsonConverter> GetJsonConverters(this IServiceProvider _) =>
   [
     new AspectIdConverter(),
+    new CasteIdConverter(),
+    new EducationIdConverter(),
     new CustomizationIdConverter(),
     new DescriptionConverter(),
     new LanguageIdConverter(),

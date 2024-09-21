@@ -2,7 +2,9 @@
 using MediatR;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Aspects;
+using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Customizations;
+using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
@@ -32,6 +34,9 @@ public class Character : AggregateRoot
   private BaseAttributes? _baseAttributes = null;
   public BaseAttributes BaseAttributes => _baseAttributes ?? throw new InvalidOperationException($"The {nameof(BaseAttributes)} has not been initialized yet.");
 
+  public CasteId CasteId { get; private set; }
+  public EducationId EducationId { get; private set; }
+
   public Character() : base()
   {
   }
@@ -48,6 +53,8 @@ public class Character : AggregateRoot
     IEnumerable<Customization> customizations,
     IEnumerable<Aspect> aspects,
     BaseAttributes baseAttributes,
+    Caste caste,
+    Education education,
     UserId userId,
     CharacterId? id = null) : base(id?.AggregateId)
   {
@@ -64,8 +71,17 @@ public class Character : AggregateRoot
     }
     IReadOnlyCollection<CustomizationId> customizationIds = GetCustomizationIds(personality, customizations);
     IReadOnlyCollection<AspectId> aspectIds = GetAspectIds(worldId, aspects);
+    if (caste.WorldId != worldId)
+    {
+      throw new ArgumentException("The caste does not reside in the same world as the character.", nameof(caste));
+    }
+    if (education.WorldId != worldId)
+    {
+      throw new ArgumentException("The education does not reside in the same world as the character.", nameof(education));
+    }
 
-    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes), userId.ActorId);
+    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes, caste.Id,
+      education.Id), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -85,6 +101,9 @@ public class Character : AggregateRoot
     AspectIds = @event.AspectIds;
 
     _baseAttributes = @event.BaseAttributes;
+
+    CasteId = @event.CasteId;
+    EducationId = @event.EducationId;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -168,8 +187,12 @@ public class Character : AggregateRoot
 
     public BaseAttributes BaseAttributes { get; }
 
-    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age, PersonalityId personalityId,
-      IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds, BaseAttributes baseAttributes)
+    public CasteId CasteId { get; }
+    public EducationId EducationId { get; }
+
+    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
+      PersonalityId personalityId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds,
+      BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
     {
       WorldId = worldId;
 
@@ -187,6 +210,9 @@ public class Character : AggregateRoot
       AspectIds = aspectIds;
 
       BaseAttributes = baseAttributes;
+
+      CasteId = casteId;
+      EducationId = educationId;
     }
   }
 }

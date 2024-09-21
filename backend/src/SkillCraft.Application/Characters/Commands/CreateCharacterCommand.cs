@@ -6,8 +6,10 @@ using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
+using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
+using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 
@@ -55,6 +57,8 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       cancellationToken);
     IReadOnlyCollection<Aspect> aspects = await _sender.Send(new ResolveAspectsQuery(command, payload.AspectIds), cancellationToken);
     BaseAttributes baseAttributes = await _sender.Send(new ResolveBaseAttributesQuery(payload.Attributes, aspects, lineage, parent), cancellationToken);
+    Caste caste = await _sender.Send(new ResolveCasteQuery(command, payload.CasteId), cancellationToken);
+    Education education = await _sender.Send(new ResolveEducationQuery(command, payload.EducationId), cancellationToken);
 
     Character character = new(
       command.GetWorldId(),
@@ -68,6 +72,8 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       customizations,
       aspects,
       baseAttributes,
+      caste,
+      education,
       command.GetUserId());
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);

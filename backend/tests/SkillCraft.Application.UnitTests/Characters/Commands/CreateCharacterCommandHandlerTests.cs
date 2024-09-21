@@ -7,8 +7,10 @@ using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
+using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
+using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using Attribute = SkillCraft.Contracts.Attribute;
@@ -36,6 +38,8 @@ public class CreateCharacterCommandHandlerTests
   private readonly BaseAttributes _baseAttributes = new(agility: 9, coordination: 9, intellect: 6, presence: 10, sensitivity: 7, spirit: 6, vigor: 10,
       best: Attribute.Agility, worst: Attribute.Sensitivity, mandatory: [Attribute.Agility, Attribute.Vigor],
       optional: [Attribute.Coordination, Attribute.Vigor], extra: [Attribute.Agility, Attribute.Vigor]);
+  private readonly Caste _caste;
+  private readonly Education _education;
 
   public CreateCharacterCommandHandlerTests()
   {
@@ -53,6 +57,8 @@ public class CreateCharacterCommandHandlerTests
       new Aspect(_world.Id, new Name("Farouche"), _world.OwnerId),
       new Aspect(_world.Id, new Name("Gymnaste"), _world.OwnerId)
     ];
+    _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId);
+    _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId);
   }
 
   [Fact(DisplayName = "It should create a new character.")]
@@ -81,7 +87,9 @@ public class CreateCharacterCommandHandlerTests
         Worst = _baseAttributes.Worst,
         Optional = [.. _baseAttributes.Optional],
         Extra = [.. _baseAttributes.Extra]
-      }
+      },
+      CasteId = _caste.Id.ToGuid(),
+      EducationId = _education.Id.ToGuid()
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
@@ -93,6 +101,8 @@ public class CreateCharacterCommandHandlerTests
     _sender.Setup(x => x.Send(It.Is<ResolveAspectsQuery>(y => y.Activity == command && y.Ids == payload.AspectIds), _cancellationToken)).ReturnsAsync(_aspects);
     _sender.Setup(x => x.Send(It.Is<ResolveBaseAttributesQuery>(y => y.Payload == payload.Attributes && y.Aspects == _aspects
       && y.Lineage == _lineage && y.Parent == null), _cancellationToken)).ReturnsAsync(_baseAttributes);
+    _sender.Setup(x => x.Send(It.Is<ResolveCasteQuery>(y => y.Activity == command && y.Id == payload.CasteId), _cancellationToken)).ReturnsAsync(_caste);
+    _sender.Setup(x => x.Send(It.Is<ResolveEducationQuery>(y => y.Activity == command && y.Id == payload.EducationId), _cancellationToken)).ReturnsAsync(_education);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -112,7 +122,9 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.PersonalityId == _personality.Id
       && y.Character.CustomizationIds.SequenceEqual(_customizations.Select(x => x.Id))
       && y.Character.AspectIds.SequenceEqual(_aspects.Select(x => x.Id))
-      && y.Character.BaseAttributes == _baseAttributes), _cancellationToken), Times.Once);
+      && y.Character.BaseAttributes == _baseAttributes
+      && y.Character.CasteId == _caste.Id
+      && y.Character.EducationId == _education.Id), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -141,7 +153,9 @@ public class CreateCharacterCommandHandlerTests
         Worst = Attribute.Agility,
         Optional = [Attribute.Coordination, Attribute.Sensitivity, Attribute.Spirit, Attribute.Vigor],
         Extra = [(Attribute)(-1)]
-      }
+      },
+      CasteId = Guid.NewGuid(),
+      EducationId = Guid.NewGuid()
     };
     CreateCharacterCommand command = new(payload);
 
