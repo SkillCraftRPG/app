@@ -4,7 +4,7 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Domain.Characters;
 
-public record BaseAttributes // TODO(fpion): serialization tests
+public record BaseAttributes
 {
   public const int MinimumScore = 6;
   public const int MaximumScore = 11;
