@@ -17,8 +17,8 @@ public class ResolveCustomizationsQueryHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ICustomizationRepository> _customizationRepository = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
 
   private readonly ResolveCustomizationsQueryHandler _handler;
 

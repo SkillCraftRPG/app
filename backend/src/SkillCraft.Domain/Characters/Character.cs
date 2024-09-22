@@ -5,9 +5,11 @@ using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
+using System.Collections.Immutable;
 
 namespace SkillCraft.Domain.Characters;
 
@@ -36,6 +38,9 @@ public class Character : AggregateRoot
 
   public CasteId CasteId { get; private set; }
   public EducationId EducationId { get; private set; }
+
+  private readonly HashSet<LanguageId> _languageIds = [];
+  public IReadOnlySet<LanguageId> LanguageIds => ImmutableHashSet.Create(_languageIds.ToArray());
 
   public Character() : base()
   {
@@ -104,6 +109,22 @@ public class Character : AggregateRoot
 
     CasteId = @event.CasteId;
     EducationId = @event.EducationId;
+  }
+
+  public void AddLanguage(Language language, UserId userId)
+  {
+    if (language.WorldId != WorldId)
+    {
+      throw new ArgumentException("The language does not reside in the same world as the character.", nameof(language));
+    }
+    else if (!_languageIds.Contains(language.Id))
+    {
+      Raise(new LanguageAdded(language.Id), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(LanguageAdded @event)
+  {
+    _languageIds.Add(@event.LanguageId);
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -213,6 +234,16 @@ public class Character : AggregateRoot
 
       CasteId = casteId;
       EducationId = educationId;
+    }
+  }
+
+  public class LanguageAdded : DomainEvent, INotification
+  {
+    public LanguageId LanguageId { get; }
+
+    public LanguageAdded(LanguageId languageId)
+    {
+      LanguageId = languageId;
     }
   }
 }

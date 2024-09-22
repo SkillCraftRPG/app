@@ -11,6 +11,7 @@ using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using Attribute = SkillCraft.Contracts.Attribute;
@@ -31,7 +32,8 @@ public class CreateCharacterCommandHandlerTests
   private readonly CreateCharacterCommandHandler _handler;
 
   private readonly WorldMock _world = new();
-  private readonly Lineage _lineage;
+  private readonly Lineage _species;
+  private readonly Lineage _nation;
   private readonly Personality _personality;
   private readonly Customization[] _customizations;
   private readonly Aspect[] _aspects;
@@ -40,12 +42,17 @@ public class CreateCharacterCommandHandlerTests
       optional: [Attribute.Coordination, Attribute.Vigor], extra: [Attribute.Agility, Attribute.Vigor]);
   private readonly Caste _caste;
   private readonly Education _education;
+  private readonly Language _language;
 
   public CreateCharacterCommandHandlerTests()
   {
     _handler = new(_characterQuerier.Object, _lineageRepository.Object, _permissionService.Object, _sender.Object);
 
-    _lineage = new(_world.Id, parent: null, new Name("Orrin"), _world.OwnerId);
+    _species = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId)
+    {
+      Languages = new(ids: [], extra: 1, text: null)
+    };
+    _nation = new(_world.Id, _species, new Name("Orrin"), _world.OwnerId);
     _personality = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
     _customizations =
     [
@@ -59,6 +66,9 @@ public class CreateCharacterCommandHandlerTests
     ];
     _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId);
     _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId);
+    _language = new(_world.Id, new Name("Celfique"), _world.OwnerId);
+
+    _lineageRepository.Setup(x => x.LoadAsync(_species.Id, _cancellationToken)).ReturnsAsync(_species);
   }
 
   [Fact(DisplayName = "It should create a new character.")]
@@ -67,10 +77,11 @@ public class CreateCharacterCommandHandlerTests
     CreateCharacterPayload payload = new("  Heracles Aetos  ")
     {
       Player = $"  {_faker.Person.FullName}  ",
-      LineageId = _lineage.Id.ToGuid(),
+      LineageId = _nation.Id.ToGuid(),
       Height = 1.84,
       Weight = 84.6,
       Age = 30,
+      LanguageIds = [_language.Id.ToGuid()],
       PersonalityId = _personality.Id.ToGuid(),
       CustomizationIds = _customizations.Select(x => x.Id.ToGuid()).ToList(),
       AspectIds = _aspects.Select(x => x.Id.ToGuid()).ToList(),
@@ -94,15 +105,17 @@ public class CreateCharacterCommandHandlerTests
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
 
-    _sender.Setup(x => x.Send(It.Is<ResolveLineageQuery>(y => y.Activity == command && y.Id == payload.LineageId), _cancellationToken)).ReturnsAsync(_lineage);
+    _sender.Setup(x => x.Send(It.Is<ResolveLineageQuery>(y => y.Activity == command && y.Id == payload.LineageId), _cancellationToken)).ReturnsAsync(_nation);
     _sender.Setup(x => x.Send(It.Is<ResolvePersonalityQuery>(y => y.Activity == command && y.Id == payload.PersonalityId), _cancellationToken)).ReturnsAsync(_personality);
     _sender.Setup(x => x.Send(It.Is<ResolveCustomizationsQuery>(y => y.Activity == command
       && y.Personality == _personality && y.Ids == payload.CustomizationIds), _cancellationToken)).ReturnsAsync(_customizations);
     _sender.Setup(x => x.Send(It.Is<ResolveAspectsQuery>(y => y.Activity == command && y.Ids == payload.AspectIds), _cancellationToken)).ReturnsAsync(_aspects);
     _sender.Setup(x => x.Send(It.Is<ResolveBaseAttributesQuery>(y => y.Payload == payload.Attributes && y.Aspects == _aspects
-      && y.Lineage == _lineage && y.Parent == null), _cancellationToken)).ReturnsAsync(_baseAttributes);
+      && y.Lineage == _nation && y.Parent == _species), _cancellationToken)).ReturnsAsync(_baseAttributes);
     _sender.Setup(x => x.Send(It.Is<ResolveCasteQuery>(y => y.Activity == command && y.Id == payload.CasteId), _cancellationToken)).ReturnsAsync(_caste);
     _sender.Setup(x => x.Send(It.Is<ResolveEducationQuery>(y => y.Activity == command && y.Id == payload.EducationId), _cancellationToken)).ReturnsAsync(_education);
+    _sender.Setup(x => x.Send(It.Is<ResolveLanguagesQuery>(y => y.Activity == command && y.Lineage == _nation
+      && y.Parent == _species && y.Ids == payload.LanguageIds), _cancellationToken)).ReturnsAsync([_language]);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -115,7 +128,7 @@ public class CreateCharacterCommandHandlerTests
     _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.WorldId == _world.Id
       && y.Character.Name.Value == payload.Name.Trim()
       && y.Character.Player != null && y.Character.Player.Value == payload.Player.Trim()
-      && y.Character.LineageId == _lineage.Id
+      && y.Character.LineageId == _nation.Id
       && y.Character.Height == payload.Height
       && y.Character.Weight == payload.Weight
       && y.Character.Age == payload.Age
@@ -124,7 +137,8 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.AspectIds.SequenceEqual(_aspects.Select(x => x.Id))
       && y.Character.BaseAttributes == _baseAttributes
       && y.Character.CasteId == _caste.Id
-      && y.Character.EducationId == _education.Id), _cancellationToken), Times.Once);
+      && y.Character.EducationId == _education.Id
+      && Assert.Single(y.Character.LanguageIds) == _language.Id), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

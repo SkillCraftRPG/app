@@ -10,6 +10,7 @@ using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 
@@ -60,6 +61,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     Caste caste = await _sender.Send(new ResolveCasteQuery(command, payload.CasteId), cancellationToken);
     Education education = await _sender.Send(new ResolveEducationQuery(command, payload.EducationId), cancellationToken);
 
+    UserId userId = command.GetUserId();
     Character character = new(
       command.GetWorldId(),
       new Name(payload.Name),
@@ -74,7 +76,13 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       baseAttributes,
       caste,
       education,
-      command.GetUserId());
+      userId);
+
+    IReadOnlyCollection<Language> languages = await _sender.Send(new ResolveLanguagesQuery(command, lineage, parent, payload.LanguageIds), cancellationToken);
+    foreach (Language language in languages)
+    {
+      character.AddLanguage(language, userId);
+    }
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 

@@ -9,7 +9,7 @@ public record CreateCharacterPayload
   public double Height { get; set; }
   public double Weight { get; set; }
   public int Age { get; set; }
-  // TODO(fpion): Lineage.Languages.Extra
+  public List<Guid> LanguageIds { get; set; }
 
   public Guid PersonalityId { get; set; }
   public List<Guid> CustomizationIds { get; set; }
@@ -29,6 +29,7 @@ public record CreateCharacterPayload
   {
     Name = name;
 
+    LanguageIds = [];
     CustomizationIds = [];
     AspectIds = [];
     Attributes = new();
