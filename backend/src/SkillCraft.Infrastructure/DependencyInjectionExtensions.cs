@@ -48,11 +48,16 @@ public static class DependencyInjectionExtensions
   private static EventSerializer InitializeEventSerializer(IServiceProvider serviceProvider) => new(serviceProvider.GetJsonConverters());
   public static IEnumerable<JsonConverter> GetJsonConverters(this IServiceProvider _) =>
   [
+    new AspectIdConverter(),
+    new CasteIdConverter(),
+    new EducationIdConverter(),
     new CustomizationIdConverter(),
     new DescriptionConverter(),
     new LanguageIdConverter(),
     new LineageIdConverter(),
     new NameConverter(),
+    new PersonalityIdConverter(),
+    new PlayerNameConverter(),
     new RollConverter(),
     new ScriptConverter(),
     new SlugConverter(),

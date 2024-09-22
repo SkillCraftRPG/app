@@ -28,7 +28,7 @@ internal class LanguageRepository : Logitar.EventSourcing.EntityFrameworkCore.Re
 
   public async Task<IReadOnlyCollection<Language>> LoadAsync(IEnumerable<LanguageId> ids, CancellationToken cancellationToken)
   {
-    IEnumerable<AggregateId> aggregateIds = ids.Select(id => id.AggregateId).Distinct();
+    IEnumerable<AggregateId> aggregateIds = ids.Distinct().Select(id => id.AggregateId);
     return (await LoadAsync<Language>(aggregateIds, cancellationToken)).ToArray();
   }
 

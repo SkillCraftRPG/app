@@ -1,4 +1,5 @@
-﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+﻿using Logitar.EventSourcing;
+using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
 using SkillCraft.Domain.Customizations;
 
@@ -23,6 +24,12 @@ internal class CustomizationRepository : Logitar.EventSourcing.EntityFrameworkCo
   public async Task<Customization?> LoadAsync(CustomizationId id, long? version, CancellationToken cancellationToken)
   {
     return await LoadAsync<Customization>(id.AggregateId, version, cancellationToken);
+  }
+
+  public async Task<IReadOnlyCollection<Customization>> LoadAsync(IEnumerable<CustomizationId> ids, CancellationToken cancellationToken)
+  {
+    IEnumerable<AggregateId> aggregateIds = ids.Distinct().Select(id => id.AggregateId);
+    return (await LoadAsync<Customization>(aggregateIds, cancellationToken)).ToArray();
   }
 
   public async Task SaveAsync(Customization customization, CancellationToken cancellationToken)
