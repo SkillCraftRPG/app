@@ -81,7 +81,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     IReadOnlyCollection<Language> languages = await _sender.Send(new ResolveLanguagesQuery(command, lineage, parent, payload.LanguageIds), cancellationToken);
     foreach (Language language in languages)
     {
-      character.AddLanguage(language, userId);
+      character.AddLanguage(language, reason: "Lineage Extra Language", userId);
     }
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);

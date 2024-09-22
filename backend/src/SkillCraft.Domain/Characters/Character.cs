@@ -39,8 +39,8 @@ public class Character : AggregateRoot
   public CasteId CasteId { get; private set; }
   public EducationId EducationId { get; private set; }
 
-  private readonly HashSet<LanguageId> _languageIds = [];
-  public IReadOnlySet<LanguageId> LanguageIds => ImmutableHashSet.Create(_languageIds.ToArray());
+  private readonly Dictionary<LanguageId, string?> _languages = [];
+  public IReadOnlySet<LanguageId> LanguageIds => ImmutableHashSet.Create(_languages.Keys.ToArray());
 
   public Character() : base()
   {
@@ -111,20 +111,21 @@ public class Character : AggregateRoot
     EducationId = @event.EducationId;
   }
 
-  public void AddLanguage(Language language, UserId userId)
+  public void AddLanguage(Language language, UserId userId) => AddLanguage(language, reason: null, userId);
+  public void AddLanguage(Language language, string? reason, UserId userId)
   {
     if (language.WorldId != WorldId)
     {
       throw new ArgumentException("The language does not reside in the same world as the character.", nameof(language));
     }
-    else if (!_languageIds.Contains(language.Id))
+    else if (!_languages.ContainsKey(language.Id))
     {
-      Raise(new LanguageAdded(language.Id), userId.ActorId);
+      Raise(new LanguageAdded(language.Id, reason), userId.ActorId);
     }
   }
   protected virtual void Apply(LanguageAdded @event)
   {
-    _languageIds.Add(@event.LanguageId);
+    _languages[@event.LanguageId] = @event.Reason;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -240,10 +241,12 @@ public class Character : AggregateRoot
   public class LanguageAdded : DomainEvent, INotification
   {
     public LanguageId LanguageId { get; }
+    public string? Reason { get; }
 
-    public LanguageAdded(LanguageId languageId)
+    public LanguageAdded(LanguageId languageId, string? reason)
     {
       LanguageId = languageId;
+      Reason = reason;
     }
   }
 }
