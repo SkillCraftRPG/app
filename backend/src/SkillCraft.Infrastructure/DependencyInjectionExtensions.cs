@@ -62,6 +62,7 @@ public static class DependencyInjectionExtensions
     new ScriptConverter(),
     new SlugConverter(),
     new TalentIdConverter(),
+    new TextConverter(),
     new TypicalSpeakersConverter(),
     new UserIdConverter(),
     new WorldIdConverter()
