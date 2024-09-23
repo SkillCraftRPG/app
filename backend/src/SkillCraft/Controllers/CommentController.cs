@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application.Comments.Commands;
+using SkillCraft.Application.Comments.Queries;
 using SkillCraft.Constants;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Domain;
@@ -45,7 +46,7 @@ public class CommentController : ControllerBase
   [HttpGet("/comments/{id}")]
   public async Task<ActionResult<CommentModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
-    await Task.Delay(1000, cancellationToken);
-    return StatusCode(StatusCodes.Status501NotImplemented); // TODO(fpion): implement
+    CommentModel? comment = await _sender.Send(new ReadCommentQuery(id), cancellationToken);
+    return comment == null ? NotFound() : Ok(comment);
   }
 }
