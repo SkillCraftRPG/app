@@ -24,6 +24,8 @@ internal class SaveTalentCommandHandler : IRequestHandler<SaveTalentCommand>
     EntityMetadata entity = talent.GetMetadata();
     await _storageService.EnsureAvailableAsync(entity, cancellationToken);
 
+    // TODO(fpion): ensure no Skill conflict
+
     await _talentRepository.SaveAsync(talent, cancellationToken);
 
     await _storageService.UpdateAsync(entity, cancellationToken);
