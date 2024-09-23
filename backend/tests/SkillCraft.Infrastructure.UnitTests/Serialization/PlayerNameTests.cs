@@ -13,6 +13,7 @@ public class PlayerNameTests
   public PlayerNameTests()
   {
     _options.Converters.Add(new PlayerNameConverter());
+    _options.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
   }
 
   [Fact(DisplayName = "It should deserialize correctly.")]
