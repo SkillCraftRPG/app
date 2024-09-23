@@ -3,6 +3,7 @@ using Logitar.Portal.Contracts.Users;
 using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Talents;
@@ -62,7 +63,7 @@ public class CreateTalentCommandHandlerTests
   [Fact(DisplayName = "It should create a new talent without a required talent.")]
   public async Task It_should_create_a_new_talent_without_a_required_talent()
   {
-    CreateTalentPayload payload = new(" Expertise ")
+    CreateTalentPayload payload = new(" Mêlée ")
     {
       Description = "    ",
       AllowMultiplePurchases = true
@@ -83,7 +84,9 @@ public class CreateTalentCommandHandlerTests
       && y.Talent.Tier == payload.Tier
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description == null
-      && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases), _cancellationToken), Times.Once);
+      && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+      && y.Talent.RequiredTalentId == null
+      && y.Talent.Skill == Skill.Melee), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

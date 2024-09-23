@@ -58,7 +58,7 @@ public class UpdateTalentCommandHandlerTests
   [Fact(DisplayName = "It should update an existing talent.")]
   public async Task It_should_update_an_existing_talent()
   {
-    Talent talent = new(_world.Id, tier: 1, new Name("tolerance-a-l-alcool-ii"), _world.OwnerId)
+    Talent talent = new(_world.Id, tier: 1, new Name("Résistance"), _world.OwnerId)
     {
       AllowMultiplePurchases = true
     };
@@ -93,6 +93,7 @@ public class UpdateTalentCommandHandlerTests
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Value.Trim()
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+      && y.Talent.Skill == null
       ), _cancellationToken), Times.Once);
   }
 }

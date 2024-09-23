@@ -37,7 +37,7 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
       World? other = await _worldRepository.LoadAsync(world.Slug, cancellationToken);
       if (other != null && !other.Equals(world))
       {
-        throw new SlugAlreadyUsedException(world);
+        throw new SlugAlreadyUsedException(world); // TODO(fpion): use querier
       }
     }
 

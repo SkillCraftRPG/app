@@ -1,6 +1,8 @@
 ﻿using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Talents;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.EntityFrameworkCore.Repositories;
 
@@ -23,6 +25,11 @@ internal class TalentRepository : Logitar.EventSourcing.EntityFrameworkCore.Rela
   public async Task<Talent?> LoadAsync(TalentId id, long? version, CancellationToken cancellationToken)
   {
     return await LoadAsync<Talent>(id.AggregateId, version, cancellationToken);
+  }
+
+  public Task<Talent?> LoadAsync(WorldId worldId, Skill skill, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException(); // TODO(fpion): implement
   }
 
   public async Task SaveAsync(Talent talent, CancellationToken cancellationToken)

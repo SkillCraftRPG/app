@@ -19,8 +19,11 @@ internal class SlugAlreadyUsedException : ConflictException
     get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
+  // TODO(fpion): ConflictId
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Slug, PropertyName);
+  // TODO(fpion): ConflictId
+
   public SlugAlreadyUsedException(World world) : base(BuildMessage(world))
   {
     Slug = world.Slug.Value;

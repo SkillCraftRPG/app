@@ -31,7 +31,7 @@ public class ReplaceTalentCommandHandlerTests
   public async Task It_should_replace_an_existing_talent()
   {
     Talent required = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
-    Talent talent = new(_world.Id, tier: 1, new Name("armes-de-finesse"), _world.OwnerId)
+    Talent talent = new(_world.Id, tier: 1, new Name("Orientation"), _world.OwnerId)
     {
       AllowMultiplePurchases = true
     };
@@ -66,6 +66,7 @@ public class ReplaceTalentCommandHandlerTests
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Trim()
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+      && y.Talent.Skill == null
       ), _cancellationToken), Times.Once);
   }
 

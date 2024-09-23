@@ -19,6 +19,7 @@ internal static class Talents
   public static readonly ColumnId Id = new(nameof(TalentEntity.Id), Table);
   public static readonly ColumnId Name = new(nameof(TalentEntity.Name), Table);
   public static readonly ColumnId RequiredTalentId = new(nameof(TalentEntity.RequiredTalentId), Table);
+  public static readonly ColumnId Skill = new(nameof(TalentEntity.Skill), Table);
   public static readonly ColumnId TalentId = new(nameof(TalentEntity.TalentId), Table);
   public static readonly ColumnId Tier = new(nameof(TalentEntity.Tier), Table);
   public static readonly ColumnId WorldId = new(nameof(TalentEntity.WorldId), Table);
