@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Aspects.Commands;
 using SkillCraft.Application.Aspects.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("aspects")]
+[Route(Routes.Aspect)]
 public class AspectController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class AspectController : ControllerBase
   public async Task<ActionResult<AspectModel>> CreateAsync([FromBody] CreateAspectPayload payload, CancellationToken cancellationToken)
   {
     AspectModel aspect = await _pipeline.ExecuteAsync(new CreateAspectCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("aspects/{id}", [new KeyValuePair<string, string>("id", aspect.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Aspect}/{{id}}", [new KeyValuePair<string, string>("id", aspect.Id.ToString())]);
 
     return Created(location, aspect);
   }

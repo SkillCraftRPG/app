@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Worlds.Commands;
 using SkillCraft.Application.Worlds.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Extensions;
 using SkillCraft.Models.Worlds;
@@ -12,7 +13,7 @@ namespace SkillCraft.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("worlds")]
+[Route(Routes.World)]
 public class WorldController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -26,7 +27,7 @@ public class WorldController : ControllerBase
   public async Task<ActionResult<WorldModel>> CreateAsync([FromBody] CreateWorldPayload payload, CancellationToken cancellationToken)
   {
     WorldModel world = await _pipeline.ExecuteAsync(new CreateWorldCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("worlds/{id}", [new KeyValuePair<string, string>("id", world.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.World}/{{id}}", [new KeyValuePair<string, string>("id", world.Id.ToString())]);
 
     return Created(location, world);
   }
