@@ -66,8 +66,7 @@ public class CreateTalentCommandHandlerTests
     CreateTalentPayload payload = new(" Mêlée ")
     {
       Description = "    ",
-      AllowMultiplePurchases = true,
-      Skill = Skill.Melee
+      AllowMultiplePurchases = true
     };
     CreateTalentCommand command = new(payload);
     command.Contextualize(_user, _world);
@@ -87,7 +86,7 @@ public class CreateTalentCommandHandlerTests
       && y.Talent.Description == null
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
       && y.Talent.RequiredTalentId == null
-      && y.Talent.Skill == payload.Skill), _cancellationToken), Times.Once);
+      && y.Talent.Skill == Skill.Melee), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

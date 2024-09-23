@@ -18,7 +18,7 @@ internal class TalentConfiguration : AggregateConfiguration<TalentEntity>, IEnti
 
     builder.HasIndex(x => x.Id).IsUnique();
     builder.HasIndex(x => x.Name);
-    builder.HasIndex(x => x.Skill).IsUnique();
+    builder.HasIndex(x => x.Skill).IsUnique(); // TODO(fpion): in the same world
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
     builder.Property(x => x.Skill).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Skill>());

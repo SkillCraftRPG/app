@@ -9,7 +9,6 @@ public record CreateTalentPayload
 
   public bool AllowMultiplePurchases { get; set; }
   public Guid? RequiredTalentId { get; set; }
-  public Skill? Skill { get; set; }
 
   public CreateTalentPayload() : this(string.Empty)
   {

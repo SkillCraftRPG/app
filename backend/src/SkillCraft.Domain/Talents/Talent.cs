@@ -25,6 +25,8 @@ public class Talent : AggregateRoot
       {
         _name = value;
         _updatedEvent.Name = value;
+
+        Skill = TalentHelper.TryGetSkill(value);
       }
     }
   }
@@ -60,7 +62,7 @@ public class Talent : AggregateRoot
   public Skill? Skill
   {
     get => _skill;
-    set
+    private set
     {
       if (_skill != value)
       {
@@ -86,7 +88,8 @@ public class Talent : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(tier));
     }
 
-    Raise(new CreatedEvent(worldId, tier, name), userId.ActorId);
+    Skill? skill = TalentHelper.TryGetSkill(name);
+    Raise(new CreatedEvent(worldId, tier, name, skill), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -95,6 +98,8 @@ public class Talent : AggregateRoot
     Tier = @event.Tier;
 
     _name = @event.Name;
+
+    _skill = @event.Skill;
   }
 
   public void SetRequiredTalent(Talent? requiredTalent)
@@ -145,7 +150,6 @@ public class Talent : AggregateRoot
     {
       RequiredTalentId = @event.RequiredTalentId.Value;
     }
-
     if (@event.Skill != null)
     {
       _skill = @event.Skill.Value;
@@ -162,13 +166,17 @@ public class Talent : AggregateRoot
 
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, int tier, Name name)
+    public Skill? Skill { get; }
+
+    public CreatedEvent(WorldId worldId, int tier, Name name, Skill? skill)
     {
       WorldId = worldId;
 
       Tier = tier;
 
       Name = name;
+
+      Skill = skill;
     }
   }
 

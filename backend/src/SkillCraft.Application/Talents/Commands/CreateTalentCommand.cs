@@ -34,8 +34,7 @@ internal class CreateTalentCommandHandler : IRequestHandler<CreateTalentCommand,
     Talent talent = new(command.GetWorldId(), payload.Tier, new Name(payload.Name), userId)
     {
       Description = Description.TryCreate(payload.Description),
-      AllowMultiplePurchases = payload.AllowMultiplePurchases,
-      Skill = payload.Skill
+      AllowMultiplePurchases = payload.AllowMultiplePurchases
     };
     if (payload.RequiredTalentId.HasValue)
     {

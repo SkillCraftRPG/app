@@ -7,7 +7,6 @@ public record ReplaceTalentPayload
 
   public bool AllowMultiplePurchases { get; set; }
   public Guid? RequiredTalentId { get; set; }
-  public Skill? Skill { get; set; }
 
   public ReplaceTalentPayload() : this(string.Empty)
   {

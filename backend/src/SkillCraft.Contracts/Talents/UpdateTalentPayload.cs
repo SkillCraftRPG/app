@@ -7,5 +7,4 @@ public record UpdateTalentPayload
 
   public bool? AllowMultiplePurchases { get; set; }
   public Change<Guid?>? RequiredTalentId { get; set; }
-  public Change<Skill?>? Skill { get; set; }
 }

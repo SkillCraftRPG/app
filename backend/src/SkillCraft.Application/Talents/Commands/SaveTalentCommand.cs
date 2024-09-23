@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Logitar.EventSourcing;
+using MediatR;
 using SkillCraft.Application.Storages;
 using SkillCraft.Domain.Talents;
 
@@ -21,10 +22,27 @@ internal class SaveTalentCommandHandler : IRequestHandler<SaveTalentCommand>
   {
     Talent talent = command.Talent;
 
+    bool hasSkillChanged = false;
+    foreach (DomainEvent change in talent.Changes)
+    {
+      if (change is Talent.CreatedEvent || change is Talent.UpdatedEvent updatedEvent && updatedEvent.Skill != null)
+      {
+        hasSkillChanged = true;
+        break;
+      }
+    }
+
+    if (hasSkillChanged && talent.Skill.HasValue)
+    {
+      Talent? other = await _talentRepository.LoadAsync(talent.WorldId, talent.Skill.Value, cancellationToken);
+      if (other != null && !other.Equals(talent))
+      {
+        throw new TalentSkillAlreadyExistingException(talent, other);
+      }
+    }
+
     EntityMetadata entity = talent.GetMetadata();
     await _storageService.EnsureAvailableAsync(entity, cancellationToken);
-
-    // TODO(fpion): ensure no Skill conflict
 
     await _talentRepository.SaveAsync(talent, cancellationToken);
 
