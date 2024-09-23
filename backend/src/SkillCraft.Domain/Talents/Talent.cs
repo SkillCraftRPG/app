@@ -56,6 +56,24 @@ public class Talent : AggregateRoot
     }
   }
   public TalentId? RequiredTalentId { get; private set; }
+  private Skill? _skill = null;
+  public Skill? Skill
+  {
+    get => _skill;
+    set
+    {
+      if (_skill != value)
+      {
+        if (value.HasValue && !Enum.IsDefined(value.Value))
+        {
+          throw new ArgumentOutOfRangeException(nameof(Skill));
+        }
+
+        _skill = value;
+        _updatedEvent.Skill = new Change<Skill?>(value);
+      }
+    }
+  }
 
   public Talent() : base()
   {
@@ -127,6 +145,11 @@ public class Talent : AggregateRoot
     {
       RequiredTalentId = @event.RequiredTalentId.Value;
     }
+
+    if (@event.Skill != null)
+    {
+      _skill = @event.Skill.Value;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -156,7 +179,9 @@ public class Talent : AggregateRoot
 
     public bool? AllowMultiplePurchases { get; set; }
     public Change<TalentId?>? RequiredTalentId { get; set; }
+    public Change<Skill?>? Skill { get; set; }
 
-    public bool HasChanges => Name != null || Description != null || AllowMultiplePurchases.HasValue || RequiredTalentId != null;
+    public bool HasChanges => Name != null || Description != null
+      || AllowMultiplePurchases.HasValue || RequiredTalentId != null || Skill != null;
   }
 }

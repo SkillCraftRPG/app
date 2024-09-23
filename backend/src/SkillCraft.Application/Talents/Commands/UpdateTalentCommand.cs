@@ -60,6 +60,10 @@ internal class UpdateTalentCommandHandler : IRequestHandler<UpdateTalentCommand,
     {
       await _sender.Send(new SetRequiredTalentCommand(command, talent, payload.RequiredTalentId.Value), cancellationToken);
     }
+    if (payload.Skill != null)
+    {
+      talent.Skill = payload.Skill.Value;
+    }
 
     talent.Update(command.GetUserId());
     await _sender.Send(new SaveTalentCommand(talent), cancellationToken);

@@ -1,4 +1,5 @@
-﻿using SkillCraft.Domain.Worlds;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Domain.Talents;
 
@@ -23,6 +24,13 @@ public class TalentTests
     var exception = Assert.Throws<ArgumentException>(() => _talent.SetRequiredTalent(talent));
     Assert.StartsWith("The required talent tier must be inferior or equal to the requiring talent tier.", exception.Message);
     Assert.Equal("requiredTalent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when the skill is not valid.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_the_skill_is_not_valid()
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _talent.Skill = (Skill)(-1));
+    Assert.Equal("Skill", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when the tier is not valid.")]

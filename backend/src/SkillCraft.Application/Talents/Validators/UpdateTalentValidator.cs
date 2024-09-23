@@ -12,5 +12,6 @@ internal class UpdateTalentValidator : AbstractValidator<UpdateTalentPayload>
     When(x => !string.IsNullOrWhiteSpace(x.Description?.Value), () => RuleFor(x => x.Description!.Value!).Description());
 
     When(x => x.RequiredTalentId?.Value != null, () => RuleFor(x => x.RequiredTalentId!.Value!.Value).NotEmpty());
+    When(x => x.Skill?.Value != null, () => RuleFor(x => x.Skill!.Value!.Value).IsInEnum());
   }
 }

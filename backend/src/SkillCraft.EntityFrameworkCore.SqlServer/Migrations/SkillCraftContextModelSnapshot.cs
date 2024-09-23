@@ -871,6 +871,10 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<int?>("RequiredTalentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Skill")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<int>("Tier")
                         .HasColumnType("int");
 
@@ -903,6 +907,10 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("Name");
 
                     b.HasIndex("RequiredTalentId");
+
+                    b.HasIndex("Skill")
+                        .IsUnique()
+                        .HasFilter("[Skill] IS NOT NULL");
 
                     b.HasIndex("UpdatedBy");
 

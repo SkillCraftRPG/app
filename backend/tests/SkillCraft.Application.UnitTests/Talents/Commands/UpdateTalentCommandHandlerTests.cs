@@ -60,7 +60,8 @@ public class UpdateTalentCommandHandlerTests
   {
     Talent talent = new(_world.Id, tier: 1, new Name("tolerance-a-l-alcool-ii"), _world.OwnerId)
     {
-      AllowMultiplePurchases = true
+      AllowMultiplePurchases = true,
+      Skill = Skill.Resistance
     };
     talent.Update(_world.OwnerId);
     _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
@@ -70,7 +71,8 @@ public class UpdateTalentCommandHandlerTests
       Name = " Tolérance à l’alcool II ",
       Description = new Change<string>("  Augmente de manière permanente de +1 le seuil de tolérance à l’alcool du personnage. La durée de ses gueules de bois est également réduite de moitié.  "),
       AllowMultiplePurchases = false,
-      RequiredTalentId = new Change<Guid?>(Guid.NewGuid())
+      RequiredTalentId = new Change<Guid?>(Guid.NewGuid()),
+      Skill = new Change<Skill?>(null)
     };
     UpdateTalentCommand command = new(talent.Id.ToGuid(), payload);
     command.Contextualize();
@@ -93,6 +95,7 @@ public class UpdateTalentCommandHandlerTests
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Value.Trim()
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+      && y.Talent.Skill == payload.Skill.Value
       ), _cancellationToken), Times.Once);
   }
 }

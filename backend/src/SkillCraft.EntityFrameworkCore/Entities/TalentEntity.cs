@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
@@ -20,6 +21,7 @@ internal class TalentEntity : AggregateEntity
   public TalentEntity? RequiredTalent { get; private set; }
   public int? RequiredTalentId { get; private set; }
   public List<TalentEntity> RequiringTalents { get; private set; } = [];
+  public Skill? Skill { get; private set; }
 
   public TalentEntity(WorldEntity world, Talent.CreatedEvent @event) : base(@event)
   {
@@ -72,6 +74,10 @@ internal class TalentEntity : AggregateEntity
     {
       RequiredTalent = requiredTalent;
       RequiredTalentId = requiredTalent?.TalentId;
+    }
+    if (@event.Skill != null)
+    {
+      Skill = @event.Skill.Value;
     }
   }
 }

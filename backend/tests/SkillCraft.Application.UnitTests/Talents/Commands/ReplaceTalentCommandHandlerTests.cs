@@ -2,6 +2,7 @@
 using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Talents;
@@ -33,7 +34,8 @@ public class ReplaceTalentCommandHandlerTests
     Talent required = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
     Talent talent = new(_world.Id, tier: 1, new Name("armes-de-finesse"), _world.OwnerId)
     {
-      AllowMultiplePurchases = true
+      AllowMultiplePurchases = true,
+      Skill = Skill.Orientation
     };
     talent.SetRequiredTalent(required);
     talent.Update(_world.OwnerId);
@@ -44,7 +46,8 @@ public class ReplaceTalentCommandHandlerTests
     {
       Description = "  Lorsque le personnage effectue une attaque en maniant une arme de finesse, alors il peut remplacer le test de _Mêlée_ par un test d’_Orientation_. Si l’attaque réussit, il ajoute sa Précision aux points de dégâts infligés plutôt que sa Force. Également, il se voit conférer un bonus de +2 aux points de dégâts infligés en maniant une arme de finesse lorsqu’il ne tient aucune autre arme.  ",
       AllowMultiplePurchases = false,
-      RequiredTalentId = null
+      RequiredTalentId = null,
+      Skill = null
     };
     ReplaceTalentCommand command = new(talent.Id.ToGuid(), payload, Version: null);
     command.Contextualize();
@@ -66,6 +69,7 @@ public class ReplaceTalentCommandHandlerTests
       && y.Talent.Name.Value == payload.Name.Trim()
       && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Trim()
       && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+      && y.Talent.Skill == payload.Skill
       ), _cancellationToken), Times.Once);
   }
 

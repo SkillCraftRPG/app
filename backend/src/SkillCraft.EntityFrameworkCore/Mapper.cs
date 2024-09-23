@@ -198,7 +198,8 @@ internal class Mapper
     {
       Tier = source.Tier,
       Description = source.Description,
-      AllowMultiplePurchases = source.AllowMultiplePurchases
+      AllowMultiplePurchases = source.AllowMultiplePurchases,
+      Skill = source.Skill
     };
 
     MapAggregate(source, destination);
