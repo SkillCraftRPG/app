@@ -4,6 +4,12 @@ namespace SkillCraft.Domain.Validators;
 
 public static class ValidationExtensions
 {
+  public static IRuleBuilderOptions<T, string> CommentText<T>(this IRuleBuilder<T, string> ruleBuilder)
+  {
+    return ruleBuilder.NotEmpty()
+      .MaximumLength(Comments.Text.MaximumLength);
+  }
+
   public static IRuleBuilderOptions<T, string> Description<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty();
