@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Educations.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("educations")]
+[Route(Routes.Education)]
 public class EducationController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class EducationController : ControllerBase
   public async Task<ActionResult<EducationModel>> CreateAsync([FromBody] CreateEducationPayload payload, CancellationToken cancellationToken)
   {
     EducationModel education = await _pipeline.ExecuteAsync(new CreateEducationCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("educations/{id}", [new KeyValuePair<string, string>("id", education.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Education}/{{id}}", [new KeyValuePair<string, string>("id", education.Id.ToString())]);
 
     return Created(location, education);
   }

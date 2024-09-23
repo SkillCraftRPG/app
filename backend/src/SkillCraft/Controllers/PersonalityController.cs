@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Personalities.Commands;
 using SkillCraft.Application.Personalities.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("personalities")]
+[Route(Routes.Personality)]
 public class PersonalityController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class PersonalityController : ControllerBase
   public async Task<ActionResult<PersonalityModel>> CreateAsync([FromBody] CreatePersonalityPayload payload, CancellationToken cancellationToken)
   {
     PersonalityModel personality = await _pipeline.ExecuteAsync(new CreatePersonalityCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("personalities/{id}", [new KeyValuePair<string, string>("id", personality.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Personality}/{{id}}", [new KeyValuePair<string, string>("id", personality.Id.ToString())]);
 
     return Created(location, personality);
   }

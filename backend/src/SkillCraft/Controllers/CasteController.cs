@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Castes.Commands;
 using SkillCraft.Application.Castes.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("castes")]
+[Route(Routes.Caste)]
 public class CasteController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class CasteController : ControllerBase
   public async Task<ActionResult<CasteModel>> CreateAsync([FromBody] CreateCastePayload payload, CancellationToken cancellationToken)
   {
     CasteModel caste = await _pipeline.ExecuteAsync(new CreateCasteCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("castes/{id}", [new KeyValuePair<string, string>("id", caste.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Caste}/{{id}}", [new KeyValuePair<string, string>("id", caste.Id.ToString())]);
 
     return Created(location, caste);
   }
