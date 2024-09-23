@@ -37,7 +37,7 @@ internal class SaveTalentCommandHandler : IRequestHandler<SaveTalentCommand>
     if (hasSkillChanged && talent.Skill.HasValue)
     {
       TalentId? otherId = await _talentQuerier.FindIdAsync(talent.WorldId, talent.Skill.Value, cancellationToken);
-      if (otherId.HasValue && talent.Id != otherId.Value)
+      if (otherId.HasValue && otherId.Value != talent.Id)
       {
         throw new TalentSkillAlreadyExistingException(talent, otherId.Value, nameof(Talent.Name));
       }
