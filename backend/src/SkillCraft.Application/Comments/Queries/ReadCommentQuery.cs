@@ -19,7 +19,7 @@ internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, Comme
     CommentModel? comment = await _commentQuerier.ReadAsync(query.Id, cancellationToken);
     if (comment != null)
     {
-      // TODO(fpion): ensure can preview the entity
+      // TODO(fpion): ensure can view the entity
     }
 
     return comment;
