@@ -10,11 +10,13 @@ internal record SaveTalentCommand(Talent Talent) : IRequest;
 internal class SaveTalentCommandHandler : IRequestHandler<SaveTalentCommand>
 {
   private readonly IStorageService _storageService;
+  private readonly ITalentQuerier _talentQuerier;
   private readonly ITalentRepository _talentRepository;
 
-  public SaveTalentCommandHandler(IStorageService storageService, ITalentRepository talentRepository)
+  public SaveTalentCommandHandler(IStorageService storageService, ITalentQuerier talentQuerier, ITalentRepository talentRepository)
   {
     _storageService = storageService;
+    _talentQuerier = talentQuerier;
     _talentRepository = talentRepository;
   }
 
@@ -34,10 +36,10 @@ internal class SaveTalentCommandHandler : IRequestHandler<SaveTalentCommand>
 
     if (hasSkillChanged && talent.Skill.HasValue)
     {
-      Talent? other = await _talentRepository.LoadAsync(talent.WorldId, talent.Skill.Value, cancellationToken);
-      if (other != null && !other.Equals(talent))
+      TalentId? otherId = await _talentQuerier.FindIdAsync(talent.WorldId, talent.Skill.Value, cancellationToken);
+      if (otherId.HasValue && talent.Id != otherId.Value)
       {
-        throw new TalentSkillAlreadyExistingException(talent, other);
+        throw new TalentSkillAlreadyExistingException(talent, otherId.Value, nameof(Talent.Name));
       }
     }
 
