@@ -979,8 +979,7 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("RequiredTalentId");
 
-                    b.HasIndex("Skill")
-                        .IsUnique();
+                    b.HasIndex("Skill");
 
                     b.HasIndex("UpdatedBy");
 
@@ -988,7 +987,7 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Skill");
 
                     b.ToTable("Talents", (string)null);
                 });
