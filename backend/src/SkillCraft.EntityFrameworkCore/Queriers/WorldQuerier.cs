@@ -30,6 +30,16 @@ internal class WorldQuerier : IWorldQuerier
     return await _worlds.AsNoTracking().Where(x => x.OwnerId == userId.ToGuid()).CountAsync(cancellationToken);
   }
 
+  public Task<WorldId?> FindIdAsync(EntityKey entity, CancellationToken cancellationToken)
+  {
+    switch (entity.Type)
+    {
+      case EntityType.World:
+        return Task.FromResult<WorldId?>(new WorldId(entity.Id));
+    }
+
+    throw new NotImplementedException(); // TODO(fpion): implement
+  }
   public async Task<WorldId?> FindIdAsync(Slug slug, CancellationToken cancellationToken)
   {
     string slugNormalized = SkillCraftDb.Helper.Normalize(slug);

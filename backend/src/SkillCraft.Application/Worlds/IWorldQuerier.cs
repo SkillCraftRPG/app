@@ -9,6 +9,7 @@ public interface IWorldQuerier
 {
   Task<int> CountOwnedAsync(UserId userId, CancellationToken cancellationToken = default);
 
+  Task<WorldId?> FindIdAsync(EntityKey entity, CancellationToken cancellationToken = default);
   Task<WorldId?> FindIdAsync(Slug slug, CancellationToken cancellationToken = default);
 
   Task<WorldModel> ReadAsync(World world, CancellationToken cancellationToken = default);
