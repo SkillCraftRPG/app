@@ -1,18 +1,15 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
 using SkillCraft.Contracts;
-using SkillCraft.Contracts.Customizations;
-using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Worlds;
-using Attribute = SkillCraft.Contracts.Attribute;
 
-namespace SkillCraft.Domain.Personalities;
+namespace SkillCraft.Domain.Parties;
 
-public class Personality : AggregateRoot
+public class Party : AggregateRoot
 {
   private UpdatedEvent _updatedEvent = new();
 
-  public new PersonalityId Id => new(base.Id);
+  public new PartyId Id => new(base.Id);
 
   public WorldId WorldId { get; private set; }
 
@@ -43,31 +40,11 @@ public class Personality : AggregateRoot
     }
   }
 
-  private Attribute? _attribute = null;
-  public Attribute? Attribute
-  {
-    get => _attribute;
-    set
-    {
-      if (_attribute != value)
-      {
-        if (value.HasValue && !Enum.IsDefined(value.Value))
-        {
-          throw new ArgumentOutOfRangeException(nameof(Attribute));
-        }
-
-        _attribute = value;
-        _updatedEvent.Attribute = new Change<Attribute?>(value);
-      }
-    }
-  }
-  public CustomizationId? GiftId { get; private set; }
-
-  public Personality() : base()
+  public Party() : base()
   {
   }
 
-  public Personality(WorldId worldId, Name name, UserId userId, PersonalityId? id = null) : base(id?.AggregateId)
+  public Party(WorldId worldId, Name name, UserId userId, PartyId? id = null) : base(id?.AggregateId)
   {
     Raise(new CreatedEvent(worldId, name), userId.ActorId);
   }
@@ -76,27 +53,6 @@ public class Personality : AggregateRoot
     WorldId = @event.WorldId;
 
     _name = @event.Name;
-  }
-
-  public void SetGift(Customization? gift)
-  {
-    if (gift != null)
-    {
-      if (gift.WorldId != WorldId)
-      {
-        throw new ArgumentException("The gift does not reside in the same world as the personality.", nameof(gift));
-      }
-      else if (gift.Type != CustomizationType.Gift)
-      {
-        throw new ArgumentException("The customization is not a gift.", nameof(gift));
-      }
-    }
-
-    if (GiftId != gift?.Id)
-    {
-      GiftId = gift?.Id;
-      _updatedEvent.GiftId = new Change<CustomizationId?>(gift?.Id);
-    }
   }
 
   public void Update(UserId userId)
@@ -116,15 +72,6 @@ public class Personality : AggregateRoot
     if (@event.Description != null)
     {
       _description = @event.Description.Value;
-    }
-
-    if (@event.Attribute != null)
-    {
-      _attribute = @event.Attribute.Value;
-    }
-    if (@event.GiftId != null)
-    {
-      GiftId = @event.GiftId.Value;
     }
   }
 
@@ -149,9 +96,6 @@ public class Personality : AggregateRoot
     public Name? Name { get; set; }
     public Change<Description>? Description { get; set; }
 
-    public Change<Attribute?>? Attribute { get; set; }
-    public Change<CustomizationId?>? GiftId { get; set; }
-
-    public bool HasChanges => Name != null || Description != null || Attribute != null || GiftId != null;
+    public bool HasChanges => Name != null || Description != null;
   }
 }
