@@ -10,11 +10,13 @@ internal record SaveWorldCommand(World World) : IRequest;
 internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
 {
   private readonly IStorageService _storageService;
+  private readonly IWorldQuerier _worldQuerier;
   private readonly IWorldRepository _worldRepository;
 
-  public SaveWorldCommandHandler(IStorageService storageService, IWorldRepository worldRepository)
+  public SaveWorldCommandHandler(IStorageService storageService, IWorldQuerier worldQuerier, IWorldRepository worldRepository)
   {
     _storageService = storageService;
+    _worldQuerier = worldQuerier;
     _worldRepository = worldRepository;
   }
 
@@ -34,10 +36,10 @@ internal class SaveWorldCommandHandler : IRequestHandler<SaveWorldCommand>
 
     if (slugHasChanged)
     {
-      World? other = await _worldRepository.LoadAsync(world.Slug, cancellationToken);
-      if (other != null && !other.Equals(world))
+      WorldId? otherId = await _worldQuerier.FindIdAsync(world.Slug, cancellationToken);
+      if (otherId.HasValue && otherId.Value != world.Id)
       {
-        throw new SlugAlreadyUsedException(world);
+        throw new SlugAlreadyUsedException(world, otherId.Value, nameof(World.Slug));
       }
     }
 

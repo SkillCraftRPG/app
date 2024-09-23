@@ -5,6 +5,7 @@ using Logitar.Portal.Contracts.Search;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Talents;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
@@ -23,6 +24,16 @@ internal class TalentQuerier : ITalentQuerier
     _actorService = actorService;
     _talents = context.Talents;
     _sqlHelper = sqlHelper;
+  }
+
+  public async Task<TalentId?> FindIdAsync(WorldId worldId, Skill skill, CancellationToken cancellationToken)
+  {
+    Guid? talentId = await _talents.AsNoTracking()
+      .Where(x => x.World!.Id == worldId.ToGuid() && x.Skill == skill)
+      .Select(x => (Guid?)x.Id)
+      .SingleOrDefaultAsync(cancellationToken);
+
+    return talentId.HasValue ? new TalentId(talentId.Value) : null;
   }
 
   public async Task<TalentModel> ReadAsync(Talent talent, CancellationToken cancellationToken)

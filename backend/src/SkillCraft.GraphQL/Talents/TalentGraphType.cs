@@ -18,6 +18,8 @@ internal class TalentGraphType : AggregateGraphType<TalentModel>
 
     Field(x => x.AllowMultiplePurchases)
       .Description("A value indicating whether or not the talent can be purchased multiple times.");
+    Field(x => x.Skill, type: typeof(SkillGraphType))
+      .Description("The skill associated to the talent.");
 
     Field(x => x.World, type: typeof(NonNullGraphType<WorldGraphType>))
       .Description("The world in which the talent resides.");

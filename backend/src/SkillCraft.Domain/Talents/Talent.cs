@@ -25,6 +25,8 @@ public class Talent : AggregateRoot
       {
         _name = value;
         _updatedEvent.Name = value;
+
+        Skill = TalentHelper.TryGetSkill(value);
       }
     }
   }
@@ -56,6 +58,24 @@ public class Talent : AggregateRoot
     }
   }
   public TalentId? RequiredTalentId { get; private set; }
+  private Skill? _skill = null;
+  public Skill? Skill
+  {
+    get => _skill;
+    private set
+    {
+      if (_skill != value)
+      {
+        if (value.HasValue && !Enum.IsDefined(value.Value))
+        {
+          throw new ArgumentOutOfRangeException(nameof(Skill));
+        }
+
+        _skill = value;
+        _updatedEvent.Skill = new Change<Skill?>(value);
+      }
+    }
+  }
 
   public Talent() : base()
   {
@@ -68,7 +88,8 @@ public class Talent : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(tier));
     }
 
-    Raise(new CreatedEvent(worldId, tier, name), userId.ActorId);
+    Skill? skill = TalentHelper.TryGetSkill(name);
+    Raise(new CreatedEvent(worldId, tier, name, skill), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -77,6 +98,8 @@ public class Talent : AggregateRoot
     Tier = @event.Tier;
 
     _name = @event.Name;
+
+    _skill = @event.Skill;
   }
 
   public void SetRequiredTalent(Talent? requiredTalent)
@@ -127,6 +150,10 @@ public class Talent : AggregateRoot
     {
       RequiredTalentId = @event.RequiredTalentId.Value;
     }
+    if (@event.Skill != null)
+    {
+      _skill = @event.Skill.Value;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";
@@ -139,13 +166,17 @@ public class Talent : AggregateRoot
 
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, int tier, Name name)
+    public Skill? Skill { get; }
+
+    public CreatedEvent(WorldId worldId, int tier, Name name, Skill? skill)
     {
       WorldId = worldId;
 
       Tier = tier;
 
       Name = name;
+
+      Skill = skill;
     }
   }
 
@@ -156,7 +187,9 @@ public class Talent : AggregateRoot
 
     public bool? AllowMultiplePurchases { get; set; }
     public Change<TalentId?>? RequiredTalentId { get; set; }
+    public Change<Skill?>? Skill { get; set; }
 
-    public bool HasChanges => Name != null || Description != null || AllowMultiplePurchases.HasValue || RequiredTalentId != null;
+    public bool HasChanges => Name != null || Description != null
+      || AllowMultiplePurchases.HasValue || RequiredTalentId != null || Skill != null;
   }
 }

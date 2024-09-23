@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SkillCraft.Contracts;
 using SkillCraft.Domain;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -16,8 +18,11 @@ internal class TalentConfiguration : AggregateConfiguration<TalentEntity>, IEnti
 
     builder.HasIndex(x => x.Id).IsUnique();
     builder.HasIndex(x => x.Name);
+    builder.HasIndex(x => new { x.WorldId, x.Skill });
+    builder.HasIndex(x => x.Skill);
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Skill).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Skill>());
 
     builder.HasOne(x => x.World).WithMany(x => x.Talents)
       .HasPrincipalKey(x => x.WorldId).HasForeignKey(x => x.WorldId)

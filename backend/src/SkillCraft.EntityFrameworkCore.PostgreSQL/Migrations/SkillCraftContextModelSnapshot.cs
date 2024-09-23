@@ -942,6 +942,10 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Property<int?>("RequiredTalentId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Skill")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<int>("Tier")
                         .HasColumnType("integer");
 
@@ -975,13 +979,15 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("RequiredTalentId");
 
+                    b.HasIndex("Skill");
+
                     b.HasIndex("UpdatedBy");
 
                     b.HasIndex("UpdatedOn");
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Skill");
 
                     b.ToTable("Talents", (string)null);
                 });
