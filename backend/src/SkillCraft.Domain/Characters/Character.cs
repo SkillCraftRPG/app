@@ -9,7 +9,6 @@ using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
-using System.Collections.Immutable;
 
 namespace SkillCraft.Domain.Characters;
 
