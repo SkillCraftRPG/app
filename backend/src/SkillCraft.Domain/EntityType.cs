@@ -9,6 +9,7 @@ public enum EntityType
   Education,
   Language,
   Lineage,
+  Party,
   Personality,
   Talent,
   World

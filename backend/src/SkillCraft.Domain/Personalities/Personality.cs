@@ -117,6 +117,15 @@ public class Personality : AggregateRoot
     {
       _description = @event.Description.Value;
     }
+
+    if (@event.Attribute != null)
+    {
+      _attribute = @event.Attribute.Value;
+    }
+    if (@event.GiftId != null)
+    {
+      GiftId = @event.GiftId.Value;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";

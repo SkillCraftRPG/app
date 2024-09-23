@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Lineages.Commands;
 using SkillCraft.Application.Lineages.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("lineages")]
+[Route(Routes.Lineage)]
 public class LineageController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class LineageController : ControllerBase
   public async Task<ActionResult<LineageModel>> CreateAsync([FromBody] CreateLineagePayload payload, CancellationToken cancellationToken)
   {
     LineageModel lineage = await _pipeline.ExecuteAsync(new CreateLineageCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("lineages/{id}", [new KeyValuePair<string, string>("id", lineage.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Lineage}/{{id}}", [new KeyValuePair<string, string>("id", lineage.Id.ToString())]);
 
     return Created(location, lineage);
   }

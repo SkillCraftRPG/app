@@ -8,6 +8,7 @@ using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Lineages;
+using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
@@ -157,6 +158,22 @@ internal class Mapper
       Size = source.GetSize(),
       Weight = source.GetWeight(),
       Ages = source.GetAges()
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public PartyModel ToParty(PartyEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    PartyModel destination = new(world, source.Name)
+    {
+      Description = source.Description
     };
 
     MapAggregate(source, destination);

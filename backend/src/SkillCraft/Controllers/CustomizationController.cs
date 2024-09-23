@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Customizations.Commands;
 using SkillCraft.Application.Customizations.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("customizations")]
+[Route(Routes.Customization)]
 public class CustomizationController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class CustomizationController : ControllerBase
   public async Task<ActionResult<CustomizationModel>> CreateAsync([FromBody] CreateCustomizationPayload payload, CancellationToken cancellationToken)
   {
     CustomizationModel customization = await _pipeline.ExecuteAsync(new CreateCustomizationCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("customizations/{id}", [new KeyValuePair<string, string>("id", customization.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Customization}/{{id}}", [new KeyValuePair<string, string>("id", customization.Id.ToString())]);
 
     return Created(location, customization);
   }

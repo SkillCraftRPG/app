@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Languages.Commands;
 using SkillCraft.Application.Languages.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("languages")]
+[Route(Routes.Language)]
 public class LanguageController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class LanguageController : ControllerBase
   public async Task<ActionResult<LanguageModel>> CreateAsync([FromBody] CreateLanguagePayload payload, CancellationToken cancellationToken)
   {
     LanguageModel language = await _pipeline.ExecuteAsync(new CreateLanguageCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("languages/{id}", [new KeyValuePair<string, string>("id", language.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Language}/{{id}}", [new KeyValuePair<string, string>("id", language.Id.ToString())]);
 
     return Created(location, language);
   }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Talents.Commands;
 using SkillCraft.Application.Talents.Queries;
+using SkillCraft.Constants;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -14,7 +15,7 @@ namespace SkillCraft.Controllers;
 [ApiController]
 [Authorize]
 [RequireWorld]
-[Route("talents")]
+[Route(Routes.Talent)]
 public class TalentController : ControllerBase
 {
   private readonly IRequestPipeline _pipeline;
@@ -28,7 +29,7 @@ public class TalentController : ControllerBase
   public async Task<ActionResult<TalentModel>> CreateAsync([FromBody] CreateTalentPayload payload, CancellationToken cancellationToken)
   {
     TalentModel talent = await _pipeline.ExecuteAsync(new CreateTalentCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation("talents/{id}", [new KeyValuePair<string, string>("id", talent.Id.ToString())]);
+    Uri location = HttpContext.BuildLocation($"{Routes.Talent}/{{id}}", [new KeyValuePair<string, string>("id", talent.Id.ToString())]);
 
     return Created(location, talent);
   }
