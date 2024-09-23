@@ -30,6 +30,11 @@ internal class WorldQuerier : IWorldQuerier
     return await _worlds.AsNoTracking().Where(x => x.OwnerId == userId.ToGuid()).CountAsync(cancellationToken);
   }
 
+  public Task<WorldId?> FindIdAsync(EntityKey key, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException(); // TODO(fpion): implement
+  }
+
   public async Task<WorldModel> ReadAsync(World world, CancellationToken cancellationToken)
   {
     return await ReadAsync(world.Id, cancellationToken)
