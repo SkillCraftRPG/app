@@ -1,6 +1,8 @@
-﻿using Moq;
+﻿using Logitar.Portal.Contracts.Actors;
+using Moq;
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
@@ -17,17 +19,24 @@ public class StorageServiceTests
     AllocatedBytes = 5 * 1024 * 1024 // 5 MB
   };
   private readonly Mock<IStorageRepository> _storageRepository = new();
-  private readonly Mock<IWorldRepository> _worldRepository = new();
+  private readonly Mock<IWorldQuerier> _worldQuerier = new();
 
   private readonly StorageService _service;
 
-  private readonly World _world = new(new Slug("new-world"), UserId.NewId());
+  private readonly UserMock _user = new();
+  private readonly World _world;
+  private readonly WorldModel _worldModel;
 
   public StorageServiceTests()
   {
-    _service = new(_accountSettings, _storageRepository.Object, _worldRepository.Object);
+    _service = new(_accountSettings, _storageRepository.Object, _worldQuerier.Object);
 
-    _worldRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(_world);
+    _world = new(new Slug("ungar"), new UserId(_user.Id));
+    _worldModel = new(new Actor(_user), _world.Slug.Value)
+    {
+      Id = _world.Id.ToGuid()
+    };
+    _worldQuerier.Setup(x => x.ReadAsync(_world.Id, _cancellationToken)).ReturnsAsync(_worldModel);
   }
 
   [Fact(DisplayName = "EnsureAvailableAsync(EntityMetadata): it should succeed when there is enough storage.")]

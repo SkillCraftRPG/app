@@ -2,10 +2,11 @@
 using MediatR;
 using SkillCraft.Application.Comments.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Comments;
-using SkillCraft.Domain.Worlds;
 using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Comments.Commands;
@@ -18,20 +19,20 @@ internal class EditCommentCommandHandler : IRequestHandler<EditCommentCommand, C
   private readonly ICommentRepository _commentRepository;
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
-  private readonly IWorldRepository _worldRepository;
+  private readonly IWorldQuerier _worldQuerier;
 
   public EditCommentCommandHandler(
     ICommentQuerier commentQuerier,
     ICommentRepository commentRepository,
     IPermissionService permissionService,
     ISender sender,
-    IWorldRepository worldRepository)
+    IWorldQuerier worldQuerier)
   {
     _commentQuerier = commentQuerier;
     _commentRepository = commentRepository;
     _permissionService = permissionService;
     _sender = sender;
-    _worldRepository = worldRepository;
+    _worldQuerier = worldQuerier;
   }
 
   public async Task<CommentModel?> Handle(EditCommentCommand command, CancellationToken cancellationToken)
@@ -48,9 +49,8 @@ internal class EditCommentCommandHandler : IRequestHandler<EditCommentCommand, C
 
     if (comment.EntityType == EntityType.World)
     {
-      WorldId worldId = new(comment.EntityId);
-      World world = await _worldRepository.LoadAsync(worldId, cancellationToken) // TODO(fpion): use querier?
-        ?? throw new InvalidOperationException($"The world 'Id={worldId}' could not be found.");
+      WorldModel world = await _worldQuerier.ReadAsync(comment.EntityId.ToGuid(), cancellationToken)
+        ?? throw new InvalidOperationException($"The world 'Id={comment.EntityId.ToGuid()}' could not be found.");
       await _permissionService.EnsureCanCommentAsync(command, world, cancellationToken);
     }
     else

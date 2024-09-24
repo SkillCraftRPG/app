@@ -1,5 +1,7 @@
 ﻿using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
+using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain;
 using SkillCraft.Domain.Storages;
 using SkillCraft.Domain.Worlds;
 
@@ -11,13 +13,13 @@ internal class StorageService : IStorageService
 
   private readonly AccountSettings _accountSettings;
   private readonly IStorageRepository _storageRepository;
-  private readonly IWorldRepository _worldRepository;
+  private readonly IWorldQuerier _worldQuerier;
 
-  public StorageService(AccountSettings accountSettings, IStorageRepository storageRepository, IWorldRepository worldRepository)
+  public StorageService(AccountSettings accountSettings, IStorageRepository storageRepository, IWorldQuerier worldQuerier)
   {
     _accountSettings = accountSettings;
     _storageRepository = storageRepository;
-    _worldRepository = worldRepository;
+    _worldQuerier = worldQuerier;
   }
 
   public async Task EnsureAvailableAsync(EntityMetadata entity, CancellationToken cancellationToken)
@@ -73,10 +75,11 @@ internal class StorageService : IStorageService
     storage = await _storageRepository.LoadAsync(worldId, cancellationToken);
     if (storage == null)
     {
-      World world = await _worldRepository.LoadAsync(worldId, cancellationToken) // TODO(fpion): use querier?
+      WorldModel world = await _worldQuerier.ReadAsync(worldId, cancellationToken)
         ?? throw new InvalidOperationException($"The world 'Id={worldId}' could not be found.");
 
-      storage = Storage.Initialize(world.OwnerId, _accountSettings.AllocatedBytes);
+      UserId ownerId = new(world.Owner.Id);
+      storage = Storage.Initialize(ownerId, _accountSettings.AllocatedBytes);
     }
 
     _cache[worldId] = storage;
