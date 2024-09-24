@@ -44,7 +44,7 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
     if (command.EntityType == EntityType.World)
     {
       worldId = new(command.EntityId);
-      World? world = await _worldRepository.LoadAsync(worldId, cancellationToken);
+      World? world = await _worldRepository.LoadAsync(worldId, cancellationToken); // TODO(fpion): use querier?
       if (world == null)
       {
         return null;

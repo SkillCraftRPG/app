@@ -11,6 +11,11 @@ internal class CommentRepository : Logitar.EventSourcing.EntityFrameworkCore.Rel
   {
   }
 
+  public async Task<Comment?> LoadAsync(CommentId id, CancellationToken cancellationToken)
+  {
+    return await LoadAsync<Comment>(id.AggregateId, cancellationToken);
+  }
+
   public async Task SaveAsync(Comment comment, CancellationToken cancellationToken)
   {
     await base.SaveAsync(comment, cancellationToken);

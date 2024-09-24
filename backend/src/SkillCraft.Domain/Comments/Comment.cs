@@ -9,9 +9,11 @@ public class Comment : AggregateRoot
   public new CommentId Id => new(base.Id);
 
   public WorldId WorldId { get; private set; }
+  public UserId OwnerId => new(CreatedBy);
 
   public EntityType EntityType { get; private set; }
   public AggregateId EntityId { get; private set; }
+  public EntityKey Entity => new(EntityType, EntityId.ToGuid());
 
   private Text? _text = null;
   public Text Text => _text ?? throw new InvalidOperationException($"The {nameof(Text)} has not been initialized yet.");
