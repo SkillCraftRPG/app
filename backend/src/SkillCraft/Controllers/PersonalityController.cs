@@ -51,8 +51,8 @@ public class PersonalityController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<PersonalityModel>>> SearchAsync([FromQuery] SearchPersonalitiesParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<PersonalityModel> worlds = await _pipeline.ExecuteAsync(new SearchPersonalitiesQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<PersonalityModel> personalities = await _pipeline.ExecuteAsync(new SearchPersonalitiesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(personalities);
   }
 
   [HttpPatch("{id}")]

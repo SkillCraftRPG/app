@@ -51,8 +51,8 @@ public class CustomizationController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<CustomizationModel>>> SearchAsync([FromQuery] SearchCustomizationsParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<CustomizationModel> worlds = await _pipeline.ExecuteAsync(new SearchCustomizationsQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<CustomizationModel> customizations = await _pipeline.ExecuteAsync(new SearchCustomizationsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(customizations);
   }
 
   [HttpPatch("{id}")]

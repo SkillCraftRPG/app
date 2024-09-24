@@ -51,8 +51,8 @@ public class TalentController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<TalentModel>>> SearchAsync([FromQuery] SearchTalentsParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<TalentModel> worlds = await _pipeline.ExecuteAsync(new SearchTalentsQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<TalentModel> talents = await _pipeline.ExecuteAsync(new SearchTalentsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(talents);
   }
 
   [HttpPatch("{id}")]

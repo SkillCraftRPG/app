@@ -51,8 +51,8 @@ public class LanguageController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<LanguageModel>>> SearchAsync([FromQuery] SearchLanguagesParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<LanguageModel> worlds = await _pipeline.ExecuteAsync(new SearchLanguagesQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<LanguageModel> languages = await _pipeline.ExecuteAsync(new SearchLanguagesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(languages);
   }
 
   [HttpPatch("{id}")]

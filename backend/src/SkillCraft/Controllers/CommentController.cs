@@ -68,7 +68,7 @@ public class CommentController : ControllerBase
       return NotFound();
     }
 
-    SearchResults<CommentModel>? worlds = await _pipeline.ExecuteAsync(new SearchCommentsQuery(entityType.Value, entityId, parameters.ToPayload()), cancellationToken); // TODO(fpion): rename everywhere
-    return worlds == null ? NotFound() : Ok(worlds);
+    SearchResults<CommentModel>? comments = await _pipeline.ExecuteAsync(new SearchCommentsQuery(entityType.Value, entityId, parameters.ToPayload()), cancellationToken);
+    return comments == null ? NotFound() : Ok(comments);
   }
 }

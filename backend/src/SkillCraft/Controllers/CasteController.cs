@@ -51,8 +51,8 @@ public class CasteController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<CasteModel>>> SearchAsync([FromQuery] SearchCastesParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<CasteModel> worlds = await _pipeline.ExecuteAsync(new SearchCastesQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<CasteModel> castes = await _pipeline.ExecuteAsync(new SearchCastesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(castes);
   }
 
   [HttpPatch("{id}")]

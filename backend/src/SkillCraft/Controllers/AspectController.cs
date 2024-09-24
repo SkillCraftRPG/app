@@ -51,8 +51,8 @@ public class AspectController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<AspectModel>>> SearchAsync([FromQuery] SearchAspectsParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<AspectModel> worlds = await _pipeline.ExecuteAsync(new SearchAspectsQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<AspectModel> aspects = await _pipeline.ExecuteAsync(new SearchAspectsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(aspects);
   }
 
   [HttpPatch("{id}")]
