@@ -9,7 +9,7 @@ internal static class Helper
   {
     EntityType.Aspect => Aspects.Table,
     EntityType.Caste => Castes.Table,
-    EntityType.Character => throw new NotImplementedException(), // TODO(fpion): implement
+    EntityType.Character => Comments.Table,
     EntityType.Comment => throw new NotImplementedException(), // TODO(fpion): implement
     EntityType.Customization => Customizations.Table,
     EntityType.Education => Educations.Table,
