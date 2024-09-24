@@ -25,7 +25,7 @@ internal class PermissionService : IPermissionService
   {
     await EnsureCanAsync(Action.Comment, activity, entity, cancellationToken);
   }
-  public async Task EnsureCanCommentAsync(Activity activity, World world, CancellationToken cancellationToken)
+  public async Task EnsureCanCommentAsync(Activity activity, WorldModel world, CancellationToken cancellationToken)
   {
     await EnsureCanAsync(Action.Comment, activity, world, cancellationToken);
   }
@@ -123,6 +123,18 @@ internal class PermissionService : IPermissionService
     }
 
     await EnsureIsOwnerOrHasPermissionAsync(user, world, action, cancellationToken);
+  }
+  private async Task EnsureCanAsync(Action action, Activity activity, WorldModel world, CancellationToken cancellationToken)
+  {
+    User user = activity.GetUser();
+    WorldModel? otherWorld = activity.TryGetWorld();
+    Guid worldId = world.Id;
+    if (otherWorld != null && otherWorld.Id != worldId)
+    {
+      throw new PermissionDeniedException(action, EntityType.World, user, otherWorld, worldId);
+    }
+
+    await EnsureIsOwnerOrHasPermissionAsync(user, world, action, EntityType.World, world.Id, cancellationToken);
   }
 
   private async Task EnsureIsOwnerOrHasPermissionAsync(User user, World world, Action action, CancellationToken cancellationToken)

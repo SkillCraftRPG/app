@@ -7,7 +7,7 @@ namespace SkillCraft.Application.Permissions;
 public interface IPermissionService
 {
   Task EnsureCanCommentAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken = default);
-  Task EnsureCanCommentAsync(Activity activity, World world, CancellationToken cancellationToken = default);
+  Task EnsureCanCommentAsync(Activity activity, WorldModel world, CancellationToken cancellationToken = default);
 
   Task EnsureCanCreateAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken = default);
 

@@ -1,9 +1,12 @@
 ﻿using FluentValidation.Results;
+using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Users;
 using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Comments;
 using SkillCraft.Domain.Worlds;
@@ -20,25 +23,30 @@ public class EditCommentCommandHandlerTests
   private readonly Mock<ICommentRepository> _commentRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
-  private readonly Mock<IWorldRepository> _worldRepository = new();
+  private readonly Mock<IWorldQuerier> _worldQuerier = new();
 
   private readonly EditCommentCommandHandler _handler;
 
   private readonly User _user;
   private readonly World _world;
+  private readonly WorldModel _worldModel;
 
   public EditCommentCommandHandlerTests()
   {
-    _handler = new(_commentQuerier.Object, _commentRepository.Object, _permissionService.Object, _sender.Object, _worldRepository.Object);
+    _handler = new(_commentQuerier.Object, _commentRepository.Object, _permissionService.Object, _sender.Object, _worldQuerier.Object);
 
     _user = new UserMock();
     _world = new(new Slug("ungar"), new UserId(_user.Id));
+    _worldModel = new(new Actor(_user), _world.Slug.Value)
+    {
+      Id = _world.Id.ToGuid()
+    };
   }
 
   [Fact(DisplayName = "It should edit the comment of a world entity.")]
   public async Task It_should_edit_the_comment_of_a_world_entity()
   {
-    _worldRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(_world);
+    _worldQuerier.Setup(x => x.ReadAsync(_worldModel.Id, _cancellationToken)).ReturnsAsync(_worldModel);
 
     Comment comment = Comment.Post(_world.Id, new EntityKey(EntityType.World, _world.Id.ToGuid()), new Text("test"), _world.OwnerId);
     _commentRepository.Setup(x => x.LoadAsync(comment.Id, _cancellationToken)).ReturnsAsync(comment);
@@ -54,7 +62,7 @@ public class EditCommentCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    _permissionService.Verify(x => x.EnsureCanCommentAsync(command, _world, _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanCommentAsync(command, _worldModel, _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveCommentCommand>(y => y.Comment.Text.Value == payload.Text.Trim()
       && y.Comment.UpdatedBy == _world.OwnerId.ActorId), _cancellationToken), Times.Once);
@@ -105,13 +113,13 @@ public class EditCommentCommandHandlerTests
     EditCommentCommand command = new(comment.Id.ToGuid(), payload);
 
     var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.StartsWith($"The world 'Id={_world.Id}' could not be found.", exception.Message);
+    Assert.StartsWith($"The world 'Id={_worldModel.Id}' could not be found.", exception.Message);
   }
 
   [Fact(DisplayName = "It should throw PermissionDeniedException when the user does not own the comment.")]
   public async Task It_should_throw_PermissionDeniedException_when_the_user_does_not_own_the_comment()
   {
-    _worldRepository.Setup(x => x.LoadAsync(_world.Id, _cancellationToken)).ReturnsAsync(_world);
+    _worldQuerier.Setup(x => x.ReadAsync(_worldModel.Id, _cancellationToken)).ReturnsAsync(_worldModel);
 
     Comment comment = Comment.Post(_world.Id, new EntityKey(EntityType.World, _world.Id.ToGuid()), new Text("test"), UserId.NewId());
     _commentRepository.Setup(x => x.LoadAsync(comment.Id, _cancellationToken)).ReturnsAsync(comment);

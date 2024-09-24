@@ -4,13 +4,24 @@ using SkillCraft.Application.Comments.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Comments;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Comments.Commands;
 
-public record PostCommentCommand(EntityType EntityType, Guid EntityId, PostCommentPayload Payload) : Activity, IRequest<CommentModel?>;
+public record PostCommentCommand : Activity, IRequest<CommentModel?>
+{
+  public EntityKey Entity { get; }
+  public PostCommentPayload Payload { get; }
+
+  public PostCommentCommand(EntityType entityType, Guid entityId, PostCommentPayload payload)
+  {
+    Entity = new(entityType, entityId);
+    Payload = payload;
+  }
+}
 
 internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, CommentModel?>
 {
@@ -18,25 +29,23 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
   private readonly IWorldQuerier _worldQuerier;
-  private readonly IWorldRepository _worldRepository;
 
   public PostCommentCommandHandler(
     ICommentQuerier commentQuerier,
     IPermissionService permissionService,
     ISender sender,
-    IWorldQuerier worldQuerier,
-    IWorldRepository worldRepository)
+    IWorldQuerier worldQuerier)
   {
     _commentQuerier = commentQuerier;
     _permissionService = permissionService;
     _sender = sender;
     _worldQuerier = worldQuerier;
-    _worldRepository = worldRepository;
   }
 
   public async Task<CommentModel?> Handle(PostCommentCommand command, CancellationToken cancellationToken)
   {
-    if (!command.EntityType.IsGameEntity())
+    EntityKey entity = command.Entity;
+    if (!entity.Type.IsGameEntity())
     {
       return null;
     }
@@ -44,12 +53,11 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
     PostCommentPayload payload = command.Payload;
     new PostCommentValidator().ValidateAndThrow(payload);
 
-    EntityKey entity = new(command.EntityType, command.EntityId);
     WorldId worldId;
-    if (command.EntityType == EntityType.World)
+    if (entity.Type == EntityType.World)
     {
-      worldId = new(command.EntityId);
-      World? world = await _worldRepository.LoadAsync(worldId, cancellationToken); // TODO(fpion): use querier?
+      worldId = new(entity.Id);
+      WorldModel? world = await _worldQuerier.ReadAsync(worldId, cancellationToken);
       if (world == null)
       {
         return null;
