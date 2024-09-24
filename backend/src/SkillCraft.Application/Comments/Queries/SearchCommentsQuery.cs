@@ -18,7 +18,7 @@ internal class SearchCommentsQueryHandler : IRequestHandler<SearchCommentsQuery,
 
   public async Task<SearchResults<CommentModel>?> Handle(SearchCommentsQuery query, CancellationToken cancellationToken)
   {
-    if (query.EntityType == EntityType.Comment)
+    if (!query.EntityType.IsGameEntity())
     {
       return null;
     }
