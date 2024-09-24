@@ -40,7 +40,7 @@ internal class WorldQuerier : IWorldQuerier
     }
 
     TableId table = SkillCraftDb.Helper.GetTableId(entity.Type);
-    IQuery query = _sqlHelper.QueryFrom(table).Select(SkillCraftDb.Worlds.Id)
+    IQuery query = _sqlHelper.QueryFrom(table).Select(SkillCraftDb.Worlds.Id) // TODO(fpion): does not work, should be renamed as [Value] (SQL Server) or "Value" (PostgreSQL)
       .Join(SkillCraftDb.Worlds.WorldId, new ColumnId(SkillCraftDb.Worlds.WorldId.Name ?? string.Empty, table))
       .Where(new ColumnId("Id", table), Operators.IsEqualTo(entity.Id))
       .Build();
