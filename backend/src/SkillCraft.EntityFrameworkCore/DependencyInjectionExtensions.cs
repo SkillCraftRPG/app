@@ -3,6 +3,7 @@ using SkillCraft.Application.Actors;
 using SkillCraft.Application.Aspects;
 using SkillCraft.Application.Castes;
 using SkillCraft.Application.Characters;
+using SkillCraft.Application.Comments;
 using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Educations;
 using SkillCraft.Application.Languages;
@@ -15,6 +16,7 @@ using SkillCraft.Application.Worlds;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
+using SkillCraft.Domain.Comments;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Languages;
@@ -49,6 +51,7 @@ public static class DependencyInjectionExtensions
       .AddScoped<IAspectQuerier, AspectQuerier>()
       .AddScoped<ICasteQuerier, CasteQuerier>()
       .AddScoped<ICharacterQuerier, CharacterQuerier>()
+      .AddScoped<ICommentQuerier, CommentQuerier>()
       .AddScoped<ICustomizationQuerier, CustomizationQuerier>()
       .AddScoped<IEducationQuerier, EducationQuerier>()
       .AddScoped<ILanguageQuerier, LanguageQuerier>()
@@ -66,6 +69,7 @@ public static class DependencyInjectionExtensions
       .AddScoped<IAspectRepository, AspectRepository>()
       .AddScoped<ICasteRepository, CasteRepository>()
       .AddScoped<ICharacterRepository, CharacterRepository>()
+      .AddScoped<ICommentRepository, CommentRepository>()
       .AddScoped<ICustomizationRepository, CustomizationRepository>()
       .AddScoped<IEducationRepository, EducationRepository>()
       .AddScoped<ILanguageRepository, LanguageRepository>()

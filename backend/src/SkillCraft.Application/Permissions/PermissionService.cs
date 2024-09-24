@@ -21,6 +21,15 @@ internal class PermissionService : IPermissionService
     _worldQuerier = worldQuerier;
   }
 
+  public async Task EnsureCanCommentAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
+  {
+    await EnsureCanAsync(Action.Comment, activity, entity, cancellationToken);
+  }
+  public async Task EnsureCanCommentAsync(Activity activity, World world, CancellationToken cancellationToken)
+  {
+    await EnsureCanAsync(Action.Comment, activity, world, cancellationToken);
+  }
+
   public async Task EnsureCanCreateAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken)
   {
     User user = activity.GetUser();

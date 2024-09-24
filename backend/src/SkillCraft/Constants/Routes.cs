@@ -7,6 +7,7 @@ internal static class Routes
   public const string Aspect = "aspects";
   public const string Caste = "castes";
   public const string Character = "characters";
+  public const string Comment = "comments";
   public const string Customization = "customizations";
   public const string Education = "educations";
   public const string Language = "languages";
@@ -21,6 +22,7 @@ internal static class Routes
     [Aspect] = EntityType.Aspect,
     [Caste] = EntityType.Caste,
     [Character] = EntityType.Character,
+    [Comment] = EntityType.Comment,
     [Customization] = EntityType.Customization,
     [Education] = EntityType.Education,
     [Language] = EntityType.Language,

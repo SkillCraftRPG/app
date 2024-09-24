@@ -9,6 +9,7 @@ internal static class CharacterExtensions
   {
     long size = character.Name.Size + (character.Player?.Size ?? 0)
       + 4 /* LineageId */ + 8 /* Height */ + 8 /* Weight */ + 4 /* Age */;
+    // TODO(fpion): complete
     return new EntityMetadata(character.WorldId, new EntityKey(EntityType.Character, character.Id.ToGuid()), size);
   }
 }

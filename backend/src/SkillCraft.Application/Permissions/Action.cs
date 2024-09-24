@@ -2,6 +2,7 @@
 
 public enum Action
 {
+  Comment,
   Create,
   Preview,
   Update

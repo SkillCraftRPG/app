@@ -1,3 +1,17 @@
-﻿namespace SkillCraft.Domain;
+﻿using FluentValidation;
+using SkillCraft.Domain.Validators;
 
-public record EntityKey(EntityType Type, Guid Id);
+namespace SkillCraft.Domain;
+
+public record EntityKey
+{
+  public EntityType Type { get; }
+  public Guid Id { get; }
+
+  public EntityKey(EntityType type, Guid id)
+  {
+    Type = type;
+    Id = id;
+    new EntityKeyValidator().ValidateAndThrow(this);
+  }
+}

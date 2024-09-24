@@ -5,8 +5,8 @@ namespace SkillCraft.Models.Search;
 
 public record SearchParameters
 {
-  private const string DescendingKeyword = "DESC";
-  private const char SortSeparator = '.';
+  public const string DescendingKeyword = "DESC";
+  public const char SortSeparator = '.';
 
   [FromQuery(Name = "ids")]
   public IEnumerable<Guid>? Ids { get; set; }

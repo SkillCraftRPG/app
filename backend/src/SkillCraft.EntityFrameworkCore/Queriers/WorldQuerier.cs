@@ -15,12 +15,14 @@ namespace SkillCraft.EntityFrameworkCore.Queriers;
 internal class WorldQuerier : IWorldQuerier
 {
   private readonly IActorService _actorService;
+  private readonly SkillCraftContext _context;
   private readonly ISqlHelper _sqlHelper;
   private readonly DbSet<WorldEntity> _worlds;
 
   public WorldQuerier(IActorService actorService, SkillCraftContext context, ISqlHelper sqlHelper)
   {
     _actorService = actorService;
+    _context = context;
     _sqlHelper = sqlHelper;
     _worlds = context.Worlds;
   }
@@ -30,6 +32,23 @@ internal class WorldQuerier : IWorldQuerier
     return await _worlds.AsNoTracking().Where(x => x.OwnerId == userId.ToGuid()).CountAsync(cancellationToken);
   }
 
+  public async Task<WorldId?> FindIdAsync(EntityKey entity, CancellationToken cancellationToken)
+  {
+    if (entity.Type == EntityType.World)
+    {
+      return new WorldId(entity.Id);
+    }
+
+    TableId table = SkillCraftDb.Helper.GetTableId(entity.Type);
+    IQuery query = _sqlHelper.QueryFrom(table).Select(SkillCraftDb.Worlds.Id) // TODO(fpion): does not work, should be renamed as [Value] (SQL Server) or "Value" (PostgreSQL)
+      .Join(SkillCraftDb.Worlds.WorldId, new ColumnId(SkillCraftDb.Worlds.WorldId.Name ?? string.Empty, table))
+      .Where(new ColumnId("Id", table), Operators.IsEqualTo(entity.Id))
+      .Build();
+
+    Guid? id = await _context.Database.SqlQueryRaw<Guid?>(query.Text, query.Parameters.ToArray()).SingleOrDefaultAsync(cancellationToken);
+
+    return id.HasValue ? new WorldId(id.Value) : null;
+  }
   public async Task<WorldId?> FindIdAsync(Slug slug, CancellationToken cancellationToken)
   {
     string slugNormalized = SkillCraftDb.Helper.Normalize(slug);

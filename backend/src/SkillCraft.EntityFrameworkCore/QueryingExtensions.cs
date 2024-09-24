@@ -19,13 +19,17 @@ internal static class QueryingExtensions
 
   public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, SearchPayload payload)
   {
-    if (payload.Skip > 0)
+    return query.ApplyPaging(payload.Skip, payload.Limit);
+  }
+  public static IQueryable<T> ApplyPaging<T>(this IQueryable<T> query, int skip, int limit)
+  {
+    if (skip > 0)
     {
-      query = query.Skip(payload.Skip);
+      query = query.Skip(skip);
     }
-    if (payload.Limit > 0)
+    if (limit > 0)
     {
-      query = query.Take(payload.Skip);
+      query = query.Take(limit);
     }
 
     return query;

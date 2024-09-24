@@ -4,6 +4,7 @@ using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
+using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Languages;
@@ -82,6 +83,19 @@ internal class Mapper
         Description = trait.Value.Description
       });
     }
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public CommentModel ToComment(CommentEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    CommentModel destination = new(world, source.Text);
 
     MapAggregate(source, destination);
 

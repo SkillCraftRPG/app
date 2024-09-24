@@ -199,6 +199,80 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("Castes", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CommentEntity", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("WorldId", "EntityType", "EntityId");
+
+                    b.ToTable("Comments", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CustomizationEntity", b =>
                 {
                     b.Property<int>("CustomizationId")
@@ -1145,6 +1219,17 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("World");
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CommentEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Comments")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("World");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CustomizationEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
@@ -1328,6 +1413,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("Aspects");
 
                     b.Navigation("Castes");
+
+                    b.Navigation("Comments");
 
                     b.Navigation("Customizations");
 

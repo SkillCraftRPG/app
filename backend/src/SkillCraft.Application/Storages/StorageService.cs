@@ -73,7 +73,7 @@ internal class StorageService : IStorageService
     storage = await _storageRepository.LoadAsync(worldId, cancellationToken);
     if (storage == null)
     {
-      World world = await _worldRepository.LoadAsync(worldId, cancellationToken)
+      World world = await _worldRepository.LoadAsync(worldId, cancellationToken) // TODO(fpion): use querier?
         ?? throw new InvalidOperationException($"The world 'Id={worldId}' could not be found.");
 
       storage = Storage.Initialize(world.OwnerId, _accountSettings.AllocatedBytes);
