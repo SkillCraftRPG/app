@@ -36,7 +36,7 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
 
   public async Task<CommentModel?> Handle(PostCommentCommand command, CancellationToken cancellationToken)
   {
-    if (command.EntityType == EntityType.Comment)
+    if (!command.EntityType.IsGameEntity())
     {
       return null;
     }
