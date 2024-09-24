@@ -223,6 +223,14 @@ public class PermissionServiceTests
   }
   #endregion
 
+  #region EnsureCanCommentAsync(Entity)
+  // TODO(fpion): implement
+  #endregion
+
+  #region EnsureCanCommentAsync(World)
+  // TODO(fpion): implement
+  #endregion
+
   #region EnsureCanCreateAsync
   [Fact(DisplayName = "EnsureCanCreateAsync: it should succeed when the user has the permission.")]
   public async Task EnsureCanCreateAsync_it_should_succeed_when_the_user_has_the_permission()

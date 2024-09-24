@@ -122,7 +122,15 @@ internal class PermissionService : IPermissionService
       throw new PermissionDeniedException(action, EntityType.World, user, otherWorld, worldId);
     }
 
-    await EnsureIsOwnerOrHasPermissionAsync(user, world, action, cancellationToken);
+    WorldModel model = new()
+    {
+      Id = world.Id.ToGuid(),
+      Owner = new Actor
+      {
+        Id = world.OwnerId.ToGuid()
+      }
+    };
+    await EnsureIsOwnerOrHasPermissionAsync(user, model, action, EntityType.World, model.Id, cancellationToken);
   }
   private async Task EnsureCanAsync(Action action, Activity activity, WorldModel world, CancellationToken cancellationToken)
   {
@@ -137,18 +145,6 @@ internal class PermissionService : IPermissionService
     await EnsureIsOwnerOrHasPermissionAsync(user, world, action, EntityType.World, world.Id, cancellationToken);
   }
 
-  private async Task EnsureIsOwnerOrHasPermissionAsync(User user, World world, Action action, CancellationToken cancellationToken)
-  {
-    WorldModel model = new()
-    {
-      Id = world.Id.ToGuid(),
-      Owner = new Actor
-      {
-        Id = world.OwnerId.ToGuid()
-      }
-    };
-    await EnsureIsOwnerOrHasPermissionAsync(user, model, action, EntityType.World, model.Id, cancellationToken);
-  }
   private async Task EnsureIsOwnerOrHasPermissionAsync(User user, WorldModel world, Action action, EntityType entityType, Guid? entityId, CancellationToken cancellationToken)
   {
     if (!user.IsOwner(world) && !await _permissionQuerier.HasAsync(user, world, action, entityType, entityId, cancellationToken))
