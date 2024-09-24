@@ -51,8 +51,8 @@ public class PartyController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<PartyModel>>> SearchAsync([FromQuery] SearchPartiesParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<PartyModel> worlds = await _pipeline.ExecuteAsync(new SearchPartiesQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<PartyModel> parties = await _pipeline.ExecuteAsync(new SearchPartiesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(parties);
   }
 
   [HttpPatch("{id}")]

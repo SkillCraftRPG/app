@@ -51,8 +51,8 @@ public class EducationController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<EducationModel>>> SearchAsync([FromQuery] SearchEducationsParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<EducationModel> worlds = await _pipeline.ExecuteAsync(new SearchEducationsQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<EducationModel> educations = await _pipeline.ExecuteAsync(new SearchEducationsQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(educations);
   }
 
   [HttpPatch("{id}")]

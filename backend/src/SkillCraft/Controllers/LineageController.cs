@@ -51,8 +51,8 @@ public class LineageController : ControllerBase
   [HttpGet]
   public async Task<ActionResult<SearchResults<LineageModel>>> SearchAsync([FromQuery] SearchLineagesParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<LineageModel> worlds = await _pipeline.ExecuteAsync(new SearchLineagesQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(worlds);
+    SearchResults<LineageModel> lineages = await _pipeline.ExecuteAsync(new SearchLineagesQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(lineages);
   }
 
   [HttpPatch("{id}")]
