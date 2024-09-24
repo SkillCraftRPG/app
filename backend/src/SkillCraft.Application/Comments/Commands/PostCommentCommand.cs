@@ -16,17 +16,20 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
 {
   private readonly ICommentQuerier _commentQuerier;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
   private readonly IWorldQuerier _worldQuerier;
   private readonly IWorldRepository _worldRepository;
 
   public PostCommentCommandHandler(
     ICommentQuerier commentQuerier,
     IPermissionService permissionService,
+    ISender sender,
     IWorldQuerier worldQuerier,
     IWorldRepository worldRepository)
   {
     _commentQuerier = commentQuerier;
     _permissionService = permissionService;
+    _sender = sender;
     _worldQuerier = worldQuerier;
     _worldRepository = worldRepository;
   }
@@ -37,27 +40,34 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
     new PostCommentValidator().ValidateAndThrow(payload);
 
     EntityKey entity = new(command.EntityType, command.EntityId);
-    WorldId? worldId = await _worldQuerier.FindIdAsync(entity, cancellationToken);
-    if (!worldId.HasValue)
+    WorldId worldId;
+    if (command.EntityType == EntityType.World)
     {
-      return null;
-    }
+      worldId = new(command.EntityId);
+      World? world = await _worldRepository.LoadAsync(worldId, cancellationToken);
+      if (world == null)
+      {
+        return null;
+      }
 
-    if (entity.Type == EntityType.World)
-    {
-      World world = await _worldRepository.LoadAsync(worldId.Value, cancellationToken)
-        ?? throw new InvalidOperationException($"The world 'Id={worldId}' could not be found.");
       await _permissionService.EnsureCanCommentAsync(command, world, cancellationToken);
     }
     else
     {
-      EntityMetadata entityMetadata = new(worldId.Value, entity, size: 1);
-      await _permissionService.EnsureCanCommentAsync(command, entityMetadata, cancellationToken);
+      WorldId? id = await _worldQuerier.FindIdAsync(entity, cancellationToken);
+      if (!id.HasValue)
+      {
+        return null;
+      }
+      worldId = id.Value;
+
+      EntityMetadata metadata = new(worldId, entity, size: 1);
+      await _permissionService.EnsureCanCommentAsync(command, metadata, cancellationToken);
     }
 
-    Comment comment = Comment.Post(worldId.Value, entity, new Text(payload.Text), command.GetUserId());
+    Comment comment = Comment.Post(worldId, entity, new Text(payload.Text), command.GetUserId());
 
-    // TODO(fpion): save; 402 --> no more storage
+    await _sender.Send(new SaveCommentCommand(comment), cancellationToken);
 
     return await _commentQuerier.ReadAsync(comment, cancellationToken);
   }
