@@ -36,6 +36,11 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
 
   public async Task<CommentModel?> Handle(PostCommentCommand command, CancellationToken cancellationToken)
   {
+    if (command.EntityType == EntityType.Comment)
+    {
+      return null;
+    }
+
     PostCommentPayload payload = command.Payload;
     new PostCommentValidator().ValidateAndThrow(payload);
 

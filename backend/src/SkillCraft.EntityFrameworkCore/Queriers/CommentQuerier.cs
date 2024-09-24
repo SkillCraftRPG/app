@@ -1,9 +1,12 @@
-﻿using Logitar.EventSourcing;
+﻿using Logitar.Data;
+using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Actors;
+using Logitar.Portal.Contracts.Search;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Comments;
 using SkillCraft.Contracts.Comments;
+using SkillCraft.Domain;
 using SkillCraft.Domain.Comments;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -38,6 +41,43 @@ internal class CommentQuerier : ICommentQuerier
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     return comment == null ? null : await MapAsync(comment, cancellationToken);
+  }
+
+  public async Task<SearchResults<CommentModel>> SearchAsync(EntityKey entity, SearchCommentsPayload payload, CancellationToken cancellationToken)
+  {
+    IQueryBuilder builder = _sqlHelper.QueryFrom(SkillCraftDb.Comments.Table).SelectAll(SkillCraftDb.Comments.Table)
+      .Where(SkillCraftDb.Comments.EntityType, Operators.IsEqualTo(entity.Type.ToString()))
+      .Where(SkillCraftDb.Comments.EntityId, Operators.IsEqualTo(entity.Id));
+
+    IQueryable<CommentEntity> query = _comments.FromQuery(builder).AsNoTracking()
+      .Include(x => x.World);
+
+    long total = await query.LongCountAsync(cancellationToken);
+
+    IOrderedQueryable<CommentEntity>? ordered = null;
+    foreach (CommentSortOption sort in payload.Sort)
+    {
+      switch (sort.Field)
+      {
+        case CommentSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
+        case CommentSort.UpdatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.UpdatedOn) : query.OrderBy(x => x.UpdatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.UpdatedOn) : ordered.ThenBy(x => x.UpdatedOn));
+          break;
+      }
+    }
+    query = ordered ?? query;
+    query = query.ApplyPaging(payload.Skip, payload.Limit);
+
+    CommentEntity[] comments = await query.ToArrayAsync(cancellationToken);
+    IEnumerable<CommentModel> items = await MapAsync(comments, cancellationToken);
+
+    return new SearchResults<CommentModel>(items, total);
   }
 
   private async Task<CommentModel> MapAsync(CommentEntity comment, CancellationToken cancellationToken)

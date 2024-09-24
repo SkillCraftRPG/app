@@ -100,6 +100,15 @@ public class PostCommentCommandHandlerTests
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 
+  [Fact(DisplayName = "It should return null when the entity type is not valid.")]
+  public async Task It_should_return_null_when_the_entity_type_is_not_valid()
+  {
+    PostCommentPayload payload = new(" Hello World! ");
+    PostCommentCommand command = new(EntityType.Comment, Guid.NewGuid(), payload);
+
+    Assert.Null(await _handler.Handle(command, _cancellationToken));
+  }
+
   [Fact(DisplayName = "It should return null when the world could not be found.")]
   public async Task It_should_return_null_when_the_world_could_not_be_found()
   {
