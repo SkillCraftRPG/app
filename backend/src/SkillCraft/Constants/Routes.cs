@@ -22,6 +22,7 @@ internal static class Routes
     [Aspect] = EntityType.Aspect,
     [Caste] = EntityType.Caste,
     [Character] = EntityType.Character,
+    [Comment] = EntityType.Comment,
     [Customization] = EntityType.Customization,
     [Education] = EntityType.Education,
     [Language] = EntityType.Language,

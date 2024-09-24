@@ -26,7 +26,7 @@ public class CommentController : ControllerBase
   public async Task<ActionResult<CommentModel>> PostAsync(string entityTypePlural, Guid entityId, [FromBody] PostCommentPayload payload, CancellationToken cancellationToken)
   {
     EntityType? entityType = Routes.GetEntityType(entityTypePlural);
-    if (!entityType.HasValue)
+    if (entityType == null || entityType == EntityType.Comment)
     {
       return NotFound();
     }
