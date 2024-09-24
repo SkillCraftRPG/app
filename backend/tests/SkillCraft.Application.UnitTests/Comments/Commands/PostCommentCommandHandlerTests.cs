@@ -106,8 +106,8 @@ public class PostCommentCommandHandlerTests
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 
-  [Fact(DisplayName = "It should return null when the entity type is not valid.")]
-  public async Task It_should_return_null_when_the_entity_type_is_not_valid()
+  [Fact(DisplayName = "It should return null when the entity is not a game entity.")]
+  public async Task It_should_return_null_when_the_entity_is_not_a_game_entity()
   {
     PostCommentPayload payload = new(" Hello World! ");
     PostCommentCommand command = new(EntityType.Comment, Guid.NewGuid(), payload);

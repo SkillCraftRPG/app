@@ -1,5 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
+using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Domain;
 
@@ -11,16 +13,18 @@ public class SearchCommentsQueryHandlerTests
   private readonly CancellationToken _cancellationToken = default;
 
   private readonly Mock<ICommentQuerier> _commentQuerier = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
+  private readonly Mock<IWorldQuerier> _worldQuerier = new();
 
   private readonly SearchCommentsQueryHandler _handler;
 
   public SearchCommentsQueryHandlerTests()
   {
-    _handler = new(_commentQuerier.Object);
+    _handler = new(_commentQuerier.Object, _permissionService.Object, _worldQuerier.Object);
   }
 
-  [Fact(DisplayName = "It should return null when the entity type is not valid.")]
-  public async Task It_should_return_null_when_the_entity_type_is_not_valid()
+  [Fact(DisplayName = "It should return null when the entity is not a game entity.")]
+  public async Task It_should_return_null_when_the_entity_is_not_a_game_entity()
   {
     SearchCommentsPayload payload = new();
     SearchCommentsQuery query = new(EntityType.Comment, Guid.NewGuid(), payload);
@@ -36,7 +40,7 @@ public class SearchCommentsQueryHandlerTests
     query.Contextualize(new WorldMock());
 
     SearchResults<CommentModel> results = new();
-    _commentQuerier.Setup(x => x.SearchAsync(It.Is<EntityKey>(y => y.Type == query.EntityType && y.Id == query.EntityId), payload, _cancellationToken))
+    _commentQuerier.Setup(x => x.SearchAsync(It.Is<EntityKey>(y => y.Type == query.Entity.Type && y.Id == query.Entity.Id), payload, _cancellationToken))
       .ReturnsAsync(results);
 
     SearchResults<CommentModel>? comments = await _handler.Handle(query, _cancellationToken);

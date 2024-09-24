@@ -478,6 +478,14 @@ public class PermissionServiceTests
   }
   #endregion
 
+  #region EnsureCanViewAsync(Entity)
+  // TODO(fpion): implement
+  #endregion
+
+  #region EnsureCanViewAsync(World)
+  // TODO(fpion): implement
+  #endregion
+
   private void EnsurePermissionQuerierHasAsyncHasNeverBeenCalled()
   {
     _permissionQuerier.Verify(x => x.HasAsync(It.IsAny<User>(), It.IsAny<WorldModel>(), It.IsAny<Action>(), It.IsAny<EntityType>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);

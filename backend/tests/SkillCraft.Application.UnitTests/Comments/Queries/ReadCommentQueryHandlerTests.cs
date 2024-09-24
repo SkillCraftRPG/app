@@ -1,4 +1,6 @@
 ﻿using Moq;
+using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Worlds;
 
@@ -10,6 +12,8 @@ public class ReadCommentQueryHandlerTests
   private readonly CancellationToken _cancellationToken = default;
 
   private readonly Mock<ICommentQuerier> _commentQuerier = new();
+  private readonly Mock<IPermissionService> _permissionService = new();
+  private readonly Mock<IWorldQuerier> _worldQuerier = new();
 
   private readonly ReadCommentQueryHandler _handler;
 
@@ -17,7 +21,7 @@ public class ReadCommentQueryHandlerTests
 
   public ReadCommentQueryHandlerTests()
   {
-    _handler = new(_commentQuerier.Object);
+    _handler = new(_commentQuerier.Object, _permissionService.Object, _worldQuerier.Object);
 
     _commentQuerier.Setup(x => x.ReadAsync(_comment.Id, _cancellationToken)).ReturnsAsync(_comment);
   }

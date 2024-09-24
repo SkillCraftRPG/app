@@ -96,6 +96,15 @@ internal class PermissionService : IPermissionService
     await EnsureCanAsync(Action.Update, activity, world, cancellationToken);
   }
 
+  public async Task EnsureCanViewAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
+  {
+    await EnsureCanAsync(Action.View, activity, entity, cancellationToken);
+  }
+  public async Task EnsureCanViewAsync(Activity activity, WorldModel world, CancellationToken cancellationToken)
+  {
+    await EnsureCanAsync(Action.View, activity, world, cancellationToken);
+  }
+
   private async Task EnsureCanAsync(Action action, Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
   {
     if (entity.Type == EntityType.World)
