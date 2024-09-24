@@ -9,7 +9,7 @@ internal static class CommentExtensions
 
   public static EntityMetadata GetMetadata(this Comment comment)
   {
-    long size = comment.Text.Size; // TODO(fpion): complete
+    long size = 4 /* EntityType */ + 16 /* EntityId */ + comment.Text.Size;
     return new EntityMetadata(comment.WorldId, new EntityKey(Type, comment.Id.ToGuid()), size);
   }
 }
