@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Users;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;

@@ -1,5 +1,5 @@
-﻿using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Permissions;

@@ -2,6 +2,7 @@
 using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Castes;

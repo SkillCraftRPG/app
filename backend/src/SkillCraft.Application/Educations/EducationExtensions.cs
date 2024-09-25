@@ -1,4 +1,5 @@
-﻿using SkillCraft.Contracts.Educations;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Contracts.Educations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Worlds;

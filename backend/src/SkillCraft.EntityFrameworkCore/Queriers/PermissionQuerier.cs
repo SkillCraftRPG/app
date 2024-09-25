@@ -1,7 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Users;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.EntityFrameworkCore.Queriers;

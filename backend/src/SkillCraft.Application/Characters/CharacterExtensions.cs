@@ -1,4 +1,5 @@
-﻿using SkillCraft.Domain;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
 
 namespace SkillCraft.Application.Characters;

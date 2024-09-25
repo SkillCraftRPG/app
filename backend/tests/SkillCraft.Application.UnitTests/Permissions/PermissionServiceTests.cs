@@ -13,6 +13,7 @@ using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Application.Worlds.Commands;
 using SkillCraft.Application.Worlds.Queries;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Customizations;

@@ -3,6 +3,7 @@ using MediatR;
 using SkillCraft.Application.Characters.Creation;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;

@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;

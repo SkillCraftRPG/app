@@ -1,9 +1,9 @@
 ﻿using Logitar.Portal.Contracts.Actors;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Comments.Queries;
 
@@ -39,7 +39,7 @@ public class ReadCommentQueryHandlerTests
     CommentModel comment = new(world, "Hello World!")
     {
       Id = Guid.NewGuid(),
-      EntityType = EntityType.Aspect.ToString(),
+      EntityType = EntityType.Aspect,
       EntityId = Guid.NewGuid()
     };
     _commentQuerier.Setup(x => x.ReadAsync(comment.Id, _cancellationToken)).ReturnsAsync(comment);
@@ -50,7 +50,7 @@ public class ReadCommentQueryHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanViewAsync(
       query,
-      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == world.Id && y.Key.Type.ToString() == comment.EntityType && y.Key.Id == comment.EntityId && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == world.Id && y.Key.Type == comment.EntityType && y.Key.Id == comment.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
   }
 
@@ -64,7 +64,7 @@ public class ReadCommentQueryHandlerTests
     CommentModel comment = new(world, "Hello World!")
     {
       Id = Guid.NewGuid(),
-      EntityType = EntityType.World.ToString(),
+      EntityType = EntityType.World,
       EntityId = world.Id
     };
     _commentQuerier.Setup(x => x.ReadAsync(comment.Id, _cancellationToken)).ReturnsAsync(comment);

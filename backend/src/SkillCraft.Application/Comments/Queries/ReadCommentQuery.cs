@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
@@ -25,14 +26,13 @@ internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, Comme
     if (comment != null)
     {
       WorldId worldId = new(comment.World.Id);
-      EntityType entityType = Enum.Parse<EntityType>(comment.EntityType);
-      if (entityType == EntityType.World)
+      if (comment.EntityType == EntityType.World)
       {
         await _permissionService.EnsureCanViewAsync(query, comment.World, cancellationToken);
       }
       else
       {
-        EntityMetadata entity = new(worldId, new EntityKey(entityType, comment.EntityId), size: 1);
+        EntityMetadata entity = new(worldId, new EntityKey(comment.EntityType, comment.EntityId), size: 1);
         await _permissionService.EnsureCanViewAsync(query, entity, cancellationToken);
       }
     }

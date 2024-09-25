@@ -5,6 +5,7 @@ using Logitar.Portal.Contracts.Search;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Worlds;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;

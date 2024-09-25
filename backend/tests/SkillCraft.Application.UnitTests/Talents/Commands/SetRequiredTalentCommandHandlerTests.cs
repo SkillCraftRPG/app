@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Talents;

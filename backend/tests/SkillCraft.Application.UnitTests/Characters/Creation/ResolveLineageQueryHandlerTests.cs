@@ -4,6 +4,7 @@ using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;

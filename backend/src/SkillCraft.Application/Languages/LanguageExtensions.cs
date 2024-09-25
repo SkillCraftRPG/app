@@ -1,4 +1,5 @@
-﻿using SkillCraft.Contracts.Languages;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Contracts.Languages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Worlds;

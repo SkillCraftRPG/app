@@ -3,9 +3,9 @@ using MediatR;
 using SkillCraft.Application.Comments.Validators;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Worlds;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Comments;
 using Action = SkillCraft.Application.Permissions.Action;
 

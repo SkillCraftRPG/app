@@ -1,4 +1,5 @@
-﻿using SkillCraft.Domain.Worlds;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Domain.Storages;
 

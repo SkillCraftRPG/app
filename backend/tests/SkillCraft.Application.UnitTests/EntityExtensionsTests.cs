@@ -1,4 +1,4 @@
-﻿using SkillCraft.Domain;
+﻿using SkillCraft.Contracts;
 
 namespace SkillCraft.Application;
 
