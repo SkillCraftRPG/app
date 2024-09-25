@@ -19,5 +19,6 @@ public record EntityMetadata
     WorldId = worldId;
     Key = key;
     Size = size;
+    // TODO(fpion): validate this; size optional?
   }
 }

@@ -96,6 +96,34 @@ internal class PermissionService : IPermissionService
     await EnsureCanAsync(Action.Update, activity, world, cancellationToken);
   }
 
+  public async Task EnsureCanViewAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
+  {
+    if (entity.Type == EntityType.World)
+    {
+      throw new ArgumentException($"The entity type must not be '{EntityType.World}'.", nameof(entity));
+    }
+
+    User user = activity.GetUser();
+    WorldModel world = activity.GetWorld();
+    if (!entity.ResidesIn(world))
+    {
+      throw new PermissionDeniedException(Action.View, entity.Type, user, world, entity.Id);
+    }
+
+    await EnsureIsOwnerOrHasPermissionAsync(user, world, Action.View, entity.Type, entityId: null, cancellationToken);
+  }
+  public Task EnsureCanViewAsync(Activity activity, WorldModel world, CancellationToken cancellationToken)
+  {
+    User user = activity.GetUser();
+    WorldModel? otherWorld = activity.TryGetWorld();
+    if ((otherWorld != null && otherWorld.Id != world.Id) || !user.IsOwner(world) /* && !user.CanPreview(entity) // Member with preview access or world is public? */)
+    {
+      throw new PermissionDeniedException(Action.View, EntityType.World, user, otherWorld, world.Id);
+    }
+
+    return Task.CompletedTask;
+  }
+
   private async Task EnsureCanAsync(Action action, Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
   {
     if (entity.Type == EntityType.World)
