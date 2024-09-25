@@ -1,8 +1,10 @@
-﻿using Moq;
+﻿using Logitar.Portal.Contracts.Actors;
+using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Comments.Queries;
 
@@ -17,13 +19,9 @@ public class ReadCommentQueryHandlerTests
 
   private readonly ReadCommentQueryHandler _handler;
 
-  private readonly CommentModel _comment = new(new WorldModel(), "Hello World!") { Id = Guid.NewGuid() };
-
   public ReadCommentQueryHandlerTests()
   {
     _handler = new(_commentQuerier.Object, _permissionService.Object, _worldQuerier.Object);
-
-    _commentQuerier.Setup(x => x.ReadAsync(_comment.Id, _cancellationToken)).ReturnsAsync(_comment);
   }
 
   [Fact(DisplayName = "It should return null when no comment is found.")]
@@ -33,11 +31,50 @@ public class ReadCommentQueryHandlerTests
     Assert.Null(await _handler.Handle(query, _cancellationToken));
   }
 
-  [Fact(DisplayName = "It should return the comment found by ID.")]
-  public async Task It_should_return_the_comment_found_by_Id()
+  [Fact(DisplayName = "It should return the comment found by ID (Entity).")]
+  public async Task It_should_return_the_comment_found_by_Id_Entity()
   {
-    ReadCommentQuery query = new(_comment.Id);
-    CommentModel? comment = await _handler.Handle(query, _cancellationToken);
-    Assert.Same(_comment, comment);
+    WorldModel world = new(new Actor(new UserMock()), "ungar")
+    {
+      Id = Guid.NewGuid()
+    };
+    CommentModel comment = new(world, "Hello World!")
+    {
+      Id = Guid.NewGuid(),
+      EntityType = EntityType.Aspect.ToString(),
+      EntityId = Guid.NewGuid()
+    };
+    _commentQuerier.Setup(x => x.ReadAsync(comment.Id, _cancellationToken)).ReturnsAsync(comment);
+
+    ReadCommentQuery query = new(comment.Id);
+    CommentModel? result = await _handler.Handle(query, _cancellationToken);
+    Assert.Same(comment, result);
+
+    _permissionService.Verify(x => x.EnsureCanViewAsync(
+      query,
+      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == world.Id && y.Key.Type.ToString() == comment.EntityType && y.Key.Id == comment.EntityId && y.Size > 0),
+      _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should return the comment found by ID (World).")]
+  public async Task It_should_return_the_comment_found_by_Id_World()
+  {
+    WorldModel world = new(new Actor(new UserMock()), "ungar")
+    {
+      Id = Guid.NewGuid()
+    };
+    CommentModel comment = new(world, "Hello World!")
+    {
+      Id = Guid.NewGuid(),
+      EntityType = EntityType.World.ToString(),
+      EntityId = world.Id
+    };
+    _commentQuerier.Setup(x => x.ReadAsync(comment.Id, _cancellationToken)).ReturnsAsync(comment);
+
+    ReadCommentQuery query = new(comment.Id);
+    CommentModel? result = await _handler.Handle(query, _cancellationToken);
+    Assert.Same(comment, result);
+
+    _permissionService.Verify(x => x.EnsureCanViewAsync(query, world, _cancellationToken), Times.Once);
   }
 }

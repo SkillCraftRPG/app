@@ -2,10 +2,12 @@
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
+using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Comments.Queries;
 
-public record ReadCommentQuery(Guid Id) : IRequest<CommentModel?>;
+public record ReadCommentQuery(Guid Id) : Activity, IRequest<CommentModel?>;
 
 internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, CommentModel?>
 {
@@ -25,7 +27,17 @@ internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, Comme
     CommentModel? comment = await _commentQuerier.ReadAsync(query.Id, cancellationToken);
     if (comment != null)
     {
-      // TODO(fpion): check permissions; ensure can view entity
+      WorldId worldId = new(comment.World.Id);
+      EntityType entityType = Enum.Parse<EntityType>(comment.EntityType);
+      if (entityType == EntityType.World)
+      {
+        await _permissionService.EnsureCanViewAsync(query, comment.World, cancellationToken);
+      }
+      else
+      {
+        EntityMetadata entity = new(worldId, new EntityKey(entityType, comment.EntityId), size: 1);
+        await _permissionService.EnsureCanViewAsync(query, entity, cancellationToken);
+      }
     }
 
     return comment;
