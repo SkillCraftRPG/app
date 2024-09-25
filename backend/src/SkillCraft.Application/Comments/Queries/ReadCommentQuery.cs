@@ -32,7 +32,7 @@ internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, Comme
       }
       else
       {
-        EntityMetadata entity = new(worldId, new EntityKey(comment.EntityType, comment.EntityId), size: 1);
+        EntityMetadata entity = new(worldId, new EntityKey(comment.EntityType, comment.EntityId));
         await _permissionService.EnsureCanViewAsync(query, entity, cancellationToken);
       }
     }

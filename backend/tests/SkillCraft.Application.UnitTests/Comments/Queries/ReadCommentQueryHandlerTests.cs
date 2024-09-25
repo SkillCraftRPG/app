@@ -50,7 +50,7 @@ public class ReadCommentQueryHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanViewAsync(
       query,
-      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == world.Id && y.Key.Type == comment.EntityType && y.Key.Id == comment.EntityId && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == world.Id && y.Key.Type == comment.EntityType && y.Key.Id == comment.EntityId && y.Size == 0),
       _cancellationToken), Times.Once);
   }
 

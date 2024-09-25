@@ -13,13 +13,14 @@ public record EntityMetadata
   public EntityType Type => Key.Type;
   public Guid Id => Key.Id;
 
-  public EntityMetadata(WorldId worldId, EntityKey key, long size)
+  public EntityMetadata(WorldId worldId, EntityKey key)
   {
-    ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size, nameof(size));
-
     WorldId = worldId;
     Key = key;
+  }
+  public EntityMetadata(WorldId worldId, EntityKey key, long size) : this(worldId, key)
+  {
+    ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size, nameof(size));
     Size = size;
-    // TODO(fpion): validate this; size optional?
   }
 }

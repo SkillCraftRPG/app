@@ -75,7 +75,7 @@ internal class PostCommentCommandHandler : IRequestHandler<PostCommentCommand, C
       }
       worldId = id.Value;
 
-      EntityMetadata metadata = new(worldId, entity, size: 1);
+      EntityMetadata metadata = new(worldId, entity);
       await _permissionService.EnsureCanCommentAsync(command, metadata, cancellationToken);
     }
 

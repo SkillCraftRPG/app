@@ -80,7 +80,7 @@ public class SearchCommentsQueryHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanViewAsync(
       query,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key == query.Entity && y.Size == 1),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key == query.Entity && y.Size == 0),
       _cancellationToken), Times.Once);
   }
 
