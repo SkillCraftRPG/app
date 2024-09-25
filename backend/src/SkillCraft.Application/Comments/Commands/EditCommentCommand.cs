@@ -55,7 +55,7 @@ internal class EditCommentCommandHandler : IRequestHandler<EditCommentCommand, C
     }
     else
     {
-      EntityMetadata entity = new(comment.WorldId, comment.Entity, size: 1);
+      EntityMetadata entity = new(comment.WorldId, comment.Entity);
       await _permissionService.EnsureCanCommentAsync(command, entity, cancellationToken);
     }
 

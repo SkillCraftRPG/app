@@ -61,7 +61,7 @@ internal class SearchCommentsQueryHandler : IRequestHandler<SearchCommentsQuery,
         return null;
       }
 
-      EntityMetadata metadata = new(worldId.Value, entity, size: 1);
+      EntityMetadata metadata = new(worldId.Value, entity);
       await _permissionService.EnsureCanViewAsync(query, metadata, cancellationToken);
     }
 

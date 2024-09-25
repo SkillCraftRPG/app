@@ -51,14 +51,14 @@ public class PermissionExtensionsTests
   [Fact(DisplayName = "ResidesIn: it should return false when the entity does not reside in the world.")]
   public void ResidesIn_it_should_return_false_when_the_entity_does_not_reside_in_the_world()
   {
-    EntityMetadata entity = new(WorldId.NewId(), new EntityKey(EntityType.Lineage, Guid.NewGuid()), size: 1);
+    EntityMetadata entity = new(WorldId.NewId(), new EntityKey(EntityType.Lineage, Guid.NewGuid()));
     Assert.False(entity.ResidesIn(_world));
   }
 
   [Fact(DisplayName = "IsOwner: it should return true when the entity resides in the world.")]
   public void ResidesIn_it_should_return_true_when_the_entity_resides_in_the_world()
   {
-    EntityMetadata entity = new(new WorldId(_world.Id), new EntityKey(EntityType.Customization, Guid.NewGuid()), size: 1);
+    EntityMetadata entity = new(new WorldId(_world.Id), new EntityKey(EntityType.Customization, Guid.NewGuid()));
     Assert.True(entity.ResidesIn(_world));
   }
 }

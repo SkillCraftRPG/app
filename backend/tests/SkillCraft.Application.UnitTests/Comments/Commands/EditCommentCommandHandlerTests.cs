@@ -88,7 +88,7 @@ public class EditCommentCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCommentAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == comment.EntityType && y.Id == comment.EntityId.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == comment.EntityType && y.Id == comment.EntityId.ToGuid() && y.Size == 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveCommentCommand>(y => y.Comment.Text.Value == payload.Text.Trim()

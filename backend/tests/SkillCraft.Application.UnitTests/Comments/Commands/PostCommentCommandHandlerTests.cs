@@ -87,7 +87,7 @@ public class PostCommentCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCommentAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == command.Entity.Type && y.Key.Id == command.Entity.Id && y.Size == 1),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == command.Entity.Type && y.Key.Id == command.Entity.Id && y.Size == 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveCommentCommand>(y => y.Comment.WorldId == _world.Id
