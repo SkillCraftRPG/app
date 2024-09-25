@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
@@ -13,13 +12,11 @@ internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, Comme
 {
   private readonly ICommentQuerier _commentQuerier;
   private readonly IPermissionService _permissionService;
-  private readonly IWorldQuerier _worldQuerier;
 
-  public ReadCommentQueryHandler(ICommentQuerier commentQuerier, IPermissionService permissionService, IWorldQuerier worldQuerier)
+  public ReadCommentQueryHandler(ICommentQuerier commentQuerier, IPermissionService permissionService)
   {
     _commentQuerier = commentQuerier;
     _permissionService = permissionService;
-    _worldQuerier = worldQuerier;
   }
 
   public async Task<CommentModel?> Handle(ReadCommentQuery query, CancellationToken cancellationToken)

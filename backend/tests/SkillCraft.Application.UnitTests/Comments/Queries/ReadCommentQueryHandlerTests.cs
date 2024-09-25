@@ -1,7 +1,6 @@
 ﻿using Logitar.Portal.Contracts.Actors;
 using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
@@ -15,13 +14,12 @@ public class ReadCommentQueryHandlerTests
 
   private readonly Mock<ICommentQuerier> _commentQuerier = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<IWorldQuerier> _worldQuerier = new();
 
   private readonly ReadCommentQueryHandler _handler;
 
   public ReadCommentQueryHandlerTests()
   {
-    _handler = new(_commentQuerier.Object, _permissionService.Object, _worldQuerier.Object);
+    _handler = new(_commentQuerier.Object, _permissionService.Object);
   }
 
   [Fact(DisplayName = "It should return null when no comment is found.")]
