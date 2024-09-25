@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Domain;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Worlds;
 using Action = SkillCraft.Application.Permissions.Action;

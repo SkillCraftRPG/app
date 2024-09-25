@@ -1,5 +1,5 @@
 ﻿using Logitar.EventSourcing;
-using SkillCraft.Domain;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Comments;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;

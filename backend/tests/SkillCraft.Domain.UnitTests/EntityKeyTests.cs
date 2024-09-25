@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SkillCraft.Contracts;
 
 namespace SkillCraft.Domain;
 

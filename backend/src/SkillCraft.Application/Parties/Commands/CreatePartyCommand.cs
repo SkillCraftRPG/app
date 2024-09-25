@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Parties.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Parties;

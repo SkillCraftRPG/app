@@ -1,5 +1,5 @@
 ﻿using GraphQL.Types;
-using SkillCraft.Domain;
+using SkillCraft.Contracts;
 
 namespace SkillCraft.GraphQL;
 

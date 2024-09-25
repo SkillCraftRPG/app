@@ -2,6 +2,7 @@
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;

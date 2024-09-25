@@ -1,4 +1,5 @@
 ﻿using Logitar.Data;
+using SkillCraft.Contracts;
 using SkillCraft.Domain;
 
 namespace SkillCraft.EntityFrameworkCore.SkillCraftDb;

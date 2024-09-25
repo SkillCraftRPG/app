@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using SkillCraft.Application.Aspects;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Worlds;
 using Action = SkillCraft.Application.Permissions.Action;

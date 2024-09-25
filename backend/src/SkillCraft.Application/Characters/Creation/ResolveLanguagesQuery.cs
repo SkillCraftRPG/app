@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using SkillCraft.Application.Languages;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Worlds;

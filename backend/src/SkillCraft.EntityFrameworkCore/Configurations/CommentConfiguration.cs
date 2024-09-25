@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SkillCraft.Domain;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Comments;
 using SkillCraft.EntityFrameworkCore.Entities;
 

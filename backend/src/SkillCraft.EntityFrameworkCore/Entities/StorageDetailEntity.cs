@@ -1,4 +1,4 @@
-﻿using SkillCraft.Domain;
+﻿using SkillCraft.Contracts;
 using SkillCraft.Domain.Storages;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;

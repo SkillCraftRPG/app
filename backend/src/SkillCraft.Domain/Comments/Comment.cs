@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
+using SkillCraft.Contracts;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Domain.Comments;

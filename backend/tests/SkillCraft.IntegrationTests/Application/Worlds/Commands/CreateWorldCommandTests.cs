@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Settings;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 using SkillCraft.EntityFrameworkCore.Entities;
 
 namespace SkillCraft.Application.Worlds.Commands;

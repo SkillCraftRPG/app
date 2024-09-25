@@ -2,8 +2,8 @@
 using Logitar.Portal.Contracts.Users;
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Permissions;

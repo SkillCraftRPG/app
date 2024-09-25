@@ -1,6 +1,7 @@
 ﻿using Moq;
 using SkillCraft.Application.Lineages.Commands;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;

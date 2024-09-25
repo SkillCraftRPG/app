@@ -2,8 +2,8 @@
 using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Worlds.Commands;

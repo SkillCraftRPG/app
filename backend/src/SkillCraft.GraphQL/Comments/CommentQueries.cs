@@ -1,8 +1,8 @@
 ﻿using GraphQL;
 using GraphQL.Types;
 using SkillCraft.Application.Comments.Queries;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Comments;
-using SkillCraft.Domain;
 
 namespace SkillCraft.GraphQL.Comments;
 

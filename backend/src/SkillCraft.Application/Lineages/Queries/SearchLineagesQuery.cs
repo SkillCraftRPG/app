@@ -1,8 +1,8 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Lineages;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Lineages.Queries;
 

@@ -1,8 +1,8 @@
 ﻿using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain;
 
 namespace SkillCraft.Application.Educations.Queries;
 

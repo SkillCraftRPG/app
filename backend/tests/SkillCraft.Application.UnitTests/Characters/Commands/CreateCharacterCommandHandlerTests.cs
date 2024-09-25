@@ -3,6 +3,7 @@ using MediatR;
 using Moq;
 using SkillCraft.Application.Characters.Creation;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
