@@ -105,6 +105,11 @@ internal class WorldQuerier : IWorldQuerier
     {
       switch (sort.Field)
       {
+        case WorldSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case WorldSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
