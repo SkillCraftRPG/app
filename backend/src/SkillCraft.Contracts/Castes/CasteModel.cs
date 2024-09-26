@@ -5,6 +5,8 @@ namespace SkillCraft.Contracts.Castes;
 
 public class CasteModel : Aggregate
 {
+  public WorldModel World { get; set; }
+
   public string Name { get; set; }
   public string? Description { get; set; }
 
@@ -13,19 +15,17 @@ public class CasteModel : Aggregate
 
   public List<TraitModel> Traits { get; set; }
 
-  public WorldModel World { get; set; }
-
   public CasteModel() : this(new WorldModel(), string.Empty)
   {
   }
 
   public CasteModel(WorldModel world, string name)
   {
+    World = world;
+
     Name = name;
 
     Traits = [];
-
-    World = world;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";

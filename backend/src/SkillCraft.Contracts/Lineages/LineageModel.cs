@@ -5,6 +5,8 @@ namespace SkillCraft.Contracts.Lineages;
 
 public class LineageModel : Aggregate
 {
+  public WorldModel World { get; set; }
+
   public string Name { get; set; }
   public string? Description { get; set; }
 
@@ -19,7 +21,8 @@ public class LineageModel : Aggregate
   public WeightModel Weight { get; set; }
   public AgesModel Ages { get; set; }
 
-  public WorldModel World { get; set; }
+  public LineageModel? Species { get; set; }
+  public List<LineageModel> Nations { get; set; }
 
   public LineageModel() : this(new WorldModel(), string.Empty)
   {
@@ -27,6 +30,8 @@ public class LineageModel : Aggregate
 
   public LineageModel(WorldModel world, string name)
   {
+    World = world;
+
     Name = name;
 
     Attributes = new();
@@ -40,7 +45,7 @@ public class LineageModel : Aggregate
     Weight = new();
     Ages = new();
 
-    World = world;
+    Nations = [];
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
