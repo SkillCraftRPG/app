@@ -8,6 +8,9 @@ internal class SearchCastesPayloadGraphType : SearchPayloadInputGraphType<Search
 {
   public SearchCastesPayloadGraphType() : base()
   {
+    Field(x => x.Skill, type: typeof(SkillGraphType))
+      .Description("When specified, only castes requiring this skill will match.");
+
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<CasteSortOptionGraphType>>>))
       .DefaultValue([])
       .Description("The sort parameters of the search.");

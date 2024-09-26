@@ -10,6 +10,7 @@ internal class CasteSortGraphType : EnumerationGraphType<CasteSort>
     Name = nameof(CasteSort);
     Description = "Represents the available caste fields for sorting.";
 
+    AddValue(CasteSort.CreatedOn, "The castes will be sorted by their creation date and time.");
     AddValue(CasteSort.Name, "The castes will be sorted by their display name.");
     AddValue(CasteSort.UpdatedOn, "The castes will be sorted by their latest update date and time.");
   }

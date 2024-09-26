@@ -51,6 +51,11 @@ internal class CasteQuerier : ICasteQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Castes.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Castes.Name);
 
+    if (payload.Skill.HasValue)
+    {
+      builder.Where(SkillCraftDb.Castes.Skill, Operators.IsEqualTo(payload.Skill.Value.ToString()));
+    }
+
     IQueryable<CasteEntity> query = _castes.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
 
@@ -61,6 +66,11 @@ internal class CasteQuerier : ICasteQuerier
     {
       switch (sort.Field)
       {
+        case CasteSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case CasteSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
