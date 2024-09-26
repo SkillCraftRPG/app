@@ -2,6 +2,7 @@
 
 public enum TalentSort
 {
+  CreatedOn,
   Name,
   UpdatedOn
 }
