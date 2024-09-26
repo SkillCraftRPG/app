@@ -5,12 +5,12 @@ namespace SkillCraft.Contracts.Comments;
 
 public class CommentModel : Aggregate
 {
-  public string Text { get; set; }
+  public WorldModel World { get; set; }
 
   public EntityType EntityType { get; set; }
   public Guid EntityId { get; set; }
 
-  public WorldModel World { get; set; }
+  public string Text { get; set; }
 
   public CommentModel() : this(new WorldModel(), string.Empty)
   {
@@ -18,8 +18,8 @@ public class CommentModel : Aggregate
 
   public CommentModel(WorldModel world, string text)
   {
-    Text = text;
-
     World = world;
+
+    Text = text;
   }
 }

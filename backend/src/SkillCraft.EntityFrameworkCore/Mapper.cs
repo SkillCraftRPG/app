@@ -95,7 +95,11 @@ internal class Mapper
       ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
       : ToWorld(source.World);
 
-    CommentModel destination = new(world, source.Text);
+    CommentModel destination = new(world, source.Text)
+    {
+      EntityType = source.EntityType,
+      EntityId = source.EntityId
+    };
 
     MapAggregate(source, destination);
 

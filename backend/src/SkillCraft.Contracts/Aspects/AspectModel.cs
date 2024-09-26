@@ -5,13 +5,13 @@ namespace SkillCraft.Contracts.Aspects;
 
 public class AspectModel : Aggregate
 {
+  public WorldModel World { get; set; }
+
   public string Name { get; set; }
   public string? Description { get; set; }
 
   public AttributeSelectionModel Attributes { get; set; }
   public SkillsModel Skills { get; set; }
-
-  public WorldModel World { get; set; }
 
   public AspectModel() : this(new WorldModel(), string.Empty)
   {
@@ -19,12 +19,12 @@ public class AspectModel : Aggregate
 
   public AspectModel(WorldModel world, string name)
   {
+    World = world;
+
     Name = name;
 
     Attributes = new();
     Skills = new();
-
-    World = world;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
