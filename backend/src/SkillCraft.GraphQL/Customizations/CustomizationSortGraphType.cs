@@ -10,6 +10,7 @@ internal class CustomizationSortGraphType : EnumerationGraphType<CustomizationSo
     Name = nameof(CustomizationSort);
     Description = "Represents the available customization fields for sorting.";
 
+    AddValue(CustomizationSort.CreatedOn, "The customizations will be sorted by their creation date and time.");
     AddValue(CustomizationSort.Name, "The customizations will be sorted by their display name.");
     AddValue(CustomizationSort.UpdatedOn, "The customizations will be sorted by their latest update date and time.");
   }
