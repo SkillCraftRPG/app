@@ -62,6 +62,11 @@ internal class TalentQuerier : ITalentQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Talents.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Talents.Name);
 
+    if (payload.AllowMultiplePurchases.HasValue)
+    {
+      builder.Where(SkillCraftDb.Talents.AllowMultiplePurchases, Operators.IsEqualTo(payload.AllowMultiplePurchases.Value));
+    }
+
     IQueryable<TalentEntity> query = _talents.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
 

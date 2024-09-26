@@ -8,6 +8,9 @@ internal class SearchTalentsPayloadGraphType : SearchPayloadInputGraphType<Searc
 {
   public SearchTalentsPayloadGraphType() : base()
   {
+    Field(x => x.AllowMultiplePurchases)
+      .Description("When specified, only talents that allow or do not allow multiple purchases will match.");
+
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<TalentSortOptionGraphType>>>))
       .DefaultValue([])
       .Description("The sort parameters of the search.");
