@@ -8,6 +8,11 @@ internal class SearchPersonalitiesPayloadGraphType : SearchPayloadInputGraphType
 {
   public SearchPersonalitiesPayloadGraphType() : base()
   {
+    Field(x => x.Attribute, type: typeof(AttributeGraphType))
+      .Description("When specified, only personalities granting a bonus to this attribute will match.");
+    Field(x => x.GiftId, type: typeof(IdGraphType))
+      .Description("When specified, only personalities granting this gift will match.");
+
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<PersonalitySortOptionGraphType>>>))
       .DefaultValue([])
       .Description("The sort parameters of the search.");

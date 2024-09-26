@@ -10,6 +10,7 @@ internal class PersonalitySortGraphType : EnumerationGraphType<PersonalitySort>
     Name = nameof(PersonalitySort);
     Description = "Represents the available personality fields for sorting.";
 
+    AddValue(PersonalitySort.CreatedOn, "The personalities will be sorted by their creation date and time.");
     AddValue(PersonalitySort.Name, "The personalities will be sorted by their display name.");
     AddValue(PersonalitySort.UpdatedOn, "The personalities will be sorted by their latest update date and time.");
   }

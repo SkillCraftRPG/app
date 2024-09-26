@@ -2,6 +2,7 @@
 
 public enum PersonalitySort
 {
+  CreatedOn,
   Name,
   UpdatedOn
 }

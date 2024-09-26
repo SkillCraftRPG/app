@@ -37,7 +37,7 @@ internal class PersonalityQuerier : IPersonalityQuerier
   public async Task<PersonalityModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     PersonalityEntity? personality = await _personalities.AsNoTracking()
-      .Include(x => x.Gift)
+      .Include(x => x.Gift).ThenInclude(x => x!.World)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -48,12 +48,22 @@ internal class PersonalityQuerier : IPersonalityQuerier
   {
     IQueryBuilder builder = _sqlHelper.QueryFrom(SkillCraftDb.Personalities.Table).SelectAll(SkillCraftDb.Personalities.Table)
       .Join(SkillCraftDb.Worlds.WorldId, SkillCraftDb.Personalities.WorldId)
+      .LeftJoin(SkillCraftDb.Customizations.CustomizationId, SkillCraftDb.Personalities.GiftId)
       .Where(SkillCraftDb.Worlds.Id, Operators.IsEqualTo(worldId.ToGuid()))
       .ApplyIdFilter(payload, SkillCraftDb.Personalities.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Personalities.Name);
 
+    if (payload.Attribute.HasValue)
+    {
+      builder.Where(SkillCraftDb.Personalities.Attribute, Operators.IsEqualTo(payload.Attribute.Value.ToString()));
+    }
+    if (payload.GiftId.HasValue)
+    {
+      builder.Where(SkillCraftDb.Customizations.Id, Operators.IsEqualTo(payload.GiftId.Value));
+    }
+
     IQueryable<PersonalityEntity> query = _personalities.FromQuery(builder).AsNoTracking()
-      .Include(x => x.Gift)
+      .Include(x => x.Gift).ThenInclude(x => x!.World)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);
@@ -63,6 +73,11 @@ internal class PersonalityQuerier : IPersonalityQuerier
     {
       switch (sort.Field)
       {
+        case PersonalitySort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case PersonalitySort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
