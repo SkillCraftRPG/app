@@ -9,9 +9,9 @@ internal class SearchAspectsPayloadGraphType : SearchPayloadInputGraphType<Searc
   public SearchAspectsPayloadGraphType() : base()
   {
     Field(x => x.Attribute, type: typeof(AttributeGraphType))
-      .Description("TODO(fpion): document");
+      .Description("When specified, only aspects selecting this attribute will match.");
     Field(x => x.Skill, type: typeof(SkillGraphType))
-      .Description("TODO(fpion): document");
+      .Description("When specified, only aspects discounting this skill will match.");
 
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<AspectSortOptionGraphType>>>))
       .DefaultValue([])
