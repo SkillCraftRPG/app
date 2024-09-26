@@ -66,6 +66,11 @@ internal class CustomizationQuerier : ICustomizationQuerier
     {
       switch (sort.Field)
       {
+        case CustomizationSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case CustomizationSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
