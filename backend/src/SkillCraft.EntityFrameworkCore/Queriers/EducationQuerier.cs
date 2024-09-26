@@ -51,6 +51,11 @@ internal class EducationQuerier : IEducationQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Educations.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Educations.Name);
 
+    if (payload.Skill.HasValue)
+    {
+      builder.Where(SkillCraftDb.Educations.Skill, Operators.IsEqualTo(payload.Skill.Value.ToString()));
+    }
+
     IQueryable<EducationEntity> query = _educations.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
 
@@ -61,6 +66,11 @@ internal class EducationQuerier : IEducationQuerier
     {
       switch (sort.Field)
       {
+        case EducationSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case EducationSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))

@@ -10,6 +10,7 @@ internal class EducationSortGraphType : EnumerationGraphType<EducationSort>
     Name = nameof(EducationSort);
     Description = "Represents the available education fields for sorting.";
 
+    AddValue(EducationSort.CreatedOn, "The educations will be sorted by their latest creation date and time.");
     AddValue(EducationSort.Name, "The educations will be sorted by their display name.");
     AddValue(EducationSort.UpdatedOn, "The educations will be sorted by their latest update date and time.");
   }

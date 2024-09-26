@@ -2,6 +2,7 @@
 
 public enum EducationSort
 {
+  CreatedOn,
   Name,
   UpdatedOn
 }
