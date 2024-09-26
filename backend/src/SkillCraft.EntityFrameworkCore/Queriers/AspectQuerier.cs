@@ -51,6 +51,17 @@ internal class AspectQuerier : IAspectQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Aspects.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Aspects.Name);
 
+    if (payload.Attribute.HasValue)
+    {
+      ColumnId[] columns = [SkillCraftDb.Aspects.MandatoryAttribute1, SkillCraftDb.Aspects.MandatoryAttribute2, SkillCraftDb.Aspects.OptionalAttribute1, SkillCraftDb.Aspects.OptionalAttribute2];
+      builder.WhereOr(columns.Select(column => new OperatorCondition(column, Operators.IsEqualTo(payload.Attribute.Value.ToString()))).ToArray());
+    }
+    if (payload.Skill.HasValue)
+    {
+      ColumnId[] columns = [SkillCraftDb.Aspects.DiscountedSkill1, SkillCraftDb.Aspects.DiscountedSkill2];
+      builder.WhereOr(columns.Select(column => new OperatorCondition(column, Operators.IsEqualTo(payload.Skill.Value.ToString()))).ToArray());
+    }
+
     IQueryable<AspectEntity> query = _aspects.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
 
@@ -61,6 +72,11 @@ internal class AspectQuerier : IAspectQuerier
     {
       switch (sort.Field)
       {
+        case AspectSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case AspectSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
