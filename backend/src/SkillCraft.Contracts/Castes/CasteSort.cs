@@ -2,6 +2,7 @@
 
 public enum CasteSort
 {
+  CreatedOn,
   Name,
   UpdatedOn
 }
