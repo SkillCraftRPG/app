@@ -19,6 +19,12 @@ internal class AspectConfiguration : AggregateConfiguration<AspectEntity>, IEnti
 
     builder.HasIndex(x => x.Id).IsUnique();
     builder.HasIndex(x => x.Name);
+    builder.HasIndex(x => x.MandatoryAttribute1);
+    builder.HasIndex(x => x.MandatoryAttribute2);
+    builder.HasIndex(x => x.OptionalAttribute1);
+    builder.HasIndex(x => x.OptionalAttribute2);
+    builder.HasIndex(x => x.DiscountedSkill1);
+    builder.HasIndex(x => x.DiscountedSkill2);
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
     builder.Property(x => x.MandatoryAttribute1).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Attribute>());

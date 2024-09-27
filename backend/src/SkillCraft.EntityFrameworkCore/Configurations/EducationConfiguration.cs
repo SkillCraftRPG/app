@@ -18,6 +18,7 @@ internal class EducationConfiguration : AggregateConfiguration<EducationEntity>,
 
     builder.HasIndex(x => x.Id).IsUnique();
     builder.HasIndex(x => x.Name);
+    builder.HasIndex(x => x.Skill);
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
     builder.Property(x => x.Skill).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Skill>());

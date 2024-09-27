@@ -17,9 +17,11 @@ internal class TalentConfiguration : AggregateConfiguration<TalentEntity>, IEnti
     builder.HasKey(x => x.TalentId);
 
     builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => x.Tier);
     builder.HasIndex(x => x.Name);
-    builder.HasIndex(x => new { x.WorldId, x.Skill });
     builder.HasIndex(x => x.Skill);
+    builder.HasIndex(x => new { x.WorldId, x.Skill });
+    builder.HasIndex(x => x.AllowMultiplePurchases);
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
     builder.Property(x => x.Skill).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Skill>());

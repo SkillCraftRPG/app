@@ -18,6 +18,7 @@ internal class CasteConfiguration : AggregateConfiguration<CasteEntity>, IEntity
 
     builder.HasIndex(x => x.Id).IsUnique();
     builder.HasIndex(x => x.Name);
+    builder.HasIndex(x => x.Skill);
 
     builder.Ignore(x => x.Traits);
 

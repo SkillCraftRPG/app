@@ -62,6 +62,29 @@ internal class TalentQuerier : ITalentQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Talents.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Talents.Name);
 
+    if (payload.AllowMultiplePurchases.HasValue)
+    {
+      builder.Where(SkillCraftDb.Talents.AllowMultiplePurchases, Operators.IsEqualTo(payload.AllowMultiplePurchases.Value));
+    }
+    if (payload.HasSkill.HasValue)
+    {
+      builder.Where(SkillCraftDb.Talents.Skill, payload.HasSkill.Value ? Operators.IsNotNull() : Operators.IsNull());
+    }
+    if (payload.RequiredTalentId.HasValue)
+    {
+      TableId required = new(SkillCraftDb.Talents.Table.Schema, SkillCraftDb.Talents.Table.Table ?? string.Empty, "Required");
+      builder.Join(
+        new ColumnId(SkillCraftDb.Talents.TalentId.Name ?? string.Empty, required),
+        SkillCraftDb.Talents.RequiredTalentId,
+        new OperatorCondition(
+          new ColumnId(SkillCraftDb.Talents.Id.Name ?? string.Empty, required),
+          Operators.IsEqualTo(payload.RequiredTalentId.Value)));
+    }
+    if (payload.Tier != null && payload.Tier.Values.Count > 0)
+    {
+      builder.Where(SkillCraftDb.Talents.Tier, GetTierOperator(payload.Tier));
+    }
+
     IQueryable<TalentEntity> query = _talents.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
 
@@ -72,6 +95,11 @@ internal class TalentQuerier : ITalentQuerier
     {
       switch (sort.Field)
       {
+        case TalentSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case TalentSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))
@@ -104,5 +132,20 @@ internal class TalentQuerier : ITalentQuerier
     Mapper mapper = new(actors);
 
     return talents.Select(mapper.ToTalent).ToArray();
+  }
+
+  private static ConditionalOperator GetTierOperator(TierFilter tier)
+  {
+    return tier.Operator.Trim().ToLowerInvariant() switch
+    {
+      "gt" => Operators.IsGreaterThan(tier.Values.First()),
+      "gte" => Operators.IsGreaterThanOrEqualTo(tier.Values.First()),
+      "in" => Operators.IsIn(tier.Values.Distinct().Select(value => (object)value).ToArray()),
+      "lt" => Operators.IsLessThan(tier.Values.First()),
+      "lte" => Operators.IsLessThanOrEqualTo(tier.Values.First()),
+      "ne" => Operators.IsNotEqualTo(tier.Values.First()),
+      "nin" => Operators.IsNotIn(tier.Values.Distinct().Select(value => (object)value).ToArray()),
+      _ => Operators.IsEqualTo(tier.Values.First()),
+    };
   }
 }

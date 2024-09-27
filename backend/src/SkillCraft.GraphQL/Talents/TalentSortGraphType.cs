@@ -10,6 +10,7 @@ internal class TalentSortGraphType : EnumerationGraphType<TalentSort>
     Name = nameof(TalentSort);
     Description = "Represents the available talent fields for sorting.";
 
+    AddValue(TalentSort.CreatedOn, "The talents will be sorted by their creation date and time.");
     AddValue(TalentSort.Name, "The talents will be sorted by their display name.");
     AddValue(TalentSort.UpdatedOn, "The talents will be sorted by their latest update date and time.");
   }
