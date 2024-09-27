@@ -10,6 +10,8 @@ internal class SearchTalentsPayloadGraphType : SearchPayloadInputGraphType<Searc
   {
     Field(x => x.AllowMultiplePurchases)
       .Description("When specified, only talents that allow or do not allow multiple purchases will match.");
+    Field(x => x.HasSkill)
+      .Description("When specified, only talents associated to a skill or not will match.");
 
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<TalentSortOptionGraphType>>>))
       .DefaultValue([])

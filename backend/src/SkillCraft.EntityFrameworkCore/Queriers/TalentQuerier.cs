@@ -66,6 +66,10 @@ internal class TalentQuerier : ITalentQuerier
     {
       builder.Where(SkillCraftDb.Talents.AllowMultiplePurchases, Operators.IsEqualTo(payload.AllowMultiplePurchases.Value));
     }
+    if (payload.HasSkill.HasValue)
+    {
+      builder.Where(SkillCraftDb.Talents.Skill, payload.HasSkill.Value ? Operators.IsNotNull() : Operators.IsNull());
+    }
 
     IQueryable<TalentEntity> query = _talents.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);

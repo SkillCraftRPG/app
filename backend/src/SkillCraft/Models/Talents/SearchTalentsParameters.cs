@@ -10,9 +10,16 @@ public record SearchTalentsParameters : SearchParameters
   [FromQuery(Name = "multiple")]
   public bool? AllowMultiplePurchases { get; set; }
 
+  [FromQuery(Name = "skill")]
+  public bool? HasSkill { get; set; }
+
   public SearchTalentsPayload ToPayload()
   {
-    SearchTalentsPayload payload = new();
+    SearchTalentsPayload payload = new()
+    {
+      AllowMultiplePurchases = AllowMultiplePurchases,
+      HasSkill = HasSkill
+    };
     Fill(payload);
 
     foreach (SortOption sort in ((SearchPayload)payload).Sort)

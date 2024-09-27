@@ -6,7 +6,7 @@ public record SearchTalentsPayload : SearchPayload
 {
   // TODO(fpion): Tier
   public bool? AllowMultiplePurchases { get; set; }
-  // TODO(fpion): Skill
+  public bool? HasSkill { get; set; }
   // TODO(fpion): RequiredTalent/RequiringTalents
 
   public new List<TalentSortOption> Sort { get; set; } = [];
