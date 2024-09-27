@@ -70,6 +70,16 @@ internal class TalentQuerier : ITalentQuerier
     {
       builder.Where(SkillCraftDb.Talents.Skill, payload.HasSkill.Value ? Operators.IsNotNull() : Operators.IsNull());
     }
+    if (payload.RequiredTalentId.HasValue)
+    {
+      TableId required = new(SkillCraftDb.Talents.Table.Schema, SkillCraftDb.Talents.Table.Table ?? string.Empty, "Required");
+      builder.Join(
+        new ColumnId(SkillCraftDb.Talents.TalentId.Name ?? string.Empty, required),
+        SkillCraftDb.Talents.RequiredTalentId,
+        new OperatorCondition(
+          new ColumnId(SkillCraftDb.Talents.Id.Name ?? string.Empty, required),
+          Operators.IsEqualTo(payload.RequiredTalentId.Value)));
+    }
     if (payload.Tier != null && payload.Tier.Values.Count > 0)
     {
       builder.Where(SkillCraftDb.Talents.Tier, GetTierOperator(payload.Tier));

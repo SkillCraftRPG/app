@@ -14,6 +14,9 @@ public record SearchTalentsParameters : SearchParameters
   [FromQuery(Name = "skill")]
   public bool? HasSkill { get; set; }
 
+  [FromQuery(Name = "required")]
+  public Guid? RequiredTalentId { get; set; }
+
   [FromQuery(Name = "tier_operator")]
   public string? TierOperator { get; set; }
 
@@ -25,7 +28,8 @@ public record SearchTalentsParameters : SearchParameters
     SearchTalentsPayload payload = new()
     {
       AllowMultiplePurchases = AllowMultiplePurchases,
-      HasSkill = HasSkill
+      HasSkill = HasSkill,
+      RequiredTalentId = RequiredTalentId
     };
     if (TierValues != null)
     {
