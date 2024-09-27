@@ -70,6 +70,10 @@ internal class TalentQuerier : ITalentQuerier
     {
       builder.Where(SkillCraftDb.Talents.Skill, payload.HasSkill.Value ? Operators.IsNotNull() : Operators.IsNull());
     }
+    if (payload.Tier != null && payload.Tier.Values.Count > 0)
+    {
+      builder.Where(SkillCraftDb.Talents.Tier, GetTierOperator(payload.Tier));
+    }
 
     IQueryable<TalentEntity> query = _talents.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
@@ -118,5 +122,20 @@ internal class TalentQuerier : ITalentQuerier
     Mapper mapper = new(actors);
 
     return talents.Select(mapper.ToTalent).ToArray();
+  }
+
+  private static ConditionalOperator GetTierOperator(TierFilter tier)
+  {
+    return tier.Operator.Trim().ToLowerInvariant() switch
+    {
+      "gt" => Operators.IsGreaterThan(tier.Values.First()),
+      "gte" => Operators.IsGreaterThanOrEqualTo(tier.Values.First()),
+      "in" => Operators.IsIn(tier.Values.Distinct().Select(value => (object)value).ToArray()),
+      "lt" => Operators.IsLessThan(tier.Values.First()),
+      "lte" => Operators.IsLessThanOrEqualTo(tier.Values.First()),
+      "ne" => Operators.IsNotEqualTo(tier.Values.First()),
+      "nin" => Operators.IsNotIn(tier.Values.Distinct().Select(value => (object)value).ToArray()),
+      _ => Operators.IsEqualTo(tier.Values.First()),
+    };
   }
 }

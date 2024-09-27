@@ -1,5 +1,6 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Microsoft.AspNetCore.Mvc;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Models.Search;
 
@@ -13,6 +14,12 @@ public record SearchTalentsParameters : SearchParameters
   [FromQuery(Name = "skill")]
   public bool? HasSkill { get; set; }
 
+  [FromQuery(Name = "tier_operator")]
+  public string? TierOperator { get; set; }
+
+  [FromQuery(Name = "tiers")]
+  public IEnumerable<int>? TierValues { get; set; }
+
   public SearchTalentsPayload ToPayload()
   {
     SearchTalentsPayload payload = new()
@@ -20,6 +27,10 @@ public record SearchTalentsParameters : SearchParameters
       AllowMultiplePurchases = AllowMultiplePurchases,
       HasSkill = HasSkill
     };
+    if (TierValues != null)
+    {
+      payload.Tier = new TierFilter(TierOperator ?? string.Empty, TierValues);
+    }
     Fill(payload);
 
     foreach (SortOption sort in ((SearchPayload)payload).Sort)
