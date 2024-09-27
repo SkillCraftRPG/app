@@ -61,6 +61,11 @@ internal class LanguageQuerier : ILanguageQuerier
     {
       switch (sort.Field)
       {
+        case LanguageSort.CreatedOn:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.CreatedOn) : query.OrderBy(x => x.CreatedOn))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.CreatedOn) : ordered.ThenBy(x => x.CreatedOn));
+          break;
         case LanguageSort.Name:
           ordered = (ordered == null)
             ? (sort.IsDescending ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name))

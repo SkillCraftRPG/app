@@ -10,6 +10,7 @@ internal class LanguageSortGraphType : EnumerationGraphType<LanguageSort>
     Name = nameof(LanguageSort);
     Description = "Represents the available language fields for sorting.";
 
+    AddValue(LanguageSort.CreatedOn, "The languages will be sorted by their creation date and time.");
     AddValue(LanguageSort.Name, "The languages will be sorted by their display name.");
     AddValue(LanguageSort.UpdatedOn, "The languages will be sorted by their latest update date and time.");
   }
