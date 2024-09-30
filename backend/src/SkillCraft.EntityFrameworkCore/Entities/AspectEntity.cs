@@ -27,7 +27,7 @@ internal class AspectEntity : AggregateEntity
 
   public AspectEntity(WorldEntity world, Aspect.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new AspectId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

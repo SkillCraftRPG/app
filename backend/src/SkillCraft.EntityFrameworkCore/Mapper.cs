@@ -52,6 +52,7 @@ internal class Mapper
 
     AspectModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description,
       Attributes = source.GetAttributes(),
       Skills = source.GetSkills()
@@ -257,7 +258,14 @@ internal class Mapper
 
   private void MapAggregate(AggregateEntity source, Aggregate destination)
   {
-    destination.Id = new AggregateId(source.AggregateId).ToGuid();
+    try
+    {
+      destination.Id = new AggregateId(source.AggregateId).ToGuid();
+    }
+    catch (Exception)
+    {
+    }
+
     destination.Version = source.Version;
 
     destination.CreatedBy = FindActor(new ActorId(source.CreatedBy));
