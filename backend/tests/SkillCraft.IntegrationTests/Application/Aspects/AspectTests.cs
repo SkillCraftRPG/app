@@ -64,7 +64,7 @@ public class AspectTests : IntegrationTests
   [Fact(DisplayName = "It should create a new aspect.")]
   public async Task It_should_create_a_new_aspect()
   {
-    CreateAspectPayload payload = new(" Gymnaste ")
+    SaveAspectPayload payload = new(" Gymnaste ")
     {
       Description = "    ",
       Attributes = new AttributeSelectionModel
@@ -81,11 +81,13 @@ public class AspectTests : IntegrationTests
       }
     };
 
-    CreateAspectCommand command = new(payload);
-    AspectModel aspect = await Pipeline.ExecuteAsync(command);
+    SaveAspectCommand command = new(Guid.NewGuid(), payload, Version: null);
+    SaveAspectResult result = await Pipeline.ExecuteAsync(command);
+    Assert.True(result.Created);
 
+    AspectModel? aspect = result.Aspect;
     Assert.NotNull(aspect);
-    Assert.NotEqual(default, aspect.Id);
+    Assert.Equal(command.Id, aspect.Id);
     Assert.Equal(2, aspect.Version);
     Assert.Equal(DateTime.UtcNow, aspect.CreatedOn, TimeSpan.FromSeconds(1));
     Assert.True(aspect.CreatedOn < aspect.UpdatedOn);
@@ -113,7 +115,7 @@ public class AspectTests : IntegrationTests
     _tenace.Update(UserId);
     await _aspectRepository.SaveAsync(_tenace);
 
-    ReplaceAspectPayload payload = new(" Gymnaste ")
+    SaveAspectPayload payload = new(" Gymnaste ")
     {
       Description = "    ",
       Attributes = new AttributeSelectionModel
@@ -130,9 +132,11 @@ public class AspectTests : IntegrationTests
       }
     };
 
-    ReplaceAspectCommand command = new(_tenace.EntityId, payload, version);
-    AspectModel? aspect = await Pipeline.ExecuteAsync(command);
+    SaveAspectCommand command = new(_tenace.EntityId, payload, version);
+    SaveAspectResult result = await Pipeline.ExecuteAsync(command);
+    Assert.False(result.Created);
 
+    AspectModel? aspect = result.Aspect;
     Assert.NotNull(aspect);
     Assert.Equal(command.Id, aspect.Id);
     Assert.Equal(_tenace.Version + 1, aspect.Version);

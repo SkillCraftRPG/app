@@ -26,26 +26,24 @@ public class AspectController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<AspectModel>> CreateAsync([FromBody] CreateAspectPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<AspectModel>> CreateAsync([FromBody] SaveAspectPayload payload, CancellationToken cancellationToken)
   {
-    AspectModel aspect = await _pipeline.ExecuteAsync(new CreateAspectCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Aspect}/{{id}}", [new KeyValuePair<string, string>("id", aspect.Id.ToString())]);
-
-    return Created(location, aspect);
+    SaveAspectResult result = await _pipeline.ExecuteAsync(new SaveAspectCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<AspectModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     AspectModel? aspect = await _pipeline.ExecuteAsync(new ReadAspectQuery(id), cancellationToken);
-    return aspect == null ? NotFound() : Ok(aspect);
+    return GetActionResult(aspect);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<AspectModel>> ReplaceAsync(Guid id, [FromBody] ReplaceAspectPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<AspectModel>> ReplaceAsync(Guid id, [FromBody] SaveAspectPayload payload, long? version, CancellationToken cancellationToken)
   {
-    AspectModel? aspect = await _pipeline.ExecuteAsync(new ReplaceAspectCommand(id, payload, version), cancellationToken);
-    return aspect == null ? NotFound() : Ok(aspect);
+    SaveAspectResult result = await _pipeline.ExecuteAsync(new SaveAspectCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class AspectController : ControllerBase
   public async Task<ActionResult<AspectModel>> UpdateAsync(Guid id, [FromBody] UpdateAspectPayload payload, CancellationToken cancellationToken)
   {
     AspectModel? aspect = await _pipeline.ExecuteAsync(new UpdateAspectCommand(id, payload), cancellationToken);
-    return aspect == null ? NotFound() : Ok(aspect);
+    return GetActionResult(aspect);
+  }
+
+  private ActionResult<AspectModel> GetActionResult(SaveAspectResult result) => GetActionResult(result.Aspect, result.Created);
+  private ActionResult<AspectModel> GetActionResult(AspectModel? aspect, bool created = false)
+  {
+    if (aspect == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Aspect}/{{id}}", [new KeyValuePair<string, string>("id", aspect.Id.ToString())]);
+      return Created(location, aspect);
+    }
+
+    return Ok(aspect);
   }
 }

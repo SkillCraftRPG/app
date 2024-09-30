@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Aspects.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
@@ -15,18 +16,18 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
   private readonly IAspectQuerier _aspectQuerier;
   private readonly IAspectRepository _aspectRepository;
   private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
+  private readonly IStorageService _storageService;
 
   public UpdateAspectCommandHandler(
     IAspectQuerier aspectQuerier,
     IAspectRepository aspectRepository,
     IPermissionService permissionService,
-    ISender sender)
+    IStorageService storageService)
   {
     _aspectQuerier = aspectQuerier;
     _aspectRepository = aspectRepository;
     _permissionService = permissionService;
-    _sender = sender;
+    _storageService = storageService;
   }
 
   public async Task<AspectModel?> Handle(UpdateAspectCommand command, CancellationToken cancellationToken)
@@ -62,8 +63,19 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
     }
 
     aspect.Update(command.GetUserId());
-    await _sender.Send(new SaveAspectCommand(aspect), cancellationToken);
+
+    await SaveAsync(aspect, cancellationToken);
 
     return await _aspectQuerier.ReadAsync(aspect, cancellationToken);
+  }
+
+  private async Task SaveAsync(Aspect aspect, CancellationToken cancellationToken)
+  {
+    EntityMetadata entity = aspect.GetMetadata();
+    await _storageService.EnsureAvailableAsync(entity, cancellationToken);
+
+    await _aspectRepository.SaveAsync(aspect, cancellationToken);
+
+    await _storageService.UpdateAsync(entity, cancellationToken);
   }
 }
