@@ -22,7 +22,7 @@ internal static class AspectEvents
         .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
       if (aspect == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new AspectId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");

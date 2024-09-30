@@ -6,8 +6,6 @@ using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
-using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Characters.Creation;
 
@@ -49,9 +47,9 @@ public class ResolveAspectsQueryHandlerTests
   [Fact(DisplayName = "It should return the found aspects.")]
   public async Task It_should_return_the_found_aspects()
   {
-    ResolveAspectsQuery query = new(_activity, [_aspect1.Id.ToGuid(), _aspect2.Id.ToGuid()]);
+    ResolveAspectsQuery query = new(_activity, [_aspect1.EntityId, _aspect2.EntityId]);
 
-    IEnumerable<AspectId> aspectIds = query.Ids.Distinct().Select(id => new AspectId(id));
+    IEnumerable<AspectId> aspectIds = query.Ids.Distinct().Select(id => new AspectId(_world.Id, id));
     _aspectRepository.Setup(x => x.LoadAsync(aspectIds, _cancellationToken)).ReturnsAsync([_aspect1, _aspect2]);
 
     IReadOnlyCollection<Aspect> aspects = await _handler.Handle(query, _cancellationToken);
@@ -65,30 +63,13 @@ public class ResolveAspectsQueryHandlerTests
   [Fact(DisplayName = "It should throw AspectsNotFoundException when some aspects could not be found.")]
   public async Task It_should_throw_AspectsNotFoundException_some_aspects_could_not_be_found()
   {
-    ResolveAspectsQuery query = new(_activity, [_aspect1.Id.ToGuid(), Guid.NewGuid(), Guid.Empty]);
+    ResolveAspectsQuery query = new(_activity, [_aspect1.EntityId, Guid.NewGuid(), Guid.Empty]);
 
-    IEnumerable<AspectId> aspectIds = query.Ids.Distinct().Select(id => new AspectId(id));
+    IEnumerable<AspectId> aspectIds = query.Ids.Distinct().Select(id => new AspectId(_world.Id, id));
     _aspectRepository.Setup(x => x.LoadAsync(aspectIds, _cancellationToken)).ReturnsAsync([_aspect1]);
 
     var exception = await Assert.ThrowsAsync<AspectsNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
     Assert.Equal(query.Ids.Skip(1), exception.Ids);
     Assert.Equal("AspectIds", exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw PermissionDeniedException a aspect is not in the expected world.")]
-  public async Task It_should_throw_PermissionDeniedException_when_a_aspect_is_not_in_the_expected_world()
-  {
-    Aspect aspect = new(WorldId.NewId(), new Name("Circonspect"), UserId.NewId());
-    ResolveAspectsQuery query = new(_activity, [aspect.Id.ToGuid()]);
-
-    IEnumerable<AspectId> aspectIds = query.Ids.Distinct().Select(id => new AspectId(id));
-    _aspectRepository.Setup(x => x.LoadAsync(aspectIds, _cancellationToken)).ReturnsAsync([aspect]);
-
-    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(Action.Preview, exception.Action);
-    Assert.Equal(EntityType.Aspect, exception.EntityType);
-    Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
-    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(aspect.Id.ToGuid(), exception.EntityId);
   }
 }

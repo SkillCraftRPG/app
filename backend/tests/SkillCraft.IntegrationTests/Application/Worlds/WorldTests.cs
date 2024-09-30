@@ -19,7 +19,6 @@ public class WorldTests : IntegrationTests
   private readonly World _hyrule;
   private readonly World _lorule;
   private readonly World _newWorld;
-  private readonly World _ungar;
 
   public WorldTests() : base()
   {
@@ -28,14 +27,13 @@ public class WorldTests : IntegrationTests
     _hyrule = new(new Slug("hyrule"), UserId);
     _lorule = new(new Slug("lorule"), UserId);
     _newWorld = new(new Slug("new-world"), UserId);
-    _ungar = new(new Slug("ungar"), UserId);
   }
 
   public override async Task InitializeAsync()
   {
     await base.InitializeAsync();
 
-    await _worldRepository.SaveAsync([_hyrule, _lorule, _newWorld, _ungar]);
+    await _worldRepository.SaveAsync([_hyrule, _lorule, _newWorld]);
   }
 
   [Fact(DisplayName = "It should create a new world.")]
@@ -69,12 +67,12 @@ public class WorldTests : IntegrationTests
   [Fact(DisplayName = "It should replace an existing world.")]
   public async Task It_should_replace_an_existing_world()
   {
-    long version = _ungar.Version;
+    long version = World.Version;
 
     Description description = new("This is the world of Ungar.");
-    _ungar.Description = description;
-    _ungar.Update(UserId);
-    await _worldRepository.SaveAsync(_ungar);
+    World.Description = description;
+    World.Update(UserId);
+    await _worldRepository.SaveAsync(World);
 
     ReplaceWorldPayload payload = new("ungar")
     {
@@ -82,12 +80,12 @@ public class WorldTests : IntegrationTests
       Description = "    "
     };
 
-    ReplaceWorldCommand command = new(_ungar.Id.ToGuid(), payload, version);
+    ReplaceWorldCommand command = new(World.Id.ToGuid(), payload, version);
     WorldModel? world = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(world);
     Assert.Equal(command.Id, world.Id);
-    Assert.Equal(_ungar.Version + 1, world.Version);
+    Assert.Equal(World.Version + 1, world.Version);
     Assert.Equal(DateTime.UtcNow, world.UpdatedOn, TimeSpan.FromSeconds(1));
     Assert.Equal(Actor, world.UpdatedBy);
 
@@ -125,7 +123,7 @@ public class WorldTests : IntegrationTests
 
     payload.Ids.Add(Guid.Empty);
     payload.Ids.AddRange((await _worldRepository.LoadAsync()).Select(world => world.Id.ToGuid()));
-    payload.Ids.Remove(_ungar.Id.ToGuid());
+    payload.Ids.Remove(World.Id.ToGuid());
 
     SearchWorldsQuery query = new(payload);
     SearchResults<WorldModel> results = await Pipeline.ExecuteAsync(query);
@@ -138,19 +136,19 @@ public class WorldTests : IntegrationTests
   [Fact(DisplayName = "It should return the world found by ID.")]
   public async Task It_should_return_the_world_found_by_Id()
   {
-    ReadWorldQuery query = new(_ungar.Id.ToGuid(), Slug: null);
+    ReadWorldQuery query = new(World.Id.ToGuid(), Slug: null);
     WorldModel? world = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(world);
-    Assert.Equal(_ungar.Id.ToGuid(), world.Id);
+    Assert.Equal(World.Id.ToGuid(), world.Id);
   }
 
   [Fact(DisplayName = "It should throw SlugAlreadyUsedException when the slug is already used.")]
   public async Task It_should_throw_SlugAlreadyUsedException_when_the_slug_is_already_used()
   {
-    CreateWorldPayload payload = new(_ungar.Slug.Value);
+    CreateWorldPayload payload = new(World.Slug.Value);
     CreateWorldCommand command = new(payload);
     var exception = await Assert.ThrowsAsync<SlugAlreadyUsedException>(async () => await Pipeline.ExecuteAsync(command));
-    Assert.Contains(_ungar.Id.ToGuid(), exception.Ids);
+    Assert.Contains(World.Id.ToGuid(), exception.Ids);
     Assert.Equal(payload.Slug, exception.Slug);
     Assert.Equal("Slug", exception.PropertyName);
   }
@@ -163,7 +161,7 @@ public class WorldTests : IntegrationTests
       Name = new Change<string>("Ungar")
     };
 
-    UpdateWorldCommand command = new(_ungar.Id.ToGuid(), payload);
+    UpdateWorldCommand command = new(World.Id.ToGuid(), payload);
     WorldModel? world = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(world);
@@ -173,7 +171,7 @@ public class WorldTests : IntegrationTests
     Assert.Equal(Actor, world.UpdatedBy);
 
     Assert.Equal(Actor, world.Owner);
-    Assert.Equal(_ungar.Slug.Value, world.Slug);
+    Assert.Equal(World.Slug.Value, world.Slug);
     Assert.Equal(payload.Name.Value?.CleanTrim(), world.Name);
     Assert.Null(world.Description);
   }

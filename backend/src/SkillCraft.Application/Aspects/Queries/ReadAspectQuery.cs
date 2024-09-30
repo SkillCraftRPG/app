@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
 
 namespace SkillCraft.Application.Aspects.Queries;
@@ -19,12 +20,8 @@ internal class ReadAspectQueryHandler : IRequestHandler<ReadAspectQuery, AspectM
 
   public async Task<AspectModel?> Handle(ReadAspectQuery query, CancellationToken cancellationToken)
   {
-    AspectModel? aspect = await _aspectQuerier.ReadAsync(query.Id, cancellationToken);
-    if (aspect != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, aspect.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Aspect, cancellationToken);
 
-    return aspect;
+    return await _aspectQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

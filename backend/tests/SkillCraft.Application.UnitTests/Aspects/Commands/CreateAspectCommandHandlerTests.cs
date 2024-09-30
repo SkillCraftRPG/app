@@ -1,12 +1,9 @@
-﻿using Logitar.Portal.Contracts.Users;
-using MediatR;
+﻿using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
-using SkillCraft.Domain.Worlds;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Aspects.Commands;
@@ -22,15 +19,11 @@ public class CreateAspectCommandHandlerTests
 
   private readonly CreateAspectCommandHandler _handler;
 
-  private readonly User _user;
-  private readonly World _world;
+  private readonly WorldMock _world = new();
 
   public CreateAspectCommandHandlerTests()
   {
     _handler = new(_aspectQuerier.Object, _permissionService.Object, _sender.Object);
-
-    _user = new UserMock();
-    _world = new(new Slug("ungar"), new UserId(_user.Id));
   }
 
   [Fact(DisplayName = "It should create a new aspect.")]
@@ -53,7 +46,7 @@ public class CreateAspectCommandHandlerTests
       }
     };
     CreateAspectCommand command = new(payload);
-    command.Contextualize(_user, _world);
+    command.Contextualize(_world);
 
     AspectModel model = new();
     _aspectQuerier.Setup(x => x.ReadAsync(It.IsAny<Aspect>(), _cancellationToken)).ReturnsAsync(model);

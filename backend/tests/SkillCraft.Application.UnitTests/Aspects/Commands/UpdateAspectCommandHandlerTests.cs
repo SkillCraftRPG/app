@@ -33,6 +33,7 @@ public class UpdateAspectCommandHandlerTests
   {
     UpdateAspectPayload payload = new();
     UpdateAspectCommand command = new(Guid.Empty, payload);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -84,8 +85,8 @@ public class UpdateAspectCommandHandlerTests
         Discounted2 = Skill.Perception
       }
     };
-    UpdateAspectCommand command = new(aspect.Id.ToGuid(), payload);
-    command.Contextualize();
+    UpdateAspectCommand command = new(aspect.EntityId, payload);
+    command.Contextualize(_world);
 
     AspectModel model = new();
     _aspectQuerier.Setup(x => x.ReadAsync(aspect, _cancellationToken)).ReturnsAsync(model);
@@ -95,7 +96,7 @@ public class UpdateAspectCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == aspect.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == aspect.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveAspectCommand>(y => y.Aspect.Equals(aspect)

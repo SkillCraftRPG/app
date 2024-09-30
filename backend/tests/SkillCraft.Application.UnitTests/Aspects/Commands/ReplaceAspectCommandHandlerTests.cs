@@ -50,8 +50,8 @@ public class ReplaceAspectCommandHandlerTests
         Discounted2 = Skill.Perception
       }
     };
-    ReplaceAspectCommand command = new(aspect.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplaceAspectCommand command = new(aspect.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     AspectModel model = new();
     _aspectQuerier.Setup(x => x.ReadAsync(aspect, _cancellationToken)).ReturnsAsync(model);
@@ -62,7 +62,7 @@ public class ReplaceAspectCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == aspect.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == aspect.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveAspectCommand>(y => y.Aspect.Equals(aspect)
@@ -81,6 +81,7 @@ public class ReplaceAspectCommandHandlerTests
   {
     ReplaceAspectPayload payload = new("Œil-de-lynx");
     ReplaceAspectCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -114,7 +115,7 @@ public class ReplaceAspectCommandHandlerTests
     long version = reference.Version;
     _aspectRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Aspect aspect = new(_world.Id, reference.Name, _world.OwnerId, reference.Id);
+    Aspect aspect = new(_world.Id, reference.Name, _world.OwnerId, reference.EntityId);
     _aspectRepository.Setup(x => x.LoadAsync(aspect.Id, _cancellationToken)).ReturnsAsync(aspect);
 
     Description description = new("Doté d’une excellente vision…");
@@ -136,8 +137,8 @@ public class ReplaceAspectCommandHandlerTests
         Discounted2 = Skill.Perception
       }
     };
-    ReplaceAspectCommand command = new(aspect.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplaceAspectCommand command = new(aspect.EntityId, payload, version);
+    command.Contextualize(_world);
 
     AspectModel model = new();
     _aspectQuerier.Setup(x => x.ReadAsync(aspect, _cancellationToken)).ReturnsAsync(model);
@@ -148,7 +149,7 @@ public class ReplaceAspectCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == aspect.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == aspect.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveAspectCommand>(y => y.Aspect.Equals(aspect)

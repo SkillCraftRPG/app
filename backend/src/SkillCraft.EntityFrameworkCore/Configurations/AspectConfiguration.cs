@@ -17,7 +17,7 @@ internal class AspectConfiguration : AggregateConfiguration<AspectEntity>, IEnti
     builder.ToTable(SkillCraftDb.Aspects.Table.Table ?? string.Empty, SkillCraftDb.Aspects.Table.Schema);
     builder.HasKey(x => x.AspectId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.MandatoryAttribute1);
     builder.HasIndex(x => x.MandatoryAttribute2);

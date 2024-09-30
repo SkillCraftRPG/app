@@ -34,7 +34,7 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
     UpdateAspectPayload payload = command.Payload;
     new UpdateAspectValidator().ValidateAndThrow(payload);
 
-    AspectId id = new(command.Id);
+    AspectId id = new(command.GetWorldId(), command.Id);
     Aspect? aspect = await _aspectRepository.LoadAsync(id, cancellationToken);
     if (aspect == null)
     {
