@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
 
 namespace SkillCraft.Application.Aspects.Queries;
@@ -15,6 +16,8 @@ public class SearchAspectsQueryHandlerTests
 
   private readonly SearchAspectsQueryHandler _handler;
 
+  private readonly WorldMock _world = new();
+
   public SearchAspectsQueryHandlerTests()
   {
     _handler = new(_aspectQuerier.Object, _permissionService.Object);
@@ -25,13 +28,15 @@ public class SearchAspectsQueryHandlerTests
   {
     SearchAspectsPayload payload = new();
     SearchAspectsQuery query = new(payload);
-    query.Contextualize(new WorldMock());
+    query.Contextualize(_world);
 
     SearchResults<AspectModel> results = new();
-    _aspectQuerier.Setup(x => x.SearchAsync(query.GetWorldId(), payload, _cancellationToken)).ReturnsAsync(results);
+    _aspectQuerier.Setup(x => x.SearchAsync(_world.Id, payload, _cancellationToken)).ReturnsAsync(results);
 
     SearchResults<AspectModel> aspects = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, aspects);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Aspect, _cancellationToken), Times.Once);
   }
 }

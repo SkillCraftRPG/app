@@ -28,17 +28,17 @@ internal class AspectQuerier : IAspectQuerier
   public async Task<AspectModel> ReadAsync(Aspect aspect, CancellationToken cancellationToken)
   {
     return await ReadAsync(aspect.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The aspect entity 'Id={aspect.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The aspect entity 'Id={aspect.Id}' could not be found.");
   }
   public async Task<AspectModel?> ReadAsync(AspectId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<AspectModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<AspectModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     AspectEntity? aspect = await _aspects.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return aspect == null ? null : await MapAsync(aspect, cancellationToken);
   }

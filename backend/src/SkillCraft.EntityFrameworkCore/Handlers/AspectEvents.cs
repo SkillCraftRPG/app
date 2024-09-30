@@ -19,10 +19,10 @@ internal static class AspectEvents
     public async Task Handle(Aspect.CreatedEvent @event, CancellationToken cancellationToken)
     {
       AspectEntity? aspect = await _context.Aspects.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (aspect == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new AspectId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -47,10 +47,9 @@ internal static class AspectEvents
 
     public async Task Handle(Aspect.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       AspectEntity aspect = await _context.Aspects
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The aspect entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The aspect entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       aspect.Update(@event);
 

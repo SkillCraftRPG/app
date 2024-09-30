@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Logitar.Portal.Contracts.Actors;
+using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
@@ -16,34 +17,46 @@ public class ReadAspectQueryHandlerTests
 
   private readonly ReadAspectQueryHandler _handler;
 
-  private readonly AspectModel _aspect = new(new WorldModel(), "Œil-de-lynx") { Id = Guid.NewGuid() };
+  private readonly UserMock _user = new();
+  private readonly WorldMock _world;
+  private readonly AspectModel _aspect;
 
   public ReadAspectQueryHandlerTests()
   {
     _handler = new(_aspectQuerier.Object, _permissionService.Object);
 
-    _aspectQuerier.Setup(x => x.ReadAsync(_aspect.Id, _cancellationToken)).ReturnsAsync(_aspect);
+    _world = new(_user);
+    WorldModel worldModel = new(new Actor(_user), _world.Slug.Value)
+    {
+      Id = _world.Id.ToGuid()
+    };
+    _aspect = new(worldModel, "Œil-de-lynx")
+    {
+      Id = Guid.NewGuid()
+    };
+    _aspectQuerier.Setup(x => x.ReadAsync(_world.Id, _aspect.Id, _cancellationToken)).ReturnsAsync(_aspect);
   }
 
   [Fact(DisplayName = "It should return null when no aspect is found.")]
   public async Task It_should_return_null_when_no_aspect_is_found()
   {
     ReadAspectQuery query = new(Guid.Empty);
+    query.Contextualize(_world);
+
     Assert.Null(await _handler.Handle(query, _cancellationToken));
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(It.IsAny<ReadAspectQuery>(), It.IsAny<EntityMetadata>(), It.IsAny<CancellationToken>()), Times.Never);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Aspect, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return the aspect found by ID.")]
   public async Task It_should_return_the_aspect_found_by_Id()
   {
     ReadAspectQuery query = new(_aspect.Id);
+    query.Contextualize(_world);
+
     AspectModel? aspect = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_aspect, aspect);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      query,
-      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == _aspect.World.Id && y.Key.Type == EntityType.Aspect && y.Key.Id == _aspect.Id && y.Size > 0),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Aspect, _cancellationToken), Times.Once);
   }
 }

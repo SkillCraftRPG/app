@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Aspects;
 
-public record CreateAspectPayload
+public record SaveAspectPayload
 {
   public string Name { get; set; }
   public string? Description { get; set; }
@@ -8,11 +8,11 @@ public record CreateAspectPayload
   public AttributeSelectionModel Attributes { get; set; }
   public SkillsModel Skills { get; set; }
 
-  public CreateAspectPayload() : this(string.Empty)
+  public SaveAspectPayload() : this(string.Empty)
   {
   }
 
-  public CreateAspectPayload(string name)
+  public SaveAspectPayload(string name)
   {
     Name = name;
 

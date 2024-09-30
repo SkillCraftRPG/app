@@ -1,4 +1,5 @@
 ﻿using SkillCraft.Domain.Aspects;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
@@ -8,6 +9,8 @@ public class AspectIdTests
 {
   private readonly JsonSerializerOptions _options = new();
 
+  private readonly AspectId _id = new(WorldId.NewId());
+
   public AspectIdTests()
   {
     _options.Converters.Add(new AspectIdConverter());
@@ -16,7 +19,7 @@ public class AspectIdTests
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
-    string json = string.Concat('"', AspectId.NewId(), '"');
+    string json = string.Concat('"', _id, '"');
     AspectId aspectId = JsonSerializer.Deserialize<AspectId>(json, _options);
     Assert.Equal(json.Trim('"'), aspectId.Value);
   }
@@ -32,8 +35,7 @@ public class AspectIdTests
   [Fact(DisplayName = "It should serialize correctly.")]
   public void It_should_serialize_correctly()
   {
-    AspectId aspectId = AspectId.NewId();
-    string json = JsonSerializer.Serialize(aspectId, _options);
-    Assert.Equal(string.Concat('"', aspectId, '"'), json);
+    string json = JsonSerializer.Serialize(_id, _options);
+    Assert.Equal(string.Concat('"', _id, '"'), json);
   }
 }

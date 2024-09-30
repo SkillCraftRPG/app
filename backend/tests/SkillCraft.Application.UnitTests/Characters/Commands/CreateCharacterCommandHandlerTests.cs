@@ -85,7 +85,7 @@ public class CreateCharacterCommandHandlerTests
       LanguageIds = [_language.Id.ToGuid()],
       PersonalityId = _personality.Id.ToGuid(),
       CustomizationIds = _customizations.Select(x => x.Id.ToGuid()).ToList(),
-      AspectIds = _aspects.Select(x => x.Id.ToGuid()).ToList(),
+      AspectIds = _aspects.Select(x => x.EntityId).ToList(),
       Attributes = new()
       {
         Agility = _baseAttributes.Agility,

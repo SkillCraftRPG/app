@@ -13,7 +13,7 @@ internal static class AspectExtensions
   public static EntityMetadata GetMetadata(this Aspect aspect)
   {
     long size = aspect.Name.Size + (aspect.Description?.Size ?? 0) + 16 + 8;
-    return new EntityMetadata(aspect.WorldId, new EntityKey(Type, aspect.Id.ToGuid()), size);
+    return new EntityMetadata(aspect.WorldId, new EntityKey(Type, aspect.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this AspectModel aspect)
   {

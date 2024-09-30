@@ -10,8 +10,8 @@ public class Aspect : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new AspectId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
   public Name Name
@@ -71,14 +71,12 @@ public class Aspect : AggregateRoot
   {
   }
 
-  public Aspect(WorldId worldId, Name name, UserId userId, AspectId? id = null) : base(id?.AggregateId)
+  public Aspect(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new AspectId(worldId, entityId).AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     _name = @event.Name;
   }
 
@@ -115,14 +113,10 @@ public class Aspect : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public CreatedEvent(Name name)
     {
-      WorldId = worldId;
-
       Name = name;
     }
   }

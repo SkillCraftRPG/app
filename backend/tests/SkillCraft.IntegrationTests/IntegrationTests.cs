@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Logitar;
 using Logitar.Data;
 using Logitar.Data.PostgreSQL;
 using Logitar.Data.SqlServer;
@@ -12,7 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Logging;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore;
 using SkillCraft.EntityFrameworkCore.SqlServer;
 using SkillCraft.Infrastructure;
@@ -25,9 +28,10 @@ public abstract class IntegrationTests : IAsyncLifetime
   private readonly DatabaseProvider _databaseProvider;
   private readonly User _user;
 
-  protected Actor Actor => new(_user);
+  protected Actor Actor { get; }
   protected Faker Faker { get; } = new();
   protected UserId UserId { get; }
+  protected World World { get; }
 
   protected IConfiguration Configuration { get; }
   protected IServiceProvider ServiceProvider { get; }
@@ -81,12 +85,26 @@ public abstract class IntegrationTests : IAsyncLifetime
       Picture = Faker.Person.Avatar,
       AuthenticatedOn = now
     };
-    Actor actor = new(_user);
-    _user.CreatedBy = actor;
-    _user.UpdatedBy = actor;
-    _user.Email.VerifiedBy = actor;
+    Actor = new(_user);
+    _user.CreatedBy = Actor;
+    _user.UpdatedBy = Actor;
+    _user.Email.VerifiedBy = Actor;
     UserId = new(_user.Id);
-    ActivityContext activityContext = new(ApiKey: null, Session: null, _user, World: null);
+
+    World = new(new Slug("ungar"), UserId);
+    WorldModel worldModel = new(Actor, World.Slug.Value)
+    {
+      Id = World.Id.ToGuid(),
+      Version = World.Version,
+      CreatedBy = Actor,
+      CreatedOn = World.CreatedOn.AsUniversalTime(),
+      UpdatedBy = Actor,
+      UpdatedOn = World.UpdatedOn.AsUniversalTime(),
+      Name = World.Name?.Value,
+      Description = World.Description?.Value
+    };
+
+    ActivityContext activityContext = new(ApiKey: null, Session: null, _user, worldModel);
     services.AddSingleton<IActivityContextResolver>(new TestActivityContextResolver(activityContext));
     services.AddSingleton<ILogRepository, FakeLogRepository>();
 
@@ -151,6 +169,9 @@ public abstract class IntegrationTests : IAsyncLifetime
   {
     IActorService actorService = ServiceProvider.GetRequiredService<IActorService>();
     await actorService.SaveAsync(_user);
+
+    IWorldRepository worldRepository = ServiceProvider.GetRequiredService<IWorldRepository>();
+    await worldRepository.SaveAsync(World);
   }
 
   public virtual Task DisposeAsync() => Task.CompletedTask;
