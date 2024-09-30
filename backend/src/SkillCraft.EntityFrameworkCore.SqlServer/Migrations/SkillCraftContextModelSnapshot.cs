@@ -100,10 +100,22 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("CreatedOn");
 
+                    b.HasIndex("DiscountedSkill1");
+
+                    b.HasIndex("DiscountedSkill2");
+
                     b.HasIndex("Id")
                         .IsUnique();
 
+                    b.HasIndex("MandatoryAttribute1");
+
+                    b.HasIndex("MandatoryAttribute2");
+
                     b.HasIndex("Name");
+
+                    b.HasIndex("OptionalAttribute1");
+
+                    b.HasIndex("OptionalAttribute2");
 
                     b.HasIndex("UpdatedBy");
 
@@ -187,6 +199,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .IsUnique();
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("Skill");
 
                     b.HasIndex("UpdatedBy");
 
@@ -417,6 +431,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .IsUnique();
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("Skill");
 
                     b.HasIndex("UpdatedBy");
 
@@ -844,6 +860,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("AggregateId")
                         .IsUnique();
 
+                    b.HasIndex("Attribute");
+
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("CreatedOn");
@@ -1042,6 +1060,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("AggregateId")
                         .IsUnique();
 
+                    b.HasIndex("AllowMultiplePurchases");
+
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("CreatedOn");
@@ -1054,6 +1074,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("RequiredTalentId");
 
                     b.HasIndex("Skill");
+
+                    b.HasIndex("Tier");
 
                     b.HasIndex("UpdatedBy");
 
