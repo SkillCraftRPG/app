@@ -3,6 +3,7 @@ using Logitar.Data;
 using Logitar.Data.PostgreSQL;
 using Logitar.Data.SqlServer;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
+using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using Logitar.Portal.Contracts.Users;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Logging;
-using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore;
 using SkillCraft.EntityFrameworkCore.SqlServer;
 using SkillCraft.Infrastructure;
@@ -25,12 +24,10 @@ public abstract class IntegrationTests : IAsyncLifetime
 {
   private readonly DatabaseProvider _databaseProvider;
   private readonly User _user;
-  private readonly WorldModel _world;
 
   protected Actor Actor => new(_user);
-  protected CancellationToken CancellationToken { get; }
   protected Faker Faker { get; } = new();
-  protected World World { get; }
+  protected UserId UserId { get; }
 
   protected IConfiguration Configuration { get; }
   protected IServiceProvider ServiceProvider { get; }
@@ -64,27 +61,32 @@ public abstract class IntegrationTests : IAsyncLifetime
         throw new DatabaseProviderNotSupportedException(_databaseProvider);
     }
 
-    _user = new()
+    DateTime now = DateTime.UtcNow;
+    _user = new(Faker.Person.Email)
     {
       Id = Guid.NewGuid(),
-      UniqueName = Faker.Person.UserName,
+      CreatedOn = now,
+      UpdatedOn = now,
+      Email = new Email(Faker.Person.Email)
+      {
+        IsVerified = true,
+        VerifiedOn = now
+      },
+      IsConfirmed = true,
       FirstName = Faker.Person.FirstName,
       LastName = Faker.Person.LastName,
       FullName = Faker.Person.FullName,
-      Email = new Email(Faker.Person.Email),
-      Picture = Faker.Person.Avatar
+      Locale = new Locale(Faker.Locale),
+      TimeZone = "America/Montreal",
+      Picture = Faker.Person.Avatar,
+      AuthenticatedOn = now
     };
-    World = new(new Slug("ungar"), new UserId(_user.Id))
-    {
-      Name = new Name("Ungar")
-    };
-    World.Update(World.OwnerId);
-    _world = new(Actor, World.Slug.Value)
-    {
-      Id = World.Id.ToGuid(),
-      Name = World.Name.Value
-    };
-    ActivityContext activityContext = new(ApiKey: null, Session: null, _user, _world);
+    Actor actor = new(_user);
+    _user.CreatedBy = actor;
+    _user.UpdatedBy = actor;
+    _user.Email.VerifiedBy = actor;
+    UserId = new(_user.Id);
+    ActivityContext activityContext = new(ApiKey: null, Session: null, _user, World: null);
     services.AddSingleton<IActivityContextResolver>(new TestActivityContextResolver(activityContext));
     services.AddSingleton<ILogRepository, FakeLogRepository>();
 
@@ -113,13 +115,18 @@ public abstract class IntegrationTests : IAsyncLifetime
     StringBuilder statement = new();
     TableId[] tables =
     [
+      EntityFrameworkCore.SkillCraftDb.Comments.Table,
       EntityFrameworkCore.SkillCraftDb.Aspects.Table,
       EntityFrameworkCore.SkillCraftDb.Castes.Table,
       EntityFrameworkCore.SkillCraftDb.Customizations.Table,
       EntityFrameworkCore.SkillCraftDb.Educations.Table,
       EntityFrameworkCore.SkillCraftDb.Languages.Table,
+      EntityFrameworkCore.SkillCraftDb.Lineages.Table,
+      EntityFrameworkCore.SkillCraftDb.Parties.Table,
+      EntityFrameworkCore.SkillCraftDb.Personalities.Table,
       EntityFrameworkCore.SkillCraftDb.StorageDetails.Table,
       EntityFrameworkCore.SkillCraftDb.StorageSummaries.Table,
+      EntityFrameworkCore.SkillCraftDb.Talents.Table,
       EntityFrameworkCore.SkillCraftDb.Worlds.Table,
       EntityFrameworkCore.SkillCraftDb.Users.Table,
       EventDb.Events.Table
@@ -144,9 +151,6 @@ public abstract class IntegrationTests : IAsyncLifetime
   {
     IActorService actorService = ServiceProvider.GetRequiredService<IActorService>();
     await actorService.SaveAsync(_user);
-
-    IWorldRepository worldRepository = ServiceProvider.GetRequiredService<IWorldRepository>();
-    await worldRepository.SaveAsync(World);
   }
 
   public virtual Task DisposeAsync() => Task.CompletedTask;
