@@ -19,7 +19,6 @@ internal class SaveAspectCommandHandler : AspectCommandHandler, IRequestHandler<
   private readonly IAspectQuerier _aspectQuerier;
   private readonly IAspectRepository _aspectRepository;
   private readonly IPermissionService _permissionService;
-  private readonly IStorageService _storageService;
 
   public SaveAspectCommandHandler(
     IAspectQuerier aspectQuerier,
@@ -30,7 +29,6 @@ internal class SaveAspectCommandHandler : AspectCommandHandler, IRequestHandler<
     _aspectQuerier = aspectQuerier;
     _aspectRepository = aspectRepository;
     _permissionService = permissionService;
-    _storageService = storageService;
   }
 
   public async Task<SaveAspectResult> Handle(SaveAspectCommand command, CancellationToken cancellationToken)

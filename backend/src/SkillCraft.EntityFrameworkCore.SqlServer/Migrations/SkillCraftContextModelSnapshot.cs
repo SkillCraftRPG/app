@@ -104,9 +104,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("DiscountedSkill2");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("MandatoryAttribute1");
 
                     b.HasIndex("MandatoryAttribute2");
@@ -123,7 +120,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Aspects", (string)null);
                 });
@@ -786,9 +784,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("UpdatedBy");
@@ -797,7 +792,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Parties", (string)null);
                 });

@@ -14,7 +14,6 @@ public record UpdateWorldCommand(Guid Id, UpdateWorldPayload Payload) : Activity
 internal class UpdateWorldCommandHandler : WorldCommandHandler, IRequestHandler<UpdateWorldCommand, WorldModel?>
 {
   private readonly IPermissionService _permissionService;
-  private readonly IStorageService _storageService;
   private readonly IWorldQuerier _worldQuerier;
   private readonly IWorldRepository _worldRepository;
 
@@ -25,7 +24,6 @@ internal class UpdateWorldCommandHandler : WorldCommandHandler, IRequestHandler<
     IWorldRepository worldRepository) : base(storageService, worldQuerier, worldRepository)
   {
     _permissionService = permissionService;
-    _storageService = storageService;
     _worldQuerier = worldQuerier;
     _worldRepository = worldRepository;
   }

@@ -1,5 +1,6 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Search;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Parties.Commands;
 using SkillCraft.Application.Parties.Queries;
@@ -37,94 +38,64 @@ public class PartyTests : IntegrationTests
     await _partyRepository.SaveAsync([_ascension, _brigadeArdente, _confrerieMystique, _griffeNoire]);
   }
 
-  //[Fact(DisplayName = "It should create a new party.")]
-  //public async Task It_should_create_a_new_party()
-  //{
-  //  SavePartyPayload payload = new(" Gymnaste ")
-  //  {
-  //    Description = "    ",
-  //    Attributes = new AttributeSelectionModel
-  //    {
-  //      Mandatory1 = Attribute.Agility,
-  //      Mandatory2 = Attribute.Vigor,
-  //      Optional1 = Attribute.Coordination,
-  //      Optional2 = Attribute.Sensitivity
-  //    },
-  //    Skills = new SkillsModel
-  //    {
-  //      Discounted1 = Skill.Acrobatics,
-  //      Discounted2 = Skill.Athletics
-  //    }
-  //  };
+  [Fact(DisplayName = "It should create a new party.")]
+  public async Task It_should_create_a_new_party()
+  {
+    SavePartyPayload payload = new(" Chasseurs de Légende ")
+    {
+      Description = "    "
+    };
 
-  //  SavePartyCommand command = new(Guid.NewGuid(), payload, Version: null);
-  //  SavePartyResult result = await Pipeline.ExecuteAsync(command);
-  //  Assert.True(result.Created);
+    SavePartyCommand command = new(Guid.NewGuid(), payload, Version: null);
+    SavePartyResult result = await Pipeline.ExecuteAsync(command);
+    Assert.True(result.Created);
 
-  //  PartyModel? party = result.Party;
-  //  Assert.NotNull(party);
-  //  Assert.Equal(command.Id, party.Id);
-  //  Assert.Equal(2, party.Version);
-  //  Assert.Equal(DateTime.UtcNow, party.CreatedOn, TimeSpan.FromSeconds(1));
-  //  Assert.True(party.CreatedOn < party.UpdatedOn);
-  //  Assert.Equal(Actor, party.CreatedBy);
-  //  Assert.Equal(party.CreatedBy, party.UpdatedBy);
+    PartyModel? party = result.Party;
+    Assert.NotNull(party);
+    Assert.Equal(command.Id, party.Id);
+    Assert.Equal(1, party.Version);
+    Assert.Equal(DateTime.UtcNow, party.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(party.CreatedOn, party.UpdatedOn);
+    Assert.Equal(Actor, party.CreatedBy);
+    Assert.Equal(party.CreatedBy, party.UpdatedBy);
 
-  //  Assert.Equal(World.Id.ToGuid(), party.World.Id);
+    Assert.Equal(World.Id.ToGuid(), party.World.Id);
 
-  //  Assert.Equal(payload.Name.Trim(), party.Name);
-  //  Assert.Equal(payload.Description?.CleanTrim(), party.Description);
+    Assert.Equal(payload.Name.Trim(), party.Name);
+    Assert.Equal(payload.Description?.CleanTrim(), party.Description);
 
-  //  Assert.Equal(payload.Attributes, party.Attributes);
-  //  Assert.Equal(payload.Skills, party.Skills);
+    Assert.NotNull(await SkillCraftContext.Parties.AsNoTracking().SingleOrDefaultAsync(x => x.Id == party.Id));
+  }
 
-  //  Assert.NotNull(await SkillCraftContext.Parties.AsNoTracking().SingleOrDefaultAsync(x => x.Id == party.Id));
-  //}
+  [Fact(DisplayName = "It should replace an existing party.")]
+  public async Task It_should_replace_an_existing_party()
+  {
+    long version = _confrerieMystique.Version;
 
-  //[Fact(DisplayName = "It should replace an existing party.")]
-  //public async Task It_should_replace_an_existing_party()
-  //{
-  //  long version = _tenace.Version;
+    Description description = new("Suivez le pèlerinage d’Ivellios et de Saviof en Orris.");
+    _confrerieMystique.Description = description;
+    _confrerieMystique.Update(UserId);
+    await _partyRepository.SaveAsync(_confrerieMystique);
 
-  //  Description description = new("Personne qui pratique la gymnastique sportive.");
-  //  _tenace.Description = description;
-  //  _tenace.Update(UserId);
-  //  await _partyRepository.SaveAsync(_tenace);
+    SavePartyPayload payload = new(" Confrérie Mystique ")
+    {
+      Description = "    "
+    };
 
-  //  SavePartyPayload payload = new(" Gymnaste ")
-  //  {
-  //    Description = "    ",
-  //    Attributes = new AttributeSelectionModel
-  //    {
-  //      Mandatory1 = Attribute.Agility,
-  //      Mandatory2 = Attribute.Vigor,
-  //      Optional1 = Attribute.Coordination,
-  //      Optional2 = Attribute.Sensitivity
-  //    },
-  //    Skills = new SkillsModel
-  //    {
-  //      Discounted1 = Skill.Acrobatics,
-  //      Discounted2 = Skill.Athletics
-  //    }
-  //  };
+    SavePartyCommand command = new(_confrerieMystique.EntityId, payload, version);
+    SavePartyResult result = await Pipeline.ExecuteAsync(command);
+    Assert.False(result.Created);
 
-  //  SavePartyCommand command = new(_tenace.EntityId, payload, version);
-  //  SavePartyResult result = await Pipeline.ExecuteAsync(command);
-  //  Assert.False(result.Created);
+    PartyModel? party = result.Party;
+    Assert.NotNull(party);
+    Assert.Equal(command.Id, party.Id);
+    Assert.Equal(_confrerieMystique.Version, party.Version);
+    Assert.Equal(DateTime.UtcNow, party.UpdatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(Actor, party.UpdatedBy);
 
-  //  PartyModel? party = result.Party;
-  //  Assert.NotNull(party);
-  //  Assert.Equal(command.Id, party.Id);
-  //  Assert.Equal(_tenace.Version + 1, party.Version);
-  //  Assert.Equal(DateTime.UtcNow, party.UpdatedOn, TimeSpan.FromSeconds(1));
-  //  Assert.Equal(Actor, party.UpdatedBy);
-
-  //  Assert.Equal(payload.Name.Trim(), party.Name);
-  //  Assert.Equal(description.Value, party.Description);
-
-  //  Assert.Equal(payload.Attributes, party.Attributes);
-  //  Assert.Equal(payload.Skills, party.Skills);
-  //}
+    Assert.Equal(payload.Name.Trim(), party.Name);
+    Assert.Equal(description.Value, party.Description);
+  }
 
   [Fact(DisplayName = "It should return empty search results.")]
   public async Task It_should_return_empty_search_results()
