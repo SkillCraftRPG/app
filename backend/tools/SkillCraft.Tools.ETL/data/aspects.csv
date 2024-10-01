@@ -1,0 +1,11 @@
+﻿id,name,description,attributes.mandatory1,attributes.mandatory2,attributes.optional1,attributes.optional2,skills.discounted1,skills.discounted2
+3d99e640-01eb-423a-9a00-779eb2a06f28,Adroit,,Agility,Coordination,Spirit,Vigor,Stealth,Thievery
+5975b833-9c25-4e3b-8094-091d97bc7e8d,Charismatique,,Presence,Sensitivity,Agility,Spirit,Insight,Deception
+7b7ad520-1787-4626-9901-5362fdb15ad8,Circonspect,,Intellect,Sensitivity,Agility,Coordination,Investigation,Medicine
+9078faf8-2693-42da-a174-8f5020ddadc8,Consciencieux,,Coordination,Intellect,Presence,Sensitivity,Craft,Knowledge
+dc8ac4ee-ee88-46c6-9dac-6a0ce6bca1cc,Déterminé,,Spirit,Vigor,Intellect,Presence,Discipline,Resistance
+387ad1ca-3edf-46e9-9f75-ff11b615c583,Éloquent,,Intellect,Presence,Coordination,Vigor,Diplomacy,Linguistics
+91e5bfce-1dd8-47ba-b0dd-1ad60a3ad3a8,Farouche,,Agility,Sensitivity,Spirit,Vigor,Melee,Survival
+2d4cf49b-ee2e-42cd-a6eb-1bc87d31c542,Gymnaste,,Agility,Vigor,Coordination,Sensitivity,Acrobatics,Athletics
+5e579135-ac03-49c9-bff0-d1c019696abb,Œil-de-lynx,,Coordination,Sensitivity,Intellect,Presence,Orientation,Perception
+fce956ec-f462-40d0-b2e8-aa46541bd53c,Tenace,,Spirit,Presence,Intellect,Sensitivity,Occultism,Performance
