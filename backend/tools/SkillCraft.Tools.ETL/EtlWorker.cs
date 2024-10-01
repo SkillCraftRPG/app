@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Logitar.Net.Http;
+using MediatR;
 using SkillCraft.Tools.ETL.Commands;
 
 namespace SkillCraft.Tools.ETL;
@@ -33,11 +34,18 @@ public class EtlWorker : BackgroundService
     try
     {
       await publisher.Publish(new ImportWorlds(), cancellationToken);
+      await publisher.Publish(new ImportParties(), cancellationToken);
+      await publisher.Publish(new ImportAspects(), cancellationToken);
     }
     catch (Exception exception)
     {
       _logger.LogError(exception, GenericErrorMessage);
       _result = LogLevel.Error;
+
+      if (exception is HttpFailureException<JsonApiResult> jsonException)
+      {
+        _logger.LogError("{JsonContent}", jsonException.Result.JsonContent);
+      }
 
       Environment.ExitCode = exception.HResult;
     }
