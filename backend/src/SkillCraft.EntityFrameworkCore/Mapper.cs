@@ -247,6 +247,7 @@ internal class Mapper
   {
     WorldModel destination = new(FindActor(source.OwnerId), source.Slug)
     {
+      Id = source.Id,
       Name = source.Name,
       Description = source.Description
     };

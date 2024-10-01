@@ -24,33 +24,31 @@ public class WorldController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<WorldModel>> CreateAsync([FromBody] CreateWorldPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<WorldModel>> CreateAsync([FromBody] SaveWorldPayload payload, CancellationToken cancellationToken)
   {
-    WorldModel world = await _pipeline.ExecuteAsync(new CreateWorldCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.World}/{{id}}", [new KeyValuePair<string, string>("id", world.Id.ToString())]);
-
-    return Created(location, world);
+    SaveWorldResult result = await _pipeline.ExecuteAsync(new SaveWorldCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<WorldModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     WorldModel? world = await _pipeline.ExecuteAsync(new ReadWorldQuery(id, Slug: null), cancellationToken);
-    return world == null ? NotFound() : Ok(world);
+    return GetActionResult(world);
   }
 
   [HttpGet("slug:{slug}")]
   public async Task<ActionResult<WorldModel>> ReadAsync(string slug, CancellationToken cancellationToken)
   {
     WorldModel? world = await _pipeline.ExecuteAsync(new ReadWorldQuery(Id: null, slug), cancellationToken);
-    return world == null ? NotFound() : Ok(world);
+    return GetActionResult(world);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<WorldModel>> ReplaceAsync(Guid id, [FromBody] ReplaceWorldPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<WorldModel>> ReplaceAsync(Guid id, [FromBody] SaveWorldPayload payload, long? version, CancellationToken cancellationToken)
   {
-    WorldModel? world = await _pipeline.ExecuteAsync(new ReplaceWorldCommand(id, payload, version), cancellationToken);
-    return world == null ? NotFound() : Ok(world);
+    SaveWorldResult result = await _pipeline.ExecuteAsync(new SaveWorldCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -64,6 +62,22 @@ public class WorldController : ControllerBase
   public async Task<ActionResult<WorldModel>> UpdateAsync(Guid id, [FromBody] UpdateWorldPayload payload, CancellationToken cancellationToken)
   {
     WorldModel? world = await _pipeline.ExecuteAsync(new UpdateWorldCommand(id, payload), cancellationToken);
-    return world == null ? NotFound() : Ok(world);
+    return GetActionResult(world);
+  }
+
+  private ActionResult<WorldModel> GetActionResult(SaveWorldResult result) => GetActionResult(result.World, result.Created);
+  private ActionResult<WorldModel> GetActionResult(WorldModel? world, bool created = false)
+  {
+    if (world == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.World}/{{id}}", [new KeyValuePair<string, string>("id", world.Id.ToString())]);
+      return Created(location, world);
+    }
+
+    return Ok(world);
   }
 }

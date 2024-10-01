@@ -9,6 +9,7 @@ public class World : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new WorldId Id => new(base.Id);
+  public Guid EntityId => Id.ToGuid();
 
   public UserId OwnerId { get; private set; }
 

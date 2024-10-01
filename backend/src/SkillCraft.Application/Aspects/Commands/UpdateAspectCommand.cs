@@ -11,7 +11,7 @@ namespace SkillCraft.Application.Aspects.Commands;
 
 public record UpdateAspectCommand(Guid Id, UpdateAspectPayload Payload) : Activity, IRequest<AspectModel?>;
 
-internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand, AspectModel?>
+internal class UpdateAspectCommandHandler : AspectCommandHandler, IRequestHandler<UpdateAspectCommand, AspectModel?>
 {
   private readonly IAspectQuerier _aspectQuerier;
   private readonly IAspectRepository _aspectRepository;
@@ -22,7 +22,7 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
     IAspectQuerier aspectQuerier,
     IAspectRepository aspectRepository,
     IPermissionService permissionService,
-    IStorageService storageService)
+    IStorageService storageService) : base(aspectRepository, storageService)
   {
     _aspectQuerier = aspectQuerier;
     _aspectRepository = aspectRepository;
@@ -67,15 +67,5 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
     await SaveAsync(aspect, cancellationToken);
 
     return await _aspectQuerier.ReadAsync(aspect, cancellationToken);
-  }
-
-  private async Task SaveAsync(Aspect aspect, CancellationToken cancellationToken)
-  {
-    EntityMetadata entity = aspect.GetMetadata();
-    await _storageService.EnsureAvailableAsync(entity, cancellationToken);
-
-    await _aspectRepository.SaveAsync(aspect, cancellationToken);
-
-    await _storageService.UpdateAsync(entity, cancellationToken);
   }
 }
