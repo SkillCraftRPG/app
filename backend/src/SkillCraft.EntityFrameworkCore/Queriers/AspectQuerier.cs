@@ -28,7 +28,7 @@ internal class AspectQuerier : IAspectQuerier
   public async Task<AspectModel> ReadAsync(Aspect aspect, CancellationToken cancellationToken)
   {
     return await ReadAsync(aspect.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The aspect entity 'Id={aspect.Id}' could not be found.");
+      ?? throw new InvalidOperationException($"The aspect entity 'AggregateId={aspect.Id}' could not be found.");
   }
   public async Task<AspectModel?> ReadAsync(AspectId id, CancellationToken cancellationToken)
   {

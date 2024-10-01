@@ -192,6 +192,7 @@ internal class Mapper
 
     PartyModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description
     };
 

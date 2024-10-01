@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Parties;
 
 namespace SkillCraft.Application.Parties.Queries;
@@ -19,12 +20,8 @@ internal class ReadPartyQueryHandler : IRequestHandler<ReadPartyQuery, PartyMode
 
   public async Task<PartyModel?> Handle(ReadPartyQuery query, CancellationToken cancellationToken)
   {
-    PartyModel? party = await _partyQuerier.ReadAsync(query.Id, cancellationToken);
-    if (party != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, party.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Party, cancellationToken);
 
-    return party;
+    return await _partyQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

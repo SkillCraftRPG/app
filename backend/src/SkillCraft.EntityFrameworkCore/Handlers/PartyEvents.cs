@@ -19,10 +19,10 @@ internal static class PartyEvents
     public async Task Handle(Party.CreatedEvent @event, CancellationToken cancellationToken)
     {
       PartyEntity? party = await _context.Parties.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (party == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new PartyId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -47,10 +47,9 @@ internal static class PartyEvents
 
     public async Task Handle(Party.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       PartyEntity party = await _context.Parties
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The party entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The party entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       party.Update(@event);
 

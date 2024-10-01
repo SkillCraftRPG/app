@@ -28,17 +28,17 @@ internal class PartyQuerier : IPartyQuerier
   public async Task<PartyModel> ReadAsync(Party party, CancellationToken cancellationToken)
   {
     return await ReadAsync(party.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The party entity 'Id={party.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The party entity 'AggregateId={party.Id}' could not be found.");
   }
   public async Task<PartyModel?> ReadAsync(PartyId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<PartyModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<PartyModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     PartyEntity? party = await _parties.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return party == null ? null : await MapAsync(party, cancellationToken);
   }

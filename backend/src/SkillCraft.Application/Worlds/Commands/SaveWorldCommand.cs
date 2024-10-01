@@ -17,7 +17,6 @@ public record SaveWorldCommand(Guid? Id, SaveWorldPayload Payload, long? Version
 internal class SaveWorldCommandHandler : WorldCommandHandler, IRequestHandler<SaveWorldCommand, SaveWorldResult>
 {
   private readonly IPermissionService _permissionService;
-  private readonly IStorageService _storageService;
   private readonly IWorldQuerier _worldQuerier;
   private readonly IWorldRepository _worldRepository;
 
@@ -28,7 +27,6 @@ internal class SaveWorldCommandHandler : WorldCommandHandler, IRequestHandler<Sa
     IWorldRepository worldRepository) : base(storageService, worldQuerier, worldRepository)
   {
     _permissionService = permissionService;
-    _storageService = storageService;
     _worldQuerier = worldQuerier;
     _worldRepository = worldRepository;
   }

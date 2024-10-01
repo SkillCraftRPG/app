@@ -9,7 +9,7 @@ public interface IPartyQuerier
 {
   Task<PartyModel> ReadAsync(Party party, CancellationToken cancellationToken = default);
   Task<PartyModel?> ReadAsync(PartyId id, CancellationToken cancellationToken = default);
-  Task<PartyModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<PartyModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken = default);
 
   Task<SearchResults<PartyModel>> SearchAsync(WorldId worldId, SearchPartiesPayload payload, CancellationToken cancellationToken = default);
 }

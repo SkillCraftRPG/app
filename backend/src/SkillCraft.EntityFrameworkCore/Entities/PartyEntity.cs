@@ -16,7 +16,7 @@ internal class PartyEntity : AggregateEntity
 
   public PartyEntity(WorldEntity world, Party.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new PartyId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

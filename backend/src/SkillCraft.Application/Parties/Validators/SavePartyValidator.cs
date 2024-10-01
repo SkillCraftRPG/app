@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Parties.Validators;
 
-internal class CreatePartyValidator : AbstractValidator<CreatePartyPayload>
+internal class SavePartyValidator : AbstractValidator<SavePartyPayload>
 {
-  public CreatePartyValidator()
+  public SavePartyValidator()
   {
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());

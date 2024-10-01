@@ -1,15 +1,15 @@
 ﻿namespace SkillCraft.Contracts.Parties;
 
-public record CreatePartyPayload
+public record SavePartyPayload
 {
   public string Name { get; set; }
   public string? Description { get; set; }
 
-  public CreatePartyPayload() : this(string.Empty)
+  public SavePartyPayload() : this(string.Empty)
   {
   }
 
-  public CreatePartyPayload(string name)
+  public SavePartyPayload(string name)
   {
     Name = name;
   }

@@ -97,7 +97,7 @@ public class SaveWorldCommandHandlerTests
   [Fact(DisplayName = "It should return null when updating an world that does not exist.")]
   public async Task It_should_return_null_when_updating_an_world_that_does_not_exist()
   {
-    SaveWorldCommand command = new(Guid.Empty, new SaveWorldPayload("Œil-de-lynx"), Version: 0);
+    SaveWorldCommand command = new(Guid.Empty, new SaveWorldPayload("ungar"), Version: 0);
     command.Contextualize(_world);
 
     SaveWorldResult result = await _handler.Handle(command, _cancellationToken);

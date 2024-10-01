@@ -26,26 +26,24 @@ public class PartyController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<PartyModel>> CreateAsync([FromBody] CreatePartyPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<PartyModel>> CreateAsync([FromBody] SavePartyPayload payload, CancellationToken cancellationToken)
   {
-    PartyModel party = await _pipeline.ExecuteAsync(new CreatePartyCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Party}/{{id}}", [new KeyValuePair<string, string>("id", party.Id.ToString())]);
-
-    return Created(location, party);
+    SavePartyResult result = await _pipeline.ExecuteAsync(new SavePartyCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<PartyModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     PartyModel? party = await _pipeline.ExecuteAsync(new ReadPartyQuery(id), cancellationToken);
-    return party == null ? NotFound() : Ok(party);
+    return GetActionResult(party);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<PartyModel>> ReplaceAsync(Guid id, [FromBody] ReplacePartyPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<PartyModel>> ReplaceAsync(Guid id, [FromBody] SavePartyPayload payload, long? version, CancellationToken cancellationToken)
   {
-    PartyModel? party = await _pipeline.ExecuteAsync(new ReplacePartyCommand(id, payload, version), cancellationToken);
-    return party == null ? NotFound() : Ok(party);
+    SavePartyResult result = await _pipeline.ExecuteAsync(new SavePartyCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class PartyController : ControllerBase
   public async Task<ActionResult<PartyModel>> UpdateAsync(Guid id, [FromBody] UpdatePartyPayload payload, CancellationToken cancellationToken)
   {
     PartyModel? party = await _pipeline.ExecuteAsync(new UpdatePartyCommand(id, payload), cancellationToken);
-    return party == null ? NotFound() : Ok(party);
+    return GetActionResult(party);
+  }
+
+  private ActionResult<PartyModel> GetActionResult(SavePartyResult result) => GetActionResult(result.Party, result.Created);
+  private ActionResult<PartyModel> GetActionResult(PartyModel? party, bool created = false)
+  {
+    if (party == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Party}/{{id}}", [new KeyValuePair<string, string>("id", party.Id.ToString())]);
+      return Created(location, party);
+    }
+
+    return Ok(party);
   }
 }

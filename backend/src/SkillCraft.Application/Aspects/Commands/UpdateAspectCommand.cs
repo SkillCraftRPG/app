@@ -16,7 +16,6 @@ internal class UpdateAspectCommandHandler : AspectCommandHandler, IRequestHandle
   private readonly IAspectQuerier _aspectQuerier;
   private readonly IAspectRepository _aspectRepository;
   private readonly IPermissionService _permissionService;
-  private readonly IStorageService _storageService;
 
   public UpdateAspectCommandHandler(
     IAspectQuerier aspectQuerier,
@@ -27,7 +26,6 @@ internal class UpdateAspectCommandHandler : AspectCommandHandler, IRequestHandle
     _aspectQuerier = aspectQuerier;
     _aspectRepository = aspectRepository;
     _permissionService = permissionService;
-    _storageService = storageService;
   }
 
   public async Task<AspectModel?> Handle(UpdateAspectCommand command, CancellationToken cancellationToken)
