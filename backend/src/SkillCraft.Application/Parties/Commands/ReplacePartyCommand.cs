@@ -34,7 +34,7 @@ internal class ReplacePartyCommandHandler : IRequestHandler<ReplacePartyCommand,
     ReplacePartyPayload payload = command.Payload;
     new ReplacePartyValidator().ValidateAndThrow(payload);
 
-    PartyId id = new(command.Id);
+    PartyId id = new(command.GetWorldId(), command.Id);
     Party? party = await _partyRepository.LoadAsync(id, cancellationToken);
     if (party == null)
     {

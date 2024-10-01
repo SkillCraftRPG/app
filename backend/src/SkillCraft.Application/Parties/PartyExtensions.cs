@@ -13,7 +13,7 @@ internal static class PartyExtensions
   public static EntityMetadata GetMetadata(this Party party)
   {
     long size = party.Name.Size + (party.Description?.Size ?? 0);
-    return new EntityMetadata(party.WorldId, new EntityKey(Type, party.Id.ToGuid()), size);
+    return new EntityMetadata(party.WorldId, new EntityKey(Type, party.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this PartyModel party)
   {

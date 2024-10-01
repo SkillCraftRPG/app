@@ -10,8 +10,8 @@ public class Party : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new PartyId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
   public Name Name
@@ -44,14 +44,12 @@ public class Party : AggregateRoot
   {
   }
 
-  public Party(WorldId worldId, Name name, UserId userId, PartyId? id = null) : base(id?.AggregateId)
+  public Party(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new PartyId(worldId, entityId).AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     _name = @event.Name;
   }
 
@@ -79,14 +77,10 @@ public class Party : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public CreatedEvent(Name name)
     {
-      WorldId = worldId;
-
       Name = name;
     }
   }

@@ -14,7 +14,7 @@ internal class PartyConfiguration : AggregateConfiguration<PartyEntity>, IEntity
     builder.ToTable(SkillCraftDb.Parties.Table.Table ?? string.Empty, SkillCraftDb.Parties.Table.Schema);
     builder.HasKey(x => x.PartyId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
