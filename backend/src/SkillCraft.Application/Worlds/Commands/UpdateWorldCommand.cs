@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Application.Worlds.Validators;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
@@ -10,17 +11,21 @@ namespace SkillCraft.Application.Worlds.Commands;
 
 public record UpdateWorldCommand(Guid Id, UpdateWorldPayload Payload) : Activity, IRequest<WorldModel?>;
 
-internal class UpdateWorldCommandHandler : IRequestHandler<UpdateWorldCommand, WorldModel?>
+internal class UpdateWorldCommandHandler : WorldCommandHandler, IRequestHandler<UpdateWorldCommand, WorldModel?>
 {
   private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
+  private readonly IStorageService _storageService;
   private readonly IWorldQuerier _worldQuerier;
   private readonly IWorldRepository _worldRepository;
 
-  public UpdateWorldCommandHandler(IPermissionService permissionService, ISender sender, IWorldQuerier worldQuerier, IWorldRepository worldRepository)
+  public UpdateWorldCommandHandler(
+    IPermissionService permissionService,
+    IStorageService storageService,
+    IWorldQuerier worldQuerier,
+    IWorldRepository worldRepository) : base(storageService, worldQuerier, worldRepository)
   {
     _permissionService = permissionService;
-    _sender = sender;
+    _storageService = storageService;
     _worldQuerier = worldQuerier;
     _worldRepository = worldRepository;
   }
@@ -53,7 +58,8 @@ internal class UpdateWorldCommandHandler : IRequestHandler<UpdateWorldCommand, W
     }
 
     world.Update(command.GetUserId());
-    await _sender.Send(new SaveWorldCommand(world), cancellationToken);
+
+    await SaveAsync(world, cancellationToken);
 
     return await _worldQuerier.ReadAsync(world, cancellationToken);
   }

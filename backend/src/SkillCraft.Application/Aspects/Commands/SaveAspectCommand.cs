@@ -14,7 +14,7 @@ public record SaveAspectResult(AspectModel? Aspect = null, bool Created = false)
 
 public record SaveAspectCommand(Guid? Id, SaveAspectPayload Payload, long? Version) : Activity, IRequest<SaveAspectResult>;
 
-internal class SaveAspectCommandHandler : IRequestHandler<SaveAspectCommand, SaveAspectResult>
+internal class SaveAspectCommandHandler : AspectCommandHandler, IRequestHandler<SaveAspectCommand, SaveAspectResult>
 {
   private readonly IAspectQuerier _aspectQuerier;
   private readonly IAspectRepository _aspectRepository;
@@ -25,7 +25,7 @@ internal class SaveAspectCommandHandler : IRequestHandler<SaveAspectCommand, Sav
     IAspectQuerier aspectQuerier,
     IAspectRepository aspectRepository,
     IPermissionService permissionService,
-    IStorageService storageService)
+    IStorageService storageService) : base(aspectRepository, storageService)
   {
     _aspectQuerier = aspectQuerier;
     _aspectRepository = aspectRepository;
@@ -126,15 +126,5 @@ internal class SaveAspectCommandHandler : IRequestHandler<SaveAspectCommand, Sav
     }
 
     aspect.Update(userId);
-  }
-
-  private async Task SaveAsync(Aspect aspect, CancellationToken cancellationToken)
-  {
-    EntityMetadata entity = aspect.GetMetadata();
-    await _storageService.EnsureAvailableAsync(entity, cancellationToken);
-
-    await _aspectRepository.SaveAsync(aspect, cancellationToken);
-
-    await _storageService.UpdateAsync(entity, cancellationToken);
   }
 }

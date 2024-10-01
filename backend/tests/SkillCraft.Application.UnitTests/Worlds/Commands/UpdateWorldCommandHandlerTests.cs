@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
-using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
@@ -15,15 +15,17 @@ public class UpdateWorldCommandHandlerTests
   private readonly CancellationToken _cancellationToken = default;
 
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<ISender> _sender = new();
+  private readonly Mock<IStorageService> _storageService = new();
   private readonly Mock<IWorldQuerier> _worldQuerier = new();
   private readonly Mock<IWorldRepository> _worldRepository = new();
 
   private readonly UpdateWorldCommandHandler _handler;
 
+  private readonly WorldMock _world = new();
+
   public UpdateWorldCommandHandlerTests()
   {
-    _handler = new(_permissionService.Object, _sender.Object, _worldQuerier.Object, _worldRepository.Object);
+    _handler = new(_permissionService.Object, _storageService.Object, _worldQuerier.Object, _worldRepository.Object);
   }
 
   [Fact(DisplayName = "It should return null when the world could not be found.")]
@@ -33,6 +35,27 @@ public class UpdateWorldCommandHandlerTests
     UpdateWorldCommand command = new(Guid.Empty, payload);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
+  }
+
+  [Fact(DisplayName = "It should throw SlugAlreadyUsedException when the slug is already used.")]
+  public async Task It_should_throw_SlugAlreadyUsedException_when_the_slug_is_already_used()
+  {
+    _worldQuerier.Setup(x => x.FindIdAsync(_world.Slug, _cancellationToken)).ReturnsAsync(_world.Id);
+
+    World world = new(new Slug("new-world"), _world.OwnerId);
+    _worldRepository.Setup(x => x.LoadAsync(world.Id, _cancellationToken)).ReturnsAsync(world);
+
+    UpdateWorldPayload payload = new()
+    {
+      Slug = _world.Slug.Value
+    };
+    UpdateWorldCommand command = new(world.EntityId, payload);
+    command.Contextualize();
+
+    var exception = await Assert.ThrowsAsync<SlugAlreadyUsedException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal([world.EntityId, _world.EntityId], exception.Ids);
+    Assert.Equal(payload.Slug, exception.Slug);
+    Assert.Equal("Slug", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -80,8 +103,13 @@ public class UpdateWorldCommandHandlerTests
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, world, _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Name.Value);
-    _sender.Verify(x => x.Send(It.Is<SaveWorldCommand>(y => y.World.Equals(world)
-      && y.World.Name != null && y.World.Name.Value == payload.Name.Value.Trim()
-      && y.World.Description == null), _cancellationToken), Times.Once);
+    _worldRepository.Verify(x => x.SaveAsync(
+      It.Is<World>(y => y.Equals(world) && y.Slug == world.Slug
+        && y.Name != null && y.Name.Value == payload.Name.Value.Trim()
+        && y.Description == null),
+      _cancellationToken), Times.Once);
+
+    _storageService.Verify(x => x.EnsureAvailableAsync(world, _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.UpdateAsync(world, _cancellationToken), Times.Once);
   }
 }

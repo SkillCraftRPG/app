@@ -146,7 +146,7 @@ public class PermissionServiceTests
   {
     World world = new(new Slug(_world.Slug), new UserId(_world.Owner.Id), new WorldId(_world.Id));
 
-    ReplaceWorldCommand command = new(_world.Id, new ReplaceWorldPayload(_world.Slug), Version: null);
+    SaveWorldCommand command = new(_world.Id, new SaveWorldPayload(_world.Slug), Version: null);
     command.Contextualize(_otherUser);
 
     _permissionQuerier.Setup(x => x.HasAsync(
@@ -173,7 +173,7 @@ public class PermissionServiceTests
   {
     World world = new(new Slug(_world.Slug), new UserId(_world.Owner.Id), new WorldId(_world.Id));
 
-    ReplaceWorldCommand command = new(_world.Id, new ReplaceWorldPayload(_world.Slug), Version: null);
+    SaveWorldCommand command = new(_world.Id, new SaveWorldPayload(_world.Slug), Version: null);
     command.Contextualize(_user, _world);
 
     await _service.EnsureCanUpdateAsync(command, world, _cancellationToken);
@@ -252,7 +252,7 @@ public class PermissionServiceTests
   [Fact(DisplayName = "EnsureCanCreateAsync: it should succeed when the world limit has not been reached.")]
   public async Task EnsureCanCreateAsync_it_should_succeed_when_the_world_limit_has_not_been_reached()
   {
-    CreateWorldCommand command = new(new CreateWorldPayload("ungar"));
+    SaveWorldCommand command = new(Id: null, new SaveWorldPayload("ungar"), Version: null);
     command.Contextualize(_user);
 
     _worldQuerier.Setup(x => x.CountOwnedAsync(command.GetUserId(), _cancellationToken)).ReturnsAsync(_accountSettings.WorldLimit - 1);
@@ -279,7 +279,7 @@ public class PermissionServiceTests
   [Fact(DisplayName = "EnsureCanCreateAsync: it should throw PermissionDeniedException when the world limit has been reached.")]
   public async Task EnsureCanCreateAsync_it_should_throw_PermissionDeniedException_when_the_world_limit_has_been_reached()
   {
-    CreateWorldCommand command = new(new CreateWorldPayload("ungar"));
+    SaveWorldCommand command = new(Id: null, new SaveWorldPayload("ungar"), Version: null);
     command.Contextualize(_user);
 
     _worldQuerier.Setup(x => x.CountOwnedAsync(command.GetUserId(), _cancellationToken)).ReturnsAsync(_accountSettings.WorldLimit);

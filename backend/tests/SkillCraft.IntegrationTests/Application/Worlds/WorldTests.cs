@@ -39,19 +39,21 @@ public class WorldTests : IntegrationTests
   [Fact(DisplayName = "It should create a new world.")]
   public async Task It_should_create_a_new_world()
   {
-    CreateWorldPayload payload = new("old-world")
+    SaveWorldPayload payload = new("old-world")
     {
       Name = " The Old World ",
       Description = "    "
     };
 
-    CreateWorldCommand command = new(payload);
-    WorldModel world = await Pipeline.ExecuteAsync(command);
+    SaveWorldCommand command = new(Guid.NewGuid(), payload, Version: null);
+    SaveWorldResult result = await Pipeline.ExecuteAsync(command);
+    Assert.True(result.Created);
 
+    WorldModel? world = result.World;
     Assert.NotNull(world);
-    Assert.NotEqual(default, world.Id);
+    Assert.Equal(command.Id, world.Id);
     Assert.Equal(2, world.Version);
-    Assert.Equal(DateTime.UtcNow, world.CreatedOn, TimeSpan.FromSeconds(1));
+    Assert.Equal(DateTime.UtcNow, world.UpdatedOn, TimeSpan.FromSeconds(1));
     Assert.True(world.CreatedOn < world.UpdatedOn);
     Assert.Equal(Actor, world.CreatedBy);
     Assert.Equal(world.CreatedBy, world.UpdatedBy);
@@ -74,15 +76,17 @@ public class WorldTests : IntegrationTests
     World.Update(UserId);
     await _worldRepository.SaveAsync(World);
 
-    ReplaceWorldPayload payload = new("ungar")
+    SaveWorldPayload payload = new("ungar")
     {
       Name = " Ungar ",
       Description = "    "
     };
 
-    ReplaceWorldCommand command = new(World.Id.ToGuid(), payload, version);
-    WorldModel? world = await Pipeline.ExecuteAsync(command);
+    SaveWorldCommand command = new(World.EntityId, payload, version);
+    SaveWorldResult result = await Pipeline.ExecuteAsync(command);
+    Assert.False(result.Created);
 
+    WorldModel? world = result.World;
     Assert.NotNull(world);
     Assert.Equal(command.Id, world.Id);
     Assert.Equal(World.Version + 1, world.Version);
@@ -122,33 +126,33 @@ public class WorldTests : IntegrationTests
     payload.Sort.Add(new WorldSortOption(WorldSort.Slug, isDescending: true));
 
     payload.Ids.Add(Guid.Empty);
-    payload.Ids.AddRange((await _worldRepository.LoadAsync()).Select(world => world.Id.ToGuid()));
-    payload.Ids.Remove(World.Id.ToGuid());
+    payload.Ids.AddRange((await _worldRepository.LoadAsync()).Select(world => world.EntityId));
+    payload.Ids.Remove(World.EntityId);
 
     SearchWorldsQuery query = new(payload);
     SearchResults<WorldModel> results = await Pipeline.ExecuteAsync(query);
 
     Assert.Equal(2, results.Total);
     WorldModel world = Assert.Single(results.Items);
-    Assert.Equal(_hyrule.Id.ToGuid(), world.Id);
+    Assert.Equal(_hyrule.EntityId, world.Id);
   }
 
   [Fact(DisplayName = "It should return the world found by ID.")]
   public async Task It_should_return_the_world_found_by_Id()
   {
-    ReadWorldQuery query = new(World.Id.ToGuid(), Slug: null);
+    ReadWorldQuery query = new(World.EntityId, Slug: null);
     WorldModel? world = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(world);
-    Assert.Equal(World.Id.ToGuid(), world.Id);
+    Assert.Equal(World.EntityId, world.Id);
   }
 
   [Fact(DisplayName = "It should throw SlugAlreadyUsedException when the slug is already used.")]
   public async Task It_should_throw_SlugAlreadyUsedException_when_the_slug_is_already_used()
   {
-    CreateWorldPayload payload = new(World.Slug.Value);
-    CreateWorldCommand command = new(payload);
+    SaveWorldPayload payload = new(World.Slug.Value);
+    SaveWorldCommand command = new(Id: null, payload, Version: null);
     var exception = await Assert.ThrowsAsync<SlugAlreadyUsedException>(async () => await Pipeline.ExecuteAsync(command));
-    Assert.Contains(World.Id.ToGuid(), exception.Ids);
+    Assert.Contains(World.EntityId, exception.Ids);
     Assert.Equal(payload.Slug, exception.Slug);
     Assert.Equal("Slug", exception.PropertyName);
   }
@@ -161,7 +165,7 @@ public class WorldTests : IntegrationTests
       Name = new Change<string>("Ungar")
     };
 
-    UpdateWorldCommand command = new(World.Id.ToGuid(), payload);
+    UpdateWorldCommand command = new(World.EntityId, payload);
     WorldModel? world = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(world);
