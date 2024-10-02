@@ -3,7 +3,7 @@ using SkillCraft.Domain.Aspects;
 
 namespace SkillCraft.Application.Aspects.Commands;
 
-public abstract class AspectCommandHandler
+internal abstract class AspectCommandHandler
 {
   private readonly IAspectRepository _aspectRepository;
   private readonly IStorageService _storageService;

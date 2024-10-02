@@ -116,6 +116,7 @@ internal class Mapper
 
     CustomizationModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Type = source.Type,
       Description = source.Description
     };

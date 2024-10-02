@@ -11,8 +11,8 @@ public class Customization : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new CustomizationId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   public CustomizationType Type { get; private set; }
 
@@ -47,19 +47,18 @@ public class Customization : AggregateRoot
   {
   }
 
-  public Customization(WorldId worldId, CustomizationType type, Name name, UserId userId, CustomizationId? id = null) : base(id?.AggregateId)
+  public Customization(WorldId worldId, CustomizationType type, Name name, UserId userId, Guid? entityId = null)
+    : base(new CustomizationId(worldId, entityId).AggregateId)
   {
     if (!Enum.IsDefined(type))
     {
       throw new ArgumentOutOfRangeException(nameof(type));
     }
 
-    Raise(new CreatedEvent(worldId, type, name), userId.ActorId);
+    Raise(new CreatedEvent(type, name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     Type = @event.Type;
 
     _name = @event.Name;
@@ -89,16 +88,12 @@ public class Customization : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public CustomizationType Type { get; }
 
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, CustomizationType type, Name name)
+    public CreatedEvent(CustomizationType type, Name name)
     {
-      WorldId = worldId;
-
       Type = type;
 
       Name = name;

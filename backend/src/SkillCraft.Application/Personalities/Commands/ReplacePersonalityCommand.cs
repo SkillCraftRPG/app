@@ -66,7 +66,7 @@ internal class ReplacePersonalityCommandHandler : IRequestHandler<ReplacePersona
     {
       personality.Attribute = payload.Attribute;
     }
-    CustomizationId? giftId = payload.GiftId.HasValue ? new(payload.GiftId.Value) : null;
+    CustomizationId? giftId = payload.GiftId.HasValue ? new(personality.WorldId, payload.GiftId.Value) : null;
     if (giftId != reference.GiftId)
     {
       await _sender.Send(new SetGiftCommand(command, personality, payload.GiftId), cancellationToken);

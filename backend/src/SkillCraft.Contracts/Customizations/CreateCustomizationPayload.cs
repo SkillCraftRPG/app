@@ -1,17 +1,17 @@
 ﻿namespace SkillCraft.Contracts.Customizations;
 
-public record CreateCustomizationPayload
+public record SaveCustomizationPayload
 {
   public CustomizationType Type { get; set; }
 
   public string Name { get; set; }
   public string? Description { get; set; }
 
-  public CreateCustomizationPayload() : this(string.Empty)
+  public SaveCustomizationPayload() : this(string.Empty)
   {
   }
 
-  public CreateCustomizationPayload(string name)
+  public SaveCustomizationPayload(string name)
   {
     Name = name;
   }

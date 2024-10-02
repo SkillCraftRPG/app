@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -55,10 +56,10 @@ internal static class PersonalityEvents
       CustomizationEntity? gift = null;
       if (@event.GiftId?.Value != null)
       {
-        Guid giftId = @event.GiftId.Value.Value.ToGuid();
+        CustomizationId giftId = @event.GiftId.Value.Value;
         gift = await _context.Customizations
-          .SingleOrDefaultAsync(x => x.Id == giftId, cancellationToken)
-          ?? throw new InvalidOperationException($"The customization entity 'Id={giftId}' could not be found.");
+          .SingleOrDefaultAsync(x => x.AggregateId == giftId.Value, cancellationToken)
+          ?? throw new InvalidOperationException($"The customization entity 'AggregateId={giftId}' could not be found.");
       }
 
       personality.Update(@event, gift);

@@ -3,7 +3,7 @@ using SkillCraft.Domain.Castes;
 
 namespace SkillCraft.Application.Castes.Commands;
 
-public abstract class CasteCommandHandler
+internal abstract class CasteCommandHandler
 {
   private readonly ICasteRepository _casteRepository;
   private readonly IStorageService _storageService;

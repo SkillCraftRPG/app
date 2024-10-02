@@ -24,11 +24,12 @@ internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
 
   public async Task Handle(SetGiftCommand command, CancellationToken cancellationToken)
   {
+    Personality personality = command.Personality;
     Customization? gift = null;
 
     if (command.Id.HasValue)
     {
-      CustomizationId giftId = new(command.Id.Value);
+      CustomizationId giftId = new(personality.WorldId, command.Id.Value);
       gift = await _customizationRepository.LoadAsync(giftId, cancellationToken)
         ?? throw new AggregateNotFoundException<Customization>(giftId.AggregateId, PropertyName);
 
@@ -40,6 +41,6 @@ internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
       }
     }
 
-    command.Personality.SetGift(gift);
+    personality.SetGift(gift);
   }
 }

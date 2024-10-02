@@ -55,7 +55,7 @@ public class SetGiftCommandHandlerTests
     Customization customization = new(_world.Id, CustomizationType.Gift, new Name("Infatigable"), _world.OwnerId);
     _customizationRepository.Setup(x => x.LoadAsync(customization.Id, _cancellationToken)).ReturnsAsync(customization);
 
-    SetGiftCommand command = new(_activity, _personality, customization.Id.ToGuid());
+    SetGiftCommand command = new(_activity, _personality, customization.EntityId);
 
     await _handler.Handle(command, _cancellationToken);
 
@@ -63,7 +63,7 @@ public class SetGiftCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(
       _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Customization && y.Id == customization.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Customization && y.Id == customization.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
   }
 
@@ -71,7 +71,7 @@ public class SetGiftCommandHandlerTests
   public async Task It_should_throw_AggregateNotFoundException_when_the_customization_could_not_be_found()
   {
     Customization customization = new(_world.Id, CustomizationType.Gift, new Name("Entrepôt à connaissances"), _world.OwnerId);
-    SetGiftCommand command = new(_activity, _personality, customization.Id.ToGuid());
+    SetGiftCommand command = new(_activity, _personality, customization.EntityId);
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Customization>>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(customization.Id.Value, exception.Id);
@@ -84,10 +84,10 @@ public class SetGiftCommandHandlerTests
     Customization customization = new(_world.Id, CustomizationType.Disability, new Name("Maladroit"), _world.OwnerId);
     _customizationRepository.Setup(x => x.LoadAsync(customization.Id, _cancellationToken)).ReturnsAsync(customization);
 
-    SetGiftCommand command = new(_activity, _personality, customization.Id.ToGuid());
+    SetGiftCommand command = new(_activity, _personality, customization.EntityId);
 
     var exception = await Assert.ThrowsAsync<CustomizationIsNotGiftException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(customization.Id.ToGuid(), exception.CustomizationId);
+    Assert.Equal(customization.EntityId, exception.CustomizationId);
     Assert.Equal("GiftId", exception.PropertyName);
   }
 }
