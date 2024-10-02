@@ -193,9 +193,6 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("Skill");
@@ -206,7 +203,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Castes", (string)null);
                 });
@@ -425,9 +423,6 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("Skill");
@@ -438,7 +433,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Educations", (string)null);
                 });

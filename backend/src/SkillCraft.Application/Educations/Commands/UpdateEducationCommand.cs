@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Educations.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Educations;
@@ -10,23 +11,21 @@ namespace SkillCraft.Application.Educations.Commands;
 
 public record UpdateEducationCommand(Guid Id, UpdateEducationPayload Payload) : Activity, IRequest<EducationModel?>;
 
-internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCommand, EducationModel?>
+internal class UpdateEducationCommandHandler : EducationCommandHandler, IRequestHandler<UpdateEducationCommand, EducationModel?>
 {
   private readonly IEducationQuerier _educationQuerier;
   private readonly IEducationRepository _educationRepository;
   private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
 
   public UpdateEducationCommandHandler(
     IEducationQuerier educationQuerier,
     IEducationRepository educationRepository,
     IPermissionService permissionService,
-    ISender sender)
+    IStorageService storageService) : base(educationRepository, storageService)
   {
     _educationQuerier = educationQuerier;
     _educationRepository = educationRepository;
     _permissionService = permissionService;
-    _sender = sender;
   }
 
   public async Task<EducationModel?> Handle(UpdateEducationCommand command, CancellationToken cancellationToken)
@@ -62,7 +61,8 @@ internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCo
     }
 
     education.Update(command.GetUserId());
-    await _sender.Send(new SaveEducationCommand(education), cancellationToken);
+
+    await SaveAsync(education, cancellationToken);
 
     return await _educationQuerier.ReadAsync(education, cancellationToken);
   }

@@ -29,7 +29,7 @@ public class SaveCasteCommandHandlerTests
   {
     _handler = new(_casteQuerier.Object, _casteRepository.Object, _permissionService.Object, _storageService.Object);
 
-    _caste = new(_world.Id, new Name("oeil-de-lynx"), _world.OwnerId);
+    _caste = new(_world.Id, new Name("classique"), _world.OwnerId);
     _casteRepository.Setup(x => x.LoadAsync(_caste.Id, _cancellationToken)).ReturnsAsync(_caste);
 
     _casteQuerier.Setup(x => x.ReadAsync(It.IsAny<Caste>(), _cancellationToken)).ReturnsAsync(_model);

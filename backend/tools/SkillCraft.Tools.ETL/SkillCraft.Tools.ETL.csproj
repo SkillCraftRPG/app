@@ -18,10 +18,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="data\aspects.csv" />
+    <None Remove="data\castes.csv" />
+    <None Remove="data\educations.csv" />
+    <None Remove="data\parties.csv" />
     <None Remove="data\worlds.csv" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="data\aspects.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\castes.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\educations.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\parties.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\worlds.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
