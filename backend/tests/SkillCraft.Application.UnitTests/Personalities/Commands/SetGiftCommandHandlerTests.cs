@@ -36,7 +36,7 @@ public class SetGiftCommandHandlerTests
     _personality.SetGift(_gift);
     _personality.Update(_world.OwnerId);
 
-    _activity = new(_personality.Id.ToGuid(), new ReplacePersonalityPayload(), Version: null);
+    _activity = new(_personality.EntityId, new ReplacePersonalityPayload(), Version: null);
   }
 
   [Fact(DisplayName = "It should nullify the gift.")]
@@ -47,6 +47,8 @@ public class SetGiftCommandHandlerTests
     await _handler.Handle(command, _cancellationToken);
 
     Assert.Null(_personality.GiftId);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Customization, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should set the gift.")]
@@ -61,10 +63,7 @@ public class SetGiftCommandHandlerTests
 
     Assert.Equal(customization.Id, _personality.GiftId);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Customization && y.Id == customization.EntityId && y.Size > 0),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Customization, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw AggregateNotFoundException when the customization could not be found.")]
@@ -76,6 +75,8 @@ public class SetGiftCommandHandlerTests
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Customization>>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(customization.Id.Value, exception.Id);
     Assert.Equal("GiftId", exception.PropertyName);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Customization, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw CustomizationIsNotGiftException when the customization is not a gift.")]
@@ -89,5 +90,7 @@ public class SetGiftCommandHandlerTests
     var exception = await Assert.ThrowsAsync<CustomizationIsNotGiftException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(customization.EntityId, exception.CustomizationId);
     Assert.Equal("GiftId", exception.PropertyName);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Customization, _cancellationToken), Times.Once);
   }
 }

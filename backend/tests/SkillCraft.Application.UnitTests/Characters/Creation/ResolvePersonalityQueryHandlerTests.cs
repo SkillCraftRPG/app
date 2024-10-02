@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Moq;
+﻿using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
@@ -36,15 +35,12 @@ public class ResolvePersonalityQueryHandlerTests
   [Fact(DisplayName = "It should return the found personality.")]
   public async Task It_should_return_the_found_personality()
   {
-    ResolvePersonalityQuery query = new(_activity, _personality.Id.ToGuid());
+    ResolvePersonalityQuery query = new(_activity, _personality.EntityId);
 
     Personality personality = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_personality, personality);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Personality && y.Id == query.Id),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Personality, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw AggregateNotFoundException when the personality could not be found.")]
@@ -53,7 +49,7 @@ public class ResolvePersonalityQueryHandlerTests
     ResolvePersonalityQuery query = new(_activity, Guid.NewGuid());
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Personality>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new AggregateId(query.Id).Value, exception.Id);
+    Assert.Equal(new PersonalityId(_world.Id, query.Id).Value, exception.Id);
     Assert.Equal("PersonalityId", exception.PropertyName);
   }
 }

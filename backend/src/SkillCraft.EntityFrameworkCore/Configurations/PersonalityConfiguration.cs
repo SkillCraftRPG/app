@@ -16,7 +16,7 @@ internal class PersonalityConfiguration : AggregateConfiguration<PersonalityEnti
     builder.ToTable(SkillCraftDb.Personalities.Table.Table ?? string.Empty, SkillCraftDb.Personalities.Table.Schema);
     builder.HasKey(x => x.PersonalityId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Attribute);
 

@@ -28,18 +28,18 @@ internal class PersonalityQuerier : IPersonalityQuerier
   public async Task<PersonalityModel> ReadAsync(Personality personality, CancellationToken cancellationToken)
   {
     return await ReadAsync(personality.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The personality entity 'Id={personality.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The personality entity 'AggregateId={personality.Id}' could not be found.");
   }
   public async Task<PersonalityModel?> ReadAsync(PersonalityId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<PersonalityModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<PersonalityModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     PersonalityEntity? personality = await _personalities.AsNoTracking()
       .Include(x => x.Gift).ThenInclude(x => x!.World)
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return personality == null ? null : await MapAsync(personality, cancellationToken);
   }

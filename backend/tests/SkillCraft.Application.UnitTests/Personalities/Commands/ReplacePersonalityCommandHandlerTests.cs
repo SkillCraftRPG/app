@@ -40,8 +40,8 @@ public class ReplacePersonalityCommandHandlerTests
     _personalityRepository.Setup(x => x.LoadAsync(personality.Id, _cancellationToken)).ReturnsAsync(personality);
 
     ReplacePersonalityPayload payload = new("Agile");
-    ReplacePersonalityCommand command = new(personality.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplacePersonalityCommand command = new(personality.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     PersonalityModel model = new();
     _personalityQuerier.Setup(x => x.ReadAsync(personality, _cancellationToken)).ReturnsAsync(model);
@@ -52,7 +52,7 @@ public class ReplacePersonalityCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Activity == command && y.Personality == personality && y.Id == null), _cancellationToken), Times.Once);
@@ -71,8 +71,8 @@ public class ReplacePersonalityCommandHandlerTests
       Attribute = Attribute.Agility,
       GiftId = Guid.NewGuid()
     };
-    ReplacePersonalityCommand command = new(personality.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplacePersonalityCommand command = new(personality.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     PersonalityModel model = new();
     _personalityQuerier.Setup(x => x.ReadAsync(personality, _cancellationToken)).ReturnsAsync(model);
@@ -83,7 +83,7 @@ public class ReplacePersonalityCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Activity == command && y.Personality == personality && y.Id == payload.GiftId), _cancellationToken), Times.Once);
@@ -98,6 +98,7 @@ public class ReplacePersonalityCommandHandlerTests
   {
     ReplacePersonalityPayload payload = new("Agile");
     ReplacePersonalityCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -126,7 +127,7 @@ public class ReplacePersonalityCommandHandlerTests
     long version = reference.Version;
     _personalityRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Personality personality = new(_world.Id, reference.Name, _world.OwnerId, reference.Id);
+    Personality personality = new(_world.Id, reference.Name, _world.OwnerId, reference.EntityId);
     _personalityRepository.Setup(x => x.LoadAsync(personality.Id, _cancellationToken)).ReturnsAsync(personality);
 
     Description description = new("  Les mouvements du personnage sont effectués avec aisance et promptitude, souplesse et alerte.  ");
@@ -139,8 +140,8 @@ public class ReplacePersonalityCommandHandlerTests
       Attribute = Attribute.Agility,
       GiftId = Guid.NewGuid()
     };
-    ReplacePersonalityCommand command = new(personality.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplacePersonalityCommand command = new(personality.EntityId, payload, version);
+    command.Contextualize(_world);
 
     PersonalityModel model = new();
     _personalityQuerier.Setup(x => x.ReadAsync(personality, _cancellationToken)).ReturnsAsync(model);
@@ -151,7 +152,7 @@ public class ReplacePersonalityCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Personality && y.Key.Id == personality.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Activity == command && y.Personality == personality && y.Id == payload.GiftId), _cancellationToken), Times.Once);

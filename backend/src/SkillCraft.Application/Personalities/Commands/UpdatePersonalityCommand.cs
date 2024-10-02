@@ -34,7 +34,7 @@ internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonali
     UpdatePersonalityPayload payload = command.Payload;
     new UpdatePersonalityValidator().ValidateAndThrow(payload);
 
-    PersonalityId id = new(command.Id);
+    PersonalityId id = new(command.GetWorldId(), command.Id);
     Personality? personality = await _personalityRepository.LoadAsync(id, cancellationToken);
     if (personality == null)
     {

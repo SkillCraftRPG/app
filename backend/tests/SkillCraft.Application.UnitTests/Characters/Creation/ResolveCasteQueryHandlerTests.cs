@@ -40,10 +40,7 @@ public class ResolveCasteQueryHandlerTests
     Caste caste = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_caste, caste);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Caste && y.Id == query.Id),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Caste, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw AggregateNotFoundException when the caste could not be found.")]

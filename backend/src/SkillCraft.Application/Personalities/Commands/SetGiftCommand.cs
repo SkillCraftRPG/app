@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
@@ -24,6 +24,8 @@ internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
 
   public async Task Handle(SetGiftCommand command, CancellationToken cancellationToken)
   {
+    await _permissionService.EnsureCanPreviewAsync(command.Activity, EntityType.Customization, cancellationToken);
+
     Personality personality = command.Personality;
     Customization? gift = null;
 
@@ -32,8 +34,6 @@ internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
       CustomizationId giftId = new(personality.WorldId, command.Id.Value);
       gift = await _customizationRepository.LoadAsync(giftId, cancellationToken)
         ?? throw new AggregateNotFoundException<Customization>(giftId.AggregateId, PropertyName);
-
-      await _permissionService.EnsureCanPreviewAsync(command.Activity, gift.GetMetadata(), cancellationToken);
 
       if (gift.Type != CustomizationType.Gift)
       {

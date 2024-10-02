@@ -20,10 +20,10 @@ internal static class PersonalityEvents
     public async Task Handle(Personality.CreatedEvent @event, CancellationToken cancellationToken)
     {
       PersonalityEntity? personality = await _context.Personalities.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (personality == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new PersonalityId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -48,10 +48,9 @@ internal static class PersonalityEvents
 
     public async Task Handle(Personality.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       PersonalityEntity personality = await _context.Personalities
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The personality entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The personality entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       CustomizationEntity? gift = null;
       if (@event.GiftId?.Value != null)
