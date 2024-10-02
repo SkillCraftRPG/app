@@ -124,7 +124,7 @@ public class SaveCasteCommandHandlerTests
     VerifyStorage(_caste.EntityId);
   }
 
-  [Fact(DisplayName = "It should return null when updating an caste that does not exist.")]
+  [Fact(DisplayName = "It should return null when updating a caste that does not exist.")]
   public async Task It_should_return_null_when_updating_an_caste_that_does_not_exist()
   {
     SaveCasteCommand command = new(Guid.Empty, new SaveCastePayload("Artisan"), Version: 0);

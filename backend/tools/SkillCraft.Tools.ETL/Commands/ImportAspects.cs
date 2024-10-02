@@ -4,7 +4,6 @@ using MediatR;
 using SkillCraft.Application.Aspects.Commands;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
-using System.Globalization;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Tools.ETL.Commands;

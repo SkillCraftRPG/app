@@ -3,7 +3,6 @@ using CsvHelper.Configuration.Attributes;
 using MediatR;
 using SkillCraft.Application.Customizations.Commands;
 using SkillCraft.Contracts.Customizations;
-using System.Globalization;
 
 namespace SkillCraft.Tools.ETL.Commands;
 

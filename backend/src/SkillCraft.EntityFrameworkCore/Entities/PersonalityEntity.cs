@@ -21,7 +21,7 @@ internal class PersonalityEntity : AggregateEntity
 
   public PersonalityEntity(WorldEntity world, Personality.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new PersonalityId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

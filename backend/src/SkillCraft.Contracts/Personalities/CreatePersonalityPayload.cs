@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Personalities;
 
-public record CreatePersonalityPayload
+public record SavePersonalityPayload
 {
   public string Name { get; set; }
   public string? Description { get; set; }
@@ -8,11 +8,11 @@ public record CreatePersonalityPayload
   public Attribute? Attribute { get; set; }
   public Guid? GiftId { get; set; }
 
-  public CreatePersonalityPayload() : this(string.Empty)
+  public SavePersonalityPayload() : this(string.Empty)
   {
   }
 
-  public CreatePersonalityPayload(string name)
+  public SavePersonalityPayload(string name)
   {
     Name = name;
   }

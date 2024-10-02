@@ -2,31 +2,32 @@
 using MediatR;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities.Validators;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Personalities.Commands;
 
 public record UpdatePersonalityCommand(Guid Id, UpdatePersonalityPayload Payload) : Activity, IRequest<PersonalityModel?>;
 
-internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonalityCommand, PersonalityModel?>
+internal class UpdatePersonalityCommandHandler : PersonalityCommandHandler, IRequestHandler<UpdatePersonalityCommand, PersonalityModel?>
 {
   private readonly IPermissionService _permissionService;
   private readonly IPersonalityQuerier _personalityQuerier;
   private readonly IPersonalityRepository _personalityRepository;
-  private readonly ISender _sender;
 
   public UpdatePersonalityCommandHandler(
+    ICustomizationRepository customizationRepository,
     IPermissionService permissionService,
     IPersonalityQuerier personalityQuerier,
     IPersonalityRepository personalityRepository,
-    ISender sender)
+    IStorageService storageService) : base(customizationRepository, permissionService, personalityRepository, storageService)
   {
     _permissionService = permissionService;
     _personalityQuerier = personalityQuerier;
     _personalityRepository = personalityRepository;
-    _sender = sender;
   }
 
   public async Task<PersonalityModel?> Handle(UpdatePersonalityCommand command, CancellationToken cancellationToken)
@@ -58,11 +59,12 @@ internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonali
     }
     if (payload.GiftId != null)
     {
-      await _sender.Send(new SetGiftCommand(command, personality, payload.GiftId.Value), cancellationToken);
+      await SetGiftAsync(command, personality, payload.GiftId.Value, cancellationToken);
     }
 
     personality.Update(command.GetUserId());
-    await _sender.Send(new SavePersonalityCommand(personality), cancellationToken);
+
+    await SaveAsync(personality, cancellationToken);
 
     return await _personalityQuerier.ReadAsync(personality, cancellationToken);
   }

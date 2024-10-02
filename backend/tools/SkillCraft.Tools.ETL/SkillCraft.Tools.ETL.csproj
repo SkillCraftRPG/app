@@ -23,6 +23,7 @@
     <None Remove="data\customizations.csv" />
     <None Remove="data\educations.csv" />
     <None Remove="data\parties.csv" />
+    <None Remove="data\personalities.csv" />
     <None Remove="data\worlds.csv" />
   </ItemGroup>
 
@@ -40,6 +41,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="data\parties.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\personalities.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="data\worlds.csv">
@@ -61,6 +65,9 @@
   
   <ItemGroup>
     <Using Include="System.Diagnostics" />
+    <Using Include="System.Globalization" />
     <Using Include="System.Reflection" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.Json.Serialization" />
   </ItemGroup>
 </Project>
