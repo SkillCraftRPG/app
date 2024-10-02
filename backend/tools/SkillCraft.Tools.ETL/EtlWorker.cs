@@ -36,6 +36,7 @@ public class EtlWorker : BackgroundService
       await publisher.Publish(new ImportWorlds(), cancellationToken);
       await publisher.Publish(new ImportParties(), cancellationToken);
       await publisher.Publish(new ImportAspects(), cancellationToken);
+      await publisher.Publish(new ImportCastes(), cancellationToken);
     }
     catch (Exception exception)
     {

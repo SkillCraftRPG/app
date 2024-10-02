@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Castes;
@@ -10,23 +11,21 @@ namespace SkillCraft.Application.Castes.Commands;
 
 public record UpdateCasteCommand(Guid Id, UpdateCastePayload Payload) : Activity, IRequest<CasteModel?>;
 
-internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, CasteModel?>
+internal class UpdateCasteCommandHandler : CasteCommandHandler, IRequestHandler<UpdateCasteCommand, CasteModel?>
 {
   private readonly ICasteQuerier _casteQuerier;
   private readonly ICasteRepository _casteRepository;
   private readonly IPermissionService _permissionService;
-  private readonly ISender _sender;
 
   public UpdateCasteCommandHandler(
     ICasteQuerier casteQuerier,
     ICasteRepository casteRepository,
     IPermissionService permissionService,
-    ISender sender)
+    IStorageService storageService) : base(casteRepository, storageService)
   {
     _casteQuerier = casteQuerier;
     _casteRepository = casteRepository;
     _permissionService = permissionService;
-    _sender = sender;
   }
 
   public async Task<CasteModel?> Handle(UpdateCasteCommand command, CancellationToken cancellationToken)
@@ -34,7 +33,7 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
     UpdateCastePayload payload = command.Payload;
     new UpdateCasteValidator().ValidateAndThrow(payload);
 
-    CasteId id = new(command.Id);
+    CasteId id = new(command.GetWorldId(), command.Id);
     Caste? caste = await _casteRepository.LoadAsync(id, cancellationToken);
     if (caste == null)
     {
@@ -64,7 +63,8 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
     SetTraits(caste, payload);
 
     caste.Update(command.GetUserId());
-    await _sender.Send(new SaveCasteCommand(caste), cancellationToken);
+
+    await SaveAsync(caste, cancellationToken);
 
     return await _casteQuerier.ReadAsync(caste, cancellationToken);
   }

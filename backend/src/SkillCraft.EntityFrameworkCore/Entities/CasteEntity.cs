@@ -41,7 +41,7 @@ internal class CasteEntity : AggregateEntity
 
   public CasteEntity(WorldEntity world, Caste.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new CasteId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

@@ -28,17 +28,17 @@ internal class CasteQuerier : ICasteQuerier
   public async Task<CasteModel> ReadAsync(Caste caste, CancellationToken cancellationToken)
   {
     return await ReadAsync(caste.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The caste entity 'Id={caste.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The caste entity 'AggregateId={caste.Id}' could not be found.");
   }
   public async Task<CasteModel?> ReadAsync(CasteId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<CasteModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<CasteModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     CasteEntity? caste = await _castes.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return caste == null ? null : await MapAsync(caste, cancellationToken);
   }

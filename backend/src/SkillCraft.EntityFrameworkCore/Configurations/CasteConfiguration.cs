@@ -16,7 +16,7 @@ internal class CasteConfiguration : AggregateConfiguration<CasteEntity>, IEntity
     builder.ToTable(SkillCraftDb.Castes.Table.Table ?? string.Empty, SkillCraftDb.Castes.Table.Schema);
     builder.HasKey(x => x.CasteId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Skill);
 

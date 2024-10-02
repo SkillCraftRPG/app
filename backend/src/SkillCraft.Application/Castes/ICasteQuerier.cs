@@ -9,7 +9,7 @@ public interface ICasteQuerier
 {
   Task<CasteModel> ReadAsync(Caste caste, CancellationToken cancellationToken = default);
   Task<CasteModel?> ReadAsync(CasteId id, CancellationToken cancellationToken = default);
-  Task<CasteModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<CasteModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken = default);
 
   Task<SearchResults<CasteModel>> SearchAsync(WorldId worldId, SearchCastesPayload payload, CancellationToken cancellationToken = default);
 }
