@@ -1,10 +1,12 @@
 ﻿using Logitar.Net.Http;
 using SkillCraft.Application.Aspects.Commands;
 using SkillCraft.Application.Castes.Commands;
+using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Parties.Commands;
 using SkillCraft.Application.Worlds.Commands;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
+using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Worlds;
 using System.Text.Json;
@@ -46,6 +48,18 @@ internal class ApiClient : IApiClient
     options.Headers.Add(new HttpHeader("X-World", "ungar")); // TODO(fpion): refactor
     JsonApiResult result = await _client.PutAsync(uri, options, cancellationToken);
     return result.Deserialize<CasteModel>(_options) ?? throw new InvalidOperationException("The caste could not be deserialized.");
+  }
+
+  public async Task<EducationModel> SaveEducationAsync(SaveEducationCommand command, CancellationToken cancellationToken)
+  {
+    Uri uri = new($"/educations/{command.Id}?version={command.Version}", UriKind.Relative);
+    JsonRequestOptions options = new(command.Payload)
+    {
+      SerializerOptions = _options
+    };
+    options.Headers.Add(new HttpHeader("X-World", "ungar")); // TODO(fpion): refactor
+    JsonApiResult result = await _client.PutAsync(uri, options, cancellationToken);
+    return result.Deserialize<EducationModel>(_options) ?? throw new InvalidOperationException("The education could not be deserialized.");
   }
 
   public async Task<PartyModel> SavePartyAsync(SavePartyCommand command, CancellationToken cancellationToken)

@@ -45,7 +45,7 @@ public class ReadCasteQueryHandlerTests
 
     Assert.Null(await _handler.Handle(query, _cancellationToken));
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(It.IsAny<ReadCasteQuery>(), It.IsAny<EntityMetadata>(), It.IsAny<CancellationToken>()), Times.Never);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Caste, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return the caste found by ID.")]

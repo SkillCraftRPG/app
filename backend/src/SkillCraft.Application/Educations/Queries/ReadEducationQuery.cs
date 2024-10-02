@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Educations;
 
 namespace SkillCraft.Application.Educations.Queries;
@@ -19,12 +20,8 @@ internal class ReadEducationQueryHandler : IRequestHandler<ReadEducationQuery, E
 
   public async Task<EducationModel?> Handle(ReadEducationQuery query, CancellationToken cancellationToken)
   {
-    EducationModel? education = await _educationQuerier.ReadAsync(query.Id, cancellationToken);
-    if (education != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, education.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Education, cancellationToken);
 
-    return education;
+    return await _educationQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

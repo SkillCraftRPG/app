@@ -101,7 +101,7 @@ public class CreateCharacterCommandHandlerTests
         Extra = [.. _baseAttributes.Extra]
       },
       CasteId = _caste.EntityId,
-      EducationId = _education.Id.ToGuid()
+      EducationId = _education.EntityId
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);

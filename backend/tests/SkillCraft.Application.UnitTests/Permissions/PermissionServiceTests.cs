@@ -228,7 +228,7 @@ public class PermissionServiceTests
   [Fact(DisplayName = "EnsureCanCreateAsync: it should succeed when the user has the permission.")]
   public async Task EnsureCanCreateAsync_it_should_succeed_when_the_user_has_the_permission()
   {
-    CreateEducationCommand command = new(new CreateEducationPayload("Classique"));
+    SaveEducationCommand command = new(Id: null, new SaveEducationPayload("Classique"), Version: null);
     command.Contextualize(_otherUser, _world);
 
     _permissionQuerier.Setup(x => x.HasAsync(_otherUser, _world, Action.Create, EntityType.Education, null, _cancellationToken)).ReturnsAsync(true);

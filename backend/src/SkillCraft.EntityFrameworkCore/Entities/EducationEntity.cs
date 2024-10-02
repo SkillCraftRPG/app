@@ -20,7 +20,7 @@ internal class EducationEntity : AggregateEntity
 
   public EducationEntity(WorldEntity world, Education.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new EducationId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

@@ -26,26 +26,24 @@ public class EducationController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<EducationModel>> CreateAsync([FromBody] CreateEducationPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<EducationModel>> CreateAsync([FromBody] SaveEducationPayload payload, CancellationToken cancellationToken)
   {
-    EducationModel education = await _pipeline.ExecuteAsync(new CreateEducationCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Education}/{{id}}", [new KeyValuePair<string, string>("id", education.Id.ToString())]);
-
-    return Created(location, education);
+    SaveEducationResult result = await _pipeline.ExecuteAsync(new SaveEducationCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<EducationModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     EducationModel? education = await _pipeline.ExecuteAsync(new ReadEducationQuery(id), cancellationToken);
-    return education == null ? NotFound() : Ok(education);
+    return GetActionResult(education);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<EducationModel>> ReplaceAsync(Guid id, [FromBody] ReplaceEducationPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<EducationModel>> ReplaceAsync(Guid id, [FromBody] SaveEducationPayload payload, long? version, CancellationToken cancellationToken)
   {
-    EducationModel? education = await _pipeline.ExecuteAsync(new ReplaceEducationCommand(id, payload, version), cancellationToken);
-    return education == null ? NotFound() : Ok(education);
+    SaveEducationResult result = await _pipeline.ExecuteAsync(new SaveEducationCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class EducationController : ControllerBase
   public async Task<ActionResult<EducationModel>> UpdateAsync(Guid id, [FromBody] UpdateEducationPayload payload, CancellationToken cancellationToken)
   {
     EducationModel? education = await _pipeline.ExecuteAsync(new UpdateEducationCommand(id, payload), cancellationToken);
-    return education == null ? NotFound() : Ok(education);
+    return GetActionResult(education);
+  }
+
+  private ActionResult<EducationModel> GetActionResult(SaveEducationResult result) => GetActionResult(result.Education, result.Created);
+  private ActionResult<EducationModel> GetActionResult(EducationModel? education, bool created = false)
+  {
+    if (education == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Education}/{{id}}", [new KeyValuePair<string, string>("id", education.Id.ToString())]);
+      return Created(location, education);
+    }
+
+    return Ok(education);
   }
 }

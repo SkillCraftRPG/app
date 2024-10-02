@@ -133,6 +133,7 @@ internal class Mapper
 
     EducationModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description,
       Skill = source.Skill,
       WealthMultiplier = source.WealthMultiplier

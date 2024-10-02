@@ -16,7 +16,7 @@ internal class EducationConfiguration : AggregateConfiguration<EducationEntity>,
     builder.ToTable(SkillCraftDb.Educations.Table.Table ?? string.Empty, SkillCraftDb.Educations.Table.Schema);
     builder.HasKey(x => x.EducationId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Skill);
 

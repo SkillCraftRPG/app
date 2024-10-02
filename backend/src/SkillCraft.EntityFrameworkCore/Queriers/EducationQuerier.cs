@@ -28,17 +28,17 @@ internal class EducationQuerier : IEducationQuerier
   public async Task<EducationModel> ReadAsync(Education education, CancellationToken cancellationToken)
   {
     return await ReadAsync(education.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The education entity 'Id={education.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The education entity 'AggregateId={education.Id}' could not be found.");
   }
   public async Task<EducationModel?> ReadAsync(EducationId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<EducationModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<EducationModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     EducationEntity? education = await _educations.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return education == null ? null : await MapAsync(education, cancellationToken);
   }

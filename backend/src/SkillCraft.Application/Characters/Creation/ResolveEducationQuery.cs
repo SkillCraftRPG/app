@@ -21,11 +21,13 @@ internal class ResolveEducationQueryHandler : IRequestHandler<ResolveEducationQu
 
   public async Task<Education> Handle(ResolveEducationQuery query, CancellationToken cancellationToken)
   {
-    EducationId id = new(query.Id);
+    Activity activity = query.Activity;
+
+    EducationId id = new(activity.GetWorldId(), query.Id);
     Education education = await _educationRepository.LoadAsync(id, cancellationToken)
       ?? throw new AggregateNotFoundException<Education>(id.AggregateId, nameof(CreateCharacterPayload.EducationId));
 
-    await _permissionService.EnsureCanPreviewAsync(query.Activity, education.GetMetadata(), cancellationToken);
+    await _permissionService.EnsureCanPreviewAsync(activity, education.GetMetadata(), cancellationToken);
 
     return education;
   }
