@@ -9,7 +9,7 @@ public interface IEducationQuerier
 {
   Task<EducationModel> ReadAsync(Education education, CancellationToken cancellationToken = default);
   Task<EducationModel?> ReadAsync(EducationId id, CancellationToken cancellationToken = default);
-  Task<EducationModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<EducationModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken = default);
 
   Task<SearchResults<EducationModel>> SearchAsync(WorldId worldId, SearchEducationsPayload payload, CancellationToken cancellationToken = default);
 }

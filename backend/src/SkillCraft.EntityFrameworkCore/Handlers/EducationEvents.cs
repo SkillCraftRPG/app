@@ -19,10 +19,10 @@ internal static class EducationEvents
     public async Task Handle(Education.CreatedEvent @event, CancellationToken cancellationToken)
     {
       EducationEntity? education = await _context.Educations.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (education == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new EducationId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -47,10 +47,9 @@ internal static class EducationEvents
 
     public async Task Handle(Education.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       EducationEntity education = await _context.Educations
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The education entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The education entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       education.Update(@event);
 

@@ -27,7 +27,7 @@ internal class ResolveCasteQueryHandler : IRequestHandler<ResolveCasteQuery, Cas
     Caste caste = await _casteRepository.LoadAsync(id, cancellationToken)
       ?? throw new AggregateNotFoundException<Caste>(id.AggregateId, nameof(CreateCharacterPayload.CasteId));
 
-    await _permissionService.EnsureCanPreviewAsync(query.Activity, caste.GetMetadata(), cancellationToken);
+    await _permissionService.EnsureCanPreviewAsync(activity, caste.GetMetadata(), cancellationToken);
 
     return caste;
   }

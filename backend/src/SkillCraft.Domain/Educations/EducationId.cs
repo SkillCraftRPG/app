@@ -1,28 +1,38 @@
 ﻿using Logitar.EventSourcing;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Domain.Educations;
 
 public readonly struct EducationId
 {
+  private const char Separator = ':';
+
+  public WorldId WorldId { get; }
+  public Guid EntityId { get; }
   public AggregateId AggregateId { get; }
   public string Value => AggregateId.Value;
 
-  public EducationId(AggregateId actorId)
+  public EducationId(WorldId worldId, Guid? entityId = null)
   {
-    AggregateId = actorId;
+    WorldId = worldId;
+    EntityId = entityId ?? Guid.NewGuid();
+    AggregateId = new(string.Join(Separator, WorldId, new AggregateId(EntityId)));
   }
-  public EducationId(Guid value)
+  public EducationId(AggregateId aggregateId) : this(aggregateId.Value)
   {
-    AggregateId = new(value);
   }
   public EducationId(string value)
   {
+    string[] values = value.Split(Separator);
+    if (values.Length != 2)
+    {
+      throw new ArgumentException("The value is not a valid education ID.", nameof(value));
+    }
+
+    WorldId = new(values[0]);
+    EntityId = new AggregateId(values[1]).ToGuid();
     AggregateId = new(value);
   }
-
-  public static EducationId NewId() => new(AggregateId.NewId());
-
-  public Guid ToGuid() => AggregateId.ToGuid();
 
   public static bool operator ==(EducationId left, EducationId right) => left.Equals(right);
   public static bool operator !=(EducationId left, EducationId right) => !left.Equals(right);

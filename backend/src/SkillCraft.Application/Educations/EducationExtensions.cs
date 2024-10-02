@@ -13,7 +13,7 @@ internal static class EducationExtensions
   public static EntityMetadata GetMetadata(this Education education)
   {
     long size = education.Name.Size + (education.Description?.Size ?? 0) + 4 + 8;
-    return new EntityMetadata(education.WorldId, new EntityKey(Type, education.Id.ToGuid()), size);
+    return new EntityMetadata(education.WorldId, new EntityKey(Type, education.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this EducationModel education)
   {

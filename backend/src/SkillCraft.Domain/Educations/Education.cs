@@ -10,8 +10,8 @@ public class Education : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new EducationId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
   public Name Name
@@ -81,14 +81,12 @@ public class Education : AggregateRoot
   {
   }
 
-  public Education(WorldId worldId, Name name, UserId userId, EducationId? id = null) : base(id?.AggregateId)
+  public Education(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new EducationId(worldId, entityId).AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     _name = @event.Name;
   }
 
@@ -125,14 +123,10 @@ public class Education : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public CreatedEvent(Name name)
     {
-      WorldId = worldId;
-
       Name = name;
     }
   }

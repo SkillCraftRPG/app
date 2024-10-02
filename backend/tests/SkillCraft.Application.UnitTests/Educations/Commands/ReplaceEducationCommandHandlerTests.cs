@@ -40,8 +40,8 @@ public class ReplaceEducationCommandHandlerTests
       Skill = Skill.Knowledge,
       WealthMultiplier = 12.0
     };
-    ReplaceEducationCommand command = new(education.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplaceEducationCommand command = new(education.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     EducationModel model = new();
     _educationQuerier.Setup(x => x.ReadAsync(education, _cancellationToken)).ReturnsAsync(model);
@@ -52,7 +52,7 @@ public class ReplaceEducationCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Education && y.Key.Id == education.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Education && y.Key.Id == education.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.Equals(education)
@@ -67,6 +67,7 @@ public class ReplaceEducationCommandHandlerTests
   {
     ReplaceEducationPayload payload = new("Classique");
     ReplaceEducationCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -95,7 +96,7 @@ public class ReplaceEducationCommandHandlerTests
     long version = reference.Version;
     _educationRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Education education = new(_world.Id, reference.Name, _world.OwnerId, reference.Id);
+    Education education = new(_world.Id, reference.Name, _world.OwnerId, reference.EntityId);
     _educationRepository.Setup(x => x.LoadAsync(education.Id, _cancellationToken)).ReturnsAsync(education);
 
     Skill skill = Skill.Knowledge;
@@ -108,8 +109,8 @@ public class ReplaceEducationCommandHandlerTests
       Skill = null,
       WealthMultiplier = 12.0
     };
-    ReplaceEducationCommand command = new(education.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplaceEducationCommand command = new(education.EntityId, payload, version);
+    command.Contextualize(_world);
 
     EducationModel model = new();
     _educationQuerier.Setup(x => x.ReadAsync(education, _cancellationToken)).ReturnsAsync(model);
@@ -120,7 +121,7 @@ public class ReplaceEducationCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Education && y.Key.Id == education.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Education && y.Id == education.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.Equals(education)

@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Moq;
+﻿using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
@@ -36,7 +35,7 @@ public class ResolveEducationQueryHandlerTests
   [Fact(DisplayName = "It should return the found education.")]
   public async Task It_should_return_the_found_education()
   {
-    ResolveEducationQuery query = new(_activity, _education.Id.ToGuid());
+    ResolveEducationQuery query = new(_activity, _education.EntityId);
 
     Education education = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_education, education);
@@ -53,7 +52,7 @@ public class ResolveEducationQueryHandlerTests
     ResolveEducationQuery query = new(_activity, Guid.NewGuid());
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Education>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new AggregateId(query.Id).Value, exception.Id);
+    Assert.Equal(new EducationId(_world.Id, query.Id).Value, exception.Id);
     Assert.Equal("EducationId", exception.PropertyName);
   }
 }

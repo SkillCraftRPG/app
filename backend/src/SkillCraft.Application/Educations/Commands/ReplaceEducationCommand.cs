@@ -34,7 +34,7 @@ internal class ReplaceEducationCommandHandler : IRequestHandler<ReplaceEducation
     ReplaceEducationPayload payload = command.Payload;
     new ReplaceEducationValidator().ValidateAndThrow(payload);
 
-    EducationId id = new(command.Id);
+    EducationId id = new(command.GetWorldId(), command.Id);
     Education? education = await _educationRepository.LoadAsync(id, cancellationToken);
     if (education == null)
     {

@@ -33,6 +33,7 @@ public class UpdateEducationCommandHandlerTests
   {
     UpdateEducationPayload payload = new();
     UpdateEducationCommand command = new(Guid.Empty, payload);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -71,8 +72,8 @@ public class UpdateEducationCommandHandlerTests
       Skill = new Change<Skill?>(Skill.Knowledge),
       WealthMultiplier = new Change<double?>(12.0)
     };
-    UpdateEducationCommand command = new(education.Id.ToGuid(), payload);
-    command.Contextualize();
+    UpdateEducationCommand command = new(education.EntityId, payload);
+    command.Contextualize(_world);
 
     EducationModel model = new();
     _educationQuerier.Setup(x => x.ReadAsync(education, _cancellationToken)).ReturnsAsync(model);
@@ -82,7 +83,7 @@ public class UpdateEducationCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Education && y.Key.Id == education.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Education && y.Key.Id == education.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveEducationCommand>(y => y.Education.Equals(education)
