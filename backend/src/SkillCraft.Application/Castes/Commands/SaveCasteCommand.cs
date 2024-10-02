@@ -84,7 +84,7 @@ internal class SaveCasteCommandHandler : CasteCommandHandler, IRequestHandler<Sa
       WealthRoll = Roll.TryCreate(payload.WealthRoll)
     };
 
-    SetTraits(caste, payload);
+    SetTraits(caste, caste, payload);
 
     caste.Update(userId);
 
@@ -130,22 +130,6 @@ internal class SaveCasteCommandHandler : CasteCommandHandler, IRequestHandler<Sa
 
     caste.Update(userId);
   }
-
-  private static void SetTraits(Caste caste, SaveCastePayload payload)
-  {
-    foreach (TraitPayload traitPayload in payload.Traits)
-    {
-      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
-      if (traitPayload.Id.HasValue)
-      {
-        caste.SetTrait(traitPayload.Id.Value, trait);
-      }
-      else
-      {
-        caste.AddTrait(trait);
-      }
-    }
-  } // TODO(fpion): refactor
   private static void SetTraits(Caste caste, Caste reference, SaveCastePayload payload)
   {
     HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
@@ -172,5 +156,5 @@ internal class SaveCasteCommandHandler : CasteCommandHandler, IRequestHandler<Sa
         caste.AddTrait(trait);
       }
     }
-  } // TODO(fpion): refactor
+  }
 }

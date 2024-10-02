@@ -85,7 +85,11 @@ public class CasteTests : IntegrationTests
     Assert.Equal(payload.Skill, caste.Skill);
     Assert.Equal(payload.WealthRoll, caste.WealthRoll);
 
-    //Assert.Equal(payload.Traits, caste.Traits); // TODO(fpion): implement
+    Assert.Equal(payload.Traits.Count, caste.Traits.Count);
+    foreach (TraitPayload trait in payload.Traits)
+    {
+      Assert.Contains(caste.Traits, t => (trait.Id == null || trait.Id == t.Id) && t.Name == trait.Name && t.Description == trait.Description);
+    }
 
     Assert.NotNull(await SkillCraftContext.Castes.AsNoTracking().SingleOrDefaultAsync(x => x.Id == caste.Id));
   }
@@ -133,7 +137,11 @@ public class CasteTests : IntegrationTests
     Assert.Equal(payload.Skill, caste.Skill);
     Assert.Equal(payload.WealthRoll, caste.WealthRoll);
 
-    //Assert.Equal(payload.Traits, caste.Traits); // TODO(fpion): implement
+    Assert.Equal(payload.Traits.Count, caste.Traits.Count);
+    foreach (TraitPayload trait in payload.Traits)
+    {
+      Assert.Contains(caste.Traits, t => (trait.Id == null || trait.Id == t.Id) && t.Name == trait.Name && t.Description == trait.Description);
+    }
   }
 
   [Fact(DisplayName = "It should return empty search results.")]
@@ -207,6 +215,10 @@ public class CasteTests : IntegrationTests
     Assert.Equal(_exile.Skill, caste.Skill);
     Assert.Equal(_exile.WealthRoll?.Value, caste.WealthRoll);
 
-    //Assert.Equal(_exile.Traits, caste.Traits); // TODO(fpion): implement
+    Assert.Equal(_exile.Traits.Count, caste.Traits.Count);
+    foreach (KeyValuePair<Guid, Trait> trait in _exile.Traits)
+    {
+      Assert.Contains(caste.Traits, t => t.Id == trait.Key && t.Name == trait.Value.Name.Value && t.Description == trait.Value.Description?.Value);
+    }
   }
 }

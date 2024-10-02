@@ -30,6 +30,9 @@ public class SaveCasteCommandHandlerTests
     _handler = new(_casteQuerier.Object, _casteRepository.Object, _permissionService.Object, _storageService.Object);
 
     _caste = new(_world.Id, new Name("classique"), _world.OwnerId);
+    _caste.AddTrait(new Trait(new Name("professionnel"), Description: null));
+    _caste.AddTrait(new Trait(new Name("sujet"), Description: null));
+    _caste.Update(_world.OwnerId);
     _casteRepository.Setup(x => x.LoadAsync(_caste.Id, _cancellationToken)).ReturnsAsync(_caste);
 
     _casteQuerier.Setup(x => x.ReadAsync(It.IsAny<Caste>(), _cancellationToken)).ReturnsAsync(_model);
@@ -70,8 +73,10 @@ public class SaveCasteCommandHandlerTests
       It.Is<Caste>(y => (!parsed || y.EntityId == id)
         && y.Name.Value == payload.Name.Trim() && y.Description == null
         && y.Skill == payload.Skill && y.WealthRoll != null && y.WealthRoll.Value == payload.WealthRoll
-        && y.Traits.Count == payload.Traits.Count), // TODO(fpion): implement
-      _cancellationToken), Times.Once);
+        && y.Traits.Count == payload.Traits.Count
+        && payload.Traits.All(t => (t.Id == null || y.Traits.ContainsKey(t.Id.Value))
+          && y.Traits.Values.Any(v => v.Name.Value == t.Name && v.Description != null && v.Description.Value == t.Description))),
+      _cancellationToken), Times.Once); ;
 
     VerifyStorage(parsed ? id : null);
   }
@@ -111,7 +116,9 @@ public class SaveCasteCommandHandlerTests
       It.Is<Caste>(y => y.Equals(_caste)
         && y.Name.Value == payload.Name.Trim() && y.Description == null
         && y.Skill == payload.Skill && y.WealthRoll != null && y.WealthRoll.Value == payload.WealthRoll
-        && y.Traits.Count == payload.Traits.Count), // TODO(fpion): implement
+        && y.Traits.Count == payload.Traits.Count
+        && payload.Traits.All(t => (t.Id == null || y.Traits.ContainsKey(t.Id.Value))
+          && y.Traits.Values.Any(v => v.Name.Value == t.Name && v.Description != null && v.Description.Value == t.Description))),
       _cancellationToken), Times.Once);
 
     VerifyStorage(_caste.EntityId);
@@ -152,11 +159,17 @@ public class SaveCasteCommandHandlerTests
       Skill = _caste.Skill,
       WealthRoll = _caste.WealthRoll
     };
+    foreach (KeyValuePair<Guid, Trait> pair in _caste.Traits)
+    {
+      reference.SetTrait(pair.Key, pair.Value);
+    }
     reference.Update(_world.OwnerId);
     _casteRepository.Setup(x => x.LoadAsync(reference.Id, reference.Version, _cancellationToken)).ReturnsAsync(reference);
 
     Description description = new("L’artisan est un expert d’un procédé de transformation des matières brutes. Il peut être un boulanger, un forgeron, un orfèvre, un tisserand ou pratiquer tout genre de profession œuvrant dans la transformation des matières brutes.");
     _caste.Description = description;
+    Trait trait = new(new Name("Professionnel"), new Description("Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."));
+    _caste.AddTrait(trait);
     _caste.Update(_world.OwnerId);
 
     SaveCastePayload payload = new(" Artisan ")
@@ -165,14 +178,10 @@ public class SaveCasteCommandHandlerTests
       Skill = Skill.Craft,
       WealthRoll = "8d6"
     };
-    payload.Traits.Add(new TraitPayload("Professionnel")
+    payload.Traits.Add(new TraitPayload(" Sujet ")
     {
-      Description = "Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."
-    });
-    payload.Traits.Add(new TraitPayload("Sujet")
-    {
-      Id = Guid.NewGuid(),
-      Description = "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
+      Id = _caste.Traits.Single(x => x.Value.Name.Value == "sujet").Key,
+      Description = "  Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale.  "
     });
 
     SaveCasteCommand command = new(_caste.EntityId, payload, reference.Version);
@@ -191,7 +200,10 @@ public class SaveCasteCommandHandlerTests
       It.Is<Caste>(y => y.Equals(_caste)
         && y.Name.Value == payload.Name.Trim() && y.Description == description
         && y.Skill == payload.Skill && y.WealthRoll != null && y.WealthRoll.Value == payload.WealthRoll
-        && y.Traits.Count == payload.Traits.Count), // TODO(fpion): implement
+        && y.Traits.Count == 2
+        && payload.Traits.All(t => (t.Id == null || y.Traits.ContainsKey(t.Id.Value))
+          && y.Traits.Values.Any(v => v.Name.Value == t.Name.Trim() && v.Description != null && t.Description != null && v.Description.Value == t.Description.Trim()))
+        && y.Traits.Values.Any(t => t.Equals(trait))),
       _cancellationToken), Times.Once);
 
     VerifyStorage(_caste.EntityId);
