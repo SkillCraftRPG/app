@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using SkillCraft.Application.Educations;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Educations;
 
@@ -22,12 +22,11 @@ internal class ResolveEducationQueryHandler : IRequestHandler<ResolveEducationQu
   public async Task<Education> Handle(ResolveEducationQuery query, CancellationToken cancellationToken)
   {
     Activity activity = query.Activity;
+    await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Education, cancellationToken);
 
     EducationId id = new(activity.GetWorldId(), query.Id);
     Education education = await _educationRepository.LoadAsync(id, cancellationToken)
       ?? throw new AggregateNotFoundException<Education>(id.AggregateId, nameof(CreateCharacterPayload.EducationId));
-
-    await _permissionService.EnsureCanPreviewAsync(activity, education.GetMetadata(), cancellationToken);
 
     return education;
   }

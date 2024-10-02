@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using SkillCraft.Application.Castes;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Castes;
 
@@ -22,12 +22,11 @@ internal class ResolveCasteQueryHandler : IRequestHandler<ResolveCasteQuery, Cas
   public async Task<Caste> Handle(ResolveCasteQuery query, CancellationToken cancellationToken)
   {
     Activity activity = query.Activity;
+    await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Caste, cancellationToken);
 
     CasteId id = new(activity.GetWorldId(), query.Id);
     Caste caste = await _casteRepository.LoadAsync(id, cancellationToken)
       ?? throw new AggregateNotFoundException<Caste>(id.AggregateId, nameof(CreateCharacterPayload.CasteId));
-
-    await _permissionService.EnsureCanPreviewAsync(activity, caste.GetMetadata(), cancellationToken);
 
     return caste;
   }

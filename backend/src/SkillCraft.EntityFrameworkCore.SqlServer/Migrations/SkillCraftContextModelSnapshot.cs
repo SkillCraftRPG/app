@@ -343,9 +343,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("Type");
@@ -356,7 +353,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Customizations", (string)null);
                 });
@@ -860,9 +858,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("GiftId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("UpdatedBy");
@@ -871,7 +866,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Personalities", (string)null);
                 });

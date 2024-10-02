@@ -9,7 +9,7 @@ public interface IPersonalityQuerier
 {
   Task<PersonalityModel> ReadAsync(Personality personality, CancellationToken cancellationToken = default);
   Task<PersonalityModel?> ReadAsync(PersonalityId id, CancellationToken cancellationToken = default);
-  Task<PersonalityModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<PersonalityModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken = default);
 
   Task<SearchResults<PersonalityModel>> SearchAsync(WorldId worldId, SearchPersonalitiesPayload payload, CancellationToken cancellationToken = default);
 }

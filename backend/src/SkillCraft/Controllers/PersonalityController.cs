@@ -26,26 +26,24 @@ public class PersonalityController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<PersonalityModel>> CreateAsync([FromBody] CreatePersonalityPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<PersonalityModel>> CreateAsync([FromBody] SavePersonalityPayload payload, CancellationToken cancellationToken)
   {
-    PersonalityModel personality = await _pipeline.ExecuteAsync(new CreatePersonalityCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Personality}/{{id}}", [new KeyValuePair<string, string>("id", personality.Id.ToString())]);
-
-    return Created(location, personality);
+    SavePersonalityResult result = await _pipeline.ExecuteAsync(new SavePersonalityCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<PersonalityModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     PersonalityModel? personality = await _pipeline.ExecuteAsync(new ReadPersonalityQuery(id), cancellationToken);
-    return personality == null ? NotFound() : Ok(personality);
+    return GetActionResult(personality);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<PersonalityModel>> ReplaceAsync(Guid id, [FromBody] ReplacePersonalityPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<PersonalityModel>> ReplaceAsync(Guid id, [FromBody] SavePersonalityPayload payload, long? version, CancellationToken cancellationToken)
   {
-    PersonalityModel? personality = await _pipeline.ExecuteAsync(new ReplacePersonalityCommand(id, payload, version), cancellationToken);
-    return personality == null ? NotFound() : Ok(personality);
+    SavePersonalityResult result = await _pipeline.ExecuteAsync(new SavePersonalityCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class PersonalityController : ControllerBase
   public async Task<ActionResult<PersonalityModel>> UpdateAsync(Guid id, [FromBody] UpdatePersonalityPayload payload, CancellationToken cancellationToken)
   {
     PersonalityModel? personality = await _pipeline.ExecuteAsync(new UpdatePersonalityCommand(id, payload), cancellationToken);
-    return personality == null ? NotFound() : Ok(personality);
+    return GetActionResult(personality);
+  }
+
+  private ActionResult<PersonalityModel> GetActionResult(SavePersonalityResult result) => GetActionResult(result.Personality, result.Created);
+  private ActionResult<PersonalityModel> GetActionResult(PersonalityModel? personality, bool created = false)
+  {
+    if (personality == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Personality}/{{id}}", [new KeyValuePair<string, string>("id", personality.Id.ToString())]);
+      return Created(location, personality);
+    }
+
+    return Ok(personality);
   }
 }

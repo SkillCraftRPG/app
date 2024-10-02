@@ -13,7 +13,7 @@ internal static class PersonalityExtensions
   public static EntityMetadata GetMetadata(this Personality personality)
   {
     long size = personality.Name.Size + (personality.Description?.Size ?? 0) + 4 + 4;
-    return new EntityMetadata(personality.WorldId, new EntityKey(Type, personality.Id.ToGuid()), size);
+    return new EntityMetadata(personality.WorldId, new EntityKey(Type, personality.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this PersonalityModel personality)
   {

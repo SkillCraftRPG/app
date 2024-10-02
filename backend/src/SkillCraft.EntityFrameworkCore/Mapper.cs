@@ -218,6 +218,7 @@ internal class Mapper
 
     PersonalityModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description,
       Attribute = source.Attribute,
       Gift = gift

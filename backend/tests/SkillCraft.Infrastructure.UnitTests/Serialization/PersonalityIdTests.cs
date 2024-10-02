@@ -1,4 +1,5 @@
 ﻿using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
@@ -8,6 +9,8 @@ public class PersonalityIdTests
 {
   private readonly JsonSerializerOptions _options = new();
 
+  private readonly PersonalityId _id = new(WorldId.NewId());
+
   public PersonalityIdTests()
   {
     _options.Converters.Add(new PersonalityIdConverter());
@@ -16,7 +19,7 @@ public class PersonalityIdTests
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
-    string json = string.Concat('"', PersonalityId.NewId(), '"');
+    string json = string.Concat('"', _id, '"');
     PersonalityId personalityId = JsonSerializer.Deserialize<PersonalityId>(json, _options);
     Assert.Equal(json.Trim('"'), personalityId.Value);
   }
@@ -32,8 +35,7 @@ public class PersonalityIdTests
   [Fact(DisplayName = "It should serialize correctly.")]
   public void It_should_serialize_correctly()
   {
-    PersonalityId personalityId = PersonalityId.NewId();
-    string json = JsonSerializer.Serialize(personalityId, _options);
-    Assert.Equal(string.Concat('"', personalityId, '"'), json);
+    string json = JsonSerializer.Serialize(_id, _options);
+    Assert.Equal(string.Concat('"', _id, '"'), json);
   }
 }

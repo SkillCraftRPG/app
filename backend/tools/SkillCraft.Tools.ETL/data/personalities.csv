@@ -1,0 +1,21 @@
+﻿id,name,description,attribute,giftId
+2ebea372-527e-42da-b40f-6dba52f9a696,Agile,"Les mouvements du personnage sont effectués avec aisance et promptitude, souplesse et alerte.",Agility,6cfc104c-307d-4db9-bc9a-74d197db235f
+bea38ff2-73c8-4f17-aa42-bab3482b49ac,Attentif,"Le personnage porte attention à son environnement, aux objets et aux créatures qui l’entourent.",Sensitivity,07f814a2-e902-4ed8-9b22-d98906845cf5
+0fb0a7ab-7180-4913-8e53-c96250ec4fde,Bienveillant,"Le personnage montre de bonnes intentions, de bonnes dispositions envers les autres, ses paroles sont complaisantes et il se montre compréhensif.",Sensitivity,b2ff145c-0613-4a14-bc36-4e0fe6e95bb7
+e6948b8c-9c79-49b5-9d4c-83a66157558a,Coriace,"Le personnage est tenace et solide, il maintient fermement ses positions.",Vigor,67c35b17-3c8e-4274-bc26-b41efce598dd
+802775f9-e79e-4d8f-a93f-4ec0e8ed51e7,Courroucé,Les émotions du personnage sont vives et ses mouvements sont brusques.,Agility,6b4b0fe3-c7e1-4ab3-9e20-4912729113f3
+5a9291e0-02a1-46d1-8fdc-8d10a138fd66,Curieux,"Le personnage est avide de voir, de comprendre et de savoir.",Intellect,0cd28992-a244-4f04-9190-f64a903d902d
+c38c0b95-a6d9-4f40-ab32-17ec66afc21c,Débrouillard,"Par des ruses, astuces et sa dextérité manuelle, le personnage sait se tirer d’embarras et obtenir ce qu’il désire.",Coordination,f1c1c572-c263-4d46-be66-b4ecf3c18578
+447d549c-99df-4f91-8c88-54067e6f81be,Explorateur,Les voyages de découverte en contrées inconnues font partie des désirs et/ou des expériences du personnage.,Intellect,fb27d782-ae95-4b9f-a75b-2850a51cc4b0
+e0b5b3c5-e7e4-49a8-8043-912602ec521f,Habile,Les gestes et mouvements du personnage sont effectuées avec adresse et précision.,Coordination,c05155f3-eba2-4b50-9351-28ae5e26d2bb
+c8a09735-963f-4185-b9e0-fcb7604a52b8,Inspirant,Le personnage inspire facilement des émotions à ceux qui l’entourent.,Presence,045ecb82-c736-4f53-b08b-c5af8a8c7c8e
+1d8f6515-59cb-468e-a58b-756750087503,Musclé,"La musculature du personnage est développée, vive et efficace.",Vigor,415e6724-20f3-4df2-a07f-535f2630aabf
+552305a7-46c1-417d-9cd7-c9d9f289614f,Mystérieux,"Le personnage s’entoure de secrets et de mystères, il laisse peu paraître ses idées et émotions.",Spirit,32bc2f11-dfde-47c0-b071-f8ad64b719ef
+3c8170e7-0ef6-4955-8b08-b1799042e37f,Naturel,"Le personnage dégage simplicité, aisance, vraisemblance, il agit selon sa nature profonde, sans masque.",Sensitivity,f79e6803-8fc2-402f-aafe-5b2e04cc8a8e
+09ebb9e8-e083-421e-b14f-8eb7eea0802d,Perfectionniste,"Le personnage est doté d’un souci exagéré et pointu du détail, il est minutieux.",Coordination,0a8fa516-a6b8-469b-a945-a50469ad7d6b
+e5072486-2fcf-4784-9679-d7c284f66b73,Savant,Les connaissances du personnage sont étendues dans divers domaines ou une discipline particulière.,Intellect,15c357c4-66a6-4025-b510-09d551fbedf6
+a79e8c3b-1b11-418b-86cb-ccc5ef5918f9,Solitaire,"Le personnage cherche la solitude, il s’attache peu aux autres.",Sensitivity,58991347-c39e-452a-9ab6-95d7625c4d12
+bbabb0cf-6f54-4a30-abc2-cc71b04fe3bc,Sournois,"Le personnage cache ses pensées, ses sentiments véritables, il arrive à ses fins en étant malveillant, hypocrite ou manipulateur.",Presence,9ac65c81-8ed7-49d9-acd8-32b8631ba764
+8b67b89c-c81d-4fd3-a3b4-aa3be5e9c0c0,Stoïque,"La volonté du personnage est ferme, il est impassible et indifférent à a douleur.",Spirit,27b24461-9dc9-460b-8667-10a237ba87f5
+9f1e71e7-4303-461f-bd75-0134ac1e2fd0,Supporteur,"Le personnage est encourageant, sa parole remonte le moral et motive ses compagnons.",Presence,d805b044-7edf-4101-b507-2acde1904834
+44f3bdeb-f986-4ed0-90d4-feff4272bd2b,Timide,"Les actes, décisions, opinions ou paroles du personnage manquent d’assurance ou de hardiesse, il se fait peut remarquer.",Agility,264f30a3-d387-46d1-88c6-a9de9326b3dd

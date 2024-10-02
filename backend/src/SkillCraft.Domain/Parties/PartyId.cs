@@ -26,7 +26,7 @@ public readonly struct PartyId
     string[] values = value.Split(Separator);
     if (values.Length != 2)
     {
-      throw new ArgumentException("The value is not a valid aspect ID.", nameof(value));
+      throw new ArgumentException("The value is not a valid party ID.", nameof(value));
     }
 
     WorldId = new(values[0]);

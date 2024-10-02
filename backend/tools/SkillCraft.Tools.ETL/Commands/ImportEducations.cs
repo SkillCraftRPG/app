@@ -4,7 +4,6 @@ using MediatR;
 using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Educations;
-using System.Globalization;
 
 namespace SkillCraft.Tools.ETL.Commands;
 

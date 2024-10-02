@@ -40,10 +40,7 @@ public class ResolveEducationQueryHandlerTests
     Education education = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_education, education);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Education && y.Id == query.Id),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Education, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw AggregateNotFoundException when the education could not be found.")]

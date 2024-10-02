@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Personalities;
 
 namespace SkillCraft.Application.Personalities.Queries;
@@ -19,12 +20,8 @@ internal class ReadPersonalityQueryHandler : IRequestHandler<ReadPersonalityQuer
 
   public async Task<PersonalityModel?> Handle(ReadPersonalityQuery query, CancellationToken cancellationToken)
   {
-    PersonalityModel? personality = await _personalityQuerier.ReadAsync(query.Id, cancellationToken);
-    if (personality != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, personality.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Personality, cancellationToken);
 
-    return personality;
+    return await _personalityQuerier.ReadAsync(query.GetWorldId(), query.Id);
   }
 }

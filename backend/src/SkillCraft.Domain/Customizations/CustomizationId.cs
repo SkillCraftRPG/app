@@ -26,7 +26,7 @@ public readonly struct CustomizationId
     string[] values = value.Split(Separator);
     if (values.Length != 2)
     {
-      throw new ArgumentException("The value is not a valid Customization ID.", nameof(value));
+      throw new ArgumentException("The value is not a valid customization ID.", nameof(value));
     }
 
     WorldId = new(values[0]);
