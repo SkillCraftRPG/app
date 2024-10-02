@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
-using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
@@ -17,7 +17,7 @@ public class UpdateCasteCommandHandlerTests
   private readonly Mock<ICasteQuerier> _casteQuerier = new();
   private readonly Mock<ICasteRepository> _casteRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<ISender> _sender = new();
+  private readonly Mock<IStorageService> _storageService = new();
 
   private readonly UpdateCasteCommandHandler _handler;
 
@@ -25,7 +25,7 @@ public class UpdateCasteCommandHandlerTests
 
   public UpdateCasteCommandHandlerTests()
   {
-    _handler = new(_casteQuerier.Object, _casteRepository.Object, _permissionService.Object, _sender.Object);
+    _handler = new(_casteQuerier.Object, _casteRepository.Object, _permissionService.Object, _storageService.Object);
   }
 
   [Fact(DisplayName = "It should return null when the caste could not be found.")]
@@ -33,6 +33,7 @@ public class UpdateCasteCommandHandlerTests
   {
     UpdateCastePayload payload = new();
     UpdateCasteCommand command = new(Guid.Empty, payload);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -71,8 +72,8 @@ public class UpdateCasteCommandHandlerTests
       Skill = new Change<Skill?>(Skill.Craft),
       WealthRoll = new Change<string>("8d6")
     };
-    UpdateCasteCommand command = new(caste.Id.ToGuid(), payload);
-    command.Contextualize();
+    UpdateCasteCommand command = new(caste.EntityId, payload);
+    command.Contextualize(_world);
 
     CasteModel model = new();
     _casteQuerier.Setup(x => x.ReadAsync(caste, _cancellationToken)).ReturnsAsync(model);
@@ -82,13 +83,20 @@ public class UpdateCasteCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Caste && y.Key.Id == caste.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Caste && y.Id == caste.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SaveCasteCommand>(y => y.Caste.Equals(caste)
-      && y.Caste.Name.Value == payload.Name.Trim()
-      && y.Caste.Description == null
-      && y.Caste.Skill == payload.Skill.Value
-      && y.Caste.WealthRoll != null && y.Caste.WealthRoll.Value == payload.WealthRoll.Value), _cancellationToken), Times.Once);
+    _casteRepository.Verify(x => x.SaveAsync(
+      It.Is<Caste>(y => y.Equals(caste) && y.Name.Value == payload.Name.Trim() && y.Description == null
+        && y.Skill == payload.Skill.Value
+        && y.WealthRoll != null && y.WealthRoll.Value == payload.WealthRoll.Value),
+      _cancellationToken), Times.Once);
+
+    _storageService.Verify(x => x.EnsureAvailableAsync(
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Caste && y.Id == caste.EntityId && y.Size > 0),
+      _cancellationToken), Times.Once);
+    _storageService.Verify(x => x.UpdateAsync(
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Caste && y.Id == caste.EntityId && y.Size > 0),
+      _cancellationToken), Times.Once);
   }
 }

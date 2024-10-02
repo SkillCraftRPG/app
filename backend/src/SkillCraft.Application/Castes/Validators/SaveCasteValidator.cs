@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Castes.Validators;
 
-internal class CreateCasteValidator : AbstractValidator<CreateCastePayload>
+internal class SaveCasteValidator : AbstractValidator<SaveCastePayload>
 {
-  public CreateCasteValidator()
+  public SaveCasteValidator()
   {
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());

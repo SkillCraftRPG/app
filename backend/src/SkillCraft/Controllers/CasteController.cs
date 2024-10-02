@@ -26,26 +26,24 @@ public class CasteController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<CasteModel>> CreateAsync([FromBody] CreateCastePayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<CasteModel>> CreateAsync([FromBody] SaveCastePayload payload, CancellationToken cancellationToken)
   {
-    CasteModel caste = await _pipeline.ExecuteAsync(new CreateCasteCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Caste}/{{id}}", [new KeyValuePair<string, string>("id", caste.Id.ToString())]);
-
-    return Created(location, caste);
+    SaveCasteResult result = await _pipeline.ExecuteAsync(new SaveCasteCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<CasteModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     CasteModel? caste = await _pipeline.ExecuteAsync(new ReadCasteQuery(id), cancellationToken);
-    return caste == null ? NotFound() : Ok(caste);
+    return GetActionResult(caste);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<CasteModel>> ReplaceAsync(Guid id, [FromBody] ReplaceCastePayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<CasteModel>> ReplaceAsync(Guid id, [FromBody] SaveCastePayload payload, long? version, CancellationToken cancellationToken)
   {
-    CasteModel? caste = await _pipeline.ExecuteAsync(new ReplaceCasteCommand(id, payload, version), cancellationToken);
-    return caste == null ? NotFound() : Ok(caste);
+    SaveCasteResult result = await _pipeline.ExecuteAsync(new SaveCasteCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class CasteController : ControllerBase
   public async Task<ActionResult<CasteModel>> UpdateAsync(Guid id, [FromBody] UpdateCastePayload payload, CancellationToken cancellationToken)
   {
     CasteModel? caste = await _pipeline.ExecuteAsync(new UpdateCasteCommand(id, payload), cancellationToken);
-    return caste == null ? NotFound() : Ok(caste);
+    return GetActionResult(caste);
+  }
+
+  private ActionResult<CasteModel> GetActionResult(SaveCasteResult result) => GetActionResult(result.Caste, result.Created);
+  private ActionResult<CasteModel> GetActionResult(CasteModel? caste, bool created = false)
+  {
+    if (caste == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Caste}/{{id}}", [new KeyValuePair<string, string>("id", caste.Id.ToString())]);
+      return Created(location, caste);
+    }
+
+    return Ok(caste);
   }
 }

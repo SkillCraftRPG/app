@@ -71,6 +71,7 @@ internal class Mapper
 
     CasteModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description,
       Skill = source.Skill,
       WealthRoll = source.WealthRoll

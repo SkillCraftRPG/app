@@ -1,4 +1,5 @@
 ﻿using SkillCraft.Domain.Castes;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
@@ -8,6 +9,8 @@ public class CasteIdTests
 {
   private readonly JsonSerializerOptions _options = new();
 
+  private readonly CasteId _id = new(WorldId.NewId());
+
   public CasteIdTests()
   {
     _options.Converters.Add(new CasteIdConverter());
@@ -16,7 +19,7 @@ public class CasteIdTests
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
-    string json = string.Concat('"', CasteId.NewId(), '"');
+    string json = string.Concat('"', _id, '"');
     CasteId casteId = JsonSerializer.Deserialize<CasteId>(json, _options);
     Assert.Equal(json.Trim('"'), casteId.Value);
   }
@@ -32,8 +35,7 @@ public class CasteIdTests
   [Fact(DisplayName = "It should serialize correctly.")]
   public void It_should_serialize_correctly()
   {
-    CasteId casteId = CasteId.NewId();
-    string json = JsonSerializer.Serialize(casteId, _options);
-    Assert.Equal(string.Concat('"', casteId, '"'), json);
+    string json = JsonSerializer.Serialize(_id, _options);
+    Assert.Equal(string.Concat('"', _id, '"'), json);
   }
 }

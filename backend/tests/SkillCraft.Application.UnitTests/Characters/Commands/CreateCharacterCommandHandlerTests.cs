@@ -100,7 +100,7 @@ public class CreateCharacterCommandHandlerTests
         Optional = [.. _baseAttributes.Optional],
         Extra = [.. _baseAttributes.Extra]
       },
-      CasteId = _caste.Id.ToGuid(),
+      CasteId = _caste.EntityId,
       EducationId = _education.Id.ToGuid()
     };
     CreateCharacterCommand command = new(payload);

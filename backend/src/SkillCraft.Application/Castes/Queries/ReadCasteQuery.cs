@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Castes;
 
 namespace SkillCraft.Application.Castes.Queries;
@@ -19,12 +20,8 @@ internal class ReadCasteQueryHandler : IRequestHandler<ReadCasteQuery, CasteMode
 
   public async Task<CasteModel?> Handle(ReadCasteQuery query, CancellationToken cancellationToken)
   {
-    CasteModel? caste = await _casteQuerier.ReadAsync(query.Id, cancellationToken);
-    if (caste != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, caste.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Caste, cancellationToken);
 
-    return caste;
+    return await _casteQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

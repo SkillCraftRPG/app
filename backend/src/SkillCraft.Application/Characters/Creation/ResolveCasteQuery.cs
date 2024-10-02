@@ -21,7 +21,9 @@ internal class ResolveCasteQueryHandler : IRequestHandler<ResolveCasteQuery, Cas
 
   public async Task<Caste> Handle(ResolveCasteQuery query, CancellationToken cancellationToken)
   {
-    CasteId id = new(query.Id);
+    Activity activity = query.Activity;
+
+    CasteId id = new(activity.GetWorldId(), query.Id);
     Caste caste = await _casteRepository.LoadAsync(id, cancellationToken)
       ?? throw new AggregateNotFoundException<Caste>(id.AggregateId, nameof(CreateCharacterPayload.CasteId));
 

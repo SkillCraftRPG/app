@@ -17,7 +17,7 @@ internal static class CasteExtensions
     {
       size += trait.Name.Size + (trait.Description?.Size ?? 0);
     }
-    return new EntityMetadata(caste.WorldId, new EntityKey(Type, caste.Id.ToGuid()), size);
+    return new EntityMetadata(caste.WorldId, new EntityKey(Type, caste.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this CasteModel caste)
   {

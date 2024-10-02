@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Moq;
+﻿using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
@@ -36,7 +35,7 @@ public class ResolveCasteQueryHandlerTests
   [Fact(DisplayName = "It should return the found caste.")]
   public async Task It_should_return_the_found_caste()
   {
-    ResolveCasteQuery query = new(_activity, _caste.Id.ToGuid());
+    ResolveCasteQuery query = new(_activity, _caste.EntityId);
 
     Caste caste = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_caste, caste);
@@ -53,7 +52,7 @@ public class ResolveCasteQueryHandlerTests
     ResolveCasteQuery query = new(_activity, Guid.NewGuid());
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Caste>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new AggregateId(query.Id).Value, exception.Id);
+    Assert.Equal(new CasteId(_world.Id, query.Id).Value, exception.Id);
     Assert.Equal("CasteId", exception.PropertyName);
   }
 }

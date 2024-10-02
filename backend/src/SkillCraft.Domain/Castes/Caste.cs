@@ -10,8 +10,8 @@ public class Caste : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new CasteId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
   public Name Name
@@ -79,14 +79,12 @@ public class Caste : AggregateRoot
   {
   }
 
-  public Caste(WorldId worldId, Name name, UserId userId, CasteId? id = null) : base(id?.AggregateId)
+  public Caste(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new CasteId(worldId, entityId).AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     _name = @event.Name;
   }
 
@@ -156,14 +154,10 @@ public class Caste : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public CreatedEvent(Name name)
     {
-      WorldId = worldId;
-
       Name = name;
     }
   }
