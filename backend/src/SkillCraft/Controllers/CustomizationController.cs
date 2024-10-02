@@ -26,26 +26,24 @@ public class CustomizationController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<CustomizationModel>> CreateAsync([FromBody] CreateCustomizationPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<CustomizationModel>> CreateAsync([FromBody] SaveCustomizationPayload payload, CancellationToken cancellationToken)
   {
-    CustomizationModel customization = await _pipeline.ExecuteAsync(new CreateCustomizationCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Customization}/{{id}}", [new KeyValuePair<string, string>("id", customization.Id.ToString())]);
-
-    return Created(location, customization);
+    SaveCustomizationResult result = await _pipeline.ExecuteAsync(new SaveCustomizationCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<CustomizationModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     CustomizationModel? customization = await _pipeline.ExecuteAsync(new ReadCustomizationQuery(id), cancellationToken);
-    return customization == null ? NotFound() : Ok(customization);
+    return GetActionResult(customization);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<CustomizationModel>> ReplaceAsync(Guid id, [FromBody] ReplaceCustomizationPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<CustomizationModel>> ReplaceAsync(Guid id, [FromBody] SaveCustomizationPayload payload, long? version, CancellationToken cancellationToken)
   {
-    CustomizationModel? customization = await _pipeline.ExecuteAsync(new ReplaceCustomizationCommand(id, payload, version), cancellationToken);
-    return customization == null ? NotFound() : Ok(customization);
+    SaveCustomizationResult result = await _pipeline.ExecuteAsync(new SaveCustomizationCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class CustomizationController : ControllerBase
   public async Task<ActionResult<CustomizationModel>> UpdateAsync(Guid id, [FromBody] UpdateCustomizationPayload payload, CancellationToken cancellationToken)
   {
     CustomizationModel? customization = await _pipeline.ExecuteAsync(new UpdateCustomizationCommand(id, payload), cancellationToken);
-    return customization == null ? NotFound() : Ok(customization);
+    return GetActionResult(customization);
+  }
+
+  private ActionResult<CustomizationModel> GetActionResult(SaveCustomizationResult result) => GetActionResult(result.Customization, result.Created);
+  private ActionResult<CustomizationModel> GetActionResult(CustomizationModel? customization, bool created = false)
+  {
+    if (customization == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Customization}/{{id}}", [new KeyValuePair<string, string>("id", customization.Id.ToString())]);
+      return Created(location, customization);
+    }
+
+    return Ok(customization);
   }
 }

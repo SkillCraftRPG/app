@@ -3,7 +3,7 @@ using SkillCraft.Domain.Educations;
 
 namespace SkillCraft.Application.Educations.Commands;
 
-public abstract class EducationCommandHandler
+internal abstract class EducationCommandHandler
 {
   private readonly IEducationRepository _educationRepository;
   private readonly IStorageService _storageService;

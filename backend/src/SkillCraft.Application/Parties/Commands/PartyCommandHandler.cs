@@ -3,7 +3,7 @@ using SkillCraft.Domain.Parties;
 
 namespace SkillCraft.Application.Parties.Commands;
 
-public abstract class PartyCommandHandler
+internal abstract class PartyCommandHandler
 {
   private readonly IPartyRepository _partyRepository;
   private readonly IStorageService _storageService;
