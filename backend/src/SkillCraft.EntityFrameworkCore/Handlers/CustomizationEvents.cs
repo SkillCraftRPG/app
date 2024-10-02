@@ -19,10 +19,10 @@ internal static class CustomizationEvents
     public async Task Handle(Customization.CreatedEvent @event, CancellationToken cancellationToken)
     {
       CustomizationEntity? customization = await _context.Customizations.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (customization == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new CustomizationId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -47,10 +47,9 @@ internal static class CustomizationEvents
 
     public async Task Handle(Customization.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       CustomizationEntity customization = await _context.Customizations
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The customization entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The customization entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       customization.Update(@event);
 

@@ -25,12 +25,12 @@ internal class CustomizationsCannotIncludePersonalityGiftException : BadRequestE
   public CustomizationsCannotIncludePersonalityGiftException(Customization customization, string? propertyName = null)
     : base(BuildMessage(customization, propertyName))
   {
-    CustomizationId = customization.Id.ToGuid();
+    CustomizationId = customization.EntityId;
     PropertyName = propertyName;
   }
 
   private static string BuildMessage(Customization customization, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(CustomizationId), customization.Id.ToGuid())
+    .AddData(nameof(CustomizationId), customization.EntityId)
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
 }

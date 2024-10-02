@@ -36,17 +36,17 @@ internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustom
     Activity activity = query.Activity;
     await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Customization, cancellationToken);
 
-    IEnumerable<CustomizationId> ids = query.Ids.Distinct().Select(id => new CustomizationId(id));
+    WorldId worldId = activity.GetWorldId();
+    IEnumerable<CustomizationId> ids = query.Ids.Distinct().Select(id => new CustomizationId(worldId, id));
     IReadOnlyCollection<Customization> customizations = await _customizationRepository.LoadAsync(ids, cancellationToken);
 
-    WorldId worldId = activity.GetWorldId();
     int gifts = 0;
     int disabilities = 0;
     foreach (Customization customization in customizations)
     {
       if (customization.WorldId != worldId)
       {
-        throw new PermissionDeniedException(Action.Preview, EntityType.Customization, activity.GetUser(), activity.GetWorld(), customization.Id.ToGuid());
+        throw new PermissionDeniedException(Action.Preview, EntityType.Customization, activity.GetUser(), activity.GetWorld(), customization.EntityId);
       }
       else if (customization.Id == query.Personality.GiftId)
       {
@@ -68,7 +68,7 @@ internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustom
       throw new InvalidCharacterCustomizationsException(query.Ids, PropertyName);
     }
 
-    IEnumerable<Guid> foundIds = customizations.Select(customization => customization.Id.ToGuid()).Distinct();
+    IEnumerable<Guid> foundIds = customizations.Select(customization => customization.EntityId).Distinct();
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {

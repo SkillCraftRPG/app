@@ -39,8 +39,8 @@ public class ReplaceCustomizationCommandHandlerTests
     {
       Description = "  Lorsque le personnage n’est pas surpris en situation de combat, alors il peut utiliser sa réaction afin d’effectuer l’activité **Objet**. Également, il peut effectuer l’activité **Objet** en action libre une fois par tour.  "
     };
-    ReplaceCustomizationCommand command = new(customization.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplaceCustomizationCommand command = new(customization.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     CustomizationModel model = new();
     _customizationQuerier.Setup(x => x.ReadAsync(customization, _cancellationToken)).ReturnsAsync(model);
@@ -51,7 +51,7 @@ public class ReplaceCustomizationCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Customization && y.Key.Id == customization.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Customization && y.Key.Id == customization.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveCustomizationCommand>(y => y.Customization.Equals(customization)
@@ -65,6 +65,7 @@ public class ReplaceCustomizationCommandHandlerTests
   {
     ReplaceCustomizationPayload payload = new("Aigrefin");
     ReplaceCustomizationCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -90,7 +91,7 @@ public class ReplaceCustomizationCommandHandlerTests
     long version = reference.Version;
     _customizationRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Customization customization = new(_world.Id, reference.Type, reference.Name, _world.OwnerId, reference.Id);
+    Customization customization = new(_world.Id, reference.Type, reference.Name, _world.OwnerId, reference.EntityId);
     _customizationRepository.Setup(x => x.LoadAsync(customization.Id, _cancellationToken)).ReturnsAsync(customization);
 
     Description description = new("  Lorsque le personnage n’est pas surpris en situation de combat, alors il peut utiliser sa réaction afin d’effectuer l’activité **Objet**. Également, il peut effectuer l’activité **Objet** en action libre une fois par tour.  ");
@@ -101,8 +102,8 @@ public class ReplaceCustomizationCommandHandlerTests
     {
       Description = "    "
     };
-    ReplaceCustomizationCommand command = new(customization.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplaceCustomizationCommand command = new(customization.EntityId, payload, version);
+    command.Contextualize(_world);
 
     CustomizationModel model = new();
     _customizationQuerier.Setup(x => x.ReadAsync(customization, _cancellationToken)).ReturnsAsync(model);
@@ -113,7 +114,7 @@ public class ReplaceCustomizationCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Customization && y.Key.Id == customization.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Customization && y.Key.Id == customization.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveCustomizationCommand>(y => y.Customization.Equals(customization)

@@ -28,17 +28,17 @@ internal class CustomizationQuerier : ICustomizationQuerier
   public async Task<CustomizationModel> ReadAsync(Customization customization, CancellationToken cancellationToken)
   {
     return await ReadAsync(customization.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The customization entity 'Id={customization.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The customization entity 'AggregateId={customization.Id}' could not be found.");
   }
   public async Task<CustomizationModel?> ReadAsync(CustomizationId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<CustomizationModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<CustomizationModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     CustomizationEntity? customization = await _customizations.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return customization == null ? null : await MapAsync(customization, cancellationToken);
   }

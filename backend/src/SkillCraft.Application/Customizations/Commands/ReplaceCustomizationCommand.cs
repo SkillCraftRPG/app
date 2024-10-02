@@ -34,7 +34,7 @@ internal class ReplaceCustomizationCommandHandler : IRequestHandler<ReplaceCusto
     ReplaceCustomizationPayload payload = command.Payload;
     new ReplaceCustomizationValidator().ValidateAndThrow(payload);
 
-    CustomizationId id = new(command.Id);
+    CustomizationId id = new(command.GetWorldId(), command.Id);
     Customization? customization = await _customizationRepository.LoadAsync(id, cancellationToken);
     if (customization == null)
     {

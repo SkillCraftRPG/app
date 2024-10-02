@@ -13,7 +13,7 @@ internal static class CustomizationExtensions
   public static EntityMetadata GetMetadata(this Customization customization)
   {
     long size = 4 + customization.Name.Size + (customization.Description?.Size ?? 0);
-    return new EntityMetadata(customization.WorldId, new EntityKey(Type, customization.Id.ToGuid()), size);
+    return new EntityMetadata(customization.WorldId, new EntityKey(Type, customization.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this CustomizationModel customization)
   {

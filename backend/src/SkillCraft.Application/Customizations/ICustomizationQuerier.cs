@@ -9,7 +9,7 @@ public interface ICustomizationQuerier
 {
   Task<CustomizationModel> ReadAsync(Customization customization, CancellationToken cancellationToken = default);
   Task<CustomizationModel?> ReadAsync(CustomizationId id, CancellationToken cancellationToken = default);
-  Task<CustomizationModel?> ReadAsync(Guid id, CancellationToken cancellationToken = default);
+  Task<CustomizationModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken = default);
 
   Task<SearchResults<CustomizationModel>> SearchAsync(WorldId worldId, SearchCustomizationsPayload payload, CancellationToken cancellationToken = default);
 }

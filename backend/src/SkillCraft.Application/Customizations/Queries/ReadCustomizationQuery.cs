@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
 
 namespace SkillCraft.Application.Customizations.Queries;
@@ -19,12 +20,8 @@ internal class ReadCustomizationQueryHandler : IRequestHandler<ReadCustomization
 
   public async Task<CustomizationModel?> Handle(ReadCustomizationQuery query, CancellationToken cancellationToken)
   {
-    CustomizationModel? customization = await _customizationQuerier.ReadAsync(query.Id, cancellationToken);
-    if (customization != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, customization.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Customization, cancellationToken);
 
-    return customization;
+    return await _customizationQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

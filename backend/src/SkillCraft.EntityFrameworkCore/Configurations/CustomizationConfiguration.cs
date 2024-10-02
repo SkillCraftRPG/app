@@ -16,7 +16,7 @@ internal class CustomizationConfiguration : AggregateConfiguration<Customization
     builder.ToTable(SkillCraftDb.Customizations.Table.Table ?? string.Empty, SkillCraftDb.Customizations.Table.Schema);
     builder.HasKey(x => x.CustomizationId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Type);
     builder.HasIndex(x => x.Name);
 

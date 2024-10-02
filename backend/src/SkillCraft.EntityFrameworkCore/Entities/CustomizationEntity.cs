@@ -21,7 +21,7 @@ internal class CustomizationEntity : AggregateEntity
 
   public CustomizationEntity(WorldEntity world, Customization.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new CustomizationId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;
