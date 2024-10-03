@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Educations.Validators;
 
-internal class SaveEducationValidator : AbstractValidator<SaveEducationPayload>
+internal class CreateOrReplaceEducationValidator : AbstractValidator<CreateOrReplaceEducationPayload>
 {
-  public SaveEducationValidator()
+  public CreateOrReplaceEducationValidator()
   {
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());

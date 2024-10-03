@@ -64,7 +64,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<CustomizationModel>(_options) ?? throw new InvalidOperationException("The customization could not be deserialized.");
   }
 
-  public async Task<EducationModel> SaveEducationAsync(SaveEducationCommand command, CancellationToken cancellationToken)
+  public async Task<EducationModel> CreateOrReplaceEducationAsync(CreateOrReplaceEducationCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/educations/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)
