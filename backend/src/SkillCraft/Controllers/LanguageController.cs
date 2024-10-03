@@ -34,6 +34,13 @@ public class LanguageController : ControllerBase
     return Created(location, language);
   }
 
+  [HttpGet("scripts")]
+  public async Task<ActionResult<SearchResults<string>>> ListScriptsAsync(CancellationToken cancellationToken)
+  {
+    SearchResults<string> scripts = await _pipeline.ExecuteAsync(new SearchScriptsQuery(), cancellationToken);
+    return Ok(scripts);
+  }
+
   [HttpGet("{id}")]
   public async Task<ActionResult<LanguageModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {

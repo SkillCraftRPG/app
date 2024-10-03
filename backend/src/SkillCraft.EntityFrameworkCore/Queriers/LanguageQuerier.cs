@@ -25,6 +25,18 @@ internal class LanguageQuerier : ILanguageQuerier
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<string>> ListScriptsAsync(WorldId worldId, CancellationToken cancellationToken)
+  {
+    string[] scripts = await _languages.AsNoTracking()
+      .Where(x => x.World!.Id == worldId.ToGuid() && x.Script != null)
+      .OrderBy(x => x.Script)
+      .Select(x => x.Script!)
+      .Distinct()
+      .ToArrayAsync(cancellationToken);
+
+    return scripts.AsReadOnly();
+  }
+
   public async Task<LanguageModel> ReadAsync(Language language, CancellationToken cancellationToken)
   {
     return await ReadAsync(language.Id, cancellationToken)
@@ -50,6 +62,11 @@ internal class LanguageQuerier : ILanguageQuerier
       .Where(SkillCraftDb.Worlds.Id, Operators.IsEqualTo(worldId.ToGuid()))
       .ApplyIdFilter(payload, SkillCraftDb.Languages.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Languages.Name, SkillCraftDb.Languages.Script, SkillCraftDb.Languages.TypicalSpeakers);
+
+    if (!string.IsNullOrEmpty(payload.Script))
+    {
+      builder.Where(SkillCraftDb.Languages.Script, Operators.IsEqualTo(payload.Script));
+    }
 
     IQueryable<LanguageEntity> query = _languages.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
