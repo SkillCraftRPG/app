@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Languages;
 
-public record ReplaceLanguagePayload
+public record CreateOrReplaceLanguagePayload
 {
   public string Name { get; set; }
   public string? Description { get; set; }
@@ -8,11 +8,11 @@ public record ReplaceLanguagePayload
   public string? Script { get; set; }
   public string? TypicalSpeakers { get; set; }
 
-  public ReplaceLanguagePayload() : this(string.Empty)
+  public CreateOrReplaceLanguagePayload() : this(string.Empty)
   {
   }
 
-  public ReplaceLanguagePayload(string name)
+  public CreateOrReplaceLanguagePayload(string name)
   {
     Name = name;
   }

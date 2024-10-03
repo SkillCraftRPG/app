@@ -44,7 +44,7 @@ public class UpdateLanguageCommandHandlerTests
   {
     UpdateLanguagePayload payload = new()
     {
-      Script = new Change<string>(RandomStringGenerator.GetString(Script.MaximumLength + 1))
+      Name = RandomStringGenerator.GetString(Name.MaximumLength + 1)
     };
     UpdateLanguageCommand command = new(Guid.Empty, payload);
 
@@ -52,26 +52,26 @@ public class UpdateLanguageCommandHandlerTests
 
     ValidationFailure error = Assert.Single(exception.Errors);
     Assert.Equal("MaximumLengthValidator", error.ErrorCode);
-    Assert.Equal("Script.Value", error.PropertyName);
-    Assert.Equal(payload.Script.Value, error.AttemptedValue);
+    Assert.Equal("Name", error.PropertyName);
+    Assert.Equal(payload.Name, error.AttemptedValue);
   }
 
   [Fact(DisplayName = "It should update an existing language.")]
   public async Task It_should_update_an_existing_language()
   {
-    Language language = new(_world.Id, new Name("common"), _world.OwnerId)
+    Language language = new(_world.Id, new Name("orrinique"), _world.OwnerId)
     {
-      Description = new Description("Cette langue est parlée par tous les habitants de l’Ouespéro.")
+      Description = new Description("Cette langue est issue des Orrins. Elle est très utilisée en Ouespéro en raison de l’histoire des Orrins. En effet, il s’agit d’une des premières civilisations du continent, leur culture et leur influence sont étendues aux confins de l’Ouespéro.")
     };
     language.Update(_world.OwnerId);
     _languageRepository.Setup(x => x.LoadAsync(language.Id, _cancellationToken)).ReturnsAsync(language);
 
     UpdateLanguagePayload payload = new()
     {
-      Name = " Commun ",
+      Name = " Orrinique ",
       Description = new Change<string>("    "),
-      Script = new Change<string>(" Alphabet latin "),
-      TypicalSpeakers = new Change<string>(" Humains ")
+      Script = new Change<string>(" Orrinique "),
+      TypicalSpeakers = new Change<string>("  Chalites, Minotaures, Orrins, Satyres, Sophitéons  ")
     };
     UpdateLanguageCommand command = new(language.EntityId, payload);
     command.Contextualize(_world);
@@ -84,15 +84,17 @@ public class UpdateLanguageCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.EntityId && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Language && y.Id == language.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Script.Value);
     Assert.NotNull(payload.TypicalSpeakers.Value);
-    _sender.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(language)
-      && y.Language.Name.Value == payload.Name.Trim()
-      && y.Language.Description == null
-      && y.Language.Script != null && y.Language.Script.Value == payload.Script.Value.Trim()
-      && y.Language.TypicalSpeakers != null && y.Language.TypicalSpeakers.Value == payload.TypicalSpeakers.Value.Trim()), _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(
+      It.Is<SaveLanguageCommand>(y => y.Language.Equals(language)
+        && y.Language.Name.Value == payload.Name.Trim()
+        && y.Language.Description == null
+        && y.Language.Script != null && y.Language.Script.Value == payload.Script.Value.Trim()
+        && y.Language.TypicalSpeakers != null && y.Language.TypicalSpeakers.Value == payload.TypicalSpeakers.Value.Trim()),
+      _cancellationToken), Times.Once);
   }
 }

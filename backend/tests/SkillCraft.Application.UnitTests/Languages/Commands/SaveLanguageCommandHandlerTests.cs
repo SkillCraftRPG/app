@@ -10,7 +10,7 @@ namespace SkillCraft.Application.Languages.Commands;
 public class SaveLanguageCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
-  private readonly Language _language = new(WorldId.NewId(), new Name("Commun"), UserId.NewId());
+  private readonly Language _language = new(WorldId.NewId(), new Name("Orrinique"), UserId.NewId());
 
   private readonly Mock<ILanguageRepository> _languageRepository = new();
   private readonly Mock<IStorageService> _storageService = new();
