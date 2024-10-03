@@ -2,7 +2,6 @@
 using MediatR;
 using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Castes;
@@ -11,21 +10,23 @@ namespace SkillCraft.Application.Castes.Commands;
 
 public record UpdateCasteCommand(Guid Id, UpdateCastePayload Payload) : Activity, IRequest<CasteModel?>;
 
-internal class UpdateCasteCommandHandler : CasteCommandHandler, IRequestHandler<UpdateCasteCommand, CasteModel?>
+internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, CasteModel?>
 {
   private readonly ICasteQuerier _casteQuerier;
   private readonly ICasteRepository _casteRepository;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public UpdateCasteCommandHandler(
     ICasteQuerier casteQuerier,
     ICasteRepository casteRepository,
     IPermissionService permissionService,
-    IStorageService storageService) : base(casteRepository, storageService)
+    ISender sender)
   {
     _casteQuerier = casteQuerier;
     _casteRepository = casteRepository;
     _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<CasteModel?> Handle(UpdateCasteCommand command, CancellationToken cancellationToken)
@@ -64,7 +65,7 @@ internal class UpdateCasteCommandHandler : CasteCommandHandler, IRequestHandler<
 
     caste.Update(command.GetUserId());
 
-    await SaveAsync(caste, cancellationToken);
+    await _sender.Send(new SaveCasteCommand(caste), cancellationToken);
 
     return await _casteQuerier.ReadAsync(caste, cancellationToken);
   }

@@ -48,7 +48,7 @@ public class CasteTests : IntegrationTests
   [Fact(DisplayName = "It should create a new caste.")]
   public async Task It_should_create_a_new_caste()
   {
-    SaveCastePayload payload = new(" Artisan ")
+    CreateOrReplaceCastePayload payload = new(" Artisan ")
     {
       Description = "  L’artisan est un expert d’un procédé de transformation des matières brutes. Il peut être un boulanger, un forgeron, un orfèvre, un tisserand ou pratiquer tout genre de profession œuvrant dans la transformation des matières brutes.  ",
       Skill = Skill.Craft,
@@ -64,8 +64,8 @@ public class CasteTests : IntegrationTests
       Description = "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
     });
 
-    SaveCasteCommand command = new(Guid.NewGuid(), payload, Version: null);
-    SaveCasteResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceCasteCommand command = new(Guid.NewGuid(), payload, Version: null);
+    CreateOrReplaceCasteResult result = await Pipeline.ExecuteAsync(command);
     Assert.True(result.Created);
 
     CasteModel? caste = result.Caste;
@@ -104,7 +104,7 @@ public class CasteTests : IntegrationTests
     _amuseur.Update(UserId);
     await _casteRepository.SaveAsync(_amuseur);
 
-    SaveCastePayload payload = new(" Amuseur ")
+    CreateOrReplaceCastePayload payload = new(" Amuseur ")
     {
       Description = "    ",
       Skill = Skill.Performance,
@@ -120,8 +120,8 @@ public class CasteTests : IntegrationTests
       Description = "Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de Survie afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue."
     });
 
-    SaveCasteCommand command = new(_amuseur.EntityId, payload, version);
-    SaveCasteResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceCasteCommand command = new(_amuseur.EntityId, payload, version);
+    CreateOrReplaceCasteResult result = await Pipeline.ExecuteAsync(command);
     Assert.False(result.Created);
 
     CasteModel? caste = result.Caste;

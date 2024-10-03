@@ -46,7 +46,7 @@ internal class ImportCustomizationsHandler : INotificationHandler<ImportCustomiz
   {
     foreach (CreateOrReplaceCustomizationCommand command in commands)
     {
-      await _client.SaveCustomizationAsync(command, cancellationToken);
+      await _client.CreateOrReplaceCustomizationAsync(command, cancellationToken);
     }
   }
 }

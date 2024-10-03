@@ -21,7 +21,7 @@ internal class ImportCastesHandler : INotificationHandler<ImportCastes>
   public async Task Handle(ImportCastes _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Caste> castes = Extract();
-    IReadOnlyCollection<SaveCasteCommand> commands = Transform(castes);
+    IReadOnlyCollection<CreateOrReplaceCasteCommand> commands = Transform(castes);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -33,9 +33,9 @@ internal class ImportCastesHandler : INotificationHandler<ImportCastes>
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SaveCasteCommand> Transform(IEnumerable<Caste> castes) => castes.Select(caste =>
+  private static IReadOnlyCollection<CreateOrReplaceCasteCommand> Transform(IEnumerable<Caste> castes) => castes.Select(caste =>
   {
-    SaveCastePayload payload = new(caste.Name)
+    CreateOrReplaceCastePayload payload = new(caste.Name)
     {
       Description = caste.Description,
       Skill = caste.Skill,
@@ -57,14 +57,14 @@ internal class ImportCastesHandler : INotificationHandler<ImportCastes>
         Description = caste.Trait2Description
       });
     }
-    return new SaveCasteCommand(caste.Id, payload, Version: null);
+    return new CreateOrReplaceCasteCommand(caste.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SaveCasteCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplaceCasteCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SaveCasteCommand command in commands)
+    foreach (CreateOrReplaceCasteCommand command in commands)
     {
-      await _client.SaveCasteAsync(command, cancellationToken);
+      await _client.CreateOrReplaceCasteAsync(command, cancellationToken);
     }
   }
 }
