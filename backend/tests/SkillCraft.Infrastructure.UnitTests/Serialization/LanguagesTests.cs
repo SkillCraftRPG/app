@@ -1,5 +1,6 @@
 ﻿using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
@@ -18,7 +19,7 @@ public class LanguagesTests
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
-    LanguageId languageId = LanguageId.NewId();
+    LanguageId languageId = new(WorldId.NewId());
     int extra = 1;
     string text = "Beaucoup de Haut-Elfes apprennent le <u>Harsème</u> ou le <u>Sarnique</u>.";
     string json = $@"{{""Ids"":[""{languageId}""],""Extra"":{extra},""Text"":""{text}""}}";
@@ -40,7 +41,7 @@ public class LanguagesTests
   [Fact(DisplayName = "It should serialize correctly.")]
   public void It_should_serialize_correctly()
   {
-    Languages languages = new(new HashSet<LanguageId>([LanguageId.NewId()]), extra: 1, "Beaucoup de Haut-Elfes apprennent le <u>Harsème</u> ou le <u>Sarnique</u>.");
+    Languages languages = new(new HashSet<LanguageId>([new LanguageId(WorldId.NewId())]), extra: 1, "Beaucoup de Haut-Elfes apprennent le <u>Harsème</u> ou le <u>Sarnique</u>.");
     string json = JsonSerializer.Serialize(languages, _options);
     Assert.Equal($@"{{""Ids"":[""{languages.Ids.Single()}""],""Extra"":{languages.Extra},""Text"":""{languages.Text}""}}", json);
   }

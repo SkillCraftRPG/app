@@ -40,17 +40,17 @@ internal class LanguageQuerier : ILanguageQuerier
   public async Task<LanguageModel> ReadAsync(Language language, CancellationToken cancellationToken)
   {
     return await ReadAsync(language.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The language entity 'Id={language.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The language entity 'AggregateId={language.Id}' could not be found.");
   }
   public async Task<LanguageModel?> ReadAsync(LanguageId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<LanguageModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<LanguageModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     LanguageEntity? language = await _languages.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return language == null ? null : await MapAsync(language, cancellationToken);
   }

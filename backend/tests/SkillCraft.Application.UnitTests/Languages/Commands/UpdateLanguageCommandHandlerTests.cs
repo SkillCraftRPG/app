@@ -34,6 +34,7 @@ public class UpdateLanguageCommandHandlerTests
   {
     UpdateLanguagePayload payload = new();
     UpdateLanguageCommand command = new(Guid.Empty, payload);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -72,8 +73,8 @@ public class UpdateLanguageCommandHandlerTests
       Script = new Change<string>(" Alphabet latin "),
       TypicalSpeakers = new Change<string>(" Humains ")
     };
-    UpdateLanguageCommand command = new(language.Id.ToGuid(), payload);
-    command.Contextualize();
+    UpdateLanguageCommand command = new(language.EntityId, payload);
+    command.Contextualize(_world);
 
     LanguageModel model = new();
     _languageQuerier.Setup(x => x.ReadAsync(language, _cancellationToken)).ReturnsAsync(model);
@@ -83,7 +84,7 @@ public class UpdateLanguageCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Script.Value);

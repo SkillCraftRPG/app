@@ -34,7 +34,7 @@ internal class ReplaceLanguageCommandHandler : IRequestHandler<ReplaceLanguageCo
     ReplaceLanguagePayload payload = command.Payload;
     new ReplaceLanguageValidator().ValidateAndThrow(payload);
 
-    LanguageId id = new(command.Id);
+    LanguageId id = new(command.GetWorldId(), command.Id);
     Language? language = await _languageRepository.LoadAsync(id, cancellationToken);
     if (language == null)
     {

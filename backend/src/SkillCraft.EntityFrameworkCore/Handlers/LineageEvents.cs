@@ -65,9 +65,9 @@ internal static class LineageEvents
       LanguageEntity[] languages = [];
       if (@event.Languages != null && @event.Languages.Ids.Count > 0)
       {
-        HashSet<Guid> languageIds = @event.Languages.Ids.Select(id => id.ToGuid()).ToHashSet();
+        HashSet<string> languageIds = @event.Languages.Ids.Select(id => id.Value).ToHashSet();
         languages = await _context.Languages
-          .Where(x => languageIds.Contains(x.Id))
+          .Where(x => languageIds.Contains(x.AggregateId))
           .ToArrayAsync(cancellationToken);
       }
 

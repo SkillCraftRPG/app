@@ -13,7 +13,7 @@ internal static class LanguageExtensions
   public static EntityMetadata GetMetadata(this Language language)
   {
     long size = language.Name.Size + (language.Description?.Size ?? 0) + (language.Script?.Size ?? 0) + (language.TypicalSpeakers?.Size ?? 0);
-    return new EntityMetadata(language.WorldId, new EntityKey(Type, language.Id.ToGuid()), size);
+    return new EntityMetadata(language.WorldId, new EntityKey(Type, language.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this LanguageModel language)
   {

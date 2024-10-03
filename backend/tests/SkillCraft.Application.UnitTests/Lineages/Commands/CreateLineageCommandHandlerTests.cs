@@ -49,7 +49,7 @@ public class CreateLineageCommandHandlerTests
     {
       ParentId = species.Id.ToGuid(),
       Description = "  L’origine noble des Orrins remonte au peuple des Thronopoi, originaire du Derebon dans l’Ancien-Monde. Ils habitent l’Orrinie, un pays situé dans une péninsule montagnarde au Sud de l’Ouespéro, entourée par la mer Aspidée et la mer Mésienne. Leur culture guerrière, architecturale et artistique a le potentiel d’être exportée dans tous les confins de l’Ouespéro. Souvent en proie à des luttes internes et déchirantes, ils sont divisés en plusieurs entités géopolitiques et États croupions. Ils sont décrits comme étant de petite taille, avec des yeux et cheveux foncés.  ",
-      Languages = new() { Ids = [language.Id.ToGuid()] },
+      Languages = new() { Ids = [language.EntityId] },
       Names = new()
       {
         Family = ["Condos", "Aetos"],
@@ -61,7 +61,7 @@ public class CreateLineageCommandHandlerTests
     };
     CreateLineageCommand command = new(payload);
     command.Contextualize(_user, _world);
-    _sender.Setup(x => x.Send(It.Is<FindLanguagesQuery>(y => y.Activity == command && Assert.Single(y.Ids) == language.Id.ToGuid()), _cancellationToken))
+    _sender.Setup(x => x.Send(It.Is<FindLanguagesQuery>(y => y.Activity == command && Assert.Single(y.Ids) == language.EntityId), _cancellationToken))
       .ReturnsAsync([language]);
 
     LineageModel model = new();

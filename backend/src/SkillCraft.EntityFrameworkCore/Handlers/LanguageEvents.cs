@@ -19,10 +19,10 @@ internal static class LanguageEvents
     public async Task Handle(Language.CreatedEvent @event, CancellationToken cancellationToken)
     {
       LanguageEntity? language = await _context.Languages.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (language == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new LanguageId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -47,10 +47,9 @@ internal static class LanguageEvents
 
     public async Task Handle(Language.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       LanguageEntity language = await _context.Languages
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The language entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The language entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       language.Update(@event);
 

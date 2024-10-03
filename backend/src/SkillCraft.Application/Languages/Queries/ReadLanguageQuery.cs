@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Languages;
 
 namespace SkillCraft.Application.Languages.Queries;
@@ -19,12 +20,8 @@ internal class ReadLanguageQueryHandler : IRequestHandler<ReadLanguageQuery, Lan
 
   public async Task<LanguageModel?> Handle(ReadLanguageQuery query, CancellationToken cancellationToken)
   {
-    LanguageModel? language = await _languageQuerier.ReadAsync(query.Id, cancellationToken);
-    if (language != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, language.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Language, cancellationToken);
 
-    return language;
+    return await _languageQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

@@ -40,8 +40,8 @@ public class ReplaceLanguageCommandHandlerTests
       Script = " Alphabet latin ",
       TypicalSpeakers = " Humains "
     };
-    ReplaceLanguageCommand command = new(language.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplaceLanguageCommand command = new(language.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     LanguageModel model = new();
     _languageQuerier.Setup(x => x.ReadAsync(language, _cancellationToken)).ReturnsAsync(model);
@@ -52,7 +52,7 @@ public class ReplaceLanguageCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(language)
@@ -67,6 +67,7 @@ public class ReplaceLanguageCommandHandlerTests
   {
     ReplaceLanguagePayload payload = new("Commun");
     ReplaceLanguageCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -92,7 +93,7 @@ public class ReplaceLanguageCommandHandlerTests
     long version = reference.Version;
     _languageRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Language language = new(_world.Id, reference.Name, _world.OwnerId, reference.Id);
+    Language language = new(_world.Id, reference.Name, _world.OwnerId, reference.EntityId);
     _languageRepository.Setup(x => x.LoadAsync(language.Id, _cancellationToken)).ReturnsAsync(language);
 
     Description description = new("  Cette langue est parlée par tous les habitants de l’Ouespéro.  ");
@@ -105,8 +106,8 @@ public class ReplaceLanguageCommandHandlerTests
       Script = " Alphabet latin ",
       TypicalSpeakers = " Humains "
     };
-    ReplaceLanguageCommand command = new(language.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplaceLanguageCommand command = new(language.EntityId, payload, version);
+    command.Contextualize(_world);
 
     LanguageModel model = new();
     _languageQuerier.Setup(x => x.ReadAsync(language, _cancellationToken)).ReturnsAsync(model);
@@ -117,7 +118,7 @@ public class ReplaceLanguageCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Language && y.Key.Id == language.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveLanguageCommand>(y => y.Language.Equals(language)

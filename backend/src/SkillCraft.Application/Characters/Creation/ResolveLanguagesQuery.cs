@@ -6,7 +6,6 @@ using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Characters.Creation;
 
@@ -35,19 +34,11 @@ internal class ResolveLanguagesQueryHandler : IRequestHandler<ResolveLanguagesQu
     Activity activity = query.Activity;
     await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Language, cancellationToken);
 
-    IEnumerable<LanguageId> ids = query.Ids.Distinct().Select(id => new LanguageId(id));
+    WorldId worldId = activity.GetWorldId();
+    IEnumerable<LanguageId> ids = query.Ids.Distinct().Select(id => new LanguageId(worldId, id));
     IReadOnlyCollection<Language> languages = await _languageRepository.LoadAsync(ids, cancellationToken);
 
-    WorldId worldId = activity.GetWorldId();
-    foreach (Language language in languages)
-    {
-      if (language.WorldId != worldId)
-      {
-        throw new PermissionDeniedException(Action.Preview, EntityType.Language, activity.GetUser(), activity.GetWorld(), language.Id.ToGuid());
-      }
-    }
-
-    IEnumerable<Guid> foundIds = languages.Select(language => language.Id.ToGuid()).Distinct();
+    IEnumerable<Guid> foundIds = languages.Select(language => language.EntityId).Distinct();
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
@@ -67,7 +58,7 @@ internal class ResolveLanguagesQueryHandler : IRequestHandler<ResolveLanguagesQu
     {
       if (lineageLanguages.Contains(language.Id))
       {
-        conflictIds.Add(language.Id.ToGuid());
+        conflictIds.Add(language.EntityId);
       }
     }
     if (conflictIds.Count > 0)
