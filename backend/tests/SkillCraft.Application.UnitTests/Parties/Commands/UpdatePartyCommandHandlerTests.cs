@@ -1,8 +1,8 @@
 ﻿using FluentValidation.Results;
 using Logitar.Security.Cryptography;
+using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Domain;
@@ -18,7 +18,7 @@ public class UpdatePartyCommandHandlerTests
   private readonly Mock<IPartyQuerier> _partyQuerier = new();
   private readonly Mock<IPartyRepository> _partyRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<IStorageService> _storageService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdatePartyCommandHandler _handler;
 
@@ -26,7 +26,7 @@ public class UpdatePartyCommandHandlerTests
 
   public UpdatePartyCommandHandlerTests()
   {
-    _handler = new(_partyQuerier.Object, _partyRepository.Object, _permissionService.Object, _storageService.Object);
+    _handler = new(_partyQuerier.Object, _partyRepository.Object, _permissionService.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the party could not be found.")]
@@ -85,15 +85,10 @@ public class UpdatePartyCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Party && y.Id == party.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _partyRepository.Verify(x => x.SaveAsync(
-      It.Is<Party>(y => y.Equals(party) && y.Name.Value == payload.Name.Trim() && y.Description == null),
-      _cancellationToken), Times.Once);
-
-    _storageService.Verify(x => x.EnsureAvailableAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Party && y.Id == party.EntityId && y.Size > 0),
-      _cancellationToken), Times.Once);
-    _storageService.Verify(x => x.UpdateAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Party && y.Id == party.EntityId && y.Size > 0),
+    _sender.Verify(x => x.Send(
+      It.Is<SavePartyCommand>(y => y.Party.Equals(party)
+        && y.Party.Name.Value == payload.Name.Trim()
+        && y.Party.Description == null),
       _cancellationToken), Times.Once);
   }
 }

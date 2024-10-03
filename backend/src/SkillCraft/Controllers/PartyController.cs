@@ -26,9 +26,9 @@ public class PartyController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<PartyModel>> CreateAsync([FromBody] SavePartyPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<PartyModel>> CreateAsync([FromBody] CreateOrReplacePartyPayload payload, CancellationToken cancellationToken)
   {
-    SavePartyResult result = await _pipeline.ExecuteAsync(new SavePartyCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplacePartyResult result = await _pipeline.ExecuteAsync(new CreateOrReplacePartyCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -40,9 +40,9 @@ public class PartyController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<PartyModel>> ReplaceAsync(Guid id, [FromBody] SavePartyPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<PartyModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplacePartyPayload payload, long? version, CancellationToken cancellationToken)
   {
-    SavePartyResult result = await _pipeline.ExecuteAsync(new SavePartyCommand(id, payload, version), cancellationToken);
+    CreateOrReplacePartyResult result = await _pipeline.ExecuteAsync(new CreateOrReplacePartyCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -60,7 +60,7 @@ public class PartyController : ControllerBase
     return GetActionResult(party);
   }
 
-  private ActionResult<PartyModel> GetActionResult(SavePartyResult result) => GetActionResult(result.Party, result.Created);
+  private ActionResult<PartyModel> GetActionResult(CreateOrReplacePartyResult result) => GetActionResult(result.Party, result.Created);
   private ActionResult<PartyModel> GetActionResult(PartyModel? party, bool created = false)
   {
     if (party == null)

@@ -20,7 +20,7 @@ internal class ImportPartiesHandler : INotificationHandler<ImportParties>
   public async Task Handle(ImportParties _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Party> parties = Extract();
-    IReadOnlyCollection<SavePartyCommand> commands = Transform(parties);
+    IReadOnlyCollection<CreateOrReplacePartyCommand> commands = Transform(parties);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -32,20 +32,20 @@ internal class ImportPartiesHandler : INotificationHandler<ImportParties>
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SavePartyCommand> Transform(IEnumerable<Party> parties) => parties.Select(party =>
+  private static IReadOnlyCollection<CreateOrReplacePartyCommand> Transform(IEnumerable<Party> parties) => parties.Select(party =>
   {
-    SavePartyPayload payload = new(party.Name)
+    CreateOrReplacePartyPayload payload = new(party.Name)
     {
       Description = party.Description
     };
-    return new SavePartyCommand(party.Id, payload, Version: null);
+    return new CreateOrReplacePartyCommand(party.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SavePartyCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplacePartyCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SavePartyCommand command in commands)
+    foreach (CreateOrReplacePartyCommand command in commands)
     {
-      await _client.SavePartyAsync(command, cancellationToken);
+      await _client.CreateOrReplacePartyAsync(command, cancellationToken);
     }
   }
 }

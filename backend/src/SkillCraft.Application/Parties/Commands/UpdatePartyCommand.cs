@@ -2,7 +2,6 @@
 using MediatR;
 using SkillCraft.Application.Parties.Validators;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Parties;
@@ -11,21 +10,23 @@ namespace SkillCraft.Application.Parties.Commands;
 
 public record UpdatePartyCommand(Guid Id, UpdatePartyPayload Payload) : Activity, IRequest<PartyModel?>;
 
-internal class UpdatePartyCommandHandler : PartyCommandHandler, IRequestHandler<UpdatePartyCommand, PartyModel?>
+internal class UpdatePartyCommandHandler : IRequestHandler<UpdatePartyCommand, PartyModel?>
 {
   private readonly IPartyQuerier _partyQuerier;
   private readonly IPartyRepository _partyRepository;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public UpdatePartyCommandHandler(
     IPartyQuerier partyQuerier,
     IPartyRepository partyRepository,
     IPermissionService permissionService,
-    IStorageService storageService) : base(partyRepository, storageService)
+    ISender sender)
   {
     _partyQuerier = partyQuerier;
     _partyRepository = partyRepository;
     _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<PartyModel?> Handle(UpdatePartyCommand command, CancellationToken cancellationToken)
@@ -53,7 +54,7 @@ internal class UpdatePartyCommandHandler : PartyCommandHandler, IRequestHandler<
 
     party.Update(command.GetUserId());
 
-    await SaveAsync(party, cancellationToken);
+    await _sender.Send(new SavePartyCommand(party), cancellationToken);
 
     return await _partyQuerier.ReadAsync(party, cancellationToken);
   }

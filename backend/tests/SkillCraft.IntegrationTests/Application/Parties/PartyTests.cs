@@ -41,13 +41,13 @@ public class PartyTests : IntegrationTests
   [Fact(DisplayName = "It should create a new party.")]
   public async Task It_should_create_a_new_party()
   {
-    SavePartyPayload payload = new(" Chasseurs de Légende ")
+    CreateOrReplacePartyPayload payload = new(" Chasseurs de Légende ")
     {
       Description = "    "
     };
 
-    SavePartyCommand command = new(Guid.NewGuid(), payload, Version: null);
-    SavePartyResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplacePartyCommand command = new(Guid.NewGuid(), payload, Version: null);
+    CreateOrReplacePartyResult result = await Pipeline.ExecuteAsync(command);
     Assert.True(result.Created);
 
     PartyModel? party = result.Party;
@@ -77,13 +77,13 @@ public class PartyTests : IntegrationTests
     _confrerieMystique.Update(UserId);
     await _partyRepository.SaveAsync(_confrerieMystique);
 
-    SavePartyPayload payload = new(" Confrérie Mystique ")
+    CreateOrReplacePartyPayload payload = new(" Confrérie Mystique ")
     {
       Description = "    "
     };
 
-    SavePartyCommand command = new(_confrerieMystique.EntityId, payload, version);
-    SavePartyResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplacePartyCommand command = new(_confrerieMystique.EntityId, payload, version);
+    CreateOrReplacePartyResult result = await Pipeline.ExecuteAsync(command);
     Assert.False(result.Created);
 
     PartyModel? party = result.Party;
