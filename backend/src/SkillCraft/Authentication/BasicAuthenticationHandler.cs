@@ -46,7 +46,7 @@ internal class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthentic
           {
             User user = await _userService.AuthenticateAsync(uniqueName: credentials[..index], password: credentials[(index + 1)..]);
             MultiFactorAuthenticationMode? multiFactorAuthenticationMode = user.GetMultiFactorAuthenticationMode();
-            if (multiFactorAuthenticationMode.HasValue && multiFactorAuthenticationMode.Value == MultiFactorAuthenticationMode.None)
+            if (multiFactorAuthenticationMode.HasValue && multiFactorAuthenticationMode.Value != MultiFactorAuthenticationMode.None)
             {
               return AuthenticateResult.Fail($"The user 'Id={user.Id}' Multi-Factor Authentication mode '{multiFactorAuthenticationMode}' is not '{MultiFactorAuthenticationMode.None}'.");
             }
