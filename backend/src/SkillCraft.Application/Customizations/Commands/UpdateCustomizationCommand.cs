@@ -2,7 +2,6 @@
 using MediatR;
 using SkillCraft.Application.Customizations.Validators;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Customizations;
@@ -11,21 +10,23 @@ namespace SkillCraft.Application.Customizations.Commands;
 
 public record UpdateCustomizationCommand(Guid Id, UpdateCustomizationPayload Payload) : Activity, IRequest<CustomizationModel?>;
 
-internal class UpdateCustomizationCommandHandler : CustomizationCommandHandler, IRequestHandler<UpdateCustomizationCommand, CustomizationModel?>
+internal class UpdateCustomizationCommandHandler : IRequestHandler<UpdateCustomizationCommand, CustomizationModel?>
 {
   private readonly ICustomizationQuerier _customizationQuerier;
   private readonly ICustomizationRepository _customizationRepository;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public UpdateCustomizationCommandHandler(
     ICustomizationQuerier customizationQuerier,
     ICustomizationRepository customizationRepository,
     IPermissionService permissionService,
-    IStorageService storageService) : base(customizationRepository, storageService)
+    ISender sender)
   {
     _customizationQuerier = customizationQuerier;
     _customizationRepository = customizationRepository;
     _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<CustomizationModel?> Handle(UpdateCustomizationCommand command, CancellationToken cancellationToken)
@@ -53,7 +54,7 @@ internal class UpdateCustomizationCommandHandler : CustomizationCommandHandler, 
 
     customization.Update(command.GetUserId());
 
-    await SaveAsync(customization, cancellationToken);
+    await _sender.Send(new SaveCustomizationCommand(customization), cancellationToken);
 
     return await _customizationQuerier.ReadAsync(customization, cancellationToken);
   }

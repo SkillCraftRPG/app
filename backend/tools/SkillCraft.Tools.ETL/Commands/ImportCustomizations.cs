@@ -20,7 +20,7 @@ internal class ImportCustomizationsHandler : INotificationHandler<ImportCustomiz
   public async Task Handle(ImportCustomizations _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Customization> customizations = Extract();
-    IReadOnlyCollection<SaveCustomizationCommand> commands = Transform(customizations);
+    IReadOnlyCollection<CreateOrReplaceCustomizationCommand> commands = Transform(customizations);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -32,19 +32,19 @@ internal class ImportCustomizationsHandler : INotificationHandler<ImportCustomiz
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SaveCustomizationCommand> Transform(IEnumerable<Customization> customizations) => customizations.Select(customization =>
+  private static IReadOnlyCollection<CreateOrReplaceCustomizationCommand> Transform(IEnumerable<Customization> customizations) => customizations.Select(customization =>
   {
-    SaveCustomizationPayload payload = new(customization.Name)
+    CreateOrReplaceCustomizationPayload payload = new(customization.Name)
     {
       Type = customization.Type,
       Description = customization.Description
     };
-    return new SaveCustomizationCommand(customization.Id, payload, Version: null);
+    return new CreateOrReplaceCustomizationCommand(customization.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SaveCustomizationCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplaceCustomizationCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SaveCustomizationCommand command in commands)
+    foreach (CreateOrReplaceCustomizationCommand command in commands)
     {
       await _client.SaveCustomizationAsync(command, cancellationToken);
     }

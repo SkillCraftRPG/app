@@ -43,14 +43,14 @@ public class CustomizationTests : IntegrationTests
   [Fact(DisplayName = "It should create a new customization.")]
   public async Task It_should_create_a_new_customization()
   {
-    SaveCustomizationPayload payload = new(" Effacé ")
+    CreateOrReplaceCustomizationPayload payload = new(" Effacé ")
     {
       Type = CustomizationType.Gift,
       Description = "  Le personnage est considéré légèrement obscurci lorsqu’il est renversé. Lorsqu’il bénéficie du demi-abri contre une attaque à distance d’une créature, alors il traite l’abri comme un abri aux trois-quarts.  "
     };
 
-    SaveCustomizationCommand command = new(Guid.NewGuid(), payload, Version: null);
-    SaveCustomizationResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceCustomizationCommand command = new(Guid.NewGuid(), payload, Version: null);
+    CreateOrReplaceCustomizationResult result = await Pipeline.ExecuteAsync(command);
     Assert.True(result.Created);
 
     CustomizationModel? customization = result.Customization;
@@ -81,14 +81,14 @@ public class CustomizationTests : IntegrationTests
     _abruti.Update(UserId);
     await _customizationRepository.SaveAsync(_abruti);
 
-    SaveCustomizationPayload payload = new(" Abruti ")
+    CreateOrReplaceCustomizationPayload payload = new(" Abruti ")
     {
       Type = CustomizationType.Gift,
       Description = "    "
     };
 
-    SaveCustomizationCommand command = new(_abruti.EntityId, payload, version);
-    SaveCustomizationResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceCustomizationCommand command = new(_abruti.EntityId, payload, version);
+    CreateOrReplaceCustomizationResult result = await Pipeline.ExecuteAsync(command);
     Assert.False(result.Created);
 
     CustomizationModel? customization = result.Customization;

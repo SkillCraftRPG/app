@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Customizations.Validators;
 
-internal class SaveCustomizationValidator : AbstractValidator<SaveCustomizationPayload>
+internal class CreateOrReplaceCustomizationValidator : AbstractValidator<CreateOrReplaceCustomizationPayload>
 {
-  public SaveCustomizationValidator()
+  public CreateOrReplaceCustomizationValidator()
   {
     RuleFor(x => x.Type).IsInEnum();
 
