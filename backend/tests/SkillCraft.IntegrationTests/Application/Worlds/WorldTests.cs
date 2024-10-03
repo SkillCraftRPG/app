@@ -39,14 +39,14 @@ public class WorldTests : IntegrationTests
   [Fact(DisplayName = "It should create a new world.")]
   public async Task It_should_create_a_new_world()
   {
-    SaveWorldPayload payload = new("old-world")
+    CreateOrReplaceWorldPayload payload = new("old-world")
     {
       Name = " The Old World ",
       Description = "    "
     };
 
-    SaveWorldCommand command = new(Guid.NewGuid(), payload, Version: null);
-    SaveWorldResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceWorldCommand command = new(Guid.NewGuid(), payload, Version: null);
+    CreateOrReplaceWorldResult result = await Pipeline.ExecuteAsync(command);
     Assert.True(result.Created);
 
     WorldModel? world = result.World;
@@ -76,14 +76,14 @@ public class WorldTests : IntegrationTests
     World.Update(UserId);
     await _worldRepository.SaveAsync(World);
 
-    SaveWorldPayload payload = new("ungar")
+    CreateOrReplaceWorldPayload payload = new("ungar")
     {
       Name = " Ungar ",
       Description = "    "
     };
 
-    SaveWorldCommand command = new(World.EntityId, payload, version);
-    SaveWorldResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceWorldCommand command = new(World.EntityId, payload, version);
+    CreateOrReplaceWorldResult result = await Pipeline.ExecuteAsync(command);
     Assert.False(result.Created);
 
     WorldModel? world = result.World;
@@ -149,8 +149,8 @@ public class WorldTests : IntegrationTests
   [Fact(DisplayName = "It should throw SlugAlreadyUsedException when the slug is already used.")]
   public async Task It_should_throw_SlugAlreadyUsedException_when_the_slug_is_already_used()
   {
-    SaveWorldPayload payload = new(World.Slug.Value);
-    SaveWorldCommand command = new(Id: null, payload, Version: null);
+    CreateOrReplaceWorldPayload payload = new(World.Slug.Value);
+    CreateOrReplaceWorldCommand command = new(Id: null, payload, Version: null);
     var exception = await Assert.ThrowsAsync<SlugAlreadyUsedException>(async () => await Pipeline.ExecuteAsync(command));
     Assert.Contains(World.EntityId, exception.Ids);
     Assert.Equal(payload.Slug, exception.Slug);
