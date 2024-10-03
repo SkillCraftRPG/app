@@ -15,7 +15,7 @@ internal class LanguageConfiguration : AggregateConfiguration<LanguageEntity>, I
     builder.ToTable(SkillCraftDb.Languages.Table.Table ?? string.Empty, SkillCraftDb.Languages.Table.Schema);
     builder.HasKey(x => x.LanguageId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Script);
     builder.HasIndex(x => x.TypicalSpeakers);

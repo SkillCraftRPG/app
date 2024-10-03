@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Languages.Validators;
 
-internal class CreateLanguageValidator : AbstractValidator<CreateLanguagePayload>
+internal class CreateOrReplaceLanguageValidator : AbstractValidator<CreateOrReplaceLanguagePayload>
 {
-  public CreateLanguageValidator()
+  public CreateOrReplaceLanguageValidator()
   {
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());

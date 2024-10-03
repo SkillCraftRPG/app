@@ -26,26 +26,31 @@ public class LanguageController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<LanguageModel>> CreateAsync([FromBody] CreateLanguagePayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<LanguageModel>> CreateAsync([FromBody] CreateOrReplaceLanguagePayload payload, CancellationToken cancellationToken)
   {
-    LanguageModel language = await _pipeline.ExecuteAsync(new CreateLanguageCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Language}/{{id}}", [new KeyValuePair<string, string>("id", language.Id.ToString())]);
+    CreateOrReplaceLanguageResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceLanguageCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
+  }
 
-    return Created(location, language);
+  [HttpGet("scripts")]
+  public async Task<ActionResult<SearchResults<string>>> ListScriptsAsync(CancellationToken cancellationToken)
+  {
+    SearchResults<string> scripts = await _pipeline.ExecuteAsync(new SearchScriptsQuery(), cancellationToken);
+    return Ok(scripts);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<LanguageModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     LanguageModel? language = await _pipeline.ExecuteAsync(new ReadLanguageQuery(id), cancellationToken);
-    return language == null ? NotFound() : Ok(language);
+    return GetActionResult(language);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<LanguageModel>> ReplaceAsync(Guid id, [FromBody] ReplaceLanguagePayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<LanguageModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceLanguagePayload payload, long? version, CancellationToken cancellationToken)
   {
-    LanguageModel? language = await _pipeline.ExecuteAsync(new ReplaceLanguageCommand(id, payload, version), cancellationToken);
-    return language == null ? NotFound() : Ok(language);
+    CreateOrReplaceLanguageResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceLanguageCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +64,22 @@ public class LanguageController : ControllerBase
   public async Task<ActionResult<LanguageModel>> UpdateAsync(Guid id, [FromBody] UpdateLanguagePayload payload, CancellationToken cancellationToken)
   {
     LanguageModel? language = await _pipeline.ExecuteAsync(new UpdateLanguageCommand(id, payload), cancellationToken);
-    return language == null ? NotFound() : Ok(language);
+    return GetActionResult(language);
+  }
+
+  private ActionResult<LanguageModel> GetActionResult(CreateOrReplaceLanguageResult result) => GetActionResult(result.Language, result.Created);
+  private ActionResult<LanguageModel> GetActionResult(LanguageModel? language, bool created = false)
+  {
+    if (language == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Language}/{{id}}", [new KeyValuePair<string, string>("id", language.Id.ToString())]);
+      return Created(location, language);
+    }
+
+    return Ok(language);
   }
 }

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Logitar.Portal.Contracts.Actors;
+using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Languages;
@@ -16,19 +17,32 @@ public class ReadLanguageQueryHandlerTests
 
   private readonly ReadLanguageQueryHandler _handler;
 
-  private readonly LanguageModel _language = new(new WorldModel(), "Commun") { Id = Guid.NewGuid() };
+  private readonly UserMock _user = new();
+  private readonly WorldMock _world;
+  private readonly LanguageModel _language;
 
   public ReadLanguageQueryHandlerTests()
   {
     _handler = new(_languageQuerier.Object, _permissionService.Object);
 
-    _languageQuerier.Setup(x => x.ReadAsync(_language.Id, _cancellationToken)).ReturnsAsync(_language);
+    _world = new(_user);
+    WorldModel worldModel = new(new Actor(_user), _world.Slug.Value)
+    {
+      Id = _world.Id.ToGuid()
+    };
+    _language = new(worldModel, "Commun")
+    {
+      Id = Guid.NewGuid()
+    };
+    _languageQuerier.Setup(x => x.ReadAsync(_world.Id, _language.Id, _cancellationToken)).ReturnsAsync(_language);
   }
 
   [Fact(DisplayName = "It should return null when no language is found.")]
   public async Task It_should_return_null_when_no_language_is_found()
   {
     ReadLanguageQuery query = new(Guid.Empty);
+    query.Contextualize(_world);
+
     Assert.Null(await _handler.Handle(query, _cancellationToken));
 
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(It.IsAny<ReadLanguageQuery>(), It.IsAny<EntityMetadata>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -38,12 +52,11 @@ public class ReadLanguageQueryHandlerTests
   public async Task It_should_return_the_language_found_by_Id()
   {
     ReadLanguageQuery query = new(_language.Id);
+    query.Contextualize(_world);
+
     LanguageModel? language = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_language, language);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      query,
-      It.Is<EntityMetadata>(y => y.WorldId.ToGuid() == _language.World.Id && y.Key.Type == EntityType.Language && y.Key.Id == _language.Id && y.Size > 0),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Language, _cancellationToken), Times.Once);
   }
 }

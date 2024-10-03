@@ -10,8 +10,8 @@ public class Language : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new LanguageId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
   public Name Name
@@ -71,14 +71,12 @@ public class Language : AggregateRoot
   {
   }
 
-  public Language(WorldId worldId, Name name, UserId userId, LanguageId? id = null) : base(id?.AggregateId)
+  public Language(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new LanguageId(worldId, entityId).AggregateId)
   {
-    Raise(new CreatedEvent(worldId, name), userId.ActorId);
+    Raise(new CreatedEvent(name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     _name = @event.Name;
   }
 
@@ -115,14 +113,10 @@ public class Language : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public Name Name { get; }
 
-    public CreatedEvent(WorldId worldId, Name name)
+    public CreatedEvent(Name name)
     {
-      WorldId = worldId;
-
       Name = name;
     }
   }

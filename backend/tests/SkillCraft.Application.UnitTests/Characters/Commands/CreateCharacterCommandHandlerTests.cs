@@ -82,7 +82,7 @@ public class CreateCharacterCommandHandlerTests
       Height = 1.84,
       Weight = 84.6,
       Age = 30,
-      LanguageIds = [_language.Id.ToGuid()],
+      LanguageIds = [_language.EntityId],
       PersonalityId = _personality.EntityId,
       CustomizationIds = _customizations.Select(x => x.EntityId).ToList(),
       AspectIds = _aspects.Select(x => x.EntityId).ToList(),

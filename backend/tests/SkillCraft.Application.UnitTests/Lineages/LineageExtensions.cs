@@ -52,7 +52,7 @@ internal static class LineageExtensions
     Assert.Equal(left.Ids.Count, right.Ids.Count);
     foreach (Guid id in right.Ids)
     {
-      Assert.Contains(left.Ids, i => i.ToGuid() == id);
+      Assert.Contains(left.Ids, i => i.EntityId == id);
     }
 
     return true;

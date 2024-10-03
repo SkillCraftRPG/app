@@ -7,8 +7,6 @@ using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
-using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Characters.Creation;
 
@@ -61,9 +59,9 @@ public class ResolveLanguagesQueryHandlerTests
   [Fact(DisplayName = "It should return the found languages.")]
   public async Task It_should_return_the_found_languages()
   {
-    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.Id.ToGuid(), _language2.Id.ToGuid()]);
+    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.EntityId, _language2.EntityId]);
 
-    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(id));
+    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(_world.Id, id));
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1, _language2]);
 
     IReadOnlyCollection<Language> languages = await _handler.Handle(query, _cancellationToken);
@@ -77,9 +75,9 @@ public class ResolveLanguagesQueryHandlerTests
   [Fact(DisplayName = "It should throw InvalidExtraLanguagesException when the number of extra languages does not match the lineages count.")]
   public async Task It_should_throw_InvalidExtraLanguagesException_when_the_number_of_extra_languages_does_not_match_the_lineages_count()
   {
-    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.Id.ToGuid()]);
+    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.EntityId]);
 
-    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(id));
+    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(_world.Id, id));
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1]);
 
     var exception = await Assert.ThrowsAsync<InvalidExtraLanguagesException>(async () => await _handler.Handle(query, _cancellationToken));
@@ -93,43 +91,26 @@ public class ResolveLanguagesQueryHandlerTests
   {
     _nation.Languages = new([_language1], extra: 0, text: null);
 
-    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.Id.ToGuid()]);
+    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.EntityId]);
 
-    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(id));
+    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(_world.Id, id));
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1]);
 
     var exception = await Assert.ThrowsAsync<LanguagesCannotIncludeLineageLanguageException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(_language1.Id.ToGuid(), Assert.Single(exception.LanguageIds));
+    Assert.Equal(_language1.EntityId, Assert.Single(exception.LanguageIds));
     Assert.Equal("LanguageIds", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw LanguagesNotFoundException when some languages could not be found.")]
   public async Task It_should_throw_LanguagesNotFoundException_when_some_languages_could_not_be_found()
   {
-    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.Id.ToGuid(), _language2.Id.ToGuid(), Guid.NewGuid(), Guid.Empty]);
+    ResolveLanguagesQuery query = new(_activity, _nation, _species, [_language1.EntityId, _language2.EntityId, Guid.NewGuid(), Guid.Empty]);
 
-    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(id));
+    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(_world.Id, id));
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1, _language2]);
 
     var exception = await Assert.ThrowsAsync<LanguagesNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
     Assert.Equal(query.Ids.Skip(2), exception.Ids);
     Assert.Equal("LanguageIds", exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw PermissionDeniedException a language is not in the expected world.")]
-  public async Task It_should_throw_PermissionDeniedException_when_a_language_is_not_in_the_expected_world()
-  {
-    Language language = new(WorldId.NewId(), new Name("Squerzèle"), UserId.NewId());
-    ResolveLanguagesQuery query = new(_activity, _nation, _species, [language.Id.ToGuid()]);
-
-    IEnumerable<LanguageId> languageIds = query.Ids.Distinct().Select(id => new LanguageId(id));
-    _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([language]);
-
-    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(Action.Preview, exception.Action);
-    Assert.Equal(EntityType.Language, exception.EntityType);
-    Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
-    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(language.Id.ToGuid(), exception.EntityId);
   }
 }

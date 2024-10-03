@@ -21,7 +21,7 @@ internal class LanguageEntity : AggregateEntity
 
   public LanguageEntity(WorldEntity world, Language.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new LanguageId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

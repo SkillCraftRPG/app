@@ -1,4 +1,5 @@
 ﻿using Logitar.Net.Http;
+using SkillCraft.Tools.ETL.Settings;
 
 namespace SkillCraft.Tools.ETL;
 
@@ -13,18 +14,17 @@ internal class Startup
 
   public void ConfigureServices(IServiceCollection services)
   {
+    ApiSettings settings = _configuration.GetSection(ApiSettings.SectionKey).Get<ApiSettings>() ?? new();
+
     services.AddHostedService<EtlWorker>();
     services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
     services.AddSingleton<IApiClient, ApiClient>();
 
-    string baseUrl = _configuration.GetValue<string>("BaseUrl") ?? throw new InvalidOperationException("The configuration 'BaseUrl' is required.");
-    string token = _configuration.GetValue<string>("BearerToken") ?? throw new InvalidOperationException("The configuration 'BearerToken' is required.");
     HttpApiSettings apiSettings = new()
     {
-      Authorization = HttpAuthorization.Bearer(token),
-      BaseUri = new(baseUrl, UriKind.Absolute)
+      Authorization = HttpAuthorization.Basic(settings.Basic.GetCredentials()),
+      BaseUri = settings.BaseUri
     };
-    // TODO(fpion): Headers
     services.AddSingleton<IHttpApiSettings>(apiSettings);
   }
 }

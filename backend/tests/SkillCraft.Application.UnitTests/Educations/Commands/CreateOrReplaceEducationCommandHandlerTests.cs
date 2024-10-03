@@ -100,7 +100,7 @@ public class CreateOrReplaceEducationCommandHandlerTests
   [Fact(DisplayName = "It should return null when updating an education that does not exist.")]
   public async Task It_should_return_null_when_updating_an_education_that_does_not_exist()
   {
-    CreateOrReplaceEducationCommand command = new(Guid.Empty, new CreateOrReplaceEducationPayload("Artisan"), Version: 0);
+    CreateOrReplaceEducationCommand command = new(Guid.Empty, new CreateOrReplaceEducationPayload("Classique"), Version: 0);
     command.Contextualize(_world);
 
     CreateOrReplaceEducationResult result = await _handler.Handle(command, _cancellationToken);

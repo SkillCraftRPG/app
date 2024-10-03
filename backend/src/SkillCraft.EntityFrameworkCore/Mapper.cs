@@ -153,6 +153,7 @@ internal class Mapper
 
     LanguageModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description,
       Script = source.Script,
       TypicalSpeakers = source.TypicalSpeakers

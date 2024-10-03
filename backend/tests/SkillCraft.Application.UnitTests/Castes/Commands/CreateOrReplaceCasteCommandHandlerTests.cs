@@ -29,7 +29,7 @@ public class CreateOrReplaceCasteCommandHandlerTests
   {
     _handler = new(_casteQuerier.Object, _casteRepository.Object, _permissionService.Object, _sender.Object);
 
-    _caste = new(_world.Id, new Name("classique"), _world.OwnerId);
+    _caste = new(_world.Id, new Name("artisan"), _world.OwnerId);
     _caste.AddTrait(new Trait(new Name("professionnel"), Description: null));
     _caste.AddTrait(new Trait(new Name("sujet"), Description: null));
     _caste.Update(_world.OwnerId);
