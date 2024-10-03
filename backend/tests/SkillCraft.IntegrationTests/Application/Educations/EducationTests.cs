@@ -46,15 +46,15 @@ public class EducationTests : IntegrationTests
   [Fact(DisplayName = "It should create a new education.")]
   public async Task It_should_create_a_new_education()
   {
-    SaveEducationPayload payload = new(" Classique ")
+    CreateOrReplaceEducationPayload payload = new(" Classique ")
     {
       Description = "  Peu peuvent se vanter d’avoir reçu une éducation traditionnelle comme celle du personnage. Il a suivi un parcours scolaire conforme et sans dérogation ayant mené à une instruction de haute qualité. Malgré son manque d’expériences personnelles, son grand savoir lui permet de se débrouiller même dans les situations les plus difficiles.  ",
       Skill = Skill.Knowledge,
       WealthMultiplier = 12.0
     };
 
-    SaveEducationCommand command = new(Guid.NewGuid(), payload, Version: null);
-    SaveEducationResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceEducationCommand command = new(Guid.NewGuid(), payload, Version: null);
+    CreateOrReplaceEducationResult result = await Pipeline.ExecuteAsync(command);
     Assert.True(result.Created);
 
     EducationModel? education = result.Education;
@@ -87,15 +87,15 @@ public class EducationTests : IntegrationTests
     _apprentiMaitre.Update(UserId);
     await _educationRepository.SaveAsync(_apprentiMaitre);
 
-    SaveEducationPayload payload = new(" Apprenti d’un maître ")
+    CreateOrReplaceEducationPayload payload = new(" Apprenti d’un maître ")
     {
       Description = "    ",
       Skill = Skill.Discipline,
       WealthMultiplier = 12.0
     };
 
-    SaveEducationCommand command = new(_apprentiMaitre.EntityId, payload, version);
-    SaveEducationResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplaceEducationCommand command = new(_apprentiMaitre.EntityId, payload, version);
+    CreateOrReplaceEducationResult result = await Pipeline.ExecuteAsync(command);
     Assert.False(result.Created);
 
     EducationModel? education = result.Education;

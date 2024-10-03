@@ -26,9 +26,9 @@ public class EducationController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<EducationModel>> CreateAsync([FromBody] SaveEducationPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<EducationModel>> CreateAsync([FromBody] CreateOrReplaceEducationPayload payload, CancellationToken cancellationToken)
   {
-    SaveEducationResult result = await _pipeline.ExecuteAsync(new SaveEducationCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplaceEducationResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceEducationCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -40,9 +40,9 @@ public class EducationController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<EducationModel>> ReplaceAsync(Guid id, [FromBody] SaveEducationPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<EducationModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceEducationPayload payload, long? version, CancellationToken cancellationToken)
   {
-    SaveEducationResult result = await _pipeline.ExecuteAsync(new SaveEducationCommand(id, payload, version), cancellationToken);
+    CreateOrReplaceEducationResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceEducationCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -60,7 +60,7 @@ public class EducationController : ControllerBase
     return GetActionResult(education);
   }
 
-  private ActionResult<EducationModel> GetActionResult(SaveEducationResult result) => GetActionResult(result.Education, result.Created);
+  private ActionResult<EducationModel> GetActionResult(CreateOrReplaceEducationResult result) => GetActionResult(result.Education, result.Created);
   private ActionResult<EducationModel> GetActionResult(EducationModel? education, bool created = false)
   {
     if (education == null)

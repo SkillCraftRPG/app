@@ -20,7 +20,7 @@ internal interface IApiClient
   Task<AspectModel> CreateOrReplaceAspectAsync(CreateOrReplaceAspectCommand command, CancellationToken cancellationToken = default);
   Task<CasteModel> CreateOrReplaceCasteAsync(CreateOrReplaceCasteCommand command, CancellationToken cancellationToken = default);
   Task<CustomizationModel> CreateOrReplaceCustomizationAsync(CreateOrReplaceCustomizationCommand command, CancellationToken cancellationToken = default);
-  Task<EducationModel> SaveEducationAsync(SaveEducationCommand command, CancellationToken cancellationToken = default);
+  Task<EducationModel> CreateOrReplaceEducationAsync(CreateOrReplaceEducationCommand command, CancellationToken cancellationToken = default);
   Task<PartyModel> CreateOrReplacePartyAsync(CreateOrReplacePartyCommand command, CancellationToken cancellationToken = default);
   Task<PersonalityModel> CreateOrReplacePersonalityAsync(CreateOrReplacePersonalityCommand command, CancellationToken cancellationToken = default);
   Task<WorldModel> CreateOrReplaceWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken = default);

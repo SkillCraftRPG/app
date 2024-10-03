@@ -21,7 +21,7 @@ internal class ImportEducationsHandler : INotificationHandler<ImportEducations>
   public async Task Handle(ImportEducations _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Education> educations = Extract();
-    IReadOnlyCollection<SaveEducationCommand> commands = Transform(educations);
+    IReadOnlyCollection<CreateOrReplaceEducationCommand> commands = Transform(educations);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -33,22 +33,22 @@ internal class ImportEducationsHandler : INotificationHandler<ImportEducations>
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SaveEducationCommand> Transform(IEnumerable<Education> educations) => educations.Select(education =>
+  private static IReadOnlyCollection<CreateOrReplaceEducationCommand> Transform(IEnumerable<Education> educations) => educations.Select(education =>
   {
-    SaveEducationPayload payload = new(education.Name)
+    CreateOrReplaceEducationPayload payload = new(education.Name)
     {
       Description = education.Description,
       Skill = education.Skill,
       WealthMultiplier = education.WealthMultiplier
     };
-    return new SaveEducationCommand(education.Id, payload, Version: null);
+    return new CreateOrReplaceEducationCommand(education.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SaveEducationCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplaceEducationCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SaveEducationCommand command in commands)
+    foreach (CreateOrReplaceEducationCommand command in commands)
     {
-      await _client.SaveEducationAsync(command, cancellationToken);
+      await _client.CreateOrReplaceEducationAsync(command, cancellationToken);
     }
   }
 }

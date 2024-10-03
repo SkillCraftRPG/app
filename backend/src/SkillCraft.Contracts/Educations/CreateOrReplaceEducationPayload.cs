@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Educations;
 
-public record SaveEducationPayload
+public record CreateOrReplaceEducationPayload
 {
   public string Name { get; set; }
   public string? Description { get; set; }
@@ -8,11 +8,11 @@ public record SaveEducationPayload
   public Skill? Skill { get; set; }
   public double? WealthMultiplier { get; set; }
 
-  public SaveEducationPayload() : this(string.Empty)
+  public CreateOrReplaceEducationPayload() : this(string.Empty)
   {
   }
 
-  public SaveEducationPayload(string name)
+  public CreateOrReplaceEducationPayload(string name)
   {
     Name = name;
   }

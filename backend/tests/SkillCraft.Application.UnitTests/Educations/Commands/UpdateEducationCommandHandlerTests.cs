@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
+using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Domain;
@@ -17,7 +17,7 @@ public class UpdateEducationCommandHandlerTests
   private readonly Mock<IEducationQuerier> _educationQuerier = new();
   private readonly Mock<IEducationRepository> _educationRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<IStorageService> _storageService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdateEducationCommandHandler _handler;
 
@@ -25,7 +25,7 @@ public class UpdateEducationCommandHandlerTests
 
   public UpdateEducationCommandHandlerTests()
   {
-    _handler = new(_educationQuerier.Object, _educationRepository.Object, _permissionService.Object, _storageService.Object);
+    _handler = new(_educationQuerier.Object, _educationRepository.Object, _permissionService.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the education could not be found.")]
@@ -86,17 +86,12 @@ public class UpdateEducationCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Education && y.Id == education.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _educationRepository.Verify(x => x.SaveAsync(
-      It.Is<Education>(y => y.Equals(education) && y.Name.Value == payload.Name.Trim() && y.Description == null
-        && y.Skill == payload.Skill.Value
-        && y.WealthMultiplier == payload.WealthMultiplier.Value),
-      _cancellationToken), Times.Once);
-
-    _storageService.Verify(x => x.EnsureAvailableAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Education && y.Id == education.EntityId && y.Size > 0),
-      _cancellationToken), Times.Once);
-    _storageService.Verify(x => x.UpdateAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Education && y.Id == education.EntityId && y.Size > 0),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveEducationCommand>(y => y.Education.Equals(education)
+        && y.Education.Name.Value == payload.Name.Trim()
+        && y.Education.Description == null
+        && y.Education.Skill == payload.Skill.Value
+        && y.Education.WealthMultiplier == payload.WealthMultiplier.Value),
       _cancellationToken), Times.Once);
   }
 }
