@@ -21,7 +21,7 @@ internal interface IApiClient
   Task<CasteModel> SaveCasteAsync(SaveCasteCommand command, CancellationToken cancellationToken = default);
   Task<CustomizationModel> SaveCustomizationAsync(CreateOrReplaceCustomizationCommand command, CancellationToken cancellationToken = default);
   Task<EducationModel> SaveEducationAsync(SaveEducationCommand command, CancellationToken cancellationToken = default);
-  Task<PartyModel> SavePartyAsync(SavePartyCommand command, CancellationToken cancellationToken = default);
+  Task<PartyModel> CreateOrReplacePartyAsync(CreateOrReplacePartyCommand command, CancellationToken cancellationToken = default);
   Task<PersonalityModel> SavePersonalityAsync(CreateOrReplacePersonalityCommand command, CancellationToken cancellationToken = default);
   Task<WorldModel> SaveWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken = default);
 }

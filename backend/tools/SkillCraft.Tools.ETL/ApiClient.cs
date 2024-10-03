@@ -76,7 +76,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<EducationModel>(_options) ?? throw new InvalidOperationException("The education could not be deserialized.");
   }
 
-  public async Task<PartyModel> SavePartyAsync(SavePartyCommand command, CancellationToken cancellationToken)
+  public async Task<PartyModel> CreateOrReplacePartyAsync(CreateOrReplacePartyCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/parties/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)
