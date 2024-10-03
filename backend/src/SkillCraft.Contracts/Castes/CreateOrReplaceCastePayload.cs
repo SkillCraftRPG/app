@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Castes;
 
-public record SaveCastePayload
+public record CreateOrReplaceCastePayload
 {
   public string Name { get; set; }
   public string? Description { get; set; }
@@ -10,11 +10,11 @@ public record SaveCastePayload
 
   public List<TraitPayload> Traits { get; set; }
 
-  public SaveCastePayload() : this(string.Empty)
+  public CreateOrReplaceCastePayload() : this(string.Empty)
   {
   }
 
-  public SaveCastePayload(string name)
+  public CreateOrReplaceCastePayload(string name)
   {
     Name = name;
 

@@ -241,7 +241,7 @@ public class PermissionServiceTests
   [Fact(DisplayName = "EnsureCanCreateAsync: it should succeed when the user is the world owner.")]
   public async Task EnsureCanCreateAsync_it_should_succeed_when_the_user_is_the_world_owner()
   {
-    SaveCasteCommand command = new(Id: null, new SaveCastePayload("Artisan"), Version: null);
+    CreateOrReplaceCasteCommand command = new(Id: null, new CreateOrReplaceCastePayload("Artisan"), Version: null);
     command.Contextualize(_user, _world);
 
     await _service.EnsureCanCreateAsync(command, EntityType.Caste, _cancellationToken);
@@ -263,7 +263,7 @@ public class PermissionServiceTests
   [Fact(DisplayName = "EnsureCanCreateAsync: it should throw PermissionDeniedException when the user does not have the permission.")]
   public async Task EnsureCanCreateAsync_it_should_throw_PermissionDeniedException_when_the_user_does_not_have_the_permission()
   {
-    SaveCasteCommand command = new(Id: null, new SaveCastePayload("Artisan"), Version: null);
+    CreateOrReplaceCasteCommand command = new(Id: null, new CreateOrReplaceCastePayload("Artisan"), Version: null);
     command.Contextualize(_otherUser, _world);
 
     var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanCreateAsync(command, EntityType.Caste, _cancellationToken));

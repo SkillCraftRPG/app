@@ -46,7 +46,7 @@ internal class ImportWorldsHandler : INotificationHandler<ImportWorlds>
   {
     foreach (CreateOrReplaceWorldCommand command in commands)
     {
-      await _client.SaveWorldAsync(command, cancellationToken);
+      await _client.CreateOrReplaceWorldAsync(command, cancellationToken);
     }
   }
 }

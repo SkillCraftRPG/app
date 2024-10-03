@@ -48,7 +48,7 @@ internal class ImportPersonalitiesHandler : INotificationHandler<ImportPersonali
   {
     foreach (CreateOrReplacePersonalityCommand command in commands)
     {
-      await _client.SavePersonalityAsync(command, cancellationToken);
+      await _client.CreateOrReplacePersonalityAsync(command, cancellationToken);
     }
   }
 }

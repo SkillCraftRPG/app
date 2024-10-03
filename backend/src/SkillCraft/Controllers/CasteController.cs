@@ -26,9 +26,9 @@ public class CasteController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<CasteModel>> CreateAsync([FromBody] SaveCastePayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<CasteModel>> CreateAsync([FromBody] CreateOrReplaceCastePayload payload, CancellationToken cancellationToken)
   {
-    SaveCasteResult result = await _pipeline.ExecuteAsync(new SaveCasteCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplaceCasteResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceCasteCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -40,9 +40,9 @@ public class CasteController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<CasteModel>> ReplaceAsync(Guid id, [FromBody] SaveCastePayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<CasteModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceCastePayload payload, long? version, CancellationToken cancellationToken)
   {
-    SaveCasteResult result = await _pipeline.ExecuteAsync(new SaveCasteCommand(id, payload, version), cancellationToken);
+    CreateOrReplaceCasteResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceCasteCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -60,7 +60,7 @@ public class CasteController : ControllerBase
     return GetActionResult(caste);
   }
 
-  private ActionResult<CasteModel> GetActionResult(SaveCasteResult result) => GetActionResult(result.Caste, result.Created);
+  private ActionResult<CasteModel> GetActionResult(CreateOrReplaceCasteResult result) => GetActionResult(result.Caste, result.Created);
   private ActionResult<CasteModel> GetActionResult(CasteModel? caste, bool created = false)
   {
     if (caste == null)

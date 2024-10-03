@@ -40,7 +40,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<AspectModel>(_options) ?? throw new InvalidOperationException("The aspect could not be deserialized.");
   }
 
-  public async Task<CasteModel> SaveCasteAsync(SaveCasteCommand command, CancellationToken cancellationToken)
+  public async Task<CasteModel> CreateOrReplaceCasteAsync(CreateOrReplaceCasteCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/castes/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)
@@ -52,7 +52,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<CasteModel>(_options) ?? throw new InvalidOperationException("The caste could not be deserialized.");
   }
 
-  public async Task<CustomizationModel> SaveCustomizationAsync(CreateOrReplaceCustomizationCommand command, CancellationToken cancellationToken)
+  public async Task<CustomizationModel> CreateOrReplaceCustomizationAsync(CreateOrReplaceCustomizationCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/customizations/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)
@@ -88,7 +88,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<PartyModel>(_options) ?? throw new InvalidOperationException("The party could not be deserialized.");
   }
 
-  public async Task<PersonalityModel> SavePersonalityAsync(CreateOrReplacePersonalityCommand command, CancellationToken cancellationToken)
+  public async Task<PersonalityModel> CreateOrReplacePersonalityAsync(CreateOrReplacePersonalityCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/personalities/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)
@@ -100,7 +100,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<PersonalityModel>(_options) ?? throw new InvalidOperationException("The personality could not be deserialized.");
   }
 
-  public async Task<WorldModel> SaveWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken)
+  public async Task<WorldModel> CreateOrReplaceWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/worlds/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)
