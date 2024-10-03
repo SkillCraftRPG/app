@@ -88,7 +88,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<PartyModel>(_options) ?? throw new InvalidOperationException("The party could not be deserialized.");
   }
 
-  public async Task<PersonalityModel> SavePersonalityAsync(SavePersonalityCommand command, CancellationToken cancellationToken)
+  public async Task<PersonalityModel> SavePersonalityAsync(CreateOrReplacePersonalityCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/personalities/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)

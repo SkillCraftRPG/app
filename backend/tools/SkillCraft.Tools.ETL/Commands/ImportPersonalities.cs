@@ -21,7 +21,7 @@ internal class ImportPersonalitiesHandler : INotificationHandler<ImportPersonali
   public async Task Handle(ImportPersonalities _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Personality> personalities = Extract();
-    IReadOnlyCollection<SavePersonalityCommand> commands = Transform(personalities);
+    IReadOnlyCollection<CreateOrReplacePersonalityCommand> commands = Transform(personalities);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -33,20 +33,20 @@ internal class ImportPersonalitiesHandler : INotificationHandler<ImportPersonali
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SavePersonalityCommand> Transform(IEnumerable<Personality> personalities) => personalities.Select(personality =>
+  private static IReadOnlyCollection<CreateOrReplacePersonalityCommand> Transform(IEnumerable<Personality> personalities) => personalities.Select(personality =>
   {
-    SavePersonalityPayload payload = new(personality.Name)
+    CreateOrReplacePersonalityPayload payload = new(personality.Name)
     {
       Description = personality.Description,
       Attribute = personality.Attribute,
       GiftId = personality.GiftId
     };
-    return new SavePersonalityCommand(personality.Id, payload, Version: null);
+    return new CreateOrReplacePersonalityCommand(personality.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SavePersonalityCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplacePersonalityCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SavePersonalityCommand command in commands)
+    foreach (CreateOrReplacePersonalityCommand command in commands)
     {
       await _client.SavePersonalityAsync(command, cancellationToken);
     }

@@ -51,15 +51,15 @@ public class PersonalityTests : IntegrationTests
   [Fact(DisplayName = "It should create a new personality.")]
   public async Task It_should_create_a_new_personality()
   {
-    SavePersonalityPayload payload = new(" Courroucé ")
+    CreateOrReplacePersonalityPayload payload = new(" Courroucé ")
     {
       Description = "  Les émotions du personnage sont vives et ses mouvements sont brusques.  ",
       Attribute = Attribute.Agility,
       GiftId = _feroce.EntityId
     };
 
-    SavePersonalityCommand command = new(Guid.NewGuid(), payload, Version: null);
-    SavePersonalityResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplacePersonalityCommand command = new(Guid.NewGuid(), payload, Version: null);
+    CreateOrReplacePersonalityResult result = await Pipeline.ExecuteAsync(command);
     Assert.True(result.Created);
 
     PersonalityModel? personality = result.Personality;
@@ -92,15 +92,15 @@ public class PersonalityTests : IntegrationTests
     _stoique.Update(UserId);
     await _personalityRepository.SaveAsync(_stoique);
 
-    SavePersonalityPayload payload = new(" Stoïque ")
+    CreateOrReplacePersonalityPayload payload = new(" Stoïque ")
     {
       Description = "    ",
       Attribute = Attribute.Agility,
       GiftId = _infatigable.EntityId
     };
 
-    SavePersonalityCommand command = new(_stoique.EntityId, payload, version);
-    SavePersonalityResult result = await Pipeline.ExecuteAsync(command);
+    CreateOrReplacePersonalityCommand command = new(_stoique.EntityId, payload, version);
+    CreateOrReplacePersonalityResult result = await Pipeline.ExecuteAsync(command);
     Assert.False(result.Created);
 
     PersonalityModel? personality = result.Personality;

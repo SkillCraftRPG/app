@@ -1,13 +1,13 @@
 ﻿using FluentValidation.Results;
 using Logitar.Security.Cryptography;
+using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Personalities.Commands;
 
@@ -16,11 +16,10 @@ public class UpdatePersonalityCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
-  private readonly Mock<ICustomizationRepository> _customizationRepository = new();
   private readonly Mock<IPersonalityQuerier> _personalityQuerier = new();
   private readonly Mock<IPersonalityRepository> _personalityRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<IStorageService> _storageService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdatePersonalityCommandHandler _handler;
 
@@ -28,7 +27,7 @@ public class UpdatePersonalityCommandHandlerTests
 
   public UpdatePersonalityCommandHandlerTests()
   {
-    _handler = new(_customizationRepository.Object, _permissionService.Object, _personalityQuerier.Object, _personalityRepository.Object, _storageService.Object);
+    _handler = new(_permissionService.Object, _personalityQuerier.Object, _personalityRepository.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the personality could not be found.")]
@@ -61,17 +60,19 @@ public class UpdatePersonalityCommandHandlerTests
   [Fact(DisplayName = "It should update an existing personality.")]
   public async Task It_should_update_an_existing_personality()
   {
-    Personality personality = new(_world.Id, new Name("confrerie-mystique"), _world.OwnerId)
+    Personality personality = new(_world.Id, new Name("mysterieux"), _world.OwnerId)
     {
-      Description = new Description("Suivez le pèlerinage d’Ivellios et de Saviof en Orris.")
+      Description = new Description("Le personnage s’entoure de secrets et de mystères, il laisse peu paraître ses idées et émotions."),
+      Attribute = Attribute.Spirit
     };
     personality.Update(_world.OwnerId);
     _personalityRepository.Setup(x => x.LoadAsync(personality.Id, _cancellationToken)).ReturnsAsync(personality);
 
     UpdatePersonalityPayload payload = new()
     {
-      Name = " Confrérie Mystique ",
-      Description = new Change<string>("    ")
+      Name = " Mystérieux ",
+      Description = new Change<string>("    "),
+      GiftId = new Change<Guid?>(Guid.NewGuid())
     };
     UpdatePersonalityCommand command = new(personality.EntityId, payload);
     command.Contextualize(_world);
@@ -83,19 +84,19 @@ public class UpdatePersonalityCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(command, EntityType.Customization, _cancellationToken), Times.Once);
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Personality && y.Id == personality.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _personalityRepository.Verify(x => x.SaveAsync(
-      It.Is<Personality>(y => y.Equals(personality) && y.Name.Value == payload.Name.Trim() && y.Description == null),
+    _sender.Verify(x => x.Send(
+      It.Is<SetGiftCommand>(y => y.Personality.Equals(personality) && y.Id == payload.GiftId.Value),
       _cancellationToken), Times.Once);
-
-    _storageService.Verify(x => x.EnsureAvailableAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Personality && y.Id == personality.EntityId && y.Size > 0),
-      _cancellationToken), Times.Once);
-    _storageService.Verify(x => x.UpdateAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Personality && y.Id == personality.EntityId && y.Size > 0),
+    _sender.Verify(x => x.Send(
+      It.Is<SavePersonalityCommand>(y => y.Personality.Equals(personality)
+        && y.Personality.Name.Value == payload.Name.Trim()
+        && y.Personality.Description == null
+        && y.Personality.Attribute == Attribute.Spirit),
       _cancellationToken), Times.Once);
   }
 }

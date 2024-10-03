@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Personalities.Validators;
 
-internal class SavePersonalityValidator : AbstractValidator<SavePersonalityPayload>
+internal class CreateOrReplacePersonalityValidator : AbstractValidator<CreateOrReplacePersonalityPayload>
 {
-  public SavePersonalityValidator()
+  public CreateOrReplacePersonalityValidator()
   {
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());

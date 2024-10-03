@@ -1,129 +1,31 @@
-﻿using FluentValidation;
-using MediatR;
-using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Personalities.Validators;
+﻿using MediatR;
 using SkillCraft.Application.Storages;
-using SkillCraft.Contracts;
-using SkillCraft.Contracts.Personalities;
-using SkillCraft.Domain;
-using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Personalities.Commands;
 
-public record SavePersonalityResult(PersonalityModel? Personality = null, bool Created = false);
+internal record SavePersonalityCommand(Personality Personality) : IRequest;
 
-public record SavePersonalityCommand(Guid? Id, SavePersonalityPayload Payload, long? Version) : Activity, IRequest<SavePersonalityResult>;
-
-internal class SavePersonalityCommandHandler : PersonalityCommandHandler, IRequestHandler<SavePersonalityCommand, SavePersonalityResult>
+internal class SavePersonalityCommandHandler : IRequestHandler<SavePersonalityCommand>
 {
-  private readonly IPermissionService _permissionService;
-  private readonly IPersonalityQuerier _personalityQuerier;
   private readonly IPersonalityRepository _personalityRepository;
+  private readonly IStorageService _storageService;
 
-  public SavePersonalityCommandHandler(
-    ICustomizationRepository customizationRepository,
-    IPermissionService permissionService,
-    IPersonalityQuerier personalityQuerier,
-    IPersonalityRepository personalityRepository,
-    IStorageService storageService) : base(customizationRepository, permissionService, personalityRepository, storageService)
+  public SavePersonalityCommandHandler(IPersonalityRepository personalityRepository, IStorageService storageService)
   {
-    _permissionService = permissionService;
-    _personalityQuerier = personalityQuerier;
     _personalityRepository = personalityRepository;
+    _storageService = storageService;
   }
 
-  public async Task<SavePersonalityResult> Handle(SavePersonalityCommand command, CancellationToken cancellationToken)
+  public async Task Handle(SavePersonalityCommand command, CancellationToken cancellationToken)
   {
-    new SavePersonalityValidator().ValidateAndThrow(command.Payload);
+    Personality personality = command.Personality;
 
-    Personality? personality = await FindAsync(command, cancellationToken);
-    bool created = false;
-    if (personality == null)
-    {
-      if (command.Version.HasValue)
-      {
-        return new SavePersonalityResult();
-      }
+    EntityMetadata entity = personality.GetMetadata();
+    await _storageService.EnsureAvailableAsync(entity, cancellationToken);
 
-      personality = await CreateAsync(command, cancellationToken);
-      created = true;
-    }
-    else
-    {
-      await ReplaceAsync(command, personality, cancellationToken);
-    }
+    await _personalityRepository.SaveAsync(personality, cancellationToken);
 
-    await SaveAsync(personality, cancellationToken);
-
-    PersonalityModel model = await _personalityQuerier.ReadAsync(personality, cancellationToken);
-    return new SavePersonalityResult(model, created);
-  }
-
-  private async Task<Personality?> FindAsync(SavePersonalityCommand command, CancellationToken cancellationToken)
-  {
-    if (!command.Id.HasValue)
-    {
-      return null;
-    }
-
-    PersonalityId id = new(command.GetWorldId(), command.Id.Value);
-    return await _personalityRepository.LoadAsync(id, cancellationToken);
-  }
-
-  private async Task<Personality> CreateAsync(SavePersonalityCommand command, CancellationToken cancellationToken)
-  {
-    await _permissionService.EnsureCanCreateAsync(command, EntityType.Personality, cancellationToken);
-
-    SavePersonalityPayload payload = command.Payload;
-    UserId userId = command.GetUserId();
-
-    Personality personality = new(command.GetWorldId(), new Name(payload.Name), userId, command.Id)
-    {
-      Description = Description.TryCreate(payload.Description),
-      Attribute = payload.Attribute
-    };
-    await SetGiftAsync(command, personality, payload.GiftId, cancellationToken);
-    personality.Update(userId);
-
-    return personality;
-  }
-
-  private async Task ReplaceAsync(SavePersonalityCommand command, Personality personality, CancellationToken cancellationToken)
-  {
-    await _permissionService.EnsureCanUpdateAsync(command, personality.GetMetadata(), cancellationToken);
-
-    SavePersonalityPayload payload = command.Payload;
-    UserId userId = command.GetUserId();
-
-    Personality? reference = null;
-    if (command.Version.HasValue)
-    {
-      reference = await _personalityRepository.LoadAsync(personality.Id, command.Version.Value, cancellationToken);
-    }
-    reference ??= personality;
-
-    Name name = new(payload.Name);
-    if (name != reference.Name)
-    {
-      personality.Name = name;
-    }
-    Description? description = Description.TryCreate(payload.Description);
-    if (description != reference.Description)
-    {
-      personality.Description = description;
-    }
-
-    if (payload.Attribute != reference.Attribute)
-    {
-      personality.Attribute = payload.Attribute;
-    }
-    CustomizationId? giftId = payload.GiftId.HasValue ? new(personality.WorldId, payload.GiftId.Value) : null;
-    if (giftId != reference.GiftId)
-    {
-      await SetGiftAsync(command, personality, payload.GiftId, cancellationToken);
-    }
-
-    personality.Update(userId);
+    await _storageService.UpdateAsync(entity, cancellationToken);
   }
 }
