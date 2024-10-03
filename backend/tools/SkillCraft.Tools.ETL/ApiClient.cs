@@ -28,7 +28,7 @@ internal class ApiClient : IApiClient
     _options.Converters.Add(new JsonStringEnumConverter());
   }
 
-  public async Task<AspectModel> SaveAspectAsync(SaveAspectCommand command, CancellationToken cancellationToken)
+  public async Task<AspectModel> CreateOrReplaceAspectAsync(CreateOrReplaceAspectCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/aspects/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)

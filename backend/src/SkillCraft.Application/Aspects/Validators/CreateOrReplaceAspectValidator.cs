@@ -5,9 +5,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Aspects.Validators;
 
-internal class SaveAspectValidator : AbstractValidator<SaveAspectPayload>
+internal class CreateOrReplaceAspectValidator : AbstractValidator<CreateOrReplaceAspectPayload>
 {
-  public SaveAspectValidator()
+  public CreateOrReplaceAspectValidator()
   {
     RuleFor(x => x.Name).Name();
     When(x => !string.IsNullOrWhiteSpace(x.Description), () => RuleFor(x => x.Description!).Description());

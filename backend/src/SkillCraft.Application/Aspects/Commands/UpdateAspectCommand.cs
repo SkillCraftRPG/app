@@ -2,7 +2,6 @@
 using MediatR;
 using SkillCraft.Application.Aspects.Validators;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
@@ -11,21 +10,23 @@ namespace SkillCraft.Application.Aspects.Commands;
 
 public record UpdateAspectCommand(Guid Id, UpdateAspectPayload Payload) : Activity, IRequest<AspectModel?>;
 
-internal class UpdateAspectCommandHandler : AspectCommandHandler, IRequestHandler<UpdateAspectCommand, AspectModel?>
+internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand, AspectModel?>
 {
   private readonly IAspectQuerier _aspectQuerier;
   private readonly IAspectRepository _aspectRepository;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public UpdateAspectCommandHandler(
     IAspectQuerier aspectQuerier,
     IAspectRepository aspectRepository,
     IPermissionService permissionService,
-    IStorageService storageService) : base(aspectRepository, storageService)
+    ISender sender)
   {
     _aspectQuerier = aspectQuerier;
     _aspectRepository = aspectRepository;
     _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<AspectModel?> Handle(UpdateAspectCommand command, CancellationToken cancellationToken)
@@ -59,10 +60,9 @@ internal class UpdateAspectCommandHandler : AspectCommandHandler, IRequestHandle
     {
       aspect.Skills = new Skills(payload.Skills);
     }
-
     aspect.Update(command.GetUserId());
 
-    await SaveAsync(aspect, cancellationToken);
+    await _sender.Send(new SaveAspectCommand(aspect), cancellationToken);
 
     return await _aspectQuerier.ReadAsync(aspect, cancellationToken);
   }
