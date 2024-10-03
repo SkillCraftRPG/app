@@ -26,9 +26,9 @@ public class AspectController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<AspectModel>> CreateAsync([FromBody] SaveAspectPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<AspectModel>> CreateAsync([FromBody] CreateOrReplaceAspectPayload payload, CancellationToken cancellationToken)
   {
-    SaveAspectResult result = await _pipeline.ExecuteAsync(new SaveAspectCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplaceAspectResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceAspectCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -40,9 +40,9 @@ public class AspectController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<AspectModel>> ReplaceAsync(Guid id, [FromBody] SaveAspectPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<AspectModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceAspectPayload payload, long? version, CancellationToken cancellationToken)
   {
-    SaveAspectResult result = await _pipeline.ExecuteAsync(new SaveAspectCommand(id, payload, version), cancellationToken);
+    CreateOrReplaceAspectResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceAspectCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -60,7 +60,7 @@ public class AspectController : ControllerBase
     return GetActionResult(aspect);
   }
 
-  private ActionResult<AspectModel> GetActionResult(SaveAspectResult result) => GetActionResult(result.Aspect, result.Created);
+  private ActionResult<AspectModel> GetActionResult(CreateOrReplaceAspectResult result) => GetActionResult(result.Aspect, result.Created);
   private ActionResult<AspectModel> GetActionResult(AspectModel? aspect, bool created = false)
   {
     if (aspect == null)

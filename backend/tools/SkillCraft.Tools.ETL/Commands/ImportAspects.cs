@@ -22,7 +22,7 @@ internal class ImportAspectsHandler : INotificationHandler<ImportAspects>
   public async Task Handle(ImportAspects _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<Aspect> aspects = Extract();
-    IReadOnlyCollection<SaveAspectCommand> commands = Transform(aspects);
+    IReadOnlyCollection<CreateOrReplaceAspectCommand> commands = Transform(aspects);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -34,9 +34,9 @@ internal class ImportAspectsHandler : INotificationHandler<ImportAspects>
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SaveAspectCommand> Transform(IEnumerable<Aspect> aspects) => aspects.Select(aspect =>
+  private static IReadOnlyCollection<CreateOrReplaceAspectCommand> Transform(IEnumerable<Aspect> aspects) => aspects.Select(aspect =>
   {
-    SaveAspectPayload payload = new(aspect.Name)
+    CreateOrReplaceAspectPayload payload = new(aspect.Name)
     {
       Description = aspect.Description,
       Attributes = new AttributeSelectionModel
@@ -52,14 +52,14 @@ internal class ImportAspectsHandler : INotificationHandler<ImportAspects>
         Discounted2 = aspect.DiscountedSkill2
       }
     };
-    return new SaveAspectCommand(aspect.Id, payload, Version: null);
+    return new CreateOrReplaceAspectCommand(aspect.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SaveAspectCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplaceAspectCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SaveAspectCommand command in commands)
+    foreach (CreateOrReplaceAspectCommand command in commands)
     {
-      await _client.SaveAspectAsync(command, cancellationToken);
+      await _client.CreateOrReplaceAspectAsync(command, cancellationToken);
     }
   }
 }

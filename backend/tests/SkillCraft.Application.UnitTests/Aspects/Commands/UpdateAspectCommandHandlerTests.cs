@@ -1,6 +1,6 @@
-﻿using Moq;
+﻿using MediatR;
+using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Domain;
@@ -17,7 +17,7 @@ public class UpdateAspectCommandHandlerTests
   private readonly Mock<IAspectQuerier> _aspectQuerier = new();
   private readonly Mock<IAspectRepository> _aspectRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<IStorageService> _storageService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdateAspectCommandHandler _handler;
 
@@ -25,7 +25,7 @@ public class UpdateAspectCommandHandlerTests
 
   public UpdateAspectCommandHandlerTests()
   {
-    _handler = new(_aspectQuerier.Object, _aspectRepository.Object, _permissionService.Object, _storageService.Object);
+    _handler = new(_aspectQuerier.Object, _aspectRepository.Object, _permissionService.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the aspect could not be found.")]
@@ -99,18 +99,16 @@ public class UpdateAspectCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Aspect && y.Id == aspect.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _aspectRepository.Verify(x => x.SaveAsync(
-      It.Is<Aspect>(y => y.Equals(aspect) && y.Name.Value == payload.Name.Trim() && y.Description == null
-        && y.Attributes.Mandatory1 == payload.Attributes.Mandatory1 && y.Attributes.Mandatory2 == payload.Attributes.Mandatory2
-        && y.Attributes.Optional1 == payload.Attributes.Optional1 && y.Attributes.Optional2 == payload.Attributes.Optional2
-        && y.Skills.Discounted1 == payload.Skills.Discounted1 && y.Skills.Discounted2 == payload.Skills.Discounted2),
-      _cancellationToken), Times.Once);
-
-    _storageService.Verify(x => x.EnsureAvailableAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Aspect && y.Id == aspect.EntityId && y.Size > 0),
-      _cancellationToken), Times.Once);
-    _storageService.Verify(x => x.UpdateAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Aspect && y.Id == aspect.EntityId && y.Size > 0),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveAspectCommand>(y => y.Aspect.Equals(aspect)
+        && y.Aspect.Name.Value == payload.Name.Trim()
+        && y.Aspect.Description == null
+        && y.Aspect.Attributes.Mandatory1 == payload.Attributes.Mandatory1
+        && y.Aspect.Attributes.Mandatory2 == payload.Attributes.Mandatory2
+        && y.Aspect.Attributes.Optional1 == payload.Attributes.Optional1
+        && y.Aspect.Attributes.Optional2 == payload.Attributes.Optional2
+        && y.Aspect.Skills.Discounted1 == payload.Skills.Discounted1
+        && y.Aspect.Skills.Discounted2 == payload.Skills.Discounted2),
       _cancellationToken), Times.Once);
   }
 }

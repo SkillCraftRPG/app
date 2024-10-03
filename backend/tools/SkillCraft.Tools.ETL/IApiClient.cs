@@ -17,7 +17,7 @@ namespace SkillCraft.Tools.ETL;
 
 internal interface IApiClient
 {
-  Task<AspectModel> SaveAspectAsync(SaveAspectCommand command, CancellationToken cancellationToken = default);
+  Task<AspectModel> CreateOrReplaceAspectAsync(CreateOrReplaceAspectCommand command, CancellationToken cancellationToken = default);
   Task<CasteModel> SaveCasteAsync(SaveCasteCommand command, CancellationToken cancellationToken = default);
   Task<CustomizationModel> SaveCustomizationAsync(CreateOrReplaceCustomizationCommand command, CancellationToken cancellationToken = default);
   Task<EducationModel> SaveEducationAsync(SaveEducationCommand command, CancellationToken cancellationToken = default);
