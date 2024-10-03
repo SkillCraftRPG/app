@@ -52,7 +52,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<CasteModel>(_options) ?? throw new InvalidOperationException("The caste could not be deserialized.");
   }
 
-  public async Task<CustomizationModel> SaveCustomizationAsync(SaveCustomizationCommand command, CancellationToken cancellationToken)
+  public async Task<CustomizationModel> SaveCustomizationAsync(CreateOrReplaceCustomizationCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/customizations/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)

@@ -1,8 +1,8 @@
 ﻿using FluentValidation.Results;
 using Logitar.Security.Cryptography;
+using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
@@ -18,7 +18,7 @@ public class UpdateCustomizationCommandHandlerTests
   private readonly Mock<ICustomizationQuerier> _customizationQuerier = new();
   private readonly Mock<ICustomizationRepository> _customizationRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
-  private readonly Mock<IStorageService> _storageService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly UpdateCustomizationCommandHandler _handler;
 
@@ -26,7 +26,7 @@ public class UpdateCustomizationCommandHandlerTests
 
   public UpdateCustomizationCommandHandlerTests()
   {
-    _handler = new(_customizationQuerier.Object, _customizationRepository.Object, _permissionService.Object, _storageService.Object);
+    _handler = new(_customizationQuerier.Object, _customizationRepository.Object, _permissionService.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the customization could not be found.")]
@@ -84,15 +84,10 @@ public class UpdateCustomizationCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Customization && y.Id == customization.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _customizationRepository.Verify(x => x.SaveAsync(
-      It.Is<Customization>(y => y.Equals(customization) && y.Name.Value == payload.Name.Trim() && y.Description == null),
-      _cancellationToken), Times.Once);
-
-    _storageService.Verify(x => x.EnsureAvailableAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Customization && y.Id == customization.EntityId && y.Size > 0),
-      _cancellationToken), Times.Once);
-    _storageService.Verify(x => x.UpdateAsync(
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Customization && y.Id == customization.EntityId && y.Size > 0),
+    _sender.Verify(x => x.Send(
+      It.Is<SaveCustomizationCommand>(y => y.Customization.Equals(customization)
+        && y.Customization.Name.Value == payload.Name.Trim()
+        && y.Customization.Description == null),
       _cancellationToken), Times.Once);
   }
 }

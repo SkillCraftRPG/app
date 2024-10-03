@@ -26,9 +26,9 @@ public class CustomizationController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<CustomizationModel>> CreateAsync([FromBody] SaveCustomizationPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<CustomizationModel>> CreateAsync([FromBody] CreateOrReplaceCustomizationPayload payload, CancellationToken cancellationToken)
   {
-    SaveCustomizationResult result = await _pipeline.ExecuteAsync(new SaveCustomizationCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplaceCustomizationResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceCustomizationCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -40,9 +40,9 @@ public class CustomizationController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<CustomizationModel>> ReplaceAsync(Guid id, [FromBody] SaveCustomizationPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<CustomizationModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceCustomizationPayload payload, long? version, CancellationToken cancellationToken)
   {
-    SaveCustomizationResult result = await _pipeline.ExecuteAsync(new SaveCustomizationCommand(id, payload, version), cancellationToken);
+    CreateOrReplaceCustomizationResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceCustomizationCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -60,7 +60,7 @@ public class CustomizationController : ControllerBase
     return GetActionResult(customization);
   }
 
-  private ActionResult<CustomizationModel> GetActionResult(SaveCustomizationResult result) => GetActionResult(result.Customization, result.Created);
+  private ActionResult<CustomizationModel> GetActionResult(CreateOrReplaceCustomizationResult result) => GetActionResult(result.Customization, result.Created);
   private ActionResult<CustomizationModel> GetActionResult(CustomizationModel? customization, bool created = false)
   {
     if (customization == null)
