@@ -23,5 +23,5 @@ internal interface IApiClient
   Task<EducationModel> SaveEducationAsync(SaveEducationCommand command, CancellationToken cancellationToken = default);
   Task<PartyModel> SavePartyAsync(SavePartyCommand command, CancellationToken cancellationToken = default);
   Task<PersonalityModel> SavePersonalityAsync(CreateOrReplacePersonalityCommand command, CancellationToken cancellationToken = default);
-  Task<WorldModel> SaveWorldAsync(SaveWorldCommand command, CancellationToken cancellationToken = default);
+  Task<WorldModel> SaveWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken = default);
 }

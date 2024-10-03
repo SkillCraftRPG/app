@@ -4,9 +4,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Worlds.Validators;
 
-internal class SaveWorldValidator : AbstractValidator<SaveWorldPayload>
+internal class CreateOrReplaceWorldValidator : AbstractValidator<CreateOrReplaceWorldPayload>
 {
-  public SaveWorldValidator()
+  public CreateOrReplaceWorldValidator()
   {
     RuleFor(x => x.Slug).Slug();
     When(x => !string.IsNullOrWhiteSpace(x.Name), () => RuleFor(x => x.Name!).Name());

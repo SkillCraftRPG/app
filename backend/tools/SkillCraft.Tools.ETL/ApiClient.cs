@@ -100,7 +100,7 @@ internal class ApiClient : IApiClient
     return result.Deserialize<PersonalityModel>(_options) ?? throw new InvalidOperationException("The personality could not be deserialized.");
   }
 
-  public async Task<WorldModel> SaveWorldAsync(SaveWorldCommand command, CancellationToken cancellationToken)
+  public async Task<WorldModel> SaveWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken)
   {
     Uri uri = new($"/worlds/{command.Id}?version={command.Version}", UriKind.Relative);
     JsonRequestOptions options = new(command.Payload)

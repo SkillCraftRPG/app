@@ -20,7 +20,7 @@ internal class ImportWorldsHandler : INotificationHandler<ImportWorlds>
   public async Task Handle(ImportWorlds _, CancellationToken cancellationToken)
   {
     IReadOnlyCollection<World> worlds = Extract();
-    IReadOnlyCollection<SaveWorldCommand> commands = Transform(worlds);
+    IReadOnlyCollection<CreateOrReplaceWorldCommand> commands = Transform(worlds);
     await LoadAsync(commands, cancellationToken);
   }
 
@@ -32,19 +32,19 @@ internal class ImportWorldsHandler : INotificationHandler<ImportWorlds>
     return records.ToArray().AsReadOnly();
   }
 
-  private static IReadOnlyCollection<SaveWorldCommand> Transform(IEnumerable<World> worlds) => worlds.Select(world =>
+  private static IReadOnlyCollection<CreateOrReplaceWorldCommand> Transform(IEnumerable<World> worlds) => worlds.Select(world =>
   {
-    SaveWorldPayload payload = new(world.Slug)
+    CreateOrReplaceWorldPayload payload = new(world.Slug)
     {
       Name = world.Name,
       Description = world.Description
     };
-    return new SaveWorldCommand(world.Id, payload, Version: null);
+    return new CreateOrReplaceWorldCommand(world.Id, payload, Version: null);
   }).ToArray().AsReadOnly();
 
-  private async Task LoadAsync(IEnumerable<SaveWorldCommand> commands, CancellationToken cancellationToken)
+  private async Task LoadAsync(IEnumerable<CreateOrReplaceWorldCommand> commands, CancellationToken cancellationToken)
   {
-    foreach (SaveWorldCommand command in commands)
+    foreach (CreateOrReplaceWorldCommand command in commands)
     {
       await _client.SaveWorldAsync(command, cancellationToken);
     }

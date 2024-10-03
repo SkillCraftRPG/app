@@ -24,9 +24,9 @@ public class WorldController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<WorldModel>> CreateAsync([FromBody] SaveWorldPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<WorldModel>> CreateAsync([FromBody] CreateOrReplaceWorldPayload payload, CancellationToken cancellationToken)
   {
-    SaveWorldResult result = await _pipeline.ExecuteAsync(new SaveWorldCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplaceWorldResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceWorldCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -45,9 +45,9 @@ public class WorldController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<WorldModel>> ReplaceAsync(Guid id, [FromBody] SaveWorldPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<WorldModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceWorldPayload payload, long? version, CancellationToken cancellationToken)
   {
-    SaveWorldResult result = await _pipeline.ExecuteAsync(new SaveWorldCommand(id, payload, version), cancellationToken);
+    CreateOrReplaceWorldResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceWorldCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -65,7 +65,7 @@ public class WorldController : ControllerBase
     return GetActionResult(world);
   }
 
-  private ActionResult<WorldModel> GetActionResult(SaveWorldResult result) => GetActionResult(result.World, result.Created);
+  private ActionResult<WorldModel> GetActionResult(CreateOrReplaceWorldResult result) => GetActionResult(result.World, result.Created);
   private ActionResult<WorldModel> GetActionResult(WorldModel? world, bool created = false)
   {
     if (world == null)

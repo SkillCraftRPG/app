@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Storages;
 using SkillCraft.Application.Worlds.Validators;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
@@ -11,19 +10,21 @@ namespace SkillCraft.Application.Worlds.Commands;
 
 public record UpdateWorldCommand(Guid Id, UpdateWorldPayload Payload) : Activity, IRequest<WorldModel?>;
 
-internal class UpdateWorldCommandHandler : WorldCommandHandler, IRequestHandler<UpdateWorldCommand, WorldModel?>
+internal class UpdateWorldCommandHandler : IRequestHandler<UpdateWorldCommand, WorldModel?>
 {
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
   private readonly IWorldQuerier _worldQuerier;
   private readonly IWorldRepository _worldRepository;
 
   public UpdateWorldCommandHandler(
     IPermissionService permissionService,
-    IStorageService storageService,
+    ISender sender,
     IWorldQuerier worldQuerier,
-    IWorldRepository worldRepository) : base(storageService, worldQuerier, worldRepository)
+    IWorldRepository worldRepository)
   {
     _permissionService = permissionService;
+    _sender = sender;
     _worldQuerier = worldQuerier;
     _worldRepository = worldRepository;
   }
@@ -57,7 +58,7 @@ internal class UpdateWorldCommandHandler : WorldCommandHandler, IRequestHandler<
 
     world.Update(command.GetUserId());
 
-    await SaveAsync(world, cancellationToken);
+    await _sender.Send(new SaveWorldCommand(world), cancellationToken);
 
     return await _worldQuerier.ReadAsync(world, cancellationToken);
   }
