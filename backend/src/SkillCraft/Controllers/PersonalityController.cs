@@ -26,9 +26,9 @@ public class PersonalityController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<PersonalityModel>> CreateAsync([FromBody] SavePersonalityPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<PersonalityModel>> CreateAsync([FromBody] CreateOrReplacePersonalityPayload payload, CancellationToken cancellationToken)
   {
-    SavePersonalityResult result = await _pipeline.ExecuteAsync(new SavePersonalityCommand(Id: null, payload, Version: null), cancellationToken);
+    CreateOrReplacePersonalityResult result = await _pipeline.ExecuteAsync(new CreateOrReplacePersonalityCommand(Id: null, payload, Version: null), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -40,9 +40,9 @@ public class PersonalityController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<PersonalityModel>> ReplaceAsync(Guid id, [FromBody] SavePersonalityPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<PersonalityModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplacePersonalityPayload payload, long? version, CancellationToken cancellationToken)
   {
-    SavePersonalityResult result = await _pipeline.ExecuteAsync(new SavePersonalityCommand(id, payload, version), cancellationToken);
+    CreateOrReplacePersonalityResult result = await _pipeline.ExecuteAsync(new CreateOrReplacePersonalityCommand(id, payload, version), cancellationToken);
     return GetActionResult(result);
   }
 
@@ -60,7 +60,7 @@ public class PersonalityController : ControllerBase
     return GetActionResult(personality);
   }
 
-  private ActionResult<PersonalityModel> GetActionResult(SavePersonalityResult result) => GetActionResult(result.Personality, result.Created);
+  private ActionResult<PersonalityModel> GetActionResult(CreateOrReplacePersonalityResult result) => GetActionResult(result.Personality, result.Created);
   private ActionResult<PersonalityModel> GetActionResult(PersonalityModel? personality, bool created = false)
   {
     if (personality == null)
