@@ -15,8 +15,8 @@ namespace SkillCraft.Domain.Characters;
 public class Character : AggregateRoot
 {
   public new CharacterId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
   public Name Name => _name ?? throw new InvalidOperationException($"The {nameof(Name)} has not been initialized yet.");
@@ -60,7 +60,7 @@ public class Character : AggregateRoot
     Caste caste,
     Education education,
     UserId userId,
-    CharacterId? id = null) : base(id?.AggregateId)
+    Guid? entityId = null) : base(new CharacterId(worldId, entityId).AggregateId)
   {
     if (lineage.WorldId != worldId)
     {
@@ -84,13 +84,12 @@ public class Character : AggregateRoot
       throw new ArgumentException("The education does not reside in the same world as the character.", nameof(education));
     }
 
-    Raise(new CreatedEvent(worldId, name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes, caste.Id,
-      education.Id), userId.ActorId);
+    Raise(
+      new CreatedEvent(name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id),
+      userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     _name = @event.Name;
     Player = @event.Player;
 
@@ -191,8 +190,6 @@ public class Character : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public Name Name { get; }
     public PlayerName? Player { get; }
 
@@ -211,12 +208,10 @@ public class Character : AggregateRoot
     public CasteId CasteId { get; }
     public EducationId EducationId { get; }
 
-    public CreatedEvent(WorldId worldId, Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
+    public CreatedEvent(Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
       PersonalityId personalityId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds,
       BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
     {
-      WorldId = worldId;
-
       Name = name;
       Player = player;
 
