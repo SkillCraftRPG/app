@@ -1,5 +1,4 @@
 ﻿using Moq;
-using SkillCraft.Contracts.Talents;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Talents;
 
@@ -18,8 +17,6 @@ public class SetRequiredTalentCommandHandlerTests
   private readonly Talent _requiredTalent;
   private readonly Talent _requiringTalent;
 
-  private readonly UpdateTalentCommand _activity;
-
   public SetRequiredTalentCommandHandlerTests()
   {
     _handler = new(_talentRepository.Object);
@@ -31,15 +28,12 @@ public class SetRequiredTalentCommandHandlerTests
     _requiringTalent.SetRequiredTalent(_requiredTalent);
     _requiringTalent.Update(_world.OwnerId);
     _talentRepository.Setup(x => x.LoadAsync(_requiringTalent.Id, _cancellationToken)).ReturnsAsync(_requiringTalent);
-
-    _activity = new(_requiringTalent.EntityId, new UpdateTalentPayload());
-    _activity.Contextualize(_world);
   }
 
   [Fact(DisplayName = "It should nullify the required talent.")]
   public async Task It_should_nullify_the_required_talent()
   {
-    SetRequiredTalentCommand command = new(_activity, _requiringTalent, Id: null);
+    SetRequiredTalentCommand command = new(_requiringTalent, Id: null);
 
     await _handler.Handle(command, _cancellationToken);
 
@@ -50,7 +44,7 @@ public class SetRequiredTalentCommandHandlerTests
   public async Task It_should_set_the_required_talent()
   {
     Talent talent = new(_world.Id, tier: 1, new Name("Cuirassé"), _world.OwnerId);
-    SetRequiredTalentCommand command = new(_activity, talent, _requiringTalent.EntityId);
+    SetRequiredTalentCommand command = new(talent, _requiringTalent.EntityId);
 
     await _handler.Handle(command, _cancellationToken);
 
@@ -61,7 +55,7 @@ public class SetRequiredTalentCommandHandlerTests
   public async Task It_should_throw_AggregateNotFoundException_when_the_required_talent_could_not_be_found()
   {
     Talent talent = new(_world.Id, tier: 1, new Name("Manœuvres de combat"), _world.OwnerId);
-    SetRequiredTalentCommand command = new(_activity, talent, Guid.NewGuid());
+    SetRequiredTalentCommand command = new(talent, Guid.NewGuid());
     Assert.True(command.Id.HasValue);
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Talent>>(async () => await _handler.Handle(command, _cancellationToken));
@@ -75,7 +69,7 @@ public class SetRequiredTalentCommandHandlerTests
     Talent talent = new(_world.Id, tier: 1, new Name("Manœuvres de combat"), _world.OwnerId);
     _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
 
-    SetRequiredTalentCommand command = new(_activity, _requiringTalent, talent.EntityId);
+    SetRequiredTalentCommand command = new(_requiringTalent, talent.EntityId);
 
     var exception = await Assert.ThrowsAsync<InvalidRequiredTalentTierException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(talent.EntityId, exception.Id);

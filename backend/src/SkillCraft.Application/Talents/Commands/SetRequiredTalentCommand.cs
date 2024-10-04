@@ -3,7 +3,7 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Talents.Commands;
 
-internal record SetRequiredTalentCommand(Activity Activity, Talent Talent, Guid? Id) : IRequest;
+internal record SetRequiredTalentCommand(Talent Talent, Guid? Id) : IRequest;
 
 internal class SetRequiredTalentCommandHandler : IRequestHandler<SetRequiredTalentCommand>
 {

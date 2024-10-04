@@ -88,13 +88,15 @@ public class UpdateTalentCommandHandlerTests
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Description.Value);
-    _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Talent == talent
-      && y.Id == payload.RequiredTalentId.Value), _cancellationToken), Times.Once);
-    _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.Equals(talent)
-      && y.Talent.Name.Value == payload.Name.Trim()
-      && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Value.Trim()
-      && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
-      && y.Talent.Skill == null
+    _sender.Verify(x => x.Send(
+      It.Is<SetRequiredTalentCommand>(y => y.Talent == talent && y.Id == payload.RequiredTalentId.Value),
+      _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(
+      It.Is<SaveTalentCommand>(y => y.Talent.Equals(talent)
+        && y.Talent.Name.Value == payload.Name.Trim()
+        && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Value.Trim()
+        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+        && y.Talent.Skill == null
       ), _cancellationToken), Times.Once);
   }
 }

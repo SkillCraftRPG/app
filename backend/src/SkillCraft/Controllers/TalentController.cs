@@ -26,26 +26,24 @@ public class TalentController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<TalentModel>> CreateAsync([FromBody] CreateTalentPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<TalentModel>> CreateAsync([FromBody] CreateOrReplaceTalentPayload payload, CancellationToken cancellationToken)
   {
-    TalentModel talent = await _pipeline.ExecuteAsync(new CreateTalentCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Talent}/{{id}}", [new KeyValuePair<string, string>("id", talent.Id.ToString())]);
-
-    return Created(location, talent);
+    CreateOrReplaceTalentResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceTalentCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<TalentModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     TalentModel? talent = await _pipeline.ExecuteAsync(new ReadTalentQuery(id), cancellationToken);
-    return talent == null ? NotFound() : Ok(talent);
+    return GetActionResult(talent);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<TalentModel>> ReplaceAsync(Guid id, [FromBody] ReplaceTalentPayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<TalentModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceTalentPayload payload, long? version, CancellationToken cancellationToken)
   {
-    TalentModel? talent = await _pipeline.ExecuteAsync(new ReplaceTalentCommand(id, payload, version), cancellationToken);
-    return talent == null ? NotFound() : Ok(talent);
+    CreateOrReplaceTalentResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceTalentCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class TalentController : ControllerBase
   public async Task<ActionResult<TalentModel>> UpdateAsync(Guid id, [FromBody] UpdateTalentPayload payload, CancellationToken cancellationToken)
   {
     TalentModel? talent = await _pipeline.ExecuteAsync(new UpdateTalentCommand(id, payload), cancellationToken);
-    return talent == null ? NotFound() : Ok(talent);
+    return GetActionResult(talent);
+  }
+
+  private ActionResult<TalentModel> GetActionResult(CreateOrReplaceTalentResult result) => GetActionResult(result.Talent, result.Created);
+  private ActionResult<TalentModel> GetActionResult(TalentModel? talent, bool created = false)
+  {
+    if (talent == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Talent}/{{id}}", [new KeyValuePair<string, string>("id", talent.Id.ToString())]);
+      return Created(location, talent);
+    }
+
+    return Ok(talent);
   }
 }

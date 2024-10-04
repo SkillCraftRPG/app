@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Talents;
 
-public record CreateTalentPayload
+public record CreateOrReplaceTalentPayload
 {
   public int Tier { get; set; }
 
@@ -10,11 +10,11 @@ public record CreateTalentPayload
   public bool AllowMultiplePurchases { get; set; }
   public Guid? RequiredTalentId { get; set; }
 
-  public CreateTalentPayload() : this(string.Empty)
+  public CreateOrReplaceTalentPayload() : this(string.Empty)
   {
   }
 
-  public CreateTalentPayload(string name)
+  public CreateOrReplaceTalentPayload(string name)
   {
     Name = name;
   }
