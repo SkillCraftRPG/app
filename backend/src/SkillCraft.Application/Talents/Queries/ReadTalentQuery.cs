@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 
 namespace SkillCraft.Application.Talents.Queries;
@@ -19,12 +20,8 @@ internal class ReadTalentQueryHandler : IRequestHandler<ReadTalentQuery, TalentM
 
   public async Task<TalentModel?> Handle(ReadTalentQuery query, CancellationToken cancellationToken)
   {
-    TalentModel? talent = await _talentQuerier.ReadAsync(query.Id, cancellationToken);
-    if (talent != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, talent.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Talent, cancellationToken);
 
-    return talent;
+    return await _talentQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

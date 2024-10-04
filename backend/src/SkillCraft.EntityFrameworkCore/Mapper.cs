@@ -238,6 +238,7 @@ internal class Mapper
 
     TalentModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Tier = source.Tier,
       Description = source.Description,
       AllowMultiplePurchases = source.AllowMultiplePurchases,

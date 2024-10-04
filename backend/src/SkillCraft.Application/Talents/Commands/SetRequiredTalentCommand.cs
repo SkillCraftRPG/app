@@ -1,12 +1,9 @@
 ﻿using MediatR;
-using SkillCraft.Application.Permissions;
-using SkillCraft.Contracts;
 using SkillCraft.Domain.Talents;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Talents.Commands;
 
-internal record SetRequiredTalentCommand(Activity Activity, Talent Talent, Guid? Id) : IRequest;
+internal record SetRequiredTalentCommand(Talent Talent, Guid? Id) : IRequest;
 
 internal class SetRequiredTalentCommandHandler : IRequestHandler<SetRequiredTalentCommand>
 {
@@ -26,16 +23,11 @@ internal class SetRequiredTalentCommandHandler : IRequestHandler<SetRequiredTale
 
     if (command.Id.HasValue)
     {
-      TalentId talentId = new(command.Id.Value);
+      TalentId talentId = new(talent.WorldId, command.Id.Value);
       requiredTalent = await _talentRepository.LoadAsync(talentId, cancellationToken)
         ?? throw new AggregateNotFoundException<Talent>(talentId.AggregateId, PropertyName);
 
-      if (requiredTalent.WorldId != talent.WorldId)
-      {
-        Activity activity = command.Activity;
-        throw new PermissionDeniedException(Action.Preview, EntityType.Talent, activity.GetUser(), activity.GetWorld(), requiredTalent.Id.ToGuid());
-      }
-      else if (requiredTalent.Tier > talent.Tier)
+      if (requiredTalent.Tier > talent.Tier)
       {
         throw new InvalidRequiredTalentTierException(requiredTalent, PropertyName);
       }

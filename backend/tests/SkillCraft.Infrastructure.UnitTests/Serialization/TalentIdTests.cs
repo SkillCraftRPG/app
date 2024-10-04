@@ -1,4 +1,5 @@
 ﻿using SkillCraft.Domain.Talents;
+using SkillCraft.Domain.Worlds;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
@@ -8,6 +9,8 @@ public class TalentIdTests
 {
   private readonly JsonSerializerOptions _options = new();
 
+  private readonly TalentId _id = new(WorldId.NewId());
+
   public TalentIdTests()
   {
     _options.Converters.Add(new TalentIdConverter());
@@ -16,7 +19,7 @@ public class TalentIdTests
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
-    string json = string.Concat('"', TalentId.NewId(), '"');
+    string json = string.Concat('"', _id, '"');
     TalentId talentId = JsonSerializer.Deserialize<TalentId>(json, _options);
     Assert.Equal(json.Trim('"'), talentId.Value);
   }
@@ -32,8 +35,7 @@ public class TalentIdTests
   [Fact(DisplayName = "It should serialize correctly.")]
   public void It_should_serialize_correctly()
   {
-    TalentId talentId = TalentId.NewId();
-    string json = JsonSerializer.Serialize(talentId, _options);
-    Assert.Equal(string.Concat('"', talentId, '"'), json);
+    string json = JsonSerializer.Serialize(_id, _options);
+    Assert.Equal(string.Concat('"', _id, '"'), json);
   }
 }

@@ -13,7 +13,7 @@ internal static class TalentExtensions
   public static EntityMetadata GetMetadata(this Talent talent)
   {
     long size = 4 + talent.Name.Size + (talent.Description?.Size ?? 0) + 1 + 4;
-    return new EntityMetadata(talent.WorldId, new EntityKey(Type, talent.Id.ToGuid()), size);
+    return new EntityMetadata(talent.WorldId, new EntityKey(Type, talent.EntityId), size);
   }
   public static EntityMetadata GetMetadata(this TalentModel talent)
   {

@@ -6,6 +6,7 @@ using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Languages.Commands;
 using SkillCraft.Application.Parties.Commands;
 using SkillCraft.Application.Personalities.Commands;
+using SkillCraft.Application.Talents.Commands;
 using SkillCraft.Application.Worlds.Commands;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
@@ -14,6 +15,7 @@ using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
 
 namespace SkillCraft.Tools.ETL;
@@ -112,6 +114,18 @@ internal class ApiClient : IApiClient
     options.Headers.Add(new HttpHeader("X-World", "ungar")); // TODO(fpion): refactor
     JsonApiResult result = await _client.PutAsync(uri, options, cancellationToken);
     return result.Deserialize<PersonalityModel>(_options) ?? throw new InvalidOperationException("The personality could not be deserialized.");
+  }
+
+  public async Task<TalentModel> CreateOrReplaceTalentAsync(CreateOrReplaceTalentCommand command, CancellationToken cancellationToken)
+  {
+    Uri uri = new($"/talents/{command.Id}?version={command.Version}", UriKind.Relative);
+    JsonRequestOptions options = new(command.Payload)
+    {
+      SerializerOptions = _options
+    };
+    options.Headers.Add(new HttpHeader("X-World", "ungar")); // TODO(fpion): refactor
+    JsonApiResult result = await _client.PutAsync(uri, options, cancellationToken);
+    return result.Deserialize<TalentModel>(_options) ?? throw new InvalidOperationException("The talent could not be deserialized.");
   }
 
   public async Task<WorldModel> CreateOrReplaceWorldAsync(CreateOrReplaceWorldCommand command, CancellationToken cancellationToken)

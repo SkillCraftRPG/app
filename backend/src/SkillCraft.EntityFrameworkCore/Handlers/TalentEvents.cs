@@ -19,10 +19,10 @@ internal static class TalentEvents
     public async Task Handle(Talent.CreatedEvent @event, CancellationToken cancellationToken)
     {
       TalentEntity? talent = await _context.Talents.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (talent == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new TalentId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -47,19 +47,17 @@ internal static class TalentEvents
 
     public async Task Handle(Talent.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       TalentEntity talent = await _context.Talents
         .Include(x => x.RequiredTalent)
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The talent entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The talent entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       TalentEntity? requiredTalent = null;
       if (@event.RequiredTalentId?.Value != null)
       {
-        Guid talentId = @event.RequiredTalentId.Value.Value.ToGuid();
         requiredTalent = await _context.Talents
-          .SingleOrDefaultAsync(x => x.Id == talentId, cancellationToken)
-          ?? throw new InvalidOperationException($"The talent entity 'Id={talentId}' could not be found.");
+          .SingleOrDefaultAsync(x => x.AggregateId == @event.RequiredTalentId.Value.Value.Value, cancellationToken)
+          ?? throw new InvalidOperationException($"The talent entity 'AggregateId={@event.RequiredTalentId.Value}' could not be found.");
       }
 
       talent.Update(@event, requiredTalent);

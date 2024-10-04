@@ -1,12 +1,6 @@
-﻿using Logitar.EventSourcing;
-using Moq;
-using SkillCraft.Application.Permissions;
-using SkillCraft.Contracts;
-using SkillCraft.Contracts.Talents;
+﻿using Moq;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Talents;
-using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Talents.Commands;
 
@@ -23,8 +17,6 @@ public class SetRequiredTalentCommandHandlerTests
   private readonly Talent _requiredTalent;
   private readonly Talent _requiringTalent;
 
-  private readonly UpdateTalentCommand _activity;
-
   public SetRequiredTalentCommandHandlerTests()
   {
     _handler = new(_talentRepository.Object);
@@ -36,15 +28,12 @@ public class SetRequiredTalentCommandHandlerTests
     _requiringTalent.SetRequiredTalent(_requiredTalent);
     _requiringTalent.Update(_world.OwnerId);
     _talentRepository.Setup(x => x.LoadAsync(_requiringTalent.Id, _cancellationToken)).ReturnsAsync(_requiringTalent);
-
-    _activity = new(_requiringTalent.Id.ToGuid(), new UpdateTalentPayload());
-    _activity.Contextualize(_world);
   }
 
   [Fact(DisplayName = "It should nullify the required talent.")]
   public async Task It_should_nullify_the_required_talent()
   {
-    SetRequiredTalentCommand command = new(_activity, _requiringTalent, Id: null);
+    SetRequiredTalentCommand command = new(_requiringTalent, Id: null);
 
     await _handler.Handle(command, _cancellationToken);
 
@@ -55,7 +44,7 @@ public class SetRequiredTalentCommandHandlerTests
   public async Task It_should_set_the_required_talent()
   {
     Talent talent = new(_world.Id, tier: 1, new Name("Cuirassé"), _world.OwnerId);
-    SetRequiredTalentCommand command = new(_activity, talent, _requiringTalent.Id.ToGuid());
+    SetRequiredTalentCommand command = new(talent, _requiringTalent.EntityId);
 
     await _handler.Handle(command, _cancellationToken);
 
@@ -66,11 +55,11 @@ public class SetRequiredTalentCommandHandlerTests
   public async Task It_should_throw_AggregateNotFoundException_when_the_required_talent_could_not_be_found()
   {
     Talent talent = new(_world.Id, tier: 1, new Name("Manœuvres de combat"), _world.OwnerId);
-    SetRequiredTalentCommand command = new(_activity, talent, Guid.NewGuid());
+    SetRequiredTalentCommand command = new(talent, Guid.NewGuid());
     Assert.True(command.Id.HasValue);
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Talent>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(new AggregateId(command.Id.Value).Value, exception.Id);
+    Assert.Equal(new TalentId(_world.Id, command.Id.Value).Value, exception.Id);
     Assert.Equal("RequiredTalentId", exception.PropertyName);
   }
 
@@ -80,26 +69,10 @@ public class SetRequiredTalentCommandHandlerTests
     Talent talent = new(_world.Id, tier: 1, new Name("Manœuvres de combat"), _world.OwnerId);
     _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
 
-    SetRequiredTalentCommand command = new(_activity, _requiringTalent, talent.Id.ToGuid());
+    SetRequiredTalentCommand command = new(_requiringTalent, talent.EntityId);
 
     var exception = await Assert.ThrowsAsync<InvalidRequiredTalentTierException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(talent.Id.ToGuid(), exception.Id);
+    Assert.Equal(talent.EntityId, exception.Id);
     Assert.Equal("RequiredTalentId", exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw PermissionDeniedException when requiring a talent from another world.")]
-  public async Task It_should_throw_PermissionDeniedException_when_requiring_a_talent_from_another_world()
-  {
-    Talent talent = new(WorldId.NewId(), tier: 0, new Name("Mêlée"), UserId.NewId());
-    _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
-
-    SetRequiredTalentCommand command = new(_activity, _requiringTalent, talent.Id.ToGuid());
-
-    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(Action.Preview, exception.Action);
-    Assert.Equal(EntityType.Talent, exception.EntityType);
-    Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
-    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(talent.Id.ToGuid(), exception.EntityId);
   }
 }
