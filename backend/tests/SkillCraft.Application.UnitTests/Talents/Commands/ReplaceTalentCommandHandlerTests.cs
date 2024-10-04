@@ -47,8 +47,8 @@ public class ReplaceTalentCommandHandlerTests
       AllowMultiplePurchases = false,
       RequiredTalentId = null
     };
-    ReplaceTalentCommand command = new(talent.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplaceTalentCommand command = new(talent.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     TalentModel model = new();
     _talentQuerier.Setup(x => x.ReadAsync(talent, _cancellationToken)).ReturnsAsync(model);
@@ -59,7 +59,7 @@ public class ReplaceTalentCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Talent == talent && y.Id == null), _cancellationToken), Times.Once);
@@ -76,6 +76,7 @@ public class ReplaceTalentCommandHandlerTests
   {
     ReplaceTalentPayload payload = new("Furtivité");
     ReplaceTalentCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -108,7 +109,7 @@ public class ReplaceTalentCommandHandlerTests
     long version = reference.Version;
     _talentRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Talent talent = new(_world.Id, reference.Tier, reference.Name, _world.OwnerId, reference.Id);
+    Talent talent = new(_world.Id, reference.Tier, reference.Name, _world.OwnerId, reference.EntityId);
     _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
 
     Description description = new("  Permet au personnage d’effectuer l’activité **Viser et tirer** au coût d’une seule action plutôt que deux lorsqu’il utilise une arme possédant la propriété **Munition**. Également, grâce à la rapidité de ses tirs, il ne déclenche pas d’attaque d’opportunité lorsqu’il effectue une attaque à distance en utilisant une de ces armes.  ");
@@ -121,8 +122,8 @@ public class ReplaceTalentCommandHandlerTests
       AllowMultiplePurchases = false,
       RequiredTalentId = Guid.NewGuid()
     };
-    ReplaceTalentCommand command = new(talent.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplaceTalentCommand command = new(talent.EntityId, payload, version);
+    command.Contextualize(_world);
 
     TalentModel model = new();
     _talentQuerier.Setup(x => x.ReadAsync(talent, _cancellationToken)).ReturnsAsync(model);
@@ -133,7 +134,7 @@ public class ReplaceTalentCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SetRequiredTalentCommand>(y => y.Activity == command && y.Talent == talent

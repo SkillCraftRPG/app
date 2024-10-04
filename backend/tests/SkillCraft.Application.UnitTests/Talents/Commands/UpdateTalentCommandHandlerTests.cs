@@ -34,6 +34,7 @@ public class UpdateTalentCommandHandlerTests
   {
     UpdateTalentPayload payload = new();
     UpdateTalentCommand command = new(Guid.Empty, payload);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -72,8 +73,8 @@ public class UpdateTalentCommandHandlerTests
       AllowMultiplePurchases = false,
       RequiredTalentId = new Change<Guid?>(Guid.NewGuid())
     };
-    UpdateTalentCommand command = new(talent.Id.ToGuid(), payload);
-    command.Contextualize();
+    UpdateTalentCommand command = new(talent.EntityId, payload);
+    command.Contextualize(_world);
 
     TalentModel model = new();
     _talentQuerier.Setup(x => x.ReadAsync(talent, _cancellationToken)).ReturnsAsync(model);
@@ -83,7 +84,7 @@ public class UpdateTalentCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Talent && y.Key.Id == talent.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Description.Value);

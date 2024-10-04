@@ -47,12 +47,12 @@ public class SaveTalentCommandHandlerTests
     Assert.NotNull(talent.Skill);
     SaveTalentCommand command = new(talent);
 
-    TalentId conflictId = TalentId.NewId();
+    TalentId conflictId = new(WorldId.NewId());
     _talentQuerier.Setup(x => x.FindIdAsync(talent.WorldId, talent.Skill.Value, _cancellationToken)).ReturnsAsync(conflictId);
 
     var exception = await Assert.ThrowsAsync<TalentSkillAlreadyExistingException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(talent.WorldId.ToGuid(), exception.WorldId);
-    Assert.Equal([talent.Id.ToGuid(), conflictId.ToGuid()], exception.Ids);
+    Assert.Equal([talent.EntityId, conflictId.EntityId], exception.Ids);
     Assert.Equal(talent.Skill, exception.Skill);
     Assert.Equal("Name", exception.PropertyName);
   }

@@ -25,12 +25,12 @@ internal class InvalidRequiredTalentTierException : BadRequestException
   public InvalidRequiredTalentTierException(Talent requiredTalent, string? propertyName)
     : base(BuildMessage(requiredTalent, propertyName))
   {
-    Id = requiredTalent.Id.ToGuid();
+    Id = requiredTalent.EntityId;
     PropertyName = propertyName;
   }
 
   private static string BuildMessage(Talent requiredTalent, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(Id), requiredTalent.Id.ToGuid())
+    .AddData(nameof(Id), requiredTalent.EntityId)
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
 }

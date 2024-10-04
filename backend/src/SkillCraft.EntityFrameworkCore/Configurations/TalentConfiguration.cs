@@ -16,7 +16,7 @@ internal class TalentConfiguration : AggregateConfiguration<TalentEntity>, IEnti
     builder.ToTable(SkillCraftDb.Talents.Table.Table ?? string.Empty, SkillCraftDb.Talents.Table.Schema);
     builder.HasKey(x => x.TalentId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Tier);
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Skill);

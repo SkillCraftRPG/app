@@ -10,8 +10,8 @@ public class Talent : AggregateRoot
   private UpdatedEvent _updatedEvent = new();
 
   public new TalentId Id => new(base.Id);
-
-  public WorldId WorldId { get; private set; }
+  public WorldId WorldId => Id.WorldId;
+  public Guid EntityId => Id.EntityId;
 
   public int Tier { get; private set; }
 
@@ -81,7 +81,7 @@ public class Talent : AggregateRoot
   {
   }
 
-  public Talent(WorldId worldId, int tier, Name name, UserId userId, TalentId? id = null) : base(id?.AggregateId)
+  public Talent(WorldId worldId, int tier, Name name, UserId userId, Guid? entityId = null) : base(new TalentId(worldId, entityId).AggregateId)
   {
     if (tier < 0 || tier > 3)
     {
@@ -89,12 +89,10 @@ public class Talent : AggregateRoot
     }
 
     Skill? skill = TalentHelper.TryGetSkill(name);
-    Raise(new CreatedEvent(worldId, tier, name, skill), userId.ActorId);
+    Raise(new CreatedEvent(tier, name, skill), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
-    WorldId = @event.WorldId;
-
     Tier = @event.Tier;
 
     _name = @event.Name;
@@ -160,18 +158,14 @@ public class Talent : AggregateRoot
 
   public class CreatedEvent : DomainEvent, INotification
   {
-    public WorldId WorldId { get; }
-
     public int Tier { get; }
 
     public Name Name { get; }
 
     public Skill? Skill { get; }
 
-    public CreatedEvent(WorldId worldId, int tier, Name name, Skill? skill)
+    public CreatedEvent(int tier, Name name, Skill? skill)
     {
-      WorldId = worldId;
-
       Tier = tier;
 
       Name = name;

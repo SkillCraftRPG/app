@@ -33,23 +33,23 @@ internal class TalentQuerier : ITalentQuerier
       .Select(x => (Guid?)x.Id)
       .SingleOrDefaultAsync(cancellationToken);
 
-    return talentId.HasValue ? new TalentId(talentId.Value) : null;
+    return talentId.HasValue ? new TalentId(worldId, talentId.Value) : null;
   }
 
   public async Task<TalentModel> ReadAsync(Talent talent, CancellationToken cancellationToken)
   {
     return await ReadAsync(talent.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The talent entity 'Id={talent.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The talent entity 'AggregateId={talent.Id}' could not be found.");
   }
   public async Task<TalentModel?> ReadAsync(TalentId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<TalentModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<TalentModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     TalentEntity? talent = await _talents.AsNoTracking()
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return talent == null ? null : await MapAsync(talent, cancellationToken);
   }

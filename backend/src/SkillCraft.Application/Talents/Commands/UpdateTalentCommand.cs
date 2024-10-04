@@ -34,7 +34,7 @@ internal class UpdateTalentCommandHandler : IRequestHandler<UpdateTalentCommand,
     UpdateTalentPayload payload = command.Payload;
     new UpdateTalentValidator().ValidateAndThrow(payload);
 
-    TalentId id = new(command.Id);
+    TalentId id = new(command.GetWorldId(), command.Id);
     Talent? talent = await _talentRepository.LoadAsync(id, cancellationToken);
     if (talent == null)
     {

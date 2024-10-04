@@ -42,7 +42,7 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     }
 
     WorldId = talent.WorldId.ToGuid();
-    Ids = [talent.Id.ToGuid(), conflictId.ToGuid()];
+    Ids = [talent.EntityId, conflictId.EntityId];
     Skill = talent.Skill.Value;
     PropertyName = propertyName;
   }
@@ -56,8 +56,8 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     message.Append(nameof(Skill)).Append(": ").Append(talent.Skill).AppendLine();
     message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
     message.Append(nameof(Ids)).Append(':').AppendLine();
-    message.Append(" - ").Append(talent.Id.ToGuid()).AppendLine();
-    message.Append(" - ").Append(conflictId.ToGuid()).AppendLine();
+    message.Append(" - ").Append(talent.EntityId).AppendLine();
+    message.Append(" - ").Append(conflictId.EntityId).AppendLine();
 
     return message.ToString();
   }

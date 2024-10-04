@@ -25,7 +25,7 @@ internal class TalentEntity : AggregateEntity
 
   public TalentEntity(WorldEntity world, Talent.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new TalentId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

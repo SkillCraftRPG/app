@@ -7,7 +7,6 @@ using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Characters.Creation;
 
@@ -44,11 +43,7 @@ internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustom
     int disabilities = 0;
     foreach (Customization customization in customizations)
     {
-      if (customization.WorldId != worldId)
-      {
-        throw new PermissionDeniedException(Action.Preview, EntityType.Customization, activity.GetUser(), activity.GetWorld(), customization.EntityId);
-      }
-      else if (customization.Id == query.Personality.GiftId)
+      if (customization.Id == query.Personality.GiftId)
       {
         throw new CustomizationsCannotIncludePersonalityGiftException(customization, PropertyName);
       }

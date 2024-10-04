@@ -34,7 +34,7 @@ internal class ReplaceTalentCommandHandler : IRequestHandler<ReplaceTalentComman
     ReplaceTalentPayload payload = command.Payload;
     new ReplaceTalentValidator().ValidateAndThrow(payload);
 
-    TalentId id = new(command.Id);
+    TalentId id = new(command.GetWorldId(), command.Id);
     Talent? talent = await _talentRepository.LoadAsync(id, cancellationToken);
     if (talent == null)
     {
@@ -65,7 +65,7 @@ internal class ReplaceTalentCommandHandler : IRequestHandler<ReplaceTalentComman
     {
       talent.AllowMultiplePurchases = payload.AllowMultiplePurchases;
     }
-    TalentId? requiredTalentId = payload.RequiredTalentId.HasValue ? new(payload.RequiredTalentId.Value) : null;
+    TalentId? requiredTalentId = payload.RequiredTalentId.HasValue ? new(talent.WorldId, payload.RequiredTalentId.Value) : null;
     if (requiredTalentId != reference.RequiredTalentId)
     {
       await _sender.Send(new SetRequiredTalentCommand(command, talent, payload.RequiredTalentId), cancellationToken);

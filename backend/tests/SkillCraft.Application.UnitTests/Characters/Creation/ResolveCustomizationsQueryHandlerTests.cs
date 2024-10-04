@@ -8,8 +8,6 @@ using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Personalities;
-using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Characters.Creation;
 
@@ -112,22 +110,5 @@ public class ResolveCustomizationsQueryHandlerTests
     var exception = await Assert.ThrowsAsync<InvalidCharacterCustomizationsException>(async () => await _handler.Handle(query, _cancellationToken));
     Assert.Equal(query.Ids, exception.Ids);
     Assert.Equal("CustomizationIds", exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw PermissionDeniedException a customization is not in the expected world.")]
-  public async Task It_should_throw_PermissionDeniedException_when_a_customization_is_not_in_the_expected_world()
-  {
-    Customization customization = new(WorldId.NewId(), CustomizationType.Gift, new Name("Réflexes"), UserId.NewId());
-    ResolveCustomizationsQuery query = new(_activity, _personality, [customization.EntityId]);
-
-    IEnumerable<CustomizationId> customizationIds = query.Ids.Distinct().Select(id => new CustomizationId(_world.Id, id));
-    _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([customization]);
-
-    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(Action.Preview, exception.Action);
-    Assert.Equal(EntityType.Customization, exception.EntityType);
-    Assert.Equal(_world.OwnerId.ToGuid(), exception.UserId);
-    Assert.Equal(_world.EntityId, exception.WorldId);
-    Assert.Equal(customization.EntityId, exception.EntityId);
   }
 }
