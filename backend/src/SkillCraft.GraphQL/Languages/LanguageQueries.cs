@@ -24,5 +24,10 @@ internal static class LanguageQueries
       .ResolveAsync(async context => await context.ExecuteQueryAsync(new SearchLanguagesQuery(
         context.GetArgument<SearchLanguagesPayload>("payload")
       ), context.CancellationToken));
+
+    root.Field<NonNullGraphType<ScriptSearchResultsGraphType>>("scripts")
+      .Authorize()
+      .Description("TODO")
+      .ResolveAsync(async context => await context.ExecuteQueryAsync(new SearchScriptsQuery(), context.CancellationToken));
   }
 }
