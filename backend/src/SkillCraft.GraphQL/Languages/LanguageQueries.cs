@@ -27,7 +27,7 @@ internal static class LanguageQueries
 
     root.Field<NonNullGraphType<ScriptSearchResultsGraphType>>("scripts")
       .Authorize()
-      .Description("TODO")
+      .Description("Searches a list of scripts.")
       .ResolveAsync(async context => await context.ExecuteQueryAsync(new SearchScriptsQuery(), context.CancellationToken));
   }
 }
