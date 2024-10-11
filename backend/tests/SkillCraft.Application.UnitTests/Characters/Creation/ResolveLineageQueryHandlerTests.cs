@@ -1,5 +1,4 @@
-﻿using Logitar.EventSourcing;
-using Logitar.Portal.Contracts.Search;
+﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Lineages;
@@ -46,21 +45,18 @@ public class ResolveLineageQueryHandlerTests
   [Fact(DisplayName = "It should return the found nation.")]
   public async Task It_should_return_the_found_nation()
   {
-    ResolveLineageQuery query = new(_activity, _nation.Id.ToGuid());
+    ResolveLineageQuery query = new(_activity, _nation.EntityId);
 
     Lineage lineage = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_nation, lineage);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Lineage && y.Id == query.Id),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Lineage, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return the found species without nations.")]
   public async Task It_should_return_the_found_species_without_nations()
   {
-    ResolveLineageQuery query = new(_activity, _lineage.Id.ToGuid());
+    ResolveLineageQuery query = new(_activity, _lineage.EntityId);
 
     SearchResults<LineageModel> results = new();
     _lineageQuerier.Setup(x => x.SearchAsync(_world.Id, It.Is<SearchLineagesPayload>(y => y.ParentId == query.Id), _cancellationToken)).ReturnsAsync(results);
@@ -68,10 +64,7 @@ public class ResolveLineageQueryHandlerTests
     Lineage lineage = await _handler.Handle(query, _cancellationToken);
     Assert.Same(_lineage, lineage);
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(
-      _activity,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Lineage && y.Id == query.Id),
-      _cancellationToken), Times.Once);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Lineage, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw AggregateNotFoundException when the lineage could not be found.")]
@@ -80,16 +73,16 @@ public class ResolveLineageQueryHandlerTests
     ResolveLineageQuery query = new(_activity, Guid.NewGuid());
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Lineage>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new AggregateId(query.Id).Value, exception.Id);
+    Assert.Equal(new LineageId(_world.Id, query.Id).Value, exception.Id);
     Assert.Equal("LineageId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw InvalidCharacterLineageException when the lineage (species) has children (nations).")]
   public async Task It_should_throw_InvalidCharacterLineageException_when_the_lineage_species_has_children_nations()
   {
-    ResolveLineageQuery query = new(_activity, _species.Id.ToGuid());
+    ResolveLineageQuery query = new(_activity, _species.EntityId);
 
-    SearchResults<LineageModel> results = new([new LineageModel { Id = _nation.Id.ToGuid() }]);
+    SearchResults<LineageModel> results = new([new LineageModel { Id = _nation.EntityId }]);
     _lineageQuerier.Setup(x => x.SearchAsync(_world.Id, It.Is<SearchLineagesPayload>(y => y.ParentId == query.Id), _cancellationToken)).ReturnsAsync(results);
 
     var exception = await Assert.ThrowsAsync<InvalidCharacterLineageException>(async () => await _handler.Handle(query, _cancellationToken));

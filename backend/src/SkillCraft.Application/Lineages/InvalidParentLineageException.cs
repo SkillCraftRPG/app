@@ -24,7 +24,7 @@ internal class InvalidParentLineageException : BadRequestException
 
   public InvalidParentLineageException(Lineage parent, string? propertyName = null) : base(BuildMessage(parent, propertyName))
   {
-    ParentId = parent.Id.ToGuid();
+    ParentId = parent.EntityId;
     PropertyName = propertyName;
   }
 

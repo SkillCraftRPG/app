@@ -25,12 +25,12 @@ internal class InvalidCharacterLineageException : BadRequestException
   public InvalidCharacterLineageException(Lineage lineage, string? propertyName = null)
     : base(BuildMessage(lineage, propertyName))
   {
-    Id = lineage.Id.ToGuid();
+    Id = lineage.EntityId;
     PropertyName = propertyName;
   }
 
   private static string BuildMessage(Lineage lineage, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(Id), lineage.Id.ToGuid())
+    .AddData(nameof(Id), lineage.EntityId)
     .AddData(nameof(PropertyName), propertyName, "<null>")
     .Build();
 }

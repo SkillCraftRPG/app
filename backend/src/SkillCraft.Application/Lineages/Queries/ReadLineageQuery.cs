@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Lineages;
 
 namespace SkillCraft.Application.Lineages.Queries;
@@ -19,12 +20,8 @@ internal class ReadLineageQueryHandler : IRequestHandler<ReadLineageQuery, Linea
 
   public async Task<LineageModel?> Handle(ReadLineageQuery query, CancellationToken cancellationToken)
   {
-    LineageModel? lineage = await _lineageQuerier.ReadAsync(query.Id, cancellationToken);
-    if (lineage != null)
-    {
-      await _permissionService.EnsureCanPreviewAsync(query, lineage.GetMetadata(), cancellationToken);
-    }
+    await _permissionService.EnsureCanPreviewAsync(query, EntityType.Lineage, cancellationToken);
 
-    return lineage;
+    return await _lineageQuerier.ReadAsync(query.GetWorldId(), query.Id, cancellationToken);
   }
 }

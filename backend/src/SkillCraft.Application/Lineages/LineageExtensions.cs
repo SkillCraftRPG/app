@@ -16,7 +16,7 @@ internal static class LineageExtensions
       + 32 /* Attributes */ + lineage.Features.Values.Sum(GetSize)
       + lineage.Languages.Size + lineage.Names.Size
       + 24 /* Speeds */ + GetSize(lineage.Size) + lineage.Weight.Size + 16 /* Ages */;
-    return new EntityMetadata(lineage.WorldId, new EntityKey(Type, lineage.Id.ToGuid()), size);
+    return new EntityMetadata(lineage.WorldId, new EntityKey(Type, lineage.EntityId), size);
   }
   private static long GetSize(Feature feature) => feature.Name.Size + (feature.Description?.Size ?? 0);
   private static long GetSize(Size size) => 4 + (size.Roll?.Size ?? 0);

@@ -45,7 +45,7 @@ public class ReadLanguageQueryHandlerTests
 
     Assert.Null(await _handler.Handle(query, _cancellationToken));
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(It.IsAny<ReadLanguageQuery>(), It.IsAny<EntityMetadata>(), It.IsAny<CancellationToken>()), Times.Never);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Language, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return the language found by ID.")]

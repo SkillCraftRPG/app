@@ -11,7 +11,6 @@ public interface IPermissionService
 
   Task EnsureCanCreateAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken = default);
 
-  Task EnsureCanPreviewAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken = default);
   Task EnsureCanPreviewAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken = default);
   Task EnsureCanPreviewAsync(Activity activity, WorldModel world, CancellationToken cancellationToken = default);
 

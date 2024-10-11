@@ -34,6 +34,7 @@ public class UpdateLineageCommandHandlerTests
   {
     UpdateLineagePayload payload = new();
     UpdateLineageCommand command = new(Guid.Empty, payload);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -89,8 +90,8 @@ public class UpdateLineageCommandHandlerTests
       Speeds = new UpdateSpeedsPayload { Walk = 4 },
       Size = new UpdateSizePayload { Category = SizeCategory.Small, Roll = new Change<string>(" 90+3d10 ") }
     };
-    UpdateLineageCommand command = new(lineage.Id.ToGuid(), payload);
-    command.Contextualize();
+    UpdateLineageCommand command = new(lineage.EntityId, payload);
+    command.Contextualize(_world);
 
     LineageModel model = new();
     _lineageQuerier.Setup(x => x.ReadAsync(lineage, _cancellationToken)).ReturnsAsync(model);
@@ -100,7 +101,7 @@ public class UpdateLineageCommandHandlerTests
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Lineage && y.Key.Id == lineage.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Lineage && y.Id == lineage.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     Assert.NotNull(payload.Description.Value);

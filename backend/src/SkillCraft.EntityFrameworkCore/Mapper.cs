@@ -172,6 +172,7 @@ internal class Mapper
 
     LineageModel destination = new(world, source.Name)
     {
+      Id = source.Id,
       Description = source.Description,
       Attributes = source.GetAttributes(),
       Features = source.GetFeatures(),

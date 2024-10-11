@@ -78,7 +78,7 @@ public class CreateCharacterCommandHandlerTests
     CreateCharacterPayload payload = new("  Heracles Aetos  ")
     {
       Player = $"  {_faker.Person.FullName}  ",
-      LineageId = _nation.Id.ToGuid(),
+      LineageId = _nation.EntityId,
       Height = 1.84,
       Weight = 84.6,
       Age = 30,
