@@ -25,7 +25,10 @@ public record SearchLineagesParameters : SearchParameters
   {
     SearchLineagesPayload payload = new()
     {
-      ParentId = ParentId
+      Attribute = Attribute,
+      LanguageId = LanguageId,
+      ParentId = ParentId,
+      SizeCategory = SizeCategory
     };
     Fill(payload);
 
