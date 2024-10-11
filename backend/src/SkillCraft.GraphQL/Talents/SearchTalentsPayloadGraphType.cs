@@ -15,7 +15,7 @@ internal class SearchTalentsPayloadGraphType : SearchPayloadInputGraphType<Searc
     Field(x => x.RequiredTalentId)
       .Description("When specified, only talents requiring this talent will match.");
     Field(x => x.Tier, type: typeof(TierFilterGraphType))
-      .Description("When specified, only talents matching the filter will be returned.");
+      .Description("When specified, only talents matching the filter will match.");
 
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<TalentSortOptionGraphType>>>))
       .DefaultValue([])

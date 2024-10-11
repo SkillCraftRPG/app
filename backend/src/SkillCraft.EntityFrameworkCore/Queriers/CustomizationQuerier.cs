@@ -51,7 +51,7 @@ internal class CustomizationQuerier : ICustomizationQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Customizations.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Customizations.Name);
 
-    if (payload.Type.HasValue)
+    if (payload.Type.HasValue && Enum.IsDefined(payload.Type.Value))
     {
       builder.Where(SkillCraftDb.Customizations.Type, Operators.IsEqualTo(payload.Type.Value.ToString()));
     }

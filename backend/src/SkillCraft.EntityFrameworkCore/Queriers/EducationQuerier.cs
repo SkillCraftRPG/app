@@ -51,7 +51,7 @@ internal class EducationQuerier : IEducationQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Educations.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Educations.Name);
 
-    if (payload.Skill.HasValue)
+    if (payload.Skill.HasValue && Enum.IsDefined(payload.Skill.Value))
     {
       builder.Where(SkillCraftDb.Educations.Skill, Operators.IsEqualTo(payload.Skill.Value.ToString()));
     }

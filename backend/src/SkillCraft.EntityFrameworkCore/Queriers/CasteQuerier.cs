@@ -51,7 +51,7 @@ internal class CasteQuerier : ICasteQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Castes.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Castes.Name);
 
-    if (payload.Skill.HasValue)
+    if (payload.Skill.HasValue && Enum.IsDefined(payload.Skill.Value))
     {
       builder.Where(SkillCraftDb.Castes.Skill, Operators.IsEqualTo(payload.Skill.Value.ToString()));
     }
