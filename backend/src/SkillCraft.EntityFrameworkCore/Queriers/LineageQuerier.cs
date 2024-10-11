@@ -9,6 +9,7 @@ using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Worlds;
 using SkillCraft.EntityFrameworkCore.Entities;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.EntityFrameworkCore.Queriers;
 
@@ -65,6 +66,49 @@ internal class LineageQuerier : ILineageQuerier
     else
     {
       builder.Where(SkillCraftDb.Lineages.ParentId, Operators.IsNull());
+    }
+
+    if (payload.Attribute.HasValue)
+    {
+      ColumnId? column = null;
+      switch (payload.Attribute.Value)
+      {
+        case Attribute.Agility:
+          column = SkillCraftDb.Lineages.Agility;
+          break;
+        case Attribute.Coordination:
+          column = SkillCraftDb.Lineages.Coordination;
+          break;
+        case Attribute.Intellect:
+          column = SkillCraftDb.Lineages.Intellect;
+          break;
+        case Attribute.Presence:
+          column = SkillCraftDb.Lineages.Presence;
+          break;
+        case Attribute.Sensitivity:
+          column = SkillCraftDb.Lineages.Sensitivity;
+          break;
+        case Attribute.Spirit:
+          column = SkillCraftDb.Lineages.Spirit;
+          break;
+        case Attribute.Vigor:
+          column = SkillCraftDb.Lineages.Vigor;
+          break;
+      }
+      if (column != null)
+      {
+        builder.Where(column, Operators.IsGreaterThan(0));
+      }
+    }
+    if (payload.LanguageId.HasValue)
+    {
+      builder.Join(SkillCraftDb.LineageLanguages.LineageId, SkillCraftDb.Lineages.LineageId)
+        .Join(SkillCraftDb.Languages.LanguageId, SkillCraftDb.LineageLanguages.LanguageId)
+        .Where(SkillCraftDb.Languages.Id, Operators.IsEqualTo(payload.LanguageId.Value));
+    }
+    if (payload.SizeCategory.HasValue && Enum.IsDefined(payload.SizeCategory.Value))
+    {
+      builder.Where(SkillCraftDb.Lineages.SizeCategory, Operators.IsEqualTo(payload.SizeCategory.Value.ToString()));
     }
 
     IQueryable<LineageEntity> query = _lineages.FromQuery(builder).AsNoTracking()

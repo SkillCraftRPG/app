@@ -53,7 +53,7 @@ internal class PersonalityQuerier : IPersonalityQuerier
       .ApplyIdFilter(payload, SkillCraftDb.Personalities.Id);
     _sqlHelper.ApplyTextSearch(builder, payload.Search, SkillCraftDb.Personalities.Name);
 
-    if (payload.Attribute.HasValue)
+    if (payload.Attribute.HasValue && Enum.IsDefined(payload.Attribute.Value))
     {
       builder.Where(SkillCraftDb.Personalities.Attribute, Operators.IsEqualTo(payload.Attribute.Value.ToString()));
     }

@@ -8,8 +8,14 @@ internal class SearchLineagesPayloadGraphType : SearchPayloadInputGraphType<Sear
 {
   public SearchLineagesPayloadGraphType() : base()
   {
+    Field(x => x.Attribute, type: typeof(AttributeGraphType))
+      .Description("When specified, only lineages granting a bonus to this attribute will match.");
+    Field(x => x.LanguageId)
+      .Description("When specified, only lineages learning this language will match.");
     Field(x => x.ParentId)
-      .Description("The unique identifier of the parent lineage to match.");
+      .Description("When specified, only nations of this species will match.");
+    Field(x => x.SizeCategory, type: typeof(SizeCategoryGraphType))
+      .Description("When specified, only lineages in this size category will match.");
 
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<LineageSortOptionGraphType>>>))
       .DefaultValue([])
