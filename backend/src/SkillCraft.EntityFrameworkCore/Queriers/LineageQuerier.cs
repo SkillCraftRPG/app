@@ -28,18 +28,18 @@ internal class LineageQuerier : ILineageQuerier
   public async Task<LineageModel> ReadAsync(Lineage lineage, CancellationToken cancellationToken)
   {
     return await ReadAsync(lineage.Id, cancellationToken)
-      ?? throw new InvalidOperationException($"The lineage entity 'Id={lineage.Id.ToGuid()}' could not be found.");
+      ?? throw new InvalidOperationException($"The lineage entity 'AggregateId={lineage.Id}' could not be found.");
   }
   public async Task<LineageModel?> ReadAsync(LineageId id, CancellationToken cancellationToken)
   {
-    return await ReadAsync(id.ToGuid(), cancellationToken);
+    return await ReadAsync(id.WorldId, id.EntityId, cancellationToken);
   }
-  public async Task<LineageModel?> ReadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<LineageModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     LineageEntity? lineage = await _lineages.AsNoTracking()
       .Include(x => x.Languages).ThenInclude(x => x.World)
       .Include(x => x.World)
-      .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+      .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
     return lineage == null ? null : await MapAsync(lineage, cancellationToken);
   }

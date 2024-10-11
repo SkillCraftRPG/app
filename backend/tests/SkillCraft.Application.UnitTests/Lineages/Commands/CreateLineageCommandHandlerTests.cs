@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using Logitar.EventSourcing;
 using Logitar.Portal.Contracts.Users;
 using MediatR;
 using Moq;
@@ -11,7 +10,6 @@ using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Lineages.Commands;
 
@@ -47,7 +45,7 @@ public class CreateLineageCommandHandlerTests
     Language language = new(_world.Id, new Name("Orrinique"), _world.OwnerId);
     CreateLineagePayload payload = new(" Orrin ")
     {
-      ParentId = species.Id.ToGuid(),
+      ParentId = species.EntityId,
       Description = "  L’origine noble des Orrins remonte au peuple des Thronopoi, originaire du Derebon dans l’Ancien-Monde. Ils habitent l’Orrinie, un pays situé dans une péninsule montagnarde au Sud de l’Ouespéro, entourée par la mer Aspidée et la mer Mésienne. Leur culture guerrière, architecturale et artistique a le potentiel d’être exportée dans tous les confins de l’Ouespéro. Souvent en proie à des luttes internes et déchirantes, ils sont divisés en plusieurs entités géopolitiques et États croupions. Ils sont décrits comme étant de petite taille, avec des yeux et cheveux foncés.  ",
       Languages = new() { Ids = [language.EntityId] },
       Names = new()
@@ -145,7 +143,7 @@ public class CreateLineageCommandHandlerTests
     command.Contextualize(_user, _world);
 
     var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Lineage>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(payload.ParentId.Value, new AggregateId(exception.Id).ToGuid());
+    Assert.Equal(new LineageId(_world.Id, payload.ParentId).Value, exception.Id);
     Assert.Equal("ParentId", exception.PropertyName);
   }
 
@@ -158,7 +156,7 @@ public class CreateLineageCommandHandlerTests
 
     CreateLineagePayload payload = new("Sophithéon")
     {
-      ParentId = nation.Id.ToGuid()
+      ParentId = nation.EntityId
     };
     CreateLineageCommand command = new(payload);
     command.Contextualize(_user, _world);
@@ -166,27 +164,6 @@ public class CreateLineageCommandHandlerTests
     var exception = await Assert.ThrowsAsync<InvalidParentLineageException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(payload.ParentId.Value, exception.ParentId);
     Assert.Equal("ParentId", exception.PropertyName);
-  }
-
-  [Fact(DisplayName = "It should throw PermissionDeniedException when the parent resides in another world.")]
-  public async Task It_should_throw_PermissionDeniedException_when_the_parent_resides_in_another_world()
-  {
-    Lineage species = new(WorldId.NewId(), parent: null, new Name("Humain"), UserId.NewId());
-    _lineageRepository.Setup(x => x.LoadAsync(species.Id, _cancellationToken)).ReturnsAsync(species);
-
-    CreateLineagePayload payload = new("Sophithéon")
-    {
-      ParentId = species.Id.ToGuid()
-    };
-    CreateLineageCommand command = new(payload);
-    command.Contextualize(_user, _world);
-
-    var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(Action.Preview, exception.Action);
-    Assert.Equal(EntityType.Lineage, exception.EntityType);
-    Assert.Equal(_user.Id, exception.UserId);
-    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(species.Id.ToGuid(), exception.EntityId);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]

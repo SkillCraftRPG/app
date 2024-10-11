@@ -45,7 +45,7 @@ public class ReadPersonalityQueryHandlerTests
 
     Assert.Null(await _handler.Handle(query, _cancellationToken));
 
-    _permissionService.Verify(x => x.EnsureCanPreviewAsync(It.IsAny<ReadPersonalityQuery>(), It.IsAny<EntityMetadata>(), It.IsAny<CancellationToken>()), Times.Never);
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Personality, _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return the personality found by ID.")]

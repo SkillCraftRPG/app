@@ -48,22 +48,6 @@ internal class PermissionService : IPermissionService
     }
   }
 
-  public async Task EnsureCanPreviewAsync(Activity activity, EntityMetadata entity, CancellationToken cancellationToken)
-  {
-    if (entity.Type == EntityType.World)
-    {
-      throw new ArgumentException($"The entity type must not be '{EntityType.World}'.", nameof(entity));
-    }
-
-    User user = activity.GetUser();
-    WorldModel world = activity.GetWorld();
-    if (!entity.ResidesIn(world))
-    {
-      throw new PermissionDeniedException(Action.Preview, entity.Type, user, world, entity.Id);
-    }
-
-    await EnsureIsOwnerOrHasPermissionAsync(user, world, Action.Preview, entity.Type, entityId: null, cancellationToken);
-  }
   public async Task EnsureCanPreviewAsync(Activity activity, EntityType entityType, CancellationToken cancellationToken)
   {
     if (entityType == EntityType.World)

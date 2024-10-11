@@ -56,8 +56,8 @@ public class ReplaceLineageCommandHandlerTests
       Weight = new() { Starved = "11+1d4", Skinny = "15+1d4", Normal = "19+1d9", Overweight = "26+1d6", Obese = "32+1d10" },
       Ages = new() { Adolescent = 8, Adult = 15, Mature = 21, Venerable = 75 }
     };
-    ReplaceLineageCommand command = new(lineage.Id.ToGuid(), payload, Version: null);
-    command.Contextualize();
+    ReplaceLineageCommand command = new(lineage.EntityId, payload, Version: null);
+    command.Contextualize(_world);
 
     LineageModel model = new();
     _lineageQuerier.Setup(x => x.ReadAsync(lineage, _cancellationToken)).ReturnsAsync(model);
@@ -68,7 +68,7 @@ public class ReplaceLineageCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Lineage && y.Key.Id == lineage.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Lineage && y.Key.Id == lineage.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveLineageCommand>(y => y.Lineage.Equals(lineage)
@@ -89,6 +89,7 @@ public class ReplaceLineageCommandHandlerTests
   {
     ReplaceLineagePayload payload = new("Ashtavrin");
     ReplaceLineageCommand command = new(Guid.Empty, payload, Version: null);
+    command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
@@ -125,7 +126,7 @@ public class ReplaceLineageCommandHandlerTests
     long version = reference.Version;
     _lineageRepository.Setup(x => x.LoadAsync(reference.Id, version, _cancellationToken)).ReturnsAsync(reference);
 
-    Lineage lineage = new(_world.Id, parent: null, reference.Name, _world.OwnerId, reference.Id);
+    Lineage lineage = new(_world.Id, parent: null, reference.Name, _world.OwnerId, reference.EntityId);
     _lineageRepository.Setup(x => x.LoadAsync(lineage.Id, _cancellationToken)).ReturnsAsync(lineage);
 
     Description description = new("  Les Ashtavrins sont des humanoïdes similaires aux humains. […]  ");
@@ -153,8 +154,8 @@ public class ReplaceLineageCommandHandlerTests
       Weight = new() { Starved = "11+1d4", Skinny = "15+1d4", Normal = "19+1d9", Overweight = "26+1d6", Obese = "32+1d10" },
       Ages = new() { Adolescent = 8, Adult = 15, Mature = 21, Venerable = 75 }
     };
-    ReplaceLineageCommand command = new(lineage.Id.ToGuid(), payload, version);
-    command.Contextualize();
+    ReplaceLineageCommand command = new(lineage.EntityId, payload, version);
+    command.Contextualize(_world);
 
     LineageModel model = new();
     _lineageQuerier.Setup(x => x.ReadAsync(lineage, _cancellationToken)).ReturnsAsync(model);
@@ -165,7 +166,7 @@ public class ReplaceLineageCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Lineage && y.Key.Id == lineage.Id.ToGuid() && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Key.Type == EntityType.Lineage && y.Key.Id == lineage.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveLineageCommand>(y => y.Lineage.Equals(lineage)

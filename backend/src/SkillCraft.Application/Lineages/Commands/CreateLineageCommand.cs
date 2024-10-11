@@ -9,7 +9,6 @@ using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Worlds;
-using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Lineages.Commands;
 
@@ -46,14 +45,10 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     Lineage? parent = null;
     if (payload.ParentId.HasValue)
     {
-      LineageId parentId = new(payload.ParentId.Value);
+      LineageId parentId = new(worldId, payload.ParentId.Value);
       parent = await _lineageRepository.LoadAsync(parentId, cancellationToken)
         ?? throw new AggregateNotFoundException<Lineage>(parentId.AggregateId, nameof(payload.ParentId));
-      if (parent.WorldId != worldId)
-      {
-        throw new PermissionDeniedException(Action.Preview, EntityType.Lineage, command.GetUser(), command.GetWorld(), parent.Id.ToGuid());
-      }
-      else if (parent.ParentId.HasValue)
+      if (parent.ParentId.HasValue)
       {
         throw new InvalidParentLineageException(parent, nameof(payload.ParentId));
       }

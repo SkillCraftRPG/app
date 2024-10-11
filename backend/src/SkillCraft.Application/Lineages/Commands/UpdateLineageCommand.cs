@@ -36,7 +36,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     UpdateLineagePayload payload = command.Payload;
     new UpdateLineageValidator().ValidateAndThrow(payload);
 
-    LineageId id = new(command.Id);
+    LineageId id = new(command.GetWorldId(), command.Id);
     Lineage? lineage = await _lineageRepository.LoadAsync(id, cancellationToken);
     if (lineage == null)
     {

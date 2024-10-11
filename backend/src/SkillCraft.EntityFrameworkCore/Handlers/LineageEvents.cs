@@ -19,10 +19,10 @@ internal static class LineageEvents
     public async Task Handle(Lineage.CreatedEvent @event, CancellationToken cancellationToken)
     {
       LineageEntity? lineage = await _context.Lineages.AsNoTracking()
-        .SingleOrDefaultAsync(x => x.Id == @event.AggregateId.ToGuid(), cancellationToken);
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
       if (lineage == null)
       {
-        Guid worldId = @event.WorldId.ToGuid();
+        Guid worldId = new LineageId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
@@ -30,7 +30,7 @@ internal static class LineageEvents
         LineageEntity? parent = null;
         if (@event.ParentId.HasValue)
         {
-          Guid parentId = @event.ParentId.Value.ToGuid();
+          Guid parentId = @event.ParentId.Value.EntityId;
           parent = await _context.Lineages
             .SingleOrDefaultAsync(x => x.Id == parentId, cancellationToken)
             ?? throw new InvalidOperationException($"The lineage entity 'Id={parentId}' could not be found.");
@@ -56,11 +56,10 @@ internal static class LineageEvents
 
     public async Task Handle(Lineage.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      Guid id = @event.AggregateId.ToGuid();
       LineageEntity lineage = await _context.Lineages
         .Include(x => x.Languages)
-        .SingleOrDefaultAsync(x => x.Id == id, cancellationToken)
-        ?? throw new InvalidOperationException($"The lineage entity 'Id={id}' could not be found.");
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The lineage entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       LanguageEntity[] languages = [];
       if (@event.Languages != null && @event.Languages.Ids.Count > 0)
