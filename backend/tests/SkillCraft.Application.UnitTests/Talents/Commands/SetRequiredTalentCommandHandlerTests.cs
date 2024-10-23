@@ -51,18 +51,6 @@ public class SetRequiredTalentCommandHandlerTests
     Assert.Equal(_requiringTalent.Id, talent.RequiredTalentId);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the required talent could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_required_talent_could_not_be_found()
-  {
-    Talent talent = new(_world.Id, tier: 1, new Name("Manœuvres de combat"), _world.OwnerId);
-    SetRequiredTalentCommand command = new(talent, Guid.NewGuid());
-    Assert.True(command.Id.HasValue);
-
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Talent>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(new TalentId(_world.Id, command.Id.Value).Value, exception.Id);
-    Assert.Equal("RequiredTalentId", exception.PropertyName);
-  }
-
   [Fact(DisplayName = "It should throw InvalidRequiredTalentTierException when requiring a talent with a higher tier.")]
   public async Task It_should_throw_InvalidRequiredTalentTierException_when_requiring_a_talent_with_a_higher_tier()
   {
@@ -72,7 +60,22 @@ public class SetRequiredTalentCommandHandlerTests
     SetRequiredTalentCommand command = new(_requiringTalent, talent.EntityId);
 
     var exception = await Assert.ThrowsAsync<InvalidRequiredTalentTierException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(talent.EntityId, exception.Id);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_requiringTalent.EntityId, exception.RequiringTalentId);
+    Assert.Equal(talent.EntityId, exception.RequiredTalentId);
+    Assert.Equal("RequiredTalentId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw TalentNotFoundException when the required talent could not be found.")]
+  public async Task It_should_throw_TalentNotFoundException_when_the_required_talent_could_not_be_found()
+  {
+    Talent talent = new(_world.Id, tier: 1, new Name("Manœuvres de combat"), _world.OwnerId);
+    SetRequiredTalentCommand command = new(talent, Guid.NewGuid());
+    Assert.True(command.Id.HasValue);
+
+    var exception = await Assert.ThrowsAsync<TalentNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(command.Id, exception.Id);
     Assert.Equal("RequiredTalentId", exception.PropertyName);
   }
 }

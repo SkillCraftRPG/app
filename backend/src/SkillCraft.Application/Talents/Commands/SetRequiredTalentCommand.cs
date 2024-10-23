@@ -25,11 +25,11 @@ internal class SetRequiredTalentCommandHandler : IRequestHandler<SetRequiredTale
     {
       TalentId talentId = new(talent.WorldId, command.Id.Value);
       requiredTalent = await _talentRepository.LoadAsync(talentId, cancellationToken)
-        ?? throw new AggregateNotFoundException<Talent>(talentId.AggregateId, PropertyName);
+        ?? throw new TalentNotFoundException(talentId, PropertyName);
 
       if (requiredTalent.Tier > talent.Tier)
       {
-        throw new InvalidRequiredTalentTierException(requiredTalent, PropertyName);
+        throw new InvalidRequiredTalentTierException(talent, requiredTalent, PropertyName);
       }
     }
 

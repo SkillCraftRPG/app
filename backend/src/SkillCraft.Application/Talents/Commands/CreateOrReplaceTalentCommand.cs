@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Application.Talents.Validators;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
@@ -11,6 +12,12 @@ namespace SkillCraft.Application.Talents.Commands;
 
 public record CreateOrReplaceTalentResult(TalentModel? Talent = null, bool Created = false);
 
+/// <exception cref="InvalidRequiredTalentTierException"></exception>
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="TalentNotFoundException"></exception>
+/// <exception cref="TalentSkillAlreadyExistingException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceTalentCommand(Guid? Id, CreateOrReplaceTalentPayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceTalentResult>;
 
 internal class CreateOrReplaceTalentCommandHandler : IRequestHandler<CreateOrReplaceTalentCommand, CreateOrReplaceTalentResult>
