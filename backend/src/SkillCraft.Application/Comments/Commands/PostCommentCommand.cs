@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Comments.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Comments;
@@ -12,6 +13,9 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Comments.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record PostCommentCommand : Activity, IRequest<CommentModel?>
 {
   public EntityKey Entity { get; }
