@@ -101,7 +101,8 @@ public class CreateCharacterCommandHandlerTests
         Extra = [.. _baseAttributes.Extra]
       },
       CasteId = _caste.EntityId,
-      EducationId = _education.EntityId
+      EducationId = _education.EntityId,
+      TalentIds = [Guid.NewGuid(), Guid.NewGuid()]
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
@@ -117,6 +118,8 @@ public class CreateCharacterCommandHandlerTests
     _sender.Setup(x => x.Send(It.Is<ResolveEducationQuery>(y => y.Activity == command && y.Id == payload.EducationId), _cancellationToken)).ReturnsAsync(_education);
     _sender.Setup(x => x.Send(It.Is<ResolveLanguagesQuery>(y => y.Activity == command && y.Lineage == _nation
       && y.Parent == _species && y.Ids == payload.LanguageIds), _cancellationToken)).ReturnsAsync([_language]);
+    _sender.Setup(x => x.Send(It.Is<ResolveTalentsQuery>(y => y.Activity == command && y.Caste == _caste
+      && y.Education == _education && y.Ids == payload.TalentIds), _cancellationToken)).ReturnsAsync([]);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -170,12 +173,13 @@ public class CreateCharacterCommandHandlerTests
         Extra = [(Attribute)(-1)]
       },
       CasteId = Guid.NewGuid(),
-      EducationId = Guid.NewGuid()
+      EducationId = Guid.NewGuid(),
+      TalentIds = [Guid.NewGuid()]
     };
     CreateCharacterCommand command = new(payload);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(9, exception.Errors.Count());
+    Assert.Equal(10, exception.Errors.Count());
 
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "PersonalityId" && (Guid?)e.AttemptedValue == payload.PersonalityId);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "CustomizationIds[0]");
@@ -186,5 +190,6 @@ public class CreateCharacterCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEqualValidator" && e.PropertyName == "Attributes.Worst" && (Attribute?)e.AttemptedValue == payload.Attributes.Worst);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "OptionalAttributesValidator" && e.PropertyName == "Attributes.Optional");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Attributes.Extra[0]" && (Attribute?)e.AttemptedValue == payload.Attributes.Extra.Single());
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "CreateCharacterValidator" && e.PropertyName == "TalentIds");
   }
 }

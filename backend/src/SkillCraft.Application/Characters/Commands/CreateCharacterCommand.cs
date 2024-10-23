@@ -14,6 +14,7 @@ using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -83,6 +84,15 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     foreach (Language language in languages)
     {
       character.AddLanguage(language, reason: "Lineage Extra Language", userId);
+    }
+
+    IReadOnlyCollection<Talent> talents = await _sender.Send(new ResolveTalentsQuery(command, caste, education, payload.TalentIds), cancellationToken);
+    foreach (Talent talent in talents)
+    {
+      /* TODO(fpion): character.(Add/Set)Talent
+       * - Cost (2 or 1 if Aspects Skill is the same)
+       * - Reason: indicate rebate, caste and education talents
+       */
     }
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
