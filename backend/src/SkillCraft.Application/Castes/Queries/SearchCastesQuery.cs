@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Castes;
 
 namespace SkillCraft.Application.Castes.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchCastesQuery(SearchCastesPayload Payload) : Activity, IRequest<SearchResults<CasteModel>>;
 
 internal class SearchCastesQueryHandler : IRequestHandler<SearchCastesQuery, SearchResults<CasteModel>>
