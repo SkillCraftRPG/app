@@ -14,10 +14,10 @@ internal class TalentNotFoundException : NotFoundException
     get => (Guid)Data[nameof(WorldId)]!;
     private set => Data[nameof(WorldId)] = value;
   }
-  public Guid Id
+  public Guid TalentId
   {
-    get => (Guid)Data[nameof(Id)]!;
-    private set => Data[nameof(Id)] = value;
+    get => (Guid)Data[nameof(TalentId)]!;
+    private set => Data[nameof(TalentId)] = value;
   }
   public string PropertyName
   {
@@ -25,19 +25,19 @@ internal class TalentNotFoundException : NotFoundException
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Id, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, TalentId, PropertyName);
 
   public TalentNotFoundException(TalentId talentId, string propertyName)
     : base(BuildMessage(talentId, propertyName))
   {
     WorldId = talentId.WorldId.ToGuid();
-    Id = talentId.EntityId;
+    TalentId = talentId.EntityId;
     PropertyName = propertyName;
   }
 
   private static string BuildMessage(TalentId talentId, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(WorldId), talentId.WorldId.ToGuid())
-    .AddData(nameof(Id), talentId.EntityId)
+    .AddData(nameof(TalentId), talentId.EntityId)
     .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

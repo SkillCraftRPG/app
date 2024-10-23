@@ -152,7 +152,7 @@ public class WorldTests : IntegrationTests
     CreateOrReplaceWorldPayload payload = new(World.Slug.Value);
     CreateOrReplaceWorldCommand command = new(Id: null, payload, Version: null);
     var exception = await Assert.ThrowsAsync<SlugAlreadyUsedException>(async () => await Pipeline.ExecuteAsync(command));
-    Assert.Contains(World.EntityId, exception.Ids);
+    Assert.Contains(World.EntityId, exception.ConflictingIds);
     Assert.Equal(payload.Slug, exception.Slug);
     Assert.Equal("Slug", exception.PropertyName);
   }

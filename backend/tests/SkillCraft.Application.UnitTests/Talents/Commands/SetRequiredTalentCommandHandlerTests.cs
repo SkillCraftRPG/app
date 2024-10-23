@@ -75,7 +75,7 @@ public class SetRequiredTalentCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<TalentNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(command.Id, exception.Id);
+    Assert.Equal(command.Id, exception.TalentId);
     Assert.Equal("RequiredTalentId", exception.PropertyName);
   }
 }

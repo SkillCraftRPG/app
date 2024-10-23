@@ -52,7 +52,7 @@ public class SaveTalentCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<TalentSkillAlreadyExistingException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(talent.WorldId.ToGuid(), exception.WorldId);
-    Assert.Equal([talent.EntityId, conflictId.EntityId], exception.Ids);
+    Assert.Equal([talent.EntityId, conflictId.EntityId], exception.ConflictingIds);
     Assert.Equal(talent.Skill, exception.Skill);
     Assert.Equal("Name", exception.PropertyName);
   }

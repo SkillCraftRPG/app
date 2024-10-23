@@ -14,10 +14,10 @@ internal class CustomizationNotFoundException : NotFoundException
     get => (Guid)Data[nameof(WorldId)]!;
     private set => Data[nameof(WorldId)] = value;
   }
-  public Guid Id
+  public Guid CustomizationId
   {
-    get => (Guid)Data[nameof(Id)]!;
-    private set => Data[nameof(Id)] = value;
+    get => (Guid)Data[nameof(CustomizationId)]!;
+    private set => Data[nameof(CustomizationId)] = value;
   }
   public string PropertyName
   {
@@ -25,19 +25,19 @@ internal class CustomizationNotFoundException : NotFoundException
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Id, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, CustomizationId, PropertyName);
 
   public CustomizationNotFoundException(CustomizationId customizationId, string propertyName)
     : base(BuildMessage(customizationId, propertyName))
   {
     WorldId = customizationId.WorldId.ToGuid();
-    Id = customizationId.EntityId;
+    CustomizationId = customizationId.EntityId;
     PropertyName = propertyName;
   }
 
   private static string BuildMessage(CustomizationId customizationId, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(WorldId), customizationId.WorldId.ToGuid())
-    .AddData(nameof(Id), customizationId.EntityId)
+    .AddData(nameof(CustomizationId), customizationId.EntityId)
     .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

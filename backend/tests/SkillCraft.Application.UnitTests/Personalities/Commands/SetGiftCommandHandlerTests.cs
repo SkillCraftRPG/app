@@ -63,7 +63,7 @@ public class SetGiftCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<CustomizationIsNotGiftException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(customization.EntityId, exception.Id);
+    Assert.Equal(customization.EntityId, exception.CustomizationId);
     Assert.Equal(customization.Type, exception.CustomizationType);
     Assert.Equal("GiftId", exception.PropertyName);
   }
@@ -76,7 +76,7 @@ public class SetGiftCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<CustomizationNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(command.Id, exception.Id);
+    Assert.Equal(command.Id, exception.CustomizationId);
     Assert.Equal("GiftId", exception.PropertyName);
   }
 }

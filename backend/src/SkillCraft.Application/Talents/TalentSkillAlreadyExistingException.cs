@@ -15,10 +15,10 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     get => (Guid)Data[nameof(WorldId)]!;
     private set => Data[nameof(WorldId)] = value;
   }
-  public IEnumerable<Guid> Ids
+  public IEnumerable<Guid> ConflictingIds
   {
-    get => (IEnumerable<Guid>)Data[nameof(Ids)]!;
-    private set => Data[nameof(Ids)] = value;
+    get => (IEnumerable<Guid>)Data[nameof(ConflictingIds)]!;
+    private set => Data[nameof(ConflictingIds)] = value;
   }
   public Skill Skill
   {
@@ -42,7 +42,7 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     }
 
     WorldId = talent.WorldId.ToGuid();
-    Ids = [talent.EntityId, conflictId.EntityId];
+    ConflictingIds = [talent.EntityId, conflictId.EntityId];
     Skill = talent.Skill.Value;
     PropertyName = propertyName;
   }
@@ -55,7 +55,7 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     message.Append(nameof(WorldId)).Append(": ").Append(talent.WorldId.ToGuid()).AppendLine();
     message.Append(nameof(Skill)).Append(": ").Append(talent.Skill).AppendLine();
     message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
-    message.Append(nameof(Ids)).Append(':').AppendLine();
+    message.Append(nameof(ConflictingIds)).Append(':').AppendLine();
     message.Append(" - ").Append(talent.EntityId).AppendLine();
     message.Append(" - ").Append(conflictId.EntityId).AppendLine();
 
