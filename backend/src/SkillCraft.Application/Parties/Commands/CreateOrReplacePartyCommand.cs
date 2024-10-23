@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Parties.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Domain;
@@ -11,6 +12,9 @@ namespace SkillCraft.Application.Parties.Commands;
 
 public record CreateOrReplacePartyResult(PartyModel? Party = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplacePartyCommand(Guid? Id, CreateOrReplacePartyPayload Payload, long? Version) : Activity, IRequest<CreateOrReplacePartyResult>;
 
 internal class CreateOrReplacePartyCommandHandler : IRequestHandler<CreateOrReplacePartyCommand, CreateOrReplacePartyResult>

@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Parties;
 
 namespace SkillCraft.Application.Parties.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchPartiesQuery(SearchPartiesPayload Payload) : Activity, IRequest<SearchResults<PartyModel>>;
 
 internal class SearchPartiesQueryHandler : IRequestHandler<SearchPartiesQuery, SearchResults<PartyModel>>

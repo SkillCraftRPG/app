@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Parties;
 
 namespace SkillCraft.Application.Parties.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadPartyQuery(Guid Id) : Activity, IRequest<PartyModel?>;
 
 internal class ReadPartyQueryHandler : IRequestHandler<ReadPartyQuery, PartyModel?>
