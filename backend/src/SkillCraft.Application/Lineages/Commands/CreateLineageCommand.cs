@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Languages;
 using SkillCraft.Application.Languages.Queries;
 using SkillCraft.Application.Lineages.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
@@ -12,6 +14,12 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Lineages.Commands;
 
+/// <exception cref="InvalidParentLineageException"></exception>
+/// <exception cref="LanguagesNotFoundException"></exception>
+/// <exception cref="LineageNotFoundException"></exception>
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateLineageCommand(CreateLineagePayload Payload) : Activity, IRequest<LineageModel>;
 
 internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageCommand, LineageModel>
@@ -47,7 +55,7 @@ internal class CreateLineageCommandHandler : IRequestHandler<CreateLineageComman
     {
       LineageId parentId = new(worldId, payload.ParentId.Value);
       parent = await _lineageRepository.LoadAsync(parentId, cancellationToken)
-        ?? throw new AggregateNotFoundException<Lineage>(parentId.AggregateId, nameof(payload.ParentId));
+        ?? throw new LineageNotFoundException(parentId, nameof(payload.ParentId));
       if (parent.ParentId.HasValue)
       {
         throw new InvalidParentLineageException(parent, nameof(payload.ParentId));

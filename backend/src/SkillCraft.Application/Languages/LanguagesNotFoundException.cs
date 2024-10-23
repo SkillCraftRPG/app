@@ -8,33 +8,33 @@ internal class LanguagesNotFoundException : NotFoundException
 {
   private const string ErrorMessage = "The specified languages could not be found.";
 
-  public IEnumerable<Guid> Ids
+  public IEnumerable<Guid> LanguageIds
   {
-    get => (IEnumerable<Guid>)Data[nameof(Ids)]!;
-    private set => Data[nameof(Ids)] = value;
+    get => (IEnumerable<Guid>)Data[nameof(LanguageIds)]!;
+    private set => Data[nameof(LanguageIds)] = value;
   }
-  public string? PropertyName
+  public string PropertyName
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Ids, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, LanguageIds, PropertyName);
 
-  public LanguagesNotFoundException(IEnumerable<Guid> ids, string? propertyName = null)
+  public LanguagesNotFoundException(IEnumerable<Guid> ids, string propertyName)
     : base(BuildMessage(ids, propertyName))
   {
-    Ids = ids;
+    LanguageIds = ids;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(IEnumerable<Guid> ids, string? propertyName)
+  private static string BuildMessage(IEnumerable<Guid> ids, string propertyName)
   {
     StringBuilder message = new();
 
     message.AppendLine(ErrorMessage);
-    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
-    message.Append(nameof(Ids)).AppendLine(":");
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
+    message.Append(nameof(LanguageIds)).AppendLine(":");
     foreach (Guid id in ids)
     {
       message.Append(" - ").Append(id).AppendLine();

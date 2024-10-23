@@ -54,7 +54,7 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     message.AppendLine(ErrorMessage);
     message.Append(nameof(WorldId)).Append(": ").Append(talent.WorldId.ToGuid()).AppendLine();
     message.Append(nameof(Skill)).Append(": ").Append(talent.Skill).AppendLine();
-    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
     message.Append(nameof(ConflictingIds)).Append(':').AppendLine();
     message.Append(" - ").Append(talent.EntityId).AppendLine();
     message.Append(" - ").Append(conflictId.EntityId).AppendLine();

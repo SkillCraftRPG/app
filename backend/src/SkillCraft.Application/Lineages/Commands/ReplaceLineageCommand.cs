@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Languages;
 using SkillCraft.Application.Languages.Queries;
 using SkillCraft.Application.Lineages.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
@@ -10,6 +12,10 @@ using SkillCraft.Domain.Lineages;
 
 namespace SkillCraft.Application.Lineages.Commands;
 
+/// <exception cref="LanguagesNotFoundException"></exception>
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record ReplaceLineageCommand(Guid Id, ReplaceLineagePayload Payload, long? Version) : Activity, IRequest<LineageModel?>;
 
 internal class ReplaceLineageCommandHandler : IRequestHandler<ReplaceLineageCommand, LineageModel?>

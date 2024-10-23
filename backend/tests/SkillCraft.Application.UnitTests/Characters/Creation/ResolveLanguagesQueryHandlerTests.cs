@@ -110,7 +110,7 @@ public class ResolveLanguagesQueryHandlerTests
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1, _language2]);
 
     var exception = await Assert.ThrowsAsync<LanguagesNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids.Skip(2), exception.Ids);
+    Assert.Equal(query.Ids.Skip(2), exception.LanguageIds);
     Assert.Equal("LanguageIds", exception.PropertyName);
   }
 }

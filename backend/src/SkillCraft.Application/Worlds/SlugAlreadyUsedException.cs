@@ -41,7 +41,7 @@ internal class SlugAlreadyUsedException : ConflictException
 
     message.AppendLine(ErrorMessage);
     message.Append(nameof(Slug)).Append(": ").Append(world.Slug).AppendLine();
-    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
     message.Append(nameof(ConflictingIds)).Append(':').AppendLine();
     message.Append(" - ").Append(world.Id.ToGuid()).AppendLine();
     message.Append(" - ").Append(conflictId.ToGuid()).AppendLine();
