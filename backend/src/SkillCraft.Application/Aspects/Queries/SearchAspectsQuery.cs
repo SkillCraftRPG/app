@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Aspects;
 
 namespace SkillCraft.Application.Aspects.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchAspectsQuery(SearchAspectsPayload Payload) : Activity, IRequest<SearchResults<AspectModel>>;
 
 internal class SearchAspectsQueryHandler : IRequestHandler<SearchAspectsQuery, SearchResults<AspectModel>>
