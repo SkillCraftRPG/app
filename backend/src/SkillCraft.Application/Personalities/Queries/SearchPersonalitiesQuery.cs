@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Personalities;
 
 namespace SkillCraft.Application.Personalities.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchPersonalitiesQuery(SearchPersonalitiesPayload Payload) : Activity, IRequest<SearchResults<PersonalityModel>>;
 
 internal class SearchPersonalitiesQueryHandler : IRequestHandler<SearchPersonalitiesQuery, SearchResults<PersonalityModel>>

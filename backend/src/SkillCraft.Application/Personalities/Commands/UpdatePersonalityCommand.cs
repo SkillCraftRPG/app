@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities.Validators;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
@@ -9,6 +11,11 @@ using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Personalities.Commands;
 
+/// <exception cref="CustomizationIsNotGiftException"></exception>
+/// <exception cref="CustomizationNotFoundException"></exception>
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdatePersonalityCommand(Guid Id, UpdatePersonalityPayload Payload) : Activity, IRequest<PersonalityModel?>;
 
 internal class UpdatePersonalityCommandHandler : IRequestHandler<UpdatePersonalityCommand, PersonalityModel?>
