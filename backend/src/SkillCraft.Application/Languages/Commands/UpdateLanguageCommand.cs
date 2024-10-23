@@ -2,12 +2,16 @@
 using MediatR;
 using SkillCraft.Application.Languages.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Languages;
 
 namespace SkillCraft.Application.Languages.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateLanguageCommand(Guid Id, UpdateLanguagePayload Payload) : Activity, IRequest<LanguageModel?>;
 
 internal class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageCommand, LanguageModel?>
