@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Educations;
 
 namespace SkillCraft.Application.Educations.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadEducationQuery(Guid Id) : Activity, IRequest<EducationModel?>;
 
 internal class ReadEducationQueryHandler : IRequestHandler<ReadEducationQuery, EducationModel?>

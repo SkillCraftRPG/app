@@ -2,12 +2,16 @@
 using MediatR;
 using SkillCraft.Application.Educations.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Educations;
 
 namespace SkillCraft.Application.Educations.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateEducationCommand(Guid Id, UpdateEducationPayload Payload) : Activity, IRequest<EducationModel?>;
 
 internal class UpdateEducationCommandHandler : IRequestHandler<UpdateEducationCommand, EducationModel?>
