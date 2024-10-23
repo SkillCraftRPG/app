@@ -132,21 +132,6 @@ public class CreateLineageCommandHandlerTests
       && y.Lineage.Ages.AreEqualTo(payload.Ages)), _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the parent could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_parent_could_not_be_found()
-  {
-    CreateLineagePayload payload = new(" Orrin ")
-    {
-      ParentId = Guid.NewGuid()
-    };
-    CreateLineageCommand command = new(payload);
-    command.Contextualize(_user, _world);
-
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Lineage>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(new LineageId(_world.Id, payload.ParentId).Value, exception.Id);
-    Assert.Equal("ParentId", exception.PropertyName);
-  }
-
   [Fact(DisplayName = "It should throw InvalidParentLineageException when the parent is a nation (not a species).")]
   public async Task It_should_throw_InvalidParentLineageException_when_the_parent_is_a_nation_not_a_species()
   {
@@ -162,7 +147,24 @@ public class CreateLineageCommandHandlerTests
     command.Contextualize(_user, _world);
 
     var exception = await Assert.ThrowsAsync<InvalidParentLineageException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
     Assert.Equal(payload.ParentId.Value, exception.ParentId);
+    Assert.Equal("ParentId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw LineageNotFoundException when the parent could not be found.")]
+  public async Task It_should_throw_LineageNotFoundException_when_the_parent_could_not_be_found()
+  {
+    CreateLineagePayload payload = new(" Orrin ")
+    {
+      ParentId = Guid.NewGuid()
+    };
+    CreateLineageCommand command = new(payload);
+    command.Contextualize(_user, _world);
+
+    var exception = await Assert.ThrowsAsync<LineageNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.ParentId, exception.LineageId);
     Assert.Equal("ParentId", exception.PropertyName);
   }
 
