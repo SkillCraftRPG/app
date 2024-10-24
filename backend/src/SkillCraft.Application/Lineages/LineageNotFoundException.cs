@@ -3,11 +3,11 @@ using Logitar.Portal.Contracts.Errors;
 using SkillCraft.Contracts.Errors;
 using SkillCraft.Domain.Lineages;
 
-namespace SkillCraft.Application.Characters;
+namespace SkillCraft.Application.Lineages;
 
-internal class InvalidCharacterLineageException : BadRequestException
+internal class LineageNotFoundException : NotFoundException
 {
-  private const string ErrorMessage = "The lineage should be a species without nation, or a nation.";
+  private const string ErrorMessage = "The specified lineage could not be found.";
 
   public Guid WorldId
   {
@@ -27,17 +27,17 @@ internal class InvalidCharacterLineageException : BadRequestException
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, LineageId, PropertyName);
 
-  public InvalidCharacterLineageException(Lineage lineage, string propertyName)
-    : base(BuildMessage(lineage, propertyName))
+  public LineageNotFoundException(LineageId lineageId, string propertyName)
+    : base(BuildMessage(lineageId, propertyName))
   {
-    WorldId = lineage.WorldId.ToGuid();
-    LineageId = lineage.EntityId;
+    WorldId = lineageId.WorldId.ToGuid();
+    LineageId = lineageId.EntityId;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Lineage lineage, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(WorldId), lineage.WorldId.ToGuid())
-    .AddData(nameof(LineageId), lineage.EntityId)
+  private static string BuildMessage(LineageId lineageId, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
+    .AddData(nameof(WorldId), lineageId.WorldId.ToGuid())
+    .AddData(nameof(LineageId), lineageId.EntityId)
     .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

@@ -82,7 +82,9 @@ public class ResolveCustomizationsQueryHandlerTests
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_customization, _disability, _gift]);
 
     var exception = await Assert.ThrowsAsync<CustomizationsCannotIncludePersonalityGiftException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(_customization.EntityId, exception.CustomizationId);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_personality.EntityId, exception.PersonalityId);
+    Assert.Equal(_customization.EntityId, exception.GiftId);
     Assert.Equal("CustomizationIds", exception.PropertyName);
   }
 
@@ -95,7 +97,8 @@ public class ResolveCustomizationsQueryHandlerTests
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_disability, _gift]);
 
     var exception = await Assert.ThrowsAsync<CustomizationsNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids.Skip(2), exception.Ids);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Ids.Skip(2), exception.CustomizationIds);
     Assert.Equal("CustomizationIds", exception.PropertyName);
   }
 
@@ -108,7 +111,8 @@ public class ResolveCustomizationsQueryHandlerTests
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_gift]);
 
     var exception = await Assert.ThrowsAsync<InvalidCharacterCustomizationsException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids, exception.Ids);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Ids, exception.CustomizationIds);
     Assert.Equal("CustomizationIds", exception.PropertyName);
   }
 }

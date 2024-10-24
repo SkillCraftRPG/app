@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Languages.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Domain;
@@ -11,6 +12,9 @@ namespace SkillCraft.Application.Languages.Commands;
 
 public record CreateOrReplaceLanguageResult(LanguageModel? Language = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceLanguageCommand(Guid? Id, CreateOrReplaceLanguagePayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceLanguageResult>;
 
 internal class CreateOrReplaceLanguageCommandHandler : IRequestHandler<CreateOrReplaceLanguageCommand, CreateOrReplaceLanguageResult>

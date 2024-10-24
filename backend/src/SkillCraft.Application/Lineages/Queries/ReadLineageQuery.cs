@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Lineages;
 
 namespace SkillCraft.Application.Lineages.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadLineageQuery(Guid Id) : Activity, IRequest<LineageModel?>;
 
 internal class ReadLineageQueryHandler : IRequestHandler<ReadLineageQuery, LineageModel?>

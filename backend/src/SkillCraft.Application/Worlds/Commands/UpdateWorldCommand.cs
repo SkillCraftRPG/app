@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Application.Worlds.Validators;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
@@ -8,6 +9,10 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Worlds.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="SlugAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateWorldCommand(Guid Id, UpdateWorldPayload Payload) : Activity, IRequest<WorldModel?>;
 
 internal class UpdateWorldCommandHandler : IRequestHandler<UpdateWorldCommand, WorldModel?>

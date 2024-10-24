@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Lineages;
 
 namespace SkillCraft.Application.Lineages.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchLineagesQuery(SearchLineagesPayload Payload) : Activity, IRequest<SearchResults<LineageModel>>;
 
 internal class SearchLineagesQueryHandler : IRequestHandler<SearchLineagesQuery, SearchResults<LineageModel>>

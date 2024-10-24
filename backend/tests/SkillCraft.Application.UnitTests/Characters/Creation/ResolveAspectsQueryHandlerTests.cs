@@ -69,7 +69,8 @@ public class ResolveAspectsQueryHandlerTests
     _aspectRepository.Setup(x => x.LoadAsync(aspectIds, _cancellationToken)).ReturnsAsync([_aspect1]);
 
     var exception = await Assert.ThrowsAsync<AspectsNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids.Skip(1), exception.Ids);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Ids.Skip(1), exception.AspectIds);
     Assert.Equal("AspectIds", exception.PropertyName);
   }
 }

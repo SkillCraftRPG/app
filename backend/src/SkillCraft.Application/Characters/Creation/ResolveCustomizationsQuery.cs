@@ -39,13 +39,14 @@ internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustom
     IEnumerable<CustomizationId> ids = query.Ids.Distinct().Select(id => new CustomizationId(worldId, id));
     IReadOnlyCollection<Customization> customizations = await _customizationRepository.LoadAsync(ids, cancellationToken);
 
+    Personality personality = query.Personality;
     int gifts = 0;
     int disabilities = 0;
     foreach (Customization customization in customizations)
     {
-      if (customization.Id == query.Personality.GiftId)
+      if (customization.Id == personality.GiftId)
       {
-        throw new CustomizationsCannotIncludePersonalityGiftException(customization, PropertyName);
+        throw new CustomizationsCannotIncludePersonalityGiftException(personality, PropertyName);
       }
 
       switch (customization.Type)
@@ -60,14 +61,14 @@ internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustom
     }
     if (gifts != disabilities)
     {
-      throw new InvalidCharacterCustomizationsException(query.Ids, PropertyName);
+      throw new InvalidCharacterCustomizationsException(worldId, query.Ids, PropertyName);
     }
 
     IEnumerable<Guid> foundIds = customizations.Select(customization => customization.EntityId).Distinct();
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new CustomizationsNotFoundException(missingIds, PropertyName);
+      throw new CustomizationsNotFoundException(worldId, missingIds, PropertyName);
     }
 
     return customizations;

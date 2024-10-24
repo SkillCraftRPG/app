@@ -1,7 +1,7 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Errors;
 using SkillCraft.Contracts.Errors;
-using SkillCraft.Domain.Customizations;
+using SkillCraft.Domain.Personalities;
 
 namespace SkillCraft.Application.Characters;
 
@@ -9,28 +9,55 @@ internal class CustomizationsCannotIncludePersonalityGiftException : BadRequestE
 {
   private const string ErrorMessage = "The personality's gift should not be included in character customizations.";
 
-  public Guid CustomizationId
+  public Guid WorldId
   {
-    get => (Guid)Data[nameof(CustomizationId)]!;
-    private set => Data[nameof(CustomizationId)] = value;
+    get => (Guid)Data[nameof(WorldId)]!;
+    private set => Data[nameof(WorldId)] = value;
   }
-  public string? PropertyName
+  public Guid PersonalityId
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (Guid)Data[nameof(PersonalityId)]!;
+    private set => Data[nameof(PersonalityId)] = value;
+  }
+  public Guid GiftId
+  {
+    get => (Guid)Data[nameof(GiftId)]!;
+    private set => Data[nameof(GiftId)] = value;
+  }
+  public string PropertyName
+  {
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, CustomizationId, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, GiftId, PropertyName);
 
-  public CustomizationsCannotIncludePersonalityGiftException(Customization customization, string? propertyName = null)
-    : base(BuildMessage(customization, propertyName))
+  public CustomizationsCannotIncludePersonalityGiftException(Personality personality, string propertyName)
+    : base(BuildMessage(personality, propertyName))
   {
-    CustomizationId = customization.EntityId;
+    if (!personality.GiftId.HasValue)
+    {
+      throw new ArgumentException($"The '{nameof(personality.GiftId)}' is required.", nameof(personality));
+    }
+
+    WorldId = personality.WorldId.ToGuid();
+    PersonalityId = personality.EntityId;
+    GiftId = personality.GiftId.Value.EntityId;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Customization customization, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(CustomizationId), customization.EntityId)
-    .AddData(nameof(PropertyName), propertyName, "<null>")
-    .Build();
+  private static string BuildMessage(Personality personality, string propertyName)
+  {
+    if (!personality.GiftId.HasValue)
+    {
+      throw new ArgumentException($"The '{nameof(personality.GiftId)}' is required.", nameof(personality));
+    }
+
+    return new ErrorMessageBuilder(ErrorMessage)
+      .AddData(nameof(WorldId), personality.WorldId.ToGuid())
+      .AddData(nameof(PersonalityId), personality.EntityId)
+      .AddData(nameof(GiftId), personality.GiftId.Value.EntityId)
+      .AddData(nameof(PropertyName), propertyName)
+      .Build();
+  }
 }

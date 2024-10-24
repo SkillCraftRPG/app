@@ -7,6 +7,7 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Comments.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadCommentQuery(Guid Id) : Activity, IRequest<CommentModel?>;
 
 internal class ReadCommentQueryHandler : IRequestHandler<ReadCommentQuery, CommentModel?>

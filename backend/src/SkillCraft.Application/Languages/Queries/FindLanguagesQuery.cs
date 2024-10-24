@@ -2,6 +2,7 @@
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Domain.Languages;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Languages.Queries;
 
@@ -28,14 +29,15 @@ internal class FindLanguagesQueryHandler : IRequestHandler<FindLanguagesQuery, I
     Activity activity = query.Activity;
     await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Language, cancellationToken);
 
-    IEnumerable<LanguageId> ids = query.Ids.Distinct().Select(id => new LanguageId(activity.GetWorldId(), id));
+    WorldId worldId = activity.GetWorldId();
+    IEnumerable<LanguageId> ids = query.Ids.Distinct().Select(id => new LanguageId(worldId, id));
     IReadOnlyCollection<Language> languages = await _languageRepository.LoadAsync(ids, cancellationToken);
 
     IEnumerable<Guid> foundIds = languages.Select(language => language.EntityId).Distinct();
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new LanguagesNotFoundException(missingIds, nameof(query.Ids));
+      throw new LanguagesNotFoundException(worldId, missingIds, nameof(query.Ids));
     }
 
     return languages;

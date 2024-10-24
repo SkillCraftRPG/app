@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Aspects;
 
 namespace SkillCraft.Application.Aspects.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadAspectQuery(Guid Id) : Activity, IRequest<AspectModel?>;
 
 internal class ReadAspectQueryHandler : IRequestHandler<ReadAspectQuery, AspectModel?>

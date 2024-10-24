@@ -1,4 +1,5 @@
 ﻿using Moq;
+using SkillCraft.Application.Customizations;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Customizations;
@@ -52,14 +53,30 @@ public class SetGiftCommandHandlerTests
     Assert.Equal(_gift.Id, _personality.GiftId);
   }
 
-  [Fact(DisplayName = "It_should throw AggregateNotFoundException when the gift cannot be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_gift_cannot_be_found()
+  [Fact(DisplayName = "It should throw CustomizationIsNotGiftException when the customization is not a gift.")]
+  public async Task It_should_throw_CustomizationIsNotGiftException_when_the_customization_is_not_a_gift()
+  {
+    Customization customization = new(_world.Id, CustomizationType.Disability, new Name("Borgne"), _world.OwnerId);
+    _customizationRepository.Setup(x => x.LoadAsync(customization.Id, _cancellationToken)).ReturnsAsync(customization);
+
+    SetGiftCommand command = new(_personality, customization.EntityId);
+
+    var exception = await Assert.ThrowsAsync<CustomizationIsNotGiftException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(customization.EntityId, exception.CustomizationId);
+    Assert.Equal(customization.Type, exception.CustomizationType);
+    Assert.Equal("GiftId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw CustomizationNotFoundException when the gift cannot be found.")]
+  public async Task It_should_throw_CustomizationNotFoundException_when_the_gift_cannot_be_found()
   {
     SetGiftCommand command = new(_personality, Guid.Empty);
     CustomizationId id = new(_world.Id, command.Id);
 
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Customization>>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(id.Value, exception.Id);
+    var exception = await Assert.ThrowsAsync<CustomizationNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(command.Id, exception.CustomizationId);
     Assert.Equal("GiftId", exception.PropertyName);
   }
 }

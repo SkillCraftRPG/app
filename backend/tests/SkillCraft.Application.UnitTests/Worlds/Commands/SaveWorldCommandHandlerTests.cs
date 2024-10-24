@@ -45,7 +45,7 @@ public class SaveWorldCommandHandlerTests
 
     SaveWorldCommand command = new(world);
     var exception = await Assert.ThrowsAsync<SlugAlreadyUsedException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal([world.EntityId, other.EntityId], exception.Ids);
+    Assert.Equal([world.EntityId, other.EntityId], exception.ConflictingIds);
     Assert.Equal(world.Slug.Value, exception.Slug);
     Assert.Equal("Slug", exception.PropertyName);
   }

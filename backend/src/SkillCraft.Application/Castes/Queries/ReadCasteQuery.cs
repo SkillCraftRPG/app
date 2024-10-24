@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Castes;
 
 namespace SkillCraft.Application.Castes.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadCasteQuery(Guid Id) : Activity, IRequest<CasteModel?>;
 
 internal class ReadCasteQueryHandler : IRequestHandler<ReadCasteQuery, CasteModel?>

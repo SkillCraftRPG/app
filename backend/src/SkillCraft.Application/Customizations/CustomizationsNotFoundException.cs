@@ -1,6 +1,7 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Errors;
 using SkillCraft.Contracts.Errors;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Customizations;
 
@@ -8,36 +9,43 @@ internal class CustomizationsNotFoundException : NotFoundException
 {
   private const string ErrorMessage = "The specified customizations could not be found.";
 
-  public IEnumerable<Guid> Ids
+  public Guid WorldId
   {
-    get => (IEnumerable<Guid>)Data[nameof(Ids)]!;
-    private set => Data[nameof(Ids)] = value;
+    get => (Guid)Data[nameof(WorldId)]!;
+    private set => Data[nameof(WorldId)] = value;
   }
-  public string? PropertyName
+  public IEnumerable<Guid> CustomizationIds
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (IEnumerable<Guid>)Data[nameof(CustomizationIds)]!;
+    private set => Data[nameof(CustomizationIds)] = value;
+  }
+  public string PropertyName
+  {
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Ids, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, CustomizationIds, PropertyName);
 
-  public CustomizationsNotFoundException(IEnumerable<Guid> ids, string? propertyName = null)
-    : base(BuildMessage(ids, propertyName))
+  public CustomizationsNotFoundException(WorldId worldId, IEnumerable<Guid> customizationIds, string propertyName)
+    : base(BuildMessage(worldId, customizationIds, propertyName))
   {
-    Ids = ids;
+    WorldId = worldId.ToGuid();
+    CustomizationIds = customizationIds;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(IEnumerable<Guid> ids, string? propertyName)
+  private static string BuildMessage(WorldId worldId, IEnumerable<Guid> customizationIds, string propertyName)
   {
     StringBuilder message = new();
 
     message.AppendLine(ErrorMessage);
-    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
-    message.Append(nameof(Ids)).AppendLine(":");
-    foreach (Guid id in ids)
+    message.Append(nameof(WorldId)).Append(": ").Append(worldId.ToGuid()).AppendLine();
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
+    message.Append(nameof(CustomizationIds)).AppendLine(":");
+    foreach (Guid customizationId in customizationIds)
     {
-      message.Append(" - ").Append(id).AppendLine();
+      message.Append(" - ").Append(customizationId).AppendLine();
     }
 
     return message.ToString();

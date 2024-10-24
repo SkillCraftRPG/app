@@ -15,25 +15,25 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     get => (Guid)Data[nameof(WorldId)]!;
     private set => Data[nameof(WorldId)] = value;
   }
-  public IEnumerable<Guid> Ids
+  public IEnumerable<Guid> ConflictingIds
   {
-    get => (IEnumerable<Guid>)Data[nameof(Ids)]!;
-    private set => Data[nameof(Ids)] = value;
+    get => (IEnumerable<Guid>)Data[nameof(ConflictingIds)]!;
+    private set => Data[nameof(ConflictingIds)] = value;
   }
   public Skill Skill
   {
     get => (Skill)Data[nameof(Skill)]!;
     private set => Data[nameof(Skill)] = value;
   }
-  public string? PropertyName
+  public string PropertyName
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Skill, PropertyName);
 
-  public TalentSkillAlreadyExistingException(Talent talent, TalentId conflictId, string? propertyName = null)
+  public TalentSkillAlreadyExistingException(Talent talent, TalentId conflictId, string propertyName)
     : base(BuildMessage(talent, conflictId, propertyName))
   {
     if (talent.Skill == null)
@@ -42,20 +42,20 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     }
 
     WorldId = talent.WorldId.ToGuid();
-    Ids = [talent.EntityId, conflictId.EntityId];
+    ConflictingIds = [talent.EntityId, conflictId.EntityId];
     Skill = talent.Skill.Value;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Talent talent, TalentId conflictId, string? propertyName)
+  private static string BuildMessage(Talent talent, TalentId conflictId, string propertyName)
   {
     StringBuilder message = new();
 
     message.AppendLine(ErrorMessage);
     message.Append(nameof(WorldId)).Append(": ").Append(talent.WorldId.ToGuid()).AppendLine();
     message.Append(nameof(Skill)).Append(": ").Append(talent.Skill).AppendLine();
-    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
-    message.Append(nameof(Ids)).Append(':').AppendLine();
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
+    message.Append(nameof(ConflictingIds)).Append(':').AppendLine();
     message.Append(" - ").Append(talent.EntityId).AppendLine();
     message.Append(" - ").Append(conflictId.EntityId).AppendLine();
 

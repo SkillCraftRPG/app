@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Educations.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Domain;
@@ -11,6 +12,9 @@ namespace SkillCraft.Application.Educations.Commands;
 
 public record CreateOrReplaceEducationResult(EducationModel? Education = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceEducationCommand(Guid? Id, CreateOrReplaceEducationPayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceEducationResult>;
 
 internal class CreateOrReplaceEducationCommandHandler : IRequestHandler<CreateOrReplaceEducationCommand, CreateOrReplaceEducationResult>

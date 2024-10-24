@@ -70,7 +70,8 @@ public class FindLanguagesQueryHandlerTests
     ), _cancellationToken)).ReturnsAsync([_language]);
 
     var exception = await Assert.ThrowsAsync<LanguagesNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids.Except([_language.EntityId]), exception.Ids);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Ids.Except([_language.EntityId]), exception.LanguageIds);
     Assert.Equal("Ids", exception.PropertyName);
 
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Language, _cancellationToken), Times.Once);

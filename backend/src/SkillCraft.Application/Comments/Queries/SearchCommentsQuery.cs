@@ -10,6 +10,7 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Comments.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchCommentsQuery : Activity, IRequest<SearchResults<CommentModel>?>
 {
   public EntityKey Entity { get; }

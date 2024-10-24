@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Personalities;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Personalities;
@@ -26,7 +27,7 @@ internal class ResolvePersonalityQueryHandler : IRequestHandler<ResolvePersonali
 
     PersonalityId id = new(activity.GetWorldId(), query.Id);
     Personality personality = await _personalityRepository.LoadAsync(id, cancellationToken)
-      ?? throw new AggregateNotFoundException<Personality>(id.AggregateId, nameof(CreateCharacterPayload.PersonalityId));
+      ?? throw new PersonalityNotFoundException(id, nameof(CreateCharacterPayload.PersonalityId));
 
     return personality;
   }

@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Personalities;
 
 namespace SkillCraft.Application.Personalities.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadPersonalityQuery(Guid Id) : Activity, IRequest<PersonalityModel?>;
 
 internal class ReadPersonalityQueryHandler : IRequestHandler<ReadPersonalityQuery, PersonalityModel?>

@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Talents;
 
 namespace SkillCraft.Application.Talents.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadTalentQuery(Guid Id) : Activity, IRequest<TalentModel?>;
 
 internal class ReadTalentQueryHandler : IRequestHandler<ReadTalentQuery, TalentModel?>

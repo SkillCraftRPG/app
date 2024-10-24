@@ -11,6 +11,9 @@ using Action = SkillCraft.Application.Permissions.Action;
 
 namespace SkillCraft.Application.Comments.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record EditCommentCommand(Guid Id, EditCommentPayload Payload) : Activity, IRequest<CommentModel?>;
 
 internal class EditCommentCommandHandler : IRequestHandler<EditCommentCommand, CommentModel?>

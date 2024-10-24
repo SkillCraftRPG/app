@@ -86,6 +86,8 @@ public class ResolveBaseAttributesQueryHandlerTests
     ResolveBaseAttributesQuery query = new(payload, _aspects, _nation, _species);
 
     var exception = await Assert.ThrowsAsync<InvalidAspectAttributeSelectionException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_aspects.Select(a => a.EntityId), exception.AspectIds);
     Assert.Equal(payload.Best, exception.Attribute);
     Assert.Equal("Best", exception.PropertyName);
   }
@@ -102,6 +104,8 @@ public class ResolveBaseAttributesQueryHandlerTests
     ResolveBaseAttributesQuery query = new(payload, _aspects, _nation, _species);
 
     var exception = await Assert.ThrowsAsync<InvalidAspectAttributeSelectionException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_aspects.Select(a => a.EntityId), exception.AspectIds);
     Assert.Equal(payload.Optional[0], exception.Attribute);
     Assert.Equal("Optional[0]", exception.PropertyName);
   }
@@ -118,6 +122,8 @@ public class ResolveBaseAttributesQueryHandlerTests
     ResolveBaseAttributesQuery query = new(payload, _aspects, _nation, _species);
 
     var exception = await Assert.ThrowsAsync<InvalidAspectAttributeSelectionException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_aspects.Select(a => a.EntityId), exception.AspectIds);
     Assert.Equal(payload.Optional[1], exception.Attribute);
     Assert.Equal("Optional[1]", exception.PropertyName);
   }
@@ -133,6 +139,8 @@ public class ResolveBaseAttributesQueryHandlerTests
     ResolveBaseAttributesQuery query = new(payload, _aspects, _nation, _species);
 
     var exception = await Assert.ThrowsAsync<InvalidAspectAttributeSelectionException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_aspects.Select(a => a.EntityId), exception.AspectIds);
     Assert.Equal(payload.Worst, exception.Attribute);
     Assert.Equal("Worst", exception.PropertyName);
   }
@@ -149,6 +157,8 @@ public class ResolveBaseAttributesQueryHandlerTests
     ResolveBaseAttributesQuery query = new(payload, _aspects, _nation, _species);
 
     var exception = await Assert.ThrowsAsync<InvalidExtraAttributesException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_nation.EntityId, exception.LineageId);
     Assert.Equal(payload.Extra, exception.ExtraAttributes);
     Assert.Equal(_species.Attributes.Extra + _nation.Attributes.Extra, exception.ExpectedCount);
     Assert.Equal("Extra", exception.PropertyName);

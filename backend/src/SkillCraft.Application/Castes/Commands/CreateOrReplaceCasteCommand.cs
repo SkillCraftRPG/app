@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
@@ -11,6 +12,9 @@ namespace SkillCraft.Application.Castes.Commands;
 
 public record CreateOrReplaceCasteResult(CasteModel? Caste = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceCasteCommand(Guid? Id, CreateOrReplaceCastePayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceCasteResult>;
 
 internal class CreateOrReplaceCasteCommandHandler : IRequestHandler<CreateOrReplaceCasteCommand, CreateOrReplaceCasteResult>
