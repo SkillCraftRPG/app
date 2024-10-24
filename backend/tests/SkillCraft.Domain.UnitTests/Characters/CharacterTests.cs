@@ -1,10 +1,13 @@
-﻿using SkillCraft.Contracts.Customizations;
+﻿using SkillCraft.Contracts;
+using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
 using Attribute = SkillCraft.Contracts.Attribute;
 
@@ -23,6 +26,10 @@ public class CharacterTests
     extra: [Attribute.Agility, Attribute.Vigor]);
   private readonly Caste _caste;
   private readonly Education _education;
+  private readonly Language _language;
+  private readonly Talent _talent;
+
+  private readonly Character _character;
 
   public CharacterTests()
   {
@@ -38,6 +45,24 @@ public class CharacterTests
     ];
     _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId);
     _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId);
+    _language = new(_world.Id, new Name("Orrinique"), _world.OwnerId);
+    _talent = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
+
+    _character = new(
+      _world.Id,
+      new Name("Heracles Aetos"),
+      player: null,
+      _lineage,
+      height: 1.84,
+      weight: 84.6,
+      age: 30,
+      _personality,
+      customizations: [],
+      _aspects,
+      _baseAttributes,
+      _caste,
+      _education,
+      _world.OwnerId);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the personality's gift.")]
@@ -163,5 +188,120 @@ public class CharacterTests
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
       weight, age: 30, _personality, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("weight", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should add a new language.")]
+  public void SetLanguage_it_should_add_a_new_language()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    Assert.Contains(_character.Languages, x => x.Key == _language.Id && x.Value.Notes == null);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should not do anything when the language metadata did not change.")]
+  public void SetLanguage_it_should_not_do_anything_when_the_language_metadata_did_not_change()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    _character.ClearChanges();
+
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    Assert.False(_character.HasChanges);
+    Assert.Empty(_character.Changes);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should replace an existing language.")]
+  public void SetLanguage_it_should_replace_an_existing_language()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+
+    Description notes = new("Lineage Extra Language");
+    _character.SetLanguage(_language, notes, _world.OwnerId);
+    Assert.Contains(_character.Languages, x => x.Key == _language.Id && x.Value.Notes == notes);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should throw ArgumentException when the language resides in another world.")]
+  public void SetLanguage_it_should_throw_ArgumentException_when_the_language_resides_in_another_world()
+  {
+    UserId userId = UserId.NewId();
+    Language language = new(WorldId.NewId(), new Name("Orrinique"), userId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetLanguage(language, notes: null, userId));
+    Assert.StartsWith("The language does not reside in the same world as the character.", exception.Message);
+    Assert.Equal("language", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should add a new talent.")]
+  public void SetTalent_it_should_add_a_new_talent()
+  {
+    _character.SetTalent(_talent, _world.OwnerId);
+
+    KeyValuePair<TalentId, TalentMetadata> talent = Assert.Single(_character.Talents);
+    Assert.Equal(_talent.Id, talent.Key);
+    Assert.Equal(_talent.Tier + 2, talent.Value.Cost);
+    Assert.Null(talent.Value.Precision);
+    Assert.Null(talent.Value.Notes);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should not do anything when the talent metadata did not change.")]
+  public void SetTalent_it_should_not_do_anything_when_the_talent_metadata_did_not_change()
+  {
+    _character.SetTalent(_talent, _world.OwnerId);
+    _character.ClearChanges();
+
+    _character.SetTalent(_talent, _world.OwnerId);
+    Assert.False(_character.HasChanges);
+    Assert.Empty(_character.Changes);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should replace an existing talent.")]
+  public void SetTalent_it_should_replace_an_existing_talent()
+  {
+    _character.SetTalent(_talent, _world.OwnerId);
+
+    SetTalentOptions options = new()
+    {
+      Cost = _talent.Tier + 2 - 1,
+      Precision = new Name(Skill.Melee.ToString()),
+      Notes = new Description("Caste: Milicien; Discounted: Farouche (aspect)")
+    };
+    _character.SetTalent(_talent, options, _world.OwnerId);
+
+    KeyValuePair<TalentId, TalentMetadata> talent = Assert.Single(_character.Talents);
+    Assert.Equal(_talent.Id, talent.Key);
+    Assert.Equal(options.Cost, talent.Value.Cost);
+    Assert.Equal(options.Precision, talent.Value.Precision);
+    Assert.Equal(options.Notes, talent.Value.Notes);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent resides in another world.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_the_talent_resides_in_another_world()
+  {
+    UserId userId = UserId.NewId();
+    Talent talent = new(WorldId.NewId(), tier: 0, new Name("Mêlée"), userId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(talent, userId));
+    Assert.StartsWith("The talent does not reside in the same world as the character.", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent cost is greater than the maximum cost.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_the_talent_tier_is_greater_than_the_maximum_cost()
+  {
+    SetTalentOptions options = new()
+    {
+      Cost = _talent.Tier + 2 + 1
+    };
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(_talent, options, _world.OwnerId));
+    Assert.StartsWith($"The cost cannot exceed the maximum cost (2) for the talent '{_talent}' of tier 0.", exception.Message);
+    Assert.Equal("options", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent tier is greater than the character tier.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_the_talent_tier_is_greater_than_the_character_tier()
+  {
+    Talent talent = new(_world.Id, tier: 2, new Name("Accélération"), _world.OwnerId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(talent, _world.OwnerId));
+    Assert.StartsWith("The talent tier (2) cannot exceed the character tier (0).", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
   }
 }

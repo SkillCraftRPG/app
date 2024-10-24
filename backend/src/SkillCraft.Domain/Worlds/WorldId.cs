@@ -22,7 +22,7 @@ public readonly struct WorldId
 
   public static WorldId NewId() => new(AggregateId.NewId());
 
-  public Guid ToGuid() => AggregateId.ToGuid(); // TODO(fpion): elimininate all ToGuid
+  public Guid ToGuid() => AggregateId.ToGuid();
 
   public static bool operator ==(WorldId left, WorldId right) => left.Equals(right);
   public static bool operator !=(WorldId left, WorldId right) => !left.Equals(right);

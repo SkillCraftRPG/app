@@ -21,6 +21,8 @@ public record CreateCharacterPayload
   public Guid CasteId { get; set; }
   public Guid EducationId { get; set; }
 
+  public List<Guid> TalentIds { get; set; }
+
   public CreateCharacterPayload() : this(string.Empty)
   {
   }
@@ -33,5 +35,6 @@ public record CreateCharacterPayload
     CustomizationIds = [];
     AspectIds = [];
     Attributes = new();
+    TalentIds = [];
   }
 }

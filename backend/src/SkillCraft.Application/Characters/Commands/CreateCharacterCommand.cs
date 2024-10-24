@@ -11,6 +11,7 @@ using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities;
 using SkillCraft.Application.Storages;
+using SkillCraft.Application.Talents;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
@@ -22,25 +23,31 @@ using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Characters.Commands;
 
 /// <exception cref="AspectsNotFoundException"></exception>
+/// <exception cref="CasteHasNoSkillTalentException"></exception>
 /// <exception cref="CasteNotFoundException"></exception>
 /// <exception cref="CustomizationsCannotIncludePersonalityGiftException"></exception>
 /// <exception cref="CustomizationsNotFoundException"></exception>
+/// <exception cref="EducationHasNoSkillTalentException"></exception>
 /// <exception cref="EducationNotFoundException"></exception>
 /// <exception cref="InvalidAspectAttributeSelectionException"></exception>
+/// <exception cref="InvalidCasteEducationSelectionException"></exception>
 /// <exception cref="InvalidCharacterCustomizationsException"></exception>
 /// <exception cref="InvalidCharacterLineageException"></exception>
 /// <exception cref="InvalidExtraAttributesException"></exception>
 /// <exception cref="InvalidExtraLanguagesException"></exception>
+/// <exception cref="InvalidSkillTalentSelectionException"></exception>
 /// <exception cref="LanguagesCannotIncludeLineageLanguageException"></exception>
 /// <exception cref="LanguagesNotFoundException"></exception>
 /// <exception cref="LineageNotFoundException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="PersonalityNotFoundException"></exception>
+/// <exception cref="TalentsNotFoundException"></exception>
 /// <exception cref="ValidationException"></exception>
 public record CreateCharacterCommand(CreateCharacterPayload Payload) : Activity, IRequest<CharacterModel>;
 
@@ -107,11 +114,64 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
     IReadOnlyCollection<Language> languages = await _sender.Send(new ResolveLanguagesQuery(command, lineage, parent, payload.LanguageIds), cancellationToken);
     foreach (Language language in languages)
     {
-      character.AddLanguage(language, reason: "Lineage Extra Language", userId);
+      Description notes = new("Lineage Extra Language");
+      character.SetLanguage(language, notes, userId);
+    }
+
+    IReadOnlyDictionary<Skill, Aspect> discountedSkills = GetDiscountedSkills(aspects);
+    IReadOnlyCollection<Talent> talents = await _sender.Send(new ResolveTalentsQuery(command, caste, education, payload.TalentIds), cancellationToken);
+    foreach (Talent talent in talents)
+    {
+      if (!talent.Skill.HasValue)
+      {
+        throw new InvalidOperationException($"The talent '{talent}' is not associated to a skill.");
+      }
+
+      List<string> notes = new(capacity: 3);
+
+      SetTalentOptions options = new()
+      {
+        Cost = talent.Tier + 2
+      };
+      if (talent.Skill == caste.Skill)
+      {
+        notes.Add($"Caste: {caste.Name}");
+      }
+      if (talent.Skill == education.Skill)
+      {
+        notes.Add($"Education: {education.Name}");
+      }
+      if (discountedSkills.TryGetValue(talent.Skill.Value, out Aspect? aspect))
+      {
+        options.Cost--;
+        notes.Add($"Discounted by Aspect: {aspect.Name}");
+      }
+      if (notes.Count > 0)
+      {
+        options.Notes = new Description(string.Join("; ", notes));
+      }
+      character.SetTalent(talent, options, userId);
     }
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 
     return await _characterQuerier.ReadAsync(character, cancellationToken);
+  }
+
+  private static IReadOnlyDictionary<Skill, Aspect> GetDiscountedSkills(IEnumerable<Aspect> aspects)
+  {
+    Dictionary<Skill, Aspect> skills = [];
+    foreach (Aspect aspect in aspects)
+    {
+      if (aspect.Skills.Discounted1.HasValue)
+      {
+        skills[aspect.Skills.Discounted1.Value] = aspect;
+      }
+      if (aspect.Skills.Discounted2.HasValue)
+      {
+        skills[aspect.Skills.Discounted2.Value] = aspect;
+      }
+    }
+    return skills.AsReadOnly();
   }
 }

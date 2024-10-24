@@ -15,6 +15,8 @@ using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Talents;
+using System.Data;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Characters.Commands;
@@ -45,6 +47,11 @@ public class CreateCharacterCommandHandlerTests
   private readonly Education _education;
   private readonly Language _language;
 
+  private readonly Talent _acrobatics;
+  private readonly Talent _athletics;
+  private readonly Talent _melee;
+  private readonly Talent _resistance;
+
   public CreateCharacterCommandHandlerTests()
   {
     _handler = new(_characterQuerier.Object, _lineageRepository.Object, _permissionService.Object, _sender.Object);
@@ -62,12 +69,29 @@ public class CreateCharacterCommandHandlerTests
     ];
     _aspects =
     [
-      new Aspect(_world.Id, new Name("Farouche"), _world.OwnerId),
+      new Aspect(_world.Id, new Name("Farouche"), _world.OwnerId)
+      {
+        Skills = new Skills(Skill.Melee, Skill.Survival)
+      },
       new Aspect(_world.Id, new Name("Gymnaste"), _world.OwnerId)
+      {
+        Skills = new Skills(Skill.Acrobatics, Skill.Athletics)
+      }
     ];
-    _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId);
-    _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId);
+    _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId)
+    {
+      Skill = Skill.Melee
+    };
+    _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId)
+    {
+      Skill = Skill.Resistance
+    };
     _language = new(_world.Id, new Name("Celfique"), _world.OwnerId);
+
+    _acrobatics = new(_world.Id, tier: 0, new Name("Acrobaties"), _world.OwnerId);
+    _athletics = new(_world.Id, tier: 0, new Name("Athlétisme"), _world.OwnerId);
+    _melee = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
+    _resistance = new(_world.Id, tier: 0, new Name("Résistance"), _world.OwnerId);
 
     _lineageRepository.Setup(x => x.LoadAsync(_species.Id, _cancellationToken)).ReturnsAsync(_species);
   }
@@ -101,7 +125,8 @@ public class CreateCharacterCommandHandlerTests
         Extra = [.. _baseAttributes.Extra]
       },
       CasteId = _caste.EntityId,
-      EducationId = _education.EntityId
+      EducationId = _education.EntityId,
+      TalentIds = [_acrobatics.EntityId, _athletics.EntityId]
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
@@ -117,6 +142,8 @@ public class CreateCharacterCommandHandlerTests
     _sender.Setup(x => x.Send(It.Is<ResolveEducationQuery>(y => y.Activity == command && y.Id == payload.EducationId), _cancellationToken)).ReturnsAsync(_education);
     _sender.Setup(x => x.Send(It.Is<ResolveLanguagesQuery>(y => y.Activity == command && y.Lineage == _nation
       && y.Parent == _species && y.Ids == payload.LanguageIds), _cancellationToken)).ReturnsAsync([_language]);
+    _sender.Setup(x => x.Send(It.Is<ResolveTalentsQuery>(y => y.Activity == command && y.Caste == _caste
+      && y.Education == _education && y.Ids == payload.TalentIds), _cancellationToken)).ReturnsAsync([_acrobatics, _athletics, _melee, _resistance]);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -139,7 +166,9 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.BaseAttributes == _baseAttributes
       && y.Character.CasteId == _caste.Id
       && y.Character.EducationId == _education.Id
-      && Assert.Single(y.Character.LanguageIds) == _language.Id), _cancellationToken), Times.Once);
+      && HasLineageExtraLanguage(y.Character, _language)
+      && HasTalent(y.Character, _acrobatics) && HasTalent(y.Character, _athletics) && HasTalent(y.Character, _melee) && HasTalent(y.Character, _resistance)
+      ), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -170,12 +199,13 @@ public class CreateCharacterCommandHandlerTests
         Extra = [(Attribute)(-1)]
       },
       CasteId = Guid.NewGuid(),
-      EducationId = Guid.NewGuid()
+      EducationId = Guid.NewGuid(),
+      TalentIds = [Guid.NewGuid()]
     };
     CreateCharacterCommand command = new(payload);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(9, exception.Errors.Count());
+    Assert.Equal(10, exception.Errors.Count());
 
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "PersonalityId" && (Guid?)e.AttemptedValue == payload.PersonalityId);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "CustomizationIds[0]");
@@ -186,5 +216,57 @@ public class CreateCharacterCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEqualValidator" && e.PropertyName == "Attributes.Worst" && (Attribute?)e.AttemptedValue == payload.Attributes.Worst);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "OptionalAttributesValidator" && e.PropertyName == "Attributes.Optional");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Attributes.Extra[0]" && (Attribute?)e.AttemptedValue == payload.Attributes.Extra.Single());
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "CreateCharacterValidator" && e.PropertyName == "TalentIds");
+  }
+
+  private static bool HasLineageExtraLanguage(Character character, Language language)
+  {
+    return character.Languages.TryGetValue(language.Id, out LanguageMetadata? metadata) && metadata.Notes?.Value == "Lineage Extra Language";
+  }
+
+  private bool HasTalent(Character character, Talent talent)
+  {
+    if (!character.Talents.TryGetValue(talent.Id, out TalentMetadata? metadata) || metadata.Precision != null)
+    {
+      return false;
+    }
+
+    int expectedCost = talent.Tier + 2;
+    IEnumerable<string> notes = metadata.Notes?.Value.Split("; ") ?? [];
+    if (talent.Skill.HasValue)
+    {
+      if (talent.Skill == _caste.Skill && !notes.Contains($"Caste: {_caste.Name}"))
+      {
+        return false;
+      }
+      if (talent.Skill == _education.Skill && !notes.Contains($"Education: {_education.Name}"))
+      {
+        return false;
+      }
+
+      Dictionary<Skill, Aspect> discountedSkills = [];
+      foreach (Aspect aspect in _aspects)
+      {
+        if (aspect.Skills.Discounted1.HasValue)
+        {
+          discountedSkills[aspect.Skills.Discounted1.Value] = aspect;
+        }
+        if (aspect.Skills.Discounted2.HasValue)
+        {
+          discountedSkills[aspect.Skills.Discounted2.Value] = aspect;
+        }
+      }
+      if (discountedSkills.TryGetValue(talent.Skill.Value, out Aspect? discountedByAspect))
+      {
+        if (!notes.Contains($"Discounted by Aspect: {discountedByAspect.Name}"))
+        {
+          return false;
+        }
+
+        expectedCost--;
+      }
+    }
+
+    return metadata.Cost == expectedCost;
   }
 }

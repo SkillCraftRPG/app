@@ -59,7 +59,7 @@ public class Talent : AggregateRoot
   }
   public TalentId? RequiredTalentId { get; private set; }
   private Skill? _skill = null;
-  public Skill? Skill
+  public Skill? Skill // TODO(fpion): a talent associated to a skill shall be of tier 0 and have no required talent.
   {
     get => _skill;
     private set
