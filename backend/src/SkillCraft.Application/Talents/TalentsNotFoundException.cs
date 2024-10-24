@@ -1,6 +1,7 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Errors;
 using SkillCraft.Contracts.Errors;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Talents;
 
@@ -8,36 +9,42 @@ internal class TalentsNotFoundException : NotFoundException
 {
   private const string ErrorMessage = "The specified talents could not be found.";
 
-  public IEnumerable<Guid> Ids
+  public Guid WorldId
   {
-    get => (IEnumerable<Guid>)Data[nameof(Ids)]!;
-    private set => Data[nameof(Ids)] = value;
+    get => (Guid)Data[nameof(WorldId)]!;
+    private set => Data[nameof(WorldId)] = value;
   }
-  public string? PropertyName
+  public IEnumerable<Guid> TalentIds
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (IEnumerable<Guid>)Data[nameof(TalentIds)]!;
+    private set => Data[nameof(TalentIds)] = value;
+  }
+  public string PropertyName
+  {
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Ids, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, TalentIds, PropertyName);
 
-  public TalentsNotFoundException(IEnumerable<Guid> ids, string? propertyName = null)
-    : base(BuildMessage(ids, propertyName))
+  public TalentsNotFoundException(WorldId worldId, IEnumerable<Guid> talentIds, string propertyName)
+    : base(BuildMessage(worldId, talentIds, propertyName))
   {
-    Ids = ids;
+    TalentIds = talentIds;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(IEnumerable<Guid> ids, string? propertyName)
+  private static string BuildMessage(WorldId worldId, IEnumerable<Guid> talentIds, string propertyName)
   {
     StringBuilder message = new();
 
     message.AppendLine(ErrorMessage);
-    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName ?? "<null>");
-    message.Append(nameof(Ids)).AppendLine(":");
-    foreach (Guid id in ids)
+    message.Append(nameof(WorldId)).Append(": ").Append(worldId.ToGuid()).AppendLine();
+    message.Append(nameof(PropertyName)).Append(": ").AppendLine(propertyName);
+    message.Append(nameof(TalentIds)).AppendLine(":");
+    foreach (Guid talentId in talentIds)
     {
-      message.Append(" - ").Append(id).AppendLine();
+      message.Append(" - ").Append(talentId).AppendLine();
     }
 
     return message.ToString();

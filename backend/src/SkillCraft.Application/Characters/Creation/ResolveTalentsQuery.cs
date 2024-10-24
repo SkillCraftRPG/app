@@ -66,7 +66,7 @@ internal class ResolveTalentsQueryHandler : IRequestHandler<ResolveTalentsQuery,
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new TalentsNotFoundException(missingIds, PropertyName);
+      throw new TalentsNotFoundException(worldId, missingIds, PropertyName);
     }
 
     // TODO(fpion): add caste talent
