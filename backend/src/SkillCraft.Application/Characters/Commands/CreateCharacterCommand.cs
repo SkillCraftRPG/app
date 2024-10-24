@@ -6,6 +6,7 @@ using SkillCraft.Application.Characters.Creation;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Educations;
+using SkillCraft.Application.Languages;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities;
@@ -33,6 +34,9 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="InvalidCharacterCustomizationsException"></exception>
 /// <exception cref="InvalidCharacterLineageException"></exception>
 /// <exception cref="InvalidExtraAttributesException"></exception>
+/// <exception cref="InvalidExtraLanguagesException"></exception>
+/// <exception cref="LanguagesCannotIncludeLineageLanguageException"></exception>
+/// <exception cref="LanguagesNotFoundException"></exception>
 /// <exception cref="LineageNotFoundException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
