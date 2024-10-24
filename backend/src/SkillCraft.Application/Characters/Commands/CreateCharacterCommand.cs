@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Aspects;
+using SkillCraft.Application.Castes;
 using SkillCraft.Application.Characters.Creation;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Customizations;
+using SkillCraft.Application.Educations;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities;
@@ -23,8 +25,10 @@ using SkillCraft.Domain.Personalities;
 namespace SkillCraft.Application.Characters.Commands;
 
 /// <exception cref="AspectsNotFoundException"></exception>
+/// <exception cref="CasteNotFoundException"></exception>
 /// <exception cref="CustomizationsCannotIncludePersonalityGiftException"></exception>
 /// <exception cref="CustomizationsNotFoundException"></exception>
+/// <exception cref="EducationNotFoundException"></exception>
 /// <exception cref="InvalidAspectAttributeSelectionException"></exception>
 /// <exception cref="InvalidCharacterCustomizationsException"></exception>
 /// <exception cref="InvalidCharacterLineageException"></exception>

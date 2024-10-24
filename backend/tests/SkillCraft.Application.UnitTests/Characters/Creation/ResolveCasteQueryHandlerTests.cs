@@ -1,4 +1,5 @@
 ﻿using Moq;
+using SkillCraft.Application.Castes;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
@@ -43,13 +44,14 @@ public class ResolveCasteQueryHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Caste, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the caste could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_caste_could_not_be_found()
+  [Fact(DisplayName = "It should throw CasteNotFoundException when the caste could not be found.")]
+  public async Task It_should_throw_CasteNotFoundException_when_the_caste_could_not_be_found()
   {
     ResolveCasteQuery query = new(_activity, Guid.NewGuid());
 
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Caste>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new CasteId(_world.Id, query.Id).Value, exception.Id);
+    var exception = await Assert.ThrowsAsync<CasteNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Id, exception.CasteId);
     Assert.Equal("CasteId", exception.PropertyName);
   }
 }

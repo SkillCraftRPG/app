@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SkillCraft.Application.Educations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
@@ -26,7 +27,7 @@ internal class ResolveEducationQueryHandler : IRequestHandler<ResolveEducationQu
 
     EducationId id = new(activity.GetWorldId(), query.Id);
     Education education = await _educationRepository.LoadAsync(id, cancellationToken)
-      ?? throw new AggregateNotFoundException<Education>(id.AggregateId, nameof(CreateCharacterPayload.EducationId));
+      ?? throw new EducationNotFoundException(id, nameof(CreateCharacterPayload.EducationId));
 
     return education;
   }
