@@ -8,6 +8,7 @@ using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Domain.Characters;
@@ -40,6 +41,12 @@ public class Character : AggregateRoot
 
   private readonly Dictionary<LanguageId, LanguageMetadata> _languages = [];
   public IReadOnlyDictionary<LanguageId, LanguageMetadata> Languages => _languages.AsReadOnly();
+
+  private readonly Dictionary<TalentId, TalentMetadata> _talents = [];
+  public IReadOnlyDictionary<TalentId, TalentMetadata> Talents => _talents.AsReadOnly();
+
+  public int Level => 0;
+  public int Tier => 0;
 
   public Character() : base()
   {
@@ -123,7 +130,38 @@ public class Character : AggregateRoot
   }
   protected virtual void Apply(LanguageSet @event)
   {
-    _languages[@event.LanguageId] = @event.Language;
+    _languages[@event.LanguageId] = @event.Metadata;
+  }
+
+  public void SetTalent(Talent talent, UserId userId) => SetTalent(talent, options: null, userId);
+  public void SetTalent(Talent talent, SetTalentOptions? options, UserId userId)
+  {
+    if (talent.WorldId != WorldId)
+    {
+      throw new ArgumentException("The talent does not reside in the same world as the character.", nameof(talent));
+    }
+    else if (talent.Tier > Tier)
+    {
+      throw new ArgumentException($"The talent tier ({talent.Tier}) cannot exceed the character tier ({Tier}).", nameof(talent));
+    }
+
+    options ??= new();
+    int maximumCost = talent.Tier + 2;
+    int cost = options.Cost ?? maximumCost;
+    if (cost > maximumCost)
+    {
+      throw new ArgumentException($"The cost cannot exceed the maximum cost ({maximumCost}) for the talent '{talent}' of tier {talent.Tier}.", nameof(options));
+    }
+
+    TalentMetadata metadata = new(cost, options.Precision, options.Notes);
+    if (!_talents.TryGetValue(talent.Id, out TalentMetadata? existingMetadata) || existingMetadata != metadata)
+    {
+      Raise(new TalentSet(talent.Id, metadata), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(TalentSet @event)
+  {
+    _talents[@event.TalentId] = @event.Metadata;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -235,12 +273,24 @@ public class Character : AggregateRoot
   public class LanguageSet : DomainEvent, INotification
   {
     public LanguageId LanguageId { get; }
-    public LanguageMetadata Language { get; }
+    public LanguageMetadata Metadata { get; }
 
-    public LanguageSet(LanguageId languageId, LanguageMetadata language)
+    public LanguageSet(LanguageId languageId, LanguageMetadata metadata)
     {
       LanguageId = languageId;
-      Language = language;
+      Metadata = metadata;
+    }
+  }
+
+  public class TalentSet : DomainEvent, INotification
+  {
+    public TalentId TalentId { get; }
+    public TalentMetadata Metadata { get; }
+
+    public TalentSet(TalentId talentId, TalentMetadata metadata)
+    {
+      TalentId = talentId;
+      Metadata = metadata;
     }
   }
 }
