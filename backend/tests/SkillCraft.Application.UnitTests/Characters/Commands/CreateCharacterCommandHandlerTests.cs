@@ -142,7 +142,7 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.BaseAttributes == _baseAttributes
       && y.Character.CasteId == _caste.Id
       && y.Character.EducationId == _education.Id
-      && Assert.Single(y.Character.LanguageIds) == _language.Id), _cancellationToken), Times.Once);
+      && Assert.Single(y.Character.Languages.Keys) == _language.Id), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
