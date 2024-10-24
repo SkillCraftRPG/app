@@ -118,17 +118,60 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       character.SetLanguage(language, notes, userId);
     }
 
+    IReadOnlyDictionary<Skill, Aspect> discountedSkills = GetDiscountedSkills(aspects);
     IReadOnlyCollection<Talent> talents = await _sender.Send(new ResolveTalentsQuery(command, caste, education, payload.TalentIds), cancellationToken);
     foreach (Talent talent in talents)
     {
-      /* TODO(fpion): character.(Add/Set)Talent
-       * - Cost (2 or 1 if Aspects Skill is the same)
-       * - Reason: indicate rebate, caste and education talents
-       */
+      if (!talent.Skill.HasValue)
+      {
+        throw new InvalidOperationException($"The talent '{talent}' is not associated to a skill.");
+      }
+
+      List<string> notes = new(capacity: 3);
+
+      SetTalentOptions options = new()
+      {
+        Cost = talent.Tier + 2
+      };
+      if (talent.Skill == caste.Skill)
+      {
+        notes.Add($"Caste: {caste.Name}");
+      }
+      if (talent.Skill == education.Skill)
+      {
+        notes.Add($"Education: {education.Name}");
+      }
+      if (discountedSkills.TryGetValue(talent.Skill.Value, out Aspect? aspect))
+      {
+        options.Cost--;
+        notes.Add($"Discounted by Aspect: {aspect.Name}");
+      }
+      if (notes.Count > 0)
+      {
+        options.Notes = new Description(string.Join("; ", notes));
+      }
+      character.SetTalent(talent, options, userId);
     }
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 
     return await _characterQuerier.ReadAsync(character, cancellationToken);
+  }
+
+  private static IReadOnlyDictionary<Skill, Aspect> GetDiscountedSkills(IEnumerable<Aspect> aspects)
+  {
+    Dictionary<Skill, Aspect> skills = [];
+    foreach (Aspect aspect in aspects)
+    {
+      if (aspect.Skills.Discounted1.HasValue)
+      {
+        skills[aspect.Skills.Discounted1.Value] = aspect;
+      }
+      if (aspect.Skills.Discounted2.HasValue)
+      {
+        skills[aspect.Skills.Discounted2.Value] = aspect;
+      }
+    }
+    return skills.AsReadOnly();
   }
 }
