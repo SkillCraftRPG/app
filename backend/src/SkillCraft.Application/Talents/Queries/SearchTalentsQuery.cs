@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Talents;
 
 namespace SkillCraft.Application.Talents.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchTalentsQuery(SearchTalentsPayload Payload) : Activity, IRequest<SearchResults<TalentModel>>;
 
 internal class SearchTalentsQueryHandler : IRequestHandler<SearchTalentsQuery, SearchResults<TalentModel>>

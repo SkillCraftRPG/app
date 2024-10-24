@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Application.Worlds.Validators;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Worlds;
@@ -11,6 +12,10 @@ namespace SkillCraft.Application.Worlds.Commands;
 
 public record CreateOrReplaceWorldResult(WorldModel? World = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="SlugAlreadyUsedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceWorldCommand(Guid? Id, CreateOrReplaceWorldPayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceWorldResult>;
 
 internal class CreateOrReplaceWorldCommandHandler : IRequestHandler<CreateOrReplaceWorldCommand, CreateOrReplaceWorldResult>

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using SkillCraft.Application.Castes;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
@@ -26,7 +27,7 @@ internal class ResolveCasteQueryHandler : IRequestHandler<ResolveCasteQuery, Cas
 
     CasteId id = new(activity.GetWorldId(), query.Id);
     Caste caste = await _casteRepository.LoadAsync(id, cancellationToken)
-      ?? throw new AggregateNotFoundException<Caste>(id.AggregateId, nameof(CreateCharacterPayload.CasteId));
+      ?? throw new CasteNotFoundException(id, nameof(CreateCharacterPayload.CasteId));
 
     return caste;
   }

@@ -42,7 +42,7 @@ internal class ResolveLanguagesQueryHandler : IRequestHandler<ResolveLanguagesQu
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new LanguagesNotFoundException(missingIds, PropertyName);
+      throw new LanguagesNotFoundException(worldId, missingIds, PropertyName);
     }
 
     Lineage lineage = query.Lineage;
@@ -50,7 +50,7 @@ internal class ResolveLanguagesQueryHandler : IRequestHandler<ResolveLanguagesQu
     int extra = lineage.Languages.Extra + (parent?.Languages.Extra ?? 0);
     if (languages.Count != extra)
     {
-      throw new InvalidExtraLanguagesException(query.Ids, extra, PropertyName);
+      throw new InvalidExtraLanguagesException(lineage, query.Ids, extra, PropertyName);
     }
     HashSet<LanguageId> lineageLanguages = [.. lineage.Languages.Ids, .. parent?.Languages.Ids ?? []];
     HashSet<Guid> conflictIds = new(capacity: languages.Count);
@@ -63,7 +63,7 @@ internal class ResolveLanguagesQueryHandler : IRequestHandler<ResolveLanguagesQu
     }
     if (conflictIds.Count > 0)
     {
-      throw new LanguagesCannotIncludeLineageLanguageException(conflictIds, PropertyName);
+      throw new LanguagesCannotIncludeLineageLanguageException(lineage, conflictIds, PropertyName);
     }
 
     return languages;

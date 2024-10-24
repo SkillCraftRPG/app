@@ -33,7 +33,7 @@ internal class ResolveLineageQueryHandler : IRequestHandler<ResolveLineageQuery,
     WorldId worldId = activity.GetWorldId();
     LineageId lineageId = new(worldId, query.Id);
     Lineage lineage = await _lineageRepository.LoadAsync(lineageId, cancellationToken)
-      ?? throw new AggregateNotFoundException<Lineage>(lineageId.AggregateId, nameof(CreateCharacterPayload.LineageId));
+      ?? throw new LineageNotFoundException(lineageId, nameof(CreateCharacterPayload.LineageId));
 
     if (lineage.ParentId == null)
     {

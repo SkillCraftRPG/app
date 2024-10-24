@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Languages;
 
 namespace SkillCraft.Application.Languages.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadLanguageQuery(Guid Id) : Activity, IRequest<LanguageModel?>;
 
 internal class ReadLanguageQueryHandler : IRequestHandler<ReadLanguageQuery, LanguageModel?>

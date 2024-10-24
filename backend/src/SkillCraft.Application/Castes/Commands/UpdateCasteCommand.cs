@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Castes.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Castes;
@@ -10,6 +11,9 @@ namespace SkillCraft.Application.Castes.Commands;
 
 public record UpdateCasteCommand(Guid Id, UpdateCastePayload Payload) : Activity, IRequest<CasteModel?>;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, CasteModel?>
 {
   private readonly ICasteQuerier _casteQuerier;

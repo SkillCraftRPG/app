@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Aspects.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Domain;
@@ -11,6 +12,9 @@ namespace SkillCraft.Application.Aspects.Commands;
 
 public record CreateOrReplaceAspectResult(AspectModel? Aspect = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceAspectCommand(Guid? Id, CreateOrReplaceAspectPayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceAspectResult>;
 
 internal class CreateOrReplaceAspectCommandHandler : IRequestHandler<CreateOrReplaceAspectCommand, CreateOrReplaceAspectResult>

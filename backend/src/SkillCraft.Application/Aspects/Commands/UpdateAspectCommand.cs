@@ -2,12 +2,16 @@
 using MediatR;
 using SkillCraft.Application.Aspects.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
 
 namespace SkillCraft.Application.Aspects.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateAspectCommand(Guid Id, UpdateAspectPayload Payload) : Activity, IRequest<AspectModel?>;
 
 internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand, AspectModel?>

@@ -5,6 +5,7 @@ using SkillCraft.Contracts;
 
 namespace SkillCraft.Application.Languages.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchScriptsQuery : Activity, IRequest<SearchResults<string>>;
 
 internal class SearchScriptsQueryHandler : IRequestHandler<SearchScriptsQuery, SearchResults<string>>

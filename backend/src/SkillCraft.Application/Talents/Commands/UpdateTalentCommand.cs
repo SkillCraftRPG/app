@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Application.Talents.Validators;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Domain;
@@ -8,6 +9,12 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Talents.Commands;
 
+/// <exception cref="InvalidRequiredTalentTierException"></exception>
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="TalentNotFoundException"></exception>
+/// <exception cref="TalentSkillAlreadyExistingException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateTalentCommand(Guid Id, UpdateTalentPayload Payload) : Activity, IRequest<TalentModel?>;
 
 internal class UpdateTalentCommandHandler : IRequestHandler<UpdateTalentCommand, TalentModel?>

@@ -81,7 +81,9 @@ public class ResolveLanguagesQueryHandlerTests
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1]);
 
     var exception = await Assert.ThrowsAsync<InvalidExtraLanguagesException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids, exception.Ids);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_nation.EntityId, exception.LineageId);
+    Assert.Equal(query.Ids, exception.LanguageIds);
     Assert.Equal(_species.Languages.Extra + _nation.Languages.Extra, exception.ExpectedCount);
     Assert.Equal("LanguageIds", exception.PropertyName);
   }
@@ -97,6 +99,8 @@ public class ResolveLanguagesQueryHandlerTests
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1]);
 
     var exception = await Assert.ThrowsAsync<LanguagesCannotIncludeLineageLanguageException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_nation.EntityId, exception.LineageId);
     Assert.Equal(_language1.EntityId, Assert.Single(exception.LanguageIds));
     Assert.Equal("LanguageIds", exception.PropertyName);
   }
@@ -110,7 +114,8 @@ public class ResolveLanguagesQueryHandlerTests
     _languageRepository.Setup(x => x.LoadAsync(languageIds, _cancellationToken)).ReturnsAsync([_language1, _language2]);
 
     var exception = await Assert.ThrowsAsync<LanguagesNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Ids.Skip(2), exception.Ids);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Ids.Skip(2), exception.LanguageIds);
     Assert.Equal("LanguageIds", exception.PropertyName);
   }
 }

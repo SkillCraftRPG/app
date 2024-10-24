@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Languages;
 
 namespace SkillCraft.Application.Languages.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchLanguagesQuery(SearchLanguagesPayload Payload) : Activity, IRequest<SearchResults<LanguageModel>>;
 
 internal class SearchLanguagesQueryHandler : IRequestHandler<SearchLanguagesQuery, SearchResults<LanguageModel>>

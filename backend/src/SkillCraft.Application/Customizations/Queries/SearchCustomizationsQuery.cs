@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Customizations;
 
 namespace SkillCraft.Application.Customizations.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchCustomizationsQuery(SearchCustomizationsPayload Payload) : Activity, IRequest<SearchResults<CustomizationModel>>;
 
 internal class SearchCustomizationsQueryHandler : IRequestHandler<SearchCustomizationsQuery, SearchResults<CustomizationModel>>

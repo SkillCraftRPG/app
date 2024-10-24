@@ -2,12 +2,16 @@
 using MediatR;
 using SkillCraft.Application.Parties.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Parties;
 
 namespace SkillCraft.Application.Parties.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdatePartyCommand(Guid Id, UpdatePartyPayload Payload) : Activity, IRequest<PartyModel?>;
 
 internal class UpdatePartyCommandHandler : IRequestHandler<UpdatePartyCommand, PartyModel?>

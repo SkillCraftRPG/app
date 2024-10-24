@@ -5,6 +5,7 @@ using SkillCraft.Contracts.Customizations;
 
 namespace SkillCraft.Application.Customizations.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record ReadCustomizationQuery(Guid Id) : Activity, IRequest<CustomizationModel?>;
 
 internal class ReadCustomizationQueryHandler : IRequestHandler<ReadCustomizationQuery, CustomizationModel?>

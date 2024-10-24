@@ -5,6 +5,8 @@ using SkillCraft.Contracts.Worlds;
 
 namespace SkillCraft.Application.Worlds.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="TooManyResultsException{T}"></exception>
 public record ReadWorldQuery(Guid? Id, string? Slug) : Activity, IRequest<WorldModel?>;
 
 internal class ReadWorldQueryHandler : IRequestHandler<ReadWorldQuery, WorldModel?>

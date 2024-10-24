@@ -6,6 +6,7 @@ using SkillCraft.Contracts.Educations;
 
 namespace SkillCraft.Application.Educations.Queries;
 
+/// <exception cref="PermissionDeniedException"></exception>
 public record SearchEducationsQuery(SearchEducationsPayload Payload) : Activity, IRequest<SearchResults<EducationModel>>;
 
 internal class SearchEducationsQueryHandler : IRequestHandler<SearchEducationsQuery, SearchResults<EducationModel>>

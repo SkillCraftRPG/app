@@ -1,5 +1,6 @@
 ﻿using Moq;
 using SkillCraft.Application.Characters.Commands;
+using SkillCraft.Application.Educations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
@@ -43,13 +44,14 @@ public class ResolveEducationQueryHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Education, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the education could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_education_could_not_be_found()
+  [Fact(DisplayName = "It should throw EducationNotFoundException when the education could not be found.")]
+  public async Task It_should_throw_EducationNotFoundException_when_the_education_could_not_be_found()
   {
     ResolveEducationQuery query = new(_activity, Guid.NewGuid());
 
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Education>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new EducationId(_world.Id, query.Id).Value, exception.Id);
+    var exception = await Assert.ThrowsAsync<EducationNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Id, exception.EducationId);
     Assert.Equal("EducationId", exception.PropertyName);
   }
 }

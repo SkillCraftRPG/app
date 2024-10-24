@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities.Validators;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Domain;
@@ -12,6 +14,11 @@ namespace SkillCraft.Application.Personalities.Commands;
 
 public record CreateOrReplacePersonalityResult(PersonalityModel? Personality = null, bool Created = false);
 
+/// <exception cref="CustomizationIsNotGiftException"></exception>
+/// <exception cref="CustomizationNotFoundException"></exception>
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplacePersonalityCommand(Guid? Id, CreateOrReplacePersonalityPayload Payload, long? Version) : Activity, IRequest<CreateOrReplacePersonalityResult>;
 
 internal class CreateOrReplacePersonalityCommandHandler : IRequestHandler<CreateOrReplacePersonalityCommand, CreateOrReplacePersonalityResult>

@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Customizations.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
@@ -11,6 +12,9 @@ namespace SkillCraft.Application.Customizations.Commands;
 
 public record CreateOrReplaceCustomizationResult(CustomizationModel? Customization = null, bool Created = false);
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record CreateOrReplaceCustomizationCommand(Guid? Id, CreateOrReplaceCustomizationPayload Payload, long? Version) : Activity, IRequest<CreateOrReplaceCustomizationResult>;
 
 internal class CreateOrReplaceCustomizationCommandHandler : IRequestHandler<CreateOrReplaceCustomizationCommand, CreateOrReplaceCustomizationResult>

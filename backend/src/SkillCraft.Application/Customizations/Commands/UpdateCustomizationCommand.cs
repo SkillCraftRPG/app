@@ -2,12 +2,16 @@
 using MediatR;
 using SkillCraft.Application.Customizations.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Customizations;
 
 namespace SkillCraft.Application.Customizations.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record UpdateCustomizationCommand(Guid Id, UpdateCustomizationPayload Payload) : Activity, IRequest<CustomizationModel?>;
 
 internal class UpdateCustomizationCommandHandler : IRequestHandler<UpdateCustomizationCommand, CustomizationModel?>
