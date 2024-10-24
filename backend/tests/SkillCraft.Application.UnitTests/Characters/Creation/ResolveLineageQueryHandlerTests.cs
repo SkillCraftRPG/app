@@ -67,16 +67,6 @@ public class ResolveLineageQueryHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Lineage, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the lineage could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_lineage_could_not_be_found()
-  {
-    ResolveLineageQuery query = new(_activity, Guid.NewGuid());
-
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Lineage>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new LineageId(_world.Id, query.Id).Value, exception.Id);
-    Assert.Equal("LineageId", exception.PropertyName);
-  }
-
   [Fact(DisplayName = "It should throw InvalidCharacterLineageException when the lineage (species) has children (nations).")]
   public async Task It_should_throw_InvalidCharacterLineageException_when_the_lineage_species_has_children_nations()
   {
@@ -86,7 +76,19 @@ public class ResolveLineageQueryHandlerTests
     _lineageQuerier.Setup(x => x.SearchAsync(_world.Id, It.Is<SearchLineagesPayload>(y => y.ParentId == query.Id), _cancellationToken)).ReturnsAsync(results);
 
     var exception = await Assert.ThrowsAsync<InvalidCharacterLineageException>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(query.Id, exception.Id);
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Id, exception.LineageId);
+    Assert.Equal("LineageId", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should throw LineageNotFoundException when the lineage could not be found.")]
+  public async Task It_should_throw_LineageNotFoundException_when_the_lineage_could_not_be_found()
+  {
+    ResolveLineageQuery query = new(_activity, Guid.NewGuid());
+
+    var exception = await Assert.ThrowsAsync<LineageNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Id, exception.LineageId);
     Assert.Equal("LineageId", exception.PropertyName);
   }
 }

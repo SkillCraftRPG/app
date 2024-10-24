@@ -42,7 +42,7 @@ internal class ResolveLanguagesQueryHandler : IRequestHandler<ResolveLanguagesQu
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new LanguagesNotFoundException(missingIds, PropertyName);
+      throw new LanguagesNotFoundException(worldId, missingIds, PropertyName);
     }
 
     Lineage lineage = query.Lineage;

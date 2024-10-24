@@ -1,6 +1,7 @@
 ﻿using Moq;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Personalities;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
@@ -43,13 +44,14 @@ public class ResolvePersonalityQueryHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Personality, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should throw AggregateNotFoundException when the personality could not be found.")]
-  public async Task It_should_throw_AggregateNotFoundException_when_the_personality_could_not_be_found()
+  [Fact(DisplayName = "It should throw PersonalityNotFoundException when the personality could not be found.")]
+  public async Task It_should_throw_PersonalityNotFoundException_when_the_personality_could_not_be_found()
   {
     ResolvePersonalityQuery query = new(_activity, Guid.NewGuid());
 
-    var exception = await Assert.ThrowsAsync<AggregateNotFoundException<Personality>>(async () => await _handler.Handle(query, _cancellationToken));
-    Assert.Equal(new PersonalityId(_world.Id, query.Id).Value, exception.Id);
+    var exception = await Assert.ThrowsAsync<PersonalityNotFoundException>(async () => await _handler.Handle(query, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(query.Id, exception.PersonalityId);
     Assert.Equal("PersonalityId", exception.PropertyName);
   }
 }

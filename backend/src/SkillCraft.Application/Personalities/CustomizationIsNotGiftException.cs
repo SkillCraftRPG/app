@@ -25,15 +25,15 @@ internal class CustomizationIsNotGiftException : BadRequestException
     get => (CustomizationType)Data[nameof(CustomizationType)]!;
     private set => Data[nameof(CustomizationType)] = value;
   }
-  public string? PropertyName
+  public string PropertyName
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (string?)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, CustomizationId, PropertyName);
 
-  public CustomizationIsNotGiftException(Customization customization, string? propertyName = null)
+  public CustomizationIsNotGiftException(Customization customization, string propertyName)
     : base(BuildMessage(customization, propertyName))
   {
     WorldId = customization.WorldId.ToGuid();
@@ -42,10 +42,10 @@ internal class CustomizationIsNotGiftException : BadRequestException
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Customization customization, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
+  private static string BuildMessage(Customization customization, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(WorldId), customization.WorldId.ToGuid())
     .AddData(nameof(CustomizationId), customization.EntityId)
     .AddData(nameof(CustomizationType), customization.Type)
-    .AddData(nameof(PropertyName), propertyName, "<null>")
+    .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

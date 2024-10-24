@@ -9,28 +9,35 @@ internal class InvalidCharacterLineageException : BadRequestException
 {
   private const string ErrorMessage = "The lineage should be a species without nation, or a nation.";
 
-  public Guid Id
+  public Guid WorldId
   {
-    get => (Guid)Data[nameof(Id)]!;
-    private set => Data[nameof(Id)] = value;
+    get => (Guid)Data[nameof(WorldId)]!;
+    private set => Data[nameof(WorldId)] = value;
   }
-  public string? PropertyName
+  public Guid LineageId
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (Guid)Data[nameof(LineageId)]!;
+    private set => Data[nameof(LineageId)] = value;
+  }
+  public string PropertyName
+  {
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Id, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, LineageId, PropertyName);
 
-  public InvalidCharacterLineageException(Lineage lineage, string? propertyName = null)
+  public InvalidCharacterLineageException(Lineage lineage, string propertyName)
     : base(BuildMessage(lineage, propertyName))
   {
-    Id = lineage.EntityId;
+    WorldId = lineage.WorldId.ToGuid();
+    LineageId = lineage.EntityId;
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Lineage lineage, string? propertyName) => new ErrorMessageBuilder(ErrorMessage)
-    .AddData(nameof(Id), lineage.EntityId)
-    .AddData(nameof(PropertyName), propertyName, "<null>")
+  private static string BuildMessage(Lineage lineage, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
+    .AddData(nameof(WorldId), lineage.WorldId.ToGuid())
+    .AddData(nameof(LineageId), lineage.EntityId)
+    .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

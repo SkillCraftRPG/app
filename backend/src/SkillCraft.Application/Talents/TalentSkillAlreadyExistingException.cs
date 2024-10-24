@@ -25,15 +25,15 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     get => (Skill)Data[nameof(Skill)]!;
     private set => Data[nameof(Skill)] = value;
   }
-  public string? PropertyName
+  public string PropertyName
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Skill, PropertyName);
 
-  public TalentSkillAlreadyExistingException(Talent talent, TalentId conflictId, string? propertyName = null)
+  public TalentSkillAlreadyExistingException(Talent talent, TalentId conflictId, string propertyName)
     : base(BuildMessage(talent, conflictId, propertyName))
   {
     if (talent.Skill == null)
@@ -47,7 +47,7 @@ internal class TalentSkillAlreadyExistingException : ConflictException
     PropertyName = propertyName;
   }
 
-  private static string BuildMessage(Talent talent, TalentId conflictId, string? propertyName)
+  private static string BuildMessage(Talent talent, TalentId conflictId, string propertyName)
   {
     StringBuilder message = new();
 

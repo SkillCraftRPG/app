@@ -41,7 +41,7 @@ internal class ResolveAspectsQueryHandler : IRequestHandler<ResolveAspectsQuery,
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
-      throw new AspectsNotFoundException(missingIds, PropertyName);
+      throw new AspectsNotFoundException(worldId, missingIds, PropertyName);
     }
 
     return aspects;

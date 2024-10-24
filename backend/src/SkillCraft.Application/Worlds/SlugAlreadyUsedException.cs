@@ -19,23 +19,23 @@ internal class SlugAlreadyUsedException : ConflictException
     get => (string)Data[nameof(Slug)]!;
     private set => Data[nameof(Slug)] = value;
   }
-  public string? PropertyName
+  public string PropertyName
   {
-    get => (string?)Data[nameof(PropertyName)];
+    get => (string)Data[nameof(PropertyName)]!;
     private set => Data[nameof(PropertyName)] = value;
   }
 
   public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, Slug, PropertyName);
 
-  public SlugAlreadyUsedException(World world, WorldId conflictId, string? propertyName = null)
+  public SlugAlreadyUsedException(World world, WorldId conflictId, string propertyName)
     : base(BuildMessage(world, conflictId, propertyName))
   {
     ConflictingIds = [world.Id.ToGuid(), conflictId.ToGuid()];
     Slug = world.Slug.Value;
-    PropertyName = nameof(world.Slug);
+    PropertyName = propertyName;
   }
 
-  private static string BuildMessage(World world, WorldId conflictId, string? propertyName)
+  private static string BuildMessage(World world, WorldId conflictId, string propertyName)
   {
     StringBuilder message = new();
 
