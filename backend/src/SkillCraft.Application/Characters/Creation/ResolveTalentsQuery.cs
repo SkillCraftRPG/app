@@ -95,7 +95,7 @@ internal class ResolveTalentsQueryHandler : IRequestHandler<ResolveTalentsQuery,
     }
     if (talent == null)
     {
-      throw new EducationHasNoSkillTalentException(education, nameof(CreateCharacterPayload.CasteId));
+      throw new EducationHasNoSkillTalentException(education, nameof(CreateCharacterPayload.EducationId));
     }
     return talent;
   }

@@ -30,6 +30,7 @@ internal class TalentsNotFoundException : NotFoundException
   public TalentsNotFoundException(WorldId worldId, IEnumerable<Guid> talentIds, string propertyName)
     : base(BuildMessage(worldId, talentIds, propertyName))
   {
+    WorldId = worldId.ToGuid();
     TalentIds = talentIds;
     PropertyName = propertyName;
   }

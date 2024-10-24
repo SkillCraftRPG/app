@@ -22,7 +22,7 @@ internal class EducationHasNoSkillTalentException : NotFoundException
   }
   public Skill? Skill
   {
-    get => (Skill)Data[nameof(Skill)]!;
+    get => (Skill?)Data[nameof(Skill)];
     private set => Data[nameof(Skill)] = value;
   }
   public string PropertyName
