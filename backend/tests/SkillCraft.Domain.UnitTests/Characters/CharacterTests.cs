@@ -3,6 +3,7 @@ using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Worlds;
@@ -23,6 +24,9 @@ public class CharacterTests
     extra: [Attribute.Agility, Attribute.Vigor]);
   private readonly Caste _caste;
   private readonly Education _education;
+  private readonly Language _language;
+
+  private readonly Character _character;
 
   public CharacterTests()
   {
@@ -38,6 +42,23 @@ public class CharacterTests
     ];
     _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId);
     _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId);
+    _language = new(_world.Id, new Name("Orrinique"), _world.OwnerId);
+
+    _character = new(
+      _world.Id,
+      new Name("Heracles Aetos"),
+      player: null,
+      _lineage,
+      height: 1.84,
+      weight: 84.6,
+      age: 30,
+      _personality,
+      customizations: [],
+      _aspects,
+      _baseAttributes,
+      _caste,
+      _education,
+      _world.OwnerId);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the personality's gift.")]
@@ -163,5 +184,45 @@ public class CharacterTests
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
       weight, age: 30, _personality, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("weight", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should add a new language.")]
+  public void SetLanguage_it_should_add_a_new_language()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    Assert.Contains(_character.Languages, x => x.Key == _language.Id && x.Value.Notes == null);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should not do anything when the language metadata did not change.")]
+  public void SetLanguage_it_should_not_do_anything_when_the_language_metadata_did_not_change()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    _character.ClearChanges();
+
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    Assert.Empty(_character.Changes);
+    Assert.False(_character.HasChanges);
+  }
+
+
+  [Fact(DisplayName = "SetLanguage: it should replace an existing language.")]
+  public void SetLanguage_it_should_replace_an_existing_language()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+
+    Description notes = new("Lineage Extra Language");
+    _character.SetLanguage(_language, notes, _world.OwnerId);
+    Assert.Contains(_character.Languages, x => x.Key == _language.Id && x.Value.Notes == notes);
+  }
+
+  [Fact(DisplayName = "SetLanguage: it should throw ArgumentException when the language resides in another world.")]
+  public void SetLanguage_it_should_throw_ArgumentException_when_the_language_resides_in_another_world()
+  {
+    UserId userId = UserId.NewId();
+    Language language = new(WorldId.NewId(), new Name("Orrinique"), userId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetLanguage(language, notes: null, userId));
+    Assert.StartsWith("The language does not reside in the same world as the character.", exception.Message);
+    Assert.Equal("language", exception.ParamName);
   }
 }

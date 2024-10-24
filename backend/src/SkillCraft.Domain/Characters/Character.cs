@@ -38,8 +38,8 @@ public class Character : AggregateRoot
   public CasteId CasteId { get; private set; }
   public EducationId EducationId { get; private set; }
 
-  private readonly Dictionary<LanguageId, string?> _languages = [];
-  public IReadOnlySet<LanguageId> LanguageIds => ImmutableHashSet.Create(_languages.Keys.ToArray());
+  private readonly Dictionary<LanguageId, LanguageMetadata> _languages = [];
+  public IReadOnlyDictionary<LanguageId, LanguageMetadata> Languages => _languages.AsReadOnly();
 
   public Character() : base()
   {
@@ -84,9 +84,8 @@ public class Character : AggregateRoot
       throw new ArgumentException("The education does not reside in the same world as the character.", nameof(education));
     }
 
-    Raise(
-      new CreatedEvent(name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id),
-      userId.ActorId);
+    CreatedEvent @event = new(name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
+    Raise(@event, userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
@@ -109,21 +108,22 @@ public class Character : AggregateRoot
     EducationId = @event.EducationId;
   }
 
-  public void AddLanguage(Language language, UserId userId) => AddLanguage(language, reason: null, userId);
-  public void AddLanguage(Language language, string? reason, UserId userId)
+  public void SetLanguage(Language language, Description? notes, UserId userId)
   {
     if (language.WorldId != WorldId)
     {
       throw new ArgumentException("The language does not reside in the same world as the character.", nameof(language));
     }
-    else if (!_languages.ContainsKey(language.Id))
+
+    LanguageMetadata metadata = new(notes);
+    if (!_languages.TryGetValue(language.Id, out LanguageMetadata? existingMetadata) || existingMetadata != metadata)
     {
-      Raise(new LanguageAdded(language.Id, reason), userId.ActorId);
+      Raise(new LanguageSet(language.Id, metadata), userId.ActorId);
     }
   }
-  protected virtual void Apply(LanguageAdded @event)
+  protected virtual void Apply(LanguageSet @event)
   {
-    _languages[@event.LanguageId] = @event.Reason;
+    _languages[@event.LanguageId] = @event.Language;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -232,15 +232,15 @@ public class Character : AggregateRoot
     }
   }
 
-  public class LanguageAdded : DomainEvent, INotification
+  public class LanguageSet : DomainEvent, INotification
   {
     public LanguageId LanguageId { get; }
-    public string? Reason { get; }
+    public LanguageMetadata Language { get; }
 
-    public LanguageAdded(LanguageId languageId, string? reason)
+    public LanguageSet(LanguageId languageId, LanguageMetadata language)
     {
       LanguageId = languageId;
-      Reason = reason;
+      Language = language;
     }
   }
 }
