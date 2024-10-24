@@ -11,6 +11,7 @@ using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Personalities;
 using SkillCraft.Application.Storages;
+using SkillCraft.Application.Talents;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
@@ -27,21 +28,26 @@ using SkillCraft.Domain.Talents;
 namespace SkillCraft.Application.Characters.Commands;
 
 /// <exception cref="AspectsNotFoundException"></exception>
+/// <exception cref="CasteHasNoSkillTalentException"></exception>
 /// <exception cref="CasteNotFoundException"></exception>
 /// <exception cref="CustomizationsCannotIncludePersonalityGiftException"></exception>
 /// <exception cref="CustomizationsNotFoundException"></exception>
+/// <exception cref="EducationHasNoSkillTalentException"></exception>
 /// <exception cref="EducationNotFoundException"></exception>
 /// <exception cref="InvalidAspectAttributeSelectionException"></exception>
+/// <exception cref="InvalidCasteEducationSelectionException"></exception>
 /// <exception cref="InvalidCharacterCustomizationsException"></exception>
 /// <exception cref="InvalidCharacterLineageException"></exception>
 /// <exception cref="InvalidExtraAttributesException"></exception>
 /// <exception cref="InvalidExtraLanguagesException"></exception>
+/// <exception cref="InvalidSkillTalentSelectionException"></exception>
 /// <exception cref="LanguagesCannotIncludeLineageLanguageException"></exception>
 /// <exception cref="LanguagesNotFoundException"></exception>
 /// <exception cref="LineageNotFoundException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="PersonalityNotFoundException"></exception>
+/// <exception cref="TalentsNotFoundException"></exception>
 /// <exception cref="ValidationException"></exception>
 public record CreateCharacterCommand(CreateCharacterPayload Payload) : Activity, IRequest<CharacterModel>;
 

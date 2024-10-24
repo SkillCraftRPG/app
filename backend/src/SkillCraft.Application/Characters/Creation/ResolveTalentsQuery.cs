@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using SkillCraft.Application.Castes;
+using SkillCraft.Application.Educations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Talents;
 using SkillCraft.Contracts;
@@ -31,48 +33,70 @@ internal class ResolveTalentsQueryHandler : IRequestHandler<ResolveTalentsQuery,
     await _permissionService.EnsureCanPreviewAsync(activity, EntityType.Talent, cancellationToken);
 
     Caste caste = query.Caste;
-    if (!caste.Skill.HasValue)
-    {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
-    }
+    Talent casteTalent = await FindCasteTalentAsync(caste, cancellationToken);
 
     Education education = query.Education;
-    if (!education.Skill.HasValue)
+    Talent educationTalent = await FindEducationTalentAsync(education, cancellationToken);
+
+    if (casteTalent.Equals(educationTalent))
     {
-      throw new NotImplementedException(); // TODO(fpion): typed exception
+      throw new InvalidCasteEducationSelectionException(caste, education);
     }
 
     WorldId worldId = activity.GetWorldId();
     IEnumerable<TalentId> ids = query.Ids.Distinct().Select(id => new TalentId(worldId, id));
     IReadOnlyCollection<Talent> talents = await _talentRepository.LoadAsync(ids, cancellationToken);
 
+    HashSet<Guid> foundIds = new(capacity: talents.Count);
+    HashSet<Guid> invalidIds = new(capacity: talents.Count);
     foreach (Talent talent in talents)
     {
-      if (talent.Skill == null)
+      foundIds.Add(talent.EntityId);
+
+      if (talent.Skill == null || talent.Equals(casteTalent) || talent.Equals(educationTalent))
       {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
-      }
-      else if (talent.Skill == caste.Skill)
-      {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
-      }
-      else if (talent.Skill == education.Skill)
-      {
-        throw new NotImplementedException(); // TODO(fpion): typed exception
+        invalidIds.Add(talent.EntityId);
       }
     }
+    if (invalidIds.Count > 0)
+    {
+      throw new InvalidSkillTalentSelectionException(caste, education, invalidIds, nameof(CreateCharacterPayload.TalentIds));
+    }
 
-    IEnumerable<Guid> foundIds = talents.Select(talent => talent.EntityId).Distinct();
     IEnumerable<Guid> missingIds = query.Ids.Except(foundIds).Distinct();
     if (missingIds.Any())
     {
       throw new TalentsNotFoundException(worldId, missingIds, PropertyName);
     }
 
-    // TODO(fpion): add caste talent
-    // TODO(fpion): add education talent
-    // TODO(fpion): there should be exactly 4 skill talents
+    return talents.Concat([casteTalent, educationTalent]).ToArray().AsReadOnly();
+  }
 
-    return talents;
+  private async Task<Talent> FindCasteTalentAsync(Caste caste, CancellationToken cancellationToken)
+  {
+    Talent? talent = null;
+    if (caste.Skill.HasValue)
+    {
+      talent = await _talentRepository.LoadAsync(caste.WorldId, caste.Skill.Value, cancellationToken);
+    }
+    if (talent == null)
+    {
+      throw new CasteHasNoSkillTalentException(caste, nameof(CreateCharacterPayload.CasteId));
+    }
+    return talent;
+  }
+
+  private async Task<Talent> FindEducationTalentAsync(Education education, CancellationToken cancellationToken)
+  {
+    Talent? talent = null;
+    if (education.Skill.HasValue)
+    {
+      talent = await _talentRepository.LoadAsync(education.WorldId, education.Skill.Value, cancellationToken);
+    }
+    if (talent == null)
+    {
+      throw new EducationHasNoSkillTalentException(education, nameof(CreateCharacterPayload.CasteId));
+    }
+    return talent;
   }
 }
