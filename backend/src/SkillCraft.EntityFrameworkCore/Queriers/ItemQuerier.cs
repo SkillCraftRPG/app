@@ -5,6 +5,7 @@ using Logitar.Portal.Contracts.Search;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Application.Actors;
 using SkillCraft.Application.Items;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Items;
 using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Worlds;
@@ -55,6 +56,14 @@ internal class ItemQuerier : IItemQuerier
     {
       builder.Where(SkillCraftDb.Items.Category, Operators.IsEqualTo(payload.Category.Value.ToString()));
     }
+    if (payload.Value != null && payload.Value.Values.Count > 0)
+    {
+      builder.Where(SkillCraftDb.Items.Value, GetDoubleOperator(payload.Value));
+    }
+    if (payload.Weight != null && payload.Weight.Values.Count > 0)
+    {
+      builder.Where(SkillCraftDb.Items.Weight, GetDoubleOperator(payload.Weight));
+    }
 
     IQueryable<ItemEntity> query = _items.FromQuery(builder).AsNoTracking()
       .Include(x => x.World);
@@ -103,5 +112,20 @@ internal class ItemQuerier : IItemQuerier
     Mapper mapper = new(actors);
 
     return items.Select(mapper.ToItem).ToArray();
+  }
+
+  private static ConditionalOperator GetDoubleOperator(DoubleFilter filter)
+  {
+    return filter.Operator.Trim().ToLowerInvariant() switch
+    {
+      "gt" => Operators.IsGreaterThan(filter.Values.First()),
+      "gte" => Operators.IsGreaterThanOrEqualTo(filter.Values.First()),
+      "in" => Operators.IsIn(filter.Values.Distinct().Select(value => (object)value).ToArray()),
+      "lt" => Operators.IsLessThan(filter.Values.First()),
+      "lte" => Operators.IsLessThanOrEqualTo(filter.Values.First()),
+      "ne" => Operators.IsNotEqualTo(filter.Values.First()),
+      "nin" => Operators.IsNotIn(filter.Values.Distinct().Select(value => (object)value).ToArray()),
+      _ => Operators.IsEqualTo(filter.Values.First()),
+    };
   }
 }
