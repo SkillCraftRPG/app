@@ -3,7 +3,7 @@ using SkillCraft.Contracts.Items;
 
 namespace SkillCraft.Domain.Items;
 
-internal class ItemCategoryNotSupportedException : NotSupportedException
+public class ItemCategoryNotSupportedException : NotSupportedException
 {
   private const string ErrorMessage = "The specified item category is not supported.";
 

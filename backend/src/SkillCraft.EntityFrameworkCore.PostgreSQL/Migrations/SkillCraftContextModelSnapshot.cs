@@ -16,7 +16,7 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -437,6 +437,95 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.ToTable("Educations", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.ItemEntity", b =>
+                {
+                    b.Property<int>("ItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ItemId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double?>("Value")
+                        .HasColumnType("double precision");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<double?>("Weight")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ItemId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Value");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("Weight");
+
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
+
+                    b.ToTable("Items", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LanguageEntity", b =>
                 {
                     b.Property<int>("LanguageId")
@@ -500,9 +589,6 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("Script");
@@ -515,7 +601,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Languages", (string)null);
                 });
@@ -690,9 +777,6 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("ParentId");
@@ -703,7 +787,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Lineages", (string)null);
                 });
@@ -1054,9 +1139,6 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("RequiredTalentId");
@@ -1070,6 +1152,9 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.HasIndex("UpdatedOn");
 
                     b.HasIndex("Version");
+
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.HasIndex("WorldId", "Skill");
 
@@ -1262,6 +1347,17 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Navigation("World");
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.ItemEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Items")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("World");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LanguageEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
@@ -1429,6 +1525,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Navigation("Customizations");
 
                     b.Navigation("Educations");
+
+                    b.Navigation("Items");
 
                     b.Navigation("Languages");
 
