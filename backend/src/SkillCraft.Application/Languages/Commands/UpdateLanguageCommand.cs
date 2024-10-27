@@ -66,6 +66,7 @@ internal class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageComm
     }
 
     language.Update(command.GetUserId());
+
     await _sender.Send(new SaveLanguageCommand(language), cancellationToken);
 
     return await _languageQuerier.ReadAsync(language, cancellationToken);
