@@ -7,6 +7,8 @@ namespace SkillCraft.EntityFrameworkCore.Entities;
 
 internal class ItemEntity : AggregateEntity
 {
+  private const char TraitSeparator = ',';
+
   public int ItemId { get; private set; }
   public Guid Id { get; private set; }
 
@@ -54,7 +56,7 @@ internal class ItemEntity : AggregateEntity
     return new ConsumablePropertiesModel
     {
       Charges = properties.TryGetValue(nameof(IConsumableProperties.Charges), out string? charges) ? int.Parse(charges) : null,
-      RemoveWhenEmpty = properties.TryGetValue(nameof(IConsumableProperties.RemoveWhenEmpty), out string? removeWhenEmpty) && bool.Parse(removeWhenEmpty),
+      RemoveWhenEmpty = bool.Parse(properties[nameof(IConsumableProperties.RemoveWhenEmpty)]),
       ReplaceWithItemWhenEmptyId = properties.TryGetValue(nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId), out string? replaceWithItemWhenEmptyId) ? Guid.Parse(replaceWithItemWhenEmptyId) : null
     };
   }
@@ -73,7 +75,13 @@ internal class ItemEntity : AggregateEntity
   }
   public EquipmentPropertiesModel GetEquipmentProperties()
   {
-    return new EquipmentPropertiesModel(); // TODO(fpion): implement
+    IReadOnlyDictionary<string, string> properties = DeserializeProperties();
+    return new EquipmentPropertiesModel
+    {
+      Defense = int.Parse(properties[nameof(IEquipmentProperties.Defense)]),
+      Resistance = properties.TryGetValue(nameof(IEquipmentProperties.Resistance), out string? resistance) ? int.Parse(resistance) : null,
+      Traits = properties.TryGetValue(nameof(IEquipmentProperties.Traits), out string? traits) ? traits.Split(TraitSeparator).Select(Enum.Parse<EquipmentTrait>).ToArray() : []
+    };
   }
   public MiscellaneousPropertiesModel GetMiscellaneousProperties()
   {
@@ -101,7 +109,7 @@ internal class ItemEntity : AggregateEntity
   {
     base.Update(@event);
 
-    Dictionary<string, string> properties = new(capacity: 1);
+    Dictionary<string, string> properties = new(capacity: 3);
     if (@event.Properties.Charges.HasValue)
     {
       properties[nameof(IConsumableProperties.Charges)] = @event.Properties.Charges.Value.ToString();
@@ -138,7 +146,19 @@ internal class ItemEntity : AggregateEntity
   {
     base.Update(@event);
 
-    Properties = null;
+    Dictionary<string, string> properties = new(capacity: 3)
+    {
+      [nameof(IEquipmentProperties.Defense)] = @event.Properties.Defense.ToString()
+    };
+    if (@event.Properties.Resistance.HasValue)
+    {
+      properties[nameof(IEquipmentProperties.Resistance)] = @event.Properties.Resistance.Value.ToString();
+    }
+    if (@event.Properties.Traits.Length > 0)
+    {
+      properties[nameof(IEquipmentProperties.Traits)] = string.Join(TraitSeparator, @event.Properties.Traits);
+    }
+    Properties = SerializeProperties(properties);
   }
   public void SetProperties(Item.MiscellaneousPropertiesUpdatedEvent @event)
   {

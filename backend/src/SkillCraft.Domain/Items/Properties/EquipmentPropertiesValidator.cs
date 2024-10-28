@@ -7,5 +7,8 @@ public class EquipmentPropertiesValidator : AbstractValidator<IEquipmentProperti
 {
   public EquipmentPropertiesValidator()
   {
+    RuleFor(x => x.Defense).GreaterThanOrEqualTo(0);
+    When(x => x.Resistance != null, () => RuleFor(x => x.Resistance).GreaterThan(0));
+    RuleForEach(x => x.Traits).IsInEnum();
   }
 }

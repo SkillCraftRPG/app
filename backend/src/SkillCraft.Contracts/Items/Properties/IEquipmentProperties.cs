@@ -1,3 +1,8 @@
 ﻿namespace SkillCraft.Contracts.Items.Properties;
 
-public interface IEquipmentProperties;
+public interface IEquipmentProperties
+{
+  int Defense { get; }
+  int? Resistance { get; }
+  EquipmentTrait[] Traits { get; }
+}
