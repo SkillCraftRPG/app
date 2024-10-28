@@ -79,6 +79,20 @@ public class Item : AggregateRoot
     }
   }
 
+  private bool _isAttunementRequired = false;
+  public bool IsAttunementRequired
+  {
+    get => _isAttunementRequired;
+    set
+    {
+      if (_isAttunementRequired != value)
+      {
+        _isAttunementRequired = value;
+        _updatedEvent.IsAttunementRequired = value;
+      }
+    }
+  }
+
   public ItemCategory Category { get; private set; }
   private PropertiesBase? _properties = null;
   public PropertiesBase Properties => _properties ?? throw new InvalidOperationException($"The {nameof(Properties)} have not been initialized yet.");
@@ -344,7 +358,9 @@ public class Item : AggregateRoot
     public Change<double?>? Value { get; set; }
     public Change<double?>? Weight { get; set; }
 
-    public bool HasChanges => Name != null || Description != null || Value != null || Weight != null;
+    public bool? IsAttunementRequired { get; set; }
+
+    public bool HasChanges => Name != null || Description != null || Value != null || Weight != null || IsAttunementRequired != null;
   }
 
   public class WeaponPropertiesUpdatedEvent : DomainEvent, INotification

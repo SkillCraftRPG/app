@@ -20,6 +20,7 @@ internal class ItemConfiguration : AggregateConfiguration<ItemEntity>, IEntityTy
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Value);
     builder.HasIndex(x => x.Weight);
+    builder.HasIndex(x => x.IsAttunementRequired);
     builder.HasIndex(x => x.Category);
 
     builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);

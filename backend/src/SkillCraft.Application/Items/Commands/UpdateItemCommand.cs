@@ -68,6 +68,11 @@ internal class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Ite
       item.Weight = payload.Weight.Value;
     }
 
+    if (payload.IsAttunementRequired.HasValue)
+    {
+      item.IsAttunementRequired = payload.IsAttunementRequired.Value;
+    }
+
     if (payload.Consumable != null)
     {
       item.SetProperties(new ConsumableProperties(payload.Consumable), userId); // TODO(fpion): ensure replacement item exists

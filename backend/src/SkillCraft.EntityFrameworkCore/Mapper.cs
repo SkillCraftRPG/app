@@ -159,6 +159,7 @@ internal class Mapper
       Description = source.Description,
       Value = source.Value,
       Weight = source.Weight,
+      IsAttunementRequired = source.IsAttunementRequired,
       Category = source.Category
     };
 

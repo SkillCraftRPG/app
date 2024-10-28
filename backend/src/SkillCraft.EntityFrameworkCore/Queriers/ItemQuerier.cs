@@ -56,6 +56,10 @@ internal class ItemQuerier : IItemQuerier
     {
       builder.Where(SkillCraftDb.Items.Category, Operators.IsEqualTo(payload.Category.Value.ToString()));
     }
+    if (payload.IsAttunementRequired.HasValue)
+    {
+      builder.Where(SkillCraftDb.Items.IsAttunementRequired, Operators.IsEqualTo(payload.IsAttunementRequired.Value));
+    }
     if (payload.Value != null && payload.Value.Values.Count > 0)
     {
       builder.Where(SkillCraftDb.Items.Value, GetDoubleOperator(payload.Value));

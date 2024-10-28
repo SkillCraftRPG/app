@@ -11,6 +11,9 @@ public record SearchItemsParameters : SearchParameters
   [FromQuery(Name = "category")]
   public ItemCategory? Category { get; set; }
 
+  [FromQuery(Name = "attunement")]
+  public bool? IsAttunementRequired { get; set; }
+
   [FromQuery(Name = "value_operator")]
   public string? ValueOperator { get; set; }
 
@@ -27,7 +30,8 @@ public record SearchItemsParameters : SearchParameters
   {
     SearchItemsPayload payload = new()
     {
-      Category = Category
+      Category = Category,
+      IsAttunementRequired = IsAttunementRequired
     };
     if (ValueValues != null)
     {

@@ -23,6 +23,8 @@ public class ItemModel : Aggregate
   public MoneyPropertiesModel? Money { get; set; }
   public WeaponPropertiesModel? Weapon { get; set; }
 
+  public bool IsAttunementRequired { get; set; }
+
   public ItemModel() : this(new WorldModel(), string.Empty)
   {
   }

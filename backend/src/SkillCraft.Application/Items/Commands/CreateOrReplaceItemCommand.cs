@@ -87,7 +87,8 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     {
       Description = Description.TryCreate(payload.Description),
       Value = payload.Value,
-      Weight = payload.Weight
+      Weight = payload.Weight,
+      IsAttunementRequired = payload.IsAttunementRequired
     };
     item.Update(userId);
 
@@ -159,6 +160,11 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     if (payload.Weight != reference.Weight)
     {
       item.Weight = payload.Weight;
+    }
+
+    if (payload.IsAttunementRequired != reference.IsAttunementRequired)
+    {
+      item.IsAttunementRequired = payload.IsAttunementRequired;
     }
 
     if (payload.Consumable != null)

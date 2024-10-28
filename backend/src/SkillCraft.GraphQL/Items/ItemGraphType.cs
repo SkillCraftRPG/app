@@ -18,6 +18,9 @@ internal class ItemGraphType : AggregateGraphType<ItemModel>
     Field(x => x.Weight)
       .Description("The weight of the item, in kilograms (kg).");
 
+    Field(x => x.IsAttunementRequired)
+      .Description("A value indicating whether or not this item is a magic item requiring attunement.");
+
     Field(x => x.Category, type: typeof(NonNullGraphType<ItemCategoryGraphType>))
       .Description("The category of the item.");
     Field(x => x.Consumable, type: typeof(ConsumablePropertiesGraphType))

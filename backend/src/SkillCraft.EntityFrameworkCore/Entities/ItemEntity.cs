@@ -21,6 +21,8 @@ internal class ItemEntity : AggregateEntity
   public double? Value { get; private set; }
   public double? Weight { get; private set; }
 
+  public bool IsAttunementRequired { get; private set; }
+
   public ItemCategory Category { get; private set; }
   public string? Properties { get; private set; }
 
@@ -203,6 +205,11 @@ internal class ItemEntity : AggregateEntity
     if (@event.Weight != null)
     {
       Weight = @event.Weight.Value;
+    }
+
+    if (@event.IsAttunementRequired.HasValue)
+    {
+      IsAttunementRequired = @event.IsAttunementRequired.Value;
     }
   }
 }

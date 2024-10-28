@@ -10,6 +10,8 @@ public record CreateOrReplaceItemPayload
   public double? Value { get; set; }
   public double? Weight { get; set; }
 
+  public bool IsAttunementRequired { get; set; }
+
   public ConsumablePropertiesModel? Consumable { get; set; }
   public ContainerPropertiesModel? Container { get; set; }
   public DevicePropertiesModel? Device { get; set; }
