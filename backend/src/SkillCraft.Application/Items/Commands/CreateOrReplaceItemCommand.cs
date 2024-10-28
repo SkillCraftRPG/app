@@ -40,8 +40,6 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
   public async Task<CreateOrReplaceItemResult> Handle(CreateOrReplaceItemCommand command, CancellationToken cancellationToken)
   {
-    new CreateOrReplaceItemValidator().ValidateAndThrow(command.Payload);
-
     Item? item = await FindAsync(command, cancellationToken);
     bool created = false;
     if (item == null)
@@ -81,6 +79,8 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     await _permissionService.EnsureCanCreateAsync(command, EntityType.Item, cancellationToken);
 
     CreateOrReplaceItemPayload payload = command.Payload;
+    new CreateOrReplaceItemValidator().ValidateAndThrow(payload);
+
     UserId userId = command.GetUserId();
     WorldId worldId = command.GetWorldId();
 
@@ -135,6 +135,8 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     await _permissionService.EnsureCanUpdateAsync(command, item.GetMetadata(), cancellationToken);
 
     CreateOrReplaceItemPayload payload = command.Payload;
+    new CreateOrReplaceItemValidator(item.Category).ValidateAndThrow(payload);
+
     UserId userId = command.GetUserId();
 
     Item? reference = null;

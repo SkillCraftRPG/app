@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using SkillCraft.Contracts.Items;
-using SkillCraft.Domain.Items.Properties;
 using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Items.Validators;
@@ -22,8 +21,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
   {
     if (category == ItemCategory.Consumable)
     {
-      When(x => x.Consumable != null, () => RuleFor(x => x.Consumable!).SetValidator(new ConsumablePropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Consumable).NotNull());
+      When(x => x.Consumable != null, () => RuleFor(x => x.Consumable!).SetValidator(new ConsumablePropertiesValidator()));
     }
     else
     {
@@ -32,8 +30,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
 
     if (category == ItemCategory.Container)
     {
-      When(x => x.Container != null, () => RuleFor(x => x.Container!).SetValidator(new ContainerPropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Container).NotNull());
+      When(x => x.Container != null, () => RuleFor(x => x.Container!).SetValidator(new ContainerPropertiesValidator()));
     }
     else
     {
@@ -42,8 +39,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
 
     if (category == ItemCategory.Device)
     {
-      When(x => x.Device != null, () => RuleFor(x => x.Device!).SetValidator(new DevicePropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Device).NotNull());
+      When(x => x.Device != null, () => RuleFor(x => x.Device!).SetValidator(new DevicePropertiesValidator()));
     }
     else
     {
@@ -52,8 +48,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
 
     if (category == ItemCategory.Equipment)
     {
-      When(x => x.Equipment != null, () => RuleFor(x => x.Equipment!).SetValidator(new EquipmentPropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Equipment).NotNull());
+      When(x => x.Equipment != null, () => RuleFor(x => x.Equipment!).SetValidator(new EquipmentPropertiesValidator()));
     }
     else
     {
@@ -62,8 +57,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
 
     if (category == ItemCategory.Miscellaneous)
     {
-      When(x => x.Miscellaneous != null, () => RuleFor(x => x.Miscellaneous!).SetValidator(new MiscellaneousPropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Miscellaneous).NotNull());
+      When(x => x.Miscellaneous != null, () => RuleFor(x => x.Miscellaneous!).SetValidator(new MiscellaneousPropertiesValidator()));
     }
     else
     {
@@ -72,8 +66,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
 
     if (category == ItemCategory.Money)
     {
-      When(x => x.Money != null, () => RuleFor(x => x.Money!).SetValidator(new MoneyPropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Money).NotNull());
+      When(x => x.Money != null, () => RuleFor(x => x.Money!).SetValidator(new MoneyPropertiesValidator()));
     }
     else
     {
@@ -82,8 +75,7 @@ internal class UpdateItemValidator : AbstractValidator<UpdateItemPayload>
 
     if (category == ItemCategory.Weapon)
     {
-      When(x => x.Weapon != null, () => RuleFor(x => x.Weapon!).SetValidator(new WeaponPropertiesValidator()))
-        .Otherwise(() => RuleFor(x => x.Weapon).NotNull());
+      When(x => x.Weapon != null, () => RuleFor(x => x.Weapon!).SetValidator(new WeaponPropertiesValidator()));
     }
     else
     {
