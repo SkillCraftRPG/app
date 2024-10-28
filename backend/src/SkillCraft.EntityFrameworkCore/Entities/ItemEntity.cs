@@ -50,11 +50,17 @@ internal class ItemEntity : AggregateEntity
 
   public ConsumablePropertiesModel GetConsumableProperties()
   {
-    return new ConsumablePropertiesModel();
+    IReadOnlyDictionary<string, string> properties = DeserializeProperties();
+    return new ConsumablePropertiesModel
+    {
+      Charges = properties.TryGetValue(nameof(IConsumableProperties.Charges), out string? charges) ? int.Parse(charges) : null,
+      RemoveWhenEmpty = properties.TryGetValue(nameof(IConsumableProperties.RemoveWhenEmpty), out string? removeWhenEmpty) && bool.Parse(removeWhenEmpty),
+      ReplaceWithItemWhenEmptyId = properties.TryGetValue(nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId), out string? replaceWithItemWhenEmptyId) ? Guid.Parse(replaceWithItemWhenEmptyId) : null
+    };
   }
   public ContainerPropertiesModel GetContainerProperties()
   {
-    Dictionary<string, string> properties = (Properties == null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(Properties)) ?? [];
+    IReadOnlyDictionary<string, string> properties = DeserializeProperties();
     return new ContainerPropertiesModel
     {
       Capacity = properties.TryGetValue(nameof(IContainerProperties.Capacity), out string? capacity) ? double.Parse(capacity) : null,
@@ -81,12 +87,31 @@ internal class ItemEntity : AggregateEntity
   {
     return new WeaponPropertiesModel(); // TODO(fpion): implement
   }
+  private IReadOnlyDictionary<string, string> DeserializeProperties()
+  {
+    Dictionary<string, string>? properties = null;
+    if (Properties != null)
+    {
+      properties = JsonSerializer.Deserialize<Dictionary<string, string>>(Properties);
+    }
+    return (properties ?? []).AsReadOnly();
+  }
 
   public void SetProperties(Item.ConsumablePropertiesUpdatedEvent @event)
   {
     base.Update(@event);
 
-    Properties = null;
+    Dictionary<string, string> properties = new(capacity: 1);
+    if (@event.Properties.Charges.HasValue)
+    {
+      properties[nameof(IConsumableProperties.Charges)] = @event.Properties.Charges.Value.ToString();
+    }
+    properties[nameof(IConsumableProperties.RemoveWhenEmpty)] = @event.Properties.RemoveWhenEmpty.ToString();
+    if (@event.Properties.ReplaceWithItemWhenEmptyId.HasValue)
+    {
+      properties[nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId)] = @event.Properties.ReplaceWithItemWhenEmptyId.Value.ToString();
+    }
+    Properties = SerializeProperties(properties);
   }
   public void SetProperties(Item.ContainerPropertiesUpdatedEvent @event)
   {
@@ -101,7 +126,7 @@ internal class ItemEntity : AggregateEntity
     {
       properties[nameof(IContainerProperties.Volume)] = @event.Properties.Volume.Value.ToString();
     }
-    Properties = properties.Count == 0 ? null : JsonSerializer.Serialize(properties);
+    Properties = SerializeProperties(properties);
   }
   public void SetProperties(Item.DevicePropertiesUpdatedEvent @event)
   {
@@ -132,6 +157,10 @@ internal class ItemEntity : AggregateEntity
     base.Update(@event);
 
     Properties = null;
+  }
+  private string? SerializeProperties(IReadOnlyDictionary<string, string> properties)
+  {
+    return properties.Count == 0 ? null : JsonSerializer.Serialize(properties);
   }
 
   public void Update(Item.UpdatedEvent @event)

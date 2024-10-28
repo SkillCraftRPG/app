@@ -70,7 +70,7 @@ internal class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Ite
 
     if (payload.Consumable != null)
     {
-      item.SetProperties(new ConsumableProperties(payload.Consumable), userId);
+      item.SetProperties(new ConsumableProperties(payload.Consumable), userId); // TODO(fpion): ensure replacement item exists
     }
     if (payload.Container != null)
     {

@@ -8,12 +8,19 @@ public record ConsumableProperties : PropertiesBase, IConsumableProperties
 {
   public override ItemCategory Category { get; } = ItemCategory.Consumable;
 
-  public ConsumableProperties(IConsumableProperties consumable) : this()
+  public int? Charges { get; }
+  public bool RemoveWhenEmpty { get; }
+  public Guid? ReplaceWithItemWhenEmptyId { get; }
+
+  public ConsumableProperties(IConsumableProperties consumable) : this(consumable.Charges, consumable.RemoveWhenEmpty, consumable.ReplaceWithItemWhenEmptyId)
   {
   }
 
-  public ConsumableProperties()
+  public ConsumableProperties(int? charges, bool removeWhenEmpty, Guid? replaceWithItemWhenEmptyId)
   {
+    Charges = charges;
+    RemoveWhenEmpty = removeWhenEmpty;
+    ReplaceWithItemWhenEmptyId = replaceWithItemWhenEmptyId;
     new ConsumablePropertiesValidator().ValidateAndThrow(this);
   }
 }

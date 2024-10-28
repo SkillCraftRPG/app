@@ -98,7 +98,7 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     List<PropertiesBase> properties = new(capacity: 7);
     if (payload.Consumable != null)
     {
-      properties.Add(new ConsumableProperties(payload.Consumable));
+      properties.Add(new ConsumableProperties(payload.Consumable)); // TODO(fpion): ensure replacement item exists
     }
     if (payload.Container != null)
     {
@@ -163,7 +163,7 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
     if (payload.Consumable != null)
     {
-      item.SetProperties(new ConsumableProperties(payload.Consumable), userId);
+      item.SetProperties(new ConsumableProperties(payload.Consumable), userId); // TODO(fpion): ensure replacement item exists
     }
     if (payload.Container != null)
     {
