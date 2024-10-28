@@ -140,6 +140,8 @@ public class Item : AggregateRoot
   protected virtual void Apply(CreatedEvent @event)
   {
     _name = @event.Name;
+
+    Category = @event.Category;
   }
 
   public void SetProperties(ConsumableProperties properties, UserId userId)
