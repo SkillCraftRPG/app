@@ -16,6 +16,6 @@ internal class ConsumablePropertiesGraphType : ObjectGraphType<ConsumablePropert
     Field(x => x.RemoveWhenEmpty)
       .Description("A value indicating whether or not the item will be removed when all charges are used.");
     Field(x => x.ReplaceWithItemWhenEmptyId)
-      .Description("The identifier of the item that this item will be replaced by when all charges are used.");
+      .Description("The identifier of the item that this item will be replaced with when all charges are used.");
   }
 }
