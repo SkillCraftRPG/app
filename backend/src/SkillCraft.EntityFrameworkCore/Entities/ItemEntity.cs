@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Items;
 using SkillCraft.Contracts.Items.Properties;
 using SkillCraft.Domain.Items;
@@ -7,7 +8,9 @@ namespace SkillCraft.EntityFrameworkCore.Entities;
 
 internal class ItemEntity : AggregateEntity
 {
-  private const char TraitSeparator = ',';
+  private const string LongRangeKey = "Range.Long";
+  private const string NormalRangeKey = "Range.Normal";
+  private const char Separator = ',';
 
   public int ItemId { get; private set; }
   public Guid Id { get; private set; }
@@ -82,7 +85,7 @@ internal class ItemEntity : AggregateEntity
     {
       Defense = int.Parse(properties[nameof(IEquipmentProperties.Defense)]),
       Resistance = properties.TryGetValue(nameof(IEquipmentProperties.Resistance), out string? resistance) ? int.Parse(resistance) : null,
-      Traits = properties.TryGetValue(nameof(IEquipmentProperties.Traits), out string? traits) ? traits.Split(TraitSeparator).Select(Enum.Parse<EquipmentTrait>).ToArray() : []
+      Traits = properties.TryGetValue(nameof(IEquipmentProperties.Traits), out string? traits) ? traits.Split(Separator).Select(Enum.Parse<EquipmentTrait>).ToList() : []
     };
   }
   public MiscellaneousPropertiesModel GetMiscellaneousProperties()
@@ -95,7 +98,43 @@ internal class ItemEntity : AggregateEntity
   }
   public WeaponPropertiesModel GetWeaponProperties()
   {
-    return new WeaponPropertiesModel(); // TODO(fpion): implement
+    IReadOnlyDictionary<string, string> properties = DeserializeProperties();
+    WeaponPropertiesModel model = new()
+    {
+      Attack = int.Parse(properties[nameof(IWeaponProperties.Attack)]),
+      Resistance = properties.TryGetValue(nameof(IWeaponProperties.Resistance), out string? resistance) ? int.Parse(resistance) : null,
+      Traits = properties.TryGetValue(nameof(IWeaponProperties.Traits), out string? traits) ? traits.Split(Separator).Select(Enum.Parse<WeaponTrait>).ToList() : [],
+      ReloadCount = properties.TryGetValue(nameof(IWeaponProperties.ReloadCount), out string? reloadCount) ? int.Parse(reloadCount) : null
+    };
+    if (properties.TryGetValue(nameof(IWeaponProperties.Damages), out string? damages))
+    {
+      string[] values = damages.Split(Separator);
+      foreach (string value in values)
+      {
+        string[] damage = value.Split();
+        model.Damages.Add(new WeaponDamageModel(damage[0], Enum.Parse<DamageType>(damage[1])));
+      }
+    }
+    if (properties.TryGetValue(nameof(IWeaponProperties.VersatileDamages), out string? versatileDamages))
+    {
+      string[] values = versatileDamages.Split(Separator);
+      foreach (string value in values)
+      {
+        string[] damage = value.Split();
+        model.VersatileDamages.Add(new WeaponDamageModel(damage[0], Enum.Parse<DamageType>(damage[1])));
+      }
+    }
+    _ = properties.TryGetValue(NormalRangeKey, out string? normalRange);
+    _ = properties.TryGetValue(LongRangeKey, out string? longRange);
+    if (normalRange != null || longRange != null)
+    {
+      model.Range = new WeaponRangeModel
+      {
+        Normal = normalRange == null ? null : int.Parse(normalRange),
+        Long = longRange == null ? null : int.Parse(longRange)
+      };
+    }
+    return model;
   }
   private IReadOnlyDictionary<string, string> DeserializeProperties()
   {
@@ -156,9 +195,9 @@ internal class ItemEntity : AggregateEntity
     {
       properties[nameof(IEquipmentProperties.Resistance)] = @event.Properties.Resistance.Value.ToString();
     }
-    if (@event.Properties.Traits.Length > 0)
+    if (@event.Properties.Traits.Count > 0)
     {
-      properties[nameof(IEquipmentProperties.Traits)] = string.Join(TraitSeparator, @event.Properties.Traits);
+      properties[nameof(IEquipmentProperties.Traits)] = string.Join(Separator, @event.Properties.Traits);
     }
     Properties = SerializeProperties(properties);
   }
@@ -178,9 +217,44 @@ internal class ItemEntity : AggregateEntity
   {
     base.Update(@event);
 
-    Properties = null;
+    Dictionary<string, string> properties = new(capacity: 8)
+    {
+      [nameof(IWeaponProperties.Attack)] = @event.Properties.Attack.ToString()
+    };
+    if (@event.Properties.Resistance.HasValue)
+    {
+      properties[nameof(IWeaponProperties.Resistance)] = @event.Properties.Resistance.Value.ToString();
+    }
+    if (@event.Properties.Traits.Count > 0)
+    {
+      properties[nameof(IWeaponProperties.Traits)] = string.Join(Separator, @event.Properties.Traits);
+    }
+    if (@event.Properties.Damages.Count > 0)
+    {
+      properties[nameof(IWeaponProperties.Damages)] = string.Join(Separator, @event.Properties.Damages.Select(damage => string.Join(' ', damage.Roll, damage.Type)));
+    }
+    if (@event.Properties.VersatileDamages.Count > 0)
+    {
+      properties[nameof(IWeaponProperties.VersatileDamages)] = string.Join(Separator, @event.Properties.VersatileDamages.Select(damage => string.Join(' ', damage.Roll, damage.Type)));
+    }
+    if (@event.Properties.Range != null)
+    {
+      if (@event.Properties.Range.Normal != null)
+      {
+        properties[NormalRangeKey] = @event.Properties.Range.Normal.Value.ToString();
+      }
+      if (@event.Properties.Range.Long != null)
+      {
+        properties[LongRangeKey] = @event.Properties.Range.Long.Value.ToString();
+      }
+    }
+    if (@event.Properties.ReloadCount.HasValue)
+    {
+      properties[nameof(IWeaponProperties.ReloadCount)] = @event.Properties.ReloadCount.Value.ToString();
+    }
+    Properties = SerializeProperties(properties);
   }
-  private string? SerializeProperties(IReadOnlyDictionary<string, string> properties)
+  private static string? SerializeProperties(IReadOnlyDictionary<string, string> properties)
   {
     return properties.Count == 0 ? null : JsonSerializer.Serialize(properties);
   }

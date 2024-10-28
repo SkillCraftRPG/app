@@ -8,6 +8,7 @@ using SkillCraft.Contracts.Items;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Items.Properties;
+using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Items.Commands;
 
@@ -81,9 +82,10 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
     CreateOrReplaceItemPayload payload = command.Payload;
     UserId userId = command.GetUserId();
+    WorldId worldId = command.GetWorldId();
 
-    PropertiesBase properties = GetProperties(payload);
-    Item item = new(command.GetWorldId(), new Name(payload.Name), properties, userId, command.Id)
+    PropertiesBase properties = GetProperties(worldId, payload);
+    Item item = new(worldId, new Name(payload.Name), properties, userId, command.Id)
     {
       Description = Description.TryCreate(payload.Description),
       Value = payload.Value,
@@ -94,12 +96,12 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
     return item;
   }
-  private static PropertiesBase GetProperties(CreateOrReplaceItemPayload payload)
+  private static PropertiesBase GetProperties(WorldId worldId, CreateOrReplaceItemPayload payload)
   {
     List<PropertiesBase> properties = new(capacity: 7);
     if (payload.Consumable != null)
     {
-      properties.Add(new ConsumableProperties(payload.Consumable)); // TODO(fpion): ensure replacement item exists
+      properties.Add(payload.Consumable.ToConsumableProperties(worldId)); // TODO(fpion): ensure replacement item exists
     }
     if (payload.Container != null)
     {
@@ -123,7 +125,7 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     }
     if (payload.Weapon != null)
     {
-      properties.Add(new WeaponProperties(payload.Weapon));
+      properties.Add(payload.Weapon.ToWeaponProperties());
     }
     return properties.Single();
   }
@@ -169,7 +171,7 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
     if (payload.Consumable != null)
     {
-      item.SetProperties(new ConsumableProperties(payload.Consumable), userId); // TODO(fpion): ensure replacement item exists
+      item.SetProperties(payload.Consumable.ToConsumableProperties(item.WorldId), userId); // TODO(fpion): ensure replacement item exists
     }
     if (payload.Container != null)
     {
@@ -193,7 +195,7 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     }
     if (payload.Weapon != null)
     {
-      item.SetProperties(new WeaponProperties(payload.Weapon), userId);
+      item.SetProperties(payload.Weapon.ToWeaponProperties(), userId);
     }
 
     item.Update(userId);

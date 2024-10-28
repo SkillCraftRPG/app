@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SkillCraft.Contracts.Items.Properties;
 
-namespace SkillCraft.Domain.Items.Properties;
+namespace SkillCraft.Application.Items.Validators;
 
 public class EquipmentPropertiesValidator : AbstractValidator<IEquipmentProperties>
 {

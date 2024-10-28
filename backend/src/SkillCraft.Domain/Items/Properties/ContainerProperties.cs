@@ -15,10 +15,20 @@ public record ContainerProperties : PropertiesBase, IContainerProperties
   {
   }
 
+  [JsonConstructor]
   public ContainerProperties(double? capacity, double? volume)
   {
     Capacity = capacity;
     Volume = volume;
-    new ContainerPropertiesValidator().ValidateAndThrow(this);
+    new Validator().ValidateAndThrow(this);
+  }
+
+  private class Validator : AbstractValidator<ContainerProperties>
+  {
+    public Validator()
+    {
+      When(x => x.Capacity != null, () => RuleFor(x => x.Capacity).GreaterThan(0.0));
+      When(x => x.Volume != null, () => RuleFor(x => x.Volume).GreaterThan(0.0));
+    }
   }
 }

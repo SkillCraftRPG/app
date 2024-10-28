@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using SkillCraft.Contracts.Items;
+﻿using SkillCraft.Contracts.Items;
 using SkillCraft.Contracts.Items.Properties;
 
 namespace SkillCraft.Domain.Items.Properties;
@@ -8,12 +7,12 @@ public record DeviceProperties : PropertiesBase, IDeviceProperties
 {
   public override ItemCategory Category { get; } = ItemCategory.Device;
 
-  public DeviceProperties(IDeviceProperties device) : this()
+  [JsonConstructor]
+  public DeviceProperties()
   {
   }
 
-  public DeviceProperties()
+  public DeviceProperties(IDeviceProperties _) : this()
   {
-    new DevicePropertiesValidator().ValidateAndThrow(this);
   }
 }

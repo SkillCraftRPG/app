@@ -1,26 +1,36 @@
 ﻿using FluentValidation;
 using SkillCraft.Contracts.Items;
-using SkillCraft.Contracts.Items.Properties;
 
 namespace SkillCraft.Domain.Items.Properties;
 
-public record ConsumableProperties : PropertiesBase, IConsumableProperties
+public record ConsumableProperties : PropertiesBase
 {
   public override ItemCategory Category { get; } = ItemCategory.Consumable;
 
   public int? Charges { get; }
   public bool RemoveWhenEmpty { get; }
-  public Guid? ReplaceWithItemWhenEmptyId { get; }
+  public ItemId? ReplaceWithItemWhenEmptyId { get; }
 
-  public ConsumableProperties(IConsumableProperties consumable) : this(consumable.Charges, consumable.RemoveWhenEmpty, consumable.ReplaceWithItemWhenEmptyId)
-  {
-  }
-
-  public ConsumableProperties(int? charges, bool removeWhenEmpty, Guid? replaceWithItemWhenEmptyId)
+  [JsonConstructor]
+  public ConsumableProperties(int? charges, bool removeWhenEmpty, ItemId? replaceWithItemWhenEmptyId)
   {
     Charges = charges;
     RemoveWhenEmpty = removeWhenEmpty;
     ReplaceWithItemWhenEmptyId = replaceWithItemWhenEmptyId;
-    new ConsumablePropertiesValidator().ValidateAndThrow(this);
+    new Validator().ValidateAndThrow(this);
+  }
+
+  private class Validator : AbstractValidator<ConsumableProperties>
+  {
+    public Validator()
+    {
+      When(x => x.Charges != null, () => RuleFor(x => x.Charges).GreaterThan(0));
+      When(x => x.RemoveWhenEmpty, () => RuleFor(x => x.ReplaceWithItemWhenEmptyId).Null());
+      When(x => x.ReplaceWithItemWhenEmptyId != null, () =>
+      {
+        RuleFor(x => x.RemoveWhenEmpty).NotEqual(true);
+        RuleFor(x => x.ReplaceWithItemWhenEmptyId).NotEmpty();
+      });
+    }
   }
 }

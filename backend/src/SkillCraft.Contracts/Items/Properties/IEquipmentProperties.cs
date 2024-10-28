@@ -4,5 +4,5 @@ public interface IEquipmentProperties
 {
   int Defense { get; }
   int? Resistance { get; }
-  EquipmentTrait[] Traits { get; }
+  List<EquipmentTrait> Traits { get; }
 }

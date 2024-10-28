@@ -75,7 +75,7 @@ internal class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Ite
 
     if (payload.Consumable != null)
     {
-      item.SetProperties(new ConsumableProperties(payload.Consumable), userId); // TODO(fpion): ensure replacement item exists
+      item.SetProperties(payload.Consumable.ToConsumableProperties(item.WorldId), userId); // TODO(fpion): ensure replacement item exists
     }
     if (payload.Container != null)
     {
@@ -99,7 +99,7 @@ internal class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Ite
     }
     if (payload.Weapon != null)
     {
-      item.SetProperties(new WeaponProperties(payload.Weapon), userId);
+      item.SetProperties(payload.Weapon.ToWeaponProperties(), userId);
     }
 
     item.Update(userId);
