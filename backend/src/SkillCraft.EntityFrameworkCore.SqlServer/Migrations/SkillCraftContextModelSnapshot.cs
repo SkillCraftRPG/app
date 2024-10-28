@@ -16,7 +16,7 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -437,6 +437,100 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("Educations", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.ItemEntity", b =>
+                {
+                    b.Property<int>("ItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAttunementRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("Value")
+                        .HasColumnType("float");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<double?>("Weight")
+                        .HasColumnType("float");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ItemId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("IsAttunementRequired");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Value");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("Weight");
+
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
+
+                    b.ToTable("Items", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LanguageEntity", b =>
                 {
                     b.Property<int>("LanguageId")
@@ -500,9 +594,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("Script");
@@ -515,7 +606,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Languages", (string)null);
                 });
@@ -690,9 +782,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("ParentId");
@@ -703,7 +792,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Version");
 
-                    b.HasIndex("WorldId");
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Lineages", (string)null);
                 });
@@ -1054,9 +1144,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("CreatedOn");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("Name");
 
                     b.HasIndex("RequiredTalentId");
@@ -1070,6 +1157,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("UpdatedOn");
 
                     b.HasIndex("Version");
+
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
 
                     b.HasIndex("WorldId", "Skill");
 
@@ -1262,6 +1352,17 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("World");
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.ItemEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Items")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("World");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.LanguageEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
@@ -1429,6 +1530,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("Customizations");
 
                     b.Navigation("Educations");
+
+                    b.Navigation("Items");
 
                     b.Navigation("Languages");
 

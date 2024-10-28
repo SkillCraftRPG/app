@@ -97,6 +97,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       payload.Ages.Venerable == null ? lineage.Ages.Venerable : payload.Ages.Venerable.Value);
 
     lineage.Update(command.GetUserId());
+
     await _sender.Send(new SaveLineageCommand(lineage), cancellationToken);
 
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);

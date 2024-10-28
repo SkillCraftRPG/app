@@ -8,6 +8,7 @@ public enum EntityType
   Comment,
   Customization,
   Education,
+  Item,
   Language,
   Lineage,
   Party,

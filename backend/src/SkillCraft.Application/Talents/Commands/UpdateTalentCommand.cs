@@ -69,6 +69,7 @@ internal class UpdateTalentCommandHandler : IRequestHandler<UpdateTalentCommand,
     }
 
     talent.Update(command.GetUserId());
+
     await _sender.Send(new SaveTalentCommand(talent), cancellationToken);
 
     return await _talentQuerier.ReadAsync(talent, cancellationToken);

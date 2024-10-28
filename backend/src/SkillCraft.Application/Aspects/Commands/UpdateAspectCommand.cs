@@ -64,6 +64,7 @@ internal class UpdateAspectCommandHandler : IRequestHandler<UpdateAspectCommand,
     {
       aspect.Skills = new Skills(payload.Skills);
     }
+
     aspect.Update(command.GetUserId());
 
     await _sender.Send(new SaveAspectCommand(aspect), cancellationToken);

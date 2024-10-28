@@ -26,6 +26,7 @@ internal class WorldEntity : AggregateEntity
   public List<CommentEntity> Comments { get; private set; } = [];
   public List<CustomizationEntity> Customizations { get; private set; } = [];
   public List<EducationEntity> Educations { get; private set; } = [];
+  public List<ItemEntity> Items { get; private set; } = [];
   public List<LanguageEntity> Languages { get; private set; } = [];
   public List<LineageEntity> Lineages { get; private set; } = [];
   public List<PartyEntity> Parties { get; private set; } = [];

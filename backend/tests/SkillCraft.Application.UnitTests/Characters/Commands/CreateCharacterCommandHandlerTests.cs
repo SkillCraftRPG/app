@@ -16,7 +16,6 @@ using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
 using SkillCraft.Domain.Talents;
-using System.Data;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Characters.Commands;

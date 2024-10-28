@@ -7,12 +7,14 @@ using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
+using SkillCraft.Contracts.Items;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Personalities;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain.Items;
 using SkillCraft.EntityFrameworkCore.Entities;
 
 namespace SkillCraft.EntityFrameworkCore;
@@ -139,6 +141,54 @@ internal class Mapper
       Skill = source.Skill,
       WealthMultiplier = source.WealthMultiplier
     };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public ItemModel ToItem(ItemEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    ItemModel destination = new(world, source.Name)
+    {
+      Id = source.Id,
+      Description = source.Description,
+      Value = source.Value,
+      Weight = source.Weight,
+      IsAttunementRequired = source.IsAttunementRequired,
+      Category = source.Category
+    };
+
+    switch (source.Category)
+    {
+      case ItemCategory.Consumable:
+        destination.Consumable = source.GetConsumableProperties();
+        break;
+      case ItemCategory.Container:
+        destination.Container = source.GetContainerProperties();
+        break;
+      case ItemCategory.Device:
+        destination.Device = source.GetDeviceProperties();
+        break;
+      case ItemCategory.Equipment:
+        destination.Equipment = source.GetEquipmentProperties();
+        break;
+      case ItemCategory.Miscellaneous:
+        destination.Miscellaneous = source.GetMiscellaneousProperties();
+        break;
+      case ItemCategory.Money:
+        destination.Money = source.GetMoneyProperties();
+        break;
+      case ItemCategory.Weapon:
+        destination.Weapon = source.GetWeaponProperties();
+        break;
+      default:
+        throw new ItemCategoryNotSupportedException(source.Category);
+    }
 
     MapAggregate(source, destination);
 

@@ -14,6 +14,7 @@ internal static class Helper
     EntityType.Comment => Comments.Table,
     EntityType.Customization => Customizations.Table,
     EntityType.Education => Educations.Table,
+    EntityType.Item => Items.Table,
     EntityType.Language => Languages.Table,
     EntityType.Lineage => Lineages.Table,
     EntityType.Party => Parties.Table,

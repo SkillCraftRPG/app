@@ -53,6 +53,7 @@ public static class DependencyInjectionExtensions
     new EducationIdConverter(),
     new CustomizationIdConverter(),
     new DescriptionConverter(),
+    new ItemIdConverter(),
     new LanguageIdConverter(),
     new LineageIdConverter(),
     new NameConverter(),
