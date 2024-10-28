@@ -8,12 +8,17 @@ public record ContainerProperties : PropertiesBase, IContainerProperties
 {
   public override ItemCategory Category { get; } = ItemCategory.Container;
 
-  public ContainerProperties(IContainerProperties container) : this()
+  public double? Capacity { get; }
+  public double? Volume { get; }
+
+  public ContainerProperties(IContainerProperties container) : this(container.Capacity, container.Volume)
   {
   }
 
-  public ContainerProperties()
+  public ContainerProperties(double? capacity, double? volume)
   {
+    Capacity = capacity;
+    Volume = volume;
     new ContainerPropertiesValidator().ValidateAndThrow(this);
   }
 }

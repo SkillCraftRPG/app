@@ -10,5 +10,10 @@ internal class ContainerPropertiesGraphType : ObjectGraphType<ContainerPropertie
   {
     Name = nameof(ContainerPropertiesModel).Remove("Model");
     Description = "Represents the properties of container items.";
+
+    Field(x => x.Capacity)
+      .Description("The capacity of the container, in kilograms (kg).");
+    Field(x => x.Volume)
+      .Description("The volume of the container, in liters (L).");
   }
 }

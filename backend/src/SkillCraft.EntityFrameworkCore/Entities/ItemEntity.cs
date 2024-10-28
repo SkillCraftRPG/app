@@ -54,7 +54,12 @@ internal class ItemEntity : AggregateEntity
   }
   public ContainerPropertiesModel GetContainerProperties()
   {
-    return new ContainerPropertiesModel();
+    Dictionary<string, string> properties = (Properties == null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(Properties)) ?? [];
+    return new ContainerPropertiesModel
+    {
+      Capacity = properties.TryGetValue(nameof(IContainerProperties.Capacity), out string? capacity) ? double.Parse(capacity) : null,
+      Volume = properties.TryGetValue(nameof(IContainerProperties.Volume), out string? volume) ? double.Parse(volume) : null
+    };
   }
   public DevicePropertiesModel GetDeviceProperties()
   {
@@ -62,7 +67,7 @@ internal class ItemEntity : AggregateEntity
   }
   public EquipmentPropertiesModel GetEquipmentProperties()
   {
-    return new EquipmentPropertiesModel();
+    return new EquipmentPropertiesModel(); // TODO(fpion): implement
   }
   public MiscellaneousPropertiesModel GetMiscellaneousProperties()
   {
@@ -74,7 +79,7 @@ internal class ItemEntity : AggregateEntity
   }
   public WeaponPropertiesModel GetWeaponProperties()
   {
-    return new WeaponPropertiesModel();
+    return new WeaponPropertiesModel(); // TODO(fpion): implement
   }
 
   public void SetProperties(Item.ConsumablePropertiesUpdatedEvent @event)
@@ -87,7 +92,16 @@ internal class ItemEntity : AggregateEntity
   {
     base.Update(@event);
 
-    Properties = null;
+    Dictionary<string, string> properties = new(capacity: 2);
+    if (@event.Properties.Capacity.HasValue)
+    {
+      properties[nameof(IContainerProperties.Capacity)] = @event.Properties.Capacity.Value.ToString();
+    }
+    if (@event.Properties.Volume.HasValue)
+    {
+      properties[nameof(IContainerProperties.Volume)] = @event.Properties.Volume.Value.ToString();
+    }
+    Properties = properties.Count == 0 ? null : JsonSerializer.Serialize(properties);
   }
   public void SetProperties(Item.DevicePropertiesUpdatedEvent @event)
   {
