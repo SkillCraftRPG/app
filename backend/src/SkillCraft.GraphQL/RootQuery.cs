@@ -4,6 +4,7 @@ using SkillCraft.GraphQL.Castes;
 using SkillCraft.GraphQL.Comments;
 using SkillCraft.GraphQL.Customizations;
 using SkillCraft.GraphQL.Educations;
+using SkillCraft.GraphQL.Items;
 using SkillCraft.GraphQL.Languages;
 using SkillCraft.GraphQL.Lineages;
 using SkillCraft.GraphQL.Parties;
@@ -24,6 +25,7 @@ internal class RootQuery : ObjectGraphType
     CommentQueries.Register(this);
     CustomizationQueries.Register(this);
     EducationQueries.Register(this);
+    ItemQueries.Register(this);
     LanguageQueries.Register(this);
     LineageQueries.Register(this);
     PartyQueries.Register(this);
