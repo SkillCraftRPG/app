@@ -469,6 +469,9 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsAttunementRequired")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -507,6 +510,8 @@ namespace SkillCraft.EntityFrameworkCore.PostgreSQL.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("CreatedOn");
+
+                    b.HasIndex("IsAttunementRequired");
 
                     b.HasIndex("Name");
 
