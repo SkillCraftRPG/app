@@ -4,8 +4,6 @@ namespace SkillCraft.Contracts.Items;
 
 public record CreateOrReplaceItemPayload
 {
-  public ItemCategory Category { get; set; }
-
   public string Name { get; set; }
   public string? Description { get; set; }
 

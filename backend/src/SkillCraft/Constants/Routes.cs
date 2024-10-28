@@ -10,6 +10,7 @@ internal static class Routes
   public const string Comment = "comments";
   public const string Customization = "customizations";
   public const string Education = "educations";
+  public const string Item = "items";
   public const string Language = "languages";
   public const string Lineage = "lineages";
   public const string Party = "parties";
@@ -25,6 +26,7 @@ internal static class Routes
     [Comment] = EntityType.Comment,
     [Customization] = EntityType.Customization,
     [Education] = EntityType.Education,
+    [Item] = EntityType.Item,
     [Language] = EntityType.Language,
     [Lineage] = EntityType.Lineage,
     [Party] = EntityType.Party,
