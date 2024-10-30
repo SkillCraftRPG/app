@@ -6,6 +6,7 @@ namespace SkillCraft.Domain.Items.Properties;
 
 public partial record WeaponProperties : PropertiesBase
 {
+  [JsonIgnore]
   public override ItemCategory Category { get; } = ItemCategory.Weapon;
 
   public int Attack { get; }
@@ -20,6 +21,11 @@ public partial record WeaponProperties : PropertiesBase
 
   public WeaponRange? Range { get; }
   public int? ReloadCount { get; }
+
+  [JsonIgnore]
+  public override int Size => 4 /* Attack */ + 4 /* Resistance */ + _traits.Count * 4
+    + Damages.Sum(d => d.Size) + VersatileDamages.Sum(d => d.Size)
+    + WeaponRange.Size + 4 /* ReloadCount */;
 
   [JsonConstructor]
   public WeaponProperties(

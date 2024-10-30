@@ -4,6 +4,8 @@ namespace SkillCraft.Domain.Items.Properties;
 
 public record WeaponRange
 {
+  public const int Size = 4 /* Normal */ + 4 /* Long */;
+
   public int? Normal { get; }
   public int? Long { get; }
 

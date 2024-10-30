@@ -6,10 +6,14 @@ namespace SkillCraft.Domain.Items.Properties;
 
 public record ContainerProperties : PropertiesBase, IContainerProperties
 {
+  [JsonIgnore]
   public override ItemCategory Category { get; } = ItemCategory.Container;
 
   public double? Capacity { get; }
   public double? Volume { get; }
+
+  [JsonIgnore]
+  public override int Size { get; } = 8 /* Capacity */ + 8 /* Volume */;
 
   public ContainerProperties(IContainerProperties container) : this(container.Capacity, container.Volume)
   {
