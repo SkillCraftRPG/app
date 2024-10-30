@@ -6,11 +6,7 @@ namespace SkillCraft.Application.Comments;
 
 internal static class CommentExtensions
 {
-  private const EntityType Type = EntityType.Comment;
+  public static EntityMetadata GetMetadata(this Comment comment) => new(comment.WorldId, new EntityKey(EntityType.Comment, comment.Id.ToGuid()), comment.CalculateSize());
 
-  public static EntityMetadata GetMetadata(this Comment comment)
-  {
-    long size = 4 /* EntityType */ + 16 /* EntityId */ + comment.Text.Size;
-    return new EntityMetadata(comment.WorldId, new EntityKey(Type, comment.Id.ToGuid()), size);
-  }
+  private static long CalculateSize(this Comment comment) => 4 /* EntityType */ + 16 /* EntityId */ + comment.Text.Size;
 }

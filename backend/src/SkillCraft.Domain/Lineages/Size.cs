@@ -20,4 +20,6 @@ public record Size
     Roll = roll;
     new SizeValidator().ValidateAndThrow(this);
   }
+
+  public int GetSize() => 4 /* Category */ + (Roll?.Size ?? 0);
 }
