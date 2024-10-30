@@ -17,7 +17,7 @@ internal static class ItemExtensions
   }
   public static EntityMetadata GetMetadata(this ItemModel item)
   {
-    long size = item.Name.Length + (item.Description?.Length ?? 0) + 8 + 8 + 1 + 4; // TODO(fpion): Properties
-    return new EntityMetadata(new WorldId(item.World.Id), new EntityKey(Type, item.Id), size);
+    // TODO(fpion): remove this method from all entity extensions
+    return new EntityMetadata(new WorldId(item.World.Id), new EntityKey(Type, item.Id), size: 0);
   }
 }

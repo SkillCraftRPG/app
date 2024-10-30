@@ -75,7 +75,9 @@ internal class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Ite
 
     if (payload.Consumable != null)
     {
-      item.SetProperties(payload.Consumable.ToConsumableProperties(item.WorldId), userId); // TODO(fpion): ensure replacement item exists
+      ConsumableProperties consumable = payload.Consumable.ToConsumableProperties(item.WorldId);
+      await EnsureItemExistsAsync(consumable, cancellationToken);
+      item.SetProperties(consumable, userId);
     }
     if (payload.Container != null)
     {
@@ -107,5 +109,15 @@ internal class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Ite
     await _sender.Send(new SaveItemCommand(item), cancellationToken);
 
     return await _itemQuerier.ReadAsync(item, cancellationToken);
+  }
+
+  private async Task EnsureItemExistsAsync(ConsumableProperties properties, CancellationToken cancellationToken)
+  {
+    if (properties.ReplaceWithItemWhenEmptyId.HasValue
+      && await _itemRepository.LoadAsync(properties.ReplaceWithItemWhenEmptyId.Value, cancellationToken) == null)
+    {
+      string propertyName = string.Join('.', nameof(UpdateItemPayload.Consumable), nameof(UpdateItemPayload.Consumable.ReplaceWithItemWhenEmptyId));
+      throw new ItemNotFoundException(properties.ReplaceWithItemWhenEmptyId.Value, propertyName);
+    }
   }
 }

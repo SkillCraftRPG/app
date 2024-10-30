@@ -138,6 +138,36 @@ public class CreateOrReplaceItemCommandHandlerTests
     Assert.Null(result.Item);
   }
 
+  [Theory(DisplayName = "It should throw ItemNotFoundException when the consumable replacement item could not be found.")]
+  [InlineData(null)]
+  [InlineData("4d3d3836-cec3-4c4b-9197-a8ec70789e47")]
+  public async Task It_should_throw_ItemNotFoundException_when_the_consumable_replacement_item_could_not_be_found(string? itemId)
+  {
+    Guid? entityId = itemId == null ? null : Guid.Parse(itemId);
+    if (entityId.HasValue)
+    {
+      Item item = new(_world.Id, new Name("Potion de Vitalité"), new ConsumableProperties(charges: 1, removeWhenEmpty: true, replaceWithItemWhenEmptyId: null), _world.OwnerId, entityId);
+      _itemRepository.Setup(x => x.LoadAsync(item.Id, _cancellationToken)).ReturnsAsync(item);
+    }
+
+    CreateOrReplaceItemPayload payload = new("Potion de Vitalité")
+    {
+      Consumable = new ConsumablePropertiesModel
+      {
+        Charges = 1,
+        RemoveWhenEmpty = false,
+        ReplaceWithItemWhenEmptyId = Guid.NewGuid()
+      }
+    };
+    CreateOrReplaceItemCommand command = new(entityId, payload, Version: null);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<ItemNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.Consumable.ReplaceWithItemWhenEmptyId, exception.ItemId);
+    Assert.Equal("Consumable.ReplaceWithItemWhenEmptyId", exception.PropertyName);
+  }
+
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
