@@ -36,7 +36,7 @@ internal class TalentRepository : Logitar.EventSourcing.EntityFrameworkCore.Rela
 
   public Task<Talent?> LoadAsync(WorldId worldId, Skill skill, CancellationToken cancellationToken)
   {
-    throw new NotImplementedException(); // TODO(fpion): implement
+    throw new NotImplementedException(); // TODO(fpion): implement load talent by world ID and skill
   }
 
   public async Task SaveAsync(Talent talent, CancellationToken cancellationToken)

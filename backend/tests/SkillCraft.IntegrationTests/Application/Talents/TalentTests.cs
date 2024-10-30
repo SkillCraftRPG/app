@@ -95,7 +95,7 @@ public class TalentTests : IntegrationTests
 
     Assert.Equal(payload.AllowMultiplePurchases, talent.AllowMultiplePurchases);
     Assert.Null(talent.Skill);
-    //Assert.Equal(_coupDeBouclier.EntityId, talent.RequiredTalent?.Id); // TODO(fpion): implement
+    //Assert.Equal(_coupDeBouclier.EntityId, talent.RequiredTalent?.Id); // TODO(fpion): complete talent unit tests
 
     Assert.NotNull(await SkillCraftContext.Talents.AsNoTracking().SingleOrDefaultAsync(x => x.Id == talent.Id));
   }
@@ -134,7 +134,7 @@ public class TalentTests : IntegrationTests
 
     Assert.Equal(payload.AllowMultiplePurchases, talent.AllowMultiplePurchases);
     Assert.Null(talent.Skill);
-    //Assert.Equal(_formationMartiale.EntityId, talent.RequiredTalent?.Id); // TODO(fpion): implement
+    //Assert.Equal(_formationMartiale.EntityId, talent.RequiredTalent?.Id); // TODO(fpion): complete talent unit tests
   }
 
   [Fact(DisplayName = "It should return empty search results.")]
@@ -211,6 +211,6 @@ public class TalentTests : IntegrationTests
 
     Assert.Equal(_manœuvresDeCombat.AllowMultiplePurchases, talent.AllowMultiplePurchases);
     Assert.Equal(_manœuvresDeCombat.Skill, talent.Skill);
-    //Assert.Equal(_formationMartiale.EntityId, talent.RequiredTalent?.Id); // TODO(fpion): implement
+    //Assert.Equal(_formationMartiale.EntityId, talent.RequiredTalent?.Id); // TODO(fpion): complete talent unit tests
   }
 }

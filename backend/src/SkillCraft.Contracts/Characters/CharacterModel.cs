@@ -4,5 +4,5 @@ namespace SkillCraft.Contracts.Characters;
 
 public class CharacterModel : Aggregate
 {
-  // TODO(fpion): implement
+  // TODO(fpion): complete character model
 }

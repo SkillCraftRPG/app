@@ -18,6 +18,6 @@ internal class CharacterQuerier : ICharacterQuerier
   }
   public Task<CharacterModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
-    throw new NotImplementedException(); // TODO(fpion): implement
+    throw new NotImplementedException(); // TODO(fpion): implement character read
   }
 }
