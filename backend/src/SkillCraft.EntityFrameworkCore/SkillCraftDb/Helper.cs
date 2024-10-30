@@ -21,7 +21,7 @@ internal static class Helper
     EntityType.Personality => Personalities.Table,
     EntityType.Talent => Talents.Table,
     EntityType.World => Worlds.Table,
-    _ => throw new ArgumentException($"The entity type '{entityType}' is not supported."),
+    _ => throw new ArgumentException($"The entity type '{entityType}' is not supported.", nameof(entityType)),
   };
 
   public static string Normalize(Slug slug) => Normalize(slug.Value);
