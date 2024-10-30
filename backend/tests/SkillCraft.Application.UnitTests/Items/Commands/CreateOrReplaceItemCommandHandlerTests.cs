@@ -84,15 +84,25 @@ public class CreateOrReplaceItemCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Item, _cancellationToken), Times.Once);
 
+    WeaponProperties properties = payload.Weapon.ToWeaponProperties();
     _sender.Verify(x => x.Send(
       It.Is<SaveItemCommand>(y => (!parsed || y.Item.EntityId == id)
         && y.Item.Name.Value == payload.Name.Trim()
         && y.Item.Description != null && y.Item.Description.Value == payload.Description.Trim()
         && y.Item.Value == payload.Value
         && y.Item.Weight == payload.Weight
-        && y.Item.IsAttunementRequired == payload.IsAttunementRequired), // TODO(fpion): properties
+        && y.Item.IsAttunementRequired == payload.IsAttunementRequired
+        && AreEqual(y.Item.Properties, properties)),
       _cancellationToken), Times.Once);
   }
+  private static bool AreEqual(PropertiesBase actual, WeaponProperties expected) => actual is WeaponProperties weapon
+    && expected.Attack == weapon.Attack
+    && expected.Resistance == weapon.Resistance
+    && expected.Traits.SequenceEqual(weapon.Traits)
+    && expected.Damages.SequenceEqual(weapon.Damages)
+    && expected.VersatileDamages.SequenceEqual(weapon.VersatileDamages)
+    && (expected.Range == null ? weapon.Range == null : expected.Range.Equals(weapon.Range))
+    && expected.ReloadCount == weapon.ReloadCount;
 
   [Fact(DisplayName = "It should replace an existing item.")]
   public async Task It_should_replace_an_existing_item()
@@ -124,7 +134,8 @@ public class CreateOrReplaceItemCommandHandlerTests
         && y.Item.Description == null
         && y.Item.Value == payload.Value
         && y.Item.Weight == payload.Weight
-        && y.Item.IsAttunementRequired == payload.IsAttunementRequired),
+        && y.Item.IsAttunementRequired == payload.IsAttunementRequired
+        && y.Item.Properties == new MoneyProperties(payload.Money)),
       _cancellationToken), Times.Once);
   }
 
@@ -225,7 +236,8 @@ public class CreateOrReplaceItemCommandHandlerTests
         && y.Item.Description == description
         && y.Item.Value == payload.Value
         && y.Item.Weight == payload.Weight
-        && y.Item.IsAttunementRequired == payload.IsAttunementRequired),
+        && y.Item.IsAttunementRequired == payload.IsAttunementRequired
+        && y.Item.Properties == reference.Properties),
       _cancellationToken), Times.Once);
   }
 }

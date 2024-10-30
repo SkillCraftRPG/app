@@ -4,7 +4,7 @@ using SkillCraft.Contracts.Items.Properties;
 
 namespace SkillCraft.Domain.Items.Properties;
 
-public partial record WeaponProperties : PropertiesBase
+public record WeaponProperties : PropertiesBase
 {
   [JsonIgnore]
   public override ItemCategory Category { get; } = ItemCategory.Weapon;
