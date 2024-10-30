@@ -6,6 +6,7 @@ using SkillCraft.Application.Characters.Creation;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Educations;
+using SkillCraft.Application.Items;
 using SkillCraft.Application.Languages;
 using SkillCraft.Application.Lineages;
 using SkillCraft.Application.Permissions;
@@ -20,6 +21,7 @@ using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
@@ -41,6 +43,8 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="InvalidExtraAttributesException"></exception>
 /// <exception cref="InvalidExtraLanguagesException"></exception>
 /// <exception cref="InvalidSkillTalentSelectionException"></exception>
+/// <exception cref="InvalidStartingWealthSelectionException"></exception>
+/// <exception cref="ItemNotFoundException"></exception>
 /// <exception cref="LanguagesCannotIncludeLineageLanguageException"></exception>
 /// <exception cref="LanguagesNotFoundException"></exception>
 /// <exception cref="LineageNotFoundException"></exception>
@@ -151,6 +155,16 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
         options.Notes = new Description(string.Join("; ", notes));
       }
       character.SetTalent(talent, options, userId);
+    }
+
+    if (payload.StartingWealth != null)
+    {
+      Item item = await _sender.Send(new ResolveItemQuery(command, payload.StartingWealth.ItemId), cancellationToken);
+      SetItemOptions options = new()
+      {
+        Quantity = payload.StartingWealth.Quantity
+      };
+      character.AddItem(item, options, userId);
     }
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);

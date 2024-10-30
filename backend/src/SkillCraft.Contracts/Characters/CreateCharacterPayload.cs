@@ -23,6 +23,8 @@ public record CreateCharacterPayload
 
   public List<Guid> TalentIds { get; set; }
 
+  public StartingWealthPayload? StartingWealth { get; set; }
+
   public CreateCharacterPayload() : this(string.Empty)
   {
   }

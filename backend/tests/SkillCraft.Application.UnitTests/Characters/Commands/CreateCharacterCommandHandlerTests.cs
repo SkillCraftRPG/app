@@ -12,6 +12,8 @@ using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Items;
+using SkillCraft.Domain.Items.Properties;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
@@ -45,6 +47,7 @@ public class CreateCharacterCommandHandlerTests
   private readonly Caste _caste;
   private readonly Education _education;
   private readonly Language _language;
+  private readonly Item _item;
 
   private readonly Talent _acrobatics;
   private readonly Talent _athletics;
@@ -86,6 +89,7 @@ public class CreateCharacterCommandHandlerTests
       Skill = Skill.Resistance
     };
     _language = new(_world.Id, new Name("Celfique"), _world.OwnerId);
+    _item = new(_world.Id, new Name("Denier"), new MoneyProperties(), _world.OwnerId);
 
     _acrobatics = new(_world.Id, tier: 0, new Name("Acrobaties"), _world.OwnerId);
     _athletics = new(_world.Id, tier: 0, new Name("Athlétisme"), _world.OwnerId);
@@ -125,7 +129,12 @@ public class CreateCharacterCommandHandlerTests
       },
       CasteId = _caste.EntityId,
       EducationId = _education.EntityId,
-      TalentIds = [_acrobatics.EntityId, _athletics.EntityId]
+      TalentIds = [_acrobatics.EntityId, _athletics.EntityId],
+      StartingWealth = new StartingWealthPayload
+      {
+        ItemId = _item.EntityId,
+        Quantity = 100
+      }
     };
     CreateCharacterCommand command = new(payload);
     command.Contextualize(_world);
@@ -143,6 +152,7 @@ public class CreateCharacterCommandHandlerTests
       && y.Parent == _species && y.Ids == payload.LanguageIds), _cancellationToken)).ReturnsAsync([_language]);
     _sender.Setup(x => x.Send(It.Is<ResolveTalentsQuery>(y => y.Activity == command && y.Caste == _caste
       && y.Education == _education && y.Ids == payload.TalentIds), _cancellationToken)).ReturnsAsync([_acrobatics, _athletics, _melee, _resistance]);
+    _sender.Setup(x => x.Send(It.Is<ResolveItemQuery>(y => y.Activity == command && y.Id == _item.EntityId), _cancellationToken)).ReturnsAsync(_item);
 
     CharacterModel character = new();
     _characterQuerier.Setup(x => x.ReadAsync(It.IsAny<Character>(), _cancellationToken)).ReturnsAsync(character);
@@ -167,7 +177,7 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.EducationId == _education.Id
       && HasLineageExtraLanguage(y.Character, _language)
       && HasTalent(y.Character, _acrobatics) && HasTalent(y.Character, _athletics) && HasTalent(y.Character, _melee) && HasTalent(y.Character, _resistance)
-      ), _cancellationToken), Times.Once);
+      && HasItem(y.Character, _item, payload.StartingWealth.Quantity)), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -199,12 +209,17 @@ public class CreateCharacterCommandHandlerTests
       },
       CasteId = Guid.NewGuid(),
       EducationId = Guid.NewGuid(),
-      TalentIds = [Guid.NewGuid()]
+      TalentIds = [Guid.NewGuid()],
+      StartingWealth = new StartingWealthPayload
+      {
+        ItemId = Guid.Empty,
+        Quantity = -100
+      }
     };
     CreateCharacterCommand command = new(payload);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(10, exception.Errors.Count());
+    Assert.Equal(12, exception.Errors.Count());
 
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "PersonalityId" && (Guid?)e.AttemptedValue == payload.PersonalityId);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "CustomizationIds[0]");
@@ -216,6 +231,16 @@ public class CreateCharacterCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "OptionalAttributesValidator" && e.PropertyName == "Attributes.Optional");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "Attributes.Extra[0]" && (Attribute?)e.AttemptedValue == payload.Attributes.Extra.Single());
     Assert.Contains(exception.Errors, e => e.ErrorCode == "CreateCharacterValidator" && e.PropertyName == "TalentIds");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "StartingWealth.ItemId");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanValidator" && e.PropertyName == "StartingWealth.Quantity");
+  }
+
+  private static bool HasItem(Character character, Item item, int quantity)
+  {
+    return character.Inventory.Values.Any(i => i.ItemId == item.Id && i.ContainingItemId == null && i.Quantity == quantity
+      && i.IsAttuned == null && !i.IsEquipped && i.IsIdentified && i.IsProficient == null && i.Skill == null
+      && i.RemainingCharges == null && i.RemainingResistance == null
+      && i.NameOverride == null && i.DescriptionOverride == null && i.ValueOverride == null);
   }
 
   private static bool HasLineageExtraLanguage(Character character, Language language)

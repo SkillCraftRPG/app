@@ -5,6 +5,7 @@ using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
+using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Personalities;
@@ -44,6 +45,9 @@ public class Character : AggregateRoot
 
   private readonly Dictionary<TalentId, TalentMetadata> _talents = [];
   public IReadOnlyDictionary<TalentId, TalentMetadata> Talents => _talents.AsReadOnly();
+
+  private readonly Dictionary<Guid, CharacterItem> _inventory = [];
+  public IReadOnlyDictionary<Guid, CharacterItem> Inventory => _inventory.AsReadOnly();
 
   public int Level => 0;
   public int Tier => 0;
@@ -113,6 +117,46 @@ public class Character : AggregateRoot
 
     CasteId = @event.CasteId;
     EducationId = @event.EducationId;
+  }
+
+  public void AddItem(Item item, UserId userId) => AddItem(item, options: null, userId);
+  public void AddItem(Item item, SetItemOptions? options, UserId userId) => SetItem(Guid.NewGuid(), item, options, userId);
+  public void SetItem(Guid inventoryId, Item item, UserId userId) => SetItem(inventoryId, item, options: null, userId);
+  public void SetItem(Guid inventoryId, Item item, SetItemOptions? options, UserId userId)
+  {
+    if (item.WorldId != WorldId)
+    {
+      throw new ArgumentException("The item does not reside in the same world as the character.", nameof(item));
+    }
+
+    options ??= new();
+    // TODO(fpion): validate options or CharacterItem
+
+    _ = _inventory.TryGetValue(inventoryId, out CharacterItem? existingItem);
+
+    CharacterItem characterItem = new(
+      item.Id,
+      options.ContainingItemId != null ? options.ContainingItemId.Value : existingItem?.ContainingItemId,
+      options.Quantity ?? existingItem?.Quantity ?? 1,
+      options.IsAttuned != null ? options.IsAttuned.Value : existingItem?.IsAttuned,
+      options.IsEquipped ?? existingItem?.IsEquipped ?? false,
+      options.IsIdentified ?? existingItem?.IsIdentified ?? true,
+      options.IsProficient != null ? options.IsProficient.Value : existingItem?.IsProficient,
+      options.Skill != null ? options.Skill.Value : existingItem?.Skill,
+      options.RemainingCharges != null ? options.RemainingCharges.Value : existingItem?.RemainingCharges,
+      options.RemainingResistance != null ? options.RemainingResistance.Value : existingItem?.RemainingResistance,
+      options.NameOverride != null ? options.NameOverride.Value : existingItem?.NameOverride,
+      options.DescriptionOverride != null ? options.DescriptionOverride.Value : existingItem?.DescriptionOverride,
+      options.ValueOverride != null ? options.ValueOverride.Value : existingItem?.ValueOverride);
+
+    if (existingItem == null || existingItem != characterItem)
+    {
+      Raise(new InventoryUpdatedEvent(inventoryId, characterItem), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(InventoryUpdatedEvent @event)
+  {
+    _inventory[@event.InventoryId] = @event.Item;
   }
 
   public void SetLanguage(Language language, Description? notes, UserId userId)
@@ -267,6 +311,18 @@ public class Character : AggregateRoot
 
       CasteId = casteId;
       EducationId = educationId;
+    }
+  }
+
+  public class InventoryUpdatedEvent : DomainEvent, INotification
+  {
+    public Guid InventoryId { get; }
+    public CharacterItem Item { get; }
+
+    public InventoryUpdatedEvent(Guid inventoryId, CharacterItem item)
+    {
+      InventoryId = inventoryId;
+      Item = item;
     }
   }
 
