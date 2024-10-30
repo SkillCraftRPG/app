@@ -154,7 +154,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       {
         options.Notes = new Description(string.Join("; ", notes));
       }
-      character.SetTalent(talent, options, userId);
+      character.AddTalent(talent, options, userId);
     }
 
     if (payload.StartingWealth != null)
