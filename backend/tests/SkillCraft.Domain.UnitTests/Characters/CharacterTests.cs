@@ -29,7 +29,13 @@ public class CharacterTests
   private readonly Caste _caste;
   private readonly Education _education;
   private readonly Language _language;
-  private readonly Talent _talent;
+
+  private readonly Talent _melee;
+  private readonly Talent _otherWorldTalent;
+  private readonly Talent _formationMartiale;
+  private readonly Talent _cuirasse;
+  private readonly Talent _occultisme;
+  private readonly Talent _elementarisme;
 
   private readonly Item _commonClothes;
   private readonly Item _crystalOfDoom;
@@ -54,7 +60,25 @@ public class CharacterTests
     _caste = new(_world.Id, new Name("Milicien"), _world.OwnerId);
     _education = new(_world.Id, new Name("Champs de bataille"), _world.OwnerId);
     _language = new(_world.Id, new Name("Orrinique"), _world.OwnerId);
-    _talent = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
+
+    _melee = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
+    _otherWorldTalent = new(WorldId.NewId(), tier: 0, new Name("Mêlée"), UserId.NewId());
+
+    _formationMartiale = new(_world.Id, tier: 0, new Name("Formation martiale"), _world.OwnerId);
+    _formationMartiale.SetRequiredTalent(_melee);
+    _formationMartiale.Update(_world.OwnerId);
+
+    _cuirasse = new(_world.Id, tier: 1, new Name("Cuirassé"), _world.OwnerId);
+    _cuirasse.SetRequiredTalent(_formationMartiale);
+    _cuirasse.Update(_world.OwnerId);
+
+    _occultisme = new(_world.Id, tier: 0, new Name("Occultisme"), _world.OwnerId);
+    _elementarisme = new(_world.Id, tier: 0, new Name("Élémentarisme"), _world.OwnerId)
+    {
+      AllowMultiplePurchases = true
+    };
+    _elementarisme.SetRequiredTalent(_occultisme);
+    _elementarisme.Update(_world.OwnerId);
 
     _commonClothes = new(_world.Id, new Name("Vêtements communs"), new EquipmentProperties(defense: 0, resistance: null, traits: []), _world.OwnerId);
     _crystalOfDoom = new(_world.Id, new Name("Cristal de Damnation"), new MiscellaneousProperties(), _world.OwnerId);
@@ -84,7 +108,7 @@ public class CharacterTests
       _world.OwnerId);
   }
 
-  [Fact(DisplayName = "AddItem: it should a new item with options.")]
+  [Fact(DisplayName = "AddItem: it should add a new item with options.")]
   public void AddItem_it_should_add_a_new_item_with_options()
   {
     SetItemOptions options = new()
@@ -112,7 +136,7 @@ public class CharacterTests
     Assert.Null(item.ValueOverride);
   }
 
-  [Fact(DisplayName = "AddItem: it should a new item without options.")]
+  [Fact(DisplayName = "AddItem: it should add a new item without options.")]
   public void AddItem_it_should_add_a_new_item_without_options()
   {
     _character.AddItem(_commonClothes, _world.OwnerId);
@@ -139,6 +163,119 @@ public class CharacterTests
     var exception = Assert.Throws<ArgumentException>(() => _character.AddItem(_otherWorldItem, _world.OwnerId));
     Assert.StartsWith("The item does not reside in the same world as the character.", exception.Message);
     Assert.Equal("item", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should add a new talent with options.")]
+  public void AddTalent_it_should_add_a_new_talent_with_options()
+  {
+    SetTalentOptions options = new()
+    {
+      Cost = 1,
+      Precision = new Name("Melee"),
+      Notes = new Description("Discounted by Aspect: Farouche")
+    };
+    _character.AddTalent(_melee, options, _world.OwnerId);
+
+    CharacterTalent talent = Assert.Single(_character.Talents.Values);
+    Assert.Equal(_melee.Id, talent.TalentId);
+    Assert.Equal(options.Cost, talent.Cost);
+    Assert.Equal(options.Precision, talent.Precision);
+    Assert.Equal(options.Notes, talent.Notes);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should add a new talent without options.")]
+  public void AddTalent_it_should_add_a_new_talent_without_options()
+  {
+    _character.AddTalent(_melee, _world.OwnerId);
+
+    CharacterTalent talent = Assert.Single(_character.Talents.Values);
+    Assert.Equal(_melee.Id, talent.TalentId);
+    Assert.Equal(_melee.Tier + 2, talent.Cost);
+    Assert.Null(talent.Precision);
+    Assert.Null(talent.Notes);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should throw ArgumentException when the cost exceeds the maximum cost.")]
+  public void AddTalent_it_should_throw_ArgumentException_when_the_cost_exceeds_the_maximum_cost()
+  {
+    SetTalentOptions options = new()
+    {
+      Cost = 3
+    };
+    var exception = Assert.Throws<ArgumentException>(() => _character.AddTalent(_melee, options, _world.OwnerId));
+    Assert.StartsWith($"The cost cannot exceed the maximum cost (2) for the talent '{_melee}' of tier 0.", exception.Message);
+    Assert.Equal("options", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should throw ArgumentException when the talent resides in another world.")]
+  public void AddTalent_it_should_throw_ArgumentException_when_the_talent_resides_in_another_world()
+  {
+    var exception = Assert.Throws<ArgumentException>(() => _character.AddTalent(_otherWorldTalent, _world.OwnerId));
+    Assert.StartsWith("The talent does not reside in the same world as the character.", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should throw ArgumentException when the required talent was not purchased first.")]
+  public void AddTalent_it_should_throw_ArgumentException_when_the_required_talent_was_not_purchased_first()
+  {
+    var exception = Assert.Throws<ArgumentException>(() => _character.AddTalent(_formationMartiale, _world.OwnerId));
+    Assert.StartsWith("The character did not purchase the required talent yet.", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should throw ArgumentException when the talent is being purchased multiple times.")]
+  public void AddTalent_it_should_throw_ArgumentException_when_the_talent_is_being_purchased_multiple_times()
+  {
+    _character.AddTalent(_melee, _world.OwnerId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.AddTalent(_melee, _world.OwnerId));
+    Assert.StartsWith("The talent cannot be purchased multiple times.", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should throw ArgumentException when the talent tier is greater than the character tier.")]
+  public void AddTalent_it_should_throw_ArgumentException_when_the_talent_tier_is_greater_than_the_character_tier()
+  {
+    var exception = Assert.Throws<ArgumentException>(() => _character.AddTalent(_cuirasse, _world.OwnerId));
+    Assert.StartsWith("The talent tier (1) cannot exceed the character tier (0).", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "AddTalent: it should throw ArgumentException when there is not enough remaining talent points.")]
+  public void AddTalent_it_should_throw_ArgumentException_when_there_is_not_enough_remaining_talent_points()
+  {
+    _character.AddTalent(_melee, _world.OwnerId);
+    _character.AddTalent(_formationMartiale, _world.OwnerId);
+    _character.AddTalent(_occultisme, new SetTalentOptions
+    {
+      Cost = 1,
+      Notes = new Description("Discounted by Aspect: Tenace")
+    }, _world.OwnerId);
+    _character.AddTalent(_elementarisme, new SetTalentOptions { Precision = new Name("Feu") }, _world.OwnerId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.AddTalent(
+      _elementarisme,
+      new SetTalentOptions { Precision = new Name("Air") },
+      _world.OwnerId));
+    Assert.StartsWith("The cost (2) exceeds the remaining talent points (1).", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should account for correct talent points.")]
+  public void It_should_account_for_correct_talent_points()
+  {
+    Assert.Equal(8, _character.AvailableTalentPoints);
+    Assert.Equal(0, _character.SpentTalentPoints);
+    Assert.Equal(8, _character.RemainingTalentPoints);
+
+    _character.AddTalent(_melee, new SetTalentOptions { Cost = 1 }, _world.OwnerId);
+    _character.SetTalent(Guid.NewGuid(), _formationMartiale, _world.OwnerId);
+    _character.SetTalent(Guid.NewGuid(), _occultisme, new SetTalentOptions { Cost = 1 }, _world.OwnerId);
+    _character.AddTalent(_elementarisme, _world.OwnerId);
+
+    Assert.Equal(8, _character.AvailableTalentPoints);
+    Assert.Equal(6, _character.SpentTalentPoints);
+    Assert.Equal(2, _character.RemainingTalentPoints);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the personality's gift.")]
@@ -387,78 +524,127 @@ public class CharacterTests
   }
 
   [Fact(DisplayName = "SetTalent: it should add a new talent.")]
-  public void SetTalent_it_should_add_a_new_talent()
+  public void SetTalent_it_should_add_a_new_talent_without_options()
   {
-    _character.SetTalent(_talent, _world.OwnerId);
+    Guid id = Guid.NewGuid();
+    _character.SetTalent(id, _melee, _world.OwnerId);
 
-    KeyValuePair<TalentId, TalentMetadata> talent = Assert.Single(_character.Talents);
-    Assert.Equal(_talent.Id, talent.Key);
-    Assert.Equal(_talent.Tier + 2, talent.Value.Cost);
-    Assert.Null(talent.Value.Precision);
-    Assert.Null(talent.Value.Notes);
+    Assert.Equal(id, Assert.Single(_character.Talents.Keys));
+
+    CharacterTalent talent = Assert.Single(_character.Talents.Values);
+    Assert.Equal(_melee.Id, talent.TalentId);
+    Assert.Equal(_melee.Tier + 2, talent.Cost);
+    Assert.Null(talent.Precision);
+    Assert.Null(talent.Notes);
   }
 
-  [Fact(DisplayName = "SetTalent: it should not do anything when the talent metadata did not change.")]
-  public void SetTalent_it_should_not_do_anything_when_the_talent_metadata_did_not_change()
+  [Fact(DisplayName = "SetTalent: it should not do anything when the talent did not change.")]
+  public void SetTalent_it_should_not_do_anything_when_the_talent_did_not_change()
   {
-    _character.SetTalent(_talent, _world.OwnerId);
+    _character.AddTalent(_occultisme, _world.OwnerId);
+
+    Guid id = Guid.NewGuid();
+    SetTalentOptions options = new()
+    {
+      Precision = new Name("Eau")
+    };
+    _character.SetTalent(id, _elementarisme, options, _world.OwnerId);
     _character.ClearChanges();
 
-    _character.SetTalent(_talent, _world.OwnerId);
-    Assert.False(_character.HasChanges);
+    _character.SetTalent(id, _elementarisme, options, _world.OwnerId);
     Assert.Empty(_character.Changes);
+    Assert.False(_character.HasChanges);
   }
 
-  [Fact(DisplayName = "SetTalent: it should replace an existing talent.")]
-  public void SetTalent_it_should_replace_an_existing_talent()
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the cost exceeds the maximum cost.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_the_cost_exceeds_the_maximum_cost()
   {
-    _character.SetTalent(_talent, _world.OwnerId);
+    _character.AddTalent(_melee, _world.OwnerId);
+    Guid id = Assert.Single(_character.Talents.Keys);
 
     SetTalentOptions options = new()
     {
-      Cost = _talent.Tier + 2 - 1,
-      Precision = new Name(Skill.Melee.ToString()),
-      Notes = new Description("Caste: Milicien; Discounted: Farouche (aspect)")
+      Cost = 3
     };
-    _character.SetTalent(_talent, options, _world.OwnerId);
-
-    KeyValuePair<TalentId, TalentMetadata> talent = Assert.Single(_character.Talents);
-    Assert.Equal(_talent.Id, talent.Key);
-    Assert.Equal(options.Cost, talent.Value.Cost);
-    Assert.Equal(options.Precision, talent.Value.Precision);
-    Assert.Equal(options.Notes, talent.Value.Notes);
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(id, _melee, options, _world.OwnerId));
+    Assert.StartsWith($"The cost cannot exceed the maximum cost (2) for the talent '{_melee}' of tier 0.", exception.Message);
+    Assert.Equal("options", exception.ParamName);
   }
 
   [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent resides in another world.")]
   public void SetTalent_it_should_throw_ArgumentException_when_the_talent_resides_in_another_world()
   {
-    UserId userId = UserId.NewId();
-    Talent talent = new(WorldId.NewId(), tier: 0, new Name("Mêlée"), userId);
-
-    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(talent, userId));
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(Guid.NewGuid(), _otherWorldTalent, _world.OwnerId));
     Assert.StartsWith("The talent does not reside in the same world as the character.", exception.Message);
     Assert.Equal("talent", exception.ParamName);
   }
 
-  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent cost is greater than the maximum cost.")]
-  public void SetTalent_it_should_throw_ArgumentException_when_the_talent_tier_is_greater_than_the_maximum_cost()
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the required talent was not purchased first.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_the_required_talent_was_not_purchased_first()
   {
-    SetTalentOptions options = new()
-    {
-      Cost = _talent.Tier + 2 + 1
-    };
-    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(_talent, options, _world.OwnerId));
-    Assert.StartsWith($"The cost cannot exceed the maximum cost (2) for the talent '{_talent}' of tier 0.", exception.Message);
-    Assert.Equal("options", exception.ParamName);
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(Guid.NewGuid(), _formationMartiale, _world.OwnerId));
+    Assert.StartsWith("The character did not purchase the required talent yet.", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent is being purchased multiple times.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_the_talent_is_being_purchased_multiple_times()
+  {
+    _character.AddTalent(_melee, _world.OwnerId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(Guid.NewGuid(), _melee, _world.OwnerId));
+    Assert.StartsWith("The talent cannot be purchased multiple times.", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
   }
 
   [Fact(DisplayName = "SetTalent: it should throw ArgumentException when the talent tier is greater than the character tier.")]
   public void SetTalent_it_should_throw_ArgumentException_when_the_talent_tier_is_greater_than_the_character_tier()
   {
-    Talent talent = new(_world.Id, tier: 2, new Name("Accélération"), _world.OwnerId);
-
-    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(talent, _world.OwnerId));
-    Assert.StartsWith("The talent tier (2) cannot exceed the character tier (0).", exception.Message);
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(Guid.NewGuid(), _cuirasse, _world.OwnerId));
+    Assert.StartsWith("The talent tier (1) cannot exceed the character tier (0).", exception.Message);
     Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should throw ArgumentException when there is not enough remaining talent points.")]
+  public void SetTalent_it_should_throw_ArgumentException_when_there_is_not_enough_remaining_talent_points()
+  {
+    _character.AddTalent(_melee, _world.OwnerId);
+    _character.AddTalent(_formationMartiale, _world.OwnerId);
+    _character.AddTalent(_occultisme, new SetTalentOptions
+    {
+      Cost = 1,
+      Notes = new Description("Discounted by Aspect: Tenace")
+    }, _world.OwnerId);
+    _character.AddTalent(_elementarisme, new SetTalentOptions { Precision = new Name("Feu") }, _world.OwnerId);
+
+    var exception = Assert.Throws<ArgumentException>(() => _character.SetTalent(
+      Guid.NewGuid(),
+      _elementarisme,
+      new SetTalentOptions { Precision = new Name("Air") },
+      _world.OwnerId));
+    Assert.StartsWith("The cost (2) exceeds the remaining talent points (1).", exception.Message);
+    Assert.Equal("talent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "SetTalent: it should update an existing talent.")]
+  public void SetTalent_it_should_update_an_existing_talent()
+  {
+    _character.AddTalent(_occultisme, _world.OwnerId);
+    _character.AddTalent(_elementarisme, new SetTalentOptions { Precision = new Name("Terre") }, _world.OwnerId);
+
+    Guid id = Guid.NewGuid();
+    _character.SetTalent(id, _elementarisme, _world.OwnerId);
+
+    SetTalentOptions options = new()
+    {
+      Precision = new Name("Esprit")
+    };
+    _character.SetTalent(id, _elementarisme, options, _world.OwnerId);
+
+    CharacterTalent talent = _character.Talents[id];
+    Assert.Equal(_elementarisme.Id, talent.TalentId);
+    Assert.Equal(_elementarisme.Tier + 2, talent.Cost);
+    Assert.Equal(options.Precision, talent.Precision);
+    Assert.Equal(options.Notes, talent.Notes);
   }
 }

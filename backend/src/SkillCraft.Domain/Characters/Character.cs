@@ -40,17 +40,22 @@ public class Character : AggregateRoot
   public CasteId CasteId { get; private set; }
   public EducationId EducationId { get; private set; }
 
+  public int Level => 0;
+  public int Tier => 0;
+
   private readonly Dictionary<LanguageId, LanguageMetadata> _languages = [];
   public IReadOnlyDictionary<LanguageId, LanguageMetadata> Languages => _languages.AsReadOnly();
 
-  private readonly Dictionary<TalentId, TalentMetadata> _talents = [];
-  public IReadOnlyDictionary<TalentId, TalentMetadata> Talents => _talents.AsReadOnly();
+  private readonly Dictionary<TalentId, HashSet<Guid>> _talentIds = [];
+  private readonly Dictionary<Guid, CharacterTalent> _talents = [];
+  public IReadOnlyDictionary<Guid, CharacterTalent> Talents => _talents.AsReadOnly();
+
+  public int AvailableTalentPoints => 8 + (Level * 4);
+  public int SpentTalentPoints => _talents.Values.Sum(t => t.Cost);
+  public int RemainingTalentPoints => AvailableTalentPoints - SpentTalentPoints;
 
   private readonly Dictionary<Guid, CharacterItem> _inventory = [];
   public IReadOnlyDictionary<Guid, CharacterItem> Inventory => _inventory.AsReadOnly();
-
-  public int Level => 0;
-  public int Tier => 0;
 
   public Character() : base()
   {
@@ -177,8 +182,10 @@ public class Character : AggregateRoot
     _languages[@event.LanguageId] = @event.Metadata;
   }
 
-  public void SetTalent(Talent talent, UserId userId) => SetTalent(talent, options: null, userId);
-  public void SetTalent(Talent talent, SetTalentOptions? options, UserId userId)
+  public void AddTalent(Talent talent, UserId userId) => AddTalent(talent, options: null, userId);
+  public void AddTalent(Talent talent, SetTalentOptions? options, UserId userId) => SetTalent(Guid.NewGuid(), talent, options, userId);
+  public void SetTalent(Guid id, Talent talent, UserId userId) => SetTalent(id, talent, options: null, userId);
+  public void SetTalent(Guid id, Talent talent, SetTalentOptions? options, UserId userId)
   {
     if (talent.WorldId != WorldId)
     {
@@ -188,6 +195,15 @@ public class Character : AggregateRoot
     {
       throw new ArgumentException($"The talent tier ({talent.Tier}) cannot exceed the character tier ({Tier}).", nameof(talent));
     }
+    else if (talent.RequiredTalentId.HasValue && !_talentIds.ContainsKey(talent.RequiredTalentId.Value))
+    {
+      throw new ArgumentException("The character did not purchase the required talent yet.", nameof(talent));
+    }
+
+    if (!talent.AllowMultiplePurchases && _talentIds.TryGetValue(talent.Id, out HashSet<Guid>? relationIds) && relationIds.Any(relationId => relationId != id))
+    {
+      throw new ArgumentException("The talent cannot be purchased multiple times.", nameof(talent));
+    }
 
     options ??= new();
     int maximumCost = talent.Tier + 2;
@@ -196,16 +212,27 @@ public class Character : AggregateRoot
     {
       throw new ArgumentException($"The cost cannot exceed the maximum cost ({maximumCost}) for the talent '{talent}' of tier {talent.Tier}.", nameof(options));
     }
-
-    TalentMetadata metadata = new(cost, options.Precision, options.Notes);
-    if (!_talents.TryGetValue(talent.Id, out TalentMetadata? existingMetadata) || existingMetadata != metadata)
+    else if (cost > RemainingTalentPoints)
     {
-      Raise(new TalentSet(talent.Id, metadata), userId.ActorId);
+      throw new ArgumentException($"The cost ({cost}) exceeds the remaining talent points ({RemainingTalentPoints}).", nameof(talent));
+    }
+
+    CharacterTalent characterTalent = new(talent.Id, cost, options.Precision, options.Notes);
+    if (!_talents.TryGetValue(id, out CharacterTalent? existingTalent) || existingTalent != characterTalent)
+    {
+      Raise(new TalentUpdatedEvent(id, characterTalent), userId.ActorId);
     }
   }
-  protected virtual void Apply(TalentSet @event)
+  protected virtual void Apply(TalentUpdatedEvent @event)
   {
-    _talents[@event.TalentId] = @event.Metadata;
+    if (!_talentIds.TryGetValue(@event.Talent.TalentId, out HashSet<Guid>? relationIds))
+    {
+      relationIds = [];
+      _talentIds[@event.Talent.TalentId] = relationIds;
+    }
+    relationIds.Add(@event.RelationId);
+
+    _talents[@event.RelationId] = @event.Talent;
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -338,15 +365,15 @@ public class Character : AggregateRoot
     }
   }
 
-  public class TalentSet : DomainEvent, INotification
+  public class TalentUpdatedEvent : DomainEvent, INotification
   {
-    public TalentId TalentId { get; }
-    public TalentMetadata Metadata { get; }
+    public Guid RelationId { get; }
+    public CharacterTalent Talent { get; }
 
-    public TalentSet(TalentId talentId, TalentMetadata metadata)
+    public TalentUpdatedEvent(Guid relationId, CharacterTalent talent)
     {
-      TalentId = talentId;
-      Metadata = metadata;
+      RelationId = relationId;
+      Talent = talent;
     }
   }
 }

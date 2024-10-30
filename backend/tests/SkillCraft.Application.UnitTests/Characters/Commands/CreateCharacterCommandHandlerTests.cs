@@ -250,13 +250,14 @@ public class CreateCharacterCommandHandlerTests
 
   private bool HasTalent(Character character, Talent talent)
   {
-    if (!character.Talents.TryGetValue(talent.Id, out TalentMetadata? metadata) || metadata.Precision != null)
+    CharacterTalent? characterTalent = character.Talents.Values.SingleOrDefault(t => t.TalentId == talent.Id);
+    if (characterTalent == null)
     {
       return false;
     }
 
     int expectedCost = talent.Tier + 2;
-    IEnumerable<string> notes = metadata.Notes?.Value.Split("; ") ?? [];
+    IEnumerable<string> notes = characterTalent.Notes?.Value.Split("; ") ?? [];
     if (talent.Skill.HasValue)
     {
       if (talent.Skill == _caste.Skill && !notes.Contains($"Caste: {_caste.Name}"))
@@ -291,6 +292,6 @@ public class CreateCharacterCommandHandlerTests
       }
     }
 
-    return metadata.Cost == expectedCost;
+    return characterTalent.Cost == expectedCost;
   }
 }
