@@ -261,6 +261,23 @@ public class CharacterTests
     Assert.Equal("talent", exception.ParamName);
   }
 
+  [Fact(DisplayName = "It should account for correct talent points.")]
+  public void It_should_account_for_correct_talent_points()
+  {
+    Assert.Equal(8, _character.AvailableTalentPoints);
+    Assert.Equal(0, _character.SpentTalentPoints);
+    Assert.Equal(8, _character.RemainingTalentPoints);
+
+    _character.AddTalent(_melee, new SetTalentOptions { Cost = 1 }, _world.OwnerId);
+    _character.SetTalent(Guid.NewGuid(), _formationMartiale, _world.OwnerId);
+    _character.SetTalent(Guid.NewGuid(), _occultisme, new SetTalentOptions { Cost = 1 }, _world.OwnerId);
+    _character.AddTalent(_elementarisme, _world.OwnerId);
+
+    Assert.Equal(8, _character.AvailableTalentPoints);
+    Assert.Equal(6, _character.SpentTalentPoints);
+    Assert.Equal(2, _character.RemainingTalentPoints);
+  }
+
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the personality's gift.")]
   public void It_should_throw_ArgumentException_when_a_customization_is_the_same_as_the_personality_s_gift()
   {
