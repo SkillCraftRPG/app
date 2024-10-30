@@ -1,6 +1,9 @@
-﻿using Logitar.EventSourcing;
+﻿using Logitar;
+using Logitar.Data;
+using Logitar.EventSourcing;
 using Logitar.EventSourcing.EntityFrameworkCore.Relational;
 using Logitar.EventSourcing.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using SkillCraft.Contracts;
 using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
@@ -9,9 +12,14 @@ namespace SkillCraft.EntityFrameworkCore.Repositories;
 
 internal class TalentRepository : Logitar.EventSourcing.EntityFrameworkCore.Relational.AggregateRepository, ITalentRepository
 {
-  public TalentRepository(IEventBus eventBus, EventContext eventContext, IEventSerializer eventSerializer)
+  private static readonly string AggregateType = typeof(Talent).GetNamespaceQualifiedName();
+
+  private readonly ISqlHelper _sqlHelper;
+
+  public TalentRepository(IEventBus eventBus, EventContext eventContext, IEventSerializer eventSerializer, ISqlHelper sqlHelper)
     : base(eventBus, eventContext, eventSerializer)
   {
+    _sqlHelper = sqlHelper;
   }
 
   public async Task<IReadOnlyCollection<Talent>> LoadAsync(CancellationToken cancellationToken)
@@ -34,9 +42,24 @@ internal class TalentRepository : Logitar.EventSourcing.EntityFrameworkCore.Rela
     return (await LoadAsync<Talent>(aggregateIds, cancellationToken)).ToArray();
   }
 
-  public Task<Talent?> LoadAsync(WorldId worldId, Skill skill, CancellationToken cancellationToken)
+  public async Task<Talent?> LoadAsync(WorldId worldId, Skill skill, CancellationToken cancellationToken)
   {
-    throw new NotImplementedException(); // TODO(fpion): implement load talent by world ID and skill
+    IQuery query = _sqlHelper.QueryFrom(EventDb.Events.Table)
+      .Join(SkillCraftDb.Talents.AggregateId, EventDb.Events.AggregateId,
+        new OperatorCondition(EventDb.Events.AggregateType, Operators.IsEqualTo(AggregateType))
+      )
+      .Join(SkillCraftDb.Worlds.WorldId, SkillCraftDb.Talents.WorldId)
+      .Where(SkillCraftDb.Worlds.Id, Operators.IsEqualTo(worldId.ToGuid()))
+      .Where(SkillCraftDb.Talents.Skill, Operators.IsEqualTo(skill.ToString()))
+      .SelectAll(EventDb.Events.Table)
+      .Build();
+
+    EventEntity[] events = await EventContext.Events.FromQuery(query)
+      .AsNoTracking()
+      .OrderBy(e => e.Version)
+      .ToArrayAsync(cancellationToken);
+
+    return Load<Talent>(events.Select(EventSerializer.Deserialize)).SingleOrDefault();
   }
 
   public async Task SaveAsync(Talent talent, CancellationToken cancellationToken)
