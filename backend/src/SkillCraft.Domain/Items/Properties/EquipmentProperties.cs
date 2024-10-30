@@ -6,6 +6,7 @@ namespace SkillCraft.Domain.Items.Properties;
 
 public record EquipmentProperties : PropertiesBase
 {
+  [JsonIgnore]
   public override ItemCategory Category { get; } = ItemCategory.Equipment;
 
   public int Defense { get; }
@@ -14,6 +15,9 @@ public record EquipmentProperties : PropertiesBase
   [JsonIgnore]
   private readonly HashSet<EquipmentTrait> _traits;
   public IReadOnlyCollection<EquipmentTrait> Traits => _traits.ToArray().AsReadOnly();
+
+  [JsonIgnore]
+  public override int Size => 4 /* Defense */ + 4 /* Resistance */ + _traits.Count * 4;
 
   public EquipmentProperties(IEquipmentProperties equipment) : this(equipment.Defense, equipment.Resistance, equipment.Traits)
   {

@@ -84,15 +84,25 @@ public class CreateOrReplaceItemCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Item, _cancellationToken), Times.Once);
 
+    WeaponProperties properties = payload.Weapon.ToWeaponProperties();
     _sender.Verify(x => x.Send(
       It.Is<SaveItemCommand>(y => (!parsed || y.Item.EntityId == id)
         && y.Item.Name.Value == payload.Name.Trim()
         && y.Item.Description != null && y.Item.Description.Value == payload.Description.Trim()
         && y.Item.Value == payload.Value
         && y.Item.Weight == payload.Weight
-        && y.Item.IsAttunementRequired == payload.IsAttunementRequired), // TODO(fpion): properties
+        && y.Item.IsAttunementRequired == payload.IsAttunementRequired
+        && AreEqual(y.Item.Properties, properties)),
       _cancellationToken), Times.Once);
   }
+  private static bool AreEqual(PropertiesBase actual, WeaponProperties expected) => actual is WeaponProperties weapon
+    && expected.Attack == weapon.Attack
+    && expected.Resistance == weapon.Resistance
+    && expected.Traits.SequenceEqual(weapon.Traits)
+    && expected.Damages.SequenceEqual(weapon.Damages)
+    && expected.VersatileDamages.SequenceEqual(weapon.VersatileDamages)
+    && (expected.Range == null ? weapon.Range == null : expected.Range.Equals(weapon.Range))
+    && expected.ReloadCount == weapon.ReloadCount;
 
   [Fact(DisplayName = "It should replace an existing item.")]
   public async Task It_should_replace_an_existing_item()
@@ -124,7 +134,8 @@ public class CreateOrReplaceItemCommandHandlerTests
         && y.Item.Description == null
         && y.Item.Value == payload.Value
         && y.Item.Weight == payload.Weight
-        && y.Item.IsAttunementRequired == payload.IsAttunementRequired),
+        && y.Item.IsAttunementRequired == payload.IsAttunementRequired
+        && y.Item.Properties == new MoneyProperties(payload.Money)),
       _cancellationToken), Times.Once);
   }
 
@@ -136,6 +147,36 @@ public class CreateOrReplaceItemCommandHandlerTests
 
     CreateOrReplaceItemResult result = await _handler.Handle(command, _cancellationToken);
     Assert.Null(result.Item);
+  }
+
+  [Theory(DisplayName = "It should throw ItemNotFoundException when the consumable replacement item could not be found.")]
+  [InlineData(null)]
+  [InlineData("4d3d3836-cec3-4c4b-9197-a8ec70789e47")]
+  public async Task It_should_throw_ItemNotFoundException_when_the_consumable_replacement_item_could_not_be_found(string? itemId)
+  {
+    Guid? entityId = itemId == null ? null : Guid.Parse(itemId);
+    if (entityId.HasValue)
+    {
+      Item item = new(_world.Id, new Name("Potion de Vitalité"), new ConsumableProperties(charges: 1, removeWhenEmpty: true, replaceWithItemWhenEmptyId: null), _world.OwnerId, entityId);
+      _itemRepository.Setup(x => x.LoadAsync(item.Id, _cancellationToken)).ReturnsAsync(item);
+    }
+
+    CreateOrReplaceItemPayload payload = new("Potion de Vitalité")
+    {
+      Consumable = new ConsumablePropertiesModel
+      {
+        Charges = 1,
+        RemoveWhenEmpty = false,
+        ReplaceWithItemWhenEmptyId = Guid.NewGuid()
+      }
+    };
+    CreateOrReplaceItemCommand command = new(entityId, payload, Version: null);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<ItemNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.Consumable.ReplaceWithItemWhenEmptyId, exception.ItemId);
+    Assert.Equal("Consumable.ReplaceWithItemWhenEmptyId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -195,7 +236,8 @@ public class CreateOrReplaceItemCommandHandlerTests
         && y.Item.Description == description
         && y.Item.Value == payload.Value
         && y.Item.Weight == payload.Weight
-        && y.Item.IsAttunementRequired == payload.IsAttunementRequired),
+        && y.Item.IsAttunementRequired == payload.IsAttunementRequired
+        && y.Item.Properties == reference.Properties),
       _cancellationToken), Times.Once);
   }
 }

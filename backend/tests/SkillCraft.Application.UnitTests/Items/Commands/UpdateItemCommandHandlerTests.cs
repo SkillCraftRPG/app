@@ -23,10 +23,19 @@ public class UpdateItemCommandHandlerTests
   private readonly UpdateItemCommandHandler _handler;
 
   private readonly WorldMock _world = new();
+  private readonly Item _item;
 
   public UpdateItemCommandHandlerTests()
   {
     _handler = new(_itemQuerier.Object, _itemRepository.Object, _permissionService.Object, _sender.Object);
+
+    _item = new(_world.Id, new Name("denier"), new MoneyProperties(), _world.OwnerId)
+    {
+      Description = new Description("Le denier, une pièce d’argent couramment utilisée par la plupart des membres de la population pour leurs achats de plus grande valeur, comme le bétail de moyens de transport. Il s’agit de l’unité de référence de ce système."),
+      IsAttunementRequired = true
+    };
+    _item.Update(_world.OwnerId);
+    _itemRepository.Setup(x => x.LoadAsync(_item.Id, _cancellationToken)).ReturnsAsync(_item);
   }
 
   [Fact(DisplayName = "It should return null when the item could not be found.")]
@@ -39,23 +48,39 @@ public class UpdateItemCommandHandlerTests
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 
+  [Fact(DisplayName = "It should throw ItemNotFoundException when the consumable replacement item could not be found.")]
+  public async Task It_should_throw_ItemNotFoundException_when_the_consumable_replacement_item_could_not_be_found()
+  {
+    Item item = new(_world.Id, new Name("Potion de Vitalité"), new ConsumableProperties(charges: 1, removeWhenEmpty: true, replaceWithItemWhenEmptyId: null), _world.OwnerId);
+    _itemRepository.Setup(x => x.LoadAsync(item.Id, _cancellationToken)).ReturnsAsync(item);
+
+    UpdateItemPayload payload = new()
+    {
+      Consumable = new ConsumablePropertiesModel
+      {
+        Charges = 1,
+        RemoveWhenEmpty = false,
+        ReplaceWithItemWhenEmptyId = Guid.NewGuid()
+      }
+    };
+    UpdateItemCommand command = new(item.EntityId, payload);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<ItemNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.Consumable.ReplaceWithItemWhenEmptyId, exception.ItemId);
+    Assert.Equal("Consumable.ReplaceWithItemWhenEmptyId", exception.PropertyName);
+  }
+
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
-    Item item = new(_world.Id, new Name("denier"), new MoneyProperties(), _world.OwnerId)
-    {
-      Description = new Description("Le denier, une pièce d’argent couramment utilisée par la plupart des membres de la population pour leurs achats de plus grande valeur, comme le bétail de moyens de transport. Il s’agit de l’unité de référence de ce système."),
-      IsAttunementRequired = true
-    };
-    item.Update(_world.OwnerId);
-    _itemRepository.Setup(x => x.LoadAsync(item.Id, _cancellationToken)).ReturnsAsync(item);
-
     UpdateItemPayload payload = new()
     {
       Value = new Change<double?>(-0.1),
       Weapon = new WeaponPropertiesModel()
     };
-    UpdateItemCommand command = new(item.EntityId, payload);
+    UpdateItemCommand command = new(_item.EntityId, payload);
     command.Contextualize(_world);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
@@ -64,21 +89,13 @@ public class UpdateItemCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NullValidator" && e.PropertyName == "Weapon");
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Item && y.Id == item.EntityId && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Item && y.Id == _item.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should update an existing item.")]
   public async Task It_should_update_an_existing_item()
   {
-    Item item = new(_world.Id, new Name("denier"), new MoneyProperties(), _world.OwnerId)
-    {
-      Description = new Description("Le denier, une pièce d’argent couramment utilisée par la plupart des membres de la population pour leurs achats de plus grande valeur, comme le bétail de moyens de transport. Il s’agit de l’unité de référence de ce système."),
-      IsAttunementRequired = true
-    };
-    item.Update(_world.OwnerId);
-    _itemRepository.Setup(x => x.LoadAsync(item.Id, _cancellationToken)).ReturnsAsync(item);
-
     UpdateItemPayload payload = new()
     {
       Name = " Denier ",
@@ -87,22 +104,22 @@ public class UpdateItemCommandHandlerTests
       Weight = new Change<double?>(0.02),
       IsAttunementRequired = false
     };
-    UpdateItemCommand command = new(item.EntityId, payload);
+    UpdateItemCommand command = new(_item.EntityId, payload);
     command.Contextualize(_world);
 
     ItemModel model = new();
-    _itemQuerier.Setup(x => x.ReadAsync(item, _cancellationToken)).ReturnsAsync(model);
+    _itemQuerier.Setup(x => x.ReadAsync(_item, _cancellationToken)).ReturnsAsync(model);
 
     var result = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(result);
     Assert.Same(model, result);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command,
-      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Item && y.Id == item.EntityId && y.Size > 0),
+      It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Item && y.Id == _item.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(
-      It.Is<SaveItemCommand>(y => y.Item.Equals(item)
+      It.Is<SaveItemCommand>(y => y.Item.Equals(_item)
         && y.Item.Name.Value == payload.Name.Trim()
         && y.Item.Description == null
         && y.Item.Value == payload.Value.Value

@@ -5,11 +5,15 @@ namespace SkillCraft.Domain.Items.Properties;
 
 public record ConsumableProperties : PropertiesBase
 {
+  [JsonIgnore]
   public override ItemCategory Category { get; } = ItemCategory.Consumable;
 
   public int? Charges { get; }
   public bool RemoveWhenEmpty { get; }
   public ItemId? ReplaceWithItemWhenEmptyId { get; }
+
+  [JsonIgnore]
+  public override int Size { get; } = 4 /* Charges */ + 1 /* RemoveWhenEmpty */ + 4 /* ReplaceWithItemWhenEmptyId */;
 
   [JsonConstructor]
   public ConsumableProperties(int? charges, bool removeWhenEmpty, ItemId? replaceWithItemWhenEmptyId)

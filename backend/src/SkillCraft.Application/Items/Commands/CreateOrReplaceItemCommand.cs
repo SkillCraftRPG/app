@@ -84,7 +84,7 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     UserId userId = command.GetUserId();
     WorldId worldId = command.GetWorldId();
 
-    PropertiesBase properties = GetProperties(worldId, payload);
+    PropertiesBase properties = await GetPropertiesAsync(worldId, payload, cancellationToken);
     Item item = new(worldId, new Name(payload.Name), properties, userId, command.Id)
     {
       Description = Description.TryCreate(payload.Description),
@@ -96,12 +96,14 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
     return item;
   }
-  private static PropertiesBase GetProperties(WorldId worldId, CreateOrReplaceItemPayload payload)
+  private async Task<PropertiesBase> GetPropertiesAsync(WorldId worldId, CreateOrReplaceItemPayload payload, CancellationToken cancellationToken)
   {
     List<PropertiesBase> properties = new(capacity: 7);
     if (payload.Consumable != null)
     {
-      properties.Add(payload.Consumable.ToConsumableProperties(worldId)); // TODO(fpion): ensure replacement item exists
+      ConsumableProperties consumable = payload.Consumable.ToConsumableProperties(worldId);
+      await EnsureItemExistsAsync(consumable, cancellationToken);
+      properties.Add(consumable);
     }
     if (payload.Container != null)
     {
@@ -173,7 +175,9 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
 
     if (payload.Consumable != null)
     {
-      item.SetProperties(payload.Consumable.ToConsumableProperties(item.WorldId), userId); // TODO(fpion): ensure replacement item exists
+      ConsumableProperties consumable = payload.Consumable.ToConsumableProperties(item.WorldId);
+      await EnsureItemExistsAsync(consumable, cancellationToken);
+      item.SetProperties(consumable, userId);
     }
     if (payload.Container != null)
     {
@@ -201,5 +205,15 @@ internal class CreateOrReplaceItemCommandHandler : IRequestHandler<CreateOrRepla
     }
 
     item.Update(userId);
+  }
+
+  private async Task EnsureItemExistsAsync(ConsumableProperties properties, CancellationToken cancellationToken)
+  {
+    if (properties.ReplaceWithItemWhenEmptyId.HasValue
+      && await _itemRepository.LoadAsync(properties.ReplaceWithItemWhenEmptyId.Value, cancellationToken) == null)
+    {
+      string propertyName = string.Join('.', nameof(UpdateItemPayload.Consumable), nameof(UpdateItemPayload.Consumable.ReplaceWithItemWhenEmptyId));
+      throw new ItemNotFoundException(properties.ReplaceWithItemWhenEmptyId.Value, propertyName);
+    }
   }
 }

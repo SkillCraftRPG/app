@@ -8,6 +8,8 @@ public record WeaponDamage
   public Roll Roll { get; }
   public DamageType Type { get; }
 
+  public int Size => Roll.Size + 4 /* Type */;
+
   public WeaponDamage(Roll roll, DamageType type)
   {
     Roll = roll;
