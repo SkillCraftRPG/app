@@ -169,10 +169,10 @@ public class Character : AggregateRoot
     LanguageMetadata metadata = new(notes);
     if (!_languages.TryGetValue(language.Id, out LanguageMetadata? existingMetadata) || existingMetadata != metadata)
     {
-      Raise(new LanguageSet(language.Id, metadata), userId.ActorId);
+      Raise(new LanguageUpdatedEvent(language.Id, metadata), userId.ActorId);
     }
   }
-  protected virtual void Apply(LanguageSet @event)
+  protected virtual void Apply(LanguageUpdatedEvent @event)
   {
     _languages[@event.LanguageId] = @event.Metadata;
   }
@@ -326,12 +326,12 @@ public class Character : AggregateRoot
     }
   }
 
-  public class LanguageSet : DomainEvent, INotification
+  public class LanguageUpdatedEvent : DomainEvent, INotification
   {
     public LanguageId LanguageId { get; }
     public LanguageMetadata Metadata { get; }
 
-    public LanguageSet(LanguageId languageId, LanguageMetadata metadata)
+    public LanguageUpdatedEvent(LanguageId languageId, LanguageMetadata metadata)
     {
       LanguageId = languageId;
       Metadata = metadata;
