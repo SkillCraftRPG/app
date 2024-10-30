@@ -33,7 +33,7 @@ public class ResolveItemQueryHandlerTests
     _denier = new(_world.Id, new Name("Denier"), new MoneyProperties(), _world.OwnerId)
     {
       Value = 1.0,
-      Weight = 0.02
+      Weight = 0.01
     };
     _denier.Update(_world.OwnerId);
     _itemRepository.Setup(x => x.LoadAsync(_denier.Id, _cancellationToken)).ReturnsAsync(_denier);
@@ -41,7 +41,7 @@ public class ResolveItemQueryHandlerTests
     _dime = new(_world.Id, new Name("Dîme"), new MoneyProperties(), _world.OwnerId)
     {
       Value = 0.1,
-      Weight = 0.02
+      Weight = 0.01
     };
     _dime.Update(_world.OwnerId);
     _itemRepository.Setup(x => x.LoadAsync(_dime.Id, _cancellationToken)).ReturnsAsync(_dime);
@@ -49,7 +49,7 @@ public class ResolveItemQueryHandlerTests
     _goldOre = new(_world.Id, new Name("Pépite d’or"), new MiscellaneousProperties(), _world.OwnerId)
     {
       Value = 1.0,
-      Weight = 0.1
+      Weight = 0.25
     };
     _goldOre.Update(_world.OwnerId);
     _itemRepository.Setup(x => x.LoadAsync(_goldOre.Id, _cancellationToken)).ReturnsAsync(_goldOre);

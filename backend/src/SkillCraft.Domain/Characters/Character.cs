@@ -151,10 +151,10 @@ public class Character : AggregateRoot
 
     if (existingItem == null || existingItem != characterItem)
     {
-      Raise(new ItemSetEvent(inventoryId, characterItem), userId.ActorId);
+      Raise(new InventoryUpdatedEvent(inventoryId, characterItem), userId.ActorId);
     }
   }
-  protected virtual void Apply(ItemSetEvent @event)
+  protected virtual void Apply(InventoryUpdatedEvent @event)
   {
     _inventory[@event.InventoryId] = @event.Item;
   }
@@ -314,12 +314,12 @@ public class Character : AggregateRoot
     }
   }
 
-  public class ItemSetEvent : DomainEvent, INotification
+  public class InventoryUpdatedEvent : DomainEvent, INotification
   {
     public Guid InventoryId { get; }
     public CharacterItem Item { get; }
 
-    public ItemSetEvent(Guid inventoryId, CharacterItem item)
+    public InventoryUpdatedEvent(Guid inventoryId, CharacterItem item)
     {
       InventoryId = inventoryId;
       Item = item;
