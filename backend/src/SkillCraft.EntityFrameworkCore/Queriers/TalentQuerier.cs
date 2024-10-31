@@ -48,6 +48,7 @@ internal class TalentQuerier : ITalentQuerier
   public async Task<TalentModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     TalentEntity? talent = await _talents.AsNoTracking()
+      .Include(x => x.RequiredTalent).ThenInclude(x => x!.World)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
@@ -86,6 +87,7 @@ internal class TalentQuerier : ITalentQuerier
     }
 
     IQueryable<TalentEntity> query = _talents.FromQuery(builder).AsNoTracking()
+      .Include(x => x.RequiredTalent).ThenInclude(x => x!.World)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);

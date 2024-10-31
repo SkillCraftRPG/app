@@ -27,7 +27,7 @@ internal class SaveTalentCommandHandler : IRequestHandler<SaveTalentCommand>
     bool hasSkillChanged = false;
     foreach (DomainEvent change in talent.Changes)
     {
-      if (change is Talent.CreatedEvent || change is Talent.UpdatedEvent updatedEvent && updatedEvent.Skill != null)
+      if (change is Talent.UpdatedEvent updatedEvent && updatedEvent.Skill != null)
       {
         hasSkillChanged = true;
         break;

@@ -43,8 +43,12 @@ public class SaveTalentCommandHandlerTests
   [Fact(DisplayName = "It should throw TalentSkillAlreadyExistingException when the skill is already associated to another talent.")]
   public async Task It_should_throw_TalentSkillAlreadyExistingException_when_the_skill_is_already_associated_to_another_talent()
   {
-    Talent talent = new(WorldId.NewId(), tier: 0, new Name("Mêlée"), UserId.NewId());
-    Assert.NotNull(talent.Skill);
+    UserId userId = UserId.NewId();
+    Talent talent = new(WorldId.NewId(), tier: 0, new Name("Mêlée"), userId)
+    {
+      Skill = Skill.Melee
+    };
+    talent.Update(userId);
     SaveTalentCommand command = new(talent);
 
     TalentId conflictId = new(WorldId.NewId());

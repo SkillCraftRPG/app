@@ -33,8 +33,6 @@ internal class TalentEntity : AggregateEntity
     Tier = @event.Tier;
 
     Name = @event.Name.Value;
-
-    Skill = @event.Skill;
   }
 
   private TalentEntity() : base()
