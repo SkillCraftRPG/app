@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 
 import WorldCard from "@/components/worlds/WorldCard.vue";
 import type { SearchResults } from "@/types/search";
@@ -10,7 +9,6 @@ import { handleErrorKey } from "@/inject/App";
 import { searchWorlds } from "@/api/worlds";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
-const router = useRouter();
 const { t } = useI18n();
 
 const worlds = ref<WorldModel[]>([]);
@@ -31,10 +29,6 @@ function compare(a: WorldModel, b: WorldModel): number {
   const x: string = (a.name ?? a.slug).toLowerCase();
   const y: string = (b.name ?? b.slug).toLowerCase();
   return x > y ? 1 : x < y ? -1 : 0;
-}
-
-function enter(world: WorldModel): void {
-  router.push({ name: "WorldIndex", params: { slug: world.slug } });
 }
 
 onMounted(async () => {
@@ -58,7 +52,7 @@ onMounted(async () => {
     <h1 class="text-center">{{ t("worlds.gateway.title") }}</h1>
     <div v-if="worlds.length > 0" class="my-3 row">
       <div v-for="world in worlds" :key="world.id" class="col-md-12 col-lg-6 col-xl-4 mb-3">
-        <WorldCard :subtitle="Boolean(world.name && (names.get(world.name) ?? 0) > 1)" :world="world" @click="enter(world)" />
+        <WorldCard :subtitle="Boolean(world.name && (names.get(world.name) ?? 0) > 1)" :world="world" />
       </div>
     </div>
     <p v-else>

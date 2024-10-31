@@ -5,10 +5,7 @@ import type { SearchResults } from "@/types/search";
 import { get } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
-  if (id) {
-    return new urlUtils.UrlBuilder({ path: "/aspects/{id}" }).setParameter("id", id);
-  }
-  return new urlUtils.UrlBuilder({ path: "/aspects" });
+  return id ? new urlUtils.UrlBuilder({ path: "/aspects/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/aspects" });
 }
 
 export async function searchAspects(payload: SearchAspectsPayload): Promise<SearchResults<AspectModel>> {

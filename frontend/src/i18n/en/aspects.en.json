@@ -3,7 +3,7 @@
     "mandatory": "Mandatory Attributes",
     "optional": "Optional Attributes"
   },
-  "empty": "TODO: empty",
+  "empty": "This list is empty.",
   "skills": "Skills",
   "sort": {
     "options": {
