@@ -11,7 +11,7 @@ using SkillCraft.Domain.Educations;
 
 namespace SkillCraft.Application.Educations;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class EducationTests : IntegrationTests
 {
   private readonly IEducationRepository _educationRepository;

@@ -11,7 +11,7 @@ using SkillCraft.Domain.Parties;
 
 namespace SkillCraft.Application.Parties;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class PartyTests : IntegrationTests
 {
   private readonly IPartyRepository _partyRepository;

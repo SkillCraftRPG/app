@@ -11,7 +11,7 @@ using SkillCraft.Domain.Languages;
 
 namespace SkillCraft.Application.Languages;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class LanguageTests : IntegrationTests
 {
   private readonly ILanguageRepository _languageRepository;

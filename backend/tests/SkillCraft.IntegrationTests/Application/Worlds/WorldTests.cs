@@ -11,7 +11,7 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Worlds;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class WorldTests : IntegrationTests
 {
   private readonly IWorldRepository _worldRepository;
