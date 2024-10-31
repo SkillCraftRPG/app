@@ -14,7 +14,7 @@ internal class StorageDetailConfiguration : IEntityTypeConfiguration<StorageDeta
     builder.HasKey(x => x.StorageDetailId);
 
     builder.HasIndex(x => x.OwnerId);
-    builder.HasIndex(x => new { x.EntityType, x.EntityId }).IsUnique(); // TODO(fpion): in the same world
+    builder.HasIndex(x => new { x.EntityType, x.EntityId }).IsUnique();
     builder.HasIndex(x => x.Size);
 
     builder.Property(x => x.EntityType).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<EntityType>());
