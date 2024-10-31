@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import type { CurrentUser } from "@/types/account";
+
 export const useAccountStore = defineStore(
   "account",
   () => {

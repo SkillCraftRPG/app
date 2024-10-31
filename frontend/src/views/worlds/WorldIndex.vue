@@ -1,0 +1,37 @@
+<script setup lang="ts">
+import { inject, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
+
+import type { WorldModel } from "@/types/worlds";
+import { handleErrorKey } from "@/inject/App";
+import { readWorld } from "@/api/worlds";
+
+const handleError = inject(handleErrorKey) as (e: unknown) => void;
+const route = useRoute();
+const { t } = useI18n();
+
+const world = ref<WorldModel>();
+
+onMounted(async () => {
+  try {
+    const slug: string = route.params.slug as string;
+    world.value = await readWorld(slug);
+  } catch (e: unknown) {
+    handleError(e);
+  }
+});
+</script>
+
+<template>
+  <main class="container">
+    <template v-if="world">
+      <h1 class="text-center">{{ world.name ?? world.slug }}</h1>
+      <ul>
+        <li>
+          <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.title.list") }}</RouterLink>
+        </li>
+      </ul>
+    </template>
+  </main>
+</template>

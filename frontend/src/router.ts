@@ -35,6 +35,28 @@ const router = createRouter({
       path: "/sign-out",
       component: () => import("./views/account/SignOutView.vue"),
     },
+    // Aspects
+    {
+      name: "AspectEdit",
+      path: "/worlds/:slug/aspects/:id",
+      component: () => import("./views/aspects/AspectEdit.vue"),
+    },
+    {
+      name: "AspectList",
+      path: "/worlds/:slug/aspects",
+      component: () => import("./views/aspects/AspectList.vue"),
+    },
+    // Worlds
+    {
+      name: "WorldIndex",
+      path: "/worlds/:slug",
+      component: () => import("./views/worlds/WorldIndex.vue"),
+    },
+    {
+      name: "WorldList",
+      path: "/worlds",
+      component: () => import("./views/worlds/WorldList.vue"),
+    },
     // NotFound
     {
       name: "NotFound",

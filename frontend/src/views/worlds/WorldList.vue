@@ -2,7 +2,7 @@
 import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import WorldCard from "./WorldCard.vue";
+import WorldCard from "@/components/worlds/WorldCard.vue";
 import type { SearchResults } from "@/types/search";
 import type { WorldModel } from "@/types/worlds";
 import { handleErrorKey } from "@/inject/App";
@@ -31,10 +31,6 @@ function compare(a: WorldModel, b: WorldModel): number {
   return x > y ? 1 : x < y ? -1 : 0;
 }
 
-function enter(world: WorldModel): void {
-  alert(`Entering world "${world.name ?? world.slug}" (id=${world.id}).`);
-}
-
 onMounted(async () => {
   try {
     const results: SearchResults<WorldModel> = await searchWorlds({
@@ -52,15 +48,15 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <main class="container">
     <h1 class="text-center">{{ t("worlds.gateway.title") }}</h1>
     <div v-if="worlds.length > 0" class="my-3 row">
       <div v-for="world in worlds" :key="world.id" class="col-md-12 col-lg-6 col-xl-4 mb-3">
-        <WorldCard :subtitle="Boolean(world.name && (names.get(world.name) ?? 0) > 1)" :world="world" @click="enter(world)" />
+        <WorldCard :subtitle="Boolean(world.name && (names.get(world.name) ?? 0) > 1)" :world="world" />
       </div>
     </div>
     <p v-else>
       {{ t("worlds.gateway.empty") }}
     </p>
-  </div>
+  </main>
 </template>

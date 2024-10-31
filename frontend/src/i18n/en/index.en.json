@@ -4,16 +4,36 @@
     "cancel": "Cancel",
     "close": "Close",
     "complete": "Complete",
-    "continue": "Continue"
+    "continue": "Continue",
+    "create": "Create",
+    "refresh": "Refresh"
   },
   "brand": "SkillCraftRPG",
+  "by": "By",
   "copyright": "© SkillCraftRPG {version} {year}.",
+  "count": "Count",
   "loading": "Loading…",
   "notFound": {
     "help": "The requested page could not be found.",
     "lead": "Page Not Found",
     "link": "Go to Home"
   },
+  "pagination": {
+    "first": "First",
+    "label": "Pagination",
+    "last": "Last",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "search": "Search",
+  "sort": {
+    "isDescending": "Is descending",
+    "select": {
+      "label": "Sort",
+      "placeholder": "Select a sort"
+    }
+  },
+  "system": "System",
   "toasts": {
     "error": {
       "message": "An unexpected error occurred. Please try again later or contact our support team.",

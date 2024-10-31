@@ -4,5 +4,8 @@
     "enter": "Enter",
     "ownedBy": "Owned by",
     "title": "Gateway"
+  },
+  "title": {
+    "list": "Worlds"
   }
 }

@@ -4,5 +4,8 @@
     "enter": "Entrer",
     "ownedBy": "Appartient à",
     "title": "Portail"
+  },
+  "title": {
+    "list": "Univers"
   }
 }

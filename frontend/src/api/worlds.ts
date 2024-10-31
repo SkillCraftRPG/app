@@ -4,11 +4,13 @@ import type { SearchResults } from "@/types/search";
 import type { SearchWorldsPayload, WorldModel } from "@/types/worlds";
 import { get } from ".";
 
-function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
-  if (id) {
-    return new urlUtils.UrlBuilder({ path: "/worlds/{id}" }).setParameter("id", id);
-  }
-  return new urlUtils.UrlBuilder({ path: "/worlds" });
+function createUrlBuilder(slug?: string): urlUtils.IUrlBuilder {
+  return slug ? new urlUtils.UrlBuilder({ path: "/worlds/slug:{slug}" }).setParameter("slug", slug) : new urlUtils.UrlBuilder({ path: "/worlds" });
+}
+
+export async function readWorld(slug: string): Promise<WorldModel> {
+  const url: string = createUrlBuilder(slug).buildRelative();
+  return (await get<WorldModel>(url)).data;
 }
 
 export async function searchWorlds(payload: SearchWorldsPayload): Promise<SearchResults<WorldModel>> {

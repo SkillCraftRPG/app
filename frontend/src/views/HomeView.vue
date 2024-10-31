@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-import type { UserType } from "@/types/account";
-import WorldGateway from "@/components/worlds/WorldGateway.vue";
 import { useAccountStore } from "@/stores/account";
 
 const account = useAccountStore();
+const router = useRouter();
 
-const mode = ref<UserType>(account.currentUser?.type ?? "Player");
+onMounted(() => {
+  switch (account.currentUser?.type) {
+    case "Gamemaster":
+      router.push({ name: "WorldList" });
+      break;
+    default:
+      break;
+  }
+});
 </script>
 
 <template>
-  <main class="container">
-    <div v-if="mode === 'Player'"></div>
-    <WorldGateway v-else-if="mode === 'Gamemaster'" />
-  </main>
+  <main class="container"></main>
 </template>
