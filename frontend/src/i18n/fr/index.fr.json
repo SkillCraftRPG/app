@@ -4,16 +4,36 @@
     "cancel": "Annuler",
     "close": "Fermer",
     "complete": "Compléter",
-    "continue": "Poursuivre"
+    "continue": "Poursuivre",
+    "create": "Créer",
+    "refresh": "Rafraîchir"
   },
   "brand": "SkillCraftRPG",
+  "by": "Par",
   "copyright": "© SkillCraftRPG {version} {year}.",
+  "count": "Nombre de résultats",
   "loading": "Chargement…",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",
     "lead": "Page introuvable",
     "link": "Aller à l’accueil"
   },
+  "pagination": {
+    "first": "Première page",
+    "label": "Pagination",
+    "last": "Dernière page",
+    "next": "Prochaine page",
+    "previous": "Page précédente"
+  },
+  "search": "Recherche",
+  "sort": {
+    "isDescending": "Descendant",
+    "select": {
+      "label": "Tri",
+      "placeholder": "Sélectionnez un tri"
+    }
+  },
+  "system": "Système",
   "toasts": {
     "error": {
       "message": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",

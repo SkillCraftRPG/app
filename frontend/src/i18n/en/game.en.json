@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "Agility": "Agility",
+    "Coordination": "Coordination",
+    "Intellect": "Intellect",
+    "Presence": "Presence",
+    "Sensitivity": "Sensitivity",
+    "Spirit": "Spirit",
+    "Vigor": "Vigor"
+  },
+  "skills": {
+    "Acrobatics": "Acrobatics",
+    "Athletics": "Athletics",
+    "Craft": "Craft",
+    "Deception": "Deception",
+    "Diplomacy": "Diplomacy",
+    "Discipline": "Discipline",
+    "Insight": "Insight",
+    "Investigation": "Investigation",
+    "Knowledge": "Knowledge",
+    "Linguistics": "Linguistics",
+    "Medicine": "Medicine",
+    "Melee": "Melee",
+    "Occultism": "Occultism",
+    "Orientation": "Orientation",
+    "Perception": "Perception",
+    "Performance": "Performance",
+    "Resistance": "Resistance",
+    "Stealth": "Stealth",
+    "Survival": "Survival",
+    "Thievery": "Thievery"
+  }
+}

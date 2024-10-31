@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
-import WorldCard from "./WorldCard.vue";
+import WorldCard from "@/components/worlds/WorldCard.vue";
 import type { SearchResults } from "@/types/search";
 import type { WorldModel } from "@/types/worlds";
 import { handleErrorKey } from "@/inject/App";
 import { searchWorlds } from "@/api/worlds";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
+const router = useRouter();
 const { t } = useI18n();
 
 const worlds = ref<WorldModel[]>([]);
@@ -32,7 +34,7 @@ function compare(a: WorldModel, b: WorldModel): number {
 }
 
 function enter(world: WorldModel): void {
-  alert(`Entering world "${world.name ?? world.slug}" (id=${world.id}).`);
+  router.push({ name: "WorldIndex", params: { slug: world.slug } });
 }
 
 onMounted(async () => {
@@ -52,7 +54,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <main class="container">
     <h1 class="text-center">{{ t("worlds.gateway.title") }}</h1>
     <div v-if="worlds.length > 0" class="my-3 row">
       <div v-for="world in worlds" :key="world.id" class="col-md-12 col-lg-6 col-xl-4 mb-3">
@@ -62,5 +64,5 @@ onMounted(async () => {
     <p v-else>
       {{ t("worlds.gateway.empty") }}
     </p>
-  </div>
+  </main>
 </template>

@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "mandatory": "Mandatory Attributes",
+    "optional": "Optional Attributes"
+  },
+  "empty": "TODO: empty",
+  "skills": "Skills",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "title": {
+    "list": "Aspects"
+  }
+}
