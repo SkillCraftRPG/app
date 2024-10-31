@@ -135,7 +135,6 @@ public class Character : AggregateRoot
     }
 
     options ??= new();
-    // TODO(fpion): validate options or CharacterItem
 
     _ = _inventory.TryGetValue(inventoryId, out CharacterItem? existingItem);
 
@@ -225,10 +224,10 @@ public class Character : AggregateRoot
   }
   protected virtual void Apply(TalentUpdatedEvent @event)
   {
-    if (!_talentIds.TryGetValue(@event.Talent.TalentId, out HashSet<Guid>? relationIds))
+    if (!_talentIds.TryGetValue(@event.Talent.Id, out HashSet<Guid>? relationIds))
     {
       relationIds = [];
-      _talentIds[@event.Talent.TalentId] = relationIds;
+      _talentIds[@event.Talent.Id] = relationIds;
     }
     relationIds.Add(@event.RelationId);
 

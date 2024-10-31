@@ -19,7 +19,8 @@ public class CommentModel : Aggregate
   public CommentModel(WorldModel world, string text)
   {
     World = world;
-
     Text = text;
   }
+
+  public override string ToString() => $"{Text} | {base.ToString()}";
 }

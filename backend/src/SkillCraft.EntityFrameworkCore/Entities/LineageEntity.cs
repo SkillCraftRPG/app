@@ -59,6 +59,8 @@ internal class LineageEntity : AggregateEntity
   public int? MatureAge { get; private set; }
   public int? VenerableAge { get; private set; }
 
+  public List<CharacterEntity> Characters { get; private set; } = [];
+
   public LineageEntity(WorldEntity world, LineageEntity? parent, Lineage.CreatedEvent @event) : base(@event)
   {
     Id = @event.AggregateId.ToGuid();

@@ -17,6 +17,7 @@ internal class LanguageEntity : AggregateEntity
   public string? Script { get; private set; }
   public string? TypicalSpeakers { get; private set; }
 
+  public List<CharacterLanguageEntity> Characters { get; private set; } = [];
   public List<LineageEntity> Lineages { get; private set; } = [];
 
   public LanguageEntity(WorldEntity world, Language.CreatedEvent @event) : base(@event)
