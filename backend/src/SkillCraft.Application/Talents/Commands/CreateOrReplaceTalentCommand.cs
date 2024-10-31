@@ -87,7 +87,8 @@ internal class CreateOrReplaceTalentCommandHandler : IRequestHandler<CreateOrRep
     Talent talent = new(command.GetWorldId(), payload.Tier, new Name(payload.Name), userId, command.Id)
     {
       Description = Description.TryCreate(payload.Description),
-      AllowMultiplePurchases = payload.AllowMultiplePurchases
+      AllowMultiplePurchases = payload.AllowMultiplePurchases,
+      Skill = payload.Skill
     };
     if (payload.RequiredTalentId.HasValue)
     {
@@ -132,6 +133,10 @@ internal class CreateOrReplaceTalentCommandHandler : IRequestHandler<CreateOrRep
     if (requiredTalentId != reference.RequiredTalentId)
     {
       await _sender.Send(new SetRequiredTalentCommand(talent, payload.RequiredTalentId), cancellationToken);
+    }
+    if (payload.Skill != reference.Skill)
+    {
+      talent.Skill = payload.Skill;
     }
 
     talent.Update(userId);

@@ -72,10 +72,26 @@ public class ResolveTalentsQueryHandlerTests
     };
     _rebelle.Update(_world.OwnerId);
 
-    _artisanat = new(_world.Id, tier: 0, new Name("Artisanat"), _world.OwnerId);
-    _connaissance = new(_world.Id, tier: 0, new Name("Connaissance"), _world.OwnerId);
-    _melee = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
-    _resistance = new(_world.Id, tier: 0, new Name("Résistance"), _world.OwnerId);
+    _artisanat = new(_world.Id, tier: 0, new Name("Artisanat"), _world.OwnerId)
+    {
+      Skill = Skill.Craft
+    };
+    _artisan.Update(_world.OwnerId);
+    _connaissance = new(_world.Id, tier: 0, new Name("Connaissance"), _world.OwnerId)
+    {
+      Skill = Skill.Knowledge
+    };
+    _connaissance.Update(_world.OwnerId);
+    _melee = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId)
+    {
+      Skill = Skill.Melee
+    };
+    _melee.Update(_world.OwnerId);
+    _resistance = new(_world.Id, tier: 0, new Name("Résistance"), _world.OwnerId)
+    {
+      Skill = Skill.Resistance
+    };
+    _resistance.Update(_world.OwnerId);
 
     _formationMartiale = new(_world.Id, tier: 0, new Name("Formation martiale"), _world.OwnerId);
     _formationMartiale.SetRequiredTalent(_melee);

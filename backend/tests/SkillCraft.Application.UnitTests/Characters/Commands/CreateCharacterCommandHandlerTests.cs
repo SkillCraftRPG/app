@@ -91,10 +91,26 @@ public class CreateCharacterCommandHandlerTests
     _language = new(_world.Id, new Name("Celfique"), _world.OwnerId);
     _item = new(_world.Id, new Name("Denier"), new MoneyProperties(), _world.OwnerId);
 
-    _acrobatics = new(_world.Id, tier: 0, new Name("Acrobaties"), _world.OwnerId);
-    _athletics = new(_world.Id, tier: 0, new Name("Athlétisme"), _world.OwnerId);
-    _melee = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId);
-    _resistance = new(_world.Id, tier: 0, new Name("Résistance"), _world.OwnerId);
+    _acrobatics = new(_world.Id, tier: 0, new Name("Acrobaties"), _world.OwnerId)
+    {
+      Skill = Skill.Acrobatics
+    };
+    _acrobatics.Update(_world.OwnerId);
+    _athletics = new(_world.Id, tier: 0, new Name("Athlétisme"), _world.OwnerId)
+    {
+      Skill = Skill.Athletics
+    };
+    _athletics.Update(_world.OwnerId);
+    _melee = new(_world.Id, tier: 0, new Name("Mêlée"), _world.OwnerId)
+    {
+      Skill = Skill.Melee
+    };
+    _melee.Update(_world.OwnerId);
+    _resistance = new(_world.Id, tier: 0, new Name("Résistance"), _world.OwnerId)
+    {
+      Skill = Skill.Resistance
+    };
+    _resistance.Update(_world.OwnerId);
 
     _lineageRepository.Setup(x => x.LoadAsync(_species.Id, _cancellationToken)).ReturnsAsync(_species);
   }

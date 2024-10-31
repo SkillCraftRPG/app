@@ -25,8 +25,6 @@ public class Talent : AggregateRoot
       {
         _name = value;
         _updatedEvent.Name = value;
-
-        Skill = TalentHelper.TryGetSkill(value);
       }
     }
   }
@@ -62,7 +60,7 @@ public class Talent : AggregateRoot
   public Skill? Skill // TODO(fpion): a talent associated to a skill shall be of tier 0 and have no required talent.
   {
     get => _skill;
-    private set
+    set
     {
       if (_skill != value)
       {
@@ -88,16 +86,13 @@ public class Talent : AggregateRoot
       throw new ArgumentOutOfRangeException(nameof(tier));
     }
 
-    Skill? skill = TalentHelper.TryGetSkill(name);
-    Raise(new CreatedEvent(tier, name, skill), userId.ActorId);
+    Raise(new CreatedEvent(tier, name), userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
   {
     Tier = @event.Tier;
 
     _name = @event.Name;
-
-    _skill = @event.Skill;
   }
 
   public void SetRequiredTalent(Talent? requiredTalent)
@@ -162,15 +157,11 @@ public class Talent : AggregateRoot
 
     public Name Name { get; }
 
-    public Skill? Skill { get; }
-
-    public CreatedEvent(int tier, Name name, Skill? skill)
+    public CreatedEvent(int tier, Name name)
     {
       Tier = tier;
 
       Name = name;
-
-      Skill = skill;
     }
   }
 
@@ -183,7 +174,6 @@ public class Talent : AggregateRoot
     public Change<TalentId?>? RequiredTalentId { get; set; }
     public Change<Skill?>? Skill { get; set; }
 
-    public bool HasChanges => Name != null || Description != null
-      || AllowMultiplePurchases.HasValue || RequiredTalentId != null || Skill != null;
+    public bool HasChanges => Name != null || Description != null || AllowMultiplePurchases.HasValue || RequiredTalentId != null || Skill != null;
   }
 }
