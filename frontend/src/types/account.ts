@@ -11,6 +11,7 @@ export type Credentials = {
 };
 
 export type CurrentUser = {
+  type: UserType;
   displayName: string;
   emailAddress?: string;
   pictureUrl?: string;

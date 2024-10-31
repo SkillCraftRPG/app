@@ -1,5 +1,4 @@
 ﻿using SkillCraft.Contracts.Talents;
-using System.Text;
 
 namespace SkillCraft.Contracts.Characters;
 
