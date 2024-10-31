@@ -195,6 +195,8 @@ internal class CharacterEntity : AggregateEntity
 
   public void SetItem(ItemEntity item, Character.InventoryUpdatedEvent @event)
   {
+    base.Update(@event);
+
     InventoryEntity? relation = Inventory.SingleOrDefault(i => i.Id == @event.InventoryId);
     if (relation == null)
     {
@@ -209,6 +211,8 @@ internal class CharacterEntity : AggregateEntity
 
   public void SetLanguage(LanguageEntity language, Character.LanguageUpdatedEvent @event)
   {
+    base.Update(@event);
+
     CharacterLanguageEntity? relation = Languages.SingleOrDefault(l => l.LanguageId == language.LanguageId);
     if (relation == null)
     {
@@ -223,6 +227,8 @@ internal class CharacterEntity : AggregateEntity
 
   public void SetTalent(TalentEntity talent, Character.TalentUpdatedEvent @event)
   {
+    base.Update(@event);
+
     CharacterTalentEntity? relation = Talents.SingleOrDefault(t => t.Id == @event.RelationId);
     if (relation == null)
     {

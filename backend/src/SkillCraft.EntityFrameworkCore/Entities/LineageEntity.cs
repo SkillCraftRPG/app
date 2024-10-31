@@ -63,7 +63,7 @@ internal class LineageEntity : AggregateEntity
 
   public LineageEntity(WorldEntity world, LineageEntity? parent, Lineage.CreatedEvent @event) : base(@event)
   {
-    Id = @event.AggregateId.ToGuid();
+    Id = new LineageId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;

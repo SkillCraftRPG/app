@@ -274,6 +274,20 @@ public class Item : AggregateRoot
     {
       _description = @event.Description.Value;
     }
+
+    if (@event.Value != null)
+    {
+      _value = @event.Value.Value;
+    }
+    if (@event.Weight != null)
+    {
+      _weight = @event.Weight.Value;
+    }
+
+    if (@event.IsAttunementRequired.HasValue)
+    {
+      _isAttunementRequired = @event.IsAttunementRequired.Value;
+    }
   }
 
   public override string ToString() => $"{Name.Value} | {base.ToString()}";

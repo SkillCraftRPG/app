@@ -102,6 +102,7 @@ internal class Mapper
 
     CharacterModel destination = new()
     {
+      Id = source.Id,
       World = world,
       Name = source.Name,
       PlayerName = source.PlayerName,
@@ -187,6 +188,8 @@ internal class Mapper
         });
       }
     }
+
+    MapAggregate(source, destination);
 
     return destination;
   }
