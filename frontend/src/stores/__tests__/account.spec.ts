@@ -5,6 +5,7 @@ import type { CurrentUser } from "../../types/account";
 import { useAccountStore } from "../account";
 
 const user: CurrentUser = {
+  type: "Gamemaster",
   displayName: "Francis Pion",
   emailAddress: "no-reply@francispion.ca",
   pictureUrl: "https://www.francispion.ca/assets/img/profile-img.jpg",
