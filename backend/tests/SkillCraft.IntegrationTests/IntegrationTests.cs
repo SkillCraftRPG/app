@@ -134,9 +134,11 @@ public abstract class IntegrationTests : IAsyncLifetime
     TableId[] tables =
     [
       EntityFrameworkCore.SkillCraftDb.Comments.Table,
+      EntityFrameworkCore.SkillCraftDb.Characters.Table,
       EntityFrameworkCore.SkillCraftDb.Aspects.Table,
       EntityFrameworkCore.SkillCraftDb.Castes.Table,
       EntityFrameworkCore.SkillCraftDb.Educations.Table,
+      EntityFrameworkCore.SkillCraftDb.Items.Table,
       EntityFrameworkCore.SkillCraftDb.Languages.Table,
       EntityFrameworkCore.SkillCraftDb.Lineages.Table,
       EntityFrameworkCore.SkillCraftDb.Parties.Table,
