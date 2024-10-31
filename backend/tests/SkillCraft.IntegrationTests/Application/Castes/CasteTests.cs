@@ -11,7 +11,7 @@ using SkillCraft.Domain.Castes;
 
 namespace SkillCraft.Application.Castes;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class CasteTests : IntegrationTests
 {
   private readonly ICasteRepository _casteRepository;

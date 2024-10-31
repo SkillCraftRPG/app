@@ -14,7 +14,7 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Personalities;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class PersonalityTests : IntegrationTests
 {
   private readonly ICustomizationRepository _customizationRepository;
