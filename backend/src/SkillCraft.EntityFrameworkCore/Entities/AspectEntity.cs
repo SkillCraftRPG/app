@@ -25,6 +25,8 @@ internal class AspectEntity : AggregateEntity
   public Skill? DiscountedSkill1 { get; private set; }
   public Skill? DiscountedSkill2 { get; private set; }
 
+  public List<CharacterEntity> Characters { get; private set; } = [];
+
   public AspectEntity(WorldEntity world, Aspect.CreatedEvent @event) : base(@event)
   {
     Id = new AspectId(@event.AggregateId).EntityId;

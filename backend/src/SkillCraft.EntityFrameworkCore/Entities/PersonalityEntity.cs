@@ -19,6 +19,8 @@ internal class PersonalityEntity : AggregateEntity
   public CustomizationEntity? Gift { get; private set; }
   public int? GiftId { get; private set; }
 
+  public List<CharacterEntity> Characters { get; private set; } = [];
+
   public PersonalityEntity(WorldEntity world, Personality.CreatedEvent @event) : base(@event)
   {
     Id = new PersonalityId(@event.AggregateId).EntityId;

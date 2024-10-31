@@ -29,6 +29,8 @@ internal class ItemEntity : AggregateEntity
   public ItemCategory Category { get; private set; }
   public string? Properties { get; private set; }
 
+  public List<InventoryEntity> Inventory { get; private set; } = [];
+
   public ItemEntity(WorldEntity world, Item.CreatedEvent @event) : base(@event)
   {
     Id = new ItemId(@event.AggregateId).EntityId;

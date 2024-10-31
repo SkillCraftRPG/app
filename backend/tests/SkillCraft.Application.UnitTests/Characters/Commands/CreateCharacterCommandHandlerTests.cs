@@ -266,7 +266,7 @@ public class CreateCharacterCommandHandlerTests
 
   private bool HasTalent(Character character, Talent talent)
   {
-    CharacterTalent? characterTalent = character.Talents.Values.SingleOrDefault(t => t.TalentId == talent.Id);
+    CharacterTalent? characterTalent = character.Talents.Values.SingleOrDefault(t => t.Id == talent.Id);
     if (characterTalent == null)
     {
       return false;

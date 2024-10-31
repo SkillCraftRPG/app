@@ -39,6 +39,8 @@ internal class CasteEntity : AggregateEntity
     }
   }
 
+  public List<CharacterEntity> Characters { get; private set; } = [];
+
   public CasteEntity(WorldEntity world, Caste.CreatedEvent @event) : base(@event)
   {
     Id = new CasteId(@event.AggregateId).EntityId;

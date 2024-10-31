@@ -177,7 +177,7 @@ public class CharacterTests
     _character.AddTalent(_melee, options, _world.OwnerId);
 
     CharacterTalent talent = Assert.Single(_character.Talents.Values);
-    Assert.Equal(_melee.Id, talent.TalentId);
+    Assert.Equal(_melee.Id, talent.Id);
     Assert.Equal(options.Cost, talent.Cost);
     Assert.Equal(options.Precision, talent.Precision);
     Assert.Equal(options.Notes, talent.Notes);
@@ -189,7 +189,7 @@ public class CharacterTests
     _character.AddTalent(_melee, _world.OwnerId);
 
     CharacterTalent talent = Assert.Single(_character.Talents.Values);
-    Assert.Equal(_melee.Id, talent.TalentId);
+    Assert.Equal(_melee.Id, talent.Id);
     Assert.Equal(_melee.Tier + 2, talent.Cost);
     Assert.Null(talent.Precision);
     Assert.Null(talent.Notes);
@@ -532,7 +532,7 @@ public class CharacterTests
     Assert.Equal(id, Assert.Single(_character.Talents.Keys));
 
     CharacterTalent talent = Assert.Single(_character.Talents.Values);
-    Assert.Equal(_melee.Id, talent.TalentId);
+    Assert.Equal(_melee.Id, talent.Id);
     Assert.Equal(_melee.Tier + 2, talent.Cost);
     Assert.Null(talent.Precision);
     Assert.Null(talent.Notes);
@@ -642,7 +642,7 @@ public class CharacterTests
     _character.SetTalent(id, _elementarisme, options, _world.OwnerId);
 
     CharacterTalent talent = _character.Talents[id];
-    Assert.Equal(_elementarisme.Id, talent.TalentId);
+    Assert.Equal(_elementarisme.Id, talent.Id);
     Assert.Equal(_elementarisme.Tier + 2, talent.Cost);
     Assert.Equal(options.Precision, talent.Precision);
     Assert.Equal(options.Notes, talent.Notes);

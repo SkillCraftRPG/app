@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Characters.Commands;
+using SkillCraft.Application.Characters.Queries;
 using SkillCraft.Constants;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Extensions;
@@ -29,5 +30,12 @@ public class CharacterController : ControllerBase
     Uri location = HttpContext.BuildLocation($"{Routes.Character}/{{id}}", [new KeyValuePair<string, string>("id", character.Id.ToString())]);
 
     return Created(location, character);
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<CharacterModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new ReadCharacterQuery(id), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
   }
 }

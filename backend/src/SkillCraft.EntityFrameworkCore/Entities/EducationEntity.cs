@@ -18,6 +18,8 @@ internal class EducationEntity : AggregateEntity
   public Skill? Skill { get; private set; }
   public double? WealthMultiplier { get; private set; }
 
+  public List<CharacterEntity> Characters { get; private set; } = [];
+
   public EducationEntity(WorldEntity world, Education.CreatedEvent @event) : base(@event)
   {
     Id = new EducationId(@event.AggregateId).EntityId;

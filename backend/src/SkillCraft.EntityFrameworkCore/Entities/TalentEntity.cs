@@ -23,6 +23,8 @@ internal class TalentEntity : AggregateEntity
   public List<TalentEntity> RequiringTalents { get; private set; } = [];
   public Skill? Skill { get; private set; }
 
+  public List<CharacterTalentEntity> Characters { get; private set; } = [];
+
   public TalentEntity(WorldEntity world, Talent.CreatedEvent @event) : base(@event)
   {
     Id = new TalentId(@event.AggregateId).EntityId;

@@ -17,6 +17,7 @@ internal class CustomizationEntity : AggregateEntity
   public string Name { get; private set; } = string.Empty;
   public string? Description { get; private set; }
 
+  public List<CharacterEntity> Characters { get; private set; } = [];
   public List<PersonalityEntity> Personalities { get; private set; } = [];
 
   public CustomizationEntity(WorldEntity world, Customization.CreatedEvent @event) : base(@event)

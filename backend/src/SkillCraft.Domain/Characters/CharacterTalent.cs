@@ -2,4 +2,4 @@
 
 namespace SkillCraft.Domain.Characters;
 
-public record CharacterTalent(TalentId TalentId, int Cost, Name? Precision, Description? Notes);
+public record CharacterTalent(TalentId Id, int Cost, Name? Precision, Description? Notes);

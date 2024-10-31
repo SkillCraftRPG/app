@@ -4,6 +4,7 @@ using Logitar.Portal.Contracts;
 using Logitar.Portal.Contracts.Actors;
 using SkillCraft.Contracts.Aspects;
 using SkillCraft.Contracts.Castes;
+using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Comments;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
@@ -89,6 +90,103 @@ internal class Mapper
     }
 
     MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public CharacterModel ToCharacter(CharacterEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    CharacterModel destination = new()
+    {
+      World = world,
+      Name = source.Name,
+      PlayerName = source.PlayerName,
+      Height = source.Height,
+      Weight = source.Weight,
+      Age = source.Age,
+      BaseAttributes = source.GetBaseAttributes()
+    };
+
+    if (source.Lineage != null)
+    {
+      destination.Lineage = ToLineage(source.Lineage);
+    }
+    if (source.Personality != null)
+    {
+      destination.Personality = ToPersonality(source.Personality);
+    }
+    if (source.Caste != null)
+    {
+      destination.Caste = ToCaste(source.Caste);
+    }
+    if (source.Education != null)
+    {
+      destination.Education = ToEducation(source.Education);
+    }
+
+    foreach (CustomizationEntity customization in source.Customizations)
+    {
+      destination.Customizations.Add(ToCustomization(customization));
+    }
+    foreach (AspectEntity aspect in source.Aspects)
+    {
+      destination.Aspects.Add(ToAspect(aspect));
+    }
+
+    foreach (CharacterLanguageEntity relation in source.Languages)
+    {
+      if (relation.Language != null)
+      {
+        LanguageModel language = ToLanguage(relation.Language);
+        destination.Languages.Add(new CharacterLanguageModel(language)
+        {
+          Notes = relation.Notes
+        });
+      }
+    }
+
+    foreach (CharacterTalentEntity relation in source.Talents)
+    {
+      if (relation.Talent != null)
+      {
+        TalentModel talent = ToTalent(relation.Talent);
+        destination.Talents.Add(new CharacterTalentModel(talent)
+        {
+          Id = relation.Id,
+          Cost = relation.Cost,
+          Precision = relation.Precision,
+          Notes = relation.Notes
+        });
+      }
+    }
+
+    foreach (InventoryEntity inventory in source.Inventory)
+    {
+      if (inventory.Item != null)
+      {
+        ItemModel item = ToItem(inventory.Item);
+        destination.Inventory.Add(new InventoryModel(item)
+        {
+          Id = inventory.Id,
+          ContainingItemId = inventory.ContainingItemId,
+          Quantity = inventory.Quantity,
+          IsAttuned = inventory.IsAttuned,
+          IsEquipped = inventory.IsEquipped,
+          IsIdentified = inventory.IsIdentified,
+          IsProficient = inventory.IsProficient,
+          Skill = inventory.Skill,
+          RemainingCharges = inventory.RemainingCharges,
+          RemainingResistance = inventory.RemainingResistance,
+          NameOverride = inventory.NameOverride,
+          DescriptionOverride = inventory.DescriptionOverride,
+          ValueOverride = inventory.ValueOverride
+        });
+      }
+    }
 
     return destination;
   }
