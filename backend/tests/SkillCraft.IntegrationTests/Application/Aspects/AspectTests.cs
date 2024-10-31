@@ -12,7 +12,7 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Aspects;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class AspectTests : IntegrationTests
 {
   private readonly IAspectRepository _aspectRepository;

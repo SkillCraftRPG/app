@@ -11,7 +11,7 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Talents;
 
-[Trait(Traits.Category, Categories.Unit)]
+[Trait(Traits.Category, Categories.Integration)]
 public class TalentTests : IntegrationTests
 {
   private readonly ITalentRepository _talentRepository;
