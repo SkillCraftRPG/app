@@ -296,6 +296,11 @@ internal class Mapper
       Skill = source.Skill
     };
 
+    if (source.RequiredTalent != null)
+    {
+      destination.RequiredTalent = ToTalent(source.RequiredTalent);
+    }
+
     MapAggregate(source, destination);
 
     return destination;
