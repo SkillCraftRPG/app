@@ -5,8 +5,8 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { AspectModel, CreateOrReplaceAspectPayload } from "@/types/aspects";
-import { createAspect } from "@/api/aspects";
+import type { EducationModel, CreateOrReplaceEducationPayload } from "@/types/educations";
+import { createEducation } from "@/api/educations";
 
 const { t } = useI18n();
 
@@ -20,20 +20,18 @@ function hide(): void {
 }
 
 const emit = defineEmits<{
-  (e: "created", value: AspectModel): void;
+  (e: "created", value: EducationModel): void;
   (e: "error", value: unknown): void;
 }>();
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    const payload: CreateOrReplaceAspectPayload = {
+    const payload: CreateOrReplaceEducationPayload = {
       name: name.value,
-      attributes: {},
-      skills: {},
     };
-    const aspect: AspectModel = await createAspect(payload);
-    emit("created", aspect);
+    const education: EducationModel = await createEducation(payload);
+    emit("created", education);
     hide();
   } catch (e: unknown) {
     emit("error", e);
@@ -43,8 +41,8 @@ const onSubmit = handleSubmit(async () => {
 
 <template>
   <span>
-    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-aspect" />
-    <TarModal :close="t('actions.close')" id="create-aspect" ref="modalRef" :title="t('aspects.create')">
+    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-education" />
+    <TarModal :close="t('actions.close')" id="create-education" ref="modalRef" :title="t('educations.create')">
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />
       </form>
