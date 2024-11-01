@@ -1,9 +1,9 @@
-export type DoubleFilter = {
+export type FilterOperator = "eq" | "gt" | "gte" | "in" | "lt" | "lte" | "ne" | "nin";
+
+export type NumberFilter = {
   values: number[];
   operator: FilterOperator;
 };
-
-export type FilterOperator = "eq" | "gt" | "gte" | "in" | "lt" | "lte" | "ne" | "nin";
 
 export type SearchPayload = {
   ids: string[];

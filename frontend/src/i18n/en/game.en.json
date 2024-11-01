@@ -32,5 +32,6 @@
     "Survival": "Survival",
     "Thievery": "Thievery"
   },
-  "startingWealth": "Starting Wealth"
+  "startingWealth": "Starting Wealth",
+  "tier": "Tier"
 }

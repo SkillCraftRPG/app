@@ -123,6 +123,17 @@ const router = createRouter({
       path: "/worlds/:slug/personalities",
       component: () => import("./views/personalities/PersonalityList.vue"),
     },
+    // Talents
+    {
+      name: "TalentEdit",
+      path: "/worlds/:slug/talents/:id",
+      component: () => import("./views/talents/TalentEdit.vue"),
+    },
+    {
+      name: "TalentList",
+      path: "/worlds/:slug/talents",
+      component: () => import("./views/talents/TalentList.vue"),
+    },
     // Worlds
     {
       name: "WorldIndex",

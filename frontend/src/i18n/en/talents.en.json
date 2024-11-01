@@ -1,0 +1,13 @@
+{
+  "allowMultiplePurchases": "Multiple purchases",
+  "empty": "This list is empty.",
+  "list": "Talents",
+  "required": "Required talent",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  }
+}

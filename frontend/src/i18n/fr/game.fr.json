@@ -32,5 +32,6 @@
     "Survival": "Survie",
     "Thievery": "Roublardise"
   },
-  "startingWealth": "Richesse initiale"
+  "startingWealth": "Richesse initiale",
+  "tier": "Tiers"
 }
