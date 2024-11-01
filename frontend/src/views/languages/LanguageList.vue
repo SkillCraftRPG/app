@@ -20,8 +20,8 @@ const router = useRouter();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
-const languages = ref<LanguageModel[]>([]);
 const isLoading = ref<boolean>(false);
+const languages = ref<LanguageModel[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
