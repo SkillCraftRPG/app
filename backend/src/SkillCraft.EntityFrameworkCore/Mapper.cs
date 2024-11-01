@@ -381,11 +381,10 @@ internal class Mapper
     return destination;
   }
 
-  public TalentModel ToTalent(TalentEntity source)
+  public TalentModel ToTalent(TalentEntity source) => ToTalent(source, world: null);
+  public TalentModel ToTalent(TalentEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     TalentModel destination = new(world, source.Name)
     {
@@ -398,7 +397,7 @@ internal class Mapper
 
     if (source.RequiredTalent != null)
     {
-      destination.RequiredTalent = ToTalent(source.RequiredTalent);
+      destination.RequiredTalent = ToTalent(source.RequiredTalent, world);
     }
 
     MapAggregate(source, destination);
