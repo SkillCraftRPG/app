@@ -22,7 +22,7 @@ public class FindLanguagesQueryHandlerTests
   private readonly World _world;
   private readonly Language _language;
 
-  private readonly CreateLineageCommand _activity;
+  private readonly CreateOrReplaceLineageCommand _activity;
 
   public FindLanguagesQueryHandlerTests()
   {
@@ -31,7 +31,7 @@ public class FindLanguagesQueryHandlerTests
     _world = new(new Slug("ungar"), UserId.NewId());
     _language = new(_world.Id, new Name("Commun"), _world.OwnerId);
 
-    _activity = new(new CreateLineagePayload());
+    _activity = new(Id: null, new CreateOrReplaceLineagePayload(), Version: null);
     _activity.Contextualize(_world);
   }
 

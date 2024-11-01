@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using SkillCraft.Application.Languages;
 using SkillCraft.Application.Languages.Queries;
 using SkillCraft.Application.Lineages.Validators;
 using SkillCraft.Application.Permissions;
@@ -15,6 +16,9 @@ namespace SkillCraft.Application.Lineages.Commands;
 
 public record CreateOrReplaceLineageResult(LineageModel? Lineage = null, bool Created = false);
 
+/// <exception cref="InvalidParentLineageException"></exception>
+/// <exception cref="LanguagesNotFoundException"></exception>
+/// <exception cref="LineageNotFoundException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="ValidationException"></exception>
@@ -97,7 +101,7 @@ internal class CreateOrReplaceLineageCommandHandler : IRequestHandler<CreateOrRe
       }
     }
 
-    Lineage lineage = new(worldId, parent, new Name(payload.Name), userId)
+    Lineage lineage = new(worldId, parent, new Name(payload.Name), userId, command.Id)
     {
       Description = Description.TryCreate(payload.Description),
       Attributes = new AttributeBonuses(payload.Attributes),
