@@ -15,12 +15,12 @@ defineProps<{
 <template>
   <TarCard :title="world.name ?? world.slug" :subtitle="subtitle ? world.slug : undefined">
     <div class="my-2">
-      {{ t("worlds.gateway.ownedBy") }}
+      {{ t("worlds.ownedBy") }}
       <TarAvatar :display-name="world.owner.displayName" :email-address="world.owner.emailAddress" icon="fas fa-user" :url="world.owner.pictureUrl" />
       {{ world.owner.displayName }}
     </div>
     <RouterLink class="btn btn-primary float-end" :to="{ name: 'WorldIndex', params: { slug: world.slug } }">
-      <font-awesome-icon icon="fas fa-dungeon" /> {{ t("worlds.gateway.enter") }}
+      <font-awesome-icon icon="fas fa-dungeon" /> {{ t("actions.enter") }}
     </RouterLink>
   </TarCard>
 </template>

@@ -163,7 +163,6 @@ watch(
             <td>{{ caste.skill ? t(`game.skills.${caste.skill}`) : "—" }}</td>
             <td>{{ caste.wealthRoll ?? "—" }}</td>
             <td v-html="formatTraits(caste)"></td>
-            <!-- TODO(fpion): this can lead to code injection -->
             <td><StatusBlock :actor="caste.updatedBy" :date="caste.updatedOn" /></td>
           </tr>
         </tbody>
