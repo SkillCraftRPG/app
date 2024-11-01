@@ -26,26 +26,24 @@ public class LineageController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<LineageModel>> CreateAsync([FromBody] CreateLineagePayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<LineageModel>> CreateAsync([FromBody] CreateOrReplaceLineagePayload payload, CancellationToken cancellationToken)
   {
-    LineageModel lineage = await _pipeline.ExecuteAsync(new CreateLineageCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Lineage}/{{id}}", [new KeyValuePair<string, string>("id", lineage.Id.ToString())]);
-
-    return Created(location, lineage);
+    CreateOrReplaceLineageResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceLineageCommand(Id: null, payload, Version: null), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<LineageModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     LineageModel? lineage = await _pipeline.ExecuteAsync(new ReadLineageQuery(id), cancellationToken);
-    return lineage == null ? NotFound() : Ok(lineage);
+    return GetActionResult(lineage);
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<LineageModel>> ReplaceAsync(Guid id, [FromBody] ReplaceLineagePayload payload, long? version, CancellationToken cancellationToken)
+  public async Task<ActionResult<LineageModel>> ReplaceAsync(Guid id, [FromBody] CreateOrReplaceLineagePayload payload, long? version, CancellationToken cancellationToken)
   {
-    LineageModel? lineage = await _pipeline.ExecuteAsync(new ReplaceLineageCommand(id, payload, version), cancellationToken);
-    return lineage == null ? NotFound() : Ok(lineage);
+    CreateOrReplaceLineageResult result = await _pipeline.ExecuteAsync(new CreateOrReplaceLineageCommand(id, payload, version), cancellationToken);
+    return GetActionResult(result);
   }
 
   [HttpGet]
@@ -59,6 +57,22 @@ public class LineageController : ControllerBase
   public async Task<ActionResult<LineageModel>> UpdateAsync(Guid id, [FromBody] UpdateLineagePayload payload, CancellationToken cancellationToken)
   {
     LineageModel? lineage = await _pipeline.ExecuteAsync(new UpdateLineageCommand(id, payload), cancellationToken);
-    return lineage == null ? NotFound() : Ok(lineage);
+    return GetActionResult(lineage);
+  }
+
+  private ActionResult<LineageModel> GetActionResult(CreateOrReplaceLineageResult result) => GetActionResult(result.Lineage, result.Created);
+  private ActionResult<LineageModel> GetActionResult(LineageModel? lineage, bool created = false)
+  {
+    if (lineage == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Lineage}/{{id}}", [new KeyValuePair<string, string>("id", lineage.Id.ToString())]);
+      return Created(location, lineage);
+    }
+
+    return Ok(lineage);
   }
 }
