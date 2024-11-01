@@ -1,3 +1,10 @@
+export type DoubleFilter = {
+  values: number[];
+  operator: FilterOperator;
+};
+
+export type FilterOperator = "eq" | "gt" | "gte" | "in" | "lt" | "lte" | "ne" | "nin";
+
 export type SearchPayload = {
   ids: string[];
   search: TextSearch;

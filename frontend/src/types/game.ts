@@ -1,5 +1,20 @@
 export type Attribute = "Agility" | "Coordination" | "Intellect" | "Presence" | "Sensitivity" | "Spirit" | "Vigor";
 
+export type DamageType =
+  | "Acid"
+  | "Bludgeoning"
+  | "Cold"
+  | "Electricity"
+  | "Fire"
+  | "Force"
+  | "Necrotic"
+  | "Piercing"
+  | "Poison"
+  | "Psychic"
+  | "Radiant"
+  | "Slashing"
+  | "Thunder";
+
 export type Skill =
   | "Acrobatics"
   | "Athletics"

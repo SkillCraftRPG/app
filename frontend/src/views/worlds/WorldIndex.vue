@@ -41,6 +41,9 @@ onMounted(async () => {
           <RouterLink :to="{ name: 'EducationList', params: { slug: world.slug } }">{{ t("educations.list") }}</RouterLink>
         </li>
         <li>
+          <RouterLink :to="{ name: 'ItemList', params: { slug: world.slug } }">{{ t("items.list") }}</RouterLink>
+        </li>
+        <li>
           <RouterLink :to="{ name: 'LanguageList', params: { slug: world.slug } }">{{ t("languages.list") }}</RouterLink>
         </li>
         <li>

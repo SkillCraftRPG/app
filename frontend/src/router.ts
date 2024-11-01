@@ -79,6 +79,17 @@ const router = createRouter({
       path: "/worlds/:slug/educations",
       component: () => import("./views/educations/EducationList.vue"),
     },
+    // Items
+    {
+      name: "ItemEdit",
+      path: "/worlds/:slug/items/:id",
+      component: () => import("./views/items/ItemEdit.vue"),
+    },
+    {
+      name: "ItemList",
+      path: "/worlds/:slug/items",
+      component: () => import("./views/items/ItemList.vue"),
+    },
     // Languages
     {
       name: "LanguageEdit",

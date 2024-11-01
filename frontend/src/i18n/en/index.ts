@@ -5,6 +5,7 @@ import customizations from "./customizations.en.json";
 import educations from "./educations.en.json";
 import game from "./game.en.json";
 import index from "./index.en.json";
+import items from "./items.en.json";
 import languages from "./languages.en.json";
 import parties from "./parties.en.json";
 import personalities from "./personalities.en.json";
@@ -19,6 +20,7 @@ export default {
   customizations,
   educations,
   game,
+  items,
   languages,
   parties,
   personalities,

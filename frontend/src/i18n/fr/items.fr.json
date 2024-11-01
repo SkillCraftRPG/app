@@ -1,0 +1,25 @@
+{
+  "category": {
+    "label": "Catégorie",
+    "options": {
+      "Consumable": "Consommable",
+      "Container": "Conteneur",
+      "Device": "Outil",
+      "Equipment": "Équipement",
+      "Miscellaneous": "Divers",
+      "Money": "Monnaie",
+      "Weapon": "Arme"
+    }
+  },
+  "empty": "Cette liste est vide.",
+  "list": "Articles",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification",
+      "Value": "Valeur",
+      "Weight": "Poids"
+    }
+  }
+}
