@@ -1,14 +1,14 @@
 import { urlUtils } from "logitar-js";
 
-import type { CasteModel, SearchCastesPayload } from "@/types/castes";
+import type { EducationModel, SearchEducationsPayload } from "@/types/educations";
 import type { SearchResults } from "@/types/search";
 import { get } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
-  return id ? new urlUtils.UrlBuilder({ path: "/castes/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/castes" });
+  return id ? new urlUtils.UrlBuilder({ path: "/educations/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/educations" });
 }
 
-export async function searchCastes(payload: SearchCastesPayload): Promise<SearchResults<CasteModel>> {
+export async function searchEducations(payload: SearchEducationsPayload): Promise<SearchResults<EducationModel>> {
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery(
@@ -24,5 +24,5 @@ export async function searchCastes(payload: SearchCastesPayload): Promise<Search
     .setQuery("skip", payload.skip.toString())
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
-  return (await get<SearchResults<CasteModel>>(url)).data;
+  return (await get<SearchResults<EducationModel>>(url)).data;
 }

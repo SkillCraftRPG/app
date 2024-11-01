@@ -46,7 +46,7 @@ const router = createRouter({
       path: "/worlds/:slug/aspects",
       component: () => import("./views/aspects/AspectList.vue"),
     },
-    // Aspects
+    // Castes
     {
       name: "CasteEdit",
       path: "/worlds/:slug/castes/:id",
@@ -56,6 +56,17 @@ const router = createRouter({
       name: "CasteList",
       path: "/worlds/:slug/castes",
       component: () => import("./views/castes/CasteList.vue"),
+    },
+    // Educations
+    {
+      name: "EducationEdit",
+      path: "/worlds/:slug/educations/:id",
+      component: () => import("./views/educations/EducationEdit.vue"),
+    },
+    {
+      name: "EducationList",
+      path: "/worlds/:slug/educations",
+      component: () => import("./views/educations/EducationList.vue"),
     },
     // Worlds
     {
