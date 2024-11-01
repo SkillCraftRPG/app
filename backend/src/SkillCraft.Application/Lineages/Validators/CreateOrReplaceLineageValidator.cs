@@ -5,9 +5,9 @@ using SkillCraft.Domain.Validators;
 
 namespace SkillCraft.Application.Lineages.Validators;
 
-internal class CreateLineageValidator : AbstractValidator<CreateLineagePayload>
+internal class CreateOrReplaceLineageValidator : AbstractValidator<CreateOrReplaceLineagePayload>
 {
-  public CreateLineageValidator()
+  public CreateOrReplaceLineageValidator()
   {
     When(x => x.ParentId.HasValue, () => RuleFor(x => x.ParentId!.Value).NotEmpty());
 
