@@ -227,8 +227,9 @@ public class CharacterTests : IntegrationTests
     Assert.NotEqual(default, character.Id);
     Assert.Equal(7, character.Version);
     Assert.Equal(DateTime.UtcNow, character.CreatedOn, TimeSpan.FromSeconds(10));
-    Assert.Equal(Actor, character.CreatedBy);
     Assert.True(character.CreatedOn < character.UpdatedOn);
+    Assert.Equal(Actor, character.CreatedBy);
+    Assert.Equal(character.CreatedBy, character.UpdatedBy);
 
     Assert.Equal(World.Id.ToGuid(), character.World.Id);
     Assert.Equal(payload.Name.Trim(), character.Name);
