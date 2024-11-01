@@ -2,6 +2,7 @@
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Lineages;
+using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain.Lineages;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
@@ -123,9 +124,9 @@ internal class LineageEntity : AggregateEntity
       Description = feature.Value.Description
     }).OrderBy(x => x.Name)];
   }
-  public LanguagesModel GetLanguages(Func<LanguageEntity, LanguageModel> map)
+  public LanguagesModel GetLanguages(Func<LanguageEntity, WorldModel?, LanguageModel> map, WorldModel world)
   {
-    IEnumerable<LanguageModel> languages = Languages.Select(map).OrderBy(x => x.Name);
+    IEnumerable<LanguageModel> languages = Languages.Select(language => map(language, world)).OrderBy(x => x.Name);
     return new LanguagesModel(languages)
     {
       Extra = ExtraLanguages,

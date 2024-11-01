@@ -38,7 +38,8 @@ internal class LineageQuerier : ILineageQuerier
   public async Task<LineageModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     LineageEntity? lineage = await _lineages.AsNoTracking()
-      .Include(x => x.Languages).ThenInclude(x => x.World)
+      .Include(x => x.Languages)
+      .Include(x => x.Species).ThenInclude(x => x!.Languages)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
@@ -112,7 +113,7 @@ internal class LineageQuerier : ILineageQuerier
     }
 
     IQueryable<LineageEntity> query = _lineages.FromQuery(builder).AsNoTracking()
-      .Include(x => x.Languages).ThenInclude(x => x.World)
+      .Include(x => x.Languages)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);
