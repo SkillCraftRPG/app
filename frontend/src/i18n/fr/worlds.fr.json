@@ -1,11 +1,5 @@
 {
-  "gateway": {
-    "empty": "TODO: empty",
-    "enter": "Entrer",
-    "ownedBy": "Appartient à",
-    "title": "Portail"
-  },
-  "title": {
-    "list": "Univers"
-  }
+  "empty": "Cette liste est vide.",
+  "gateway": "Portail",
+  "ownedBy": "Appartient à"
 }
