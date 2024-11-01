@@ -94,6 +94,16 @@ internal class ItemQuerier : IItemQuerier
             ? (sort.IsDescending ? query.OrderByDescending(x => x.UpdatedOn) : query.OrderBy(x => x.UpdatedOn))
             : (sort.IsDescending ? ordered.ThenByDescending(x => x.UpdatedOn) : ordered.ThenBy(x => x.UpdatedOn));
           break;
+        case ItemSort.Value:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.Value) : query.OrderBy(x => x.Value))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Value) : ordered.ThenBy(x => x.Value));
+          break;
+        case ItemSort.Weight:
+          ordered = (ordered == null)
+            ? (sort.IsDescending ? query.OrderByDescending(x => x.Weight) : query.OrderBy(x => x.Weight))
+            : (sort.IsDescending ? ordered.ThenByDescending(x => x.Weight) : ordered.ThenBy(x => x.Weight));
+          break;
       }
     }
     query = ordered ?? query;
