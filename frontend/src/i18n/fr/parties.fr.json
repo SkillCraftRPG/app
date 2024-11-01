@@ -1,0 +1,11 @@
+{
+  "empty": "Cette liste est vide.",
+  "list": "Groupes",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  }
+}

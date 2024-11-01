@@ -79,6 +79,17 @@ const router = createRouter({
       path: "/worlds/:slug/educations",
       component: () => import("./views/educations/EducationList.vue"),
     },
+    // Parties
+    {
+      name: "PartyEdit",
+      path: "/worlds/:slug/parties/:id",
+      component: () => import("./views/parties/PartyEdit.vue"),
+    },
+    {
+      name: "PartyList",
+      path: "/worlds/:slug/parties",
+      component: () => import("./views/parties/PartyList.vue"),
+    },
     // Worlds
     {
       name: "WorldIndex",
