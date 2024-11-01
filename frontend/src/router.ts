@@ -79,6 +79,17 @@ const router = createRouter({
       path: "/worlds/:slug/educations",
       component: () => import("./views/educations/EducationList.vue"),
     },
+    // Languages
+    {
+      name: "LanguageEdit",
+      path: "/worlds/:slug/languages/:id",
+      component: () => import("./views/languages/LanguageEdit.vue"),
+    },
+    {
+      name: "LanguageList",
+      path: "/worlds/:slug/languages",
+      component: () => import("./views/languages/LanguageList.vue"),
+    },
     // Parties
     {
       name: "PartyEdit",
