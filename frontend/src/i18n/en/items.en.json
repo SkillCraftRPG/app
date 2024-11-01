@@ -1,11 +1,25 @@
 {
+  "category": {
+    "label": "Category",
+    "options": {
+      "Consumable": "Consumable",
+      "Container": "Container",
+      "Device": "Device",
+      "Equipment": "Equipment",
+      "Miscellaneous": "Miscellaneous",
+      "Money": "Money",
+      "Weapon": "Weapon"
+    }
+  },
   "empty": "This list is empty.",
   "list": "Items",
   "sort": {
     "options": {
       "CreatedOn": "Created on",
       "Name": "Name",
-      "UpdatedOn": "Updated on"
+      "UpdatedOn": "Updated on",
+      "Value": "Value",
+      "Weight": "Weight"
     }
   }
 }

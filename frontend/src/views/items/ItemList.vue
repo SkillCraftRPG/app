@@ -144,6 +144,9 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("items.sort.options.Name") }}</th>
+            <th scope="col">{{ t("items.category.label") }}</th>
+            <th scope="col">{{ t("items.sort.options.Value") }}</th>
+            <th scope="col">{{ t("items.sort.options.Weight") }}</th>
             <th scope="col">{{ t("items.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
@@ -152,6 +155,9 @@ watch(
             <td>
               <RouterLink :to="{ name: 'ItemEdit', params: { id: item.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ item.name }} </RouterLink>
             </td>
+            <td>{{ t(`items.category.options.${item.category}`) }}</td>
+            <td>{{ item.value ?? "—" }}</td>
+            <td>{{ item.weight ?? "—" }}</td>
             <td><StatusBlock :actor="item.updatedBy" :date="item.updatedOn" /></td>
           </tr>
         </tbody>
