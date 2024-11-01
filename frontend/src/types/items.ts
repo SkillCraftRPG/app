@@ -1,6 +1,6 @@
 import type { Aggregate } from "./aggregate";
 import type { DamageType } from "./game";
-import type { DoubleFilter, SearchPayload, SortOption } from "./search";
+import type { NumberFilter, SearchPayload, SortOption } from "./search";
 import type { WorldModel } from "./worlds";
 
 export type ConsumablePropertiesModel = {
@@ -56,8 +56,8 @@ export type MoneyPropertiesModel = {};
 export type SearchItemsPayload = SearchPayload & {
   category?: ItemCategory;
   isAttunementRequired?: boolean;
-  value?: DoubleFilter;
-  weight?: DoubleFilter;
+  value?: NumberFilter;
+  weight?: NumberFilter;
   sort: ItemSortOption[];
 };
 

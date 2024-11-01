@@ -13,6 +13,7 @@
   "copyright": "© SkillCraftRPG {version} {year}.",
   "count": "Nombre de résultats",
   "loading": "Chargement…",
+  "no": "Non",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",
     "lead": "Page introuvable",
@@ -44,5 +45,6 @@
       "signedOut": "Vous avez été déconnecté, veuillez vous reconnecter à votre compte.",
       "title": "Attention !"
     }
-  }
+  },
+  "yes": "Oui"
 }

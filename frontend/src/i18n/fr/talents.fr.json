@@ -1,0 +1,13 @@
+{
+  "allowMultiplePurchases": "Achats multiples",
+  "empty": "Cette liste est vide.",
+  "list": "Talents",
+  "required": "Talent requis",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  }
+}

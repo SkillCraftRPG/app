@@ -9,6 +9,7 @@ import items from "./items.fr.json";
 import languages from "./languages.fr.json";
 import parties from "./parties.fr.json";
 import personalities from "./personalities.fr.json";
+import talents from "./talents.fr.json";
 import users from "./users.fr.json";
 import worlds from "./worlds.fr.json";
 
@@ -24,6 +25,7 @@ export default {
   languages,
   parties,
   personalities,
+  talents,
   users,
   worlds,
 };

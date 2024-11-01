@@ -13,6 +13,7 @@
   "copyright": "© SkillCraftRPG {version} {year}.",
   "count": "Count",
   "loading": "Loading…",
+  "no": "No",
   "notFound": {
     "help": "The requested page could not be found.",
     "lead": "Page Not Found",
@@ -44,5 +45,6 @@
       "signedOut": "You have been signed-out, please try sign-in to your account again.",
       "title": "Warning!"
     }
-  }
+  },
+  "yes": "Yes"
 }
