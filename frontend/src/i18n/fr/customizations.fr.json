@@ -1,4 +1,6 @@
 {
+  "create": "Créer une personnalisation",
+  "created": "La personnalisation a été créée.",
   "empty": "Cette liste est vide.",
   "list": "Personnalisations",
   "sort": {
@@ -13,6 +15,7 @@
     "options": {
       "Disability": "Handicap",
       "Gift": "Don"
-    }
+    },
+    "placeholder": "Sélectionnez un type de personnalisation"
   }
 }
