@@ -37,7 +37,7 @@ internal class PersonalityQuerier : IPersonalityQuerier
   public async Task<PersonalityModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     PersonalityEntity? personality = await _personalities.AsNoTracking()
-      .Include(x => x.Gift).ThenInclude(x => x!.World)
+      .Include(x => x.Gift)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
@@ -63,7 +63,7 @@ internal class PersonalityQuerier : IPersonalityQuerier
     }
 
     IQueryable<PersonalityEntity> query = _personalities.FromQuery(builder).AsNoTracking()
-      .Include(x => x.Gift).ThenInclude(x => x!.World)
+      .Include(x => x.Gift)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);
