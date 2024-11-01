@@ -101,6 +101,17 @@ const router = createRouter({
       path: "/worlds/:slug/parties",
       component: () => import("./views/parties/PartyList.vue"),
     },
+    // Personalities
+    {
+      name: "PersonalityEdit",
+      path: "/worlds/:slug/personalities/:id",
+      component: () => import("./views/personalities/PersonalityEdit.vue"),
+    },
+    {
+      name: "PersonalityList",
+      path: "/worlds/:slug/personalities",
+      component: () => import("./views/personalities/PersonalityList.vue"),
+    },
     // Worlds
     {
       name: "WorldIndex",

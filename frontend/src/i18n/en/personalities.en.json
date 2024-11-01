@@ -1,0 +1,11 @@
+{
+  "empty": "This list is empty.",
+  "list": "Personalities",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  }
+}

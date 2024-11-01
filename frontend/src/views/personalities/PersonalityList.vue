@@ -10,9 +10,9 @@ import CountSelect from "@/components/shared/CountSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { PartyModel, PartySort, SearchPartiesPayload } from "@/types/parties";
+import type { PersonalityModel, PersonalitySort, SearchPersonalitiesPayload } from "@/types/personalities";
 import { handleErrorKey } from "@/inject/App";
-import { searchParties } from "@/api/parties";
+import { searchPersonalities } from "@/api/personalities";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
@@ -21,7 +21,7 @@ const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
 const isLoading = ref<boolean>(false);
-const parties = ref<PartyModel[]>([]);
+const personalities = ref<PersonalityModel[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
@@ -33,13 +33,13 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   arrayUtils.orderBy(
-    Object.entries(tm(rt("parties.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("personalities.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 async function refresh(): Promise<void> {
-  const payload: SearchPartiesPayload = {
+  const payload: SearchPersonalitiesPayload = {
     ids: [],
     search: {
       terms: search.value
@@ -48,7 +48,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as PartySort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as PersonalitySort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -56,9 +56,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results = await searchParties(payload);
+    const results = await searchPersonalities(payload);
     if (now === timestamp.value) {
-      parties.value = results.items;
+      personalities.value = results.items;
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -84,7 +84,7 @@ function setQuery(key: string, value: string): void {
 watch(
   () => route,
   (route) => {
-    if (route.name === "PartyList") {
+    if (route.name === "PersonalityList") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
@@ -114,7 +114,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("parties.list") }}</h1>
+    <h1>{{ t("personalities.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -139,25 +139,36 @@ watch(
       />
       <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
-    <template v-if="parties.length">
+    <template v-if="personalities.length">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("parties.sort.options.Name") }}</th>
-            <th scope="col">{{ t("parties.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("personalities.sort.options.Name") }}</th>
+            <th scope="col">{{ t("game.attribute") }}</th>
+            <th scope="col">{{ t("customizations.type.options.Gift") }}</th>
+            <th scope="col">{{ t("personalities.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="party in parties" :key="party.id">
+          <tr v-for="personality in personalities" :key="personality.id">
             <td>
-              <RouterLink :to="{ name: 'PartyEdit', params: { id: party.id } }"><font-awesome-icon icon="fas fa-edit" />{{ party.name }}</RouterLink>
+              <RouterLink :to="{ name: 'PersonalityEdit', params: { id: personality.id } }">
+                <font-awesome-icon icon="fas fa-edit" />{{ personality.name }}
+              </RouterLink>
             </td>
-            <td><StatusBlock :actor="party.updatedBy" :date="party.updatedOn" /></td>
+            <td>{{ personality.attribute ? t(`game.attributes.${personality.attribute}`) : "—" }}</td>
+            <td>
+              <RouterLink v-if="personality.gift" :to="{ name: 'CustomizationEdit', params: { id: personality.gift.id } }" target="_blank">
+                <font-awesome-icon icon="fas fa-eye" />{{ personality.gift.name }}
+              </RouterLink>
+              <template v-else>{{ "—" }}</template>
+            </td>
+            <td><StatusBlock :actor="personality.updatedBy" :date="personality.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("parties.empty") }}</p>
+    <p v-else>{{ t("personalities.empty") }}</p>
   </main>
 </template>

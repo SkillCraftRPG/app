@@ -7,6 +7,7 @@ import game from "./game.en.json";
 import index from "./index.en.json";
 import languages from "./languages.en.json";
 import parties from "./parties.en.json";
+import personalities from "./personalities.en.json";
 import users from "./users.en.json";
 import worlds from "./worlds.en.json";
 
@@ -20,6 +21,7 @@ export default {
   game,
   languages,
   parties,
+  personalities,
   users,
   worlds,
 };
