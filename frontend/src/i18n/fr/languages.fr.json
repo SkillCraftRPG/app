@@ -1,0 +1,13 @@
+{
+  "empty": "Cette liste est vide.",
+  "list": "Langues",
+  "script": "Alphabet",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "typicalSpeakers": "Locuteurs typiques"
+}

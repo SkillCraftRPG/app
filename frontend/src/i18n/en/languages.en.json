@@ -1,0 +1,13 @@
+{
+  "empty": "This list is empty.",
+  "list": "Languages",
+  "script": "Script",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "typicalSpeakers": "Typical speakers"
+}
