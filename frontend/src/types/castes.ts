@@ -1,6 +1,6 @@
 import type { Aggregate } from "./aggregate";
-import type { Skill } from "./game";
 import type { SearchPayload, SortOption } from "./search";
+import type { Skill } from "./game";
 import type { WorldModel } from "./worlds";
 
 export type CasteModel = Aggregate & {
