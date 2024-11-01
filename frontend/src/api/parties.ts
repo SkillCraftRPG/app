@@ -1,11 +1,16 @@
 import { urlUtils } from "logitar-js";
 
-import type { PartyModel, SearchPartiesPayload } from "@/types/parties";
+import type { CreateOrReplacePartyPayload, PartyModel, SearchPartiesPayload } from "@/types/parties";
 import type { SearchResults } from "@/types/search";
-import { get } from ".";
+import { get, post } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/parties/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/parties" });
+}
+
+export async function createParty(payload: CreateOrReplacePartyPayload): Promise<PartyModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplacePartyPayload, PartyModel>(url, payload)).data;
 }
 
 export async function searchParties(payload: SearchPartiesPayload): Promise<SearchResults<PartyModel>> {

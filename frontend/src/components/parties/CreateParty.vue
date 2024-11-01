@@ -5,8 +5,8 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { EducationModel, CreateOrReplaceEducationPayload } from "@/types/educations";
-import { createEducation } from "@/api/educations";
+import type { PartyModel, CreateOrReplacePartyPayload } from "@/types/parties";
+import { createParty } from "@/api/parties";
 
 const { t } = useI18n();
 
@@ -20,7 +20,7 @@ function hide(): void {
 }
 
 const emit = defineEmits<{
-  (e: "created", value: EducationModel): void;
+  (e: "created", value: PartyModel): void;
   (e: "error", value: unknown): void;
 }>();
 
@@ -32,11 +32,11 @@ function onCancel(): void {
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    const payload: CreateOrReplaceEducationPayload = {
+    const payload: CreateOrReplacePartyPayload = {
       name: name.value,
     };
-    const education: EducationModel = await createEducation(payload);
-    emit("created", education);
+    const party: PartyModel = await createParty(payload);
+    emit("created", party);
     hide();
   } catch (e: unknown) {
     emit("error", e);
@@ -46,8 +46,8 @@ const onSubmit = handleSubmit(async () => {
 
 <template>
   <span>
-    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-education" />
-    <TarModal :close="t('actions.close')" id="create-education" ref="modalRef" :title="t('educations.create')">
+    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-party" />
+    <TarModal :close="t('actions.close')" id="create-party" ref="modalRef" :title="t('parties.create')">
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />
       </form>

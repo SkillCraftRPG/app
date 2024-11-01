@@ -1,4 +1,6 @@
 {
+  "create": "Create Party",
+  "created": "The party has been created.",
   "empty": "This list is empty.",
   "list": "Parties",
   "sort": {

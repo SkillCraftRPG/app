@@ -24,6 +24,11 @@ const emit = defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
+function onCancel(): void {
+  name.value = "";
+  hide();
+}
+
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
@@ -49,7 +54,7 @@ const onSubmit = handleSubmit(async () => {
         <NameInput required v-model="name" />
       </form>
       <template #footer>
-        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="hide" />
+        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />
         <TarButton
           :disabled="isSubmitting || !hasChanges"
           icon="fas fa-plus"
