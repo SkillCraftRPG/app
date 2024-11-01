@@ -1,4 +1,6 @@
 {
+  "create": "Create Caste",
+  "created": "The caste has been created.",
   "empty": "This list is empty.",
   "list": "Castes",
   "sort": {

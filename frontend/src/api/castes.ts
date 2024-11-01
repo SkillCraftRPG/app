@@ -1,11 +1,16 @@
 import { urlUtils } from "logitar-js";
 
-import type { CasteModel, SearchCastesPayload } from "@/types/castes";
+import type { CasteModel, CreateOrReplaceCastePayload, SearchCastesPayload } from "@/types/castes";
 import type { SearchResults } from "@/types/search";
-import { get } from ".";
+import { get, post } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/castes/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/castes" });
+}
+
+export async function createCaste(payload: CreateOrReplaceCastePayload): Promise<CasteModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplaceCastePayload, CasteModel>(url, payload)).data;
 }
 
 export async function searchCastes(payload: SearchCastesPayload): Promise<SearchResults<CasteModel>> {

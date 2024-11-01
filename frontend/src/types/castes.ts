@@ -18,6 +18,14 @@ export type CasteSortOption = SortOption & {
   field: CasteSort;
 };
 
+export type CreateOrReplaceCastePayload = {
+  name: string;
+  description?: string;
+  skill?: Skill;
+  wealthRoll?: string;
+  traits: TraitPayload[];
+};
+
 export type SearchCastesPayload = SearchPayload & {
   skill?: Skill;
   sort: CasteSortOption[];
@@ -25,6 +33,12 @@ export type SearchCastesPayload = SearchPayload & {
 
 export type TraitModel = {
   id: string;
+  name: string;
+  description?: string;
+};
+
+export type TraitPayload = {
+  id?: string;
   name: string;
   description?: string;
 };
