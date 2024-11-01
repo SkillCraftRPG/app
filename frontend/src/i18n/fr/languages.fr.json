@@ -1,4 +1,6 @@
 {
+  "create": "Créer une language",
+  "created": "La langue a été créée.",
   "empty": "Cette liste est vide.",
   "list": "Langues",
   "script": "Alphabet",

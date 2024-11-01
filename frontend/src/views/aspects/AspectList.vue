@@ -59,7 +59,7 @@ function formatSkills(aspect: AspectModel): string {
 }
 
 function onCreated(aspect: AspectModel): void {
-  toasts.success(t("aspects.created"));
+  toasts.success("aspects.created");
   router.push({ name: "AspectEdit", params: { id: aspect.id } });
 }
 

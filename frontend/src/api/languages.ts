@@ -1,11 +1,16 @@
 import { urlUtils } from "logitar-js";
 
-import type { LanguageModel, SearchLanguagesPayload } from "@/types/languages";
+import type { CreateOrReplaceLanguagePayload, LanguageModel, SearchLanguagesPayload } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
-import { get } from ".";
+import { get, post } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/languages/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/languages" });
+}
+
+export async function createLanguage(payload: CreateOrReplaceLanguagePayload): Promise<LanguageModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplaceLanguagePayload, LanguageModel>(url, payload)).data;
 }
 
 export async function searchLanguages(payload: SearchLanguagesPayload): Promise<SearchResults<LanguageModel>> {
