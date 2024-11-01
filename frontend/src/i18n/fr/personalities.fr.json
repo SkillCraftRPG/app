@@ -1,4 +1,6 @@
 {
+  "create": "Créer un caractère",
+  "created": "Le caractère a été créé.",
   "empty": "Cette liste est vide.",
   "list": "Caractères",
   "sort": {
