@@ -1,16 +1,12 @@
 {
-  "attributes": {
-    "mandatory": "Mandatory Attributes",
-    "optional": "Optional Attributes"
-  },
   "empty": "This list is empty.",
-  "list": "Aspects",
-  "skills": "Skills",
+  "list": "Castes",
   "sort": {
     "options": {
       "CreatedOn": "Created on",
       "Name": "Name",
       "UpdatedOn": "Updated on"
     }
-  }
+  },
+  "traits": "Traits"
 }

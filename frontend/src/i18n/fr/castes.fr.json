@@ -1,16 +1,12 @@
 {
-  "attributes": {
-    "mandatory": "Attributs obligatoires",
-    "optional": "Attributs facultatifs"
-  },
   "empty": "Cette liste est vide.",
-  "list": "Aspects",
-  "skills": "Compétences",
+  "list": "Castes",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
       "Name": "Nom",
       "UpdatedOn": "Dernière modification"
     }
-  }
+  },
+  "traits": "Traits"
 }

@@ -8,6 +8,7 @@
     "Spirit": "Esprit",
     "Vigor": "Vigueur"
   },
+  "skill": "Compétence",
   "skills": {
     "Acrobatics": "Acrobaties",
     "Athletics": "Athlétisme",
@@ -29,5 +30,6 @@
     "Stealth": "Furtivité",
     "Survival": "Survie",
     "Thievery": "Roublardise"
-  }
+  },
+  "startingWealth": "Richesse initiale"
 }
