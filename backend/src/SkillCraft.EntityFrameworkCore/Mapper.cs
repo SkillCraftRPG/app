@@ -295,11 +295,10 @@ internal class Mapper
     return destination;
   }
 
-  public LanguageModel ToLanguage(LanguageEntity source)
+  public LanguageModel ToLanguage(LanguageEntity source) => ToLanguage(source, world: null);
+  public LanguageModel ToLanguage(LanguageEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     LanguageModel destination = new(world, source.Name)
     {
@@ -314,11 +313,10 @@ internal class Mapper
     return destination;
   }
 
-  public LineageModel ToLineage(LineageEntity source)
+  public LineageModel ToLineage(LineageEntity source) => ToLineage(source, world: null);
+  public LineageModel ToLineage(LineageEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     LineageModel destination = new(world, source.Name)
     {
@@ -326,13 +324,18 @@ internal class Mapper
       Description = source.Description,
       Attributes = source.GetAttributes(),
       Features = source.GetFeatures(),
-      Languages = source.GetLanguages(ToLanguage),
+      Languages = source.GetLanguages(ToLanguage, world),
       Names = source.GetNames(),
       Speeds = source.GetSpeeds(),
       Size = source.GetSize(),
       Weight = source.GetWeight(),
       Ages = source.GetAges()
     };
+
+    if (source.Species != null)
+    {
+      destination.Species = ToLineage(source.Species, world);
+    }
 
     MapAggregate(source, destination);
 

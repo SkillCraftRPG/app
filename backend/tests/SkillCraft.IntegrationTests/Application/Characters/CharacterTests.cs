@@ -262,7 +262,7 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(payload.Attributes.Vigor, character.BaseAttributes.Vigor);
     Assert.Equal(payload.Attributes.Best, character.BaseAttributes.Best);
     Assert.Equal(payload.Attributes.Worst, character.BaseAttributes.Worst);
-    Assert.Equal([Attribute.Agility, Attribute.Vigor], character.BaseAttributes.Mandatory);
+    Assert.Equal([Attribute.Agility, Attribute.Vigor], character.BaseAttributes.Mandatory.OrderBy(x => x.ToString()));
     Assert.Equal(payload.Attributes.Optional, character.BaseAttributes.Optional);
     Assert.Equal(payload.Attributes.Extra, character.BaseAttributes.Extra);
 

@@ -91,8 +91,8 @@ public class LineageTests : IntegrationTests
 
     Assert.Equal(World.Id.ToGuid(), lineage.World.Id);
 
-    //Assert.NotNull(lineage.Species); // TODO(fpion): complete & optimize Querier
-    //Assert.Equal(_humain.EntityId, lineage.Species.Id);
+    Assert.NotNull(lineage.Species);
+    Assert.Equal(_humain.EntityId, lineage.Species.Id);
 
     Assert.Equal(payload.Name.Trim(), lineage.Name);
     Assert.Equal(payload.Description?.CleanTrim(), lineage.Description);
