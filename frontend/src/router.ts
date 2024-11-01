@@ -46,6 +46,17 @@ const router = createRouter({
       path: "/worlds/:slug/aspects",
       component: () => import("./views/aspects/AspectList.vue"),
     },
+    // Aspects
+    {
+      name: "CasteEdit",
+      path: "/worlds/:slug/castes/:id",
+      component: () => import("./views/castes/CasteEdit.vue"),
+    },
+    {
+      name: "CasteList",
+      path: "/worlds/:slug/castes",
+      component: () => import("./views/castes/CasteList.vue"),
+    },
     // Worlds
     {
       name: "WorldIndex",

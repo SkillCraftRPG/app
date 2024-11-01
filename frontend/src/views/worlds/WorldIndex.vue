@@ -29,7 +29,10 @@ onMounted(async () => {
       <h1 class="text-center">{{ world.name ?? world.slug }}</h1>
       <ul>
         <li>
-          <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.title.list") }}</RouterLink>
+          <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink :to="{ name: 'CasteList', params: { slug: world.slug } }">{{ t("castes.list") }}</RouterLink>
         </li>
       </ul>
     </template>

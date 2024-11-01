@@ -10,9 +10,9 @@ import CountSelect from "@/components/shared/CountSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { AspectModel, AspectSort, SearchAspectsPayload } from "@/types/aspects";
+import type { CasteModel, CasteSort, SearchCastesPayload } from "@/types/castes";
 import { handleErrorKey } from "@/inject/App";
-import { searchAspects } from "@/api/aspects";
+import { searchCastes } from "@/api/castes";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
@@ -20,7 +20,7 @@ const router = useRouter();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
-const aspects = ref<AspectModel[]>([]);
+const castes = ref<CasteModel[]>([]);
 const isLoading = ref<boolean>(false);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
@@ -33,30 +33,18 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   arrayUtils.orderBy(
-    Object.entries(tm(rt("aspects.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("castes.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
-type AttributeCategory = "mandatory" | "optional";
-function formatAttributes(aspect: AspectModel, category: AttributeCategory): string {
-  const attributes: string[] =
-    category === "mandatory"
-      ? [aspect.attributes.mandatory1, aspect.attributes.mandatory2]
-          .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.${attribute}`))
-      : [aspect.attributes.optional1, aspect.attributes.optional2]
-          .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.${attribute}`));
-  return attributes.join("<br />") || "—";
-}
-function formatSkills(aspect: AspectModel): string {
-  const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2].filter((skill) => Boolean(skill)).map((skill) => t(`game.skills.${skill}`));
-  return skills.join("<br />") || "—";
+function formatTraits(caste: CasteModel): string {
+  const traits: string[] = caste.traits.map(({ name }) => name);
+  return traits.join("<br />") || "—";
 }
 
 async function refresh(): Promise<void> {
-  const payload: SearchAspectsPayload = {
+  const payload: SearchCastesPayload = {
     ids: [],
     search: {
       terms: search.value
@@ -65,7 +53,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as AspectSort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as CasteSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -73,9 +61,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results = await searchAspects(payload);
+    const results = await searchCastes(payload);
     if (now === timestamp.value) {
-      aspects.value = results.items;
+      castes.value = results.items;
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -101,7 +89,7 @@ function setQuery(key: string, value: string): void {
 watch(
   () => route,
   (route) => {
-    if (route.name === "AspectList") {
+    if (route.name === "CasteList") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
@@ -131,7 +119,7 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("aspects.list") }}</h1>
+    <h1>{{ t("castes.list") }}</h1>
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -156,31 +144,32 @@ watch(
       />
       <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
-    <template v-if="aspects.length">
+    <template v-if="castes.length">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("aspects.sort.options.Name") }}</th>
-            <th scope="col">{{ t("aspects.attributes.mandatory") }}</th>
-            <th scope="col">{{ t("aspects.attributes.optional") }}</th>
-            <th scope="col">{{ t("aspects.skills") }}</th>
-            <th scope="col">{{ t("aspects.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("castes.sort.options.Name") }}</th>
+            <th scope="col">{{ t("game.skill") }}</th>
+            <th scope="col">{{ t("game.startingWealth") }}</th>
+            <th scope="col">{{ t("castes.traits") }}</th>
+            <th scope="col">{{ t("castes.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="aspect in aspects" :key="aspect.id">
+          <tr v-for="caste in castes" :key="caste.id">
             <td>
-              <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }"><font-awesome-icon icon="fas fa-edit" />{{ aspect.name }}</RouterLink>
+              <RouterLink :to="{ name: 'CasteEdit', params: { id: caste.id } }"><font-awesome-icon icon="fas fa-edit" />{{ caste.name }}</RouterLink>
             </td>
-            <td v-html="formatAttributes(aspect, 'mandatory')"></td>
-            <td v-html="formatAttributes(aspect, 'optional')"></td>
-            <td v-html="formatSkills(aspect)"></td>
-            <td><StatusBlock :actor="aspect.updatedBy" :date="aspect.updatedOn" /></td>
+            <td>{{ caste.skill ? t(`game.skills.${caste.skill}`) : "—" }}</td>
+            <td>{{ caste.wealthRoll ?? "—" }}</td>
+            <td v-html="formatTraits(caste)"></td>
+            <!-- TODO(fpion): this can lead to code injection -->
+            <td><StatusBlock :actor="caste.updatedBy" :date="caste.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("aspects.empty") }}</p>
+    <p v-else>{{ t("castes.empty") }}</p>
   </main>
 </template>
