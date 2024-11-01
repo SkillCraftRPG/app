@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Lineages;
 
-public record CreateLineagePayload
+public record CreateOrReplaceLineagePayload
 {
   public Guid? ParentId { get; set; }
 
@@ -18,11 +18,11 @@ public record CreateLineagePayload
   public WeightModel Weight { get; set; }
   public AgesModel Ages { get; set; }
 
-  public CreateLineagePayload() : this(string.Empty)
+  public CreateOrReplaceLineagePayload() : this(string.Empty)
   {
   }
 
-  public CreateLineagePayload(string name)
+  public CreateOrReplaceLineagePayload(string name)
   {
     Name = name;
 
