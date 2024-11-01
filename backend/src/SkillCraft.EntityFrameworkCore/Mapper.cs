@@ -211,11 +211,10 @@ internal class Mapper
     return destination;
   }
 
-  public CustomizationModel ToCustomization(CustomizationEntity source)
+  public CustomizationModel ToCustomization(CustomizationEntity source) => ToCustomization(source, world: null);
+  public CustomizationModel ToCustomization(CustomizationEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     CustomizationModel destination = new(world, source.Name)
     {
@@ -367,7 +366,7 @@ internal class Mapper
     {
       throw new ArgumentException($"The {nameof(source.Gift)} is required.", nameof(source));
     }
-    CustomizationModel? gift = source.Gift == null ? null : ToCustomization(source.Gift);
+    CustomizationModel? gift = source.Gift == null ? null : ToCustomization(source.Gift, world);
 
     PersonalityModel destination = new(world, source.Name)
     {

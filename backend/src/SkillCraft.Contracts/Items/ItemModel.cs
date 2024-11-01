@@ -14,6 +14,8 @@ public class ItemModel : Aggregate
   public double? Value { get; set; }
   public double? Weight { get; set; }
 
+  public bool IsAttunementRequired { get; set; }
+
   public ItemCategory Category { get; set; }
   public ConsumablePropertiesModel? Consumable { get; set; }
   public ContainerPropertiesModel? Container { get; set; }
@@ -22,8 +24,6 @@ public class ItemModel : Aggregate
   public MiscellaneousPropertiesModel? Miscellaneous { get; set; }
   public MoneyPropertiesModel? Money { get; set; }
   public WeaponPropertiesModel? Weapon { get; set; }
-
-  public bool IsAttunementRequired { get; set; }
 
   public ItemModel() : this(new WorldModel(), string.Empty)
   {
