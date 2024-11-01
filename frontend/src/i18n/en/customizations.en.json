@@ -1,0 +1,18 @@
+{
+  "empty": "This list is empty.",
+  "list": "Customizations",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "type": {
+    "label": "Type",
+    "options": {
+      "Disability": "Disability",
+      "Gift": "Gift"
+    }
+  }
+}

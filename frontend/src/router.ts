@@ -57,6 +57,17 @@ const router = createRouter({
       path: "/worlds/:slug/castes",
       component: () => import("./views/castes/CasteList.vue"),
     },
+    // Customizations
+    {
+      name: "CustomizationEdit",
+      path: "/worlds/:slug/customizations/:id",
+      component: () => import("./views/customizations/CustomizationEdit.vue"),
+    },
+    {
+      name: "CustomizationList",
+      path: "/worlds/:slug/customizations",
+      component: () => import("./views/customizations/CustomizationList.vue"),
+    },
     // Educations
     {
       name: "EducationEdit",
