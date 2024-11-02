@@ -141,7 +141,13 @@ watch(
       <CreateItem class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <ItemCategorySelect class="col-lg-3" :model-value="category" validation="server" @update:model-value="setQuery('category', $event ?? '')" />
+      <ItemCategorySelect
+        class="col-lg-3"
+        :model-value="category"
+        placeholder="items.category.all"
+        validation="server"
+        @update:model-value="setQuery('category', $event ?? '')"
+      />
       <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
         class="col-lg-3"

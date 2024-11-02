@@ -10,11 +10,17 @@ import type { ValidationType } from "@/types/validation";
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
-defineProps<{
-  modelValue?: string;
-  required?: boolean | string;
-  validation?: ValidationType;
-}>();
+withDefaults(
+  defineProps<{
+    modelValue?: string;
+    placeholder?: string;
+    required?: boolean | string;
+    validation?: ValidationType;
+  }>(),
+  {
+    placeholder: "items.category.placeholder",
+  },
+);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
@@ -35,7 +41,7 @@ defineEmits<{
     label="items.category.label"
     :model-value="modelValue"
     :options="options"
-    placeholder="items.category.placeholder"
+    :placeholder="placeholder"
     :required="required"
     :validation="validation"
     @update:model-value="$emit('update:model-value', $event)"

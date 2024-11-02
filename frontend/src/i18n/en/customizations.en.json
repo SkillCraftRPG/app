@@ -11,6 +11,7 @@
     }
   },
   "type": {
+    "all": "All types",
     "label": "Type",
     "options": {
       "Disability": "Disability",

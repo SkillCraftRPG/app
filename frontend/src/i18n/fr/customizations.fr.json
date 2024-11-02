@@ -11,6 +11,7 @@
     }
   },
   "type": {
+    "all": "Tous types",
     "label": "Type",
     "options": {
       "Disability": "Handicap",

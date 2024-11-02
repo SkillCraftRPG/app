@@ -1,5 +1,6 @@
 {
   "category": {
+    "all": "Toutes catégories",
     "label": "Catégorie",
     "options": {
       "Consumable": "Consommable",
