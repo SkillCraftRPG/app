@@ -17,7 +17,7 @@ export async function searchAspects(payload: SearchAspectsPayload): Promise<Sear
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery(
-      "search_terms",
+      "search",
       payload.search.terms.map(({ value }) => value),
     )
     .setQuery("search_operator", payload.search.operator)

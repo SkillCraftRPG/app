@@ -33,5 +33,9 @@
     "Thievery": "Roublardise"
   },
   "startingWealth": "Richesse initiale",
-  "tier": "Tiers"
+  "tier": {
+    "all": "Tous tiers",
+    "label": "Tiers",
+    "placeholder": "Sélectionnez un tiers"
+  }
 }

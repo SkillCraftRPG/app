@@ -17,7 +17,7 @@ export async function searchItems(payload: SearchItemsPayload): Promise<SearchRe
   const builder: urlUtils.IUrlBuilder = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery(
-      "search_terms",
+      "search",
       payload.search.terms.map(({ value }) => value),
     )
     .setQuery("search_operator", payload.search.operator)

@@ -17,7 +17,7 @@ export async function searchPersonalities(payload: SearchPersonalitiesPayload): 
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery(
-      "search_terms",
+      "search",
       payload.search.terms.map(({ value }) => value),
     )
     .setQuery("search_operator", payload.search.operator)

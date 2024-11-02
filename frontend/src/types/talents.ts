@@ -3,6 +3,15 @@ import type { NumberFilter, SearchPayload, SortOption } from "./search";
 import type { Skill } from "./game";
 import type { WorldModel } from "./worlds";
 
+export type CreateOrReplaceTalentPayload = {
+  tier: number;
+  name: string;
+  description?: string;
+  allowMultiplePurchases: boolean;
+  requiredTalentId?: string;
+  skill?: Skill;
+};
+
 export type TalentModel = Aggregate & {
   world: WorldModel;
   tier: number;
