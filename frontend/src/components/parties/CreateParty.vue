@@ -5,7 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { PartyModel, CreateOrReplacePartyPayload } from "@/types/parties";
+import type { CreateOrReplacePartyPayload, PartyModel } from "@/types/parties";
 import { createParty } from "@/api/parties";
 
 const { t } = useI18n();

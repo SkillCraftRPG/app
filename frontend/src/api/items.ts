@@ -1,11 +1,16 @@
 import { urlUtils } from "logitar-js";
 
-import type { ItemModel, SearchItemsPayload } from "@/types/items";
+import type { CreateOrReplaceItemPayload, ItemModel, SearchItemsPayload } from "@/types/items";
 import type { SearchResults } from "@/types/search";
-import { get } from ".";
+import { get, post } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/items/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/items" });
+}
+
+export async function createItem(payload: CreateOrReplaceItemPayload): Promise<ItemModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplaceItemPayload, ItemModel>(url, payload)).data;
 }
 
 export async function searchItems(payload: SearchItemsPayload): Promise<SearchResults<ItemModel>> {
@@ -17,6 +22,7 @@ export async function searchItems(payload: SearchItemsPayload): Promise<SearchRe
     )
     .setQuery("search_operator", payload.search.operator)
     .setQuery("attunement", payload.isAttunementRequired?.toString() ?? "")
+    .setQuery("category", payload.category ?? "")
     .setQuery(
       "sort",
       payload.sort.map(({ field, isDescending }) => (isDescending ? `DESC.${field}` : field)),

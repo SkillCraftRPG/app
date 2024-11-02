@@ -18,7 +18,7 @@ defineProps<{
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("customizations.type.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -32,10 +32,10 @@ defineEmits<{
   <AppSelect
     floating
     id="type"
-    label="customizations.type.label"
+    label="items.category.label"
     :model-value="modelValue"
     :options="options"
-    placeholder="customizations.type.placeholder"
+    placeholder="items.category.placeholder"
     :required="required"
     :validation="validation"
     @update:model-value="$emit('update:model-value', $event)"

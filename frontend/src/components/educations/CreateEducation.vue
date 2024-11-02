@@ -5,7 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { EducationModel, CreateOrReplaceEducationPayload } from "@/types/educations";
+import type { CreateOrReplaceEducationPayload, EducationModel } from "@/types/educations";
 import { createEducation } from "@/api/educations";
 
 const { t } = useI18n();

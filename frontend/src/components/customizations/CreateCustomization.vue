@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 
 import CustomizationTypeSelect from "./CustomizationTypeSelect.vue";
 import NameInput from "@/components/shared/NameInput.vue";
-import type { CustomizationModel, CreateOrReplaceCustomizationPayload, CustomizationType } from "@/types/customizations";
+import type { CreateOrReplaceCustomizationPayload, CustomizationModel, CustomizationType } from "@/types/customizations";
 import { createCustomization } from "@/api/customizations";
 
 const { t } = useI18n();

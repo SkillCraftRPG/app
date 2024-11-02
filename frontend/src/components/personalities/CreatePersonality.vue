@@ -5,7 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { PersonalityModel, CreateOrReplacePersonalityPayload } from "@/types/personalities";
+import type { CreateOrReplacePersonalityPayload, PersonalityModel } from "@/types/personalities";
 import { createPersonality } from "@/api/personalities";
 
 const { t } = useI18n();

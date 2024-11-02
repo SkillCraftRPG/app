@@ -5,7 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { LanguageModel, CreateOrReplaceLanguagePayload } from "@/types/languages";
+import type { CreateOrReplaceLanguagePayload, LanguageModel } from "@/types/languages";
 import { createLanguage } from "@/api/languages";
 
 const { t } = useI18n();

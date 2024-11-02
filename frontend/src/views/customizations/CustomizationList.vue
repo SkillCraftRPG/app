@@ -141,7 +141,7 @@ watch(
       <CreateCustomization class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <CustomizationTypeSelect class="col-lg-3" :model-value="type" @update:model-value="setQuery('type', $event ?? '')" />
+      <CustomizationTypeSelect class="col-lg-3" :model-value="type" validation="server" @update:model-value="setQuery('type', $event ?? '')" />
       <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
         class="col-lg-3"
