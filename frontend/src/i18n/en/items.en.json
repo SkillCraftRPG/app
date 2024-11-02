@@ -1,5 +1,6 @@
 {
   "category": {
+    "all": "All categories",
     "label": "Category",
     "options": {
       "Consumable": "Consumable",
@@ -9,8 +10,11 @@
       "Miscellaneous": "Miscellaneous",
       "Money": "Money",
       "Weapon": "Weapon"
-    }
+    },
+    "placeholder": "Select an item category"
   },
+  "create": "Create Item",
+  "created": "The item has been created.",
   "empty": "This list is empty.",
   "list": "Items",
   "sort": {

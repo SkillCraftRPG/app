@@ -3,6 +3,8 @@
     "mandatory": "Mandatory Attributes",
     "optional": "Optional Attributes"
   },
+  "create": "Create Aspect",
+  "created": "The aspect has been created.",
   "empty": "This list is empty.",
   "list": "Aspects",
   "skills": "Skills",

@@ -33,5 +33,9 @@
     "Thievery": "Thievery"
   },
   "startingWealth": "Starting Wealth",
-  "tier": "Tier"
+  "tier": {
+    "all": "All tiers",
+    "label": "Tier",
+    "placeholder": "Select a tier"
+  }
 }

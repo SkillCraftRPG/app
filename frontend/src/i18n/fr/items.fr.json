@@ -1,5 +1,6 @@
 {
   "category": {
+    "all": "Toutes catégories",
     "label": "Catégorie",
     "options": {
       "Consumable": "Consommable",
@@ -9,10 +10,13 @@
       "Miscellaneous": "Divers",
       "Money": "Monnaie",
       "Weapon": "Arme"
-    }
+    },
+    "placeholder": "Sélectionnez une catégorie d’objet"
   },
+  "create": "Créer un objet",
+  "created": "L’objet a été créé.",
   "empty": "Cette liste est vide.",
-  "list": "Articles",
+  "list": "Objets",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

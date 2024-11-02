@@ -14,6 +14,7 @@
   "copyright": "© SkillCraftRPG {version} {year}.",
   "count": "Nombre de résultats",
   "loading": "Chargement…",
+  "name": "Nom",
   "no": "Non",
   "notFound": {
     "help": "La page demandée n’a pu être trouvée.",

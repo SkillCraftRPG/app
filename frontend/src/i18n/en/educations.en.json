@@ -1,4 +1,6 @@
 {
+  "create": "Create Education",
+  "created": "The education has been created.",
   "empty": "This list is empty.",
   "list": "Educations",
   "sort": {

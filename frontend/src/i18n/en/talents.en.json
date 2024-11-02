@@ -1,5 +1,7 @@
 {
   "allowMultiplePurchases": "Multiple purchases",
+  "create": "Create Talent",
+  "created": "The talent has been created.",
   "empty": "This list is empty.",
   "list": "Talents",
   "required": "Required talent",

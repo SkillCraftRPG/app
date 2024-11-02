@@ -7,16 +7,20 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateCustomization from "@/components/customizations/CreateCustomization.vue";
+import CustomizationTypeSelect from "@/components/customizations/CustomizationTypeSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { CustomizationModel, CustomizationSort, SearchCustomizationsPayload } from "@/types/customizations";
+import type { CustomizationModel, CustomizationSort, CustomizationType, SearchCustomizationsPayload } from "@/types/customizations";
 import { handleErrorKey } from "@/inject/App";
 import { searchCustomizations } from "@/api/customizations";
+import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
@@ -30,6 +34,7 @@ const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescendi
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
+const type = computed<CustomizationType>(() => (route.query.type?.toString() as CustomizationType) ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   arrayUtils.orderBy(
@@ -37,6 +42,11 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
+
+function onCreated(customization: CustomizationModel): void {
+  toasts.success("customizations.created");
+  router.push({ name: "CustomizationEdit", params: { id: customization.id } });
+}
 
 async function refresh(): Promise<void> {
   const payload: SearchCustomizationsPayload = {
@@ -48,6 +58,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    type: type.value,
     sort: sort.value ? [{ field: sort.value as CustomizationSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -74,6 +85,7 @@ function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
     case "search":
+    case "type":
     case "count":
       query.page = "1";
       break;
@@ -92,6 +104,7 @@ watch(
           query: objectUtils.isEmpty(query)
             ? {
                 search: "",
+                type: "",
                 sort: "Name",
                 isDescending: "false",
                 page: 1,
@@ -125,19 +138,26 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <TarButton class="ms-1" icon="fas fa-plus" :text="t('actions.create')" variant="success" />
+      <CreateCustomization class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <CustomizationTypeSelect
+        class="col-lg-3"
+        :model-value="type"
+        placeholder="customizations.type.all"
+        validation="server"
+        @update:model-value="setQuery('type', $event ?? '')"
+      />
+      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-4"
+        class="col-lg-3"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="customizations.length">
       <table class="table table-striped">

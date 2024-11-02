@@ -7,16 +7,20 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateItem from "@/components/items/CreateItem.vue";
+import ItemCategorySelect from "@/components/items/ItemCategorySelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import type { ItemModel, ItemSort, SearchItemsPayload } from "@/types/items";
+import type { ItemCategory, ItemModel, ItemSort, SearchItemsPayload } from "@/types/items";
 import { handleErrorKey } from "@/inject/App";
 import { searchItems } from "@/api/items";
+import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
@@ -25,6 +29,7 @@ const items = ref<ItemModel[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
+const category = computed<ItemCategory>(() => (route.query.category?.toString() as ItemCategory) ?? "");
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
@@ -38,6 +43,11 @@ const sortOptions = computed<SelectOption[]>(() =>
   ),
 );
 
+function onCreated(item: ItemModel): void {
+  toasts.success("items.created");
+  router.push({ name: "ItemEdit", params: { id: item.id } });
+}
+
 async function refresh(): Promise<void> {
   const payload: SearchItemsPayload = {
     ids: [],
@@ -48,6 +58,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    category: category.value,
     sort: sort.value ? [{ field: sort.value as ItemSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -73,6 +84,7 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "category":
     case "search":
     case "count":
       query.page = "1";
@@ -91,6 +103,7 @@ watch(
           ...route,
           query: objectUtils.isEmpty(query)
             ? {
+                category: "",
                 search: "",
                 sort: "Name",
                 isDescending: "false",
@@ -125,19 +138,26 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <TarButton class="ms-1" icon="fas fa-plus" :text="t('actions.create')" variant="success" />
+      <CreateItem class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <ItemCategorySelect
+        class="col-lg-3"
+        :model-value="category"
+        placeholder="items.category.all"
+        validation="server"
+        @update:model-value="setQuery('category', $event ?? '')"
+      />
+      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-4"
+        class="col-lg-3"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="items.length">
       <table class="table table-striped">

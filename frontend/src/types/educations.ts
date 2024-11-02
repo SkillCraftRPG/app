@@ -3,6 +3,13 @@ import type { SearchPayload, SortOption } from "./search";
 import type { Skill } from "./game";
 import type { WorldModel } from "./worlds";
 
+export type CreateOrReplaceEducationPayload = {
+  name: string;
+  description?: string;
+  skill?: Skill;
+  wealthMultiplier?: number;
+};
+
 export type EducationModel = Aggregate & {
   world: WorldModel;
   name: string;

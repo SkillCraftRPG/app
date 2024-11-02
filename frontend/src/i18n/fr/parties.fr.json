@@ -1,4 +1,6 @@
 {
+  "create": "Créer un groupe",
+  "created": "Le groupe a été créé.",
   "empty": "Cette liste est vide.",
   "list": "Groupes",
   "sort": {

@@ -24,6 +24,13 @@ export type AttributeSelectionModel = {
   optional2?: Attribute;
 };
 
+export type CreateOrReplaceAspectPayload = {
+  name: string;
+  description?: string;
+  attributes: AttributeSelectionModel;
+  skills: SkillsModel;
+};
+
 export type SearchAspectsPayload = SearchPayload & {
   attribute?: Attribute;
   skill?: Skill;

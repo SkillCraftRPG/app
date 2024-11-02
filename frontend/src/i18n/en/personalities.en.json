@@ -1,4 +1,6 @@
 {
+  "create": "Create Personality",
+  "created": "The personality has been created.",
   "empty": "This list is empty.",
   "list": "Personalities",
   "sort": {

@@ -2,6 +2,12 @@ import type { Aggregate } from "./aggregate";
 import type { SearchPayload, SortOption } from "./search";
 import type { WorldModel } from "./worlds";
 
+export type CreateOrReplaceCustomizationPayload = {
+  type: CustomizationType;
+  name: string;
+  description?: string;
+};
+
 export type CustomizationModel = Aggregate & {
   world: WorldModel;
   type: CustomizationType;

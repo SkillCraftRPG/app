@@ -7,16 +7,20 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateTalent from "@/components/talents/CreateTalent.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
+import TierSelect from "@/components/shared/TierSelect.vue";
 import type { TalentModel, TalentSort, SearchTalentsPayload } from "@/types/talents";
 import { handleErrorKey } from "@/inject/App";
 import { searchTalents } from "@/api/talents";
+import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
@@ -30,6 +34,10 @@ const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescendi
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
+const tier = computed<number | undefined>(() => {
+  const tier: string | undefined = route.query.tier?.toString();
+  return tier === "" ? undefined : parseNumber(tier);
+});
 
 const sortOptions = computed<SelectOption[]>(() =>
   arrayUtils.orderBy(
@@ -37,6 +45,11 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
+
+function onCreated(talent: TalentModel): void {
+  toasts.success("talents.created");
+  router.push({ name: "TalentEdit", params: { id: talent.id } });
+}
 
 async function refresh(): Promise<void> {
   const payload: SearchTalentsPayload = {
@@ -48,6 +61,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    tier: typeof tier.value === "number" ? { values: [tier.value], operator: "eq" } : undefined,
     sort: sort.value ? [{ field: sort.value as TalentSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -74,6 +88,7 @@ function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
     case "search":
+    case "tier":
     case "count":
       query.page = "1";
       break;
@@ -93,6 +108,7 @@ watch(
             ? {
                 search: "",
                 sort: "Name",
+                tier: "",
                 isDescending: "false",
                 page: 1,
                 count: 10,
@@ -125,26 +141,33 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <TarButton class="ms-1" icon="fas fa-plus" :text="t('actions.create')" variant="success" />
+      <CreateTalent class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <TierSelect
+        class="col-lg-3"
+        :model-value="tier"
+        placeholder="game.tier.all"
+        validation="server"
+        @update:model-value="setQuery('tier', $event?.toString() ?? '')"
+      />
+      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-4"
+        class="col-lg-3"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="talents.length">
       <table class="table table-striped">
         <thead>
           <tr>
             <th scope="col">{{ t("talents.sort.options.Name") }}</th>
-            <th scope="col">{{ t("game.tier") }}</th>
+            <th scope="col">{{ t("game.tier.label") }}</th>
             <th scope="col">{{ t("talents.required") }}</th>
             <th scope="col">{{ t("game.skill") }}</th>
             <th scope="col">{{ t("talents.allowMultiplePurchases") }}</th>

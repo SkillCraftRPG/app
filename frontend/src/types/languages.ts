@@ -2,6 +2,13 @@ import type { Aggregate } from "./aggregate";
 import type { SearchPayload, SortOption } from "./search";
 import type { WorldModel } from "./worlds";
 
+export type CreateOrReplaceLanguagePayload = {
+  name: string;
+  description?: string;
+  script?: string;
+  typicalSpeakers?: string;
+};
+
 export type LanguageModel = Aggregate & {
   world: WorldModel;
   name: string;

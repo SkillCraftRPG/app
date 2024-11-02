@@ -14,6 +14,21 @@ export type ContainerPropertiesModel = {
   volume?: number;
 };
 
+export type CreateOrReplaceItemPayload = {
+  name: string;
+  description?: string;
+  value?: number;
+  weight?: number;
+  isAttunementRequired: boolean;
+  consumable?: ConsumablePropertiesModel;
+  container?: ContainerPropertiesModel;
+  device?: DevicePropertiesModel;
+  equipment?: EquipmentPropertiesModel;
+  miscellaneous?: MiscellaneousPropertiesModel;
+  money?: MoneyPropertiesModel;
+  weapon?: WeaponPropertiesModel;
+};
+
 export type DevicePropertiesModel = {};
 
 export type EquipmentPropertiesModel = {

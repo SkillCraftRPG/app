@@ -1,4 +1,6 @@
 {
+  "create": "Create Language",
+  "created": "The language has been created.",
   "empty": "This list is empty.",
   "list": "Languages",
   "script": "Script",

@@ -7,16 +7,19 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateAspect from "@/components/aspects/CreateAspect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { AspectModel, AspectSort, SearchAspectsPayload } from "@/types/aspects";
 import { handleErrorKey } from "@/inject/App";
 import { searchAspects } from "@/api/aspects";
+import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
@@ -53,6 +56,11 @@ function formatAttributes(aspect: AspectModel, category: AttributeCategory): str
 function formatSkills(aspect: AspectModel): string {
   const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2].filter((skill) => Boolean(skill)).map((skill) => t(`game.skills.${skill}`));
   return skills.join("<br />") || "—";
+}
+
+function onCreated(aspect: AspectModel): void {
+  toasts.success("aspects.created");
+  router.push({ name: "AspectEdit", params: { id: aspect.id } });
 }
 
 async function refresh(): Promise<void> {
@@ -142,7 +150,7 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <TarButton class="ms-1" icon="fas fa-plus" :text="t('actions.create')" variant="success" />
+      <CreateAspect class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />

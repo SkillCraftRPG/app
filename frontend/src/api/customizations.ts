@@ -1,18 +1,23 @@
 import { urlUtils } from "logitar-js";
 
-import type { CustomizationModel, SearchCustomizationsPayload } from "@/types/customizations";
+import type { CreateOrReplaceCustomizationPayload, CustomizationModel, SearchCustomizationsPayload } from "@/types/customizations";
 import type { SearchResults } from "@/types/search";
-import { get } from ".";
+import { get, post } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/customizations/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/customizations" });
+}
+
+export async function createCustomization(payload: CreateOrReplaceCustomizationPayload): Promise<CustomizationModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplaceCustomizationPayload, CustomizationModel>(url, payload)).data;
 }
 
 export async function searchCustomizations(payload: SearchCustomizationsPayload): Promise<SearchResults<CustomizationModel>> {
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery(
-      "search_terms",
+      "search",
       payload.search.terms.map(({ value }) => value),
     )
     .setQuery("search_operator", payload.search.operator)

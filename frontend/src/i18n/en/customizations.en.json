@@ -1,4 +1,6 @@
 {
+  "create": "Create Customization",
+  "created": "The customization has been created.",
   "empty": "This list is empty.",
   "list": "Customizations",
   "sort": {
@@ -9,10 +11,12 @@
     }
   },
   "type": {
+    "all": "All types",
     "label": "Type",
     "options": {
       "Disability": "Disability",
       "Gift": "Gift"
-    }
+    },
+    "placeholder": "Select a customization type"
   }
 }

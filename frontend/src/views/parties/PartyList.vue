@@ -7,16 +7,19 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateParty from "@/components/parties/CreateParty.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { PartyModel, PartySort, SearchPartiesPayload } from "@/types/parties";
 import { handleErrorKey } from "@/inject/App";
 import { searchParties } from "@/api/parties";
+import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
@@ -37,6 +40,11 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
+
+function onCreated(party: PartyModel): void {
+  toasts.success("parties.created");
+  router.push({ name: "PartyEdit", params: { id: party.id } });
+}
 
 async function refresh(): Promise<void> {
   const payload: SearchPartiesPayload = {
@@ -125,7 +133,7 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <TarButton class="ms-1" icon="fas fa-plus" :text="t('actions.create')" variant="success" />
+      <CreateParty class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />

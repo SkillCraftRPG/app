@@ -4,6 +4,13 @@ import type { CustomizationModel } from "./customizations";
 import type { SearchPayload, SortOption } from "./search";
 import type { WorldModel } from "./worlds";
 
+export type CreateOrReplacePersonalityPayload = {
+  name: string;
+  description?: string;
+  attribute?: Attribute;
+  giftId?: string;
+};
+
 export type PersonalityModel = Aggregate & {
   world: WorldModel;
   name: string;

@@ -3,6 +3,8 @@
     "mandatory": "Attributs obligatoires",
     "optional": "Attributs facultatifs"
   },
+  "create": "Créer un aspect",
+  "created": "L’aspect a été créé.",
   "empty": "Cette liste est vide.",
   "list": "Aspects",
   "skills": "Compétences",

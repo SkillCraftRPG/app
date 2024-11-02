@@ -1,18 +1,23 @@
 import { urlUtils } from "logitar-js";
 
-import type { TalentModel, SearchTalentsPayload } from "@/types/talents";
+import type { CreateOrReplaceTalentPayload, SearchTalentsPayload, TalentModel } from "@/types/talents";
 import type { SearchResults } from "@/types/search";
-import { get } from ".";
+import { get, post } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/talents/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/talents" });
+}
+
+export async function createTalent(payload: CreateOrReplaceTalentPayload): Promise<TalentModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplaceTalentPayload, TalentModel>(url, payload)).data;
 }
 
 export async function searchTalents(payload: SearchTalentsPayload): Promise<SearchResults<TalentModel>> {
   const builder: urlUtils.IUrlBuilder = createUrlBuilder()
     .setQuery("ids", payload.ids)
     .setQuery(
-      "search_terms",
+      "search",
       payload.search.terms.map(({ value }) => value),
     )
     .setQuery("search_operator", payload.search.operator)
