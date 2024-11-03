@@ -9,9 +9,11 @@ import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateEducation from "@/components/educations/CreateEducation.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
+import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { EducationModel, EducationSort, SearchEducationsPayload } from "@/types/educations";
+import type { Skill } from "@/types/game";
 import { handleErrorKey } from "@/inject/App";
 import { searchEducations } from "@/api/educations";
 import { useToastStore } from "@/stores/toast";
@@ -32,6 +34,7 @@ const count = computed<number>(() => parseNumber(route.query.count?.toString()) 
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
+const skill = computed<Skill | undefined>(() => (route.query.skill?.toString() as Skill) ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
@@ -56,6 +59,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    skill: skill.value,
     sort: sort.value ? [{ field: sort.value as EducationSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -82,6 +86,7 @@ function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
     case "search":
+    case "skill":
     case "count":
       query.page = "1";
       break;
@@ -100,6 +105,7 @@ watch(
           query: objectUtils.isEmpty(query)
             ? {
                 search: "",
+                skill: "",
                 sort: "Name",
                 isDescending: "false",
                 page: 1,
@@ -136,16 +142,17 @@ watch(
       <CreateEducation class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <SkillSelect class="col-lg-3" :model-value="skill" validation="server" @update:model-value="setQuery('skill', $event ?? '')" />
+      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-4"
+        class="col-lg-3"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="educations.length">
       <table class="table table-striped">

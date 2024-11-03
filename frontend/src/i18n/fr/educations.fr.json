@@ -9,5 +9,7 @@
       "Name": "Nom",
       "UpdatedOn": "Dernière modification"
     }
-  }
+  },
+  "updated": "L’éducation a été modifiée.",
+  "wealthMultiplier": "Richesse initiale (multiplicateur)"
 }

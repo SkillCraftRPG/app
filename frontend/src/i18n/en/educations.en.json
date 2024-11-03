@@ -9,5 +9,7 @@
       "Name": "Name",
       "UpdatedOn": "Updated on"
     }
-  }
+  },
+  "updated": "The education has been updated.",
+  "wealthMultiplier": "Starting Wealth (multiplier)"
 }
