@@ -13,6 +13,7 @@ defineEmits<{
 <template>
   <AppInput
     floating
+    id="script"
     label="languages.script.label"
     max="255"
     :model-value="modelValue"

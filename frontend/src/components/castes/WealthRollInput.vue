@@ -3,7 +3,6 @@ import AppInput from "@/components/shared/AppInput.vue";
 
 defineProps<{
   modelValue?: string;
-  required?: boolean | string;
 }>();
 
 defineEmits<{
@@ -14,12 +13,11 @@ defineEmits<{
 <template>
   <AppInput
     floating
-    id="name"
-    label="name"
-    max="255"
-    :model-value="modelValue"
-    placeholder="name"
-    :required="required"
+    id="wealth-roll"
+    label="castes.wealthRoll"
+    :model-value="modelValue?.toString()"
+    placeholder="castes.wealthRoll"
+    :rules="{ roll: true }"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>

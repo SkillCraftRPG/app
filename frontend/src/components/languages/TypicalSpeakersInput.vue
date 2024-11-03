@@ -13,6 +13,7 @@ defineEmits<{
 <template>
   <AppInput
     floating
+    id="typical-speakers"
     label="languages.typicalSpeakers"
     max="255"
     :model-value="modelValue"

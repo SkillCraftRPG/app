@@ -13,6 +13,7 @@
   "require_non_alphanumeric": "The {field} must contain at least one special character (e.g. !@/$%&*_+-).",
   "require_uppercase": "The {field} must contain at least one uppercase letter (A-Z).",
   "required": "The {field} is required.",
+  "roll": "The {field} must be a mathematical expression composed of operators ('+'), positive numbers and rolls. A roll is composed of two positive numbers separated by a 'D' (lowercase or uppercase).",
   "slug": "The {field} must be composed of non-empty alphanumeric words separated by hyphens (-).",
   "unique_chars": "The {field} must contain at least 0:{count} different characters.",
   "url": "Please enter a valid URL. Valid URLs start with http:// or https://."

@@ -1,13 +1,17 @@
 {
   "actions": {
+    "add": "Add",
     "back": "Go back",
     "cancel": "Cancel",
     "close": "Close",
     "complete": "Complete",
     "continue": "Continue",
     "create": "Create",
+    "edit": "Edit",
     "enter": "Enter",
     "refresh": "Refresh",
+    "remove": "Remove",
+    "restore": "Restore",
     "save": "Save"
   },
   "brand": "SkillCraftRPG",
