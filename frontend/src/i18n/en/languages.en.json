@@ -3,7 +3,10 @@
   "created": "The language has been created.",
   "empty": "This list is empty.",
   "list": "Languages",
-  "script": "Script",
+  "script": {
+    "all": "All scripts",
+    "label": "Script"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",

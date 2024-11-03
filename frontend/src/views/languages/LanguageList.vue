@@ -8,6 +8,7 @@ import { useRoute, useRouter } from "vue-router";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLanguage from "@/components/languages/CreateLanguage.vue";
+import ScriptSelect from "@/components/languages/ScriptSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
@@ -31,6 +32,7 @@ const total = ref<number>(0);
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
+const script = computed<string>(() => route.query.script?.toString() ?? "");
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
@@ -56,6 +58,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    script: script.value,
     sort: sort.value ? [{ field: sort.value as LanguageSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -81,6 +84,7 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "script":
     case "search":
     case "count":
       query.page = "1";
@@ -99,6 +103,7 @@ watch(
           ...route,
           query: objectUtils.isEmpty(query)
             ? {
+                script: "",
                 search: "",
                 sort: "Name",
                 isDescending: "false",
@@ -136,23 +141,24 @@ watch(
       <CreateLanguage class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
-      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <ScriptSelect class="col-lg-3" :model-value="script" @update:model-value="setQuery('script', $event ?? '')" @error="handleError" />
+      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-4"
+        class="col-lg-3"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="languages.length">
       <table class="table table-striped">
         <thead>
           <tr>
             <th scope="col">{{ t("languages.sort.options.Name") }}</th>
-            <th scope="col">{{ t("languages.script") }}</th>
+            <th scope="col">{{ t("languages.script.label") }}</th>
             <th scope="col">{{ t("languages.typicalSpeakers") }}</th>
             <th scope="col">{{ t("languages.sort.options.UpdatedOn") }}</th>
           </tr>
