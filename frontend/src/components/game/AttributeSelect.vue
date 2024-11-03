@@ -5,26 +5,20 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
+import type { Attribute } from "@/types/game";
 import type { ValidationType } from "@/types/validation";
 
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
-withDefaults(
-  defineProps<{
-    modelValue?: string;
-    placeholder?: string;
-    required?: boolean | string;
-    validation?: ValidationType;
-  }>(),
-  {
-    placeholder: "items.category.placeholder",
-  },
-);
+defineProps<{
+  modelValue?: Attribute;
+  validation?: ValidationType;
+}>();
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("game.attributes"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -37,13 +31,12 @@ defineEmits<{
 <template>
   <AppSelect
     floating
-    id="category"
-    label="items.category.label"
+    id="attribute"
+    label="game.attribute"
     :model-value="modelValue"
     :options="options"
-    :placeholder="placeholder"
-    :required="required"
+    placeholder="game.attribute"
     :validation="validation"
-    @update:model-value="$emit('update:model-value', $event)"
+    @update:model-value="$emit('update:model-value', $event as Attribute)"
   />
 </template>
