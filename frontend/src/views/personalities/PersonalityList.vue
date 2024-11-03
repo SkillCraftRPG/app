@@ -6,11 +6,14 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
+import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreatePersonality from "@/components/personalities/CreatePersonality.vue";
+import CustomizationSelect from "@/components/customizations/CustomizationSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
+import type { Attribute } from "@/types/game";
 import type { PersonalityModel, PersonalitySort, SearchPersonalitiesPayload } from "@/types/personalities";
 import { handleErrorKey } from "@/inject/App";
 import { searchPersonalities } from "@/api/personalities";
@@ -28,7 +31,9 @@ const personalities = ref<PersonalityModel[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
+const attribute = computed<Attribute>(() => (route.query.attribute?.toString() as Attribute) ?? "");
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
+const giftId = computed<string>(() => route.query.gift?.toString() ?? "");
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
@@ -56,6 +61,8 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    attribute: attribute.value,
+    giftId: giftId.value,
     sort: sort.value ? [{ field: sort.value as PersonalitySort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -81,6 +88,8 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "attribute":
+    case "gift":
     case "search":
     case "count":
       query.page = "1";
@@ -99,6 +108,8 @@ watch(
           ...route,
           query: objectUtils.isEmpty(query)
             ? {
+                attribute: "",
+                gift: "",
                 search: "",
                 sort: "Name",
                 isDescending: "false",
@@ -134,6 +145,10 @@ watch(
         @click="refresh()"
       />
       <CreatePersonality class="ms-1" @created="onCreated" @error="handleError" />
+    </div>
+    <div class="row">
+      <AttributeSelect class="col-lg-6" :model-value="attribute" validation="server" @update:model-value="setQuery('attribute', $event ?? '')" />
+      <CustomizationSelect class="col-lg-6" :model-value="giftId" type="Gift" validation="server" @update:model-value="setQuery('gift', $event ?? '')" />
     </div>
     <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />

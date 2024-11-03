@@ -3,6 +3,10 @@
   "created": "The customization has been created.",
   "empty": "This list is empty.",
   "list": "Customizations",
+  "select": {
+    "label": "Customization",
+    "placeholder": "Select a customization"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",

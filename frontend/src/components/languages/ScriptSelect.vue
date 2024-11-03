@@ -32,7 +32,7 @@ onMounted(async () => {
 <template>
   <AppSelect
     floating
-    id="type"
+    id="script"
     label="languages.script.label"
     :model-value="modelValue"
     :options="options"
