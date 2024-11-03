@@ -27,6 +27,7 @@ const emit = defineEmits<{
 }>();
 
 function onCancel(): void {
+  category.value = undefined;
   name.value = "";
   hide();
 }

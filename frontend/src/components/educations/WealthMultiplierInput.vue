@@ -17,6 +17,7 @@ defineEmits<{
 <template>
   <AppInput
     floating
+    id="wealth-multiplier"
     label="educations.wealthMultiplier"
     min="1"
     max="12"

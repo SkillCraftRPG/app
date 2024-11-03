@@ -10,5 +10,18 @@
       "UpdatedOn": "Updated on"
     }
   },
-  "traits": "Traits"
+  "traits": {
+    "edit": "Edit Trait",
+    "empty": "This list is empty.",
+    "new": "New Trait",
+    "status": {
+      "added": "Added",
+      "label": "Status",
+      "removed": "Removed",
+      "updated": "Updated"
+    },
+    "label": "Traits"
+  },
+  "updated": "The caste has been updated.",
+  "wealthRoll": "Starting Wealth (roll)"
 }

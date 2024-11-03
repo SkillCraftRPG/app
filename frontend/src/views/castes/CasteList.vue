@@ -159,7 +159,7 @@ watch(
             <th scope="col">{{ t("castes.sort.options.Name") }}</th>
             <th scope="col">{{ t("game.skill") }}</th>
             <th scope="col">{{ t("game.startingWealth") }}</th>
-            <th scope="col">{{ t("castes.traits") }}</th>
+            <th scope="col">{{ t("castes.traits.label") }}</th>
             <th scope="col">{{ t("castes.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>

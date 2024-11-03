@@ -13,6 +13,7 @@
   "require_non_alphanumeric": "Le champs « {field} » doit contenir au moins un caractère spécial (e.g. !@/$%&*_+-).",
   "require_uppercase": "Le champs « {field} » doit contenir au moins une majuscule (A-Z).",
   "required": "Le champs « {field} » est requis.",
+  "roll": "Le champs « {field} » doit être une expression mathématique composée d’opérateurs (+), de nombres positifs et de jets de dés. Un jet de dé est composé de deux nombres positifs séparés par un D (minuscule ou majuscule).",
   "slug": "Le champs « {field} » doit être composé de mots alphanumériques non vides séparés par un tiret (-).",
   "unique_chars": "Le champs « {field} » doit contenir au moins 0:{count} caractères uniques.",
   "url": "Veuillez entre un lien valide. Un lien valide débute par http:// ou https://."

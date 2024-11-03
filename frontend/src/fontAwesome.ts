@@ -28,6 +28,8 @@ import {
   faSave,
   faSpaghettiMonsterFlying,
   faTimes,
+  faTrash,
+  faTrashArrowUp,
   faUser,
   faVial,
 } from "@fortawesome/free-solid-svg-icons";
@@ -58,6 +60,8 @@ library.add(
   faSave,
   faSpaghettiMonsterFlying,
   faTimes,
+  faTrash,
+  faTrashArrowUp,
   faUser,
   faVial,
 );

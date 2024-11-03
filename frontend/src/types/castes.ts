@@ -42,3 +42,14 @@ export type TraitPayload = {
   name: string;
   description?: string;
 };
+
+export type TraitStatus = {
+  trait: TraitPayload;
+  isRemoved: boolean;
+  isUpdated: boolean;
+};
+
+export type TraitUpdated = {
+  index: number;
+  trait: TraitPayload;
+};

@@ -10,5 +10,18 @@
       "UpdatedOn": "Dernière modification"
     }
   },
-  "traits": "Traits"
+  "traits": {
+    "edit": "Modifier un trait",
+    "empty": "Cette liste est vide.",
+    "new": "Nouveau trait",
+    "status": {
+      "added": "Ajouté",
+      "label": "Statut",
+      "removed": "Retiré",
+      "updated": "Modifié"
+    },
+    "label": "Traits"
+  },
+  "updated": "La caste a été modifiée.",
+  "wealthRoll": "Richesse initiale (jet)"
 }

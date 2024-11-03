@@ -27,6 +27,7 @@ const emit = defineEmits<{
 }>();
 
 function onCancel(): void {
+  tier.value = undefined;
   name.value = "";
   hide();
 }

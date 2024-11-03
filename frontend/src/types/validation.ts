@@ -25,6 +25,7 @@ export type ValidationRules = {
   require_non_alphanumeric?: boolean;
   require_uppercase?: boolean;
   required?: boolean;
+  roll?: boolean;
   unique_chars?: number;
   url?: boolean;
 };
