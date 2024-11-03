@@ -7,12 +7,14 @@
     "continue": "Continue",
     "create": "Create",
     "enter": "Enter",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "save": "Save"
   },
   "brand": "SkillCraftRPG",
   "by": "By",
   "copyright": "© SkillCraftRPG {version} {year}.",
   "count": "Count",
+  "description": "Description",
   "loading": "Loading…",
   "name": "Name",
   "no": "No",
@@ -35,6 +37,10 @@
       "label": "Sort",
       "placeholder": "Select a sort"
     }
+  },
+  "status": {
+    "createdOn": "Created on {date} by",
+    "updatedOn": "Last updated on {date} by"
   },
   "system": "System",
   "toasts": {

@@ -12,6 +12,7 @@ const { rt, tm } = useI18n();
 
 withDefaults(
   defineProps<{
+    disabled?: boolean | string;
     modelValue?: string;
     placeholder?: string;
     required?: boolean | string;
@@ -36,6 +37,7 @@ defineEmits<{
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     id="type"
     label="customizations.type.label"
