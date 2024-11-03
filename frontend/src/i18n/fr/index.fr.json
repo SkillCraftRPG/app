@@ -7,12 +7,14 @@
     "continue": "Poursuivre",
     "create": "Créer",
     "enter": "Entrer",
-    "refresh": "Rafraîchir"
+    "refresh": "Rafraîchir",
+    "save": "Enregistrer"
   },
   "brand": "SkillCraftRPG",
   "by": "Par",
   "copyright": "© SkillCraftRPG {version} {year}.",
   "count": "Nombre de résultats",
+  "description": "Description",
   "loading": "Chargement…",
   "name": "Nom",
   "no": "Non",
@@ -35,6 +37,10 @@
       "label": "Tri",
       "placeholder": "Sélectionnez un tri"
     }
+  },
+  "status": {
+    "createdOn": "Création le {date} par",
+    "updatedOn": "Dernière modification le {date} par"
   },
   "system": "Système",
   "toasts": {

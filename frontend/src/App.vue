@@ -36,8 +36,7 @@ provide(handleErrorKey, handleError);
 
 <template>
   <AppNavbar />
-  <div class="mb-3"></div>
-  <RouterView />
+  <RouterView class="my-3" />
   <AppFooter />
   <TarToaster :toasts="toasts.toasts" @hidden="toasts.remove" />
 </template>
