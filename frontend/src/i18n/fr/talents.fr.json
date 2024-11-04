@@ -3,13 +3,20 @@
   "create": "Créer un talent",
   "created": "Le talent a été créé.",
   "empty": "Cette liste est vide.",
+  "hasSkill": "Associé à une compétence",
   "list": "Talents",
   "required": "Talent requis",
+  "select": {
+    "label": "Talent",
+    "none": "Aucun",
+    "placeholder": "Sélectionnez un talent"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
       "Name": "Nom",
       "UpdatedOn": "Dernière modification"
     }
-  }
+  },
+  "updated": "Le talent a été modifié."
 }

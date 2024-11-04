@@ -79,8 +79,8 @@ onMounted(async () => {
       <StatusDetail :aggregate="customization" />
       <form @submit.prevent="onSubmit">
         <div class="row">
-          <CustomizationTypeSelect class="col-md-6" disabled :model-value="customization.type" validation="server" />
           <NameInput class="col-md-6" required v-model="name" />
+          <CustomizationTypeSelect class="col-md-6" disabled :model-value="customization.type" validation="server" />
         </div>
         <DescriptionTextarea v-model="description" />
         <div>

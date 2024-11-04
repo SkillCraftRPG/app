@@ -3,7 +3,7 @@ import type { SelectOption } from "logitar-vue3-ui";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { CustomizationModel, CustomizationType } from "@/types/customizations";
+import type { CustomizationModel, CustomizationType, SearchCustomizationsPayload } from "@/types/customizations";
 import type { SearchResults } from "@/types/search";
 import type { ValidationType } from "@/types/validation";
 import { searchCustomizations } from "@/api/customizations";
@@ -15,6 +15,7 @@ const props = defineProps<{
 }>();
 
 const customizations = ref<CustomizationModel[]>([]);
+const hasLoaded = ref<boolean>(false);
 
 const options = computed<SelectOption[]>(() => customizations.value.map(({ id, name }) => ({ text: name, value: id })));
 
@@ -32,23 +33,27 @@ function onModelValueUpdate(id?: string) {
 
 onMounted(async () => {
   try {
-    const results: SearchResults<CustomizationModel> = await searchCustomizations({
+    const payload: SearchCustomizationsPayload = {
       ids: [],
       search: { terms: [], operator: "And" },
       type: props.type,
       sort: [{ field: "Name", isDescending: false }],
       skip: 0,
       limit: 0,
-    });
+    };
+    const results: SearchResults<CustomizationModel> = await searchCustomizations(payload);
     customizations.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
+  } finally {
+    hasLoaded.value = true;
   }
 });
 </script>
 
 <template>
   <AppSelect
+    :disabled="!hasLoaded"
     floating
     id="customization"
     label="customizations.select.label"

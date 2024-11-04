@@ -35,6 +35,9 @@
     "previous": "Page précédente"
   },
   "search": "Recherche",
+  "select": {
+    "placeholder": "Sélectionnez une option"
+  },
   "sort": {
     "isDescending": "Descendant",
     "select": {

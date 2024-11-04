@@ -4,6 +4,7 @@
   "empty": "This list is empty.",
   "list": "Customizations",
   "select": {
+    "gift": "Select a gift",
     "label": "Customization",
     "placeholder": "Select a customization"
   },
