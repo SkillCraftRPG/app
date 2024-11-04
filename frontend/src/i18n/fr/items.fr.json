@@ -13,10 +13,30 @@
     },
     "placeholder": "Sélectionnez une catégorie d’objet"
   },
+  "consumable": {
+    "charges": "Charges",
+    "invalid": "Un objet consommable ne peut être que retiré ou remplacé lorsque vide.",
+    "removeWhenEmpty": "Retirer lorsque vide",
+    "replaceWithItemWhenEmpty": "Remplacer par l’objet lorsque vide"
+  },
+  "container": {
+    "capacity": "Capacité",
+    "volume": "Volume"
+  },
   "create": "Créer un objet",
   "created": "L’objet a été créé.",
   "empty": "Cette liste est vide.",
+  "equipment": {
+    "defense": "Défense",
+    "resistance": "Résistance"
+  },
+  "isAttunementRequired": "Harmonisation requise",
   "list": "Objets",
+  "properties": "Propriétés",
+  "select": {
+    "label": "Objet",
+    "placeholder": "Sélectionnez un objet"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
@@ -25,5 +45,10 @@
       "Value": "Valeur",
       "Weight": "Poids"
     }
+  },
+  "updated": "L’objet a été modifié.",
+  "weapon": {
+    "attack": "Attaque",
+    "resistance": "Résistance"
   }
 }

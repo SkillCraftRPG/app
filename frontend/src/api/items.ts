@@ -2,7 +2,7 @@ import { urlUtils } from "logitar-js";
 
 import type { CreateOrReplaceItemPayload, ItemModel, SearchItemsPayload } from "@/types/items";
 import type { SearchResults } from "@/types/search";
-import { get, post } from ".";
+import { get, post, put } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/items/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/items" });
@@ -11,6 +11,18 @@ function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
 export async function createItem(payload: CreateOrReplaceItemPayload): Promise<ItemModel> {
   const url: string = createUrlBuilder().buildRelative();
   return (await post<CreateOrReplaceItemPayload, ItemModel>(url, payload)).data;
+}
+
+export async function readItem(id: string): Promise<ItemModel> {
+  const url: string = createUrlBuilder(id).buildRelative();
+  return (await get<ItemModel>(url)).data;
+}
+
+export async function replaceItem(id: string, payload: CreateOrReplaceItemPayload, version?: number): Promise<ItemModel> {
+  const url: string = createUrlBuilder(id)
+    .setQuery("version", version?.toString() ?? "")
+    .buildRelative();
+  return (await put<CreateOrReplaceItemPayload, ItemModel>(url, payload)).data;
 }
 
 export async function searchItems(payload: SearchItemsPayload): Promise<SearchResults<ItemModel>> {

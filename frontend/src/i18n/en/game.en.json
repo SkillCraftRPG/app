@@ -37,5 +37,9 @@
     "all": "All tiers",
     "label": "Tier",
     "placeholder": "Select a tier"
+  },
+  "units": {
+    "kilograms": "kg",
+    "liters": "L"
   }
 }

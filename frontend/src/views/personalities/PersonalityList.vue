@@ -155,6 +155,7 @@ watch(
         placeholder="customizations.select.gift"
         type="Gift"
         validation="server"
+        @error="handleError"
         @update:model-value="setQuery('gift', $event ?? '')"
       />
     </div>

@@ -170,6 +170,7 @@ watch(
         :model-value="required"
         placeholder="talents.select.none"
         validation="server"
+        @error="handleError"
         @update:model-value="setQuery('required', $event?.toString() ?? '')"
       />
       <TierSelect

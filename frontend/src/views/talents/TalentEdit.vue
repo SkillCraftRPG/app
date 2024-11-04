@@ -111,6 +111,7 @@ onMounted(async () => {
             :max-tier="talent.tier"
             :model-value="requiredTalent?.id"
             placeholder="talents.select.none"
+            @error="handleError"
             @selected="requiredTalent = $event"
           />
         </div>

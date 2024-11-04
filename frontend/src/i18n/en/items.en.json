@@ -13,10 +13,30 @@
     },
     "placeholder": "Select an item category"
   },
+  "consumable": {
+    "charges": "Charges",
+    "invalid": "A consumable item may only be removed or replaced when empty.",
+    "removeWhenEmpty": "Remove when empty",
+    "replaceWithItemWhenEmpty": "Replace with item when empty"
+  },
+  "container": {
+    "capacity": "Capacity",
+    "volume": "Volume"
+  },
   "create": "Create Item",
   "created": "The item has been created.",
   "empty": "This list is empty.",
+  "equipment": {
+    "defense": "Defense",
+    "resistance": "Resistance"
+  },
+  "isAttunementRequired": "Attunement required",
   "list": "Items",
+  "properties": "Properties",
+  "select": {
+    "label": "Item",
+    "placeholder": "Select an item"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",
@@ -25,5 +45,10 @@
       "Value": "Value",
       "Weight": "Weight"
     }
+  },
+  "updated": "The item has been updated.",
+  "weapon": {
+    "attack": "Attack",
+    "resistance": "Resistance"
   }
 }
