@@ -28,7 +28,6 @@ const description = ref<string>("");
 const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const skill = ref<Skill>();
-
 const traits = ref<TraitStatus[]>([]);
 const wealthRoll = ref<string>("");
 

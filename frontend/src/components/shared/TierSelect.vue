@@ -10,6 +10,7 @@ const { parseNumber } = parsingUtils;
 
 withDefaults(
   defineProps<{
+    disabled?: boolean;
     modelValue?: number;
     placeholder?: string;
     required?: boolean | string;
@@ -34,6 +35,7 @@ defineEmits<{
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     id="tier"
     label="game.tier.label"

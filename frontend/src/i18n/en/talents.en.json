@@ -3,13 +3,20 @@
   "create": "Create Talent",
   "created": "The talent has been created.",
   "empty": "This list is empty.",
+  "hasSkill": "Associated to a skill",
   "list": "Talents",
   "required": "Required talent",
+  "select": {
+    "label": "Talent",
+    "none": "None",
+    "placeholder": "Select a talent"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",
       "Name": "Name",
       "UpdatedOn": "Updated on"
     }
-  }
+  },
+  "updated": "The talent has been updated."
 }

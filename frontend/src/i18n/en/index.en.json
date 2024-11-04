@@ -35,6 +35,9 @@
     "previous": "Previous"
   },
   "search": "Search",
+  "select": {
+    "placeholder": "Select an option"
+  },
   "sort": {
     "isDescending": "Is descending",
     "select": {

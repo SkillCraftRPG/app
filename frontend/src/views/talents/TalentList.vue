@@ -11,7 +11,9 @@ import CreateTalent from "@/components/talents/CreateTalent.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
+import TalentSelect from "@/components/talents/TalentSelect.vue";
 import TierSelect from "@/components/shared/TierSelect.vue";
+import YesNoSelect from "@/components/shared/YesNoSelect.vue";
 import type { TalentModel, TalentSort, SearchTalentsPayload } from "@/types/talents";
 import { handleErrorKey } from "@/inject/App";
 import { searchTalents } from "@/api/talents";
@@ -31,8 +33,17 @@ const total = ref<number>(0);
 
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
+const multiple = computed<boolean | undefined>(() => {
+  const multiple: string | undefined = route.query.multiple?.toString();
+  return multiple === "" ? undefined : parseBoolean(multiple);
+});
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
+const required = computed<string>(() => route.query.required?.toString() ?? "");
 const search = computed<string>(() => route.query.search?.toString() ?? "");
+const skill = computed<boolean | undefined>(() => {
+  const skill: string | undefined = route.query.skill?.toString();
+  return skill === "" ? undefined : parseBoolean(skill);
+});
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 const tier = computed<number | undefined>(() => {
   const tier: string | undefined = route.query.tier?.toString();
@@ -61,6 +72,9 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    allowMultiplePurchases: multiple.value,
+    hasSkill: skill.value,
+    requiredTalentId: required.value,
     tier: typeof tier.value === "number" ? { values: [tier.value], operator: "eq" } : undefined,
     sort: sort.value ? [{ field: sort.value as TalentSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
@@ -87,7 +101,10 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "multiple":
+    case "required":
     case "search":
+    case "skill":
     case "tier":
     case "count":
       query.page = "1";
@@ -106,9 +123,12 @@ watch(
           ...route,
           query: objectUtils.isEmpty(query)
             ? {
+                multiple: "",
+                required: "",
                 search: "",
-                sort: "Name",
+                skill: "",
                 tier: "",
+                sort: "Name",
                 isDescending: "false",
                 page: 1,
                 count: 10,
@@ -144,6 +164,14 @@ watch(
       <CreateTalent class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
+      <TalentSelect
+        class="col-lg-3"
+        label="talents.required"
+        :model-value="required"
+        placeholder="talents.select.none"
+        validation="server"
+        @update:model-value="setQuery('required', $event?.toString() ?? '')"
+      />
       <TierSelect
         class="col-lg-3"
         :model-value="tier"
@@ -151,16 +179,34 @@ watch(
         validation="server"
         @update:model-value="setQuery('tier', $event?.toString() ?? '')"
       />
-      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
-      <SortSelect
+      <YesNoSelect
         class="col-lg-3"
+        id="multiple"
+        label="talents.allowMultiplePurchases"
+        :model-value="multiple"
+        validation="server"
+        @update:model-value="setQuery('multiple', $event?.toString() ?? '')"
+      />
+      <YesNoSelect
+        class="col-lg-3"
+        id="skill"
+        label="talents.hasSkill"
+        :model-value="skill"
+        validation="server"
+        @update:model-value="setQuery('skill', $event?.toString() ?? '')"
+      />
+    </div>
+    <div class="row">
+      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <SortSelect
+        class="col-lg-4"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="talents.length">
       <table class="table table-striped">

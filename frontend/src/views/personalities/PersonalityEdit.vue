@@ -13,6 +13,7 @@ import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { Attribute } from "@/types/game";
 import type { CreateOrReplacePersonalityPayload, PersonalityModel } from "@/types/personalities";
+import type { CustomizationModel } from "@/types/customizations";
 import { handleErrorKey } from "@/inject/App";
 import { readPersonality, replacePersonality } from "@/api/personalities";
 import { useToastStore } from "@/stores/toast";
@@ -24,7 +25,7 @@ const toasts = useToastStore();
 
 const attribute = ref<Attribute>();
 const description = ref<string>("");
-const giftId = ref<string>("");
+const gift = ref<CustomizationModel>();
 const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const personality = ref<PersonalityModel>();
@@ -34,7 +35,7 @@ const hasChanges = computed<boolean>(
     !!personality.value &&
     (name.value !== personality.value.name ||
       attribute.value !== personality.value.attribute ||
-      giftId.value !== (personality.value.gift?.id ?? "") ||
+      gift.value?.id !== personality.value.gift?.id ||
       description.value !== (personality.value.description ?? "")),
 );
 
@@ -42,7 +43,7 @@ function setModel(model: PersonalityModel): void {
   personality.value = model;
   attribute.value = model.attribute;
   description.value = model.description ?? "";
-  giftId.value = model.gift?.id ?? "";
+  gift.value = model.gift;
   name.value = model.name;
 }
 
@@ -54,7 +55,7 @@ const onSubmit = handleSubmit(async () => {
         name: name.value,
         description: description.value,
         attribute: attribute.value,
-        giftId: giftId.value || undefined,
+        giftId: gift.value?.id,
       };
       const model: PersonalityModel = await replacePersonality(personality.value.id, payload, personality.value.version);
       setModel(model);
@@ -93,7 +94,7 @@ onMounted(async () => {
         <div class="row">
           <NameInput class="col-md-4" required v-model="name" />
           <AttributeSelect class="col-md-4" v-model="attribute" />
-          <CustomizationSelect class="col-md-4" type="Gift" v-model="giftId" />
+          <CustomizationSelect class="col-md-4" type="Gift" :model-value="gift?.id" @selected="gift = $event" />
         </div>
         <DescriptionTextarea v-model="description" />
         <div>
