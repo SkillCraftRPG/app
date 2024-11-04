@@ -11,10 +11,18 @@ import type { ValidationType } from "@/types/validation";
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
-defineProps<{
-  modelValue?: Skill;
-  validation?: ValidationType;
-}>();
+withDefaults(
+  defineProps<{
+    id?: string;
+    label?: string;
+    modelValue?: Skill;
+    validation?: ValidationType;
+  }>(),
+  {
+    id: "skill",
+    label: "game.skill",
+  },
+);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
@@ -24,19 +32,19 @@ const options = computed<SelectOption[]>(() =>
 );
 
 defineEmits<{
-  (e: "update:model-value", value?: string): void;
+  (e: "update:model-value", value?: Skill): void;
 }>();
 </script>
 
 <template>
   <AppSelect
     floating
-    id="skill"
-    label="game.skill"
+    :id="id"
+    :label="label"
     :model-value="modelValue"
     :options="options"
     placeholder="game.skill"
     :validation="validation"
-    @update:model-value="$emit('update:model-value', $event as Skill)"
+    @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as Skill))"
   />
 </template>

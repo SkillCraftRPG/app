@@ -1,18 +1,30 @@
 {
   "attributes": {
+    "invalid": "Tous les attributs doivent être distincts les uns des autres.",
+    "label": "Attributs",
     "mandatory": "Attributs obligatoires",
-    "optional": "Attributs facultatifs"
+    "mandatory1": "Obligatoire (1)",
+    "mandatory2": "Obligatoire (2)",
+    "optional": "Attributs facultatifs",
+    "optional1": "Facultatif (1)",
+    "optional2": "Facultatif (2)"
   },
   "create": "Créer un aspect",
   "created": "L’aspect a été créé.",
   "empty": "Cette liste est vide.",
   "list": "Aspects",
-  "skills": "Compétences",
+  "skills": {
+    "discounted1": "À rabais (1)",
+    "discounted2": "À rabais (2)",
+    "invalid": "Les compétences à rabais doivent être différentes.",
+    "label": "Compétences"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
       "Name": "Nom",
       "UpdatedOn": "Dernière modification"
     }
-  }
+  },
+  "updated": "L’aspect a été modifié."
 }

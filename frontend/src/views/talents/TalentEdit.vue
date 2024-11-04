@@ -100,13 +100,13 @@ onMounted(async () => {
       <StatusDetail :aggregate="talent" />
       <form @submit.prevent="onSubmit">
         <div class="row">
-          <NameInput class="col-md-6" required v-model="name" />
-          <TierSelect class="col-md-6" disabled :model-value="talent.tier" validation="server" />
+          <NameInput class="col-lg-6" required v-model="name" />
+          <TierSelect class="col-lg-6" disabled :model-value="talent.tier" validation="server" />
         </div>
         <div class="row">
-          <SkillSelect class="col-md-6" v-model="skill" />
+          <SkillSelect class="col-lg-6" v-model="skill" />
           <TalentSelect
-            class="col-md-6"
+            class="col-lg-6"
             label="talents.required"
             :max-tier="talent.tier"
             :model-value="requiredTalent?.id"

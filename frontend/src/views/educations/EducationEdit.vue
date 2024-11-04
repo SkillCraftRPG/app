@@ -91,9 +91,9 @@ onMounted(async () => {
       <StatusDetail :aggregate="education" />
       <form @submit.prevent="onSubmit">
         <div class="row">
-          <NameInput class="col-md-4" required v-model="name" />
-          <SkillSelect class="col-md-4" v-model="skill" />
-          <WealthMultiplierInput class="col-md-4" v-model="wealthMultiplier" />
+          <NameInput class="col-lg-4" required v-model="name" />
+          <SkillSelect class="col-lg-4" v-model="skill" />
+          <WealthMultiplierInput class="col-lg-4" v-model="wealthMultiplier" />
         </div>
         <DescriptionTextarea v-model="description" />
         <div>

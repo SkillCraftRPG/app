@@ -6,12 +6,15 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppPagination from "@/components/shared/AppPagination.vue";
+import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateAspect from "@/components/aspects/CreateAspect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
+import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { AspectModel, AspectSort, SearchAspectsPayload } from "@/types/aspects";
+import type { Attribute, Skill } from "@/types/game";
 import { handleErrorKey } from "@/inject/App";
 import { searchAspects } from "@/api/aspects";
 import { useToastStore } from "@/stores/toast";
@@ -28,10 +31,12 @@ const isLoading = ref<boolean>(false);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
+const attribute = computed<Attribute>(() => (route.query.attribute?.toString() as Attribute) ?? "");
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
+const skill = computed<Skill>(() => (route.query.skill?.toString() as Skill) ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
@@ -73,6 +78,8 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
+    attribute: attribute.value,
+    skill: skill.value,
     sort: sort.value ? [{ field: sort.value as AspectSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
@@ -98,7 +105,9 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "attribute":
     case "search":
+    case "skill":
     case "count":
       query.page = "1";
       break;
@@ -116,7 +125,9 @@ watch(
           ...route,
           query: objectUtils.isEmpty(query)
             ? {
+                attribute: "",
                 search: "",
+                skill: "",
                 sort: "Name",
                 isDescending: "false",
                 page: 1,
@@ -153,6 +164,10 @@ watch(
       <CreateAspect class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
+      <AttributeSelect class="col-lg-6" :model-value="attribute" validation="server" @update:model-value="setQuery('attribute', $event ?? '')" />
+      <SkillSelect class="col-lg-6" :model-value="skill" validation="server" @update:model-value="setQuery('skill', $event ?? '')" />
+    </div>
+    <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
         class="col-lg-4"
@@ -171,7 +186,7 @@ watch(
             <th scope="col">{{ t("aspects.sort.options.Name") }}</th>
             <th scope="col">{{ t("aspects.attributes.mandatory") }}</th>
             <th scope="col">{{ t("aspects.attributes.optional") }}</th>
-            <th scope="col">{{ t("aspects.skills") }}</th>
+            <th scope="col">{{ t("aspects.skills.label") }}</th>
             <th scope="col">{{ t("aspects.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>

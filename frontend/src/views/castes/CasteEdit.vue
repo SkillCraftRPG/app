@@ -119,9 +119,9 @@ onMounted(async () => {
       <StatusDetail :aggregate="caste" />
       <form @submit.prevent="onSubmit">
         <div class="row">
-          <NameInput class="col-md-4" required v-model="name" />
-          <SkillSelect class="col-md-4" v-model="skill" />
-          <WealthRollInput class="col-md-4" v-model="wealthRoll" />
+          <NameInput class="col-lg-4" required v-model="name" />
+          <SkillSelect class="col-lg-4" v-model="skill" />
+          <WealthRollInput class="col-lg-4" v-model="wealthRoll" />
         </div>
         <DescriptionTextarea v-model="description" />
         <TraitList :traits="traits" @added="onTraitAdded" @removed="onTraitRemoved" @updated="onTraitUpdated" />

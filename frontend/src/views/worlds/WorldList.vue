@@ -51,7 +51,7 @@ onMounted(async () => {
   <main class="container">
     <h1 class="text-center">{{ t("worlds.gateway") }}</h1>
     <div v-if="worlds.length > 0" class="my-3 row">
-      <div v-for="world in worlds" :key="world.id" class="col-md-12 col-lg-6 col-xl-4 mb-3">
+      <div v-for="world in worlds" :key="world.id" class="col-lg-6 col-xl-4 mb-3">
         <WorldCard :subtitle="Boolean(world.name && (names.get(world.name) ?? 0) > 1)" :world="world" />
       </div>
     </div>
