@@ -30,6 +30,7 @@ import {
   faTimes,
   faTrash,
   faTrashArrowUp,
+  faTriangleExclamation,
   faUser,
   faVial,
 } from "@fortawesome/free-solid-svg-icons";
@@ -62,6 +63,7 @@ library.add(
   faTimes,
   faTrash,
   faTrashArrowUp,
+  faTriangleExclamation,
   faUser,
   faVial,
 );

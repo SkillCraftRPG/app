@@ -90,8 +90,8 @@ onMounted(async () => {
       <StatusDetail :aggregate="language" />
       <form @submit.prevent="onSubmit">
         <div class="row">
-          <NameInput class="col-md-6" required v-model="name" />
-          <ScriptInput class="col-md-6" v-model="script" />
+          <NameInput class="col-lg-6" required v-model="name" />
+          <ScriptInput class="col-lg-6" v-model="script" />
         </div>
         <TypicalSpeakersInput v-model="typicalSpeakers" />
         <DescriptionTextarea v-model="description" />

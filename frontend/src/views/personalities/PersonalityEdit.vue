@@ -92,10 +92,10 @@ onMounted(async () => {
       <StatusDetail :aggregate="personality" />
       <form @submit.prevent="onSubmit">
         <div class="row">
-          <NameInput class="col-md-4" required v-model="name" />
-          <AttributeSelect class="col-md-4" v-model="attribute" />
+          <NameInput class="col-lg-4" required v-model="name" />
+          <AttributeSelect class="col-lg-4" v-model="attribute" />
           <CustomizationSelect
-            class="col-md-4"
+            class="col-lg-4"
             label="customizations.type.options.Gift"
             :model-value="gift?.id"
             placeholder="customizations.select.gift"
