@@ -94,7 +94,14 @@ onMounted(async () => {
         <div class="row">
           <NameInput class="col-md-4" required v-model="name" />
           <AttributeSelect class="col-md-4" v-model="attribute" />
-          <CustomizationSelect class="col-md-4" type="Gift" :model-value="gift?.id" @selected="gift = $event" />
+          <CustomizationSelect
+            class="col-md-4"
+            label="customizations.type.options.Gift"
+            :model-value="gift?.id"
+            placeholder="customizations.select.gift"
+            type="Gift"
+            @selected="gift = $event"
+          />
         </div>
         <DescriptionTextarea v-model="description" />
         <div>

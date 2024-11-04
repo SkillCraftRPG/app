@@ -105,7 +105,14 @@ onMounted(async () => {
         </div>
         <div class="row">
           <SkillSelect class="col-md-6" v-model="skill" />
-          <TalentSelect class="col-md-6" :max-tier="talent.tier" :model-value="requiredTalent?.id" @selected="requiredTalent = $event" />
+          <TalentSelect
+            class="col-md-6"
+            label="talents.required"
+            :max-tier="talent.tier"
+            :model-value="requiredTalent?.id"
+            placeholder="talents.select.none"
+            @selected="requiredTalent = $event"
+          />
         </div>
         <TarCheckbox class="mb-3" id="allow-multiple-purchases" :label="t('talents.allowMultiplePurchases')" v-model="allowMultiplePurchases" />
         <DescriptionTextarea v-model="description" />

@@ -15,6 +15,7 @@ const props = defineProps<{
 }>();
 
 const customizations = ref<CustomizationModel[]>([]);
+const hasLoaded = ref<boolean>(false);
 
 const options = computed<SelectOption[]>(() => customizations.value.map(({ id, name }) => ({ text: name, value: id })));
 
@@ -44,12 +45,15 @@ onMounted(async () => {
     customizations.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
+  } finally {
+    hasLoaded.value = true;
   }
 });
 </script>
 
 <template>
   <AppSelect
+    :disabled="!hasLoaded"
     floating
     id="customization"
     label="customizations.select.label"

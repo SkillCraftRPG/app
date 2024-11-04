@@ -20,6 +20,7 @@ const props = withDefaults(
   },
 );
 
+const hasLoaded = ref<boolean>(false);
 const talents = ref<TalentModel[]>([]);
 
 const options = computed<SelectOption[]>(() => talents.value.map(({ id, name }) => ({ text: name, value: id })));
@@ -51,12 +52,15 @@ watchEffect(async () => {
     talents.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
+  } finally {
+    hasLoaded.value = true;
   }
 });
 </script>
 
 <template>
   <AppSelect
+    :disabled="!hasLoaded"
     floating
     id="talent"
     :label="label"

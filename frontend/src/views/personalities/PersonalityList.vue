@@ -148,7 +148,15 @@ watch(
     </div>
     <div class="row">
       <AttributeSelect class="col-lg-6" :model-value="attribute" validation="server" @update:model-value="setQuery('attribute', $event ?? '')" />
-      <CustomizationSelect class="col-lg-6" :model-value="giftId" type="Gift" validation="server" @update:model-value="setQuery('gift', $event ?? '')" />
+      <CustomizationSelect
+        class="col-lg-6"
+        label="customizations.type.options.Gift"
+        :model-value="giftId"
+        placeholder="customizations.select.gift"
+        type="Gift"
+        validation="server"
+        @update:model-value="setQuery('gift', $event ?? '')"
+      />
     </div>
     <div class="row">
       <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />

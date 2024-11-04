@@ -4,6 +4,7 @@
   "empty": "Cette liste est vide.",
   "list": "Personnalisations",
   "select": {
+    "gift": "Sélectionnez un don",
     "label": "Personnalisation",
     "placeholder": "Sélectionnez une personnalisation"
   },
