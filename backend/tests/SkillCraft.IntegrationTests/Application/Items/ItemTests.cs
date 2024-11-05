@@ -51,9 +51,9 @@ public class ItemTests : IntegrationTests
       {
         Attack = 5,
         Resistance = 24,
-        Traits = [WeaponTrait.Ammunition, WeaponTrait.Loading, WeaponTrait.Range, WeaponTrait.Reload],
+        Traits = [WeaponTrait.Loading],
         Damages = [new WeaponDamageModel("1d10", DamageType.Piercing)],
-        Range = new WeaponRangeModel
+        AmmunitionRange = new WeaponRangeModel
         {
           Normal = 8,
           Long = 24
@@ -97,7 +97,8 @@ public class ItemTests : IntegrationTests
     Assert.Equal(payload.Weapon.Traits, item.Weapon.Traits);
     Assert.Equal(payload.Weapon.Damages, item.Weapon.Damages);
     Assert.Equal(payload.Weapon.VersatileDamages, item.Weapon.VersatileDamages);
-    Assert.Equal(payload.Weapon.Range, item.Weapon.Range);
+    Assert.Equal(payload.Weapon.AmmunitionRange, item.Weapon.AmmunitionRange);
+    Assert.Equal(payload.Weapon.ThrownRange, item.Weapon.ThrownRange);
     Assert.Equal(payload.Weapon.ReloadCount, item.Weapon.ReloadCount);
 
     Assert.NotNull(await SkillCraftContext.Items.AsNoTracking().SingleOrDefaultAsync(x => x.Id == item.Id));
@@ -200,7 +201,7 @@ public class ItemTests : IntegrationTests
       Weight = 4.0
     };
     heaterShield.Update(UserId);
-    Item longsword = new(World.Id, new Name("Épée longue"), new WeaponProperties(attack: 0, resistance: null, traits: [], damages: [], versatileDamages: [], range: null, reloadCount: null), UserId)
+    Item longsword = new(World.Id, new Name("Épée longue"), new WeaponProperties(attack: 0, resistance: null, traits: [], damages: [], versatileDamages: [], ammunitionRange: null, thrownRange: null, reloadCount: null), UserId)
     {
       Value = 15.0,
       Weight = 1.5

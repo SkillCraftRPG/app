@@ -26,7 +26,8 @@ internal static class PropertiesExtensions
       properties.Traits,
       properties.Damages.Select(damage => new WeaponDamage(new Roll(damage.Roll), damage.Type)).ToArray(),
       properties.VersatileDamages.Select(damage => new WeaponDamage(new Roll(damage.Roll), damage.Type)).ToArray(),
-      properties.Range == null ? null : new WeaponRange(properties.Range.Normal, properties.Range.Long),
+      properties.AmmunitionRange == null ? null : new WeaponRange(properties.AmmunitionRange.Normal, properties.AmmunitionRange.Long),
+      properties.ThrownRange == null ? null : new WeaponRange(properties.ThrownRange.Normal, properties.ThrownRange.Long),
       properties.ReloadCount);
   }
 }

@@ -23,8 +23,10 @@ internal class WeaponPropertiesGraphType : ObjectGraphType<WeaponPropertiesModel
     Field(x => x.VersatileDamages, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<WeaponDamageGraphType>>>))
       .Description("The damage inflicted by the versatile weapon when held two-handed.");
 
-    Field(x => x.Range, type: typeof(WeaponRangeGraphType))
-      .Description("The range values of the weapon.");
+    Field(x => x.AmmunitionRange, type: typeof(WeaponRangeGraphType))
+      .Description("The ammunition range values of the weapon.");
+    Field(x => x.ThrownRange, type: typeof(WeaponRangeGraphType))
+      .Description("The thrown range values of the weapon.");
     Field(x => x.ReloadCount)
       .Description("The number of ammunition piece that can be fired from the weapon before a full-reload is required.");
   }

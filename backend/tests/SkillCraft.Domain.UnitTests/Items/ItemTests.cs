@@ -57,10 +57,11 @@ public class ItemTests
       [ItemCategory.Weapon] = new WeaponProperties(
         attack: 5,
         resistance: 24,
-        traits: [WeaponTrait.Ammunition, WeaponTrait.Loading, WeaponTrait.Range, WeaponTrait.Reload],
+        traits: [WeaponTrait.Loading],
         damages: [new WeaponDamage(new Roll("1d10"), DamageType.Piercing)],
         versatileDamages: [],
-        new WeaponRange(8, 24),
+        ammunitionRange: new WeaponRange(8, 24),
+        thrownRange: null,
         reloadCount: 6)
     };
 
