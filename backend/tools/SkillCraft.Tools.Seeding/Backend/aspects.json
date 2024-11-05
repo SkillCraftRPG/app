@@ -1,0 +1,32 @@
+﻿[
+  {
+    "Id": "d996b2af-ea41-4a8d-84ed-06b223101489",
+    "Name": "Gymnaste",
+    "Description": null,
+    "Attributes": {
+      "Mandatory1": "Agility",
+      "Mandatory2": "Vigor",
+      "Optional1": "Coordination",
+      "Optional2": "Sensitivity"
+    },
+    "Skills": {
+      "Discounted1": "Acrobatics",
+      "Discounted2": "Athletics"
+    }
+  },
+  {
+    "Id": "6e853846-18e5-437d-84f1-6fc92060d333",
+    "Name": "Farouche",
+    "Description": null,
+    "Attributes": {
+      "Mandatory1": "Agility",
+      "Mandatory2": "Sensitivity",
+      "Optional1": "Spirit",
+      "Optional2": "Vigor"
+    },
+    "Skills": {
+      "Discounted1": "Melee",
+      "Discounted2": "Survival"
+    }
+  }
+]

@@ -1,0 +1,20 @@
+﻿[
+  {
+    "Id": "cf500d72-c2e0-4c81-9d28-e20e5161e651",
+    "Type": "Gift",
+    "Name": "Dur à cuire",
+    "Description": "Lorsque le personnage reçoit des points de dégâts létaux, il retire à ceux-ci un nombre de points égal à son modificateur de Vigueur (minimum 1)."
+  },
+  {
+    "Id": "534fc3e3-a606-4139-b527-eb3331f80645",
+    "Type": "Gift",
+    "Name": "Féroce",
+    "Description": "Une fois par round, le personnage peut rouler deux fois les dés de dégâts d’une attaque. Il peut ensuite utiliser le résultat de son choix."
+  },
+  {
+    "Id": "73167f5f-0a05-4561-9c46-0f9f4d5ad2b8",
+    "Type": "Disability",
+    "Name": "Chaotique",
+    "Description": "Affligé d’un grand besoin de liberté, le personnage a tendance à désobéir lorsqu’il le peut et à contredire les lois. Ses tests de _Discipline_ sont effectués avec désavantage."
+  }
+]

@@ -172,7 +172,7 @@ internal class ItemEntity : AggregateEntity
     properties[nameof(IConsumableProperties.RemoveWhenEmpty)] = @event.Properties.RemoveWhenEmpty.ToString();
     if (@event.Properties.ReplaceWithItemWhenEmptyId.HasValue)
     {
-      properties[nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId)] = @event.Properties.ReplaceWithItemWhenEmptyId.Value.ToString();
+      properties[nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId)] = @event.Properties.ReplaceWithItemWhenEmptyId.Value.EntityId.ToString();
     }
     Properties = SerializeProperties(properties);
   }
