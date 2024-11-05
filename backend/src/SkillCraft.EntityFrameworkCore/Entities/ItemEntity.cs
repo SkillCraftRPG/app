@@ -66,7 +66,7 @@ internal class ItemEntity : AggregateEntity
     {
       Charges = properties.TryGetValue(nameof(IConsumableProperties.Charges), out string? charges) ? int.Parse(charges) : null,
       RemoveWhenEmpty = bool.Parse(properties[nameof(IConsumableProperties.RemoveWhenEmpty)]),
-      ReplaceWithItemWhenEmptyId = properties.TryGetValue(nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId), out string? replaceWithItemWhenEmptyId) ? new ItemId(replaceWithItemWhenEmptyId).EntityId : null
+      ReplaceWithItemWhenEmptyId = properties.TryGetValue(nameof(IConsumableProperties.ReplaceWithItemWhenEmptyId), out string? replaceWithItemWhenEmptyId) ? Guid.Parse(replaceWithItemWhenEmptyId) : null
     };
   }
   public ContainerPropertiesModel GetContainerProperties()
