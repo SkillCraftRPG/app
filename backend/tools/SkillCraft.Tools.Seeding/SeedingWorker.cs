@@ -50,6 +50,16 @@ internal class SeedingWorker : BackgroundService
       await ExecuteAsync(new SeedDictionariesTask(), cancellationToken);
       await ExecuteAsync(new SeedSendersTask(), cancellationToken);
       await ExecuteAsync(new SeedTemplatesTask(), cancellationToken);
+      await ExecuteAsync(new SeedWorldsTask(), cancellationToken);
+      await ExecuteAsync(new SeedAspectsTask(), cancellationToken);
+      await ExecuteAsync(new SeedCastesTask(), cancellationToken);
+      await ExecuteAsync(new SeedCustomizationsTask(), cancellationToken);
+      await ExecuteAsync(new SeedEducationsTask(), cancellationToken);
+      await ExecuteAsync(new SeedItemsTask(), cancellationToken);
+      await ExecuteAsync(new SeedLanguagesTask(), cancellationToken);
+      await ExecuteAsync(new SeedPartiesTask(), cancellationToken);
+      await ExecuteAsync(new SeedPersonalitiesTask(), cancellationToken);
+      await ExecuteAsync(new SeedTalentsTask(), cancellationToken);
     }
     catch (Exception exception)
     {

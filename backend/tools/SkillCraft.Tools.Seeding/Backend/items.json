@@ -1,0 +1,230 @@
+﻿[
+  {
+    "Id": "81afac6f-cc82-44fb-9020-c8fdf9251a2b",
+    "Name": "Centime",
+    "Description": "Une pièce de cuivre utilisée principalement les membres les plus pauvres de la population pour les achats courants telle la nourriture. **10 centimes** valent **1 dîme** et **100 centimes** valent **1 denier**. Cette pièce est aussi appelée « sou » et « liard ».",
+    "Value": 0.01,
+    "Weight": 0.01,
+    "IsAttunementRequired": false,
+    "Money": {}
+  },
+  {
+    "Id": "5aa9e62a-0307-499d-b203-f09cf4cf5e3d",
+    "Name": "Dîme",
+    "Description": "Une pièce de billon (alliage de cuivre, de zinc et d’argent) couramment utilisée par la plupart des membres de la population pour leurs achats de faible valeur, tels des vêtements et outils. Elle vaut **10 centimes** et **10 dîmes** valent **1 denier**.",
+    "Value": 0.1,
+    "Weight": 0.01,
+    "IsAttunementRequired": false,
+    "Money": {}
+  },
+  {
+    "Id": "f3106a5f-6d06-40bc-9754-fa21e8dfb07a",
+    "Name": "Denier",
+    "Description": "Une pièce d’argent couramment utilisée par la plupart des membres de la population pour leurs achats de plus grande valeur, comme le bétail de moyens de transport. Il s’agit de l’unité de référence de ce système.",
+    "Value": 1.0,
+    "Weight": 0.01,
+    "IsAttunementRequired": false,
+    "Money": {}
+  },
+  {
+    "Id": "9aaeb3cb-8128-4521-8699-1c6dd7648a41",
+    "Name": "Écu",
+    "Description": "Une pièce d’électrum (alliage d’argent et d’or) utilisée par les nobles, bourgeois et riches marchands pour payer certains achats en moins de pièces de monnaie. Il vaut **10 deniers**.",
+    "Value": 10.0,
+    "Weight": 0.01,
+    "IsAttunementRequired": false,
+    "Money": {}
+  },
+  {
+    "Id": "2d62d711-8c70-4f8b-a0d5-d9607229423b",
+    "Name": "Couronne",
+    "Description": "Une pièce d’or réservée aux membres les plus riches de la société. Sa valeur est de **100 deniers**. Vu la rareté de l’or, cette pièce est plus rarement utilisée que l’écu, et son usage est surveillé. Par exemple, si un paysan est surpris à payer avec des couronnes, il sera suspecté de les avoir dérobées à un noble, et elles lui seront généralement confisquées.",
+    "Value": 100.0,
+    "Weight": 0.01,
+    "IsAttunementRequired": false,
+    "Money": {}
+  },
+  {
+    "Id": "fecc3cc0-1884-454a-9387-ee82236b15b7",
+    "Name": "Galion",
+    "Description": "Une pièce de platine qui ne fait pas partie du système du denier d’argent. De ce fait, il ne sera jamais accepté par les marchands. Néanmoins, il est reconnu par certaines grandes institutions puisqu’il a déjà été utilisé par d’anciens empires possédant la magie ou la technologie d’extraire et de transformer ce rare métal. Cette pièce est extrêmement rare et on n’en retrouvera généralement que dans les ruines de ces anciens empires. Il faut **1000 deniers**.",
+    "Value": 1000.0,
+    "Weight": 0.01,
+    "IsAttunementRequired": false,
+    "Money": {}
+  },
+  {
+    "Id": "cc86804f-b81f-4a97-ba86-15abd2754858",
+    "Name": "Outils tout-usage",
+    "Description": null,
+    "Value": 2000.0,
+    "Weight": 5.0,
+    "IsAttunementRequired": true,
+    "Device": {}
+  },
+  {
+    "Id": "b77cbd65-0aba-45b2-92b4-e112019085f0",
+    "Name": "Sac de couchage",
+    "Description": "Permet de dormir sur le sol, par exemple dans une chambre d’auberge ou à l’extérieur. Il peut être combiné à une couverture pour les nuits froides.",
+    "Value": 1.0,
+    "Weight": 3.5,
+    "IsAttunementRequired": false,
+    "Miscellaneous": {}
+  },
+  {
+    "Id": "3e6e416e-2cf5-423a-af2f-7b991654d246",
+    "Name": "Bourse",
+    "Description": "Petit porte-monnaie en cuir maintenue fermée par une ficelle, il peut contenir jusqu’à 500 pièces de monnaie.",
+    "Value": 0.5,
+    "Weight": 0.5,
+    "IsAttunementRequired": false,
+    "Container": { "Capacity": 5.0 }
+  },
+  {
+    "Id": "6650d68f-a08c-44fa-9d22-278b1bfce4fe",
+    "Name": "Gourde",
+    "Description": "Une gourde en forme de poire en cuir dotée d’un bouchon de liège et de sangles.",
+    "Value": 0.2,
+    "Weight": 2.5,
+    "IsAttunementRequired": false,
+    "Container": { "Volume": 2.0 }
+  },
+  {
+    "Id": "79530848-4b54-47e5-baff-a8a58cd80a06",
+    "Name": "Fiole",
+    "Description": "Une petite fiole en verre dotée d’un petit bouchon de liège.",
+    "Value": 1.0,
+    "Weight": 0.0,
+    "IsAttunementRequired": false,
+    "Container": { "Volume": 0.12 }
+  },
+  {
+    "Id": "978f9eb9-aeb1-4302-aae4-8e648c393f50",
+    "Name": "Flèche",
+    "Description": null,
+    "Value": 0.05,
+    "Weight": 0.02,
+    "IsAttunementRequired": false,
+    "Consumable": {
+      "Charges": 1,
+      "RemoveWhenEmpty": true
+    }
+  },
+  {
+    "Id": "b4e450db-02f8-4a04-8481-61719dc4b3a7",
+    "Name": "Potion de santé",
+    "Description": "3d4+3",
+    "Value": 50.0,
+    "Weight": 0.2,
+    "IsAttunementRequired": false,
+    "Consumable": {
+      "Charges": 1,
+      "ReplaceWithItemWhenEmptyId": "79530848-4b54-47e5-baff-a8a58cd80a06"
+    }
+  },
+  {
+    "Id": "98aab26d-d7e8-4fcc-bcfd-54ef0a5d9106",
+    "Name": "Vêtements de voyage",
+    "Description": "Des vêtements tissés de laine et de coton afin de mieux résister aux intempéries. Ils sont idéaux pour se distinguer des roturiers sans pour autant se faire remarquer.",
+    "Value": 2.0,
+    "Weight": 2.0,
+    "IsAttunementRequired": false,
+    "Equipment": {}
+  },
+  {
+    "Id": "e525f8fb-12ee-40f7-9fde-7c102104051b",
+    "Name": "Armure d’écailles",
+    "Description": "Armure de plaques de cuir bouilli renforcées par une grande quantité de petites pièces de métal se chevauchant à la manière des écailles d’un poisson.",
+    "Value": 50.0,
+    "Weight": 20.0,
+    "IsAttunementRequired": false,
+    "Equipment": {
+      "Defense": 4,
+      "Resistance": 5,
+      "Traits": [ "Hybrid", "Noisy" ]
+    }
+  },
+  {
+    "Id": "40e94f48-b7d5-4c30-9888-f9f92fa14f02",
+    "Name": "Écu",
+    "Description": "Le bouclier le plus couramment utilisé, portant généralement un blason, soit les armoiries de son porteur. Il est de forme rectangulaire pour les fantassins, ou de forme ogivale pour les cavaliers.",
+    "Value": 25.0,
+    "Weight": 4.0,
+    "IsAttunementRequired": false,
+    "Equipment": {
+      "Defense": 2,
+      "Resistance": 10
+    }
+  },
+  {
+    "Id": "47db305f-f585-4763-b043-689ca6c523e8",
+    "Name": "Trident",
+    "Description": "Arme munie d’un manche au bout duquel sont fixées trois pointes acérées.",
+    "Value": 5.0,
+    "Weight": 2.0,
+    "IsAttunementRequired": false,
+    "Weapon": {
+      "Attack": 3,
+      "Resistance": 8,
+      "Damages": [
+        {
+          "Roll": "1d6",
+          "Type": "Piercing"
+        }
+      ],
+      "VersatileDamages": [
+        {
+          "Roll": "1d8",
+          "Type": "Piercing"
+        }
+      ],
+      "ThrownRange": {
+        "Normal": 4,
+        "Long": 6
+      }
+    }
+  },
+  {
+    "Id": "2bdb11e0-42f3-416d-909e-06f7691230e6",
+    "Name": "Espadon",
+    "Description": "Lourde épée maniée à deux mains, aussi appelée « grande épée », utilisée pour contrer les armes d’hast.",
+    "Value": 50.0,
+    "Weight": 3.0,
+    "IsAttunementRequired": false,
+    "Weapon": {
+      "Attack": 4,
+      "Resistance": 14,
+      "Traits": [ "Heavy", "TwoHanded" ],
+      "Damages": [
+        {
+          "Roll": "2d6",
+          "Type": "Slashing"
+        }
+      ]
+    }
+  },
+  {
+    "Id": "f6998de8-c877-4480-878f-194e3e8037e3",
+    "Name": "Poivrière",
+    "Description": "Un pistolet doté d’un barillet multiple pouvant contenir jusqu’à 6 balles.",
+    "Value": 450.0,
+    "Weight": 2.5,
+    "IsAttunementRequired": false,
+    "Weapon": {
+      "Attack": 5,
+      "Resistance": 24,
+      "Traits": [ "Loading" ],
+      "Damages": [
+        {
+          "Roll": "1d10",
+          "Type": "Piercing"
+        }
+      ],
+      "AmmunitionRange": {
+        "Normal": 8,
+        "Long": 24
+      },
+      "ReloadCount": 6
+    }
+  }
+]

@@ -1,0 +1,27 @@
+﻿[
+  {
+    "Id": "883943b8-fdef-4670-b1ca-b3a33ccbac9e",
+    "Name": "Griffe Noire",
+    "Description": null
+  },
+  {
+    "Id": "c85d0427-0e09-42b0-98ce-ebbf074f22f3",
+    "Name": "Brigade Ardente",
+    "Description": null
+  },
+  {
+    "Id": "4887dab3-44a2-4291-9d8e-dd152dbee5f1",
+    "Name": "Ascension",
+    "Description": null
+  },
+  {
+    "Id": "0dbef57c-f0dd-4fc4-a6ec-b252c8c79f21",
+    "Name": "Confrérie Mystique",
+    "Description": null
+  },
+  {
+    "Id": "b8ca1a69-404f-47f9-a156-91386e5cacd5",
+    "Name": "Chasseurs de Légende",
+    "Description": null
+  }
+]
