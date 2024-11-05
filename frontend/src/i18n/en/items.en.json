@@ -28,7 +28,15 @@
   "empty": "This list is empty.",
   "equipment": {
     "defense": "Defense",
-    "resistance": "Resistance"
+    "resistance": "Resistance",
+    "traits": {
+      "Bulwark": "Bulwark",
+      "Comfort": "Comfort",
+      "Hybrid": "Hybrid",
+      "Noisy": "Noisy",
+      "Quilted": "Quilted",
+      "Sturdy": "Sturdy"
+    }
   },
   "isAttunementRequired": "Attunement required",
   "list": "Items",
@@ -49,6 +57,21 @@
   "updated": "The item has been updated.",
   "weapon": {
     "attack": "Attack",
-    "resistance": "Resistance"
+    "resistance": "Resistance",
+    "traits": {
+      "Ammunition": "Ammunition",
+      "Finesse": "Finesse",
+      "Heavy": "Heavy",
+      "Light": "Light",
+      "Loading": "Loading",
+      "Range": "Range",
+      "Reach": "Reach",
+      "Reload": "Reload",
+      "Scatter": "Scatter",
+      "Special": "Special",
+      "Thrown": "Thrown",
+      "TwoHanded": "TwoHanded",
+      "Versatile": "Versatile"
+    }
   }
 }

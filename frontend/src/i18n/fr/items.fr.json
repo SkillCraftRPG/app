@@ -28,7 +28,15 @@
   "empty": "Cette liste est vide.",
   "equipment": {
     "defense": "Défense",
-    "resistance": "Résistance"
+    "resistance": "Résistance",
+    "traits": {
+      "Bulwark": "Rempart",
+      "Comfort": "Confortable",
+      "Hybrid": "Hybride",
+      "Noisy": "Bruyant",
+      "Quilted": "Matelassé",
+      "Sturdy": "Ferme"
+    }
   },
   "isAttunementRequired": "Harmonisation requise",
   "list": "Objets",
@@ -49,6 +57,21 @@
   "updated": "L’objet a été modifié.",
   "weapon": {
     "attack": "Attaque",
-    "resistance": "Résistance"
+    "resistance": "Résistance",
+    "traits": {
+      "Ammunition": "Munition",
+      "Finesse": "Finesse",
+      "Heavy": "Lourde",
+      "Light": "Légère",
+      "Loading": "Chargement",
+      "Range": "Portée",
+      "Reach": "Allonge",
+      "Reload": "Barillet",
+      "Scatter": "Dispersion",
+      "Special": "Spéciale",
+      "Thrown": "Jet",
+      "TwoHanded": "Deux mains",
+      "Versatile": "Versatile"
+    }
   }
 }
