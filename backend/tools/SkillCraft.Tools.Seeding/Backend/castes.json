@@ -1,0 +1,21 @@
+﻿[
+  {
+    "Id": "735b8380-b9e8-4aac-ae56-320e223465ca",
+    "Name": "Exilé",
+    "Description": "Banni par son peuple ou par choix personnel, l’exilé a recours à son instinct de survie et à sa connaissance des milieux sauvages afin de survivre à son environnement. Il garde de mauvais souvenirs de son ancienne vie et prépare aigrement sa vengeance.",
+    "Skill": "Survival",
+    "WealthRoll": "6d6",
+    "Traits": [
+      {
+        "Id": "a226f578-ff8d-4211-a29b-2099d8a629cb",
+        "Name": "Rancunier",
+        "Description": "Peu importe la raison, le personnage a renoncé à sa fidélité envers son seigneur. Il connaît les rouages du système lorsqu’il est question d’éviter de payer des taxes et de jouer avec les lois en place. Lorsqu’il se trouve dans son pays d’origine, il peut réduire ses dépenses essentielles de 10 %."
+      },
+      {
+        "Id": "cb108e87-a42f-4a0a-96bf-67d0dffd8b90",
+        "Name": "Vagabond",
+        "Description": "Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de _Survie_ afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue."
+      }
+    ]
+  }
+]

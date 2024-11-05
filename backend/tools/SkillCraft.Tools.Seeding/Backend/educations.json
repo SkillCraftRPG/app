@@ -1,0 +1,9 @@
+﻿[
+  {
+    "Id": "ce4620dd-17fb-440c-bc41-7f94f46228e0",
+    "Name": "Champs de bataille",
+    "Description": "Le personnage est un enfant de la guerre, un fugitif d’un conflit ayant affecté les civils. Son enfance est maigre de moments heureux et aisés, ce a fait de lui une personne endurcie dotée d’une personnalité pragmatique.",
+    "Skill": "Resistance",
+    "WealthMultiplier": 4.0
+  }
+]

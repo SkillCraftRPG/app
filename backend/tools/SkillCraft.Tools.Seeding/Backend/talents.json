@@ -1,0 +1,101 @@
+﻿[
+  {
+    "Id": "87681992-ae4e-433d-acb3-5ace81c16863",
+    "Tier": 0,
+    "Name": "Survie",
+    "Description": "Permet au personnage d’effectuer des tâches banales sans posséder les outils nécessaires et en utilisant les ressources du milieu naturel et sauvage dans lequel il se trouve, par exemple allumer un feu, fabriquer un abri ou cuisiner.\n\nÉgalement, pendant une halte et en utilisant les ressources provenant d’une carcasse, il peut fabriquer un bouclier léger, une arme simple de mêlée, ou 1d4 pièces de munitions tels des dards ou des flèches. La carcasse doit être celle d’une bête, d’une construction, d’un dragon, d’une monstruosité, ou d’une plante, et la créature doit être de taille petite ou supérieure.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Survival"
+  },
+  {
+    "Id": "d57bfcda-7b30-45c5-9fa1-2757edb00c4e",
+    "Tier": 0,
+    "Name": "Résistance",
+    "Description": "Confère au personnage un bonus permanent de 5 points de Vitalité.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Resistance"
+  },
+  {
+    "Id": "8ab02dfe-66bb-4276-aba4-3ed7438a6107",
+    "Tier": 0,
+    "Name": "Acrobaties",
+    "Description": "Lorsque le personnage est renversé, se relever ne lui coûte maintenant que le quart de ses points de mouvement plutôt que la moitié.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Acrobatics"
+  },
+  {
+    "Id": "47569ef4-7b81-46e0-ac84-50cfd7b5fe1f",
+    "Tier": 0,
+    "Name": "Athlétisme",
+    "Description": "Lorsque le personnage tente d’effectuer un saut, la distance minimale de l’élan est réduite de moitié, soit de 3 mètres à 1,5 mètres.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Athletics"
+  },
+  {
+    "Id": "029afe9f-59af-4669-9528-2e2c9aa28d2b",
+    "Tier": 0,
+    "Name": "Mêlée",
+    "Description": "Forme le personnage au maniement des armes simples. Il est également formé au port des armures légères et à l’utilisation des boucliers légers.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Melee"
+  },
+  {
+    "Id": "68d309fb-dc16-40fc-ae98-d77fae525bb4",
+    "Tier": 0,
+    "Name": "Formation martiale",
+    "Description": "Forme le personnage au maniement des armes martiales. Il est également formé au port des armures moyennes et à l’utilisation des boucliers moyens. De plus, il n’est pas affligé de la pénalité à ses tests de _Furtivité_ et à sa régénération de Vitalité et d’Énergie lorsqu’il porte une armure légère ou moyenne.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": "029afe9f-59af-4669-9528-2e2c9aa28d2b",
+    "Skill": null
+  },
+  {
+    "Id": "ff216255-073d-4f44-8b9c-9ae064ad4542",
+    "Tier": 0,
+    "Name": "Vigilance",
+    "Description": "Confère un bonus permanent de +1 à l’Initiative du personnage. Le personnage n’est jamais pris au dépourvu avant d’avoir joué son premier tour en combat. Au cours de son premier tour, il peut également dégainer l’arme de son choix par une action libre, même lorsqu’il est surpris. Enfin, lorsqu’il est surpris, il peut tout de même effectuer une seule action pendant son tour.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": null
+  },
+  {
+    "Id": "b5c36659-3aef-4cd3-8169-141387f1dfad",
+    "Tier": 1,
+    "Name": "Cuirassé",
+    "Description": "Le personnage acquiert les capacités suivantes :\n\n• Il est formé au port des armures lourdes et à l’utilisation des boucliers lourds.\n• Il est formé au port de deux couches d’armure.\n• Lorsqu’il porte une armure complète, il se voit conférer un bonus de +1 à sa Défense.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": "68d309fb-dc16-40fc-ae98-d77fae525bb4",
+    "Skill": null
+  },
+  {
+    "Id": "5a8725b5-7e56-4e6b-b120-9e5bd9ebd27e",
+    "Tier": 1,
+    "Name": "Manœuvres de combat",
+    "Description": "Le personnage apprend trois manœuvres de combat parmi une liste de manœuvres. Cette liste est définie dans les ouvrages spécifiques aux univers.",
+    "AllowMultiplePurchases": true,
+    "RequiredTalentId": "68d309fb-dc16-40fc-ae98-d77fae525bb4",
+    "Skill": null
+  },
+  {
+    "Id": "af519fd9-9e3b-4271-9663-5c050880dbc6",
+    "Tier": 2,
+    "Name": "Poigne de fer",
+    "Description": "Le personnage acquiert les capacités suivantes :\n\n• Lorsqu’il tente de désarmer un adversaire, son test se voit conférer l’avantage.\n• Lorsqu’il est ciblé par une tentative de désarmement, le test de son adversaire est affligé du désavantage.\n• Lorsqu’une créature qu’il agrippe tente de s’échapper, il peut utiliser sa réaction afin d’infliger le désavantage au test de cette créature.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": "5a8725b5-7e56-4e6b-b120-9e5bd9ebd27e",
+    "Skill": null
+  },
+  {
+    "Id": "2daf1821-cfda-4291-870f-9acaace3afe2",
+    "Tier": 3,
+    "Name": "Commandement",
+    "Description": "Le personnage acquiert les capacités suivantes :\n\n• Si son modificateur d’Intellect est supérieur à son modificateur de Sensibilité, alors il ajoute un bonus égal à la différence entre ces modificateurs à ses tests d’Initiative.\n• Par une action, le personnage ordonne à un allié d’effectuer une attaque. L’allié utilise sa réaction afin d’effectuer l’activité **Attaque**.\n• Par une action, le personnage ordonne à un allié de se déplacer. L’allié utilise sa réaction afin d’effectuer l’activité **Déplacement** à la moitié de sa vitesse, ou il effectue l’activité **Pas prudent**. Les attaques d’opportunité déclenchées par ce déplacement sont affligées du désavantage.\n• Par une action, le personnage ordonne à un allié situé dans une case adjacente à la sienne d’échanger de position. L’allié utilise sa réaction afin d’effectuer l’activité **Pas prudent** en même temps que le personnage, qui l’effectue en action libre.\n• Par une action, le personnage ordonne à deux alliés n’ayant pas encore joué leur tour pendant le round actuel d’échanger leur valeur d’Initiative.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": "af519fd9-9e3b-4271-9663-5c050880dbc6",
+    "Skill": null
+  }
+]
