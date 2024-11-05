@@ -59,19 +59,14 @@
     "attack": "Attack",
     "resistance": "Resistance",
     "traits": {
-      "Ammunition": "Ammunition",
       "Finesse": "Finesse",
       "Heavy": "Heavy",
       "Light": "Light",
       "Loading": "Loading",
-      "Range": "Range",
       "Reach": "Reach",
-      "Reload": "Reload",
       "Scatter": "Scatter",
       "Special": "Special",
-      "Thrown": "Thrown",
-      "TwoHanded": "TwoHanded",
-      "Versatile": "Versatile"
+      "TwoHanded": "TwoHanded"
     }
   }
 }

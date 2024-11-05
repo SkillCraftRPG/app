@@ -59,19 +59,14 @@
     "attack": "Attaque",
     "resistance": "Résistance",
     "traits": {
-      "Ammunition": "Munition",
       "Finesse": "Finesse",
       "Heavy": "Lourde",
       "Light": "Légère",
       "Loading": "Chargement",
-      "Range": "Portée",
       "Reach": "Allonge",
-      "Reload": "Barillet",
       "Scatter": "Dispersion",
       "Special": "Spéciale",
-      "Thrown": "Jet",
-      "TwoHanded": "Deux mains",
-      "Versatile": "Versatile"
+      "TwoHanded": "Deux mains"
     }
   }
 }
