@@ -1,7 +1,6 @@
 ﻿using Logitar.Portal.Client;
 using MediatR;
 using SkillCraft.Tools.Seeding.Backend.Tasks;
-using SkillCraft.Tools.Seeding.Portal.Tasks;
 
 namespace SkillCraft.Tools.Seeding;
 
@@ -37,7 +36,7 @@ internal class SeedingWorker : BackgroundService
     Stopwatch chrono = Stopwatch.StartNew();
     _logger.LogInformation("Worker executing at {Timestamp}.", DateTimeOffset.Now);
 
-    await WaitForStartupAsync(cancellationToken);
+    //await WaitForStartupAsync(cancellationToken);
 
     using IServiceScope scope = _serviceProvider.CreateScope();
     _publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
@@ -46,10 +45,20 @@ internal class SeedingWorker : BackgroundService
     {
       // NOTE(fpion): the order of these tasks matter.
       await ExecuteAsync(new MigrateDatabaseTask(), cancellationToken);
-      await ExecuteAsync(new SeedRealmTask(), cancellationToken);
-      await ExecuteAsync(new SeedDictionariesTask(), cancellationToken);
-      await ExecuteAsync(new SeedSendersTask(), cancellationToken);
-      await ExecuteAsync(new SeedTemplatesTask(), cancellationToken);
+      //await ExecuteAsync(new SeedRealmTask(), cancellationToken);
+      //await ExecuteAsync(new SeedDictionariesTask(), cancellationToken);
+      //await ExecuteAsync(new SeedSendersTask(), cancellationToken);
+      //await ExecuteAsync(new SeedTemplatesTask(), cancellationToken);
+      await ExecuteAsync(new SeedWorldsTask(), cancellationToken);
+      await ExecuteAsync(new SeedAspectsTask(), cancellationToken);
+      await ExecuteAsync(new SeedCastesTask(), cancellationToken);
+      await ExecuteAsync(new SeedCustomizationsTask(), cancellationToken);
+      await ExecuteAsync(new SeedEducationsTask(), cancellationToken);
+      await ExecuteAsync(new SeedItemsTask(), cancellationToken);
+      await ExecuteAsync(new SeedLanguagesTask(), cancellationToken);
+      await ExecuteAsync(new SeedPartiesTask(), cancellationToken);
+      await ExecuteAsync(new SeedPersonalitiesTask(), cancellationToken);
+      await ExecuteAsync(new SeedTalentsTask(), cancellationToken);
     }
     catch (Exception exception)
     {
