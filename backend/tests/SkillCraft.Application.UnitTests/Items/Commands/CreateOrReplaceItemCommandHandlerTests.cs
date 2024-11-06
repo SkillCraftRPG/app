@@ -56,7 +56,7 @@ public class CreateOrReplaceItemCommandHandlerTests
       {
         Attack = 5,
         Resistance = 24,
-        Traits = [WeaponTrait.Ammunition, WeaponTrait.Loading, WeaponTrait.Range, WeaponTrait.Reload],
+        Traits = [WeaponTrait.Loading],
         Damages =
         [
           new WeaponDamageModel
@@ -65,7 +65,7 @@ public class CreateOrReplaceItemCommandHandlerTests
             Type = DamageType.Piercing
           }
         ],
-        Range = new WeaponRangeModel
+        AmmunitionRange = new WeaponRangeModel
         {
           Normal = 8,
           Long = 24
@@ -101,7 +101,8 @@ public class CreateOrReplaceItemCommandHandlerTests
     && expected.Traits.SequenceEqual(weapon.Traits)
     && expected.Damages.SequenceEqual(weapon.Damages)
     && expected.VersatileDamages.SequenceEqual(weapon.VersatileDamages)
-    && (expected.Range == null ? weapon.Range == null : expected.Range.Equals(weapon.Range))
+    && (expected.AmmunitionRange == null ? weapon.AmmunitionRange == null : expected.AmmunitionRange.Equals(weapon.AmmunitionRange))
+    && (expected.ThrownRange == null ? weapon.ThrownRange == null : expected.ThrownRange.Equals(weapon.ThrownRange))
     && expected.ReloadCount == weapon.ReloadCount;
 
   [Fact(DisplayName = "It should replace an existing item.")]

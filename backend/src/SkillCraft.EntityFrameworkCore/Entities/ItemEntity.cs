@@ -8,9 +8,11 @@ namespace SkillCraft.EntityFrameworkCore.Entities;
 
 internal class ItemEntity : AggregateEntity
 {
-  private const string LongRangeKey = "Range.Long";
-  private const string NormalRangeKey = "Range.Normal";
+  private const string AmmunitionLongRangeKey = "AmmunitionRange.Long";
+  private const string AmmunitionNormalRangeKey = "AmmunitionRange.Normal";
   private const char Separator = ',';
+  private const string ThrownLongRangeKey = "ThrownRange.Long";
+  private const string ThrownNormalRangeKey = "ThrownRange.Normal";
 
   public int ItemId { get; private set; }
   public Guid Id { get; private set; }
@@ -126,14 +128,24 @@ internal class ItemEntity : AggregateEntity
         model.VersatileDamages.Add(new WeaponDamageModel(damage[0], Enum.Parse<DamageType>(damage[1])));
       }
     }
-    _ = properties.TryGetValue(NormalRangeKey, out string? normalRange);
-    _ = properties.TryGetValue(LongRangeKey, out string? longRange);
-    if (normalRange != null || longRange != null)
+    _ = properties.TryGetValue(AmmunitionNormalRangeKey, out string? ammunitionNormalRange);
+    _ = properties.TryGetValue(AmmunitionLongRangeKey, out string? ammunitionLongRange);
+    if (ammunitionNormalRange != null || ammunitionLongRange != null)
     {
-      model.Range = new WeaponRangeModel
+      model.AmmunitionRange = new WeaponRangeModel
       {
-        Normal = normalRange == null ? null : int.Parse(normalRange),
-        Long = longRange == null ? null : int.Parse(longRange)
+        Normal = ammunitionNormalRange == null ? null : int.Parse(ammunitionNormalRange),
+        Long = ammunitionLongRange == null ? null : int.Parse(ammunitionLongRange)
+      };
+    }
+    _ = properties.TryGetValue(ThrownNormalRangeKey, out string? thrownNormalRange);
+    _ = properties.TryGetValue(ThrownLongRangeKey, out string? thrownLongRange);
+    if (thrownNormalRange != null || thrownLongRange != null)
+    {
+      model.ThrownRange = new WeaponRangeModel
+      {
+        Normal = thrownNormalRange == null ? null : int.Parse(thrownNormalRange),
+        Long = thrownLongRange == null ? null : int.Parse(thrownLongRange)
       };
     }
     return model;
@@ -239,15 +251,26 @@ internal class ItemEntity : AggregateEntity
     {
       properties[nameof(IWeaponProperties.VersatileDamages)] = string.Join(Separator, @event.Properties.VersatileDamages.Select(damage => string.Join(' ', damage.Roll, damage.Type)));
     }
-    if (@event.Properties.Range != null)
+    if (@event.Properties.AmmunitionRange != null)
     {
-      if (@event.Properties.Range.Normal != null)
+      if (@event.Properties.AmmunitionRange.Normal != null)
       {
-        properties[NormalRangeKey] = @event.Properties.Range.Normal.Value.ToString();
+        properties[AmmunitionNormalRangeKey] = @event.Properties.AmmunitionRange.Normal.Value.ToString();
       }
-      if (@event.Properties.Range.Long != null)
+      if (@event.Properties.AmmunitionRange.Long != null)
       {
-        properties[LongRangeKey] = @event.Properties.Range.Long.Value.ToString();
+        properties[AmmunitionLongRangeKey] = @event.Properties.AmmunitionRange.Long.Value.ToString();
+      }
+    }
+    if (@event.Properties.ThrownRange != null)
+    {
+      if (@event.Properties.ThrownRange.Normal != null)
+      {
+        properties[ThrownNormalRangeKey] = @event.Properties.ThrownRange.Normal.Value.ToString();
+      }
+      if (@event.Properties.ThrownRange.Long != null)
+      {
+        properties[ThrownLongRangeKey] = @event.Properties.ThrownRange.Long.Value.ToString();
       }
     }
     if (@event.Properties.ReloadCount.HasValue)

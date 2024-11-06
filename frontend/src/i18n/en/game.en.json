@@ -9,6 +9,28 @@
     "Spirit": "Spirit",
     "Vigor": "Vigor"
   },
+  "damage": {
+    "roll": "Roll",
+    "type": {
+      "label": "Type",
+      "options": {
+        "Acid": "Acid",
+        "Bludgeoning": "Bludgeoning",
+        "Cold": "Cold",
+        "Electricity": "Electricity",
+        "Fire": "Fire",
+        "Force": "Force",
+        "Necrotic": "Necrotic",
+        "Piercing": "Piercing",
+        "Poison": "Poison",
+        "Psychic": "Psychic",
+        "Radiant": "Radiant",
+        "Slashing": "Slashing",
+        "Thunder": "Thunder"
+      },
+      "placeholder": "Select a damage type"
+    }
+  },
   "skill": "Skill",
   "skills": {
     "Acrobatics": "Acrobatics",
@@ -37,5 +59,9 @@
     "all": "All tiers",
     "label": "Tier",
     "placeholder": "Select a tier"
+  },
+  "units": {
+    "kilograms": "kg",
+    "liters": "L"
   }
 }

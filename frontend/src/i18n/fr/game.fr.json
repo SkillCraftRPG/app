@@ -9,6 +9,28 @@
     "Spirit": "Esprit",
     "Vigor": "Vigueur"
   },
+  "damage": {
+    "roll": "Jet",
+    "type": {
+      "label": "Type",
+      "options": {
+        "Acid": "Acide",
+        "Bludgeoning": "Contondant",
+        "Cold": "Froid",
+        "Electricity": "Électrique",
+        "Fire": "Feu",
+        "Force": "Force",
+        "Necrotic": "Nécrotique",
+        "Piercing": "Perçant",
+        "Poison": "Poison",
+        "Psychic": "Psychique",
+        "Radiant": "Radiant",
+        "Slashing": "Tranchant",
+        "Thunder": "Tonnerre"
+      },
+      "placeholder": "Sélectionnez un type de dégâts"
+    }
+  },
   "skill": "Compétence",
   "skills": {
     "Acrobatics": "Acrobaties",
@@ -37,5 +59,9 @@
     "all": "Tous tiers",
     "label": "Tiers",
     "placeholder": "Sélectionnez un tiers"
+  },
+  "units": {
+    "kilograms": "kg",
+    "liters": "L"
   }
 }

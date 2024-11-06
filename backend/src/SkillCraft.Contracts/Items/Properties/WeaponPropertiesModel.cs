@@ -9,7 +9,8 @@ public record WeaponPropertiesModel : IWeaponProperties
   public List<WeaponDamageModel> Damages { get; set; }
   public List<WeaponDamageModel> VersatileDamages { get; set; }
 
-  public WeaponRangeModel? Range { get; set; }
+  public WeaponRangeModel? AmmunitionRange { get; set; }
+  public WeaponRangeModel? ThrownRange { get; set; }
   public int? ReloadCount { get; set; }
 
   public WeaponPropertiesModel()

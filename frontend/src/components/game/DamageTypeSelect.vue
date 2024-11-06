@@ -5,47 +5,43 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { ValidationType } from "@/types/validation";
+import type { DamageType } from "@/types/game";
 
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
 withDefaults(
   defineProps<{
-    disabled?: boolean | string;
-    modelValue?: string;
-    placeholder?: string;
+    id?: string;
+    modelValue?: DamageType;
     required?: boolean | string;
-    validation?: ValidationType;
   }>(),
   {
-    placeholder: "items.category.placeholder",
+    id: "type",
   },
 );
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("game.damage.type.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 defineEmits<{
-  (e: "update:model-value", value?: string): void;
+  (e: "update:model-value", value?: DamageType): void;
 }>();
 </script>
 
 <template>
   <AppSelect
-    :disabled="disabled"
     floating
-    id="category"
-    label="items.category.label"
+    :id="id"
+    label="game.damage.type.label"
     :model-value="modelValue"
     :options="options"
-    :placeholder="placeholder"
+    placeholder="game.damage.type.placeholder"
     :required="required"
-    :validation="validation"
-    @update:model-value="$emit('update:model-value', $event)"
+    @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as DamageType))"
   />
 </template>

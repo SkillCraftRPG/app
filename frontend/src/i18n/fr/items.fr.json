@@ -13,10 +13,38 @@
     },
     "placeholder": "Sélectionnez une catégorie d’objet"
   },
+  "consumable": {
+    "charges": "Charges",
+    "invalid": "Un objet consommable ne peut être que retiré ou remplacé lorsque vide.",
+    "removeWhenEmpty": "Retirer lorsque vide",
+    "replaceWithItemWhenEmpty": "Remplacer par l’objet lorsque vide"
+  },
+  "container": {
+    "capacity": "Capacité",
+    "volume": "Volume"
+  },
   "create": "Créer un objet",
   "created": "L’objet a été créé.",
   "empty": "Cette liste est vide.",
+  "equipment": {
+    "defense": "Défense",
+    "resistance": "Résistance",
+    "traits": {
+      "Bulwark": "Rempart",
+      "Comfort": "Confortable",
+      "Hybrid": "Hybride",
+      "Noisy": "Bruyant",
+      "Quilted": "Matelassé",
+      "Sturdy": "Ferme"
+    }
+  },
+  "isAttunementRequired": "Harmonisation requise",
   "list": "Objets",
+  "properties": "Propriétés",
+  "select": {
+    "label": "Objet",
+    "placeholder": "Sélectionnez un objet"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
@@ -24,6 +52,33 @@
       "UpdatedOn": "Dernière modification",
       "Value": "Valeur",
       "Weight": "Poids"
+    }
+  },
+  "updated": "L’objet a été modifié.",
+  "weapon": {
+    "attack": "Attaque",
+    "damage": {
+      "empty": "Cette liste est vide.",
+      "label": "Dégâts",
+      "versatile": "Dégâts versatiles"
+    },
+    "range": {
+      "ammunition": "Portée (munition)",
+      "long": "Longue",
+      "normal": "Normale",
+      "thrown": "Portée (jet)"
+    },
+    "reloadCount": "Barillet",
+    "resistance": "Résistance",
+    "traits": {
+      "Finesse": "Finesse",
+      "Heavy": "Lourde",
+      "Light": "Légère",
+      "Loading": "Chargement",
+      "Reach": "Allonge",
+      "Scatter": "Dispersion",
+      "Special": "Spéciale",
+      "TwoHanded": "Deux mains"
     }
   }
 }

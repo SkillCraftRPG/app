@@ -87,7 +87,8 @@ export type WeaponPropertiesModel = {
   traits: WeaponTrait[];
   damages: WeaponDamageModel[];
   versatileDamages: WeaponDamageModel[];
-  range?: WeaponRangeModel;
+  ammunitionRange?: WeaponRangeModel;
+  thrownRange?: WeaponRangeModel;
   reloadCount?: number;
 };
 
@@ -96,17 +97,4 @@ export type WeaponRangeModel = {
   long?: number;
 };
 
-export type WeaponTrait =
-  | "Ammunition"
-  | "Finesse"
-  | "Heavy"
-  | "Light"
-  | "Loading"
-  | "Range"
-  | "Reach"
-  | "Reload"
-  | "Scatter"
-  | "Special"
-  | "Thrown"
-  | "TwoHanded"
-  | "Versatile";
+export type WeaponTrait = "Finesse" | "Heavy" | "Light" | "Loading" | "Reach" | "Scatter" | "Special" | "TwoHanded";

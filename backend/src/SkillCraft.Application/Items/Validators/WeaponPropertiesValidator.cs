@@ -12,23 +12,9 @@ public class WeaponPropertiesValidator : AbstractValidator<IWeaponProperties>
 
     RuleForEach(x => x.Damages).SetValidator(new WeaponDamageValidator());
     RuleForEach(x => x.VersatileDamages).SetValidator(new WeaponDamageValidator());
-    When(x => x.VersatileDamages.Count > 0, () => RuleFor(x => x.Traits).Must(traits => traits.Contains(WeaponTrait.Versatile))
-      .WithErrorCode(nameof(WeaponPropertiesValidator))
-      .WithMessage($"'{{PropertyName}}' must include '{WeaponTrait.Versatile}' when versatile damages are specified."));
 
-    When(x => x.Range != null, () =>
-    {
-      RuleFor(x => x.Range!).SetValidator(new WeaponRangeValidator());
-      RuleFor(x => x.Traits).Must(traits => traits.Contains(WeaponTrait.Range))
-        .WithErrorCode(nameof(WeaponPropertiesValidator))
-        .WithMessage($"'{{PropertyName}}' must include '{WeaponTrait.Range}' when a range is specified.");
-    });
-    When(x => x.ReloadCount != null, () =>
-    {
-      RuleFor(x => x.ReloadCount).GreaterThan(1);
-      RuleFor(x => x.Traits).Must(traits => traits.Contains(WeaponTrait.Reload))
-        .WithErrorCode(nameof(WeaponPropertiesValidator))
-        .WithMessage($"'{{PropertyName}}' must include '{WeaponTrait.Reload}' when a reload count is specified.");
-    });
+    When(x => x.AmmunitionRange != null, () => RuleFor(x => x.AmmunitionRange!).SetValidator(new WeaponRangeValidator()));
+    When(x => x.ThrownRange != null, () => RuleFor(x => x.ThrownRange!).SetValidator(new WeaponRangeValidator()));
+    When(x => x.ReloadCount != null, () => RuleFor(x => x.ReloadCount).GreaterThan(1));
   }
 }

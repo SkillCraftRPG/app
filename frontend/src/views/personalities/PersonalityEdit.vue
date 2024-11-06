@@ -100,6 +100,7 @@ onMounted(async () => {
             :model-value="gift?.id"
             placeholder="customizations.select.gift"
             type="Gift"
+            @error="handleError"
             @selected="gift = $event"
           />
         </div>

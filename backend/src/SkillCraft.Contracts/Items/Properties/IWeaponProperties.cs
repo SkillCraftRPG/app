@@ -9,6 +9,7 @@ public interface IWeaponProperties
   List<WeaponDamageModel> Damages { get; }
   List<WeaponDamageModel> VersatileDamages { get; }
 
-  WeaponRangeModel? Range { get; }
+  WeaponRangeModel? AmmunitionRange { get; }
+  WeaponRangeModel? ThrownRange { get; }
   int? ReloadCount { get; }
 }
