@@ -35,7 +35,7 @@ const hasChanges = computed<boolean>(
   () =>
     !!caste.value &&
     (name.value !== caste.value.name ||
-      skill.value !== caste.value.skill ||
+      skill.value !== (caste.value.skill ?? undefined) ||
       wealthRoll.value !== (caste.value.wealthRoll ?? "") ||
       description.value !== (caste.value.description ?? "") ||
       traits.value.some((trait) => !trait.trait.id || trait.isRemoved || trait.isUpdated)),
@@ -45,7 +45,7 @@ function setModel(model: CasteModel): void {
   caste.value = model;
   description.value = model.description ?? "";
   name.value = model.name;
-  skill.value = model.skill;
+  skill.value = model.skill ?? undefined;
   traits.value = model.traits.map((trait) => ({ trait: { ...trait }, isRemoved: false, isUpdated: false }));
   wealthRoll.value = model.wealthRoll ?? "";
 }

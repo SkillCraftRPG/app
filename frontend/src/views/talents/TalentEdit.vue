@@ -38,7 +38,7 @@ const hasChanges = computed<boolean>(
   () =>
     !!talent.value &&
     (name.value !== talent.value.name ||
-      skill.value !== talent.value.skill ||
+      skill.value !== (talent.value.skill ?? undefined) ||
       requiredTalent.value?.id !== talent.value.requiredTalent?.id ||
       allowMultiplePurchases.value !== talent.value.allowMultiplePurchases ||
       description.value !== (talent.value.description ?? "")),
@@ -49,8 +49,8 @@ function setModel(model: TalentModel): void {
   allowMultiplePurchases.value = model.allowMultiplePurchases;
   description.value = model.description ?? "";
   name.value = model.name;
-  requiredTalent.value = model.requiredTalent;
-  skill.value = model.skill;
+  requiredTalent.value = model.requiredTalent ?? undefined;
+  skill.value = model.skill ?? undefined;
 }
 
 const { handleSubmit, isSubmitting } = useForm();

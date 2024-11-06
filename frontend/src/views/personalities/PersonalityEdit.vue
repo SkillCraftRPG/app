@@ -34,16 +34,16 @@ const hasChanges = computed<boolean>(
   () =>
     !!personality.value &&
     (name.value !== personality.value.name ||
-      attribute.value !== personality.value.attribute ||
+      attribute.value !== (personality.value.attribute ?? undefined) ||
       gift.value?.id !== personality.value.gift?.id ||
       description.value !== (personality.value.description ?? "")),
 );
 
 function setModel(model: PersonalityModel): void {
   personality.value = model;
-  attribute.value = model.attribute;
+  attribute.value = model.attribute ?? undefined;
   description.value = model.description ?? "";
-  gift.value = model.gift;
+  gift.value = model.gift ?? undefined;
   name.value = model.name;
 }
 

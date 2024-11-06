@@ -33,8 +33,8 @@ const hasChanges = computed<boolean>(
   () =>
     !!education.value &&
     (name.value !== education.value.name ||
-      skill.value !== education.value.skill ||
-      wealthMultiplier.value !== education.value.wealthMultiplier ||
+      skill.value !== (education.value.skill ?? undefined) ||
+      wealthMultiplier.value !== (education.value.wealthMultiplier ?? undefined) ||
       description.value !== (education.value.description ?? "")),
 );
 
@@ -42,8 +42,8 @@ function setModel(model: EducationModel): void {
   education.value = model;
   description.value = model.description ?? "";
   name.value = model.name;
-  skill.value = model.skill;
-  wealthMultiplier.value = model.wealthMultiplier;
+  skill.value = model.skill ?? undefined;
+  wealthMultiplier.value = model.wealthMultiplier ?? undefined;
 }
 
 const { handleSubmit, isSubmitting } = useForm();

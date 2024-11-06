@@ -63,24 +63,24 @@ const hasChanges = computed<boolean>(
     !!aspect.value &&
     (name.value !== aspect.value.name ||
       description.value !== (aspect.value.description ?? "") ||
-      mandatoryAttribute1.value !== aspect.value.attributes.mandatory1 ||
-      mandatoryAttribute2.value !== aspect.value.attributes.mandatory2 ||
-      optionalAttribute1.value !== aspect.value.attributes.optional1 ||
-      optionalAttribute2.value !== aspect.value.attributes.optional2 ||
-      discountedSkill1.value !== aspect.value.skills.discounted1 ||
-      discountedSkill2.value !== aspect.value.skills.discounted2),
+      mandatoryAttribute1.value !== (aspect.value.attributes.mandatory1 ?? undefined) ||
+      mandatoryAttribute2.value !== (aspect.value.attributes.mandatory2 ?? undefined) ||
+      optionalAttribute1.value !== (aspect.value.attributes.optional1 ?? undefined) ||
+      optionalAttribute2.value !== (aspect.value.attributes.optional2 ?? undefined) ||
+      discountedSkill1.value !== (aspect.value.skills.discounted1 ?? undefined) ||
+      discountedSkill2.value !== (aspect.value.skills.discounted2 ?? undefined)),
 );
 
 function setModel(model: AspectModel): void {
   aspect.value = model;
   description.value = model.description ?? "";
-  discountedSkill1.value = model.skills.discounted1;
-  discountedSkill2.value = model.skills.discounted2;
-  mandatoryAttribute1.value = model.attributes.mandatory1;
-  mandatoryAttribute2.value = model.attributes.mandatory2;
+  discountedSkill1.value = model.skills.discounted1 ?? undefined;
+  discountedSkill2.value = model.skills.discounted2 ?? undefined;
+  mandatoryAttribute1.value = model.attributes.mandatory1 ?? undefined;
+  mandatoryAttribute2.value = model.attributes.mandatory2 ?? undefined;
   name.value = model.name;
-  optionalAttribute1.value = model.attributes.optional1;
-  optionalAttribute2.value = model.attributes.optional2;
+  optionalAttribute1.value = model.attributes.optional1 ?? undefined;
+  optionalAttribute2.value = model.attributes.optional2 ?? undefined;
 }
 
 const { handleSubmit, isSubmitting } = useForm();

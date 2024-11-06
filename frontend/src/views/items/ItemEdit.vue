@@ -53,8 +53,8 @@ const hasChanges = computed<boolean>(
   () =>
     !!item.value &&
     (name.value !== item.value.name ||
-      value.value !== item.value.value ||
-      weight.value !== item.value.weight ||
+      value.value !== (item.value.value ?? undefined) ||
+      weight.value !== (item.value.weight ?? undefined) ||
       isAttunementRequired.value !== item.value.isAttunementRequired ||
       description.value !== (item.value.description ?? "") ||
       JSON.stringify(consumable.value) !== JSON.stringify(item.value.consumable ?? undefined) ||
@@ -75,9 +75,9 @@ function setModel(model: ItemModel): void {
   equipment.value = model.equipment ? { ...model.equipment } : undefined;
   isAttunementRequired.value = model.isAttunementRequired;
   name.value = model.name;
-  value.value = model.value;
+  value.value = model.value ?? undefined;
   weapon.value = model.weapon ? { ...model.weapon } : undefined;
-  weight.value = model.weight;
+  weight.value = model.weight ?? undefined;
 }
 
 const { handleSubmit, isSubmitting } = useForm();
