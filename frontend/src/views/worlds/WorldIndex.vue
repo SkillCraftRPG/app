@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import type { WorldModel } from "@/types/worlds";
 import { handleErrorKey } from "@/inject/App";
 import { readWorld } from "@/api/worlds";
+import type { ApiError } from "@/types/api";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 
 const world = ref<WorldModel>();
@@ -19,7 +21,12 @@ onMounted(async () => {
     const slug: string = route.params.slug as string;
     world.value = await readWorld(slug);
   } catch (e: unknown) {
-    handleError(e);
+    const { status } = e as ApiError;
+    if (status === 404) {
+      router.push({ path: "/not-found" });
+    } else {
+      handleError(e);
+    }
   }
 });
 </script>
@@ -28,7 +35,14 @@ onMounted(async () => {
   <main class="container">
     <template v-if="world">
       <h1 class="text-center">{{ world.name ?? world.slug }}</h1>
-      <AppBreadcrumb :current="world.name ?? world.slug" @error="handleError" />
+      <div class="mb-3 row">
+        <AppBreadcrumb class="col" :current="world.name ?? world.slug" @error="handleError" />
+        <div class="col">
+          <RouterLink class="btn btn-primary float-end" :to="{ name: 'WorldEdit' }">
+            <font-awesome-icon icon="fas fa-edit" /> {{ t("actions.edit") }}
+          </RouterLink>
+        </div>
+      </div>
       <ul>
         <li>
           <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>

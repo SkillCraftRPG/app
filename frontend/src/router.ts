@@ -136,6 +136,11 @@ const router = createRouter({
     },
     // Worlds
     {
+      name: "WorldEdit",
+      path: "/worlds/:slug/edit",
+      component: () => import("./views/worlds/WorldEdit.vue"),
+    },
+    {
       name: "WorldIndex",
       path: "/worlds/:slug",
       component: () => import("./views/worlds/WorldIndex.vue"),
