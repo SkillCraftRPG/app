@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
@@ -20,6 +22,7 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const { t } = useI18n();
 
 const language = ref<LanguageModel>();
 const description = ref<string>("");
@@ -87,6 +90,12 @@ onMounted(async () => {
   <main class="container">
     <template v-if="language">
       <h1>{{ language.name }}</h1>
+      <AppBreadcrumb
+        :current="language.name"
+        :parent="{ route: { name: 'LanguageList' }, text: t('languages.list') }"
+        :world="language.world"
+        @error="handleError"
+      />
       <StatusDetail :aggregate="language" />
       <form @submit.prevent="onSubmit">
         <div class="row">

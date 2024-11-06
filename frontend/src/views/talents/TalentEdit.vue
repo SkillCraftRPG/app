@@ -5,6 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
@@ -97,6 +98,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="talent">
       <h1>{{ talent.name }}</h1>
+      <AppBreadcrumb :current="talent.name" :parent="{ route: { name: 'TalentList' }, text: t('talents.list') }" :world="talent.world" @error="handleError" />
       <StatusDetail :aggregate="talent" />
       <form @submit.prevent="onSubmit">
         <div class="row">

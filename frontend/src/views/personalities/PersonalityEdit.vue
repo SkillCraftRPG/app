@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import CustomizationSelect from "@/components/customizations/CustomizationSelect.vue";
@@ -22,6 +24,7 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const { t } = useI18n();
 
 const attribute = ref<Attribute>();
 const description = ref<string>("");
@@ -89,6 +92,12 @@ onMounted(async () => {
   <main class="container">
     <template v-if="personality">
       <h1>{{ personality.name }}</h1>
+      <AppBreadcrumb
+        :current="personality.name"
+        :parent="{ route: { name: 'PersonalityList' }, text: t('personalities.list') }"
+        :world="personality.world"
+        @error="handleError"
+      />
       <StatusDetail :aggregate="personality" />
       <form @submit.prevent="onSubmit">
         <div class="row">

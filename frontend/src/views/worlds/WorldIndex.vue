@@ -3,6 +3,7 @@ import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import type { WorldModel } from "@/types/worlds";
 import { handleErrorKey } from "@/inject/App";
 import { readWorld } from "@/api/worlds";
@@ -27,6 +28,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="world">
       <h1 class="text-center">{{ world.name ?? world.slug }}</h1>
+      <AppBreadcrumb :current="world.name ?? world.slug" @error="handleError" />
       <ul>
         <li>
           <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>

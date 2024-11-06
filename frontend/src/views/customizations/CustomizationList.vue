@@ -5,6 +5,7 @@ import { computed, inject, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateCustomization from "@/components/customizations/CreateCustomization.vue";
@@ -128,6 +129,7 @@ watch(
 <template>
   <main class="container">
     <h1>{{ t("customizations.list") }}</h1>
+    <AppBreadcrumb :current="t('customizations.list')" @error="handleError" />
     <div class="my-3">
       <TarButton
         class="me-1"
