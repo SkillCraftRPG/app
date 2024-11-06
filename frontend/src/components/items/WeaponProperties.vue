@@ -5,13 +5,15 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AttackInput from "./AttackInput.vue";
+import DamageList from "./DamageList.vue";
 import RangeInput from "./RangeInput.vue";
 import ReloadCountInput from "./ReloadCountInput.vue";
 import ResistanceInput from "./ResistanceInput.vue";
-import type { WeaponPropertiesModel, WeaponTrait } from "@/types/items";
+import type { WeaponDamageModel, WeaponPropertiesModel, WeaponRangeModel, WeaponTrait } from "@/types/items";
 
 const { rt, t, tm } = useI18n();
 
+type DamageKey = "normal" | "versatile";
 type RangeKey = "ammunition.normal" | "ammunition.long" | "thrown.normal" | "thrown.long";
 type TranslatedTrait = {
   value: WeaponTrait;
@@ -33,6 +35,18 @@ const emit = defineEmits<{
   (e: "update:model-value", value: WeaponPropertiesModel): void;
 }>();
 
+function hasTrait(trait: WeaponTrait): boolean {
+  return props.modelValue.traits.includes(trait);
+}
+function toggleTrait(trait: WeaponTrait, add: boolean): void {
+  const properties: WeaponPropertiesModel = { ...props.modelValue };
+  properties.traits = properties.traits.filter((t) => t !== trait);
+  if (add) {
+    properties.traits.push(trait);
+  }
+  emit("update:model-value", properties);
+}
+
 function setAttack(attack?: number): void {
   const properties: WeaponPropertiesModel = { ...props.modelValue, attack: attack ?? 0 };
   emit("update:model-value", properties);
@@ -50,16 +64,16 @@ function setRange(key: RangeKey, value?: number): void {
   const properties: WeaponPropertiesModel = { ...props.modelValue };
   switch (key) {
     case "ammunition.long":
-      console.log(key + ": " + value); // TODO(fpion): implement
+      properties.ammunitionRange = { normal: properties.ammunitionRange?.normal, long: value } as WeaponRangeModel;
       break;
     case "ammunition.normal":
-      console.log(key + ": " + value); // TODO(fpion): implement
+      properties.ammunitionRange = { normal: value, long: properties.ammunitionRange?.long } as WeaponRangeModel;
       break;
     case "thrown.long":
-      console.log(key + ": " + value); // TODO(fpion): implement
+      properties.thrownRange = { normal: properties.thrownRange?.normal, long: value } as WeaponRangeModel;
       break;
     case "thrown.normal":
-      console.log(key + ": " + value); // TODO(fpion): implement
+      properties.thrownRange = { normal: value, long: properties.thrownRange?.long } as WeaponRangeModel;
       break;
     default:
       throw new Error(`The weapon range key '${key}' is not supported.`);
@@ -67,14 +81,17 @@ function setRange(key: RangeKey, value?: number): void {
   emit("update:model-value", properties);
 }
 
-function hasTrait(trait: WeaponTrait): boolean {
-  return props.modelValue.traits.includes(trait);
-}
-function toggleTrait(trait: WeaponTrait, add: boolean): void {
+function setDamage(key: DamageKey, value: WeaponDamageModel[]): void {
   const properties: WeaponPropertiesModel = { ...props.modelValue };
-  properties.traits = properties.traits.filter((t) => t !== trait);
-  if (add) {
-    properties.traits.push(trait);
+  switch (key) {
+    case "normal":
+      properties.damages = value;
+      break;
+    case "versatile":
+      properties.versatileDamages = value;
+      break;
+    default:
+      throw new Error(`The weapon damage key '${key}' is not supported.`);
   }
   emit("update:model-value", properties);
 }
@@ -147,5 +164,12 @@ function toggleTrait(trait: WeaponTrait, add: boolean): void {
         </div>
       </div>
     </div>
+    <DamageList :model-value="modelValue.damages" @update:model-value="setDamage('normal', $event)" />
+    <DamageList
+      id="versatile-damage"
+      label="items.weapon.damage.versatile"
+      :model-value="modelValue.versatileDamages"
+      @update:model-value="setDamage('versatile', $event)"
+    />
   </div>
 </template>

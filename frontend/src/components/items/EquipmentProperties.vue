@@ -30,15 +30,6 @@ const emit = defineEmits<{
   (e: "update:model-value", value: EquipmentPropertiesModel): void;
 }>();
 
-function setDefense(defense?: number): void {
-  const properties: EquipmentPropertiesModel = { ...props.modelValue, defense: defense ?? 0 };
-  emit("update:model-value", properties);
-}
-function setResistance(resistance?: number): void {
-  const properties: EquipmentPropertiesModel = { ...props.modelValue, resistance };
-  emit("update:model-value", properties);
-}
-
 function hasTrait(trait: EquipmentTrait): boolean {
   return props.modelValue.traits.includes(trait);
 }
@@ -48,6 +39,15 @@ function toggleTrait(trait: EquipmentTrait, add: boolean): void {
   if (add) {
     properties.traits.push(trait);
   }
+  emit("update:model-value", properties);
+}
+
+function setDefense(defense?: number): void {
+  const properties: EquipmentPropertiesModel = { ...props.modelValue, defense: defense ?? 0 };
+  emit("update:model-value", properties);
+}
+function setResistance(resistance?: number): void {
+  const properties: EquipmentPropertiesModel = { ...props.modelValue, resistance };
   emit("update:model-value", properties);
 }
 </script>

@@ -57,6 +57,11 @@
   "updated": "The item has been updated.",
   "weapon": {
     "attack": "Attack",
+    "damage": {
+      "empty": "This list is empty.",
+      "label": "Damage",
+      "versatile": "Versatile Damage"
+    },
     "range": {
       "ammunition": "Range (Ammunition)",
       "long": "Long",

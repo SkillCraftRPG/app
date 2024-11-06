@@ -57,6 +57,11 @@
   "updated": "L’objet a été modifié.",
   "weapon": {
     "attack": "Attaque",
+    "damage": {
+      "empty": "Cette liste est vide.",
+      "label": "Dégâts",
+      "versatile": "Dégâts versatiles"
+    },
     "range": {
       "ammunition": "Portée (munition)",
       "long": "Longue",
