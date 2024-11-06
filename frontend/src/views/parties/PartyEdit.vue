@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
@@ -18,6 +20,7 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const { t } = useI18n();
 
 const description = ref<string>("");
 const hasLoaded = ref<boolean>(false);
@@ -72,6 +75,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="party">
       <h1>{{ party.name }}</h1>
+      <AppBreadcrumb :current="party.name" :parent="{ route: { name: 'PartyList' }, text: t('parties.list') }" :world="party.world" @error="handleError" />
       <StatusDetail :aggregate="party" />
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />

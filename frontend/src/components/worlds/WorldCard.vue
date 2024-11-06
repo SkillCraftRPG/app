@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TarAvatar, TarCard } from "logitar-vue3-ui";
+import { TarAvatar, TarButton, TarCard } from "logitar-vue3-ui";
 
 import type { WorldModel } from "@/types/worlds";
 import { useI18n } from "vue-i18n";
@@ -10,6 +10,10 @@ defineProps<{
   subtitle: boolean;
   world: WorldModel;
 }>();
+
+defineEmits<{
+  (e: "entered"): void;
+}>();
 </script>
 
 <template>
@@ -19,8 +23,6 @@ defineProps<{
       <TarAvatar :display-name="world.owner.displayName" :email-address="world.owner.emailAddress" icon="fas fa-user" :url="world.owner.pictureUrl" />
       {{ world.owner.displayName }}
     </div>
-    <RouterLink class="btn btn-primary float-end" :to="{ name: 'WorldIndex', params: { slug: world.slug } }">
-      <font-awesome-icon icon="fas fa-dungeon" /> {{ t("actions.enter") }}
-    </RouterLink>
+    <TarButton class="float-end" icon="fas fa-dungeon" :text="t('actions.enter')" @click="$emit('entered')" />
   </TarCard>
 </template>

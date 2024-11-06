@@ -5,6 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
@@ -133,6 +134,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="aspect">
       <h1>{{ aspect.name }}</h1>
+      <AppBreadcrumb :current="aspect.name" :parent="{ route: { name: 'AspectList' }, text: t('aspects.list') }" :world="aspect.world" @error="handleError" />
       <StatusDetail :aggregate="aspect" />
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />

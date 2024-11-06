@@ -5,6 +5,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import ConsumableProperties from "@/components/items/ConsumableProperties.vue";
 import ContainerProperties from "@/components/items/ContainerProperties.vue";
@@ -130,6 +131,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="item">
       <h1>{{ item.name }}</h1>
+      <AppBreadcrumb :current="item.name" :parent="{ route: { name: 'ItemList' }, text: t('items.list') }" :world="item.world" @error="handleError" />
       <StatusDetail :aggregate="item" />
       <form @submit.prevent="onSubmit">
         <div class="row">

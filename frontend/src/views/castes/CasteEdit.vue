@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
@@ -22,6 +24,7 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const { t } = useI18n();
 
 const caste = ref<CasteModel>();
 const description = ref<string>("");
@@ -116,6 +119,7 @@ onMounted(async () => {
   <main class="container">
     <template v-if="caste">
       <h1>{{ caste.name }}</h1>
+      <AppBreadcrumb :current="caste.name" :parent="{ route: { name: 'CasteList' }, text: t('castes.list') }" :world="caste.world" @error="handleError" />
       <StatusDetail :aggregate="caste" />
       <form @submit.prevent="onSubmit">
         <div class="row">

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import CustomizationTypeSelect from "@/components/customizations/CustomizationTypeSelect.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
@@ -19,6 +21,7 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const { t } = useI18n();
 
 const customization = ref<CustomizationModel>();
 const description = ref<string>("");
@@ -76,6 +79,12 @@ onMounted(async () => {
   <main class="container">
     <template v-if="customization">
       <h1>{{ customization.name }}</h1>
+      <AppBreadcrumb
+        :current="customization.name"
+        :parent="{ route: { name: 'CustomizationList' }, text: t('customizations.list') }"
+        :world="customization.world"
+        @error="handleError"
+      />
       <StatusDetail :aggregate="customization" />
       <form @submit.prevent="onSubmit">
         <div class="row">
