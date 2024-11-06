@@ -14,7 +14,7 @@ const props = defineProps<{
   name?: string;
 }>();
 
-const isCustom = ref<boolean>(false);
+const isCustom = ref<boolean>(props.modelValue !== slugify(props.name));
 
 const emit = defineEmits<{
   (e: "update:model-value", value?: string): void;

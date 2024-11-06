@@ -1,11 +1,13 @@
 {
   "create": "Créer un univers",
   "created": "L’univers a été créée.",
+  "edit": "Édition",
   "empty": "Cette liste est vide.",
   "gateway": "Portail",
   "ownedBy": "Appartient à",
   "slug": {
     "custom": "Personnaliser",
     "label": "Alias (slug)"
-  }
+  },
+  "updated": "L’univers a été modifié."
 }

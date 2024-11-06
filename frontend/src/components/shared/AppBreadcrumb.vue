@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
@@ -25,7 +25,27 @@ const props = withDefaults(
   },
 );
 
-const breadcrumbs = ref<Breadcrumb[]>([]);
+const currentWorld = ref<WorldModel>();
+
+const breadcrumbs = computed<Breadcrumb[]>(() => {
+  const breadcrumbs: Breadcrumb[] = [
+    {
+      route: { name: "WorldList" },
+      text: t("worlds.gateway"),
+    },
+  ];
+  if (route.name !== "WorldIndex" && currentWorld.value) {
+    breadcrumbs.push({
+      route: { name: "WorldIndex", params: { slug: currentWorld.value.slug } },
+      text: currentWorld.value.name ?? currentWorld.value.slug,
+    });
+  }
+  if (props.parent) {
+    breadcrumbs.push(props.parent);
+  }
+  breadcrumbs.push({ text: props.current });
+  return breadcrumbs;
+});
 
 function getAriaCurrent(breadcrumb: Breadcrumb): "page" | undefined {
   return breadcrumb.route ? undefined : "page";
@@ -42,39 +62,24 @@ const emit = defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
-onMounted(async () => {
-  try {
-    breadcrumbs.value.push({
-      route: { name: "WorldList" },
-      text: t("worlds.gateway"),
-    });
-    if (route.name !== "WorldIndex") {
-      let world: WorldModel | undefined = props.world;
-      if (!world) {
+watch(
+  () => props.world,
+  async (world) => {
+    if (world) {
+      currentWorld.value = world;
+    } else {
+      try {
         const slug: string | undefined = getWorldSlug();
         if (slug) {
-          const world: WorldModel = await worldStore.retrieve(slug);
-          breadcrumbs.value.push({
-            route: { name: "WorldIndex", params: { slug: world.slug } },
-            text: world.name ?? world.slug,
-          });
+          currentWorld.value = await worldStore.retrieve(slug);
         }
-      }
-      if (world) {
-        breadcrumbs.value.push({
-          route: { name: "WorldIndex", params: { slug: world.slug } },
-          text: world.name ?? world.slug,
-        });
+      } catch (e: unknown) {
+        emit("error", e);
       }
     }
-    if (props.parent) {
-      breadcrumbs.value.push(props.parent);
-    }
-    breadcrumbs.value.push({ text: props.current });
-  } catch (e: unknown) {
-    emit("error", e);
-  }
-});
+  },
+  { deep: true, immediate: true },
+);
 </script>
 
 <template>
