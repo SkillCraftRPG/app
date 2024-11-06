@@ -54,16 +54,6 @@ function toggleTrait(trait: EquipmentTrait, add: boolean): void {
 
 <template>
   <div>
-    <div class="row">
-      <DefenseInput class="col-lg-6" :model-value="modelValue.defense" required @update:model-value="setDefense" />
-      <ResistanceInput
-        class="col-lg-6"
-        label="items.equipment.resistance"
-        :model-value="modelValue.resistance"
-        placeholder="items.equipment.resistance"
-        @update:model-value="setResistance"
-      />
-    </div>
     <div class="mb-3">
       <TarCheckbox
         v-for="trait in traits"
@@ -72,6 +62,16 @@ function toggleTrait(trait: EquipmentTrait, add: boolean): void {
         :label="trait.text"
         :model-value="hasTrait(trait.value)"
         @update:model-value="toggleTrait(trait.value, $event)"
+      />
+    </div>
+    <div class="row">
+      <DefenseInput class="col-lg-6" :model-value="modelValue.defense" required @update:model-value="setDefense" />
+      <ResistanceInput
+        class="col-lg-6"
+        label="items.equipment.resistance"
+        :model-value="modelValue.resistance"
+        placeholder="items.equipment.resistance"
+        @update:model-value="setResistance"
       />
     </div>
   </div>
