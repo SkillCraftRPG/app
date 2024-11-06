@@ -1,5 +1,11 @@
 {
+  "create": "Créer un univers",
+  "created": "L’univers a été créée.",
   "empty": "Cette liste est vide.",
   "gateway": "Portail",
-  "ownedBy": "Appartient à"
+  "ownedBy": "Appartient à",
+  "slug": {
+    "custom": "Personnaliser",
+    "label": "Alias (slug)"
+  }
 }

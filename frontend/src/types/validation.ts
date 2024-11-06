@@ -15,6 +15,7 @@ export type ValidationRules = {
   allowed_characters?: string;
   confirmed?: string[];
   email?: boolean;
+  identifier?: boolean;
   max_length?: number;
   max_value?: number;
   min_length?: number;
@@ -26,6 +27,7 @@ export type ValidationRules = {
   require_uppercase?: boolean;
   required?: boolean;
   roll?: boolean;
+  slug?: boolean;
   unique_chars?: number;
   url?: boolean;
 };

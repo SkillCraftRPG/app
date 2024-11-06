@@ -1,5 +1,11 @@
 {
+  "create": "Create World",
+  "created": "The world has been created.",
   "empty": "This list is empty.",
   "gateway": "Gateway",
-  "ownedBy": "Owned by"
+  "ownedBy": "Owned by",
+  "slug": {
+    "custom": "Customize",
+    "label": "Alias (slug)"
+  }
 }

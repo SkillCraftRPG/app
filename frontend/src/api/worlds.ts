@@ -1,11 +1,16 @@
 import { urlUtils } from "logitar-js";
 
 import type { SearchResults } from "@/types/search";
-import type { SearchWorldsPayload, WorldModel } from "@/types/worlds";
-import { get } from ".";
+import type { CreateOrReplaceWorldPayload, SearchWorldsPayload, WorldModel } from "@/types/worlds";
+import { get, post } from ".";
 
 function createUrlBuilder(slug?: string): urlUtils.IUrlBuilder {
   return slug ? new urlUtils.UrlBuilder({ path: "/worlds/slug:{slug}" }).setParameter("slug", slug) : new urlUtils.UrlBuilder({ path: "/worlds" });
+}
+
+export async function createWorld(payload: CreateOrReplaceWorldPayload): Promise<WorldModel> {
+  const url: string = createUrlBuilder().buildRelative();
+  return (await post<CreateOrReplaceWorldPayload, WorldModel>(url, payload)).data;
 }
 
 export async function readWorld(slug: string): Promise<WorldModel> {

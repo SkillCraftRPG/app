@@ -50,7 +50,6 @@ onMounted(async () => {
     });
     if (route.name !== "WorldIndex") {
       let world: WorldModel | undefined = props.world;
-      console.log(world);
       if (!world) {
         const slug: string | undefined = getWorldSlug();
         if (slug) {
@@ -61,7 +60,6 @@ onMounted(async () => {
           });
         }
       }
-      console.log(world);
       if (world) {
         breadcrumbs.value.push({
           route: { name: "WorldIndex", params: { slug: world.slug } },
