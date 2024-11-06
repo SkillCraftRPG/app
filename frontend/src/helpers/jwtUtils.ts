@@ -8,4 +8,4 @@ export function decode(token: string): unknown {
       .join(""),
   );
   return JSON.parse(json);
-} // ISSUE: https://github.com/SkillCraftRPG/app/issues/23
+}
