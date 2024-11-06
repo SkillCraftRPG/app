@@ -57,6 +57,13 @@
   "updated": "L’objet a été modifié.",
   "weapon": {
     "attack": "Attaque",
+    "range": {
+      "ammunition": "Portée (munition)",
+      "long": "Longue",
+      "normal": "Normale",
+      "thrown": "Portée (jet)"
+    },
+    "reloadCount": "Barillet",
     "resistance": "Résistance",
     "traits": {
       "Finesse": "Finesse",

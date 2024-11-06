@@ -57,6 +57,13 @@
   "updated": "The item has been updated.",
   "weapon": {
     "attack": "Attack",
+    "range": {
+      "ammunition": "Range (Ammunition)",
+      "long": "Long",
+      "normal": "Normal",
+      "thrown": "Range (Thrown)"
+    },
+    "reloadCount": "Reload Count",
     "resistance": "Resistance",
     "traits": {
       "Finesse": "Finesse",

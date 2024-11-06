@@ -34,6 +34,10 @@ function setAttack(attack?: number): void {
   const properties: WeaponPropertiesModel = { ...props.modelValue, attack: attack ?? 0 };
   emit("update:model-value", properties);
 }
+function setReloadCount(reloadCount?: number): void {
+  const properties: WeaponPropertiesModel = { ...props.modelValue, reloadCount };
+  emit("update:model-value", properties);
+}
 function setResistance(resistance?: number): void {
   const properties: WeaponPropertiesModel = { ...props.modelValue, resistance };
   emit("update:model-value", properties);
@@ -55,14 +59,15 @@ function toggleTrait(trait: WeaponTrait, add: boolean): void {
 <template>
   <div>
     <div class="row">
-      <AttackInput class="col-lg-6" :model-value="modelValue.attack" required @update:model-value="setAttack" />
+      <AttackInput class="col-lg-4" :model-value="modelValue.attack" required @update:model-value="setAttack" />
       <ResistanceInput
-        class="col-lg-6"
+        class="col-lg-4"
         label="items.weapon.resistance"
         :model-value="modelValue.resistance"
         placeholder="items.weapon.resistance"
         @update:model-value="setResistance"
       />
+      <ReloadCountInput class="col-lg-4" :model-value="modelValue.reloadCount" @update:model-value="setReloadCount" />
     </div>
     <div class="mb-3">
       <TarCheckbox
