@@ -1,0 +1,26 @@
+{
+  "create": "Créer une lignée",
+  "created": "La lignée a été créée.",
+  "empty": "Cette liste est vide.",
+  "list": "Lignées",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "traits": {
+    "edit": "Modifier un trait",
+    "empty": "Cette liste est vide.",
+    "new": "Nouveau trait",
+    "status": {
+      "added": "Ajouté",
+      "label": "Statut",
+      "removed": "Retiré",
+      "updated": "Modifié"
+    },
+    "label": "Traits"
+  },
+  "updated": "La lignée a été modifié."
+}

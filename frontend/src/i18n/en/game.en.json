@@ -31,6 +31,19 @@
       "placeholder": "Select a damage type"
     }
   },
+  "size": {
+    "categories": {
+      "Colossal": "Colossal",
+      "Diminutive": "Diminutive",
+      "Gargantuan": "Gargantuan",
+      "Huge": "Huge",
+      "Large": "Large",
+      "Medium": "Medium",
+      "Small": "Small",
+      "Tiny": "Tiny"
+    },
+    "category": "Size Category"
+  },
   "skill": "Skill",
   "skills": {
     "Acrobatics": "Acrobatics",

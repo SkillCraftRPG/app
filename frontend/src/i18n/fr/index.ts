@@ -7,6 +7,7 @@ import game from "./game.fr.json";
 import index from "./index.fr.json";
 import items from "./items.fr.json";
 import languages from "./languages.fr.json";
+import lineages from "./lineages.fr.json";
 import parties from "./parties.fr.json";
 import personalities from "./personalities.fr.json";
 import talents from "./talents.fr.json";
@@ -23,6 +24,7 @@ export default {
   game,
   items,
   languages,
+  lineages,
   parties,
   personalities,
   talents,

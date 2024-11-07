@@ -101,6 +101,17 @@ const router = createRouter({
       path: "/worlds/:slug/languages",
       component: () => import("./views/languages/LanguageList.vue"),
     },
+    // Languages
+    {
+      name: "LineageEdit",
+      path: "/worlds/:slug/lineages/:id",
+      component: () => import("./views/lineages/LineageEdit.vue"),
+    },
+    {
+      name: "LineageList",
+      path: "/worlds/:slug/lineages",
+      component: () => import("./views/lineages/LineageList.vue"),
+    },
     // Parties
     {
       name: "PartyEdit",

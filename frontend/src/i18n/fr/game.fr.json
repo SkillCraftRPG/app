@@ -31,6 +31,19 @@
       "placeholder": "Sélectionnez un type de dégâts"
     }
   },
+  "size": {
+    "categories": {
+      "Colossal": "Colossale",
+      "Diminutive": "Infime",
+      "Gargantuan": "Gigantesque",
+      "Huge": "Énorme",
+      "Large": "Grande",
+      "Medium": "Moyenne",
+      "Small": "Petite",
+      "Tiny": "Minuscule"
+    },
+    "category": "Catégorie de taille"
+  },
   "skill": "Compétence",
   "skills": {
     "Acrobatics": "Acrobaties",

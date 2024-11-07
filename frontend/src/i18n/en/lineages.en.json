@@ -1,0 +1,26 @@
+{
+  "create": "Create Lineage",
+  "created": "The lineage has been created.",
+  "empty": "This list is empty.",
+  "list": "Lineages",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "traits": {
+    "edit": "Edit Trait",
+    "empty": "This list is empty.",
+    "new": "New Trait",
+    "status": {
+      "added": "Added",
+      "label": "Status",
+      "removed": "Removed",
+      "updated": "Updated"
+    },
+    "label": "Traits"
+  },
+  "updated": "The lineage has been updated."
+}
