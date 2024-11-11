@@ -197,7 +197,7 @@ onMounted(async () => {
           </form>
         </TarTab>
         <TarTab v-if="!lineage.species" id="nations" :title="t('lineages.nations.label')">
-          <NationList :has-changes="hasChanges" :species="lineage" @error="handleError" />
+          <NationList :species="lineage" @error="handleError" />
         </TarTab>
       </TarTabs>
     </template>

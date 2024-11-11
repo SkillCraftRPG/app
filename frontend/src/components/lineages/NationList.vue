@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { TarCard } from "logitar-vue3-ui";
-import { computed, onMounted, ref } from "vue";
-import { parsingUtils } from "logitar-js";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CreateLineage from "./CreateLineage.vue";
@@ -11,22 +10,13 @@ import { searchLineages } from "@/api/lineages";
 import { useToastStore } from "@/stores/toast";
 
 const toasts = useToastStore();
-const { parseBoolean } = parsingUtils;
 const { t } = useI18n();
 
-const props = withDefaults(
-  defineProps<{
-    hasChanges?: boolean | string;
-    species: LineageModel;
-  }>(),
-  {
-    hasChanges: false,
-  },
-);
+const props = defineProps<{
+  species: LineageModel;
+}>();
 
 const nations = ref<LineageModel[]>([]);
-
-const target = computed<string | undefined>(() => (parseBoolean(props.hasChanges) ? "_blank" : undefined));
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
@@ -65,7 +55,7 @@ onMounted(async () => {
       <div v-for="nation in nations" :key="nation.id" class="col-lg-3">
         <TarCard :title="nation.name">
           <div class="float-end">
-            <RouterLink class="btn btn-primary" :to="{ name: 'LineageEdit', params: { id: nation.id } }" :target="target">
+            <RouterLink class="btn btn-primary" :to="{ name: 'LineageEdit', params: { id: nation.id } }">
               <font-awesome-icon icon="fas fa-edit" /> {{ t("actions.edit") }}
             </RouterLink>
           </div>
