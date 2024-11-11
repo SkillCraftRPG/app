@@ -12,7 +12,10 @@
     "extra": "Extra",
     "label": "Attributes"
   },
-  "create": "Create Lineage",
+  "create": {
+    "nation": "Create Nation",
+    "species": "Create Species"
+  },
   "created": "The lineage has been created.",
   "empty": "This list is empty.",
   "languages": {
@@ -30,6 +33,10 @@
     "male": "Male",
     "text": "Description",
     "unisex": "Unisex"
+  },
+  "nations": {
+    "empty": "This list is empty.",
+    "label": "Nations"
   },
   "size": {
     "label": "Size",

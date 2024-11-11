@@ -20,6 +20,7 @@ const language = ref<LanguageModel>();
 const selectedLanguages = ref<LanguageModel[]>(props.languages ?? []);
 
 const emit = defineEmits<{
+  (e: "error", value: unknown): void;
   (e: "update:model-value", value: LanguagesPayload): void;
 }>();
 
@@ -56,7 +57,14 @@ function setText(text?: string): void {
   <div>
     <h3>{{ t("lineages.languages.label") }}</h3>
     <div class="row">
-      <LanguageSelect class="col-lg-6" :exclude="selectedLanguages" :model-value="language?.id" validation="server" @selected="language = $event">
+      <LanguageSelect
+        class="col-lg-6"
+        :exclude="selectedLanguages"
+        :model-value="language?.id"
+        validation="server"
+        @error="$emit('error', $event)"
+        @selected="language = $event"
+      >
         <template #append>
           <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addLanguage" />
         </template>

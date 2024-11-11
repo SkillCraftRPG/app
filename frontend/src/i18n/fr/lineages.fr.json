@@ -2,7 +2,7 @@
   "ages": {
     "categories": {
       "Adolescent": "Adolescent",
-      "Adult": "Adult",
+      "Adult": "Adulte",
       "Mature": "Âge mur",
       "Venerable": "Vénérable"
     },
@@ -12,7 +12,10 @@
     "extra": "Extra",
     "label": "Attributs"
   },
-  "create": "Créer une lignée",
+  "create": {
+    "nation": "Créer un peuple",
+    "species": "Créer une espèce"
+  },
   "created": "La lignée a été créée.",
   "empty": "Cette liste est vide.",
   "languages": {
@@ -30,6 +33,10 @@
     "male": "Masculins",
     "text": "Description",
     "unisex": "Unisexes"
+  },
+  "nations": {
+    "empty": "Cette liste est vide.",
+    "label": "Peuples"
   },
   "size": {
     "label": "Taille",

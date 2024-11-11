@@ -11,6 +11,7 @@ import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import NamesEdit from "@/components/lineages/NamesEdit.vue";
+import NationList from "@/components/lineages/NationList.vue";
 import SaveButton from "@/components/shared/SaveButton.vue";
 import SizeEdit from "@/components/lineages/SizeEdit.vue";
 import SpeedsEdit from "@/components/lineages/SpeedsEdit.vue";
@@ -183,6 +184,7 @@ onMounted(async () => {
         <SizeEdit v-model="size" />
         <WeightEdit v-model="weight" />
         <AgesEdit v-model="ages" />
+        <NationList :species="lineage" @error="handleError" />
         <div>
           <SaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
           <BackButton class="ms-1" :has-changes="hasChanges" />

@@ -5,10 +5,14 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { LineageModel, CreateOrReplaceLineagePayload } from "@/types/lineages";
+import type { CreateOrReplaceLineagePayload, LineageModel } from "@/types/lineages";
 import { createLineage } from "@/api/lineages";
 
 const { t } = useI18n();
+
+const props = defineProps<{
+  species?: LineageModel;
+}>();
 
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
@@ -33,6 +37,7 @@ const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
     const payload: CreateOrReplaceLineagePayload = {
+      parentId: props.species?.id,
       name: name.value,
       attributes: { agility: 0, coordination: 0, intellect: 0, presence: 0, sensitivity: 0, spirit: 0, vigor: 0, extra: 0 },
       features: [],
@@ -55,7 +60,7 @@ const onSubmit = handleSubmit(async () => {
 <template>
   <span>
     <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-lineage" />
-    <TarModal :close="t('actions.close')" id="create-lineage" ref="modalRef" :title="t('lineages.create')">
+    <TarModal :close="t('actions.close')" id="create-lineage" ref="modalRef" :title="t(`lineages.create.${species ? 'nation' : 'species'}`)">
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />
       </form>
