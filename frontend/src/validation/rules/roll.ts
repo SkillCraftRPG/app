@@ -12,5 +12,5 @@ function isRoll(s: string): boolean {
 }
 
 export default function (s?: string): boolean {
-  return typeof s === "string" && s.split("+").every((part) => part.length > 0 && (isNumber(part) || isRoll(part)));
+  return typeof s === "string" && (s.length === 0 || s.split("+").every((part) => part.length > 0 && (isNumber(part) || isRoll(part))));
 }
