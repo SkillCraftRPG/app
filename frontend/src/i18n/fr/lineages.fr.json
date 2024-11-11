@@ -1,0 +1,80 @@
+{
+  "ages": {
+    "categories": {
+      "Adolescent": "Adolescent",
+      "Adult": "Adulte",
+      "Mature": "Âge mur",
+      "Venerable": "Vénérable"
+    },
+    "label": "Âge"
+  },
+  "attributes": {
+    "extra": "Extra",
+    "label": "Attributs"
+  },
+  "create": {
+    "nation": "Créer un peuple",
+    "species": "Créer une espèce"
+  },
+  "created": "La lignée a été créée.",
+  "empty": "Cette liste est vide.",
+  "languages": {
+    "empty": "Cette liste est vide.",
+    "extra": "Extra",
+    "label": "Langues",
+    "text": "Description"
+  },
+  "list": "Lignées",
+  "names": {
+    "category": {
+      "edit": "Modifier une catégorie",
+      "label": "Catégorie",
+      "new": "Nouvelle catégorie"
+    },
+    "family": "Famille",
+    "female": "Féminins",
+    "label": "Noms",
+    "male": "Masculins",
+    "text": "Description",
+    "unisex": "Unisexes"
+  },
+  "nations": {
+    "empty": "Cette liste est vide.",
+    "label": "Peuples"
+  },
+  "size": {
+    "label": "Taille",
+    "roll": "Jet"
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "speeds": "Vitesses",
+  "traits": {
+    "edit": "Modifier un trait",
+    "empty": "Cette liste est vide.",
+    "new": "Nouveau trait",
+    "status": {
+      "added": "Ajouté",
+      "label": "Statut",
+      "removed": "Retiré",
+      "updated": "Modifié"
+    },
+    "label": "Traits"
+  },
+  "updated": "La lignée a été modifié.",
+  "weight": {
+    "categories": {
+      "Normal": "Normal",
+      "Obese": "Obèse",
+      "Overweight": "Surpoids",
+      "Skinny": "Maigre",
+      "Starved": "Dénutrition"
+    },
+    "label": "Poids"
+  }
+}

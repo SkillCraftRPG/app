@@ -1,0 +1,80 @@
+{
+  "ages": {
+    "categories": {
+      "Adolescent": "Adolescent",
+      "Adult": "Adult",
+      "Mature": "Mature",
+      "Venerable": "Venerable"
+    },
+    "label": "Age"
+  },
+  "attributes": {
+    "extra": "Extra",
+    "label": "Attributes"
+  },
+  "create": {
+    "nation": "Create Nation",
+    "species": "Create Species"
+  },
+  "created": "The lineage has been created.",
+  "empty": "This list is empty.",
+  "languages": {
+    "empty": "This list is empty.",
+    "extra": "Extra",
+    "label": "Languages",
+    "text": "Description"
+  },
+  "list": "Lineages",
+  "names": {
+    "category": {
+      "edit": "Edit Category",
+      "label": "Category",
+      "new": "New Category"
+    },
+    "family": "Family",
+    "female": "Female",
+    "label": "Names",
+    "male": "Male",
+    "text": "Description",
+    "unisex": "Unisex"
+  },
+  "nations": {
+    "empty": "This list is empty.",
+    "label": "Nations"
+  },
+  "size": {
+    "label": "Size",
+    "roll": "Roll"
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "speeds": "Speeds",
+  "traits": {
+    "edit": "Edit Trait",
+    "empty": "This list is empty.",
+    "new": "New Trait",
+    "status": {
+      "added": "Added",
+      "label": "Status",
+      "removed": "Removed",
+      "updated": "Updated"
+    },
+    "label": "Traits"
+  },
+  "updated": "The lineage has been updated.",
+  "weight": {
+    "label": "Weight",
+    "categories": {
+      "Starved": "Starved",
+      "Skinny": "Skinny",
+      "Normal": "Normal",
+      "Overweight": "Overweight",
+      "Obese": "Obese"
+    }
+  }
+}

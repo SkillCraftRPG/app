@@ -17,7 +17,7 @@ const props = withDefaults(
     ariaLabel?: string;
     current: string;
     divider?: string;
-    parent?: Breadcrumb;
+    parent?: Breadcrumb | Breadcrumb[];
     world?: WorldModel;
   }>(),
   {
@@ -41,7 +41,11 @@ const breadcrumbs = computed<Breadcrumb[]>(() => {
     });
   }
   if (props.parent) {
-    breadcrumbs.push(props.parent);
+    if (Array.isArray(props.parent)) {
+      breadcrumbs.push(...props.parent);
+    } else {
+      breadcrumbs.push(props.parent);
+    }
   }
   breadcrumbs.push({ text: props.current });
   return breadcrumbs;

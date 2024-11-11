@@ -31,6 +31,19 @@
       "placeholder": "Sélectionnez un type de dégâts"
     }
   },
+  "size": {
+    "categories": {
+      "Colossal": "Colossale",
+      "Diminutive": "Infime",
+      "Gargantuan": "Gigantesque",
+      "Huge": "Énorme",
+      "Large": "Grande",
+      "Medium": "Moyenne",
+      "Small": "Petite",
+      "Tiny": "Minuscule"
+    },
+    "category": "Catégorie de taille"
+  },
   "skill": "Compétence",
   "skills": {
     "Acrobatics": "Acrobaties",
@@ -54,6 +67,15 @@
     "Survival": "Survie",
     "Thievery": "Roublardise"
   },
+  "speed": "Vitesse",
+  "speeds": {
+    "Burrow": "Creusage",
+    "Climb": "Escalade",
+    "Fly": "Vol",
+    "Hover": "Lévitation",
+    "Swim": "Nage",
+    "Walk": "Marche"
+  },
   "startingWealth": "Richesse initiale",
   "tier": {
     "all": "Tous tiers",
@@ -61,6 +83,7 @@
     "placeholder": "Sélectionnez un tiers"
   },
   "units": {
+    "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L"
   }

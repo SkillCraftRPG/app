@@ -7,6 +7,10 @@
     "all": "All scripts",
     "label": "Script"
   },
+  "select": {
+    "label": "Language",
+    "placeholder": "Select a language"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",

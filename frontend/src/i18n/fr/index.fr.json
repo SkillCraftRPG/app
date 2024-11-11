@@ -12,13 +12,15 @@
     "refresh": "Rafraîchir",
     "remove": "Retirer",
     "restore": "Restaurer",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "view": "Voir"
   },
   "brand": "SkillCraftRPG",
   "by": "Par",
   "copyright": "© SkillCraftRPG {version} {year}.",
   "count": "Nombre de résultats",
   "description": "Description",
+  "editing": "Édition",
   "loading": "Chargement…",
   "name": "Nom",
   "no": "Non",

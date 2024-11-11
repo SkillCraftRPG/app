@@ -31,6 +31,19 @@
       "placeholder": "Select a damage type"
     }
   },
+  "size": {
+    "categories": {
+      "Colossal": "Colossal",
+      "Diminutive": "Diminutive",
+      "Gargantuan": "Gargantuan",
+      "Huge": "Huge",
+      "Large": "Large",
+      "Medium": "Medium",
+      "Small": "Small",
+      "Tiny": "Tiny"
+    },
+    "category": "Size Category"
+  },
   "skill": "Skill",
   "skills": {
     "Acrobatics": "Acrobatics",
@@ -54,6 +67,15 @@
     "Survival": "Survival",
     "Thievery": "Thievery"
   },
+  "speed": "Speed",
+  "speeds": {
+    "Burrow": "Burrow",
+    "Climb": "Climb",
+    "Fly": "Fly",
+    "Hover": "Hover",
+    "Swim": "Swim",
+    "Walk": "Walk"
+  },
   "startingWealth": "Starting Wealth",
   "tier": {
     "all": "All tiers",
@@ -61,6 +83,7 @@
     "placeholder": "Select a tier"
   },
   "units": {
+    "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L"
   }

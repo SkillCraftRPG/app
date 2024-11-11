@@ -15,6 +15,8 @@ export type DamageType =
   | "Slashing"
   | "Thunder";
 
+export type SizeCategory = "Diminutive" | "Tiny" | "Small" | "Medium" | "Large" | "Huge" | "Gargantuan" | "Colossal";
+
 export type Skill =
   | "Acrobatics"
   | "Athletics"
@@ -36,3 +38,5 @@ export type Skill =
   | "Stealth"
   | "Survival"
   | "Thievery";
+
+export type Speed = "Walk" | "Climb" | "Swim" | "Fly" | "Hover" | "Burrow";
