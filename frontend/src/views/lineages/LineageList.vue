@@ -10,6 +10,7 @@ import AppPagination from "@/components/shared/AppPagination.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLineage from "@/components/lineages/CreateLineage.vue";
+import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -35,6 +36,7 @@ const total = ref<number>(0);
 const attribute = computed<Attribute | undefined>(() => (route.query.attribute?.toString() as Attribute) ?? undefined);
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
+const language = computed<string>(() => route.query.language?.toString() ?? "");
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const size = computed<SizeCategory>(() => (route.query.size?.toString() as SizeCategory) ?? undefined);
@@ -63,6 +65,7 @@ async function refresh(): Promise<void> {
       operator: "And",
     },
     attribute: attribute.value,
+    languageId: language.value,
     sizeCategory: size.value,
     sort: sort.value ? [{ field: sort.value as LineageSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
@@ -90,6 +93,7 @@ function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
     case "attribute":
+    case "language":
     case "search":
     case "size":
     case "count":
@@ -110,6 +114,7 @@ watch(
           query: objectUtils.isEmpty(query)
             ? {
                 attribute: "",
+                language: "",
                 search: "",
                 size: "",
                 sort: "Name",
@@ -150,7 +155,7 @@ watch(
     </div>
     <div class="row">
       <AttributeSelect class="col-lg-4" :model-value="attribute" validation="server" @update:model-value="setQuery('attribute', $event ?? '')" />
-      <div class="col-lg-4"></div>
+      <LanguageSelect class="col-lg-4" :model-value="language" validation="server" @update:model-value="setQuery('language', $event ?? '')" />
       <SizeCategorySelect class="col-lg-4" :model-value="size" validation="server" @update:model-value="setQuery('size', $event ?? '')" />
     </div>
     <div class="row">
