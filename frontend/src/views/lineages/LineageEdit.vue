@@ -112,7 +112,7 @@ function setModel(model: LineageModel): void {
     female: [...model.names.female],
     male: [...model.names.male],
     unisex: [...model.names.unisex],
-    custom: JSON.parse(JSON.stringify(model.names.unisex)),
+    custom: JSON.parse(JSON.stringify(model.names.custom)),
   };
   size.value = { ...model.size, roll: model.size.roll ?? "" };
   speeds.value = { ...model.speeds };

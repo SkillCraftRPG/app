@@ -82,7 +82,7 @@ export type NamesModel = {
   family: string[];
   female: string[];
   male: string[];
-  unisex: [];
+  unisex: string[];
   custom: NameCategory[];
 };
 

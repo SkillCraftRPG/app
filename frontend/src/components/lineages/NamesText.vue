@@ -18,7 +18,7 @@ defineEmits<{
     max="65535"
     :model-value="modelValue"
     placeholder="lineages.names.text"
-    rows="3"
+    rows="5"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>

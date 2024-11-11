@@ -26,7 +26,11 @@
   },
   "list": "Lignées",
   "names": {
-    "category": "Catégorie",
+    "category": {
+      "edit": "Modifier une catégorie",
+      "label": "Catégorie",
+      "new": "Nouvelle catégorie"
+    },
     "family": "Famille",
     "female": "Féminins",
     "label": "Noms",

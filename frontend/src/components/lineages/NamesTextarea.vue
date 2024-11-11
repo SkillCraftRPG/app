@@ -2,6 +2,7 @@
 import AppTextarea from "@/components/shared/AppTextarea.vue";
 
 defineProps<{
+  id?: string;
   modelValue?: string;
 }>();
 
@@ -13,12 +14,11 @@ defineEmits<{
 <template>
   <AppTextarea
     floating
-    id="languages-text"
-    label="lineages.languages.text"
-    max="65535"
+    :id="id"
+    label="lineages.names.label"
     :model-value="modelValue"
-    placeholder="lineages.languages.text"
-    rows="5"
+    placeholder="lineages.names.label"
+    rows="10"
     @update:model-value="$emit('update:model-value', $event)"
   />
 </template>

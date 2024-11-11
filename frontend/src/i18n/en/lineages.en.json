@@ -26,7 +26,11 @@
   },
   "list": "Lineages",
   "names": {
-    "category": "Category",
+    "category": {
+      "edit": "Edit Category",
+      "label": "Category",
+      "new": "New Category"
+    },
     "family": "Family",
     "female": "Female",
     "label": "Names",
