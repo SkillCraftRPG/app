@@ -26,7 +26,7 @@ const props = withDefaults(
 
 const nations = ref<LineageModel[]>([]);
 
-const target = computed<string | undefined>(() => (props.hasChanges === "" || parseBoolean(props.hasChanges) ? "_blank" : undefined));
+const target = computed<string | undefined>(() => (parseBoolean(props.hasChanges) ? "_blank" : undefined));
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
