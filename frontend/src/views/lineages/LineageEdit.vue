@@ -63,7 +63,12 @@ const hasChanges = computed<boolean>(
       JSON.stringify(attributes.value) !== JSON.stringify(lineage.value.attributes) ||
       traits.value.some((trait) => !trait.trait.id || trait.isRemoved || trait.isUpdated) ||
       JSON.stringify(languages.value) !== JSON.stringify(languagesReference.value) ||
-      // TODO(fpion): names
+      names.value.text !== (lineage.value.names.text ?? "") ||
+      JSON.stringify(names.value.family) !== JSON.stringify(lineage.value.names.family) ||
+      JSON.stringify(names.value.female) !== JSON.stringify(lineage.value.names.female) ||
+      JSON.stringify(names.value.male) !== JSON.stringify(lineage.value.names.male) ||
+      JSON.stringify(names.value.unisex) !== JSON.stringify(lineage.value.names.unisex) ||
+      JSON.stringify(names.value.custom) !== JSON.stringify(lineage.value.names.custom) ||
       JSON.stringify(speeds.value) !== JSON.stringify(lineage.value.speeds) ||
       size.value.category !== lineage.value.size.category ||
       size.value.roll !== (lineage.value.size.roll ?? "") ||
@@ -91,7 +96,14 @@ function setModel(model: LineageModel): void {
   languages.value = { ids: model.languages.items.map(({ id }) => id), extra: model.languages.extra, text: model.languages.text ?? "" };
   languagesReference.value = { ids: model.languages.items.map(({ id }) => id), extra: model.languages.extra, text: model.languages.text ?? "" };
   name.value = model.name;
-  // TODO(fpion): names
+  names.value = {
+    text: model.names.text ?? "",
+    family: [...model.names.family],
+    female: [...model.names.female],
+    male: [...model.names.male],
+    unisex: [...model.names.unisex],
+    custom: JSON.parse(JSON.stringify(model.names.unisex)),
+  };
   size.value = { ...model.size, roll: model.size.roll ?? "" };
   speeds.value = { ...model.speeds };
   traits.value = model.features.map((trait) => ({ trait, isRemoved: false, isUpdated: false }));

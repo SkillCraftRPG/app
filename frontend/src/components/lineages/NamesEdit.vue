@@ -61,6 +61,13 @@ function setText(text?: string): void {
             <!-- TODO(fpion): buttons -->
           </td>
         </tr>
+        <tr v-for="custom in modelValue.custom" :key="custom.key">
+          <td>{{ custom.key }}</td>
+          <td>{{ custom.values.length > 0 ? custom.values.join(", ") : "—" }}</td>
+          <td>
+            <!-- TODO(fpion): buttons -->
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
