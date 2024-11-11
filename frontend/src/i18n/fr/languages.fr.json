@@ -7,6 +7,10 @@
     "all": "Tous alphabets",
     "label": "Alphabet"
   },
+  "select": {
+    "label": "Langue",
+    "placeholder": "Sélectionnez une langue"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

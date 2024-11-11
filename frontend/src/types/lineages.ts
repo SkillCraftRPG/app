@@ -2,6 +2,9 @@ import type { Aggregate } from "./aggregate";
 import type { Attribute, SizeCategory } from "./game";
 import type { WorldModel } from "@/types/worlds";
 import type { SearchPayload, SortOption } from "./search";
+import type { LanguageModel } from "./languages";
+
+export type AgeCategory = "Adolescent" | "Adult" | "Mature" | "Venerable";
 
 export type AgesModel = {
   adolescent?: number;
@@ -26,7 +29,7 @@ export type CreateOrReplaceLineagePayload = {
   name: string;
   description?: string;
   attributes: AttributeBonusesModel;
-  features: FeaturePayload[];
+  features: TraitPayload[]; // TODO(fpion): rename to "traits"
   languages: LanguagesPayload;
   names: NamesModel;
   speeds: SpeedsModel;
@@ -35,10 +38,10 @@ export type CreateOrReplaceLineagePayload = {
   ages: AgesModel;
 };
 
-export type FeaturePayload = {
-  id?: string;
-  name: string;
-  description?: string;
+export type LanguagesModel = {
+  items: LanguageModel[];
+  extra: number;
+  text?: string;
 };
 
 export type LanguagesPayload = {
@@ -52,8 +55,8 @@ export type LineageModel = Aggregate & {
   name: string;
   description?: string;
   attributes: AttributeBonusesModel;
-  features: FeaturePayload[];
-  languages: LanguagesPayload;
+  features: TraitModel[]; // TODO(fpion): rename to "traits"
+  languages: LanguagesModel;
   names: NamesModel;
   speeds: SpeedsModel;
   size: SizeModel;
@@ -104,6 +107,26 @@ export type SpeedsModel = {
   hover: number;
   burrow: number;
 };
+
+export type TraitModel = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
+export type TraitPayload = {
+  id?: string;
+  name: string;
+  description?: string;
+};
+
+export type TraitStatus = {
+  trait: TraitPayload;
+  isRemoved: boolean;
+  isUpdated: boolean;
+};
+
+export type WeightCategory = "Starved" | "Skinny" | "Normal" | "Overweight" | "Obese";
 
 export type WeightModel = {
   starved?: string;

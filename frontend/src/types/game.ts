@@ -38,3 +38,5 @@ export type Skill =
   | "Stealth"
   | "Survival"
   | "Thievery";
+
+export type Speed = "Walk" | "Climb" | "Swim" | "Fly" | "Hover" | "Burrow";

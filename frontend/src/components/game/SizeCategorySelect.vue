@@ -11,18 +11,10 @@ import type { ValidationType } from "@/types/validation";
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
-withDefaults(
-  defineProps<{
-    id?: string;
-    label?: string;
-    modelValue?: SizeCategory;
-    validation?: ValidationType;
-  }>(),
-  {
-    id: "size-category",
-    label: "",
-  },
-);
+defineProps<{
+  modelValue?: SizeCategory;
+  validation?: ValidationType;
+}>();
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
@@ -39,7 +31,7 @@ defineEmits<{
 <template>
   <AppSelect
     floating
-    :id="id"
+    id="size-category"
     label="game.size.category"
     :model-value="modelValue"
     :options="options"
