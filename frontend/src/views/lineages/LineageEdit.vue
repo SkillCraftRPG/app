@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarTab, TarTabs } from "logitar-vue3-ui";
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, ref, watch } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
@@ -152,23 +152,30 @@ const onSubmit = handleSubmit(async () => {
   }
 });
 
-onMounted(async () => {
-  try {
-    const id = route.params.id?.toString();
-    if (id) {
-      const lineage: LineageModel = await readLineage(id);
-      setModel(lineage);
+watch(
+  route,
+  async (route) => {
+    if (route.name === "LineageEdit") {
+      try {
+        const id = route.params.id?.toString();
+        if (id) {
+          const lineage: LineageModel = await readLineage(id);
+          setModel(lineage);
+          document.getElementById("tab_editing_head")?.click();
+        }
+      } catch (e: unknown) {
+        const { status } = e as ApiError;
+        if (status === 404) {
+          router.push({ path: "/not-found" });
+        } else {
+          handleError(e);
+        }
+      }
+      hasLoaded.value = true;
     }
-  } catch (e: unknown) {
-    const { status } = e as ApiError;
-    if (status === 404) {
-      router.push({ path: "/not-found" });
-    } else {
-      handleError(e);
-    }
-  }
-  hasLoaded.value = true;
-});
+  },
+  { deep: true, immediate: true },
+);
 </script>
 
 <template>
