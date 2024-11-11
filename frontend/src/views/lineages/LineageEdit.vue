@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TarTab, TarTabs } from "logitar-vue3-ui";
 import { computed, inject, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -20,6 +21,7 @@ import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TraitList from "@/components/lineages/TraitList.vue";
 import WeightEdit from "@/components/lineages/WeightEdit.vue";
 import type { ApiError } from "@/types/api";
+import type { Breadcrumb } from "@/types/components";
 import type {
   AgesModel,
   AttributeBonusesModel,
@@ -83,6 +85,13 @@ const hasChanges = computed<boolean>(
       ages.value.mature !== (lineage.value.ages.mature ?? undefined) ||
       ages.value.venerable !== (lineage.value.ages.venerable ?? undefined)),
 );
+const parent = computed<Breadcrumb[]>(() => {
+  const parent: Breadcrumb[] = [{ route: { name: "LineageList" }, text: t("lineages.list") }];
+  if (lineage.value?.species) {
+    parent.push({ route: { name: "LineageEdit", params: { id: lineage.value.species.id } }, text: lineage.value.species.name });
+  }
+  return parent;
+});
 
 function setModel(model: LineageModel): void {
   lineage.value = model;
@@ -166,30 +175,31 @@ onMounted(async () => {
   <main class="container">
     <template v-if="lineage">
       <h1>{{ lineage.name }}</h1>
-      <AppBreadcrumb
-        :current="lineage.name"
-        :parent="{ route: { name: 'LineageList' }, text: t('lineages.list') }"
-        :world="lineage.world"
-        @error="handleError"
-      />
+      <AppBreadcrumb :current="lineage.name" :parent="parent" :world="lineage.world" @error="handleError" />
       <StatusDetail :aggregate="lineage" />
-      <form @submit.prevent="onSubmit">
-        <NameInput required v-model="name" />
-        <DescriptionTextarea v-model="description" />
-        <AttributeBonuses v-model="attributes" />
-        <TraitList v-model="traits" />
-        <SpokenLanguages :languages="lineage.languages.items" v-model="languages" />
-        <NamesEdit v-model="names" />
-        <SpeedsEdit v-model="speeds" />
-        <SizeEdit v-model="size" />
-        <WeightEdit v-model="weight" />
-        <AgesEdit v-model="ages" />
-        <NationList :species="lineage" @error="handleError" />
-        <div>
-          <SaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
-          <BackButton class="ms-1" :has-changes="hasChanges" />
-        </div>
-      </form>
+      <TarTabs>
+        <TarTab active id="editing" :title="t('editing')">
+          <form @submit.prevent="onSubmit">
+            <NameInput required v-model="name" />
+            <DescriptionTextarea v-model="description" />
+            <AttributeBonuses v-model="attributes" />
+            <TraitList v-model="traits" />
+            <SpokenLanguages :languages="lineage.languages.items" v-model="languages" />
+            <NamesEdit v-model="names" />
+            <SpeedsEdit v-model="speeds" />
+            <SizeEdit v-model="size" />
+            <WeightEdit v-model="weight" />
+            <AgesEdit v-model="ages" />
+            <div>
+              <SaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
+              <BackButton class="ms-1" :has-changes="hasChanges" />
+            </div>
+          </form>
+        </TarTab>
+        <TarTab v-if="!lineage.species" id="nations" :title="t('lineages.nations.label')">
+          <NationList :species="lineage" @error="handleError" />
+        </TarTab>
+      </TarTabs>
     </template>
   </main>
 </template>
