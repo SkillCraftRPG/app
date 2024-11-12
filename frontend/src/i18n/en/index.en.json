@@ -1,5 +1,6 @@
 {
   "actions": {
+    "abandon": "Abandon",
     "add": "Add",
     "back": "Go back",
     "cancel": "Cancel",
