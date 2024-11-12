@@ -1,4 +1,5 @@
 import type { Aggregate } from "./aggregate";
+import type { AspectModel } from "./aspects";
 import type { LineageModel } from "./lineages";
 import type { PersonalityModel } from "./personalities";
 import type { SearchPayload, SortOption } from "./search";
@@ -7,6 +8,7 @@ import type { WorldModel } from "./worlds";
 export type CharacterCreation = {
   step1?: Step1;
   step2?: Step2;
+  step3?: Step3;
 };
 
 export type CharacterModel = Aggregate & {
@@ -52,4 +54,8 @@ export type Step1 = {
 
 export type Step2 = {
   personality?: PersonalityModel;
+};
+
+export type Step3 = {
+  aspects: AspectModel[];
 };
