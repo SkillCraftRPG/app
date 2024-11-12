@@ -5,39 +5,31 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
-import type { Step4 } from "@/types/characters";
+import type { Step5 } from "@/types/characters";
 
 const emit = defineEmits<{
   (e: "back"): void;
-  (e: "continue", value: Step4): void;
+  (e: "continue", value: Step5): void;
   (e: "error", value: unknown): void;
 }>();
 
 const { handleSubmit } = useForm();
 const onSubmit = handleSubmit(() =>
   emit("continue", {
-    attributes: {
-      agility: 0,
-      coordination: 0,
-      intellect: 0,
-      presence: 0,
-      sensitivity: 0,
-      spirit: 0,
-      vigor: 0,
-      best: "Agility",
-      worst: "Agility",
-      optional: [],
-      extra: [],
-    },
+    casteId: "",
+    educationId: "",
+    startingWealth: { itemId: "", quantity: 0 },
   }),
 );
 </script>
 
 <template>
   <div>
-    <h3>{{ t("characters.steps.attributes") }}</h3>
+    <h3>{{ t("characters.steps.background") }}</h3>
     <form @submit="onSubmit">
-      <!-- TODO(fpion): Attributes -->
+      <!-- TODO(fpion): Caste -->
+      <!-- TODO(fpion): Education -->
+      <!-- TODO(fpion): StartingWealth -->
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
       <TarButton class="ms-1" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>

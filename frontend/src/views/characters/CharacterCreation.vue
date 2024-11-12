@@ -9,7 +9,8 @@ import Step1Lineage from "@/components/characters/creation/Step1Lineage.vue";
 import Step2Personality from "@/components/characters/creation/Step2Personality.vue";
 import Step3Aspects from "@/components/characters/creation/Step3Aspects.vue";
 import Step4Attributes from "@/components/characters/creation/Step4Attributes.vue";
-import type { Step1, Step2, Step3, Step4 } from "@/types/characters";
+import Step5Background from "@/components/characters/creation/Step5Background.vue";
+import type { Step1, Step2, Step3, Step4, Step5, Step6 } from "@/types/characters";
 import { handleErrorKey } from "@/inject/App";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -45,6 +46,20 @@ function onStep3(value?: Step3): void {
 function onStep4(value?: Step4): void {
   if (value) {
     step.value++; // TODO(fpion): implement
+  } else {
+    step.value--;
+  }
+}
+function onStep5(value?: Step5): void {
+  if (value) {
+    step.value++; // TODO(fpion): implement
+  } else {
+    step.value--;
+  }
+}
+function onStep6(value?: Step6): void {
+  if (value) {
+    // TODO(fpion): implement
   } else {
     step.value--;
   }
@@ -87,5 +102,6 @@ function onStep4(value?: Step4): void {
     <Step2Personality v-if="step === 2" @back="onStep2()" @continue="onStep2" @error="handleError" />
     <Step3Aspects v-if="step === 3" @back="onStep3()" @continue="onStep3" @error="handleError" />
     <Step4Attributes v-if="step === 4" @back="onStep4()" @continue="onStep4" @error="handleError" />
+    <Step5Background v-if="step === 5" @back="onStep5()" @continue="onStep5" @error="handleError" />
   </main>
 </template>

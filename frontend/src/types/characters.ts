@@ -1,14 +1,32 @@
 import type { Aggregate } from "./aggregate";
 import type { AspectModel } from "./aspects";
+import type { Attribute } from "./game";
 import type { LineageModel } from "./lineages";
 import type { PersonalityModel } from "./personalities";
 import type { SearchPayload, SortOption } from "./search";
 import type { WorldModel } from "./worlds";
 
+export type BaseAttributesPayload = {
+  agility: number;
+  coordination: number;
+  intellect: number;
+  presence: number;
+  sensitivity: number;
+  spirit: number;
+  vigor: number;
+  best: Attribute;
+  worst: Attribute;
+  optional: Attribute[];
+  extra: Attribute[];
+};
+
 export type CharacterCreation = {
   step1?: Step1;
   step2?: Step2;
   step3?: Step3;
+  step4?: Step4;
+  step5?: Step5;
+  step6?: Step6;
 };
 
 export type CharacterModel = Aggregate & {
@@ -39,11 +57,20 @@ export type CreateCharacterPayload = {
   personalityId: string;
   customizationIds: string[];
   aspectIds: string[];
-  // TODO(fpion): complete
+  attributes: BaseAttributesPayload;
+  casteId: string;
+  educationId: string;
+  talentIds: string[];
+  startingWealth?: StartingWealthPayload;
 };
 
 export type SearchCharactersPayload = SearchPayload & {
   sort: CharacterSortOption[];
+};
+
+export type StartingWealthPayload = {
+  itemId: string;
+  quantity: number;
 };
 
 export type Step1 = {
@@ -60,4 +87,16 @@ export type Step3 = {
   aspects: AspectModel[];
 };
 
-export type Step4 = {}; // TODO(fpion): complete
+export type Step4 = {
+  attributes: BaseAttributesPayload;
+};
+
+export type Step5 = {
+  casteId: string;
+  educationId: string;
+  startingWealth?: StartingWealthPayload;
+};
+
+export type Step6 = {
+  talentIds: string[];
+};
