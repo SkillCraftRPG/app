@@ -38,6 +38,10 @@
     "text": "Description",
     "unisex": "Unisexes"
   },
+  "nation": {
+    "label": "Peuple",
+    "placeholder": "Sélectionnez un peuple"
+  },
   "nations": {
     "empty": "Cette liste est vide.",
     "label": "Peuples"
@@ -52,6 +56,10 @@
       "Name": "Nom",
       "UpdatedOn": "Dernière modification"
     }
+  },
+  "species": {
+    "label": "Espèce",
+    "placeholder": "Sélectionnez une espèce"
   },
   "speeds": "Vitesses",
   "traits": {

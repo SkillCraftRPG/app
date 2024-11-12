@@ -1,0 +1,17 @@
+{
+  "create": "Create Character",
+  "empty": "This list is empty.",
+  "list": "Characters",
+  "player": "Player Name",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "steps": {
+    "lineage": "Step #1 – Species & Nation",
+    "progress": "Character creation progress"
+  }
+}

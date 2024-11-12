@@ -1,0 +1,17 @@
+{
+  "create": "Création de personnage",
+  "empty": "Cette liste est vide.",
+  "list": "Personnages",
+  "player": "Nom du joueur",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "steps": {
+    "lineage": "Étape 1 – Espèce et peuple",
+    "progress": "Progression de la création de personnage"
+  }
+}

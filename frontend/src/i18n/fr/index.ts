@@ -1,5 +1,6 @@
 import aspects from "./aspects.fr.json";
 import castes from "./castes.fr.json";
+import characters from "./characters.fr.json";
 import countries from "./countries.fr.json";
 import customizations from "./customizations.fr.json";
 import educations from "./educations.fr.json";
@@ -18,6 +19,7 @@ export default {
   ...index,
   aspects,
   castes,
+  characters,
   countries,
   customizations,
   educations,

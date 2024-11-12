@@ -38,6 +38,10 @@
     "text": "Description",
     "unisex": "Unisex"
   },
+  "nation": {
+    "label": "Nation",
+    "placeholder": "Select a nation"
+  },
   "nations": {
     "empty": "This list is empty.",
     "label": "Nations"
@@ -52,6 +56,10 @@
       "Name": "Name",
       "UpdatedOn": "Updated on"
     }
+  },
+  "species": {
+    "label": "Species",
+    "placeholder": "Select a species"
   },
   "speeds": "Speeds",
   "traits": {

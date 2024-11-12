@@ -57,6 +57,17 @@ const router = createRouter({
       path: "/worlds/:slug/castes",
       component: () => import("./views/castes/CasteList.vue"),
     },
+    // Characters
+    {
+      name: "CharacterCreation",
+      path: "/worlds/:slug/characters/create",
+      component: () => import("./views/characters/CharacterCreation.vue"),
+    },
+    {
+      name: "CharacterList",
+      path: "/worlds/:slug/characters",
+      component: () => import("./views/characters/CharacterList.vue"),
+    },
     // Customizations
     {
       name: "CustomizationEdit",
