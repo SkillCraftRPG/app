@@ -1,0 +1,63 @@
+<script setup lang="ts">
+import type { SelectOption } from "logitar-vue3-ui";
+import { computed, onMounted, ref } from "vue";
+
+import AppSelect from "@/components/shared/AppSelect.vue";
+import type { EducationModel, SearchEducationsPayload } from "@/types/educations";
+import type { SearchResults } from "@/types/search";
+import { searchEducations } from "@/api/educations";
+
+defineProps<{
+  modelValue?: string;
+  required?: boolean | string;
+}>();
+
+const educations = ref<EducationModel[]>([]);
+const hasLoaded = ref<boolean>(false);
+
+const options = computed<SelectOption[]>(() => educations.value.map(({ id, name }) => ({ text: name, value: id })));
+
+const emit = defineEmits<{
+  (e: "error", value: unknown): void;
+  (e: "selected", value?: EducationModel): void;
+  (e: "update:model-value", value?: string): void;
+}>();
+
+function onModelValueUpdate(id?: string) {
+  const education: EducationModel | undefined = educations.value.find((education) => education.id === id);
+  emit("selected", education);
+  emit("update:model-value", id);
+}
+
+onMounted(async () => {
+  try {
+    const payload: SearchEducationsPayload = {
+      ids: [],
+      search: { terms: [], operator: "And" },
+      sort: [{ field: "Name", isDescending: false }],
+      skip: 0,
+      limit: 0,
+    };
+    const results: SearchResults<EducationModel> = await searchEducations(payload);
+    educations.value = results.items;
+  } catch (e: unknown) {
+    emit("error", e);
+  } finally {
+    hasLoaded.value = true;
+  }
+});
+</script>
+
+<template>
+  <AppSelect
+    :disabled="!hasLoaded"
+    floating
+    id="education"
+    label="educations.select.label"
+    :model-value="modelValue"
+    :options="options"
+    placeholder="educations.select.placeholder"
+    :required="required"
+    @update:model-value="onModelValueUpdate"
+  />
+</template>
