@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
 import AppInput from "@/components/shared/AppInput.vue";
 import type { WeightCategory } from "@/types/lineages";
+
+const { t } = useI18n();
 
 defineProps<{
   category: WeightCategory;
@@ -10,8 +14,6 @@ defineProps<{
 defineEmits<{
   (e: "update:model-value", value?: string): void;
 }>();
-
-// TODO(fpion): prepend BMI
 </script>
 
 <template>
@@ -23,5 +25,9 @@ defineEmits<{
     :placeholder="`lineages.weight.categories.${category}`"
     :rules="{ roll: true }"
     @update:model-value="$emit('update:model-value', $event)"
-  />
+  >
+    <template #append>
+      <span class="input-group-text">{{ t("game.units.bodyMassIndex") }}</span>
+    </template>
+  </AppInput>
 </template>

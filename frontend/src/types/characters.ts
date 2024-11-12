@@ -92,10 +92,10 @@ export type CreateCharacterPayload = {
   name: string;
   player?: string;
   lineageId: string;
-  height: number; // TODO(fpion): optional
-  weight: number; // TODO(fpion): optional
-  age: number; // TODO(fpion): optional
-  languageIds: string[]; // TODO(fpion): optional
+  height: number;
+  weight: number;
+  age: number;
+  languageIds: string[];
   personalityId: string;
   customizationIds: string[];
   aspectIds: string[];

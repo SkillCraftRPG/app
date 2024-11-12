@@ -93,9 +93,13 @@
     "placeholder": "Sélectionnez un tiers"
   },
   "units": {
+    "bodyMassIndex": "IMC",
     "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L",
+    "square": "case",
+    "squares": "cases",
+    "year": "an",
     "years": "ans"
   },
   "weight": {

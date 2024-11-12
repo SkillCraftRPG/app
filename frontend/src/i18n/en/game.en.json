@@ -93,9 +93,13 @@
     "placeholder": "Select a tier"
   },
   "units": {
+    "bodyMassIndex": "BMI",
     "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L",
+    "square": "square",
+    "squares": "squares",
+    "year": "year",
     "years": "years"
   },
   "weight": {
