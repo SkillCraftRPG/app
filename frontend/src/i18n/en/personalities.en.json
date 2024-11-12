@@ -3,6 +3,10 @@
   "created": "The personality has been created.",
   "empty": "This list is empty.",
   "list": "Personalities",
+  "select": {
+    "label": "Personality",
+    "placeholder": "Select a personality"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",
