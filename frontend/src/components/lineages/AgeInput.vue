@@ -20,6 +20,8 @@ withDefaults(
 defineEmits<{
   (e: "update:model-value", value?: number): void;
 }>();
+
+// TODO(fpion): prepend years/années
 </script>
 
 <template>

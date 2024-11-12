@@ -1,4 +1,14 @@
 {
+  "age": {
+    "categories": {
+      "Adolescent": "Adolescent",
+      "Adult": "Adult",
+      "Child": "Child",
+      "Mature": "Mature",
+      "Venerable": "Venerable"
+    },
+    "category": "Age Category"
+  },
   "attribute": "Attribute",
   "attributes": {
     "Agility": "Agility",
@@ -85,7 +95,8 @@
   "units": {
     "centimeters": "cm",
     "kilograms": "kg",
-    "liters": "L"
+    "liters": "L",
+    "years": "years"
   },
   "weight": {
     "categories": {

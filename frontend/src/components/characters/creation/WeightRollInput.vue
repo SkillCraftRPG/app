@@ -26,6 +26,8 @@ function onRoll(): void {
     emit("update:model-value", weight);
   }
 }
+
+// TODO(fpion): name conflict with LineageEdit
 </script>
 
 <template>

@@ -3,6 +3,7 @@
     "categories": {
       "Adolescent": "Adolescent",
       "Adult": "Adult",
+      "Child": "Child",
       "Mature": "Mature",
       "Venerable": "Venerable"
     },

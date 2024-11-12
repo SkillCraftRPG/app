@@ -69,11 +69,11 @@ function onStep6(value?: Step6): void {
 /*
  * ( ) AspectsNotFoundException
  * ( ) CasteHasNoSkillTalentException
- * ( ) CasteNotFoundException
+ * (✅) CasteNotFoundException
  * ( ) CustomizationsCannotIncludePersonalityGiftException
  * ( ) CustomizationsNotFoundException
  * ( ) EducationHasNoSkillTalentException
- * ( ) EducationNotFoundException
+ * (✅) EducationNotFoundException
  * ( ) InvalidAspectAttributeSelectionException
  * ( ) InvalidCasteEducationSelectionException
  * ( ) InvalidCharacterCustomizationsException

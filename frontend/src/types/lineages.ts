@@ -4,7 +4,7 @@ import type { WorldModel } from "@/types/worlds";
 import type { SearchPayload, SortOption } from "./search";
 import type { LanguageModel } from "./languages";
 
-export type AgeCategory = "Adolescent" | "Adult" | "Mature" | "Venerable";
+export type AgeCategory = "Child" | "Adolescent" | "Adult" | "Mature" | "Venerable";
 
 export type AgesModel = {
   adolescent?: number;

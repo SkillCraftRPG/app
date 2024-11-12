@@ -10,6 +10,8 @@ defineProps<{
 defineEmits<{
   (e: "update:model-value", value?: string): void;
 }>();
+
+// TODO(fpion): prepend BMI
 </script>
 
 <template>

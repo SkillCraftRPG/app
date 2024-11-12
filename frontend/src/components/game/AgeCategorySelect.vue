@@ -5,24 +5,24 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { WeightCategory } from "@/types/lineages";
+import type { AgeCategory } from "@/types/lineages";
 
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
 defineProps<{
-  modelValue?: WeightCategory;
+  modelValue?: AgeCategory;
 }>();
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.weight.categories"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("game.age.categories"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 defineEmits<{
-  (e: "update:model-value", value?: WeightCategory): void;
+  (e: "update:model-value", value?: AgeCategory): void;
 }>();
 
 // TODO(fpion): merge translations from lineages and game
@@ -31,12 +31,12 @@ defineEmits<{
 <template>
   <AppSelect
     floating
-    id="weight-category"
-    label="game.weight.category"
+    id="age-category"
+    label="game.age.category"
     :model-value="modelValue"
     :options="options"
-    placeholder="game.weight.category"
+    placeholder="game.age.category"
     required
-    @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as WeightCategory))"
+    @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as AgeCategory))"
   />
 </template>
