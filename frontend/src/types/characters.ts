@@ -59,3 +59,5 @@ export type Step2 = {
 export type Step3 = {
   aspects: AspectModel[];
 };
+
+export type Step4 = {}; // TODO(fpion): complete

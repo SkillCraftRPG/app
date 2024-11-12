@@ -11,7 +11,8 @@
     }
   },
   "steps": {
-    "aspect": "Step #3 – Aspects",
+    "aspects": "Step #3 – Aspects",
+    "attributes": "Step #4 – Attributes",
     "lineage": "Step #1 – Species & Nation",
     "personality": "Step #2 – Personality",
     "progress": "Character creation progress"

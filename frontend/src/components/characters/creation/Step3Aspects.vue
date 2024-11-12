@@ -19,7 +19,7 @@ const onSubmit = handleSubmit(() => emit("continue", { aspects: [] }));
 
 <template>
   <div>
-    <h3>{{ t("characters.steps.aspect") }}</h3>
+    <h3>{{ t("characters.steps.aspects") }}</h3>
     <form @submit="onSubmit">
       <!-- TODO(fpion): Aspects -->
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />

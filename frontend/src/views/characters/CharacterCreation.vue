@@ -7,8 +7,9 @@ import { useRouter } from "vue-router";
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import Step1Lineage from "@/components/characters/creation/Step1Lineage.vue";
 import Step2Personality from "@/components/characters/creation/Step2Personality.vue";
-import Step3Aspect from "@/components/characters/creation/Step3Aspect.vue";
-import type { Step1, Step2, Step3 } from "@/types/characters";
+import Step3Aspects from "@/components/characters/creation/Step3Aspects.vue";
+import Step4Attributes from "@/components/characters/creation/Step4Attributes.vue";
+import type { Step1, Step2, Step3, Step4 } from "@/types/characters";
 import { handleErrorKey } from "@/inject/App";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -35,6 +36,13 @@ function onStep2(value?: Step2): void {
   }
 }
 function onStep3(value?: Step3): void {
+  if (value) {
+    step.value++; // TODO(fpion): implement
+  } else {
+    step.value--;
+  }
+}
+function onStep4(value?: Step4): void {
   if (value) {
     step.value++; // TODO(fpion): implement
   } else {
@@ -77,6 +85,7 @@ function onStep3(value?: Step3): void {
     <TarProgress :aria-label="t('characters.steps.progress')" class="mb-3" :value="progress" />
     <Step1Lineage v-if="step === 1" @abandon="onStep1()" @continue="onStep1" @error="handleError" />
     <Step2Personality v-if="step === 2" @back="onStep2()" @continue="onStep2" @error="handleError" />
-    <Step3Aspect v-if="step === 3" @back="onStep3()" @continue="onStep3" @error="handleError" />
+    <Step3Aspects v-if="step === 3" @back="onStep3()" @continue="onStep3" @error="handleError" />
+    <Step4Attributes v-if="step === 4" @back="onStep4()" @continue="onStep4" @error="handleError" />
   </main>
 </template>
