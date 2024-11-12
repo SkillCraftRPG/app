@@ -10,6 +10,7 @@ import Step2Personality from "@/components/characters/creation/Step2Personality.
 import Step3Aspects from "@/components/characters/creation/Step3Aspects.vue";
 import Step4Attributes from "@/components/characters/creation/Step4Attributes.vue";
 import Step5Background from "@/components/characters/creation/Step5Background.vue";
+import Step6Talents from "@/components/characters/creation/Step6Talents.vue";
 import type { Step1, Step2, Step3, Step4, Step5, Step6 } from "@/types/characters";
 import { handleErrorKey } from "@/inject/App";
 
@@ -103,5 +104,6 @@ function onStep6(value?: Step6): void {
     <Step3Aspects v-if="step === 3" @back="onStep3()" @continue="onStep3" @error="handleError" />
     <Step4Attributes v-if="step === 4" @back="onStep4()" @continue="onStep4" @error="handleError" />
     <Step5Background v-if="step === 5" @back="onStep5()" @continue="onStep5" @error="handleError" />
+    <Step6Talents v-if="step === 6" @back="onStep6()" @continue="onStep6" @error="handleError" />
   </main>
 </template>
