@@ -11,7 +11,7 @@ export function roll(roll: string): number {
       const values: string[] = part.split("d");
       if (values.length === 2) {
         for (let i = 0; i < (parseNumber(values[0]) ?? 0); i++) {
-          value += Math.floor(Math.random() * (parseNumber(values[1]) ?? 0));
+          value += Math.floor(Math.random() * (parseNumber(values[1]) ?? 0)) + 1;
         }
       } else {
         value += parseNumber(values[0]) ?? 0;
