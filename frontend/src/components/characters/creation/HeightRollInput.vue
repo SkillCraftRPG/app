@@ -2,6 +2,7 @@
 import { TarButton } from "logitar-vue3-ui";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
+import { watch } from "vue";
 
 import AppInput from "@/components/shared/AppInput.vue";
 import * as gameUtils from "@/helpers/gameUtils";
@@ -24,6 +25,8 @@ function onRoll(): void {
     emit("update:model-value", value);
   }
 }
+
+watch(() => props.roll, onRoll, { immediate: true });
 </script>
 
 <template>

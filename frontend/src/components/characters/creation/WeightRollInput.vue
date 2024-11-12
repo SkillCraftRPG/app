@@ -2,6 +2,7 @@
 import { TarButton } from "logitar-vue3-ui";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
+import { watch } from "vue";
 
 import AppInput from "@/components/shared/AppInput.vue";
 import * as gameUtils from "@/helpers/gameUtils";
@@ -19,13 +20,40 @@ const emit = defineEmits<{
   (e: "update:model-value", value?: number): void;
 }>();
 
-function onRoll(): void {
-  if (props.height && props.roll) {
-    const bmi: number = gameUtils.roll(props.roll);
+function updateWeight(bmi: number): void {
+  if (props.height) {
     const weight: number = Math.round(bmi * (props.height / 100.0) * (props.height / 100.0) * 10) / 10.0;
     emit("update:model-value", weight);
   }
 }
+
+function onRoll(): void {
+  if (props.roll) {
+    const bmi: number = gameUtils.roll(props.roll);
+    updateWeight(bmi);
+  }
+}
+
+watch(
+  () => props.height,
+  (newHeight, oldHeight) => {
+    if (
+      typeof newHeight === "number" &&
+      newHeight > 0 &&
+      typeof oldHeight === "number" &&
+      oldHeight > 0 &&
+      typeof props.modelValue === "number" &&
+      props.modelValue > 0
+    ) {
+      const bmi: number = Math.floor(props.modelValue / (oldHeight / 100.0) / (oldHeight / 100.0));
+      updateWeight(bmi);
+    } else {
+      onRoll();
+    }
+  },
+  { immediate: true },
+);
+watch(() => props.roll, onRoll, { immediate: true });
 
 // TODO(fpion): name conflict with LineageEdit
 </script>

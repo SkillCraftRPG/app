@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton } from "logitar-vue3-ui";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
@@ -29,6 +29,8 @@ function onRoll(): void {
     emit("update:model-value", age);
   }
 }
+
+watch(() => props.range, onRoll, { immediate: true });
 </script>
 
 <template>

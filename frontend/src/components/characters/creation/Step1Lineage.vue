@@ -22,7 +22,7 @@ import { searchLineages } from "@/api/lineages";
 const { t } = useI18n();
 
 const age = ref<number>(0);
-const ageCategory = ref<AgeCategory | undefined>();
+const ageCategory = ref<AgeCategory | undefined>("Adult");
 const height = ref<number>(0);
 const isLoading = ref<boolean>(false);
 const nation = ref<LineageModel>();
@@ -30,7 +30,7 @@ const nations = ref<LineageModel[]>([]);
 const player = ref<string>("");
 const species = ref<LineageModel>();
 const weight = ref<number>(0);
-const weightCategory = ref<WeightCategory | undefined>();
+const weightCategory = ref<WeightCategory | undefined>("Normal");
 
 const ageRange = computed<number[]>(() => {
   let lower: number = 1;
