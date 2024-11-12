@@ -86,5 +86,15 @@
     "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L"
+  },
+  "weight": {
+    "categories": {
+      "Normal": "Normal",
+      "Obese": "Obese",
+      "Overweight": "Overweight",
+      "Skinny": "Skinny",
+      "Starved": "Starved"
+    },
+    "category": "Weight Category"
   }
 }

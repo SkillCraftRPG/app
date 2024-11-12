@@ -9,7 +9,9 @@ import HeightRollInput from "./HeightRollInput.vue";
 import LineageSelect from "@/components/lineages/LineageSelect.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
-import type { LineageModel, SearchLineagesPayload } from "@/types/lineages";
+import WeightCategorySelect from "@/components/game/WeightCategorySelect.vue";
+import WeightRollInput from "./WeightRollInput.vue";
+import type { LineageModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
 import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
@@ -23,10 +25,29 @@ const nation = ref<LineageModel>();
 const nations = ref<LineageModel[]>([]);
 const player = ref<string>("");
 const species = ref<LineageModel>();
+const weight = ref<number>(0);
+const weightCategory = ref<WeightCategory>("Normal");
 
 const nationOptions = computed<SelectOption[]>(() => nations.value.map(({ id, name }) => ({ text: name, value: id })));
 const sizeCategory = computed<SizeCategory>(() => nation.value?.size.category ?? species.value?.size.category ?? "Medium");
 const sizeRoll = computed<string | undefined>(() => nation.value?.size.roll ?? species.value?.size.roll);
+const weightRoll = computed<string | undefined>(() => {
+  if (species.value && weightCategory.value) {
+    switch (weightCategory.value) {
+      case "Normal":
+        return nation.value?.weight.normal ?? species.value.weight.normal;
+      case "Obese":
+        return nation.value?.weight.obese ?? species.value.weight.obese;
+      case "Overweight":
+        return nation.value?.weight.overweight ?? species.value.weight.overweight;
+      case "Skinny":
+        return nation.value?.weight.skinny ?? species.value.weight.skinny;
+      case "Starved":
+        return nation.value?.weight.starved ?? species.value.weight.starved;
+    }
+  }
+  return undefined;
+});
 
 const emit = defineEmits<{
   (e: "abandon"): void;
@@ -106,8 +127,12 @@ const onSubmit = handleSubmit(() =>
           <SizeCategorySelect class="col" disabled :model-value="sizeCategory" validation="server" />
           <HeightRollInput class="col" :roll="sizeRoll" v-model="height" />
         </div>
+        <h5>{{ t("characters.weight") }}</h5>
+        <div class="row">
+          <WeightCategorySelect class="col" v-model="weightCategory" />
+          <WeightRollInput class="col" :height="height" :roll="weightRoll" v-model="weight" />
+        </div>
       </template>
-      <!-- TODO(fpion): Weight -->
       <!-- TODO(fpion): Age -->
       <!-- TODO(fpion): Languages -->
       <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />

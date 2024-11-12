@@ -86,5 +86,15 @@
     "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L"
+  },
+  "weight": {
+    "categories": {
+      "Normal": "Normal",
+      "Obese": "Obèse",
+      "Overweight": "Surpoids",
+      "Skinny": "Maigre",
+      "Starved": "Dénutrition"
+    },
+    "category": "Catégorie de poids"
   }
 }
