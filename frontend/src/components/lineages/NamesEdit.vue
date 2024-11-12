@@ -28,8 +28,6 @@ function removeCategory(index: number): void {
   emit("update:model-value", names);
 }
 function updateCategory(key: number | NameKey, category: NameCategory): void {
-  console.log(key);
-  console.log(category);
   const names: NamesModel = { ...props.modelValue };
   if (typeof key === "number") {
     names.custom = [...names.custom];

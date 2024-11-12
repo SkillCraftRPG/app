@@ -1,6 +1,7 @@
 {
   "create": "Création de personnage",
   "empty": "Cette liste est vide.",
+  "height": "Hauteur",
   "list": "Personnages",
   "player": "Nom du joueur",
   "sort": {
@@ -10,6 +11,7 @@
       "UpdatedOn": "Dernière modification"
     }
   },
+  "size": "Taille",
   "steps": {
     "aspects": "Étape 3 – Aspects",
     "attributes": "Étape 4 – Attributs",

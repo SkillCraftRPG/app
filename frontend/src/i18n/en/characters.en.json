@@ -1,6 +1,7 @@
 {
   "create": "Create Character",
   "empty": "This list is empty.",
+  "height": "Height",
   "list": "Characters",
   "player": "Player Name",
   "sort": {
@@ -10,6 +11,7 @@
       "UpdatedOn": "Updated on"
     }
   },
+  "size": "Size",
   "steps": {
     "aspects": "Step #3 – Aspects",
     "attributes": "Step #4 – Attributes",

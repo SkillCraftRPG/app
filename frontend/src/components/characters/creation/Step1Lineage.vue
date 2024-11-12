@@ -5,15 +5,19 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
+import HeightRollInput from "./HeightRollInput.vue";
 import LineageSelect from "@/components/lineages/LineageSelect.vue";
 import NameInput from "@/components/shared/NameInput.vue";
+import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import type { LineageModel, SearchLineagesPayload } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
+import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
 import { searchLineages } from "@/api/lineages";
 
 const { t } = useI18n();
 
+const height = ref<number>(0);
 const isLoading = ref<boolean>(false);
 const nation = ref<LineageModel>();
 const nations = ref<LineageModel[]>([]);
@@ -21,6 +25,8 @@ const player = ref<string>("");
 const species = ref<LineageModel>();
 
 const nationOptions = computed<SelectOption[]>(() => nations.value.map(({ id, name }) => ({ text: name, value: id })));
+const sizeCategory = computed<SizeCategory>(() => nation.value?.size.category ?? species.value?.size.category ?? "Medium");
+const sizeRoll = computed<string | undefined>(() => nation.value?.size.roll ?? species.value?.size.roll);
 
 const emit = defineEmits<{
   (e: "abandon"): void;
@@ -68,6 +74,7 @@ const onSubmit = handleSubmit(() =>
   <div>
     <h3>{{ t("characters.steps.lineage") }}</h3>
     <form @submit="onSubmit">
+      <NameInput id="player" label="characters.player" placeholder="characters.player" v-model="player" />
       <div class="row">
         <LineageSelect
           class="col"
@@ -89,12 +96,17 @@ const onSubmit = handleSubmit(() =>
           :options="nationOptions"
           placeholder="lineages.nation.placeholder"
           required
-          @update:model-value="nation = $event"
+          @selected="nation = $event"
         />
       </div>
-      <NameInput id="player" label="characters.player" placeholder="characters.player" v-model="player" />
       <!-- TODO(fpion): Name -->
-      <!-- TODO(fpion): Size -->
+      <template v-if="species">
+        <h5>{{ t("characters.size") }}</h5>
+        <div class="row">
+          <SizeCategorySelect class="col" disabled :model-value="sizeCategory" validation="server" />
+          <HeightRollInput class="col" :roll="sizeRoll" v-model="height" />
+        </div>
+      </template>
       <!-- TODO(fpion): Weight -->
       <!-- TODO(fpion): Age -->
       <!-- TODO(fpion): Languages -->
