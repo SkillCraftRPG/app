@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
-import Step1Lineage from "@/components/characters/creation/Step1Lineage.vue";
+import Step1Lineage from "@/components/characters/creation/Step1Lineage/Step1Lineage.vue";
 import Step2Personality from "@/components/characters/creation/Step2Personality.vue";
 import Step3Aspects from "@/components/characters/creation/Step3Aspects.vue";
 import Step4Attributes from "@/components/characters/creation/Step4Attributes.vue";

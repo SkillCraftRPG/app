@@ -8,12 +8,13 @@ import AgeCategorySelect from "@/components/game/AgeCategorySelect.vue";
 import AgeRollInput from "./AgeRollInput.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
 import HeightRollInput from "./HeightRollInput.vue";
+import LineageNames from "./LineageNames.vue";
 import LineageSelect from "@/components/lineages/LineageSelect.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import WeightCategorySelect from "@/components/game/WeightCategorySelect.vue";
 import WeightRollInput from "./WeightRollInput.vue";
-import type { AgeCategory, LineageModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
+import type { AgeCategory, LineageModel, NamesModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
 import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
@@ -25,6 +26,7 @@ const age = ref<number>(0);
 const ageCategory = ref<AgeCategory | undefined>("Adult");
 const height = ref<number>(0);
 const isLoading = ref<boolean>(false);
+const name = ref<string>("");
 const nation = ref<LineageModel>();
 const nations = ref<LineageModel[]>([]);
 const player = ref<string>("");
@@ -62,6 +64,13 @@ const ageRange = computed<number[]>(() => {
   }
   return [lower, upper];
 });
+const areNamesEmpty = computed<boolean>(() => {
+  const names: NamesModel | undefined = nation.value?.names ?? species.value?.names;
+  return (
+    !names ||
+    (!names.text && names.family.length === 0 && names.female.length === 0 && names.male.length === 0 && names.unisex.length === 0 && names.custom.length === 0)
+  );
+});
 const nationOptions = computed<SelectOption[]>(() => nations.value.map(({ id, name }) => ({ text: name, value: id })));
 const sizeCategory = computed<SizeCategory>(() => nation.value?.size.category ?? species.value?.size.category ?? "Medium");
 const sizeRoll = computed<string | undefined>(() => nation.value?.size.roll ?? species.value?.size.roll);
@@ -89,6 +98,9 @@ const emit = defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
+function setNation(id?: string): void {
+  nation.value = nations.value.find((nation) => nation.id === id);
+}
 async function setSpecies(value?: LineageModel): Promise<void> {
   species.value = value;
   nation.value = undefined;
@@ -118,7 +130,7 @@ async function setSpecies(value?: LineageModel): Promise<void> {
 const { handleSubmit } = useForm();
 const onSubmit = handleSubmit(() =>
   emit("continue", {
-    name: undefined, // TODO(fpion): implement
+    name: name.value,
     player: player.value,
     species: species.value,
     nation: nation.value,
@@ -134,7 +146,6 @@ const onSubmit = handleSubmit(() =>
   <div>
     <h3>{{ t("characters.steps.lineage") }}</h3>
     <form @submit="onSubmit">
-      <NameInput id="player" label="characters.player" placeholder="characters.player" v-model="player" />
       <div class="row">
         <LineageSelect
           class="col"
@@ -156,11 +167,16 @@ const onSubmit = handleSubmit(() =>
           :options="nationOptions"
           placeholder="lineages.nation.placeholder"
           required
-          @selected="nation = $event"
+          @update:model-value="setNation"
         />
       </div>
-      <!-- TODO(fpion): Name -->
       <template v-if="species">
+        <h5>{{ t("characters.name") }}</h5>
+        <div class="row">
+          <NameInput class="col" required v-model="name" />
+          <NameInput class="col" id="player" label="characters.player" placeholder="characters.player" v-model="player" />
+        </div>
+        <LineageNames v-if="!areNamesEmpty" :lineage="nation ?? species" />
         <h5>{{ t("characters.size") }}</h5>
         <div class="row">
           <SizeCategorySelect class="col" disabled :model-value="sizeCategory" validation="server" />

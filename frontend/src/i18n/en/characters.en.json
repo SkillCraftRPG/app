@@ -4,6 +4,7 @@
   "empty": "This list is empty.",
   "height": "Height",
   "list": "Characters",
+  "name": "Nom du personnage",
   "player": "Player Name",
   "sort": {
     "options": {
