@@ -65,12 +65,3 @@ function setAge(category: AgeCategory, value?: number): void {
     </div>
   </div>
 </template>
-
-<style scoped>
-@media (min-width: 992px) {
-  .col-weight {
-    flex: 0 0 auto;
-    width: 20%;
-  }
-}
-</style>
