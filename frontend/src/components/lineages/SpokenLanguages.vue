@@ -70,7 +70,7 @@ function setText(text?: string): void {
           <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addLanguage" />
         </template>
       </LanguageSelect>
-      <ExtraLanguagesInput class="col-lg-6" :model-value="modelValue.extra" @update:model-value="setExtra($event ?? 0)" />
+      <ExtraLanguagesInput class="col-lg-6" :model-value="modelValue.extra" required @update:model-value="setExtra($event ?? 0)" />
     </div>
     <div v-if="selectedLanguages.length > 0" class="mb-3 row">
       <div v-for="language in selectedLanguages" :key="language.id" class="col-lg-3">
