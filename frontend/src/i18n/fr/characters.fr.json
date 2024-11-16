@@ -6,7 +6,10 @@
   "create": "Création de personnage",
   "empty": "Cette liste est vide.",
   "height": "Hauteur",
-  "languages": "Langues",
+  "languages": {
+    "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires.",
+    "label": "Langues"
+  },
   "list": "Personnages",
   "name": "Nom du personnage",
   "player": "Nom du joueur",

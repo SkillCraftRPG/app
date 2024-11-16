@@ -9,6 +9,7 @@ import type { ValidationType } from "@/types/validation";
 import { searchLanguages } from "@/api/languages";
 
 const props = defineProps<{
+  disabled?: boolean | string;
   exclude?: (string | LanguageModel)[];
   modelValue?: string;
   validation?: ValidationType;
@@ -55,7 +56,7 @@ onMounted(async () => {
 
 <template>
   <AppSelect
-    :disabled="!hasLoaded"
+    :disabled="disabled || !hasLoaded"
     floating
     id="language"
     label="languages.select.label"

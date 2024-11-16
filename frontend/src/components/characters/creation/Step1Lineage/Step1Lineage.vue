@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TarButton, type SelectOption } from "logitar-vue3-ui";
+import { arrayUtils } from "logitar-js";
 import { computed, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -7,7 +8,10 @@ import { useI18n } from "vue-i18n";
 import AgeCategorySelect from "@/components/game/AgeCategorySelect.vue";
 import AgeRollInput from "./AgeRollInput.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
+import ExtraLanguagesInput from "@/components/lineages/ExtraLanguagesInput.vue";
 import HeightRollInput from "./HeightRollInput.vue";
+import LanguageCard from "@/components/languages/LanguageCard.vue";
+import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import LineageDetail from "./LineageDetail.vue";
 import LineageNames from "./LineageNames.vue";
 import LineageSelect from "@/components/lineages/LineageSelect.vue";
@@ -24,12 +28,19 @@ import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
 import { readLineage, searchLineages } from "@/api/lineages";
 
+type SpokenLanguage = {
+  language: LanguageModel;
+  source: "extra" | "lineage";
+};
+
+const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
 const age = ref<number>(0);
 const ageCategory = ref<AgeCategory | undefined>("Adult");
 const height = ref<number>(0);
 const isLoading = ref<boolean>(false);
+const language = ref<LanguageModel>();
 const languages = ref<LanguageModel[]>([]);
 const name = ref<string>("");
 const nation = ref<LineageModel>();
@@ -69,9 +80,19 @@ const ageRange = computed<number[]>(() => {
   }
   return [lower, upper];
 });
+const excludedLanguages = computed<LanguageModel[]>(() => lineageLanguages.value.concat(languages.value));
+const extraLanguages = computed<number>(() => (species.value?.languages.extra ?? 0) + (nation.value?.languages.extra ?? 0));
+const lineageLanguages = computed<LanguageModel[]>(() => (species.value?.languages.items ?? []).concat(nation.value?.languages.items ?? []));
 const nationOptions = computed<SelectOption[]>(() => nations.value.map(({ id, name }) => ({ text: name, value: id })));
+const requiredLanguages = computed<number>(() => extraLanguages.value - languages.value.length);
 const sizeCategory = computed<SizeCategory>(() => nation.value?.size.category ?? species.value?.size.category ?? "Medium");
 const sizeRoll = computed<string | undefined>(() => nation.value?.size.roll ?? species.value?.size.roll);
+const spokenLanguages = computed<SpokenLanguage[]>(() => {
+  const spokenLanguages: SpokenLanguage[] = [];
+  spokenLanguages.push(...orderBy(lineageLanguages.value, "name").map((language) => ({ language, source: "lineage" }) as SpokenLanguage));
+  spokenLanguages.push(...languages.value.map((language) => ({ language, source: "extra" }) as SpokenLanguage));
+  return spokenLanguages;
+});
 const weightRoll = computed<string | undefined>(() => {
   if (species.value && weightCategory.value) {
     switch (weightCategory.value) {
@@ -96,7 +117,21 @@ const emit = defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
+function addLanguage(): void {
+  if (language.value) {
+    languages.value.push(language.value);
+    language.value = undefined;
+  }
+}
+function removeLanguage(language: LanguageModel): void {
+  const index: number = languages.value.findIndex(({ id }) => id === language.id);
+  if (index >= 0) {
+    languages.value.splice(index, 1);
+  }
+}
+
 async function setNation(id?: string): Promise<void> {
+  languages.value = [];
   if (id) {
     isLoading.value = true;
     try {
@@ -111,6 +146,7 @@ async function setNation(id?: string): Promise<void> {
   }
 }
 async function setSpecies(value?: LineageModel): Promise<void> {
+  languages.value = [];
   species.value = value;
   nation.value = undefined;
   if (value && !isLoading.value) {
@@ -149,16 +185,6 @@ const onSubmit = handleSubmit(() =>
     languages: languages.value,
   }),
 );
-
-/* TODO(fpion):
- * - Calculer le nombre de extraLanguages
- * - Si extraLanguages > 0, afficher en row un sélecteur de langue, un bouton d'ajout et le nombre de extra languages
- * - Exclure les langues de la lignée et les langues sélectionnées du sélecteur
- * - Si extraLanguages === languages.length, disable le sélecteur de langue
- * - Afficher les langues de la lignée en ordre alphabétique, permettre la vue seulement
- * - Afficher les langues supplémentaires en ordre de sélection, permettre la vue et le retrait
- * - Empêcher la soumission si extraLanguages !== languages.length
- */
 </script>
 
 <template>
@@ -216,11 +242,33 @@ const onSubmit = handleSubmit(() =>
           <AgeCategorySelect class="col" v-model="ageCategory" />
           <AgeRollInput class="col" :range="ageRange" v-model="age" />
         </div>
-        <h5>{{ t("characters.languages") }}</h5>
-        <!-- TODO(fpion): Languages -->
+        <h5>{{ t("characters.languages.label") }}</h5>
+        <div v-if="extraLanguages > 0" class="row">
+          <LanguageSelect
+            class="col"
+            :disabled="requiredLanguages === 0"
+            :exclude="excludedLanguages"
+            :model-value="language?.id"
+            validation="server"
+            @selected="language = $event"
+          >
+            <template #append>
+              <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addLanguage" />
+            </template>
+          </LanguageSelect>
+          <ExtraLanguagesInput class="col" disabled :model-value="extraLanguages" validation="server" />
+        </div>
+        <p v-if="requiredLanguages !== 0" class="text-danger">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.languages.selectExtra", { n: requiredLanguages }) }}
+        </p>
+        <div class="mb-3 row">
+          <div v-for="language in spokenLanguages" :key="language.language.id" class="col-lg-3">
+            <LanguageCard :language="language.language" :remove="language.source === 'extra'" view @removed="removeLanguage(language.language)" />
+          </div>
+        </div>
       </template>
       <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
-      <TarButton class="ms-1" :disabled="isLoading" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
+      <TarButton class="ms-1" :disabled="isLoading || requiredLanguages !== 0" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
 </template>

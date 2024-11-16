@@ -6,7 +6,10 @@
   "create": "Create Character",
   "empty": "This list is empty.",
   "height": "Height",
-  "languages": "Languages",
+  "languages": {
+    "selectExtra": "You must select {n} additional language. | You must select {n} additional languages.",
+    "label": "Languages"
+  },
   "list": "Characters",
   "name": "Character Name",
   "player": "Player Name",
