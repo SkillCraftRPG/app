@@ -1,5 +1,8 @@
 {
   "age": "Âge",
+  "attributes": {
+    "extra": "au choix | différents au choix"
+  },
   "create": "Création de personnage",
   "empty": "Cette liste est vide.",
   "height": "Hauteur",

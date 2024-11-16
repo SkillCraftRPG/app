@@ -97,10 +97,8 @@
     "centimeters": "cm",
     "kilograms": "kg",
     "liters": "L",
-    "square": "case",
-    "squares": "cases",
-    "year": "an",
-    "years": "ans"
+    "square": "case | case | cases",
+    "year": "an | an | ans"
   },
   "weight": {
     "categories": {

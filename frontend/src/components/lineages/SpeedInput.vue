@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import AppInput from "@/components/shared/AppInput.vue";
 import type { Speed } from "@/types/game";
+import type { ValidationType } from "@/types/validation";
 
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
-const props = defineProps<{
+defineProps<{
+  disabled?: boolean | string;
   modelValue?: number;
   speed: Speed;
+  validation?: ValidationType;
 }>();
-
-const unit = computed<string>(() => (typeof props.modelValue === "number" && props.modelValue > 1 ? "squares" : "square"));
 
 defineEmits<{
   (e: "update:model-value", value?: number): void;
@@ -23,6 +23,7 @@ defineEmits<{
 
 <template>
   <AppInput
+    :disabled="disabled"
     floating
     :id="`speed-${speed}`"
     :label="`game.speeds.${speed}`"
@@ -33,10 +34,11 @@ defineEmits<{
     required
     step="1"
     type="number"
+    :validation="validation"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"
   >
     <template #append>
-      <span class="input-group-text">{{ t(`game.units.${unit}`) }}</span>
+      <span class="input-group-text">{{ t("game.units.square", modelValue ?? 0) }}</span>
     </template>
   </AppInput>
 </template>

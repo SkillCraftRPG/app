@@ -1,5 +1,8 @@
 {
   "age": "Age",
+  "attributes": {
+    "extra": "extra | extra different"
+  },
   "create": "Create Character",
   "empty": "This list is empty.",
   "height": "Height",

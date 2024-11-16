@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { parsingUtils } from "logitar-js";
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppInput from "@/components/shared/AppInput.vue";
@@ -9,7 +8,7 @@ import type { AgeCategory } from "@/types/lineages";
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     category: AgeCategory;
     min?: number | string;
@@ -19,8 +18,6 @@ const props = withDefaults(
     min: 1,
   },
 );
-
-const unit = computed<string>(() => (typeof props.modelValue === "number" && props.modelValue > 1 ? "years" : "year"));
 
 defineEmits<{
   (e: "update:model-value", value?: number): void;
@@ -40,7 +37,7 @@ defineEmits<{
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"
   >
     <template #append>
-      <span class="input-group-text">{{ t(`game.units.${unit}`) }}</span>
+      <span class="input-group-text">{{ t("game.units.year", modelValue ?? 0) }}</span>
     </template>
   </AppInput>
 </template>

@@ -16,7 +16,6 @@ const props = defineProps<{
 
 const isRangeValid = computed<boolean>(() => props.range?.length === 2 && props.range[0] < props.range[1] && props.range.every((value) => value > 0));
 const text = computed<string | undefined>(() => props.range?.join("—"));
-const unit = computed<string>(() => (typeof props.modelValue === "number" && props.modelValue > 1 ? "years" : "year"));
 
 const emit = defineEmits<{
   (e: "update:model-value", value?: number): void;
@@ -51,7 +50,7 @@ watch(() => props.range, onRoll, { immediate: true });
       <TarButton v-if="isRangeValid" icon="fas fa-dice" :text="text" @click="onRoll" />
     </template>
     <template #append>
-      <span class="input-group-text">{{ t(`game.units.${unit}`) }}</span>
+      <span class="input-group-text">{{ t("game.units.year", modelValue ?? 0) }}</span>
     </template>
   </AppInput>
 </template>

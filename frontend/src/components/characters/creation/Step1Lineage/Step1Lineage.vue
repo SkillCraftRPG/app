@@ -8,17 +8,20 @@ import AgeCategorySelect from "@/components/game/AgeCategorySelect.vue";
 import AgeRollInput from "./AgeRollInput.vue";
 import AppSelect from "@/components/shared/AppSelect.vue";
 import HeightRollInput from "./HeightRollInput.vue";
+import LineageDetail from "./LineageDetail.vue";
 import LineageNames from "./LineageNames.vue";
 import LineageSelect from "@/components/lineages/LineageSelect.vue";
+import LineageSpeeds from "./LineageSpeeds.vue";
+import MarkdownText from "@/components/shared/MarkdownText.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import WeightCategorySelect from "@/components/game/WeightCategorySelect.vue";
 import WeightRollInput from "./WeightRollInput.vue";
-import type { AgeCategory, LineageModel, NamesModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
+import type { AgeCategory, LineageModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
 import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
-import { searchLineages } from "@/api/lineages";
+import { readLineage, searchLineages } from "@/api/lineages";
 
 const { t } = useI18n();
 
@@ -64,13 +67,6 @@ const ageRange = computed<number[]>(() => {
   }
   return [lower, upper];
 });
-const areNamesEmpty = computed<boolean>(() => {
-  const names: NamesModel | undefined = nation.value?.names ?? species.value?.names;
-  return (
-    !names ||
-    (!names.text && names.family.length === 0 && names.female.length === 0 && names.male.length === 0 && names.unisex.length === 0 && names.custom.length === 0)
-  );
-});
 const nationOptions = computed<SelectOption[]>(() => nations.value.map(({ id, name }) => ({ text: name, value: id })));
 const sizeCategory = computed<SizeCategory>(() => nation.value?.size.category ?? species.value?.size.category ?? "Medium");
 const sizeRoll = computed<string | undefined>(() => nation.value?.size.roll ?? species.value?.size.roll);
@@ -98,8 +94,19 @@ const emit = defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
-function setNation(id?: string): void {
-  nation.value = nations.value.find((nation) => nation.id === id);
+async function setNation(id?: string): Promise<void> {
+  if (id) {
+    isLoading.value = true;
+    try {
+      nation.value = await readLineage(id);
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  } else {
+    nation.value = undefined;
+  }
 }
 async function setSpecies(value?: LineageModel): Promise<void> {
   species.value = value;
@@ -147,36 +154,41 @@ const onSubmit = handleSubmit(() =>
     <h3>{{ t("characters.steps.lineage") }}</h3>
     <form @submit="onSubmit">
       <div class="row">
-        <LineageSelect
-          class="col"
-          id="species"
-          label="lineages.species.label"
-          :model-value="species?.id"
-          placeholder="lineages.species.placeholder"
-          required
-          @error="$emit('error', $event)"
-          @selected="setSpecies"
-        />
-        <AppSelect
-          v-if="nations.length > 0"
-          class="col"
-          floating
-          id="nation"
-          label="lineages.nation.label"
-          :model-value="nation?.id"
-          :options="nationOptions"
-          placeholder="lineages.nation.placeholder"
-          required
-          @update:model-value="setNation"
-        />
+        <div class="col">
+          <LineageSelect
+            id="species"
+            label="lineages.species.label"
+            :model-value="species?.id"
+            placeholder="lineages.species.placeholder"
+            required
+            @error="$emit('error', $event)"
+            @selected="setSpecies"
+          />
+          <MarkdownText v-if="species?.description" :text="species.description" />
+        </div>
+        <div v-if="nations.length > 0" class="col">
+          <AppSelect
+            floating
+            id="nation"
+            label="lineages.nation.label"
+            :model-value="nation?.id"
+            :options="nationOptions"
+            placeholder="lineages.nation.placeholder"
+            required
+            @update:model-value="setNation"
+          />
+          <MarkdownText v-if="nation?.description" :text="nation.description" />
+        </div>
       </div>
       <template v-if="species">
+        <LineageDetail :lineage="nation ?? species" />
         <h5>{{ t("characters.name") }}</h5>
         <div class="row">
           <NameInput class="col" required v-model="name" />
           <NameInput class="col" id="player" label="characters.player" placeholder="characters.player" v-model="player" />
         </div>
-        <LineageNames v-if="!areNamesEmpty" :lineage="nation ?? species" />
+        <LineageNames :lineage="nation ?? species" />
+        <LineageSpeeds :lineage="nation ?? species" />
         <h5>{{ t("characters.size") }}</h5>
         <div class="row">
           <SizeCategorySelect class="col" disabled :model-value="sizeCategory" validation="server" />
