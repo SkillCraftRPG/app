@@ -12,6 +12,7 @@ const { t } = useI18n();
 defineProps<{
   disabled?: boolean | string;
   modelValue?: number;
+  required?: boolean | string;
   speed: Speed;
   validation?: ValidationType;
 }>();
@@ -31,7 +32,7 @@ defineEmits<{
     :max="8"
     :model-value="modelValue?.toString()"
     :placeholder="`game.speeds.${speed}`"
-    required
+    :required="required"
     step="1"
     type="number"
     :validation="validation"
