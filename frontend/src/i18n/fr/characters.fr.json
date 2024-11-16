@@ -4,6 +4,13 @@
     "extra": "au choix | différents au choix"
   },
   "create": "Création de personnage",
+  "customizations": {
+    "label": "Personnalisations",
+    "select": {
+      "Disability": "Vous devez sélectionner {n} handicap supplémentaire. | Vous devez sélectionner {n} handicaps supplémentaires.",
+      "Gift": "Vous devez sélectionner {n} don supplémentaire. | Vous devez sélectionner {n} dons supplémentaires"
+    }
+  },
   "empty": "Cette liste est vide.",
   "height": "Hauteur",
   "languages": {
@@ -12,6 +19,7 @@
   },
   "list": "Personnages",
   "name": "Nom du personnage",
+  "personalityAttributeBonus": "Bonus d’attribut (+1)",
   "player": "Nom du joueur",
   "sort": {
     "options": {

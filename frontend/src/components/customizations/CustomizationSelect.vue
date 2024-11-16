@@ -69,5 +69,9 @@ onMounted(async () => {
     placeholder="customizations.select.placeholder"
     :validation="validation"
     @update:model-value="onModelValueUpdate"
-  />
+  >
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+  </AppSelect>
 </template>

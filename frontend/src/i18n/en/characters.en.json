@@ -4,14 +4,22 @@
     "extra": "extra | extra different"
   },
   "create": "Create Character",
+  "customizations": {
+    "label": "Customizations",
+    "select": {
+      "Disability": "You must select {n} additional disability. | You must select {n} additional disabilities.",
+      "Gift": "You must select {n} additional gift. | You must select {n} additional gifts."
+    }
+  },
   "empty": "This list is empty.",
   "height": "Height",
   "languages": {
-    "selectExtra": "You must select {n} additional language. | You must select {n} additional languages.",
-    "label": "Languages"
+    "label": "Languages",
+    "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
   "list": "Characters",
   "name": "Character Name",
+  "personalityAttributeBonus": "Attribute Bonus (+1)",
   "player": "Player Name",
   "sort": {
     "options": {
