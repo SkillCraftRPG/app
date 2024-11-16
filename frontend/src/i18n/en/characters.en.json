@@ -6,8 +6,9 @@
   "create": "Create Character",
   "empty": "This list is empty.",
   "height": "Height",
+  "languages": "Languages",
   "list": "Characters",
-  "name": "Nom du personnage",
+  "name": "Character Name",
   "player": "Player Name",
   "sort": {
     "options": {

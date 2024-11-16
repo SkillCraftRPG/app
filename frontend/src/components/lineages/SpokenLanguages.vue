@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { TarButton, TarCard } from "logitar-vue3-ui";
+import { TarButton } from "logitar-vue3-ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ExtraLanguagesInput from "./ExtraLanguagesInput.vue";
+import LanguageCard from "@/components/languages/LanguageCard.vue";
 import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import LanguagesText from "./LanguagesText.vue";
 import type { LanguageModel } from "@/types/languages";
@@ -73,14 +74,7 @@ function setText(text?: string): void {
     </div>
     <div v-if="selectedLanguages.length > 0" class="mb-3 row">
       <div v-for="language in selectedLanguages" :key="language.id" class="col-lg-3">
-        <TarCard :title="language.name" :subtitle="language.script">
-          <div class="float-end">
-            <RouterLink class="btn btn-primary me-1" :to="{ name: 'LanguageEdit', params: { id: language.id } }" target="_blank">
-              <font-awesome-icon icon="fas fa-eye" /> {{ t("actions.view") }}
-            </RouterLink>
-            <TarButton class="ms-1" icon="fas fa-times" :text="t('actions.remove')" variant="danger" @click="removeLanguage(language)" />
-          </div>
-        </TarCard>
+        <LanguageCard :language="language" remove view @removed="removeLanguage(language)" />
       </div>
     </div>
     <p v-else>{{ t("lineages.languages.empty") }}</p>

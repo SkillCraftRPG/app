@@ -204,6 +204,8 @@ const onSubmit = handleSubmit(() =>
           <AgeCategorySelect class="col" v-model="ageCategory" />
           <AgeRollInput class="col" :range="ageRange" v-model="age" />
         </div>
+        <h5>{{ t("characters.languages") }}</h5>
+        <!-- TODO(fpion): implement -->
       </template>
       <!-- TODO(fpion): Languages -->
       <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
