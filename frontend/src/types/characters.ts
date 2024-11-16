@@ -140,7 +140,7 @@ export type Step1 = {
   height?: number;
   weight?: number;
   age?: number;
-  languageIds: string[];
+  languages: LanguageModel[];
 };
 
 export type Step2 = {

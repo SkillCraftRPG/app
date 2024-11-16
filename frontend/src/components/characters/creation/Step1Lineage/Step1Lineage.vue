@@ -144,7 +144,7 @@ const onSubmit = handleSubmit(() =>
     height: height.value,
     weight: weight.value,
     age: age.value,
-    languageIds: [], // TODO(fpion): implement
+    languages: [], // TODO(fpion): implement
   }),
 );
 </script>
