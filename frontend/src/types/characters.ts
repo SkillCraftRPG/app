@@ -145,7 +145,7 @@ export type Step1 = {
 
 export type Step2 = {
   personality?: PersonalityModel;
-  customizationIds: string[];
+  customizations: CustomizationModel[];
 };
 
 export type Step3 = {

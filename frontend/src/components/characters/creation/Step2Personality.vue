@@ -19,7 +19,7 @@ const emit = defineEmits<{
 }>();
 
 const { handleSubmit } = useForm();
-const onSubmit = handleSubmit(() => emit("continue", { personality: personality.value }));
+const onSubmit = handleSubmit(() => emit("continue", { personality: personality.value, customizations: [] }));
 </script>
 
 <template>
