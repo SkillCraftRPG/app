@@ -18,6 +18,7 @@ import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import WeightCategorySelect from "@/components/game/WeightCategorySelect.vue";
 import WeightRollInput from "./WeightRollInput.vue";
 import type { AgeCategory, LineageModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
+import type { LanguageModel } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
 import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
@@ -29,6 +30,7 @@ const age = ref<number>(0);
 const ageCategory = ref<AgeCategory | undefined>("Adult");
 const height = ref<number>(0);
 const isLoading = ref<boolean>(false);
+const languages = ref<LanguageModel[]>([]);
 const name = ref<string>("");
 const nation = ref<LineageModel>();
 const nations = ref<LineageModel[]>([]);
@@ -144,9 +146,19 @@ const onSubmit = handleSubmit(() =>
     height: height.value,
     weight: weight.value,
     age: age.value,
-    languages: [], // TODO(fpion): implement
+    languages: languages.value,
   }),
 );
+
+/* TODO(fpion):
+ * - Calculer le nombre de extraLanguages
+ * - Si extraLanguages > 0, afficher en row un sélecteur de langue, un bouton d'ajout et le nombre de extra languages
+ * - Exclure les langues de la lignée et les langues sélectionnées du sélecteur
+ * - Si extraLanguages === languages.length, disable le sélecteur de langue
+ * - Afficher les langues de la lignée en ordre alphabétique, permettre la vue seulement
+ * - Afficher les langues supplémentaires en ordre de sélection, permettre la vue et le retrait
+ * - Empêcher la soumission si extraLanguages !== languages.length
+ */
 </script>
 
 <template>
@@ -205,9 +217,8 @@ const onSubmit = handleSubmit(() =>
           <AgeRollInput class="col" :range="ageRange" v-model="age" />
         </div>
         <h5>{{ t("characters.languages") }}</h5>
-        <!-- TODO(fpion): implement -->
+        <!-- TODO(fpion): Languages -->
       </template>
-      <!-- TODO(fpion): Languages -->
       <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
       <TarButton class="ms-1" :disabled="isLoading" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
