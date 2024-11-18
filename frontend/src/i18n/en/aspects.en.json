@@ -13,6 +13,10 @@
   "created": "The aspect has been created.",
   "empty": "This list is empty.",
   "list": "Aspects",
+  "select": {
+    "label": "Aspect",
+    "placeholder": "Select an aspect"
+  },
   "skills": {
     "discounted1": "Discounted (1)",
     "discounted2": "Discounted (2)",

@@ -1,5 +1,8 @@
 {
   "age": "Âge",
+  "aspects": {
+    "select": "Vous devez sélectionner {n} aspect supplémentaire. | Vous devez sélectionner {n} aspects supplémentaires."
+  },
   "attributes": {
     "extra": "au choix | différents au choix"
   },

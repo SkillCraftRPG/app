@@ -7,7 +7,7 @@ import { useRouter } from "vue-router";
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import Step1Lineage from "@/components/characters/creation/Step1Lineage/Step1Lineage.vue";
 import Step2Personality from "@/components/characters/creation/Step2Personality/Step2Personality.vue";
-import Step3Aspects from "@/components/characters/creation/Step3Aspects.vue";
+import Step3Aspects from "@/components/characters/creation/Step3Aspects/Step3Aspects.vue";
 import Step4Attributes from "@/components/characters/creation/Step4Attributes.vue";
 import Step5Background from "@/components/characters/creation/Step5Background/Step5Background.vue";
 import Step6Talents from "@/components/characters/creation/Step6Talents.vue";
@@ -67,16 +67,16 @@ function onStep6(value?: Step6): void {
 }
 
 /*
- * ( ) AspectsNotFoundException
+ * (✅) AspectsNotFoundException
  * ( ) CasteHasNoSkillTalentException
  * (✅) CasteNotFoundException
- * ( ) CustomizationsCannotIncludePersonalityGiftException
- * ( ) CustomizationsNotFoundException
+ * (✅) CustomizationsCannotIncludePersonalityGiftException
+ * (✅) CustomizationsNotFoundException
  * ( ) EducationHasNoSkillTalentException
  * (✅) EducationNotFoundException
  * ( ) InvalidAspectAttributeSelectionException
  * ( ) InvalidCasteEducationSelectionException
- * ( ) InvalidCharacterCustomizationsException
+ * (✅) InvalidCharacterCustomizationsException
  * (✅) InvalidCharacterLineageException
  * ( ) InvalidExtraAttributesException
  * (✅) InvalidExtraLanguagesException

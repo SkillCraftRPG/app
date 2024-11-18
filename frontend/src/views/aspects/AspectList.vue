@@ -62,7 +62,7 @@ function formatAttributes(aspect: AspectModel, category: AttributeCategory): str
 function formatSkills(aspect: AspectModel): string {
   const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2].filter((skill) => Boolean(skill)).map((skill) => t(`game.skills.${skill}`));
   return skills.join("<br />") || "—";
-}
+} // TODO(fpion): refactor
 
 function onCreated(aspect: AspectModel): void {
   toasts.success("aspects.created");
