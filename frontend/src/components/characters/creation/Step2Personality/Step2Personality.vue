@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton } from "logitar-vue3-ui";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
@@ -12,12 +12,14 @@ import PersonalitySelect from "@/components/personalities/PersonalitySelect.vue"
 import type { CustomizationModel } from "@/types/customizations";
 import type { PersonalityModel } from "@/types/personalities";
 import type { Step2 } from "@/types/characters";
+import { useCharacterStore } from "@/stores/character";
 
 type Customization = {
   customization: CustomizationModel;
   source: "extra" | "personality";
 };
 
+const character = useCharacterStore();
 const { t } = useI18n();
 
 const customization = ref<CustomizationModel>();
@@ -63,14 +65,28 @@ function setPersonality(value?: PersonalityModel): void {
   customizations.value = [];
 }
 
-const emit = defineEmits<{
-  (e: "back"): void;
-  (e: "continue", value: Step2): void;
+defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
 const { handleSubmit } = useForm();
-const onSubmit = handleSubmit(() => emit("continue", { personality: personality.value, customizations: customizations.value }));
+const onSubmit = handleSubmit(() => {
+  if (personality.value) {
+    const payload: Step2 = {
+      personality: personality.value,
+      customizations: customizations.value,
+    };
+    character.setStep2(payload);
+  }
+});
+
+onMounted(() => {
+  const step2: Step2 | undefined = character.creation.step2;
+  if (step2) {
+    setPersonality(step2.personality);
+    customizations.value = [...step2.customizations];
+  }
+});
 </script>
 
 <template>
@@ -113,7 +129,7 @@ const onSubmit = handleSubmit(() => emit("continue", { personality: personality.
           <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.customizations.select.Gift", { n: requiredGifts }) }}
         </p>
       </template>
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>

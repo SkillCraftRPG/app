@@ -133,18 +133,18 @@ export type StartingWealthPayload = {
 };
 
 export type Step1 = {
-  name?: string;
+  name: string;
   player?: string;
-  species?: LineageModel;
+  species: LineageModel;
   nation?: LineageModel;
-  height?: number;
-  weight?: number;
-  age?: number;
+  height: number;
+  weight: number;
+  age: number;
   languages: LanguageModel[];
 };
 
 export type Step2 = {
-  personality?: PersonalityModel;
+  personality: PersonalityModel;
   customizations: CustomizationModel[];
 };
 
@@ -153,12 +153,12 @@ export type Step3 = {
 };
 
 export type Step4 = {
-  attributes: BaseAttributesPayload;
+  // attributes: BaseAttributesPayload; // TODO(fpion): implement
 };
 
 export type Step5 = {
-  casteId: string;
-  educationId: string;
+  caste: CasteModel;
+  education: EducationModel;
   startingWealth?: StartingWealthPayload;
 };
 

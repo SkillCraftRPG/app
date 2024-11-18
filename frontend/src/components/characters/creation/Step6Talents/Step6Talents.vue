@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton } from "logitar-vue3-ui";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
@@ -8,7 +8,9 @@ import TalentCard from "@/components/talents/TalentCard.vue";
 import TalentSelect from "@/components/talents/TalentSelect.vue";
 import type { Step6 } from "@/types/characters";
 import type { TalentModel } from "@/types/talents";
+import { useCharacterStore } from "@/stores/character";
 
+const character = useCharacterStore();
 const { t } = useI18n();
 
 const talent = ref<TalentModel>();
@@ -18,8 +20,7 @@ const isCompleted = computed<boolean>(() => requiredTalents.value === 0);
 const requiredTalents = computed<number>(() => 2 - talents.value.length);
 
 const emit = defineEmits<{
-  (e: "back"): void;
-  (e: "continue", value: Step6): void;
+  (e: "complete"): void;
   (e: "error", value: unknown): void;
 }>();
 
@@ -29,7 +30,6 @@ function addTalent(): void {
     talent.value = undefined;
   }
 }
-
 function removeTalent(talent: TalentModel): void {
   const index: number = talents.value.findIndex(({ id }) => id === talent.id);
   if (index >= 0) {
@@ -38,7 +38,18 @@ function removeTalent(talent: TalentModel): void {
 }
 
 const { handleSubmit } = useForm();
-const onSubmit = handleSubmit(() => emit("continue", { talents: talents.value }));
+const onSubmit = handleSubmit(() => {
+  const payload: Step6 = { talents: talents.value };
+  character.setStep6(payload);
+  emit("complete");
+});
+
+onMounted(() => {
+  const step6: Step6 | undefined = character.creation.step6;
+  if (step6) {
+    talents.value = [...step6.talents];
+  }
+});
 </script>
 
 <template>
@@ -67,7 +78,7 @@ const onSubmit = handleSubmit(() => emit("continue", { talents: talents.value })
         </div>
       </div>
       <!-- TODO(fpion): Talents -->
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-plus" :text="t('actions.create')" type="submit" variant="success" />
     </form>
   </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton } from "logitar-vue3-ui";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
@@ -12,26 +12,35 @@ import SkillSelect from "@/components/game/SkillSelect.vue";
 import type { CasteModel } from "@/types/castes";
 import type { EducationModel } from "@/types/educations";
 import type { Step5 } from "@/types/characters";
+import { useCharacterStore } from "@/stores/character";
 
+const character = useCharacterStore();
 const { t } = useI18n();
 
 const caste = ref<CasteModel>();
 const education = ref<EducationModel>();
 
-const emit = defineEmits<{
-  (e: "back"): void;
-  (e: "continue", value: Step5): void;
+defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
 const { handleSubmit } = useForm();
 const onSubmit = handleSubmit(() => {
   if (caste.value && education.value) {
-    emit("continue", {
-      casteId: caste.value.id,
-      educationId: education.value.id,
-      startingWealth: { itemId: "", quantity: 0 },
-    });
+    const payload: Step5 = {
+      caste: caste.value,
+      education: education.value,
+      startingWealth: undefined, // TODO(fpion): implement
+    };
+    character.setStep5(payload);
+  }
+});
+
+onMounted(() => {
+  const step5: Step5 | undefined = character.creation.step5;
+  if (step5) {
+    caste.value = step5.caste;
+    education.value = step5.education;
   }
 });
 </script>
@@ -59,7 +68,7 @@ const onSubmit = handleSubmit(() => {
         <h5>{{ t("game.startingWealth") }}</h5>
         <!-- TODO(fpion): StartingWealth -->
       </template>
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>

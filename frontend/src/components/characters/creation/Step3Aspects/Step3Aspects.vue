@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { TarButton } from "logitar-vue3-ui";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import AspectSelect from "@/components/aspects/AspectSelect.vue";
 import type { AspectModel } from "@/types/aspects";
 import type { Step3 } from "@/types/characters";
+import { useCharacterStore } from "@/stores/character";
 
+const character = useCharacterStore();
 const { t } = useI18n();
 
 const aspect = ref<AspectModel>();
@@ -16,9 +18,7 @@ const aspects = ref<AspectModel[]>([]);
 const isCompleted = computed<boolean>(() => requiredAspects.value === 0);
 const requiredAspects = computed<number>(() => 2 - aspects.value.length);
 
-const emit = defineEmits<{
-  (e: "back"): void;
-  (e: "continue", value: Step3): void;
+defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
@@ -53,7 +53,17 @@ function formatSkills(aspect: AspectModel): string {
 } // TODO(fpion): refactor
 
 const { handleSubmit } = useForm();
-const onSubmit = handleSubmit(() => emit("continue", { aspects: aspects.value }));
+const onSubmit = handleSubmit(() => {
+  const payload: Step3 = { aspects: aspects.value };
+  character.setStep3(payload);
+});
+
+onMounted(() => {
+  const step3: Step3 | undefined = character.creation.step3;
+  if (step3) {
+    aspects.value = [...step3.aspects];
+  }
+});
 </script>
 
 <template>
@@ -94,7 +104,7 @@ const onSubmit = handleSubmit(() => emit("continue", { aspects: aspects.value })
           </tr>
         </tbody>
       </table>
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>

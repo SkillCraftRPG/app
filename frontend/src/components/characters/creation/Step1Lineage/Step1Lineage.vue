@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TarButton, type SelectOption } from "logitar-vue3-ui";
 import { arrayUtils } from "logitar-js";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
@@ -27,12 +27,14 @@ import type { SearchResults } from "@/types/search";
 import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
 import { readLineage, searchLineages } from "@/api/lineages";
+import { useCharacterStore } from "@/stores/character";
 
 type SpokenLanguage = {
   language: LanguageModel;
   source: "extra" | "lineage";
 };
 
+const character = useCharacterStore();
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
@@ -114,7 +116,6 @@ const weightRoll = computed<string | undefined>(() => {
 
 const emit = defineEmits<{
   (e: "abandon"): void;
-  (e: "continue", value: Step1): void;
   (e: "error", value: unknown): void;
 }>();
 
@@ -173,19 +174,41 @@ async function setSpecies(value?: LineageModel): Promise<void> {
   }
 }
 
+function onAbandon(): void {
+  character.goBack();
+  emit("abandon");
+}
+
 const { handleSubmit } = useForm();
-const onSubmit = handleSubmit(() =>
-  emit("continue", {
-    name: name.value,
-    player: player.value,
-    species: species.value,
-    nation: nation.value,
-    height: height.value,
-    weight: weight.value,
-    age: age.value,
-    languages: languages.value,
-  }),
-);
+const onSubmit = handleSubmit(() => {
+  if (species.value) {
+    const payload: Step1 = {
+      name: name.value,
+      player: player.value,
+      species: species.value,
+      nation: nation.value,
+      height: height.value,
+      weight: weight.value,
+      age: age.value,
+      languages: languages.value,
+    };
+    character.setStep1(payload);
+  }
+});
+
+onMounted(() => {
+  const step1: Step1 | undefined = character.creation.step1;
+  if (step1) {
+    name.value = step1.name;
+    player.value = step1.player ?? "";
+    setSpecies(step1.species);
+    setNation(step1.nation?.id);
+    height.value = step1.height;
+    weight.value = step1.weight;
+    age.value = step1.age;
+    languages.value = [...step1.languages];
+  }
+});
 </script>
 
 <template>
@@ -268,7 +291,7 @@ const onSubmit = handleSubmit(() =>
           </div>
         </div>
       </template>
-      <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
+      <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="onAbandon" />
       <TarButton class="ms-1" :disabled="isLoading || !isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>

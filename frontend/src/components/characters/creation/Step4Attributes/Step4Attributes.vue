@@ -3,34 +3,30 @@ import { TarButton } from "logitar-vue3-ui";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import { useCharacterStore } from "@/stores/character";
+
+const character = useCharacterStore();
 const { t } = useI18n();
 
 import type { Step4 } from "@/types/characters";
+import { onMounted } from "vue";
 
-const emit = defineEmits<{
-  (e: "back"): void;
-  (e: "continue", value: Step4): void;
+defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
 const { handleSubmit } = useForm();
-const onSubmit = handleSubmit(() =>
-  emit("continue", {
-    attributes: {
-      agility: 0,
-      coordination: 0,
-      intellect: 0,
-      presence: 0,
-      sensitivity: 0,
-      spirit: 0,
-      vigor: 0,
-      best: "Agility",
-      worst: "Agility",
-      optional: [],
-      extra: [],
-    },
-  }),
-);
+const onSubmit = handleSubmit(() => {
+  const payload: Step4 = {};
+  character.setStep4(payload);
+});
+
+onMounted(() => {
+  const step4: Step4 | undefined = character.creation.step4;
+  if (step4) {
+    // TODO(fpion): implement
+  }
+});
 </script>
 
 <template>
@@ -38,7 +34,7 @@ const onSubmit = handleSubmit(() =>
     <h3>{{ t("characters.steps.attributes") }}</h3>
     <form @submit="onSubmit">
       <!-- TODO(fpion): Attributes -->
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
