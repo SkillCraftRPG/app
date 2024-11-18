@@ -82,6 +82,7 @@ const ageRange = computed<number[]>(() => {
 });
 const excludedLanguages = computed<LanguageModel[]>(() => lineageLanguages.value.concat(languages.value));
 const extraLanguages = computed<number>(() => (species.value?.languages.extra ?? 0) + (nation.value?.languages.extra ?? 0));
+const isCompleted = computed<boolean>(() => requiredLanguages.value === 0);
 const lineageLanguages = computed<LanguageModel[]>(() => (species.value?.languages.items ?? []).concat(nation.value?.languages.items ?? []));
 const nationOptions = computed<SelectOption[]>(() => nations.value.map(({ id, name }) => ({ text: name, value: id })));
 const requiredLanguages = computed<number>(() => extraLanguages.value - languages.value.length);
@@ -268,7 +269,7 @@ const onSubmit = handleSubmit(() =>
         </div>
       </template>
       <TarButton class="me-1" icon="fas fa-ban" :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
-      <TarButton class="ms-1" :disabled="isLoading || requiredLanguages !== 0" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
+      <TarButton class="ms-1" :disabled="isLoading || !isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
 </template>

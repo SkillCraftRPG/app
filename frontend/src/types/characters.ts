@@ -163,5 +163,5 @@ export type Step5 = {
 };
 
 export type Step6 = {
-  talentIds: string[];
+  talents: TalentModel[];
 };

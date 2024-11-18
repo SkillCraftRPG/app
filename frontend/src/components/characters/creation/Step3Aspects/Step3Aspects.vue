@@ -13,6 +13,7 @@ const { t } = useI18n();
 const aspect = ref<AspectModel>();
 const aspects = ref<AspectModel[]>([]);
 
+const isCompleted = computed<boolean>(() => requiredAspects.value === 0);
 const requiredAspects = computed<number>(() => 2 - aspects.value.length);
 
 const emit = defineEmits<{
@@ -25,6 +26,12 @@ function addAspect(): void {
   if (aspect.value) {
     aspects.value.push(aspect.value);
     aspect.value = undefined;
+  }
+}
+function removeAspect(aspect: AspectModel): void {
+  const index: number = aspects.value.findIndex(({ id }) => id === aspect.id);
+  if (index >= 0) {
+    aspects.value.splice(index, 1);
   }
 }
 
@@ -55,7 +62,7 @@ const onSubmit = handleSubmit(() => emit("continue", { aspects: aspects.value })
     <form @submit="onSubmit">
       <AspectSelect :disabled="requiredAspects === 0" :exclude="aspects" :model-value="aspect?.id" validation="server" @selected="aspect = $event">
         <template #append>
-          <TarButton :disabled="requiredAspects === 0" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addAspect" />
+          <TarButton :disabled="!aspect" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addAspect" />
         </template>
       </AspectSelect>
       <p v-if="requiredAspects !== 0" class="text-danger">
@@ -68,6 +75,7 @@ const onSubmit = handleSubmit(() => emit("continue", { aspects: aspects.value })
             <th scope="col">{{ t("aspects.attributes.mandatory") }}</th>
             <th scope="col">{{ t("aspects.attributes.optional") }}</th>
             <th scope="col">{{ t("aspects.skills.label") }}</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -80,11 +88,14 @@ const onSubmit = handleSubmit(() => emit("continue", { aspects: aspects.value })
             <td v-html="formatAttributes(aspect, 'mandatory')"></td>
             <td v-html="formatAttributes(aspect, 'optional')"></td>
             <td v-html="formatSkills(aspect)"></td>
+            <td>
+              <TarButton icon="fas fa-trash" :text="t('actions.remove')" variant="danger" @click="removeAspect(aspect)" />
+            </td>
           </tr>
         </tbody>
       </table>
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
-      <TarButton class="ms-1" :disabled="requiredAspects !== 0" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
+      <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
 </template>

@@ -35,6 +35,7 @@ const allCustomizations = computed<Customization[]>(() => {
 const disabilityCount = computed<number>(() => customizations.value.filter(({ type }) => type === "Disability").length);
 const excludedCustomizations = computed<CustomizationModel[]>(() => allCustomizations.value.map(({ customization }) => customization));
 const giftCount = computed<number>(() => customizations.value.filter(({ type }) => type === "Gift").length);
+const isCompleted = computed<boolean>(() => giftCount.value === disabilityCount.value);
 const requiredDisabilities = computed<number>(() => {
   const count: number = giftCount.value - disabilityCount.value;
   return count < 0 ? 0 : count;
@@ -113,7 +114,7 @@ const onSubmit = handleSubmit(() => emit("continue", { personality: personality.
         </p>
       </template>
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="$emit('back')" />
-      <TarButton class="ms-1" :disabled="giftCount !== disabilityCount" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
+      <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
 </template>

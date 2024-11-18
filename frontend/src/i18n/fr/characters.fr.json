@@ -41,5 +41,8 @@
     "progress": "Progression de la création de personnage",
     "talents": "Étape 6 – Talents"
   },
+  "talents": {
+    "select": "Vous devez sélectionner {n} talent supplémentaire. | Vous devez sélectionner {n} talents supplémentaires."
+  },
   "weight": "Poids"
 }
