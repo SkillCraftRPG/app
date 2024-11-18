@@ -41,6 +41,9 @@ export const useCharacterStore = defineStore(
       creation.value = { ...creation.value, step6 };
     }
 
+    // TODO(fpion): separate step increment from setSteps?
+    // TODO(fpion): clear store when character successfully created?
+
     return { creation, step, goBack, setStep1, setStep2, setStep3, setStep4, setStep5, setStep6 };
   },
   {
