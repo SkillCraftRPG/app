@@ -153,7 +153,7 @@ export type Step3 = {
 };
 
 export type Step4 = {
-  // attributes: BaseAttributesPayload; // TODO(fpion): implement
+  attributes: BaseAttributesPayload;
 };
 
 export type Step5 = {

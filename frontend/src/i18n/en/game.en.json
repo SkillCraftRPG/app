@@ -9,7 +9,11 @@
     },
     "category": "Age Category"
   },
-  "attribute": "Attribute",
+  "attribute": {
+    "label": "Attribute",
+    "modifier": "Modifier",
+    "score": "Score"
+  },
   "attributes": {
     "Agility": "Agility",
     "Coordination": "Coordination",

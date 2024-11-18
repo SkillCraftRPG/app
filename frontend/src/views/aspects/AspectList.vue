@@ -57,11 +57,11 @@ function formatAttributes(aspect: AspectModel, category: AttributeCategory): str
       : [aspect.attributes.optional1, aspect.attributes.optional2]
           .filter((attribute) => Boolean(attribute))
           .map((attribute) => t(`game.attributes.${attribute}`));
-  return attributes.join("<br />") || "—";
+  return attributes.join("<br />") || "—"; // TODO(fpion): order
 }
 function formatSkills(aspect: AspectModel): string {
   const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2].filter((skill) => Boolean(skill)).map((skill) => t(`game.skills.${skill}`));
-  return skills.join("<br />") || "—";
+  return skills.join("<br />") || "—"; // TODO(fpion): order
 } // TODO(fpion): refactor
 
 function onCreated(aspect: AspectModel): void {

@@ -73,11 +73,10 @@ onMounted(() => {
         <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.talents.select", { n: requiredTalents }) }}
       </p>
       <div v-if="talents.length > 0" class="mb-3 row">
-        <div v-for="talent in talents" :key="talent.id" class="col-lg-6">
+        <div v-for="talent in talents" :key="talent.id" class="col-lg-3">
           <TalentCard remove :talent="talent" view @removed="removeTalent(talent)" />
         </div>
       </div>
-      <!-- TODO(fpion): Talents -->
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-plus" :text="t('actions.create')" type="submit" variant="success" />
     </form>

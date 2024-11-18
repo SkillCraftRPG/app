@@ -1,10 +1,14 @@
 {
   "age": "Age",
   "aspects": {
+    "label": "Aspects",
     "select": "You must select {n} additional aspect. | You must select {n} additional aspects."
   },
   "attributes": {
-    "extra": "extra | extra different"
+    "bases": "Bases",
+    "extra": "extra | extra different",
+    "label": "Attributes",
+    "spend": "You must spend {n} additional attribute point. | You must spend {n} additional attribute points."
   },
   "create": "Create Character",
   "customizations": {
@@ -20,6 +24,7 @@
     "label": "Languages",
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
+  "lineage": "Lineage",
   "list": "Characters",
   "name": "Character Name",
   "personalityAttributeBonus": "Attribute Bonus (+1)",

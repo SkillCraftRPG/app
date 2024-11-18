@@ -21,7 +21,7 @@ withDefaults(
   }>(),
   {
     id: "attribute",
-    label: "game.attribute",
+    label: "game.attribute.label",
   },
 );
 
@@ -45,7 +45,7 @@ defineEmits<{
     :label="label"
     :model-value="modelValue"
     :options="options"
-    placeholder="game.attribute"
+    placeholder="game.attribute.label"
     :validation="validation"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as Attribute))"
   />

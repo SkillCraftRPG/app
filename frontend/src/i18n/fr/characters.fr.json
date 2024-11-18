@@ -1,10 +1,14 @@
 {
   "age": "Âge",
   "aspects": {
+    "label": "Aspects",
     "select": "Vous devez sélectionner {n} aspect supplémentaire. | Vous devez sélectionner {n} aspects supplémentaires."
   },
   "attributes": {
-    "extra": "au choix | différents au choix"
+    "bases": "Bases",
+    "extra": "au choix | différents au choix",
+    "label": "Attributs",
+    "spend": "Vous devez dépenser {n} point d’attribut supplémentaire. | Vous devez dépenser {n} points d’attribut supplémentaires."
   },
   "create": "Création de personnage",
   "customizations": {
@@ -20,6 +24,7 @@
     "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires.",
     "label": "Langues"
   },
+  "lineage": "Lignée",
   "list": "Personnages",
   "name": "Nom du personnage",
   "personalityAttributeBonus": "Bonus d’attribut (+1)",

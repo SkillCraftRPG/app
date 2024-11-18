@@ -178,7 +178,7 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("personalities.sort.options.Name") }}</th>
-            <th scope="col">{{ t("game.attribute") }}</th>
+            <th scope="col">{{ t("game.attribute.label") }}</th>
             <th scope="col">{{ t("customizations.type.options.Gift") }}</th>
             <th scope="col">{{ t("personalities.sort.options.UpdatedOn") }}</th>
           </tr>
