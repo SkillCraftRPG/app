@@ -115,7 +115,7 @@ internal class CreateOrReplaceLineageCommandHandler : IRequestHandler<CreateOrRe
         Roll.TryCreate(payload.Weight.Obese)),
       Ages = new Ages(payload.Ages)
     };
-    SetFeatures(lineage, lineage, payload);
+    SetTraits(lineage, lineage, payload);
 
     await SetLanguagesAsync(command, lineage, lineage, payload.Languages, cancellationToken);
     SetNames(lineage, lineage, payload.Names);
@@ -155,7 +155,7 @@ internal class CreateOrReplaceLineageCommandHandler : IRequestHandler<CreateOrRe
     {
       lineage.Attributes = attributes;
     }
-    SetFeatures(lineage, reference, payload);
+    SetTraits(lineage, reference, payload);
 
     await SetLanguagesAsync(command, lineage, reference, payload.Languages, cancellationToken);
     SetNames(lineage, reference, payload.Names);
@@ -201,30 +201,30 @@ internal class CreateOrReplaceLineageCommandHandler : IRequestHandler<CreateOrRe
     }
   }
 
-  private static void SetFeatures(Lineage lineage, Lineage reference, CreateOrReplaceLineagePayload payload)
+  private static void SetTraits(Lineage lineage, Lineage reference, CreateOrReplaceLineagePayload payload)
   {
-    HashSet<Guid> featureIds = payload.Features.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
-    foreach (Guid featureId in reference.Features.Keys)
+    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
+    foreach (Guid traitId in reference.Traits.Keys)
     {
-      if (!featureIds.Contains(featureId))
+      if (!traitIds.Contains(traitId))
       {
-        lineage.RemoveFeature(featureId);
+        lineage.RemoveTrait(traitId);
       }
     }
 
-    foreach (FeaturePayload featurePayload in payload.Features)
+    foreach (TraitPayload traitPayload in payload.Traits)
     {
-      Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
-      if (featurePayload.Id.HasValue)
+      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+      if (traitPayload.Id.HasValue)
       {
-        if (!reference.Features.TryGetValue(featurePayload.Id.Value, out Feature? existingFeature) || existingFeature != feature)
+        if (!reference.Traits.TryGetValue(traitPayload.Id.Value, out Trait? existingTrait) || existingTrait != trait)
         {
-          lineage.SetFeature(featurePayload.Id.Value, feature);
+          lineage.SetTrait(traitPayload.Id.Value, trait);
         }
       }
       else
       {
-        lineage.AddFeature(feature);
+        lineage.AddTrait(trait);
       }
     }
   }

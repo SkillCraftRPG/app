@@ -63,11 +63,11 @@ public class UpdateLineageCommandHandlerTests
   public async Task It_should_update_an_existing_lineage()
   {
     Lineage lineage = new(_world.Id, parent: null, new Name("gnome"), _world.OwnerId);
-    lineage.AddFeature(new Feature(new Name("Bizarrerie"), Description: null));
+    lineage.AddTrait(new Trait(new Name("Bizarrerie"), Description: null));
     lineage.Update(_world.OwnerId);
     _lineageRepository.Setup(x => x.LoadAsync(lineage.Id, _cancellationToken)).ReturnsAsync(lineage);
 
-    UpdateFeaturePayload feature = new(" Curieux ") { Description = "  Le personnage peut acquérir à rabais le talent <u>Investigation</u>.  " };
+    UpdateTraitPayload trait = new(" Curieux ") { Description = "  Le personnage peut acquérir à rabais le talent <u>Investigation</u>.  " };
     UpdateLineagePayload payload = new()
     {
       Name = " Gnome ",
@@ -77,10 +77,10 @@ public class UpdateLineageCommandHandlerTests
         Coordination = 1,
         Intellect = 1
       },
-      Features =
+      Traits =
       [
-        new UpdateFeaturePayload(lineage.Features.Values.Single().Name.Value) { Id = lineage.Features.Keys.Single(), Remove = true },
-        feature
+        new UpdateTraitPayload(lineage.Traits.Values.Single().Name.Value) { Id = lineage.Traits.Keys.Single(), Remove = true },
+        trait
       ],
       Languages = new UpdateLanguagesPayload { Extra = 1 },
       Names = new UpdateNamesPayload
@@ -111,14 +111,14 @@ public class UpdateLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description != null && y.Lineage.Description.Value == payload.Description.Value.Trim()
       && y.Lineage.Attributes.Coordination == payload.Attributes.Coordination && y.Lineage.Attributes.Intellect == payload.Attributes.Intellect
-      && AreEqual(y.Lineage.Features.Single(), feature)
+      && AreEqual(y.Lineage.Traits.Single(), trait)
       && y.Lineage.Languages.Extra == 1
       && y.Lineage.Names.Text == payload.Names.Text.Value.CleanTrim()
       && y.Lineage.Speeds.Walk == payload.Speeds.Walk
       && y.Lineage.Size.Category == payload.Size.Category
       && y.Lineage.Size.Roll != null && y.Lineage.Size.Roll.Value == payload.Size.Roll.Value.Trim()), _cancellationToken), Times.Once);
   }
-  private static bool AreEqual(KeyValuePair<Guid, Feature> feature, UpdateFeaturePayload payload) => (!payload.Id.HasValue || payload.Id.Value == feature.Key)
-    && feature.Value.Name.Value == payload.Name.Trim()
-    && feature.Value.Description?.Value == payload.Description?.CleanTrim();
+  private static bool AreEqual(KeyValuePair<Guid, Trait> trait, UpdateTraitPayload payload) => (!payload.Id.HasValue || payload.Id.Value == trait.Key)
+    && trait.Value.Name.Value == payload.Name.Trim()
+    && trait.Value.Description?.Value == payload.Description?.CleanTrim();
 }

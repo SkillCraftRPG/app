@@ -65,7 +65,7 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
       caste.WealthRoll = Roll.TryCreate(payload.WealthRoll.Value);
     }
 
-    SetTraits(caste, payload);
+    SetFeatures(caste, payload);
 
     caste.Update(command.GetUserId());
 
@@ -74,27 +74,27 @@ internal class UpdateCasteCommandHandler : IRequestHandler<UpdateCasteCommand, C
     return await _casteQuerier.ReadAsync(caste, cancellationToken);
   }
 
-  private static void SetTraits(Caste caste, UpdateCastePayload payload)
+  private static void SetFeatures(Caste caste, UpdateCastePayload payload)
   {
-    foreach (UpdateTraitPayload traitPayload in payload.Traits)
+    foreach (UpdateFeaturePayload featurePayload in payload.Features)
     {
-      if (traitPayload.Remove)
+      if (featurePayload.Remove)
       {
-        if (traitPayload.Id.HasValue)
+        if (featurePayload.Id.HasValue)
         {
-          caste.RemoveTrait(traitPayload.Id.Value);
+          caste.RemoveFeature(featurePayload.Id.Value);
         }
       }
       else
       {
-        Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
-        if (traitPayload.Id.HasValue)
+        Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
+        if (featurePayload.Id.HasValue)
         {
-          caste.SetTrait(traitPayload.Id.Value, trait);
+          caste.SetFeature(featurePayload.Id.Value, feature);
         }
         else
         {
-          caste.AddTrait(trait);
+          caste.AddFeature(feature);
         }
       }
     }

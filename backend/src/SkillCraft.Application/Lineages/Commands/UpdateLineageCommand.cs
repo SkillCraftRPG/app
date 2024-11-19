@@ -69,7 +69,7 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
       payload.Attributes.Spirit ?? lineage.Attributes.Spirit,
       payload.Attributes.Vigor ?? lineage.Attributes.Vigor,
       payload.Attributes.Extra ?? lineage.Attributes.Extra);
-    SetFeatures(lineage, payload);
+    SetTraits(lineage, payload);
 
     await SetLanguagesAsync(command, lineage, payload.Languages, cancellationToken);
     SetNames(lineage, payload.Names);
@@ -103,27 +103,27 @@ internal class UpdateLineageCommandHandler : IRequestHandler<UpdateLineageComman
     return await _lineageQuerier.ReadAsync(lineage, cancellationToken);
   }
 
-  private static void SetFeatures(Lineage lineage, UpdateLineagePayload payload)
+  private static void SetTraits(Lineage lineage, UpdateLineagePayload payload)
   {
-    foreach (UpdateFeaturePayload featurePayload in payload.Features)
+    foreach (UpdateTraitPayload traitPayload in payload.Traits)
     {
-      if (featurePayload.Remove)
+      if (traitPayload.Remove)
       {
-        if (featurePayload.Id.HasValue)
+        if (traitPayload.Id.HasValue)
         {
-          lineage.RemoveFeature(featurePayload.Id.Value);
+          lineage.RemoveTrait(traitPayload.Id.Value);
         }
       }
       else
       {
-        Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
-        if (featurePayload.Id.HasValue)
+        Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
+        if (traitPayload.Id.HasValue)
         {
-          lineage.SetFeature(featurePayload.Id.Value, feature);
+          lineage.SetTrait(traitPayload.Id.Value, trait);
         }
         else
         {
-          lineage.AddFeature(feature);
+          lineage.AddTrait(trait);
         }
       }
     }

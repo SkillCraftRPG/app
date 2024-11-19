@@ -1,5 +1,5 @@
 ﻿using SkillCraft.Domain;
-using SkillCraft.Domain.Lineages;
+using SkillCraft.Domain.Castes;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
@@ -19,8 +19,8 @@ public class FeatureTests
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
-    Name name = new("Lien psychique");
-    Description description = new("Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]");
+    Name name = new("Vagabond");
+    Description description = new("Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de Survie afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue.");
     string json = $@"{{""Name"":""{name}"",""Description"":""{description}""}}";
     Feature? feature = JsonSerializer.Deserialize<Feature>(json, _options);
     Assert.NotNull(feature);
@@ -39,7 +39,7 @@ public class FeatureTests
   [Fact(DisplayName = "It should serialize correctly.")]
   public void It_should_serialize_correctly()
   {
-    Feature feature = new(new Name("Lien psychique"), new Description("Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]"));
+    Feature feature = new(new Name("Vagabond"), new Description("Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de Survie afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue."));
     string json = JsonSerializer.Serialize(feature, _options);
     Assert.Equal($@"{{""Name"":""{feature.Name}"",""Description"":""{feature.Description}""}}", json);
   }
