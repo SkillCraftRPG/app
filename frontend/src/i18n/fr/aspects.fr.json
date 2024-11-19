@@ -1,7 +1,6 @@
 {
   "attributes": {
     "invalid": "Tous les attributs doivent être distincts les uns des autres.",
-    "label": "Attributs",
     "mandatory": "Attributs obligatoires",
     "mandatory1": "Obligatoire (1)",
     "mandatory2": "Obligatoire (2)",
@@ -13,11 +12,14 @@
   "created": "L’aspect a été créé.",
   "empty": "Cette liste est vide.",
   "list": "Aspects",
+  "select": {
+    "label": "Aspect",
+    "placeholder": "Sélectionnez un aspect"
+  },
   "skills": {
     "discounted1": "À rabais (1)",
     "discounted2": "À rabais (2)",
-    "invalid": "Les compétences à rabais doivent être différentes.",
-    "label": "Compétences"
+    "invalid": "Les compétences à rabais doivent être différentes."
   },
   "sort": {
     "options": {

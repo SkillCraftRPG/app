@@ -1,0 +1,89 @@
+{
+  "aspects": {
+    "select": "Vous devez sélectionner {n} aspect supplémentaire. | Vous devez sélectionner {n} aspects supplémentaires."
+  },
+  "attributes": {
+    "bases": "Bases",
+    "best": {
+      "label": "Meilleur",
+      "select": "Vous devez sélectionner un meilleur attribut."
+    },
+    "bestCannotBeWorst": "Le meilleur attribut doit être différent du pire attribut.",
+    "extra": {
+      "label": "au choix | différents au choix",
+      "less": "Vous avez sélectionné {n} attribut additionnel en trop. | Vous avez sélectionné {n} attributs additionnels en trop.",
+      "more": "Vous devez sélectionner {n} attribut additionnel supplémentaire. | Vous devez sélectionner {n} attributs additionnels supplémentaires."
+    },
+    "mandatory": {
+      "best": "Meilleur (+3)",
+      "label": "Obligatoire",
+      "mandatory": "Obligatoire (+2)",
+      "worst": "Pire (+1)"
+    },
+    "optional": {
+      "less": "Vous avez sélectionné {n} attribut optionnel en trop. | Vous avez sélectionné {n} attributs optionnels en trop.",
+      "more": "Vous devez sélectionner {n} attribut optionnel supplémentaire. | Vous devez sélectionner {n} attributs optionnels supplémentaires."
+    },
+    "selected": "Sélectionné (+1)",
+    "spend": "Vous devez dépenser {n} point d’attribut supplémentaire. | Vous devez dépenser {n} points d’attribut supplémentaires.",
+    "worst": {
+      "label": "Pire",
+      "select": "Vous devez sélectionner un pire attribut."
+    }
+  },
+  "background": {
+    "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence."
+  },
+  "caste": {
+    "invalid": {
+      "skill": "Aucune compétence n’est associée à la caste sélectionnée.",
+      "talent": "Il n’existe aucun talent associé à la compétence de la caste sélectionnée."
+    }
+  },
+  "create": "Création de personnage",
+  "created": "Le personnage a été créé.",
+  "customizations": {
+    "select": {
+      "Disability": "Vous devez sélectionner {n} handicap supplémentaire. | Vous devez sélectionner {n} handicaps supplémentaires.",
+      "Gift": "Vous devez sélectionner {n} don supplémentaire. | Vous devez sélectionner {n} dons supplémentaires"
+    }
+  },
+  "education": {
+    "invalid": {
+      "skill": "Aucune compétence n’est associée à l’éducation sélectionnée.",
+      "talent": "Il n’existe aucun talent associé à la compétence de l’éducation sélectionnée."
+    }
+  },
+  "empty": "Cette liste est vide.",
+  "height": "Hauteur",
+  "inventory": {
+    "quantity": "Quantité"
+  },
+  "languages": {
+    "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires."
+  },
+  "lineage": "Lignée",
+  "list": "Personnages",
+  "name": "Nom du personnage",
+  "personalityAttributeBonus": "Bonus d’attribut (+1)",
+  "player": "Nom du joueur",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "steps": {
+    "aspects": "Étape 3 – Aspects",
+    "attributes": "Étape 4 – Attributs",
+    "background": "Étape 5 – Historique",
+    "lineage": "Étape 1 – Espèce et peuple",
+    "personality": "Étape 2 – Personnalité",
+    "progress": "Progression de la création de personnage",
+    "talents": "Étape 6 – Talents"
+  },
+  "talents": {
+    "select": "Vous devez sélectionner {n} talent supplémentaire. | Vous devez sélectionner {n} talents supplémentaires."
+  }
+}

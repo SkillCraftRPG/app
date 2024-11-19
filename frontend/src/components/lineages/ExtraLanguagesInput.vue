@@ -2,11 +2,15 @@
 import { parsingUtils } from "logitar-js";
 
 import AppInput from "@/components/shared/AppInput.vue";
+import type { ValidationType } from "@/types/validation";
 
 const { parseNumber } = parsingUtils;
 
 defineProps<{
+  disabled?: boolean | string;
   modelValue?: number;
+  required?: boolean | string;
+  validation?: ValidationType;
 }>();
 
 defineEmits<{
@@ -16,6 +20,7 @@ defineEmits<{
 
 <template>
   <AppInput
+    :disabled="disabled"
     floating
     id="extra-languages"
     label="lineages.languages.extra"
@@ -23,9 +28,10 @@ defineEmits<{
     max="3"
     :model-value="modelValue?.toString()"
     placeholder="lineages.languages.extra"
-    required
+    :required="required"
     step="1"
     type="number"
+    :validation="validation"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"
   />
 </template>

@@ -9,6 +9,8 @@ import type { ValidationType } from "@/types/validation";
 import { searchCustomizations } from "@/api/customizations";
 
 const props = defineProps<{
+  disabled?: boolean | string;
+  exclude?: (string | CustomizationModel)[];
   modelValue?: string;
   type?: CustomizationType;
   validation?: ValidationType;
@@ -17,7 +19,12 @@ const props = defineProps<{
 const customizations = ref<CustomizationModel[]>([]);
 const hasLoaded = ref<boolean>(false);
 
-const options = computed<SelectOption[]>(() => customizations.value.map(({ id, name }) => ({ text: name, value: id })));
+const excludedIds = computed<Set<string>>(
+  () => new Set<string>(props.exclude?.map((customization) => (typeof customization === "string" ? customization : customization.id))),
+);
+const options = computed<SelectOption[]>(() =>
+  customizations.value.filter(({ id }) => !excludedIds.value.has(id)).map(({ id, name }) => ({ text: name, value: id })),
+);
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
@@ -53,7 +60,7 @@ onMounted(async () => {
 
 <template>
   <AppSelect
-    :disabled="!hasLoaded"
+    :disabled="disabled || !hasLoaded"
     floating
     id="customization"
     label="customizations.select.label"
@@ -62,5 +69,9 @@ onMounted(async () => {
     placeholder="customizations.select.placeholder"
     :validation="validation"
     @update:model-value="onModelValueUpdate"
-  />
+  >
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+  </AppSelect>
 </template>

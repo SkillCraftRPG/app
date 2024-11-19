@@ -1,3 +1,5 @@
+export type AgeCategory = "Child" | "Adolescent" | "Adult" | "Mature" | "Venerable";
+
 export type Attribute = "Agility" | "Coordination" | "Intellect" | "Presence" | "Sensitivity" | "Spirit" | "Vigor";
 
 export type DamageType =

@@ -66,7 +66,7 @@ onMounted(async () => {
 
 <template>
   <main class="container">
-    <h1 class="text-center">{{ t("worlds.gateway") }}</h1>
+    <h1 class="text-center"><font-awesome-icon icon="fas fa-dungeon" /> {{ t("worlds.gateway") }}</h1>
     <div v-if="worlds.length > 0" class="my-3 row">
       <div class="mb-3">
         <CreateWorld @created="onCreated" @error="handleError" />

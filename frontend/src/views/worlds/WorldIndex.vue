@@ -48,31 +48,34 @@ onMounted(async () => {
           <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>
         </li>
         <li>
-          <RouterLink :to="{ name: 'CasteList', params: { slug: world.slug } }">{{ t("castes.list") }}</RouterLink>
+          <RouterLink :to="{ name: 'PersonalityList', params: { slug: world.slug } }">{{ t("personalities.list") }}</RouterLink>
         </li>
         <li>
-          <RouterLink :to="{ name: 'CustomizationList', params: { slug: world.slug } }">{{ t("customizations.list") }}</RouterLink>
+          <RouterLink :to="{ name: 'CasteList', params: { slug: world.slug } }">{{ t("castes.list") }}</RouterLink>
         </li>
         <li>
           <RouterLink :to="{ name: 'EducationList', params: { slug: world.slug } }">{{ t("educations.list") }}</RouterLink>
         </li>
         <li>
-          <RouterLink :to="{ name: 'ItemList', params: { slug: world.slug } }">{{ t("items.list") }}</RouterLink>
-        </li>
-        <li>
           <RouterLink :to="{ name: 'LanguageList', params: { slug: world.slug } }">{{ t("languages.list") }}</RouterLink>
         </li>
         <li>
-          <RouterLink :to="{ name: 'PartyList', params: { slug: world.slug } }">{{ t("parties.list") }}</RouterLink>
+          <RouterLink :to="{ name: 'LineageList', params: { slug: world.slug } }">{{ t("lineages.list") }}</RouterLink>
         </li>
         <li>
-          <RouterLink :to="{ name: 'PersonalityList', params: { slug: world.slug } }">{{ t("personalities.list") }}</RouterLink>
+          <RouterLink :to="{ name: 'ItemList', params: { slug: world.slug } }">{{ t("items.list") }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink :to="{ name: 'CustomizationList', params: { slug: world.slug } }">{{ t("customizations.list") }}</RouterLink>
         </li>
         <li>
           <RouterLink :to="{ name: 'TalentList', params: { slug: world.slug } }">{{ t("talents.list") }}</RouterLink>
         </li>
         <li>
-          <RouterLink :to="{ name: 'LineageList', params: { slug: world.slug } }">{{ t("lineages.list") }}</RouterLink>
+          <RouterLink :to="{ name: 'PartyList', params: { slug: world.slug } }">{{ t("parties.list") }}</RouterLink>
+        </li>
+        <li>
+          <RouterLink :to="{ name: 'CharacterList', params: { slug: world.slug } }">{{ t("characters.list") }}</RouterLink>
         </li>
       </ul>
     </template>

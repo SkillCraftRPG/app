@@ -13,6 +13,7 @@ const { rt, tm } = useI18n();
 
 withDefaults(
   defineProps<{
+    disabled?: boolean | string;
     id?: string;
     label?: string;
     modelValue?: Attribute;
@@ -20,13 +21,13 @@ withDefaults(
   }>(),
   {
     id: "attribute",
-    label: "game.attribute",
+    label: "game.attribute.label",
   },
 );
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.attributes"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("game.attributes.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -38,12 +39,13 @@ defineEmits<{
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     :id="id"
     :label="label"
     :model-value="modelValue"
     :options="options"
-    placeholder="game.attribute"
+    placeholder="game.attribute.label"
     :validation="validation"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as Attribute))"
   />

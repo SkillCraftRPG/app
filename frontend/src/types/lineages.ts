@@ -4,8 +4,6 @@ import type { WorldModel } from "@/types/worlds";
 import type { SearchPayload, SortOption } from "./search";
 import type { LanguageModel } from "./languages";
 
-export type AgeCategory = "Adolescent" | "Adult" | "Mature" | "Venerable";
-
 export type AgesModel = {
   adolescent?: number;
   adult?: number;
@@ -29,7 +27,7 @@ export type CreateOrReplaceLineagePayload = {
   name: string;
   description?: string;
   attributes: AttributeBonusesModel;
-  features: TraitPayload[]; // TODO(fpion): rename to "traits"
+  features: TraitPayload[];
   languages: LanguagesPayload;
   names: NamesModel;
   speeds: SpeedsModel;
@@ -55,7 +53,7 @@ export type LineageModel = Aggregate & {
   name: string;
   description?: string;
   attributes: AttributeBonusesModel;
-  features: TraitModel[]; // TODO(fpion): rename to "traits"
+  features: TraitModel[];
   languages: LanguagesModel;
   names: NamesModel;
   speeds: SpeedsModel;

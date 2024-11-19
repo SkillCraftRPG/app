@@ -3,6 +3,10 @@
   "created": "The education has been created.",
   "empty": "This list is empty.",
   "list": "Educations",
+  "select": {
+    "label": "Education",
+    "placeholder": "Select an education"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",

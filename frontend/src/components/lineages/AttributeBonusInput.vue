@@ -20,11 +20,11 @@ defineEmits<{
   <AppInput
     floating
     :id="`${attribute.toLowerCase()}-bonus`"
-    :label="`game.attributes.${attribute}`"
+    :label="`game.attributes.options.${attribute}`"
     min="0"
     max="2"
     :model-value="modelValue?.toString()"
-    :placeholder="`game.attributes.${attribute}`"
+    :placeholder="`game.attributes.options.${attribute}`"
     required
     step="1"
     type="number"

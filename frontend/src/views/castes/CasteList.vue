@@ -177,7 +177,7 @@ watch(
             <td>
               <RouterLink :to="{ name: 'CasteEdit', params: { id: caste.id } }"><font-awesome-icon icon="fas fa-edit" />{{ caste.name }}</RouterLink>
             </td>
-            <td>{{ caste.skill ? t(`game.skills.${caste.skill}`) : "—" }}</td>
+            <td>{{ caste.skill ? t(`game.skills.options.${caste.skill}`) : "—" }}</td>
             <td>{{ caste.wealthRoll ?? "—" }}</td>
             <td v-html="formatTraits(caste)"></td>
             <td><StatusBlock :actor="caste.updatedBy" :date="caste.updatedOn" /></td>

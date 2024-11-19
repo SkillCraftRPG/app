@@ -1,0 +1,89 @@
+{
+  "aspects": {
+    "select": "You must select {n} additional aspect. | You must select {n} additional aspects."
+  },
+  "attributes": {
+    "bases": "Bases",
+    "best": {
+      "label": "Best",
+      "select": "You must select one best attribute."
+    },
+    "bestCannotBeWorst": "The best attribute must be different from the worst attribute.",
+    "extra": {
+      "label": "extra | extra different",
+      "less": "You have selected {n} extra attribute too many. | You have selected {n} extra attributes too many.",
+      "more": "You must select {n} additional extra attribute. | You must select {n} additional extra attributes."
+    },
+    "mandatory": {
+      "best": "Best (+3)",
+      "label": "Mandatory",
+      "mandatory": "Mandatory (+2)",
+      "worst": "Worst (+1)"
+    },
+    "optional": {
+      "less": "You have selected {n} optional attribute too many. | You have selected {n} optional attributes too many.",
+      "more": "You must select {n} additional optional attribute. | You must select {n} additional optional attributes."
+    },
+    "selected": "Selected (+1)",
+    "spend": "You must spend {n} additional attribute point. | You must spend {n} additional attribute points.",
+    "worst": {
+      "label": "Worst",
+      "select": "You must select one worst attribute."
+    }
+  },
+  "background": {
+    "invalid": "The selected caste and education cannot be associated to the same skill."
+  },
+  "caste": {
+    "invalid": {
+      "skill": "There is not skill associated to the selected caste.",
+      "talent": "There is no talent associated to the caste's skill."
+    }
+  },
+  "create": "Create Character",
+  "created": "The character has been created.",
+  "customizations": {
+    "select": {
+      "Disability": "You must select {n} additional disability. | You must select {n} additional disabilities.",
+      "Gift": "You must select {n} additional gift. | You must select {n} additional gifts."
+    }
+  },
+  "education": {
+    "invalid": {
+      "skill": "There is not skill associated to the selected education.",
+      "talent": "There is no talent associated to the education's skill."
+    }
+  },
+  "empty": "This list is empty.",
+  "height": "Height",
+  "inventory": {
+    "quantity": "Quantity"
+  },
+  "languages": {
+    "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
+  },
+  "lineage": "Lineage",
+  "list": "Characters",
+  "name": "Character Name",
+  "personalityAttributeBonus": "Attribute Bonus (+1)",
+  "player": "Player Name",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "steps": {
+    "aspects": "Step #3 – Aspects",
+    "attributes": "Step #4 – Attributes",
+    "background": "Step #5 – Background",
+    "lineage": "Step #1 – Species & Nation",
+    "personality": "Step #2 – Personality",
+    "progress": "Character creation progress",
+    "talents": "Step #6 – Talents"
+  },
+  "talents": {
+    "select": "You must select {n} additional talent. | You must select {n} additional talents."
+  }
+}

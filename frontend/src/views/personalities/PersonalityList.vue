@@ -178,7 +178,7 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("personalities.sort.options.Name") }}</th>
-            <th scope="col">{{ t("game.attribute") }}</th>
+            <th scope="col">{{ t("game.attribute.label") }}</th>
             <th scope="col">{{ t("customizations.type.options.Gift") }}</th>
             <th scope="col">{{ t("personalities.sort.options.UpdatedOn") }}</th>
           </tr>
@@ -190,7 +190,7 @@ watch(
                 <font-awesome-icon icon="fas fa-edit" />{{ personality.name }}
               </RouterLink>
             </td>
-            <td>{{ personality.attribute ? t(`game.attributes.${personality.attribute}`) : "—" }}</td>
+            <td>{{ personality.attribute ? t(`game.attributes.options.${personality.attribute}`) : "—" }}</td>
             <td>
               <RouterLink v-if="personality.gift" :to="{ name: 'CustomizationEdit', params: { id: personality.gift.id } }" target="_blank">
                 <font-awesome-icon icon="fas fa-eye" />{{ personality.gift.name }}

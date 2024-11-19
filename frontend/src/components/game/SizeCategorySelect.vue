@@ -12,6 +12,7 @@ const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
 
 defineProps<{
+  disabled?: boolean | string;
   modelValue?: SizeCategory;
   validation?: ValidationType;
 }>();
@@ -30,6 +31,7 @@ defineEmits<{
 
 <template>
   <AppSelect
+    :disabled="disabled"
     floating
     id="size-category"
     label="game.size.category"

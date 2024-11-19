@@ -18,9 +18,9 @@ defineEmits<{
   <AppInput
     floating
     id="size-roll"
-    label="lineages.size.roll"
+    label="game.roll"
     :model-value="modelValue?.toString()"
-    placeholder="lineages.size.roll"
+    placeholder="game.roll"
     :rules="{ roll: true }"
     @update:model-value="$emit('update:model-value', $event)"
   >

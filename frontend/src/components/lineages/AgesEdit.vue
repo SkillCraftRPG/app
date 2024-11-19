@@ -2,7 +2,8 @@
 import { useI18n } from "vue-i18n";
 
 import AgeInput from "./AgeInput.vue";
-import type { AgeCategory, AgesModel } from "@/types/lineages";
+import type { AgeCategory } from "@/types/game";
+import type { AgesModel } from "@/types/lineages";
 
 const { t } = useI18n();
 
@@ -38,7 +39,7 @@ function setAge(category: AgeCategory, value?: number): void {
 
 <template>
   <div>
-    <h3>{{ t("lineages.ages.label") }}</h3>
+    <h3>{{ t("game.age.label") }}</h3>
     <div class="row">
       <AgeInput category="Adolescent" class="col-lg-3" :model-value="modelValue.adolescent" @update:model-value="setAge('Adolescent', $event)" />
       <AgeInput
@@ -65,12 +66,3 @@ function setAge(category: AgeCategory, value?: number): void {
     </div>
   </div>
 </template>
-
-<style scoped>
-@media (min-width: 992px) {
-  .col-weight {
-    flex: 0 0 auto;
-    width: 20%;
-  }
-}
-</style>

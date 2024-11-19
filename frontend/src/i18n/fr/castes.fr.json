@@ -3,6 +3,10 @@
   "created": "La caste a été créée.",
   "empty": "Cette liste est vide.",
   "list": "Castes",
+  "select": {
+    "label": "Caste",
+    "placeholder": "Sélectionnez une caste"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
