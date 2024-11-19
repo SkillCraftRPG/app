@@ -1,14 +1,14 @@
 ﻿using GraphQL.Types;
-using SkillCraft.Contracts.Castes;
+using SkillCraft.Contracts.Lineages;
 
-namespace SkillCraft.GraphQL.Castes;
+namespace SkillCraft.GraphQL.Lineages;
 
 internal class TraitGraphType : ObjectGraphType<TraitModel>
 {
   public TraitGraphType()
   {
     Name = "Trait";
-    Description = "Represents a trait granted by a caste.";
+    Description = "Represents a trait granted by a lineage.";
 
     Field(x => x.Id)
       .Description("The unique identifier of the trait.");
