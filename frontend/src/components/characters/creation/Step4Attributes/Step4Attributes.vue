@@ -326,43 +326,56 @@ const onSubmit = handleSubmit(() => {
 });
 
 onMounted(() => {
-  try {
-    const step3: Step3 | undefined = character.creation.step3;
-    if (step3) {
-      step3.aspects.forEach(({ attributes }) => {
-        if (attributes.mandatory1) {
-          mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attributes.${attributes.mandatory1}`), selected: "mandatory" });
-        }
-        if (attributes.mandatory2) {
-          mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attributes.${attributes.mandatory2}`), selected: "mandatory" });
-        }
-        if (attributes.optional1) {
-          optional.value.push({ attribute: attributes.optional1, text: t(`game.attributes.${attributes.optional1}`), selected: false });
-        }
-        if (attributes.optional2) {
-          optional.value.push({ attribute: attributes.optional2, text: t(`game.attributes.${attributes.optional2}`), selected: false });
-        }
-      });
-      mandatory.value = orderBy(mandatory.value, "text");
-      optional.value = orderBy(optional.value, "text");
+  const step3: Step3 | undefined = character.creation.step3;
+  if (step3) {
+    step3.aspects.forEach(({ attributes }) => {
+      if (attributes.mandatory1) {
+        mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attributes.${attributes.mandatory1}`), selected: "mandatory" });
+      }
+      if (attributes.mandatory2) {
+        mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attributes.${attributes.mandatory2}`), selected: "mandatory" });
+      }
+      if (attributes.optional1) {
+        optional.value.push({ attribute: attributes.optional1, text: t(`game.attributes.${attributes.optional1}`), selected: false });
+      }
+      if (attributes.optional2) {
+        optional.value.push({ attribute: attributes.optional2, text: t(`game.attributes.${attributes.optional2}`), selected: false });
+      }
+    });
+    mandatory.value = orderBy(mandatory.value, "text");
+    optional.value = orderBy(optional.value, "text");
+  }
+  const step4: Step4 | undefined = character.creation.step4;
+  if (step4) {
+    agility.value = step4.attributes.agility;
+    coordination.value = step4.attributes.coordination;
+    intellect.value = step4.attributes.intellect;
+    presence.value = step4.attributes.presence;
+    sensitivity.value = step4.attributes.sensitivity;
+    spirit.value = step4.attributes.spirit;
+    vigor.value = step4.attributes.vigor;
+
+    let index: number = mandatory.value.findIndex(({ attribute }) => attribute === step4.attributes.best);
+    if (index >= 0) {
+      const attribute: MandatoryAttribute = { ...mandatory.value[index], selected: "best" };
+      mandatory.value.splice(index, 1, attribute);
     }
-    const step4: Step4 | undefined = character.creation.step4;
-    if (step4) {
-      agility.value = step4.attributes.agility;
-      coordination.value = step4.attributes.coordination;
-      intellect.value = step4.attributes.intellect;
-      presence.value = step4.attributes.presence;
-      sensitivity.value = step4.attributes.sensitivity;
-      spirit.value = step4.attributes.spirit;
-      vigor.value = step4.attributes.vigor;
-      // best.value = step4.attributes.best; // TODO(fpion): implement
-      // worst.value = step4.attributes.worst; // TODO(fpion): implement
-      // optional.value = [...step4.attributes.optional]; // TODO(fpion): implement
-      extra.value = [...step4.attributes.extra];
+    index = mandatory.value.findIndex(({ attribute }) => attribute === step4.attributes.worst);
+    if (index >= 0) {
+      const attribute: MandatoryAttribute = { ...mandatory.value[index], selected: "worst" };
+      mandatory.value.splice(index, 1, attribute);
     }
-  } catch (e: unknown) {
-    console.warn(e);
-  } // TODO(fpion): remove try..catch
+
+    step4.attributes.optional.forEach((attribute) => {
+      const index: number = optional.value.findIndex((optional) => optional.attribute === attribute && !optional.selected);
+      if (index >= 0) {
+        const attribute: OptionalAttribute = { ...optional.value[index], selected: true };
+        optional.value.splice(index, 1, attribute);
+      }
+    });
+
+    extra.value = [...step4.attributes.extra];
+  }
 });
 </script>
 
