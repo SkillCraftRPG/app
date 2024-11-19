@@ -31,11 +31,26 @@
       "select": "Vous devez sélectionner un pire attribut."
     }
   },
+  "background": {
+    "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence."
+  },
+  "caste": {
+    "invalid": {
+      "skill": "Aucune compétence n’est associée à la caste sélectionnée.",
+      "talent": "Il n’existe aucun talent associé à la compétence de la caste sélectionnée."
+    }
+  },
   "create": "Création de personnage",
   "customizations": {
     "select": {
       "Disability": "Vous devez sélectionner {n} handicap supplémentaire. | Vous devez sélectionner {n} handicaps supplémentaires.",
       "Gift": "Vous devez sélectionner {n} don supplémentaire. | Vous devez sélectionner {n} dons supplémentaires"
+    }
+  },
+  "education": {
+    "invalid": {
+      "skill": "Aucune compétence n’est associée à l’éducation sélectionnée.",
+      "talent": "Il n’existe aucun talent associé à la compétence de l’éducation sélectionnée."
     }
   },
   "empty": "Cette liste est vide.",

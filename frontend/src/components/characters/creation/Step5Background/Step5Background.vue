@@ -14,8 +14,12 @@ import SkillSelect from "@/components/game/SkillSelect.vue";
 import type { CasteModel } from "@/types/castes";
 import type { EducationModel } from "@/types/educations";
 import type { ItemModel } from "@/types/items";
+import type { SearchResults } from "@/types/search";
+import type { SearchTalentsPayload, TalentModel } from "@/types/talents";
+import type { Skill } from "@/types/game";
 import type { Step5 } from "@/types/characters";
 import { roll } from "@/helpers/gameUtils";
+import { searchTalents } from "@/api/talents";
 import { useCharacterStore } from "@/stores/character";
 
 const character = useCharacterStore();
@@ -25,12 +29,16 @@ const caste = ref<CasteModel>();
 const education = ref<EducationModel>();
 const item = ref<ItemModel>();
 const quantity = ref<number>(0);
+const talents = ref<Map<Skill, TalentModel>>(new Map<Skill, TalentModel>());
 
+const isCasteValid = computed<boolean>(() => (caste.value?.skill ? talents.value.has(caste.value.skill) : false));
+const isCompleted = computed<boolean>(() => isCasteValid.value && isEducationValid.value && caste.value?.skill !== education.value?.skill);
+const isEducationValid = computed<boolean>(() => (education.value?.skill ? talents.value.has(education.value.skill) : false));
 const startingWealth = computed<string | undefined>(() =>
   caste.value?.wealthRoll && education.value?.wealthMultiplier ? [caste.value.wealthRoll, education.value.wealthMultiplier].join(" × ") : undefined,
 );
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "error", value: unknown): void;
 }>();
 
@@ -54,13 +62,32 @@ const onSubmit = handleSubmit(() => {
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
   const step5: Step5 | undefined = character.creation.step5;
   if (step5) {
     caste.value = step5.caste;
     education.value = step5.education;
     item.value = step5.item;
     quantity.value = step5.quantity;
+  }
+  try {
+    const payload: SearchTalentsPayload = {
+      hasSkill: true,
+      ids: [],
+      search: { terms: [], operator: "And" },
+      tier: { values: [0], operator: "eq" },
+      sort: [],
+      skip: 0,
+      limit: 0,
+    };
+    const results: SearchResults<TalentModel> = await searchTalents(payload);
+    results.items.forEach((talent) => {
+      if (talent.skill) {
+        talents.value.set(talent.skill, talent);
+      }
+    });
+  } catch (e: unknown) {
+    emit("error", e);
   }
 });
 </script>
@@ -76,14 +103,23 @@ onMounted(() => {
       </div>
       <template v-if="caste">
         <MarkdownText v-if="caste.description" :text="caste.description" />
-        <CasteDetail :caste="caste" />
+        <CasteDetail v-if="caste.traits.length > 0" :caste="caste" />
+        <p v-if="!isCasteValid" class="text-danger">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t(caste.skill ? "characters.caste.invalid.talent" : "characters.caste.invalid.skill") }}
+        </p>
       </template>
       <h5>{{ t("educations.select.label") }}</h5>
       <div class="row">
         <EducationSelect class="col" :model-value="education?.id" required @selected="education = $event" />
         <SkillSelect v-if="education?.skill" class="col" disabled id="education-skill" :model-value="education?.skill" validation="server" />
       </div>
-      <MarkdownText v-if="education?.description" :text="education.description" />
+      <template v-if="education">
+        <MarkdownText v-if="education.description" :text="education.description" />
+        <p v-if="!isEducationValid" class="text-danger">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" />
+          {{ t(education.skill ? "characters.education.invalid.talent" : "characters.education.invalid.skill") }}
+        </p>
+      </template>
       <template v-if="caste && education">
         <h5>{{ t("game.startingWealth") }}</h5>
         <div class="row">
@@ -94,9 +130,12 @@ onMounted(() => {
             </template>
           </QuantityInput>
         </div>
+        <p v-if="caste.skill === education.skill" class="text-danger">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.background.invalid") }}
+        </p>
       </template>
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
-      <TarButton class="ms-1" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
+      <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
 </template>

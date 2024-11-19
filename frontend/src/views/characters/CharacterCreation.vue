@@ -48,14 +48,14 @@ async function onComplete(): Promise<void> {
 
 /* TODO(fpion): exceptions
  * (✅) AspectsNotFoundException
- * ( ) CasteHasNoSkillTalentException
+ * (✅) CasteHasNoSkillTalentException
  * (✅) CasteNotFoundException
  * (✅) CustomizationsCannotIncludePersonalityGiftException
  * (✅) CustomizationsNotFoundException
- * ( ) EducationHasNoSkillTalentException
+ * (✅) EducationHasNoSkillTalentException
  * (✅) EducationNotFoundException
  * (✅) InvalidAspectAttributeSelectionException
- * ( ) InvalidCasteEducationSelectionException
+ * (✅) InvalidCasteEducationSelectionException
  * (✅) InvalidCharacterCustomizationsException
  * (✅) InvalidCharacterLineageException
  * (✅) InvalidExtraAttributesException

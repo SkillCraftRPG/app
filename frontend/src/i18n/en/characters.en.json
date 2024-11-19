@@ -31,11 +31,26 @@
       "select": "You must select one worst attribute."
     }
   },
+  "background": {
+    "invalid": "The selected caste and education cannot be associated to the same skill."
+  },
+  "caste": {
+    "invalid": {
+      "skill": "There is not skill associated to the selected caste.",
+      "talent": "There is no talent associated to the caste's skill."
+    }
+  },
   "create": "Create Character",
   "customizations": {
     "select": {
       "Disability": "You must select {n} additional disability. | You must select {n} additional disabilities.",
       "Gift": "You must select {n} additional gift. | You must select {n} additional gifts."
+    }
+  },
+  "education": {
+    "invalid": {
+      "skill": "There is not skill associated to the selected education.",
+      "talent": "There is no talent associated to the education's skill."
     }
   },
   "empty": "This list is empty.",
