@@ -41,6 +41,7 @@
     }
   },
   "create": "Création de personnage",
+  "created": "Le personnage a été créé.",
   "customizations": {
     "select": {
       "Disability": "Vous devez sélectionner {n} handicap supplémentaire. | Vous devez sélectionner {n} handicaps supplémentaires.",

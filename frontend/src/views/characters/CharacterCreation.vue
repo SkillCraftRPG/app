@@ -11,6 +11,7 @@ import Step3Aspects from "@/components/characters/creation/Step3Aspects/Step3Asp
 import Step4Attributes from "@/components/characters/creation/Step4Attributes/Step4Attributes.vue";
 import Step5Background from "@/components/characters/creation/Step5Background/Step5Background.vue";
 import Step6Talents from "@/components/characters/creation/Step6Talents/Step6Talents.vue";
+import type { CharacterModel, CreateCharacterPayload } from "@/types/characters";
 import { createCharacter } from "@/api/characters";
 import { handleErrorKey } from "@/inject/App";
 import { useCharacterStore } from "@/stores/character";
@@ -31,13 +32,31 @@ function onAbandon(): void {
 }
 
 async function onComplete(): Promise<void> {
-  if (!isSubmitting.value) {
+  const { step1, step2, step3, step4, step5, step6 } = character.creation;
+  if (!isSubmitting.value && step1 && step2 && step3 && step4 && step5 && step6) {
     isSubmitting.value = true;
     try {
-      // TODO(fpion): create payload from character.creation
-      // TODO(fpion): POST /characters
-      // TODO(fpion): show success toast
-      // TODO(fpion): redirect to character edit
+      const payload: CreateCharacterPayload = {
+        name: step1.name,
+        player: step1.player,
+        lineageId: step1.nation?.id ?? step1.species.id,
+        height: step1.height,
+        weight: step1.weight,
+        age: step1.age,
+        languageIds: step1.languages.map(({ id }) => id),
+        personalityId: step2.personality.id,
+        customizationIds: step2.customizations.map(({ id }) => id),
+        aspectIds: step3.aspects.map(({ id }) => id),
+        attributes: step4.attributes,
+        casteId: step5.caste.id,
+        educationId: step5.education.id,
+        talentIds: step6.talents.map(({ id }) => id),
+        startingWealth: step5.item && step5.quantity > 0 ? { itemId: step5.item.id, quantity: step5.quantity } : undefined,
+      };
+      const created: CharacterModel = await createCharacter(payload);
+      character.reset();
+      toasts.success("characters.created");
+      router.push({ name: "CharacterEdit", params: { id: created.id } });
     } catch (e: unknown) {
       handleError(e);
     } finally {
@@ -57,6 +76,6 @@ async function onComplete(): Promise<void> {
     <Step3Aspects v-if="character.step === 3" @error="handleError" />
     <Step4Attributes v-if="character.step === 4" @error="handleError" />
     <Step5Background v-if="character.step === 5" @error="handleError" />
-    <Step6Talents v-if="character.step === 6" @complete="onComplete" @error="handleError" />
+    <Step6Talents v-if="character.step === 6" :loading="isSubmitting" @complete="onComplete" @error="handleError" />
   </main>
 </template>

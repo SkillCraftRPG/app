@@ -175,7 +175,7 @@ async function setSpecies(value?: LineageModel): Promise<void> {
 }
 
 function onAbandon(): void {
-  character.goBack();
+  character.reset();
   emit("abandon");
 }
 
@@ -193,6 +193,7 @@ const onSubmit = handleSubmit(() => {
       languages: languages.value,
     };
     character.setStep1(payload);
+    character.next();
   }
 });
 

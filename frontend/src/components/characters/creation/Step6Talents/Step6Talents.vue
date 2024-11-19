@@ -16,6 +16,10 @@ import { useCharacterStore } from "@/stores/character";
 const character = useCharacterStore();
 const { t } = useI18n();
 
+defineProps<{
+  loading?: boolean | string;
+}>();
+
 const backgroundTalents = ref<TalentModel[]>([]);
 const talent = ref<TalentModel>();
 const talents = ref<TalentModel[]>([]);
@@ -117,8 +121,16 @@ onMounted(async () => {
           <TalentCard remove :talent="talent" view @removed="removeTalent(talent)" />
         </div>
       </div>
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
-      <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-plus" :text="t('actions.create')" type="submit" variant="success" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.back()" />
+      <TarButton
+        class="ms-1"
+        :disabled="!isCompleted || loading"
+        icon="fas fa-plus"
+        :loading="loading"
+        :text="t('actions.create')"
+        type="submit"
+        variant="success"
+      />
     </form>
   </div>
 </template>

@@ -41,6 +41,7 @@
     }
   },
   "create": "Create Character",
+  "created": "The character has been created.",
   "customizations": {
     "select": {
       "Disability": "You must select {n} additional disability. | You must select {n} additional disabilities.",

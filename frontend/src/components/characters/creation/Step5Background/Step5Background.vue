@@ -59,6 +59,7 @@ const onSubmit = handleSubmit(() => {
       quantity: quantity.value,
     };
     character.setStep5(payload);
+    character.next();
   }
 });
 
@@ -134,7 +135,7 @@ onMounted(async () => {
           <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.background.invalid") }}
         </p>
       </template>
-      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
+      <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.back()" />
       <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
