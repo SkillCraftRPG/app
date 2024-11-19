@@ -18,8 +18,8 @@ internal class CasteGraphType : AggregateGraphType<CasteModel>
     Field(x => x.WealthRoll)
       .Description("The starting wealth roll of characters in this caste.");
 
-    Field(x => x.Traits, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<TraitGraphType>>>))
-      .Description("The traits granted to characters in this caste.");
+    Field(x => x.Features, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<FeatureGraphType>>>))
+      .Description("The features granted to characters in this caste.");
 
     Field(x => x.World, type: typeof(NonNullGraphType<WorldGraphType>))
       .Description("The world in which the caste resides.");

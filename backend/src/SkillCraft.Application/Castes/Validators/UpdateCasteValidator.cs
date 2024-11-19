@@ -14,6 +14,6 @@ internal class UpdateCasteValidator : AbstractValidator<UpdateCastePayload>
     When(x => x.Skill?.Value != null, () => RuleFor(x => x.Skill!.Value).IsInEnum());
     When(x => !string.IsNullOrWhiteSpace(x.WealthRoll?.Value), () => RuleFor(x => x.WealthRoll!.Value!).Roll());
 
-    RuleForEach(x => x.Traits).SetValidator(new UpdateTraitValidator());
+    RuleForEach(x => x.Features).SetValidator(new UpdateFeatureValidator());
   }
 }

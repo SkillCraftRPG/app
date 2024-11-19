@@ -8,18 +8,18 @@ public class CasteTests
 {
   private readonly Caste _caste = new(WorldId.NewId(), new Name("Amuseur"), UserId.NewId());
 
-  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when removing an empty trait ID.")]
-  public void It_should_throw_ArgumentOutOfRangeException_when_removing_an_empty_trait_Id()
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when removing an empty feature ID.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_removing_an_empty_feature_Id()
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _caste.RemoveTrait(Guid.Empty));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _caste.RemoveFeature(Guid.Empty));
     Assert.Equal("id", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting an empty trait ID.")]
-  public void It_should_throw_ArgumentOutOfRangeException_when_setting_an_empty_trait_Id()
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting an empty feature ID.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_an_empty_feature_Id()
   {
-    Trait trait = new(new Name("Vagabond"), Description: null);
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _caste.SetTrait(Guid.Empty, trait));
+    Feature feature = new(new Name("Vagabond"), Description: null);
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _caste.SetFeature(Guid.Empty, feature));
     Assert.Equal("id", exception.ParamName);
   }
 

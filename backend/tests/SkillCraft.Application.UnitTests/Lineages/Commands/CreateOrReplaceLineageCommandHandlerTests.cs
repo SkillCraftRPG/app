@@ -7,7 +7,6 @@ using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Lineages;
 using SkillCraft.Domain;
-using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
 
@@ -71,7 +70,7 @@ public class CreateOrReplaceLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description != null && y.Lineage.Description.Value == payload.Description.Trim()
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Features.AreEqualTo(payload.Features)
+      && y.Lineage.Traits.AreEqualTo(payload.Traits)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)
@@ -87,10 +86,10 @@ public class CreateOrReplaceLineageCommandHandlerTests
     {
       Description = "    ",
       Attributes = new() { Extra = 2 },
-      Features =
+      Traits =
       [
-        new FeaturePayload("Apprentissage accéléré.") { Description = "Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.)." },
-        new FeaturePayload("Versatilité.") { Description = "Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence." }
+        new TraitPayload("Apprentissage accéléré.") { Description = "Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.)." },
+        new TraitPayload("Versatilité.") { Description = "Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence." }
       ],
       Languages = new() { Extra = 1 },
       Names = new() { Text = "les humains portent généralement un prénom et un nom de famille." },
@@ -122,7 +121,7 @@ public class CreateOrReplaceLineageCommandHandlerTests
       && y.Lineage.ParentId == null
       && y.Lineage.Name.Value == payload.Name.Trim() && y.Lineage.Description == null
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Features.AreEqualTo(payload.Features)
+      && y.Lineage.Traits.AreEqualTo(payload.Traits)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)
@@ -142,10 +141,10 @@ public class CreateOrReplaceLineageCommandHandlerTests
     {
       Description = "  Les Ashtavrins sont des humanoïdes similaires aux humains. […]  ",
       Attributes = new() { Presence = 1, Spirit = 1, Extra = 1 },
-      Features =
+      Traits =
       [
-        new FeaturePayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
-        new FeaturePayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
+        new TraitPayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
+        new TraitPayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
       ],
       Languages = new() { Ids = [], Extra = 1 },
       Names = new()
@@ -178,7 +177,7 @@ public class CreateOrReplaceLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description != null && y.Lineage.Description.Value == payload.Description.CleanTrim()
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Features.AreEqualTo(payload.Features)
+      && y.Lineage.Traits.AreEqualTo(payload.Traits)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)
@@ -278,10 +277,10 @@ public class CreateOrReplaceLineageCommandHandlerTests
     {
       Description = "    ",
       Attributes = new() { Presence = 1, Spirit = 1, Extra = 1 },
-      Features =
+      Traits =
       [
-        new FeaturePayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
-        new FeaturePayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
+        new TraitPayload("Double psyché") { Description = "Le personnage acquiert les capacités suivantes. […]" },
+        new TraitPayload("Lien psychique") { Description = "Par une action, le personnage peut créer un lien télépathique avec une créature qu’il peut voir et située à 18 mètres (12 cases) ou moins de sa position. […]" }
       ],
       Languages = new() { Ids = [], Extra = 1 },
       Names = new()
@@ -314,7 +313,7 @@ public class CreateOrReplaceLineageCommandHandlerTests
       && y.Lineage.Name.Value == payload.Name.Trim()
       && y.Lineage.Description == description
       && y.Lineage.Attributes.AreEqualTo(payload.Attributes)
-      && y.Lineage.Features.AreEqualTo(payload.Features)
+      && y.Lineage.Traits.AreEqualTo(payload.Traits)
       && y.Lineage.Languages.AreEqualTo(payload.Languages)
       && y.Lineage.Names.AreEqualTo(payload.Names)
       && y.Lineage.Speeds.AreEqualTo(payload.Speeds)

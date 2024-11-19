@@ -30,8 +30,8 @@ public class CreateOrReplaceCasteCommandHandlerTests
     _handler = new(_casteQuerier.Object, _casteRepository.Object, _permissionService.Object, _sender.Object);
 
     _caste = new(_world.Id, new Name("artisan"), _world.OwnerId);
-    _caste.AddTrait(new Trait(new Name("professionnel"), Description: null));
-    _caste.AddTrait(new Trait(new Name("sujet"), Description: null));
+    _caste.AddFeature(new Feature(new Name("professionnel"), Description: null));
+    _caste.AddFeature(new Feature(new Name("sujet"), Description: null));
     _caste.Update(_world.OwnerId);
     _casteRepository.Setup(x => x.LoadAsync(_caste.Id, _cancellationToken)).ReturnsAsync(_caste);
 
@@ -49,11 +49,11 @@ public class CreateOrReplaceCasteCommandHandlerTests
       Skill = Skill.Craft,
       WealthRoll = "8d6"
     };
-    payload.Traits.Add(new TraitPayload("Professionnel")
+    payload.Features.Add(new FeaturePayload("Professionnel")
     {
       Description = "Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."
     });
-    payload.Traits.Add(new TraitPayload("Sujet")
+    payload.Features.Add(new FeaturePayload("Sujet")
     {
       Id = Guid.NewGuid(),
       Description = "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
@@ -75,9 +75,9 @@ public class CreateOrReplaceCasteCommandHandlerTests
         && y.Caste.Description == null
         && y.Caste.Skill == payload.Skill
         && y.Caste.WealthRoll != null && y.Caste.WealthRoll.Value == payload.WealthRoll
-        && y.Caste.Traits.Count == payload.Traits.Count
-        && payload.Traits.All(t => (t.Id == null || y.Caste.Traits.ContainsKey(t.Id.Value))
-          && y.Caste.Traits.Values.Any(v => v.Name.Value == t.Name && v.Description != null && v.Description.Value == t.Description))),
+        && y.Caste.Features.Count == payload.Features.Count
+        && payload.Features.All(t => (t.Id == null || y.Caste.Features.ContainsKey(t.Id.Value))
+          && y.Caste.Features.Values.Any(v => v.Name.Value == t.Name && v.Description != null && v.Description.Value == t.Description))),
       _cancellationToken), Times.Once);
   }
 
@@ -90,11 +90,11 @@ public class CreateOrReplaceCasteCommandHandlerTests
       Skill = Skill.Craft,
       WealthRoll = "8d6"
     };
-    payload.Traits.Add(new TraitPayload("Professionnel")
+    payload.Features.Add(new FeaturePayload("Professionnel")
     {
       Description = "Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."
     });
-    payload.Traits.Add(new TraitPayload("Sujet")
+    payload.Features.Add(new FeaturePayload("Sujet")
     {
       Id = Guid.NewGuid(),
       Description = "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
@@ -118,9 +118,9 @@ public class CreateOrReplaceCasteCommandHandlerTests
         && y.Caste.Description == null
         && y.Caste.Skill == payload.Skill
         && y.Caste.WealthRoll != null && y.Caste.WealthRoll.Value == payload.WealthRoll
-        && y.Caste.Traits.Count == payload.Traits.Count
-        && payload.Traits.All(t => (t.Id == null || y.Caste.Traits.ContainsKey(t.Id.Value))
-          && y.Caste.Traits.Values.Any(v => v.Name.Value == t.Name && v.Description != null && v.Description.Value == t.Description))),
+        && y.Caste.Features.Count == payload.Features.Count
+        && payload.Features.All(t => (t.Id == null || y.Caste.Features.ContainsKey(t.Id.Value))
+          && y.Caste.Features.Values.Any(v => v.Name.Value == t.Name && v.Description != null && v.Description.Value == t.Description))),
       _cancellationToken), Times.Once);
   }
 
@@ -159,17 +159,17 @@ public class CreateOrReplaceCasteCommandHandlerTests
       Skill = _caste.Skill,
       WealthRoll = _caste.WealthRoll
     };
-    foreach (KeyValuePair<Guid, Trait> pair in _caste.Traits)
+    foreach (KeyValuePair<Guid, Feature> pair in _caste.Features)
     {
-      reference.SetTrait(pair.Key, pair.Value);
+      reference.SetFeature(pair.Key, pair.Value);
     }
     reference.Update(_world.OwnerId);
     _casteRepository.Setup(x => x.LoadAsync(reference.Id, reference.Version, _cancellationToken)).ReturnsAsync(reference);
 
     Description description = new("L’artisan est un expert d’un procédé de transformation des matières brutes. Il peut être un boulanger, un forgeron, un orfèvre, un tisserand ou pratiquer tout genre de profession œuvrant dans la transformation des matières brutes.");
     _caste.Description = description;
-    Trait trait = new(new Name("Professionnel"), new Description("Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."));
-    _caste.AddTrait(trait);
+    Feature feature = new(new Name("Professionnel"), new Description("Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."));
+    _caste.AddFeature(feature);
     _caste.Update(_world.OwnerId);
 
     CreateOrReplaceCastePayload payload = new(" Artisan ")
@@ -178,9 +178,9 @@ public class CreateOrReplaceCasteCommandHandlerTests
       Skill = Skill.Craft,
       WealthRoll = "8d6"
     };
-    payload.Traits.Add(new TraitPayload(" Sujet ")
+    payload.Features.Add(new FeaturePayload(" Sujet ")
     {
-      Id = _caste.Traits.Single(x => x.Value.Name.Value == "sujet").Key,
+      Id = _caste.Features.Single(x => x.Value.Name.Value == "sujet").Key,
       Description = "  Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale.  "
     });
 
@@ -202,10 +202,10 @@ public class CreateOrReplaceCasteCommandHandlerTests
         && y.Caste.Description == description
         && y.Caste.Skill == payload.Skill
         && y.Caste.WealthRoll != null && y.Caste.WealthRoll.Value == payload.WealthRoll
-        && y.Caste.Traits.Count == 2
-        && payload.Traits.All(t => (t.Id == null || y.Caste.Traits.ContainsKey(t.Id.Value))
-          && y.Caste.Traits.Values.Any(v => v.Name.Value == t.Name.Trim() && v.Description != null && t.Description != null && v.Description.Value == t.Description.Trim()))
-        && y.Caste.Traits.Values.Any(t => t.Equals(trait))),
+        && y.Caste.Features.Count == 2
+        && payload.Features.All(t => (t.Id == null || y.Caste.Features.ContainsKey(t.Id.Value))
+          && y.Caste.Features.Values.Any(v => v.Name.Value == t.Name.Trim() && v.Description != null && t.Description != null && v.Description.Value == t.Description.Trim()))
+        && y.Caste.Features.Values.Any(t => t.Equals(feature))),
       _cancellationToken), Times.Once);
   }
 }

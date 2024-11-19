@@ -1,0 +1,204 @@
+﻿[
+  {
+    "Id": "cbb15145-5193-444f-9fc5-27b4819ddb01",
+    "ParentId": null,
+    "Name": "Humain",
+    "Description": "Les humains représentent le commun des mortels. Répandus sur toute la surface du monde, ils s’adaptent au climat des territoires sur lesquels ils s’installent. Leur apparence physique et leurs traits psychologiques varient grandement en fonction de leur habitat et de leurs traditions. Leur capacité d’apprentissage constitue une caractéristique qui leur est unique et qui surpasse celle des autres espèces.",
+    "Attributes": {
+      "Agility": 0,
+      "Coordination": 0,
+      "Intellect": 0,
+      "Presence": 0,
+      "Sensitivity": 0,
+      "Spirit": 0,
+      "Vigor": 0,
+      "Extra": 2
+    },
+    "Traits": [
+      {
+        "Id": "bea0920c-f875-4e73-9a15-55edda314dbc",
+        "Name": "Apprentissage accéléré",
+        "Description": "Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.)."
+      },
+      {
+        "Id": "674b7325-907b-459a-86a7-b8a45d5c98c6",
+        "Name": "Versatilité",
+        "Description": "Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence."
+      }
+    ],
+    "Languages": {
+      "Ids": [],
+      "Extra": 1,
+      "Text": null
+    },
+    "Names": {
+      "Text": "Les humains portent généralement un prénom et un nom de famille.",
+      "Family": [],
+      "Female": [],
+      "Male": [],
+      "Unisex": [],
+      "Custom": []
+    },
+    "Speeds": {
+      "Walk": 6,
+      "Climb": 0,
+      "Swim": 0,
+      "Fly": 0,
+      "Hover": 0,
+      "Burrow": 0
+    },
+    "Size": {
+      "Category": "Medium",
+      "Roll": "140+2d20"
+    },
+    "Weight": {
+      "Starved": "11+1d4",
+      "Skinny": "15+1d4",
+      "Normal": "19+1d6",
+      "Overweight": "25+1d6",
+      "Obese": "31+1d10"
+    },
+    "Ages": {
+      "Adolescent": 8,
+      "Adult": 15,
+      "Mature": 21,
+      "Venerable": 35
+    }
+  },
+  {
+    "Id": "536628c2-a4ac-40b5-9d8e-48822f13eb16",
+    "ParentId": "cbb15145-5193-444f-9fc5-27b4819ddb01",
+    "Name": "Daéronais",
+    "Description": "Les Daéronais peuplent le Sud de l’Ouespéro, en bordure de la mer Mésienne. Ils ont adopté la culture, les traditions et le mode de vie des Haut-Elfes, vivant en harmonie avec la nature et prenant soin de celle-ci. On les décrit comme étant de taille moyenne, avec un teint, des yeux et des cheveux pâles. Ils savent tirer le meilleur parti de la nature, que cela soit au combat ou pour le commerce.",
+    "Languages": {
+      "Ids": [ "22555040-9008-486d-8893-3024d86e38e2" ],
+      "Extra": 0,
+      "Text": null
+    },
+    "Names": {
+      "Text": "Les Daéronais portent les mêmes noms que les Elfes sylvains.",
+      "Family": [],
+      "Female": [],
+      "Male": [],
+      "Unisex": [],
+      "Custom": []
+    }
+  },
+  {
+    "Id": "bb0dd83b-0bf6-4f46-9e0c-8901dfba1d30",
+    "ParentId": "cbb15145-5193-444f-9fc5-27b4819ddb01",
+    "Name": "Orrin",
+    "Description": "L’origine noble des Orrins remonte au peuple des Thronopoi, originaire du Derebon dans l’Ancien-Monde. Ils habitent l’Orrinie, un pays situé dans une péninsule montagnarde au Sud de l’Ouespéro, entourée par la mer Aspidée et la mer Mésienne. Leur culture guerrière, architecturale et artistique a le potentiel d’être exportée dans tous les confins de l’Ouespéro. Souvent en proie à des luttes internes et déchirantes, ils sont divisés en plusieurs entités géopolitiques et États croupions. Ils sont décrits comme étant de petite taille, avec des yeux et cheveux foncés.",
+    "Languages": {
+      "Ids": [ "1ea92dc2-662a-43db-8f18-ee7de8e55309" ],
+      "Extra": 0,
+      "Text": null
+    },
+    "Names": {
+      "Text": null,
+      "Family": [ "Aetos", "Bringas", "Condos", "Galanis", "Hondros", "Komnena", "Lykaios", "Maleina", "Sideris", "Xiphilinos" ],
+      "Female": [ "Alexandra", "Ariadnh", "Constantina", "Eritha", "Irene", "Karpathia", "Korinsia", "Poulxeria", "Sophia", "Theodora" ],
+      "Male": [ "Amphimedes", "Demetrios", "Ekhinos", "Glaukos", "Heracles", "Klymenos", "Orestes", "Photios", "Radamanqus", "Valens" ],
+      "Unisex": [],
+      "Custom": []
+    }
+  },
+  {
+    "Id": "ea3ef9b2-394b-459b-91df-e02198d3681c",
+    "ParentId": "cbb15145-5193-444f-9fc5-27b4819ddb01",
+    "Name": "Sophithéon",
+    "Description": "Les Sophithéons partagent leur origine avec les Orrins. On dit d’eux qu’ils sont le miroir de la civilisation orrinique, tant sur leur apparence physique qu’au plan de leurs coutumes et de leurs valeurs. Ils sont établis dans une péninsule montagnarde au Sud de l’Ouespéro, situés entre les Thrixes au Nord et les Orrins au Sud. Ils se distinguent des Orrins notamment pour leur système monarchique opposé à la démocratie orrinique, leur culture accordant plus d’importance au militarisme et moins aux arts, ainsi que pour leur dialecte et leurs pratiques religieuses.",
+    "Languages": {
+      "Ids": [ "1ea92dc2-662a-43db-8f18-ee7de8e55309" ],
+      "Extra": 0,
+      "Text": null
+    },
+    "Names": {
+      "Text": "Les Sophithéons portent les mêmes prénoms que les Orrins. En revanche, ils ne portent pas de nom de famille. Ils adoptent plutôt un surnom simple divisé en deux parties. La seconde représente une caractéristique de l’individu, par exemple sa profession ou sa région natale. La première partie est un déterminant accordé avec la seconde partie. Par exemple, pour une caractéristique, la Grande, le Chauve ; pour une profession, le Forgeron, la Tisserande ; pour une région natale, du Ponton, de la Rivière, de Skotúrio.",
+      "Family": [],
+      "Female": [],
+      "Male": [],
+      "Unisex": [],
+      "Custom": [
+        {
+          "Key": "Surnoms féminins",
+          "Values": [ "la Grande", "la Tisserande" ]
+        },
+        {
+          "Key": "Surnoms masculins",
+          "Values": [ "le Chauve", "le Forgeron" ]
+        },
+        {
+          "Key": "Surnoms unisexes",
+          "Values": [ "de Skotúrio", "de la Rivière", "du Ponton" ]
+        }
+      ]
+    }
+  },
+  {
+    "Id": "795c3019-520d-4251-84e0-949bd831dcbb",
+    "ParentId": null,
+    "Name": "Vodyanoi",
+    "Description": "Les Vodyanoy (singulier Vodyanoi) sont des hommes-animaux, hybrides entre humains et crapauds. Leur mode de vie non conventionnel, dû à leur habitat marécageux, explique leur crainte envers les étrangers et le fait qu’ils leur accordent difficilement leur confiance. Dans un environnement aquatique, ils sont de redoutables adversaires et s’adonnent à de dangereuses joutes de lutte. Par ailleurs, ce sport extrême leur a valu leur réputation, selon laquelle ils attirent les voyageurs dans les marais afin de les noyer.",
+    "Attributes": {
+      "Agility": 0,
+      "Coordination": 0,
+      "Intellect": 0,
+      "Presence": 0,
+      "Sensitivity": 1,
+      "Spirit": 1,
+      "Vigor": 1,
+      "Extra": 0
+    },
+    "Traits": [
+      {
+        "Id": "52a378a0-f778-4c08-a050-c696c4186779",
+        "Name": "Habitat marécageux",
+        "Description": "Le personnage se voit conférer l’avantage à ses jets de sauvegarde contre les effets et pouvoirs de poisons. Il est également résistant aux points de dégâts de poison, et son seuil de tolérance à l’alcool augmente de 1. Il est capable de communiquer des idées simples aux amphibiens."
+      },
+      {
+        "Id": "3c42edd7-de11-4c03-affb-8afa37dde7bf",
+        "Name": "Lutteur amphibien",
+        "Description": "Le personnage peut respirer hors de l’eau et sous l’eau. Il possède également une vitesse de nage égale à sa vitesse de marche. En combat, il est considéré comme une créature aquatique. Il peut acquérir à rabais les talents <u>Athlétisme</u> et <u>Mêlée</u>."
+      }
+    ],
+    "Languages": {
+      "Ids": [ "bcbeee34-a6a5-4c79-9ada-1c4c7e86d29f" ],
+      "Extra": 1,
+      "Text": "Les Vodyanoy connaissent également le langage secret de leur espèce, qu’ils feront tout pour conserver inconnu. Il est exprimé par des sons de bouche et des signes. Lorsqu’ils parlent, ils exagèrent les sons de B, de C/K/Q et de R."
+    },
+    "Names": {
+      "Text": "Les Vodyanoy portent des noms unisexes et ne portent pas de nom de famille. Ils révèrent rarement leur vrai nom à ceux qui n’ont pas pleinement gagné leur confiance, utilisant le pseudonyme _Vodnik_ afin de se désigner.",
+      "Family": [],
+      "Female": [],
+      "Male": [],
+      "Unisex": [ "Berrik", "Dema", "Gebbal", "Kodav", "Koru", "Krilim", "Mibar", "Rarrat", "Tobbut", "Vorran" ],
+      "Custom": []
+    },
+    "Speeds": {
+      "Walk": 6,
+      "Climb": 0,
+      "Swim": 6,
+      "Fly": 0,
+      "Hover": 0,
+      "Burrow": 0
+    },
+    "Size": {
+      "Category": "Medium",
+      "Roll": "160+3d10"
+    },
+    "Weight": {
+      "Starved": "13+1d4",
+      "Skinny": "17+1d4",
+      "Normal": "21+1d6",
+      "Overweight": "27+1d8",
+      "Obese": "35+1d10"
+    },
+    "Ages": {
+      "Adolescent": 8,
+      "Adult": 15,
+      "Mature": 40,
+      "Venerable": 70
+    }
+  }
+]

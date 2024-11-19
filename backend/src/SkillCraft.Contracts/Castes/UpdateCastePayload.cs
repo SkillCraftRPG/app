@@ -8,5 +8,5 @@ public record UpdateCastePayload
   public Change<Skill?>? Skill { get; set; }
   public Change<string>? WealthRoll { get; set; }
 
-  public List<UpdateTraitPayload> Traits { get; set; } = [];
+  public List<UpdateFeaturePayload> Features { get; set; } = [];
 }

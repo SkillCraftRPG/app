@@ -7,61 +7,61 @@ import { useI18n } from "vue-i18n";
 
 import DescriptionTextarea from "../shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
-import type { TraitPayload } from "@/types/castes";
+import type { FeaturePayload } from "@/types/castes";
 
 const { t } = useI18n();
 
 const props = defineProps<{
-  trait?: TraitPayload;
+  feature?: FeaturePayload;
 }>();
 
 const description = ref<string>("");
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
 
-const hasChanges = computed<boolean>(() => name.value !== (props.trait?.name ?? "") || description.value !== (props.trait?.description ?? ""));
-const id = computed<string>(() => (props.trait ? `edit-trait-${props.trait.id ?? nanoid()}` : "create-trait"));
+const hasChanges = computed<boolean>(() => name.value !== (props.feature?.name ?? "") || description.value !== (props.feature?.description ?? ""));
+const id = computed<string>(() => (props.feature ? `edit-feature-${props.feature.id ?? nanoid()}` : "create-feature"));
 
 function hide(): void {
   modalRef.value?.hide();
 }
 
-function setModel(model?: TraitPayload): void {
+function setModel(model?: FeaturePayload): void {
   name.value = model?.name ?? "";
   description.value = model?.description ?? "";
 }
 
 const emit = defineEmits<{
-  (e: "saved", value: TraitPayload): void;
+  (e: "saved", value: FeaturePayload): void;
 }>();
 
 function onCancel(): void {
-  setModel(props.trait);
+  setModel(props.feature);
   hide();
 }
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(() => {
-  emit("saved", { id: props.trait?.id, name: name.value, description: description.value });
+  emit("saved", { id: props.feature?.id, name: name.value, description: description.value });
   onCancel();
 });
 
 watchEffect(() => {
-  const trait: TraitPayload | undefined = props.trait;
-  setModel(trait);
+  const feature: FeaturePayload | undefined = props.feature;
+  setModel(feature);
 });
 </script>
 
 <template>
   <span>
     <TarButton
-      :icon="trait ? 'fas fa-edit' : 'fas fa-plus'"
-      :text="t(trait ? 'actions.edit' : 'actions.add')"
-      :variant="trait ? 'primary' : 'success'"
+      :icon="feature ? 'fas fa-edit' : 'fas fa-plus'"
+      :text="t(feature ? 'actions.edit' : 'actions.add')"
+      :variant="feature ? 'primary' : 'success'"
       data-bs-toggle="modal"
       :data-bs-target="`#${id}`"
     />
-    <TarModal :close="t('actions.close')" :id="id" ref="modalRef" :title="t(trait ? 'castes.traits.edit' : 'castes.traits.new')">
+    <TarModal :close="t('actions.close')" :id="id" ref="modalRef" :title="t(feature ? 'castes.features.edit' : 'castes.features.new')">
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />
         <DescriptionTextarea v-model="description" />
@@ -70,11 +70,11 @@ watchEffect(() => {
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />
         <TarButton
           :disabled="isSubmitting || !hasChanges"
-          :icon="trait ? 'fas fa-edit' : 'fas fa-plus'"
+          :icon="feature ? 'fas fa-edit' : 'fas fa-plus'"
           :loading="isSubmitting"
           :status="t('loading')"
-          :text="t(trait ? 'actions.edit' : 'actions.add')"
-          :variant="trait ? 'primary' : 'success'"
+          :text="t(feature ? 'actions.edit' : 'actions.add')"
+          :variant="feature ? 'primary' : 'success'"
           @click="onSubmit"
         />
       </template>

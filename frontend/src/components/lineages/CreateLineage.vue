@@ -40,7 +40,7 @@ const onSubmit = handleSubmit(async () => {
       parentId: props.species?.id,
       name: name.value,
       attributes: { agility: 0, coordination: 0, intellect: 0, presence: 0, sensitivity: 0, spirit: 0, vigor: 0, extra: 0 },
-      features: [],
+      traits: [],
       languages: { ids: [], extra: 0 },
       names: { family: [], female: [], male: [], unisex: [], custom: [] },
       speeds: { walk: 0, climb: 0, swim: 0, fly: 0, hover: 0, burrow: 0 },

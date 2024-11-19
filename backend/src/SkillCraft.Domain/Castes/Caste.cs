@@ -72,8 +72,8 @@ public class Caste : AggregateRoot
     }
   }
 
-  private readonly Dictionary<Guid, Trait> _traits = [];
-  public IReadOnlyDictionary<Guid, Trait> Traits => _traits.AsReadOnly();
+  private readonly Dictionary<Guid, Feature> _features = [];
+  public IReadOnlyDictionary<Guid, Feature> Features => _features.AsReadOnly();
 
   public Caste() : base()
   {
@@ -88,24 +88,24 @@ public class Caste : AggregateRoot
     _name = @event.Name;
   }
 
-  public void AddTrait(Trait trait) => SetTrait(Guid.NewGuid(), trait);
-  public void RemoveTrait(Guid id)
+  public void AddFeature(Feature feature) => SetFeature(Guid.NewGuid(), feature);
+  public void RemoveFeature(Guid id)
   {
     ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
 
-    if (_traits.Remove(id))
+    if (_features.Remove(id))
     {
-      _updatedEvent.Traits[id] = null;
+      _updatedEvent.Features[id] = null;
     }
   }
-  public void SetTrait(Guid id, Trait trait)
+  public void SetFeature(Guid id, Feature feature)
   {
     ArgumentOutOfRangeException.ThrowIfEqual(id, Guid.Empty, nameof(id));
 
-    if (!_traits.TryGetValue(id, out Trait? existingTrait) || existingTrait != trait)
+    if (!_features.TryGetValue(id, out Feature? existingFeature) || existingFeature != feature)
     {
-      _traits[id] = trait;
-      _updatedEvent.Traits[id] = trait;
+      _features[id] = feature;
+      _updatedEvent.Features[id] = feature;
     }
   }
 
@@ -137,15 +137,15 @@ public class Caste : AggregateRoot
       _wealthRoll = @event.WealthRoll.Value;
     }
 
-    foreach (KeyValuePair<Guid, Trait?> trait in @event.Traits)
+    foreach (KeyValuePair<Guid, Feature?> feature in @event.Features)
     {
-      if (trait.Value == null)
+      if (feature.Value == null)
       {
-        _traits.Remove(trait.Key);
+        _features.Remove(feature.Key);
       }
       else
       {
-        _traits[trait.Key] = trait.Value;
+        _features[feature.Key] = feature.Value;
       }
     }
   }
@@ -170,8 +170,8 @@ public class Caste : AggregateRoot
     public Change<Skill?>? Skill { get; set; }
     public Change<Roll>? WealthRoll { get; set; }
 
-    public Dictionary<Guid, Trait?> Traits { get; set; } = [];
+    public Dictionary<Guid, Feature?> Features { get; set; } = [];
 
-    public bool HasChanges => Name != null || Description != null || Skill != null || WealthRoll != null || Traits.Count > 0;
+    public bool HasChanges => Name != null || Description != null || Skill != null || WealthRoll != null || Features.Count > 0;
   }
 }

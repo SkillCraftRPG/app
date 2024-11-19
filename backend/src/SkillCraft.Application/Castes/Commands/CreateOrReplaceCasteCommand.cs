@@ -88,7 +88,7 @@ internal class CreateOrReplaceCasteCommandHandler : IRequestHandler<CreateOrRepl
       WealthRoll = Roll.TryCreate(payload.WealthRoll)
     };
 
-    SetTraits(caste, caste, payload);
+    SetFeatures(caste, caste, payload);
 
     caste.Update(userId);
 
@@ -130,34 +130,34 @@ internal class CreateOrReplaceCasteCommandHandler : IRequestHandler<CreateOrRepl
       caste.WealthRoll = wealthRoll;
     }
 
-    SetTraits(caste, reference, payload);
+    SetFeatures(caste, reference, payload);
 
     caste.Update(userId);
   }
-  private static void SetTraits(Caste caste, Caste reference, CreateOrReplaceCastePayload payload)
+  private static void SetFeatures(Caste caste, Caste reference, CreateOrReplaceCastePayload payload)
   {
-    HashSet<Guid> traitIds = payload.Traits.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
-    foreach (Guid traitId in reference.Traits.Keys)
+    HashSet<Guid> featureIds = payload.Features.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToHashSet();
+    foreach (Guid featureId in reference.Features.Keys)
     {
-      if (!traitIds.Contains(traitId))
+      if (!featureIds.Contains(featureId))
       {
-        caste.RemoveTrait(traitId);
+        caste.RemoveFeature(featureId);
       }
     }
 
-    foreach (TraitPayload traitPayload in payload.Traits)
+    foreach (FeaturePayload featurePayload in payload.Features)
     {
-      Trait trait = new(new Name(traitPayload.Name), Description.TryCreate(traitPayload.Description));
-      if (traitPayload.Id.HasValue)
+      Feature feature = new(new Name(featurePayload.Name), Description.TryCreate(featurePayload.Description));
+      if (featurePayload.Id.HasValue)
       {
-        if (!reference.Traits.TryGetValue(traitPayload.Id.Value, out Trait? existingTrait) || existingTrait != trait)
+        if (!reference.Features.TryGetValue(featurePayload.Id.Value, out Feature? existingFeature) || existingFeature != feature)
         {
-          caste.SetTrait(traitPayload.Id.Value, trait);
+          caste.SetFeature(featurePayload.Id.Value, feature);
         }
       }
       else
       {
-        caste.AddTrait(trait);
+        caste.AddFeature(feature);
       }
     }
   }

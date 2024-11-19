@@ -27,7 +27,7 @@ export type CreateOrReplaceLineagePayload = {
   name: string;
   description?: string;
   attributes: AttributeBonusesModel;
-  features: TraitPayload[];
+  traits: TraitPayload[];
   languages: LanguagesPayload;
   names: NamesModel;
   speeds: SpeedsModel;
@@ -53,7 +53,7 @@ export type LineageModel = Aggregate & {
   name: string;
   description?: string;
   attributes: AttributeBonusesModel;
-  features: TraitModel[];
+  traits: TraitModel[];
   languages: LanguagesModel;
   names: NamesModel;
   speeds: SpeedsModel;

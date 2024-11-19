@@ -34,7 +34,7 @@ const onSubmit = handleSubmit(async () => {
   try {
     const payload: CreateOrReplaceCastePayload = {
       name: name.value,
-      traits: [],
+      features: [],
     };
     const caste: CasteModel = await createCaste(payload);
     emit("created", caste);

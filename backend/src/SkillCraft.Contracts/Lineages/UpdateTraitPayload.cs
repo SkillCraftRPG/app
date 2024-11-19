@@ -1,17 +1,19 @@
 ﻿namespace SkillCraft.Contracts.Lineages;
 
-public record FeaturePayload
+public record UpdateTraitPayload
 {
   public Guid? Id { get; set; }
 
   public string Name { get; set; }
   public string? Description { get; set; }
 
-  public FeaturePayload() : this(string.Empty)
+  public bool Remove { get; set; }
+
+  public UpdateTraitPayload() : this(string.Empty)
   {
   }
 
-  public FeaturePayload(string name)
+  public UpdateTraitPayload(string name)
   {
     Name = name;
   }

@@ -47,7 +47,7 @@ const attributes = computed<string>(() => {
   }
   return bonuses.join(", ");
 });
-const traits = computed<TraitModel[]>(() => orderBy(props.lineage.features.concat(props.lineage.species?.features ?? []), "name"));
+const traits = computed<TraitModel[]>(() => orderBy(props.lineage.traits.concat(props.lineage.species?.traits ?? []), "name"));
 </script>
 
 <template>

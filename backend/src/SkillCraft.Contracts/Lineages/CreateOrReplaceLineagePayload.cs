@@ -8,7 +8,7 @@ public record CreateOrReplaceLineagePayload
   public string? Description { get; set; }
 
   public AttributeBonusesModel Attributes { get; set; }
-  public List<FeaturePayload> Features { get; set; }
+  public List<TraitPayload> Traits { get; set; }
 
   public LanguagesPayload Languages { get; set; }
   public NamesModel Names { get; set; }
@@ -27,7 +27,7 @@ public record CreateOrReplaceLineagePayload
     Name = name;
 
     Attributes = new();
-    Features = [];
+    Traits = [];
 
     Languages = new();
     Names = new();

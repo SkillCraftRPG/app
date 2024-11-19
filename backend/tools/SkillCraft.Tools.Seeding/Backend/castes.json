@@ -5,7 +5,7 @@
     "Description": "Banni par son peuple ou par choix personnel, l’exilé a recours à son instinct de survie et à sa connaissance des milieux sauvages afin de survivre à son environnement. Il garde de mauvais souvenirs de son ancienne vie et prépare aigrement sa vengeance.",
     "Skill": "Survival",
     "WealthRoll": "6d6",
-    "Traits": [
+    "Features": [
       {
         "Id": "a226f578-ff8d-4211-a29b-2099d8a629cb",
         "Name": "Rancunier",

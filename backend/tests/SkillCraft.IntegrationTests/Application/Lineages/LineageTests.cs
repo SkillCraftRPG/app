@@ -46,8 +46,8 @@ public class LineageTests : IntegrationTests
       Weight = new Weight(new Roll("11+1d4"), new Roll("15+1d4"), new Roll("19+1d6"), new Roll("26+1d6"), new Roll("32+1d10")),
       Ages = new Ages(8, 15, 21, 35)
     };
-    _humain.AddFeature(new Feature(new Name("Apprentissage accéléré"), new Description("Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.).")));
-    _humain.AddFeature(new Feature(new Name("Versatilité"), new Description("Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence.")));
+    _humain.AddTrait(new Trait(new Name("Apprentissage accéléré"), new Description("Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.).")));
+    _humain.AddTrait(new Trait(new Name("Versatilité"), new Description("Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence.")));
     _humain.Update(UserId);
 
     _vodyanoi = new Lineage(World.Id, parent: null, new Name("vodyanoi"), UserId);
@@ -123,10 +123,10 @@ public class LineageTests : IntegrationTests
         Intellect = 1,
         Extra = 1
       },
-      Features =
+      Traits =
       [
-        new FeaturePayload { Id = Guid.NewGuid(), Name = "Facultés surnaturelles" },
-        new FeaturePayload { Name = " Morsure vampirique ", Description = "  Le personnage est doté d’une paire de canines acérées. Il peut les utiliser par un test de _Mêlée_ afin d’infliger 1d4 points de dégâts perçants additionnés à sa Force. Lorsqu’il réussit une attaque en les utilisant contre une créature n’étant pas un mort-vivant ni une construction, il peut dépenser des points d’Énergie afin de bénéficier d’un des deux effets suivants. […]  " }
+        new TraitPayload { Id = Guid.NewGuid(), Name = "Facultés surnaturelles" },
+        new TraitPayload { Name = " Morsure vampirique ", Description = "  Le personnage est doté d’une paire de canines acérées. Il peut les utiliser par un test de _Mêlée_ afin d’infliger 1d4 points de dégâts perçants additionnés à sa Force. Lorsqu’il réussit une attaque en les utilisant contre une créature n’étant pas un mort-vivant ni une construction, il peut dépenser des points d’Énergie afin de bénéficier d’un des deux effets suivants. […]  " }
       ],
       Languages = new LanguagesPayload
       {
@@ -179,9 +179,9 @@ public class LineageTests : IntegrationTests
     Assert.Equal(payload.Description?.CleanTrim(), lineage.Description);
 
     Assert.Equal(payload.Attributes, lineage.Attributes);
-    Assert.Equal(2, lineage.Features.Count);
-    Assert.Contains(lineage.Features, f => f.Id == payload.Features[0].Id && f.Name == payload.Features[0].Name);
-    Assert.Contains(lineage.Features, f => f.Name == payload.Features[1].Name.Trim() && f.Description == payload.Features[1].Description?.Trim());
+    Assert.Equal(2, lineage.Traits.Count);
+    Assert.Contains(lineage.Traits, f => f.Id == payload.Traits[0].Id && f.Name == payload.Traits[0].Name);
+    Assert.Contains(lineage.Traits, f => f.Name == payload.Traits[1].Name.Trim() && f.Description == payload.Traits[1].Description?.Trim());
 
     Assert.Empty(lineage.Languages.Items);
     Assert.Equal(payload.Languages.Extra, lineage.Languages.Extra);
@@ -204,9 +204,9 @@ public class LineageTests : IntegrationTests
   [Fact(DisplayName = "It should replace an existing lineage.")]
   public async Task It_should_replace_an_existing_lineage()
   {
-    _vodyanoi.AddFeature(new Feature(new Name("Vision nocturne"), new Description("Le personnage voit dans la pénombre comme si la zone était dans la clarté à une distance de 18 mètres (12 cases). Dans l’obscurité, il ne voit qu’en teintes de gris, il ne peut donc pas distinguer les couleurs")));
-    Guid featureId = Guid.NewGuid();
-    _vodyanoi.SetFeature(featureId, new Feature(new Name("lutteur-amphibien"), Description: null));
+    _vodyanoi.AddTrait(new Trait(new Name("Vision nocturne"), new Description("Le personnage voit dans la pénombre comme si la zone était dans la clarté à une distance de 18 mètres (12 cases). Dans l’obscurité, il ne voit qu’en teintes de gris, il ne peut donc pas distinguer les couleurs")));
+    Guid traitId = Guid.NewGuid();
+    _vodyanoi.SetTrait(traitId, new Trait(new Name("lutteur-amphibien"), Description: null));
     _vodyanoi.Update(UserId);
     await _lineageRepository.SaveAsync(_vodyanoi);
 
@@ -214,7 +214,7 @@ public class LineageTests : IntegrationTests
 
     Description description = new("Les Vodyanoy (singulier Vodyanoi) sont des hommes-animaux, hybrides entre humains et crapauds. Leur mode de vie non conventionnel, dû à leur habitat marécageux, explique leur crainte envers les étrangers et le fait qu’ils leur accordent difficilement leur confiance. Dans un environnement aquatique, ils sont de redoutables adversaires et s’adonnent à de dangereuses joutes de lutte. Par ailleurs, ce sport extrême leur a valu leur réputation, selon laquelle ils attirent les voyageurs dans les marais afin de les noyer.");
     _vodyanoi.Description = description;
-    _vodyanoi.AddFeature(new Feature(new Name("Vodyanoi"), Description: null));
+    _vodyanoi.AddTrait(new Trait(new Name("Vodyanoi"), Description: null));
     _vodyanoi.Update(UserId);
     await _lineageRepository.SaveAsync(_vodyanoi);
 
@@ -228,10 +228,10 @@ public class LineageTests : IntegrationTests
         Spirit = 1,
         Vigor = 1
       },
-      Features =
+      Traits =
       [
-        new FeaturePayload { Name = " Habitat marécageux ", Description = "  Le personnage se voit conférer l’avantage à ses jets de sauvegarde contre les effets et pouvoirs de poisons. Il est également résistant aux points de dégâts de poison, et son seuil de tolérance à l’alcool augmente de 1. Il est capable de communiquer des idées simples aux amphibiens.  " },
-        new FeaturePayload { Id = featureId, Name = "Lutteur amphibien" }
+        new TraitPayload { Name = " Habitat marécageux ", Description = "  Le personnage se voit conférer l’avantage à ses jets de sauvegarde contre les effets et pouvoirs de poisons. Il est également résistant aux points de dégâts de poison, et son seuil de tolérance à l’alcool augmente de 1. Il est capable de communiquer des idées simples aux amphibiens.  " },
+        new TraitPayload { Id = traitId, Name = "Lutteur amphibien" }
       ],
       Languages = new LanguagesPayload
       {
@@ -287,10 +287,10 @@ public class LineageTests : IntegrationTests
     Assert.Equal(description.Value, lineage.Description);
 
     Assert.Equal(payload.Attributes, lineage.Attributes);
-    Assert.Equal(3, lineage.Features.Count);
-    Assert.Contains(lineage.Features, f => f.Name == payload.Features[0].Name.Trim() && f.Description == payload.Features[0].Description?.Trim());
-    Assert.Contains(lineage.Features, f => f.Id == payload.Features[1].Id && f.Name == payload.Features[1].Name);
-    Assert.Contains(lineage.Features, f => f.Name == "Vodyanoi");
+    Assert.Equal(3, lineage.Traits.Count);
+    Assert.Contains(lineage.Traits, f => f.Name == payload.Traits[0].Name.Trim() && f.Description == payload.Traits[0].Description?.Trim());
+    Assert.Contains(lineage.Traits, f => f.Id == payload.Traits[1].Id && f.Name == payload.Traits[1].Name);
+    Assert.Contains(lineage.Traits, f => f.Name == "Vodyanoi");
 
     Assert.Equal(payload.Languages.Ids, lineage.Languages.Items.Select(language => language.Id));
     Assert.Equal(payload.Languages.Extra, lineage.Languages.Extra);
@@ -429,13 +429,13 @@ public class LineageTests : IntegrationTests
     _vodyanoi.Weight = new Weight(new Roll("13+1d4"), new Roll("17+1d4"), normal: null, new Roll("27+1d8"), new Roll("35+1d10"));
     _vodyanoi.Ages = new Ages(8, 15, 40, venerable: null);
 
-    _vodyanoi.AddFeature(new Feature(new Name("Vodyanoi"), Description: null));
+    _vodyanoi.AddTrait(new Trait(new Name("Vodyanoi"), Description: null));
 
     Guid lutteurAmphibienId = Guid.NewGuid();
-    _vodyanoi.SetFeature(lutteurAmphibienId, new Feature(new Name("lutteur-amphibien"), Description: null));
+    _vodyanoi.SetTrait(lutteurAmphibienId, new Trait(new Name("lutteur-amphibien"), Description: null));
 
     Guid visionNocturneId = Guid.NewGuid();
-    _vodyanoi.SetFeature(visionNocturneId, new Feature(new Name("Vision nocturne"), Description: null));
+    _vodyanoi.SetTrait(visionNocturneId, new Trait(new Name("Vision nocturne"), Description: null));
 
     _vodyanoi.Update(UserId);
     await _lineageRepository.SaveAsync(_vodyanoi);
@@ -450,11 +450,11 @@ public class LineageTests : IntegrationTests
         Sensitivity = 1,
         Vigor = 1
       },
-      Features =
+      Traits =
       [
-        new UpdateFeaturePayload(" Habitat marécageux ") { Description = "  Le personnage se voit conférer l’avantage à ses jets de sauvegarde contre les effets et pouvoirs de poisons. Il est également résistant aux points de dégâts de poison, et son seuil de tolérance à l’alcool augmente de 1. Il est capable de communiquer des idées simples aux amphibiens.  " },
-        new UpdateFeaturePayload("Lutteur amphibien") { Id = lutteurAmphibienId },
-        new UpdateFeaturePayload("Vision nocturne") { Id = visionNocturneId, Remove = true }
+        new UpdateTraitPayload(" Habitat marécageux ") { Description = "  Le personnage se voit conférer l’avantage à ses jets de sauvegarde contre les effets et pouvoirs de poisons. Il est également résistant aux points de dégâts de poison, et son seuil de tolérance à l’alcool augmente de 1. Il est capable de communiquer des idées simples aux amphibiens.  " },
+        new UpdateTraitPayload("Lutteur amphibien") { Id = lutteurAmphibienId },
+        new UpdateTraitPayload("Vision nocturne") { Id = visionNocturneId, Remove = true }
       ],
       Languages = new UpdateLanguagesPayload
       {
@@ -500,10 +500,10 @@ public class LineageTests : IntegrationTests
     Assert.Equal(1, lineage.Attributes.Spirit);
     Assert.Equal(1, lineage.Attributes.Vigor);
 
-    Assert.Equal(3, lineage.Features.Count);
-    Assert.Contains(lineage.Features, f => f.Name == "Vodyanoi");
-    Assert.Contains(lineage.Features, f => f.Id == lutteurAmphibienId && f.Name == "Lutteur amphibien");
-    Assert.Contains(lineage.Features, f => f.Name == payload.Features.First().Name.Trim() && f.Description == payload.Features.First().Description?.Trim());
+    Assert.Equal(3, lineage.Traits.Count);
+    Assert.Contains(lineage.Traits, f => f.Name == "Vodyanoi");
+    Assert.Contains(lineage.Traits, f => f.Id == lutteurAmphibienId && f.Name == "Lutteur amphibien");
+    Assert.Contains(lineage.Traits, f => f.Name == payload.Traits.First().Name.Trim() && f.Description == payload.Traits.First().Description?.Trim());
 
     Assert.Equal(_commun.EntityId, Assert.Single(lineage.Languages.Items).Id);
     Assert.Equal(payload.Languages.Extra, lineage.Languages.Extra);

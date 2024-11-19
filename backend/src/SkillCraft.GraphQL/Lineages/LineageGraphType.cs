@@ -15,8 +15,8 @@ internal class LineageGraphType : AggregateGraphType<LineageModel>
 
     Field(x => x.Attributes, type: typeof(NonNullGraphType<AttributeBonusesGraphType>))
       .Description("The attribute bonuses granted by this lineage.");
-    Field(x => x.Features, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<FeatureGraphType>>>))
-      .Description("The features granted to characters in this lineage.");
+    Field(x => x.Traits, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<TraitGraphType>>>))
+      .Description("The traits granted to characters in this lineage.");
 
     Field(x => x.Languages, type: typeof(NonNullGraphType<LanguagesGraphType>))
       .Description("The languages spoken by this lineage.");

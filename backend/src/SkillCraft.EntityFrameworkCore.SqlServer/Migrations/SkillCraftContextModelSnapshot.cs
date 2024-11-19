@@ -150,6 +150,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Features")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
@@ -161,10 +164,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<string>("Skill")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("TraitsSerialized")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Traits");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -967,9 +966,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<string>("FamilyNames")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Features")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FemaleNames")
                         .HasColumnType("nvarchar(max)");
 
@@ -1047,6 +1043,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.Property<int>("SwimSpeed")
                         .HasColumnType("int");
+
+                    b.Property<string>("Traits")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnisexNames")
                         .HasColumnType("nvarchar(max)");

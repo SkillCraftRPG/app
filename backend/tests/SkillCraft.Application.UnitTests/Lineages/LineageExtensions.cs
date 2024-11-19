@@ -20,22 +20,22 @@ internal static class LineageExtensions
     && left.Vigor == right.Vigor
     && left.Extra == right.Extra;
 
-  public static bool AreEqualTo(this IReadOnlyDictionary<Guid, Feature> left, IEnumerable<FeaturePayload> right)
+  public static bool AreEqualTo(this IReadOnlyDictionary<Guid, Trait> left, IEnumerable<TraitPayload> right)
   {
     Assert.Equal(left.Count, right.Count());
 
-    foreach (FeaturePayload feature in right)
+    foreach (TraitPayload trait in right)
     {
-      if (feature.Id.HasValue)
+      if (trait.Id.HasValue)
       {
-        Assert.True(left.ContainsKey(feature.Id.Value));
-        Assert.Equal(feature.Name.Trim(), left[feature.Id.Value].Name.Value);
-        Assert.Equal(feature.Description?.CleanTrim(), left[feature.Id.Value].Description?.Value);
+        Assert.True(left.ContainsKey(trait.Id.Value));
+        Assert.Equal(trait.Name.Trim(), left[trait.Id.Value].Name.Value);
+        Assert.Equal(trait.Description?.CleanTrim(), left[trait.Id.Value].Description?.Value);
       }
       else
       {
-        Assert.Contains(left, x => x.Value.Name.Value == feature.Name.Trim()
-        && x.Value.Description?.Value == feature.Description?.CleanTrim());
+        Assert.Contains(left, x => x.Value.Name.Value == trait.Name.Trim()
+        && x.Value.Description?.Value == trait.Description?.CleanTrim());
       }
     }
 
