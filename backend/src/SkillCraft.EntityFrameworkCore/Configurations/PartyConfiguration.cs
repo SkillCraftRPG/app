@@ -17,7 +17,7 @@ internal class PartyConfiguration : AggregateConfiguration<PartyEntity>, IEntity
     builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
 
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
 
     builder.HasOne(x => x.World).WithMany(x => x.Parties)
       .HasPrincipalKey(x => x.WorldId).HasForeignKey(x => x.WorldId)

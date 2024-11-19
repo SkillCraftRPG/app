@@ -20,7 +20,7 @@ internal class LineageConfiguration : AggregateConfiguration<LineageEntity>, IEn
     builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
 
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.LanguagesText).HasMaxLength(Languages.MaximumLength);
     builder.Property(x => x.NamesText).HasMaxLength(Names.MaximumLength);
     builder.Property(x => x.SizeCategory).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<SizeCategory>());

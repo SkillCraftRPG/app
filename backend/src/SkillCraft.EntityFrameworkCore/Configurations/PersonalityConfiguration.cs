@@ -20,7 +20,7 @@ internal class PersonalityConfiguration : AggregateConfiguration<PersonalityEnti
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.Attribute);
 
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.Attribute).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Attribute>());
 
     builder.HasOne(x => x.Gift).WithMany(x => x.Personalities)
