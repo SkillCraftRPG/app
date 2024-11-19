@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using SkillCraft.Contracts;
+using SkillCraft.Contracts.Castes;
 using SkillCraft.Domain.Castes;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
@@ -18,26 +19,7 @@ internal class CasteEntity : AggregateEntity
   public Skill? Skill { get; private set; }
   public string? WealthRoll { get; private set; }
 
-  public Dictionary<Guid, TraitEntity> Traits { get; private set; } = [];
-  public string? TraitsSerialized
-  {
-    get => Traits.Count == 0 ? null : JsonSerializer.Serialize(Traits);
-    private set
-    {
-      Traits.Clear();
-      if (value != null)
-      {
-        Dictionary<Guid, TraitEntity>? traits = JsonSerializer.Deserialize<Dictionary<Guid, TraitEntity>>(value);
-        if (traits != null)
-        {
-          foreach (KeyValuePair<Guid, TraitEntity> trait in traits)
-          {
-            Traits[trait.Key] = trait.Value;
-          }
-        }
-      }
-    }
-  }
+  public string? Features { get; private set; }
 
   public List<CharacterEntity> Characters { get; private set; } = [];
 
@@ -65,6 +47,16 @@ internal class CasteEntity : AggregateEntity
     return actorIds.AsReadOnly();
   }
 
+  public List<FeatureModel> GetFeatures()
+  {
+    Dictionary<Guid, FeatureEntity> features = DeserializeFeatures();
+    return [.. features.Select(feature => new FeatureModel(feature.Value.Name)
+    {
+      Id = feature.Key,
+      Description = feature.Value.Description
+    }).OrderBy(x => x.Name)];
+  }
+
   public void Update(Caste.UpdatedEvent @event)
   {
     base.Update(@event);
@@ -87,16 +79,30 @@ internal class CasteEntity : AggregateEntity
       WealthRoll = @event.WealthRoll.Value?.Value;
     }
 
-    foreach (KeyValuePair<Guid, Trait?> trait in @event.Traits)
+    if (@event.Features.Count > 0)
     {
-      if (trait.Value == null)
+      SetFeatures(@event.Features);
+    }
+  }
+  private void SetFeatures(Dictionary<Guid, Feature?> features)
+  {
+    Dictionary<Guid, FeatureEntity> entities = DeserializeFeatures();
+    foreach (KeyValuePair<Guid, Feature?> feature in features)
+    {
+      if (feature.Value == null)
       {
-        Traits.Remove(trait.Key);
+        entities.Remove(feature.Key);
       }
       else
       {
-        Traits[trait.Key] = new TraitEntity(trait.Value.Name.Value, trait.Value.Description?.Value);
+        entities[feature.Key] = new FeatureEntity(feature.Value.Name.Value, feature.Value.Description?.Value);
       }
     }
+    Features = entities.Count == 0 ? null : JsonSerializer.Serialize(entities);
+  }
+
+  private Dictionary<Guid, FeatureEntity> DeserializeFeatures()
+  {
+    return (Features == null ? null : JsonSerializer.Deserialize<Dictionary<Guid, FeatureEntity>>(Features)) ?? [];
   }
 }

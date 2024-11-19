@@ -16,10 +16,10 @@ internal static class Castes
 
   public static readonly ColumnId CasteId = new(nameof(CasteEntity.CasteId), Table);
   public static readonly ColumnId Description = new(nameof(CasteEntity.Description), Table);
+  public static readonly ColumnId Features = new(nameof(CasteEntity.Features), Table);
   public static readonly ColumnId Id = new(nameof(CasteEntity.Id), Table);
   public static readonly ColumnId Name = new(nameof(CasteEntity.Name), Table);
   public static readonly ColumnId Skill = new(nameof(CasteEntity.Skill), Table);
-  public static readonly ColumnId Traits = new(nameof(CasteEntity.Traits), Table);
   public static readonly ColumnId WealthRoll = new(nameof(CasteEntity.WealthRoll), Table);
   public static readonly ColumnId WorldId = new(nameof(CasteEntity.WorldId), Table);
 }

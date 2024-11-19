@@ -25,7 +25,6 @@ internal static class Lineages
   public static readonly ColumnId ExtraAttributes = new(nameof(LineageEntity.ExtraAttributes), Table);
   public static readonly ColumnId ExtraLanguages = new(nameof(LineageEntity.ExtraLanguages), Table);
   public static readonly ColumnId FamilyNames = new(nameof(LineageEntity.FamilyNames), Table);
-  public static readonly ColumnId Features = new(nameof(LineageEntity.Features), Table);
   public static readonly ColumnId FemaleNames = new(nameof(LineageEntity.FemaleNames), Table);
   public static readonly ColumnId FlySpeed = new(nameof(LineageEntity.FlySpeed), Table);
   public static readonly ColumnId HoverSpeed = new(nameof(LineageEntity.HoverSpeed), Table);
@@ -49,6 +48,7 @@ internal static class Lineages
   public static readonly ColumnId Spirit = new(nameof(LineageEntity.Spirit), Table);
   public static readonly ColumnId StarvedRoll = new(nameof(LineageEntity.StarvedRoll), Table);
   public static readonly ColumnId SwimSpeed = new(nameof(LineageEntity.SwimSpeed), Table);
+  public static readonly ColumnId Traits = new(nameof(LineageEntity.Traits), Table);
   public static readonly ColumnId UnisexNames = new(nameof(LineageEntity.UnisexNames), Table);
   public static readonly ColumnId VenerableAge = new(nameof(LineageEntity.VenerableAge), Table);
   public static readonly ColumnId Vigor = new(nameof(LineageEntity.Vigor), Table);
