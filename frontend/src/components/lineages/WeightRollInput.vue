@@ -20,9 +20,9 @@ defineEmits<{
   <AppInput
     floating
     :id="`weight-${category}-roll`"
-    :label="`lineages.weight.categories.${category}`"
+    :label="`game.weight.categories.${category}`"
     :model-value="modelValue?.toString()"
-    :placeholder="`lineages.weight.categories.${category}`"
+    :placeholder="`game.weight.categories.${category}`"
     :rules="{ roll: true }"
     @update:model-value="$emit('update:model-value', $event)"
   >

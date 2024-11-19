@@ -54,18 +54,16 @@ watch(
   { immediate: true },
 );
 watch(() => props.roll, onRoll, { immediate: true });
-
-// TODO(fpion): name conflict with LineageEdit
 </script>
 
 <template>
   <AppInput
     floating
     id="weight"
-    label="characters.weight"
+    label="game.weight.label"
     min="1"
     :model-value="modelValue?.toString()"
-    placeholder="characters.weight"
+    placeholder="game.weight.label"
     required
     step="1"
     type="number"

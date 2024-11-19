@@ -36,11 +36,11 @@ watch(() => props.range, onRoll, { immediate: true });
   <AppInput
     floating
     id="age"
-    label="characters.age"
+    label="game.age.label"
     :min="isRangeValid && range ? range[0] : 1"
     :max="isRangeValid && range ? range[1] : undefined"
     :model-value="modelValue?.toString()"
-    placeholder="characters.age"
+    placeholder="game.age.label"
     required
     step="1"
     type="number"

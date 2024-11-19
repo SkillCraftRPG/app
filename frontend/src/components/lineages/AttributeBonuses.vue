@@ -53,9 +53,8 @@ function setExtra(extra: number): void {
 
 <template>
   <div>
-    <h3>{{ t("lineages.attributes.label") }}</h3>
+    <h3>{{ t("game.attributes.label") }}</h3>
     <div class="row">
-      <!-- TODO(fpion): order -->
       <div class="col-attributes">
         <AttributeBonusInput attribute="Agility" :model-value="modelValue.agility" @update:model-value="setAttribute('Agility', $event)" />
       </div>

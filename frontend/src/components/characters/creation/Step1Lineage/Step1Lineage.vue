@@ -20,11 +20,11 @@ import MarkdownText from "@/components/shared/MarkdownText.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import WeightCategorySelect from "@/components/game/WeightCategorySelect.vue";
-import WeightRollInput from "./WeightRollInput.vue";
-import type { AgeCategory, LineageModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
+import WeightInput from "./WeightInput.vue";
+import type { AgeCategory, SizeCategory } from "@/types/game";
 import type { LanguageModel } from "@/types/languages";
+import type { LineageModel, SearchLineagesPayload, WeightCategory } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
-import type { SizeCategory } from "@/types/game";
 import type { Step1 } from "@/types/characters";
 import { readLineage, searchLineages } from "@/api/lineages";
 import { useCharacterStore } from "@/stores/character";
@@ -251,22 +251,22 @@ onMounted(() => {
         </div>
         <LineageNames :lineage="nation ?? species" />
         <LineageSpeeds :lineage="nation ?? species" />
-        <h5>{{ t("characters.size") }}</h5>
+        <h5>{{ t("game.size.label") }}</h5>
         <div class="row">
           <SizeCategorySelect class="col" disabled :model-value="sizeCategory" validation="server" />
           <HeightRollInput class="col" :roll="sizeRoll" v-model="height" />
         </div>
-        <h5>{{ t("characters.weight") }}</h5>
+        <h5>{{ t("game.weight.label") }}</h5>
         <div class="row">
           <WeightCategorySelect class="col" v-model="weightCategory" />
-          <WeightRollInput class="col" :height="height" :roll="weightRoll" v-model="weight" />
+          <WeightInput class="col" :height="height" :roll="weightRoll" v-model="weight" />
         </div>
-        <h5>{{ t("characters.age") }}</h5>
+        <h5>{{ t("game.age.label") }}</h5>
         <div class="row">
           <AgeCategorySelect class="col" v-model="ageCategory" />
           <AgeRollInput class="col" :range="ageRange" v-model="age" />
         </div>
-        <h5>{{ t("characters.languages.label") }}</h5>
+        <h5>{{ t("languages.list") }}</h5>
         <div v-if="extraLanguages > 0" class="row">
           <LanguageSelect
             class="col"

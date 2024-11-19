@@ -1,17 +1,6 @@
 {
-  "ages": {
-    "categories": {
-      "Adolescent": "Adolescent",
-      "Adult": "Adulte",
-      "Child": "Enfant",
-      "Mature": "Âge mur",
-      "Venerable": "Vénérable"
-    },
-    "label": "Âge"
-  },
   "attributes": {
-    "extra": "Extra",
-    "label": "Attributs"
+    "extra": "Extra"
   },
   "create": {
     "nation": "Créer un peuple",
@@ -22,7 +11,6 @@
   "languages": {
     "empty": "Cette liste est vide.",
     "extra": "Extra",
-    "label": "Langues",
     "text": "Description"
   },
   "list": "Lignées",
@@ -46,10 +34,6 @@
   "nations": {
     "empty": "Cette liste est vide.",
     "label": "Peuples"
-  },
-  "size": {
-    "label": "Taille",
-    "roll": "Jet"
   },
   "sort": {
     "options": {
@@ -75,15 +59,5 @@
     },
     "label": "Traits"
   },
-  "updated": "La lignée a été modifié.",
-  "weight": {
-    "categories": {
-      "Normal": "Normal",
-      "Obese": "Obèse",
-      "Overweight": "Surpoids",
-      "Skinny": "Maigre",
-      "Starved": "Dénutrition"
-    },
-    "label": "Poids"
-  }
+  "updated": "La lignée a été modifié."
 }

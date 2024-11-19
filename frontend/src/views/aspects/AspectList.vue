@@ -53,16 +53,18 @@ function formatAttributes(aspect: AspectModel, category: AttributeCategory): str
     category === "mandatory"
       ? [aspect.attributes.mandatory1, aspect.attributes.mandatory2]
           .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.${attribute}`))
+          .map((attribute) => t(`game.attributes.options.${attribute}`))
       : [aspect.attributes.optional1, aspect.attributes.optional2]
           .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.${attribute}`));
-  return attributes.join("<br />") || "—"; // TODO(fpion): order
+          .map((attribute) => t(`game.attributes.options.${attribute}`));
+  return attributes.join("<br />") || "—";
 }
 function formatSkills(aspect: AspectModel): string {
-  const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2].filter((skill) => Boolean(skill)).map((skill) => t(`game.skills.${skill}`));
-  return skills.join("<br />") || "—"; // TODO(fpion): order
-} // TODO(fpion): refactor
+  const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2]
+    .filter((skill) => Boolean(skill))
+    .map((skill) => t(`game.skills.options.${skill}`));
+  return skills.join("<br />") || "—";
+}
 
 function onCreated(aspect: AspectModel): void {
   toasts.success("aspects.created");
@@ -188,7 +190,7 @@ watch(
             <th scope="col">{{ t("aspects.sort.options.Name") }}</th>
             <th scope="col">{{ t("aspects.attributes.mandatory") }}</th>
             <th scope="col">{{ t("aspects.attributes.optional") }}</th>
-            <th scope="col">{{ t("aspects.skills.label") }}</th>
+            <th scope="col">{{ t("game.skills.label") }}</th>
             <th scope="col">{{ t("aspects.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>

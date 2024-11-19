@@ -173,7 +173,7 @@ watch(
                 <font-awesome-icon icon="fas fa-edit" />{{ education.name }}
               </RouterLink>
             </td>
-            <td>{{ education.skill ? t(`game.skills.${education.skill}`) : "—" }}</td>
+            <td>{{ education.skill ? t(`game.skills.options.${education.skill}`) : "—" }}</td>
             <td>{{ education.wealthMultiplier ? `×${education.wealthMultiplier}` : "—" }}</td>
             <td><StatusBlock :actor="education.updatedBy" :date="education.updatedOn" /></td>
           </tr>

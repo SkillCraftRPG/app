@@ -1,7 +1,5 @@
 {
-  "age": "Age",
   "aspects": {
-    "label": "Aspects",
     "select": "You must select {n} additional aspect. | You must select {n} additional aspects."
   },
   "attributes": {
@@ -16,7 +14,6 @@
       "less": "You have selected {n} extra attribute too many. | You have selected {n} extra attributes too many.",
       "more": "You must select {n} additional extra attribute. | You must select {n} additional extra attributes."
     },
-    "label": "Attributes",
     "mandatory": {
       "best": "Best (+3)",
       "label": "Mandatory",
@@ -36,7 +33,6 @@
   },
   "create": "Create Character",
   "customizations": {
-    "label": "Customizations",
     "select": {
       "Disability": "You must select {n} additional disability. | You must select {n} additional disabilities.",
       "Gift": "You must select {n} additional gift. | You must select {n} additional gifts."
@@ -48,7 +44,6 @@
     "quantity": "Quantity"
   },
   "languages": {
-    "label": "Languages",
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
   "lineage": "Lineage",
@@ -63,7 +58,6 @@
       "UpdatedOn": "Updated on"
     }
   },
-  "size": "Size",
   "steps": {
     "aspects": "Step #3 – Aspects",
     "attributes": "Step #4 – Attributes",
@@ -75,6 +69,5 @@
   },
   "talents": {
     "select": "You must select {n} additional talent. | You must select {n} additional talents."
-  },
-  "weight": "Weight"
+  }
 }

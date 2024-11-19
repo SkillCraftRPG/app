@@ -24,8 +24,6 @@ const options = computed<SelectOption[]>(() =>
 defineEmits<{
   (e: "update:model-value", value?: WeightCategory): void;
 }>();
-
-// TODO(fpion): merge translations from lineages and game
 </script>
 
 <template>

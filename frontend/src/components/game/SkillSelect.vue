@@ -27,7 +27,7 @@ withDefaults(
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.skills"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("game.skills.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );

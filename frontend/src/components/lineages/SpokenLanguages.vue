@@ -56,7 +56,7 @@ function setText(text?: string): void {
 
 <template>
   <div>
-    <h3>{{ t("lineages.languages.label") }}</h3>
+    <h3>{{ t("languages.list") }}</h3>
     <div class="row">
       <LanguageSelect
         class="col-lg-6"

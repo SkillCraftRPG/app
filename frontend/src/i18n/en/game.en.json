@@ -7,7 +7,8 @@
       "Mature": "Mature",
       "Venerable": "Venerable"
     },
-    "category": "Age Category"
+    "category": "Age Category",
+    "label": "Age"
   },
   "attribute": {
     "label": "Attribute",
@@ -15,16 +16,18 @@
     "score": "Score"
   },
   "attributes": {
-    "Agility": "Agility",
-    "Coordination": "Coordination",
-    "Intellect": "Intellect",
-    "Presence": "Presence",
-    "Sensitivity": "Sensitivity",
-    "Spirit": "Spirit",
-    "Vigor": "Vigor"
+    "label": "Attributes",
+    "options": {
+      "Agility": "Agility",
+      "Coordination": "Coordination",
+      "Intellect": "Intellect",
+      "Presence": "Presence",
+      "Sensitivity": "Sensitivity",
+      "Spirit": "Spirit",
+      "Vigor": "Vigor"
+    }
   },
   "damage": {
-    "roll": "Roll",
     "type": {
       "label": "Type",
       "options": {
@@ -45,6 +48,7 @@
       "placeholder": "Select a damage type"
     }
   },
+  "roll": "Roll",
   "size": {
     "categories": {
       "Colossal": "Colossal",
@@ -56,30 +60,34 @@
       "Small": "Small",
       "Tiny": "Tiny"
     },
-    "category": "Size Category"
+    "category": "Size Category",
+    "label": "Size"
   },
   "skill": "Skill",
   "skills": {
-    "Acrobatics": "Acrobatics",
-    "Athletics": "Athletics",
-    "Craft": "Craft",
-    "Deception": "Deception",
-    "Diplomacy": "Diplomacy",
-    "Discipline": "Discipline",
-    "Insight": "Insight",
-    "Investigation": "Investigation",
-    "Knowledge": "Knowledge",
-    "Linguistics": "Linguistics",
-    "Medicine": "Medicine",
-    "Melee": "Melee",
-    "Occultism": "Occultism",
-    "Orientation": "Orientation",
-    "Perception": "Perception",
-    "Performance": "Performance",
-    "Resistance": "Resistance",
-    "Stealth": "Stealth",
-    "Survival": "Survival",
-    "Thievery": "Thievery"
+    "label": "Skills",
+    "options": {
+      "Acrobatics": "Acrobatics",
+      "Athletics": "Athletics",
+      "Craft": "Craft",
+      "Deception": "Deception",
+      "Diplomacy": "Diplomacy",
+      "Discipline": "Discipline",
+      "Insight": "Insight",
+      "Investigation": "Investigation",
+      "Knowledge": "Knowledge",
+      "Linguistics": "Linguistics",
+      "Medicine": "Medicine",
+      "Melee": "Melee",
+      "Occultism": "Occultism",
+      "Orientation": "Orientation",
+      "Perception": "Perception",
+      "Performance": "Performance",
+      "Resistance": "Resistance",
+      "Stealth": "Stealth",
+      "Survival": "Survival",
+      "Thievery": "Thievery"
+    }
   },
   "speed": "Speed",
   "speeds": {
@@ -112,6 +120,7 @@
       "Skinny": "Skinny",
       "Starved": "Starved"
     },
-    "category": "Weight Category"
+    "category": "Weight Category",
+    "label": "Weight"
   }
 }

@@ -1,7 +1,6 @@
 {
   "attributes": {
     "invalid": "All attributes must differ from one another.",
-    "label": "Attributes",
     "mandatory": "Mandatory Attributes",
     "mandatory1": "Mandatory (1)",
     "mandatory2": "Mandatory (2)",
@@ -20,8 +19,7 @@
   "skills": {
     "discounted1": "Discounted (1)",
     "discounted2": "Discounted (2)",
-    "invalid": "The discounted skills must be different.",
-    "label": "Skills"
+    "invalid": "The discounted skills must be different."
   },
   "sort": {
     "options": {

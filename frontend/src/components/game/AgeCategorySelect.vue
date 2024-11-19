@@ -5,7 +5,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { AgeCategory } from "@/types/lineages";
+import type { AgeCategory } from "@/types/game";
 
 const { orderBy } = arrayUtils;
 const { rt, tm } = useI18n();
@@ -24,8 +24,6 @@ const options = computed<SelectOption[]>(() =>
 defineEmits<{
   (e: "update:model-value", value?: AgeCategory): void;
 }>();
-
-// TODO(fpion): merge translations from lineages and game
 </script>
 
 <template>

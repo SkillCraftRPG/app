@@ -111,7 +111,7 @@ const rows = computed<AttributeRow[]>(() => {
   const rows: AttributeRow[] = [
     {
       attribute: "Agility",
-      text: t("game.attributes.Agility"),
+      text: t("game.attributes.options.Agility"),
       base: agility.value,
       lineage: lineageAttributes.value.agility + (extra.value.includes("Agility") ? 1 : 0),
       personality: step2?.personality.attribute === "Agility" ? 1 : 0,
@@ -121,7 +121,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Coordination",
-      text: t("game.attributes.Coordination"),
+      text: t("game.attributes.options.Coordination"),
       base: coordination.value,
       lineage: lineageAttributes.value.coordination + (extra.value.includes("Coordination") ? 1 : 0),
       personality: step2?.personality.attribute === "Coordination" ? 1 : 0,
@@ -131,7 +131,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Intellect",
-      text: t("game.attributes.Intellect"),
+      text: t("game.attributes.options.Intellect"),
       base: intellect.value,
       lineage: lineageAttributes.value.intellect + (extra.value.includes("Intellect") ? 1 : 0),
       personality: step2?.personality.attribute === "Intellect" ? 1 : 0,
@@ -141,7 +141,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Presence",
-      text: t("game.attributes.Presence"),
+      text: t("game.attributes.options.Presence"),
       base: presence.value,
       lineage: lineageAttributes.value.presence + (extra.value.includes("Presence") ? 1 : 0),
       personality: step2?.personality.attribute === "Presence" ? 1 : 0,
@@ -151,7 +151,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Sensitivity",
-      text: t("game.attributes.Sensitivity"),
+      text: t("game.attributes.options.Sensitivity"),
       base: sensitivity.value,
       lineage: lineageAttributes.value.sensitivity + (extra.value.includes("Sensitivity") ? 1 : 0),
       personality: step2?.personality.attribute === "Sensitivity" ? 1 : 0,
@@ -161,7 +161,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Spirit",
-      text: t("game.attributes.Spirit"),
+      text: t("game.attributes.options.Spirit"),
       base: spirit.value,
       lineage: lineageAttributes.value.spirit + (extra.value.includes("Spirit") ? 1 : 0),
       personality: step2?.personality.attribute === "Spirit" ? 1 : 0,
@@ -171,7 +171,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Vigor",
-      text: t("game.attributes.Vigor"),
+      text: t("game.attributes.options.Vigor"),
       base: vigor.value,
       lineage: lineageAttributes.value.vigor + (extra.value.includes("Vigor") ? 1 : 0),
       personality: step2?.personality.attribute === "Vigor" ? 1 : 0,
@@ -330,16 +330,16 @@ onMounted(() => {
   if (step3) {
     step3.aspects.forEach(({ attributes }) => {
       if (attributes.mandatory1) {
-        mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attributes.${attributes.mandatory1}`), selected: "mandatory" });
+        mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attributes.options.${attributes.mandatory1}`), selected: "mandatory" });
       }
       if (attributes.mandatory2) {
-        mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attributes.${attributes.mandatory2}`), selected: "mandatory" });
+        mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attributes.options.${attributes.mandatory2}`), selected: "mandatory" });
       }
       if (attributes.optional1) {
-        optional.value.push({ attribute: attributes.optional1, text: t(`game.attributes.${attributes.optional1}`), selected: false });
+        optional.value.push({ attribute: attributes.optional1, text: t(`game.attributes.options.${attributes.optional1}`), selected: false });
       }
       if (attributes.optional2) {
-        optional.value.push({ attribute: attributes.optional2, text: t(`game.attributes.${attributes.optional2}`), selected: false });
+        optional.value.push({ attribute: attributes.optional2, text: t(`game.attributes.options.${attributes.optional2}`), selected: false });
       }
     });
     mandatory.value = orderBy(mandatory.value, "text");
@@ -390,7 +390,7 @@ onMounted(() => {
             <th scope="col">{{ t("characters.attributes.bases") }}</th>
             <th scope="col">{{ t("characters.lineage") }}</th>
             <th scope="col">{{ t("personalities.select.label") }}</th>
-            <th scope="col">{{ t("characters.aspects.label") }}</th>
+            <th scope="col">{{ t("aspects.list") }}</th>
             <th scope="col">{{ t("game.attribute.score") }}</th>
             <th scope="col">{{ t("game.attribute.modifier") }}</th>
           </tr>
@@ -414,7 +414,7 @@ onMounted(() => {
       <p v-if="remainingPoints > 0" class="text-danger">
         <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.spend", { n: remainingPoints }) }}
       </p>
-      <h5>{{ t("characters.aspects.label") }}</h5>
+      <h5>{{ t("aspects.list") }}</h5>
       <h6>{{ t("aspects.attributes.mandatory") }}</h6>
       <div class="mb-3 row">
         <div v-for="(mandatory, index) in mandatory" :key="index" class="col">

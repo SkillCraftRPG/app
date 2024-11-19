@@ -49,4 +49,4 @@ export const useCharacterStore = defineStore(
   {
     persist: true,
   },
-); // TODO(fpion): unit tests
+);

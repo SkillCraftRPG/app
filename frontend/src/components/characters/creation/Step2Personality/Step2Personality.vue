@@ -106,7 +106,7 @@ onMounted(() => {
       </div>
       <MarkdownText v-if="personality?.description" :text="personality.description" />
       <template v-if="allCustomizations.length > 0">
-        <h5>{{ t("characters.customizations.label") }}</h5>
+        <h5>{{ t("customizations.list") }}</h5>
         <CustomizationSelect :exclude="excludedCustomizations" :model-value="customization?.id" validation="server" @selected="customization = $event">
           <template #append>
             <TarButton :disabled="!customization" icon="fas fa-plus" :text="t('actions.add')" variant="success" @click="addCustomization" />

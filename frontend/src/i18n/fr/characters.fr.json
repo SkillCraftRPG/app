@@ -1,7 +1,5 @@
 {
-  "age": "Âge",
   "aspects": {
-    "label": "Aspects",
     "select": "Vous devez sélectionner {n} aspect supplémentaire. | Vous devez sélectionner {n} aspects supplémentaires."
   },
   "attributes": {
@@ -16,7 +14,6 @@
       "less": "Vous avez sélectionné {n} attribut additionnel en trop. | Vous avez sélectionné {n} attributs additionnels en trop.",
       "more": "Vous devez sélectionner {n} attribut additionnel supplémentaire. | Vous devez sélectionner {n} attributs additionnels supplémentaires."
     },
-    "label": "Attributs",
     "mandatory": {
       "best": "Meilleur (+3)",
       "label": "Obligatoire",
@@ -36,7 +33,6 @@
   },
   "create": "Création de personnage",
   "customizations": {
-    "label": "Personnalisations",
     "select": {
       "Disability": "Vous devez sélectionner {n} handicap supplémentaire. | Vous devez sélectionner {n} handicaps supplémentaires.",
       "Gift": "Vous devez sélectionner {n} don supplémentaire. | Vous devez sélectionner {n} dons supplémentaires"
@@ -48,8 +44,7 @@
     "quantity": "Quantité"
   },
   "languages": {
-    "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires.",
-    "label": "Langues"
+    "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires."
   },
   "lineage": "Lignée",
   "list": "Personnages",
@@ -63,7 +58,6 @@
       "UpdatedOn": "Dernière modification"
     }
   },
-  "size": "Taille",
   "steps": {
     "aspects": "Étape 3 – Aspects",
     "attributes": "Étape 4 – Attributs",
@@ -75,6 +69,5 @@
   },
   "talents": {
     "select": "Vous devez sélectionner {n} talent supplémentaire. | Vous devez sélectionner {n} talents supplémentaires."
-  },
-  "weight": "Poids"
+  }
 }

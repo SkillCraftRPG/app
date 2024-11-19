@@ -41,7 +41,7 @@ function setRoll(category: WeightCategory, value?: string): void {
 
 <template>
   <div>
-    <h3>{{ t("lineages.weight.label") }}</h3>
+    <h3>{{ t("game.weight.label") }}</h3>
     <div class="row">
       <WeightRollInput category="Starved" class="col-weight" :model-value="modelValue.starved" @update:model-value="setRoll('Starved', $event)" />
       <WeightRollInput category="Skinny" class="col-weight" :model-value="modelValue.skinny" @update:model-value="setRoll('Skinny', $event)" />

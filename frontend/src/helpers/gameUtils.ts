@@ -23,5 +23,3 @@ export function roll(roll: string): number {
     });
   return value;
 }
-
-// TODO(fpion): tests

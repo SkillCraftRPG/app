@@ -7,7 +7,8 @@
       "Mature": "Âge mur",
       "Venerable": "Vénérable"
     },
-    "category": "Catégorie d’âge"
+    "category": "Catégorie d’âge",
+    "label": "Âge"
   },
   "attribute": {
     "label": "Attribut",
@@ -15,16 +16,18 @@
     "score": "Score"
   },
   "attributes": {
-    "Agility": "Agilité",
-    "Coordination": "Coordination",
-    "Intellect": "Intellect",
-    "Presence": "Présence",
-    "Sensitivity": "Sensibilité",
-    "Spirit": "Esprit",
-    "Vigor": "Vigueur"
+    "label": "Attributs",
+    "options": {
+      "Agility": "Agilité",
+      "Coordination": "Coordination",
+      "Intellect": "Intellect",
+      "Presence": "Présence",
+      "Sensitivity": "Sensibilité",
+      "Spirit": "Esprit",
+      "Vigor": "Vigueur"
+    }
   },
   "damage": {
-    "roll": "Jet",
     "type": {
       "label": "Type",
       "options": {
@@ -45,6 +48,7 @@
       "placeholder": "Sélectionnez un type de dégâts"
     }
   },
+  "roll": "Jet",
   "size": {
     "categories": {
       "Colossal": "Colossale",
@@ -56,30 +60,34 @@
       "Small": "Petite",
       "Tiny": "Minuscule"
     },
-    "category": "Catégorie de taille"
+    "category": "Catégorie de taille",
+    "label": "Taille"
   },
   "skill": "Compétence",
   "skills": {
-    "Acrobatics": "Acrobaties",
-    "Athletics": "Athlétisme",
-    "Craft": "Artisanat",
-    "Deception": "Tromperie",
-    "Diplomacy": "Diplomatie",
-    "Discipline": "Discipline",
-    "Insight": "Intuition",
-    "Investigation": "Investigation",
-    "Knowledge": "Connaissance",
-    "Linguistics": "Linguistique",
-    "Medicine": "Médecine",
-    "Melee": "Mêlée",
-    "Occultism": "Occultisme",
-    "Orientation": "Orientation",
-    "Perception": "Perception",
-    "Performance": "Performance",
-    "Resistance": "Résistance",
-    "Stealth": "Furtivité",
-    "Survival": "Survie",
-    "Thievery": "Roublardise"
+    "label": "Compétences",
+    "options": {
+      "Acrobatics": "Acrobaties",
+      "Athletics": "Athlétisme",
+      "Craft": "Artisanat",
+      "Deception": "Tromperie",
+      "Diplomacy": "Diplomatie",
+      "Discipline": "Discipline",
+      "Insight": "Intuition",
+      "Investigation": "Investigation",
+      "Knowledge": "Connaissance",
+      "Linguistics": "Linguistique",
+      "Medicine": "Médecine",
+      "Melee": "Mêlée",
+      "Occultism": "Occultisme",
+      "Orientation": "Orientation",
+      "Perception": "Perception",
+      "Performance": "Performance",
+      "Resistance": "Résistance",
+      "Stealth": "Furtivité",
+      "Survival": "Survie",
+      "Thievery": "Roublardise"
+    }
   },
   "speed": "Vitesse",
   "speeds": {
@@ -112,6 +120,7 @@
       "Skinny": "Maigre",
       "Starved": "Dénutrition"
     },
-    "category": "Catégorie de poids"
+    "category": "Catégorie de poids",
+    "label": "Poids"
   }
 }

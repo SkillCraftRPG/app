@@ -28,7 +28,7 @@ function setRoll(roll?: string): void {
 
 <template>
   <div>
-    <h3>{{ t("lineages.size.label") }}</h3>
+    <h3>{{ t("game.size.label") }}</h3>
     <div class="row">
       <SizeCategorySelect class="col-lg-6" :model-value="modelValue.category" @update:model-value="setCategory($event ?? 'Medium')" />
       <SizeRollInput class="col-lg-6" :model-value="modelValue.roll" @update:model-value="setRoll" />

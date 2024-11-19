@@ -16,7 +16,7 @@ const props = defineProps<{
 
 function capitalize(s: string): string {
   return s[0].toUpperCase() + s.substring(1).toLowerCase();
-} // TODO(fpion): move to logitar-js.stringUtils
+}
 
 const attributes = computed<string>(() => {
   const attributes = new Map<Attribute, number>();
@@ -41,7 +41,7 @@ const attributes = computed<string>(() => {
   }
   const bonuses: string[] = [...attributes.entries()]
     .filter(([, bonus]) => bonus > 0)
-    .map(([attribute, bonus]) => `+${bonus} ${t(`game.attributes.${attribute}`)}`);
+    .map(([attribute, bonus]) => `+${bonus} ${t(`game.attributes.options.${attribute}`)}`);
   if (extra > 0) {
     bonuses.push(`+${extra} ${t("characters.attributes.extra.label", extra)}`);
   }
@@ -54,7 +54,7 @@ const traits = computed<TraitModel[]>(() => orderBy(props.lineage.features.conca
   <div>
     <ul>
       <li v-if="attributes">
-        <strong>{{ t("lineages.attributes.label") }}.</strong> {{ attributes }}
+        <strong>{{ t("game.attributes.label") }}.</strong> {{ attributes }}
       </li>
       <li v-for="trait in traits" :key="trait.id">
         <strong>{{ trait.name }}.</strong> <MarkdownText v-if="trait.description" inline :text="trait.description" />
