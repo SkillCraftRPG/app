@@ -25,7 +25,6 @@ const { t } = useI18n();
 
 const customization = ref<CustomizationModel>();
 const description = ref<string>("");
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 
 const hasChanges = computed<boolean>(
@@ -71,7 +70,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

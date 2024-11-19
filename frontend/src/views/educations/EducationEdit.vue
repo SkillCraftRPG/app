@@ -27,7 +27,6 @@ const { t } = useI18n();
 
 const description = ref<string>("");
 const education = ref<EducationModel>();
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const skill = ref<Skill>();
 const wealthMultiplier = ref<number>();
@@ -83,7 +82,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

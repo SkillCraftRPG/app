@@ -29,7 +29,6 @@ const { t } = useI18n();
 
 const allowMultiplePurchases = ref<boolean>(false);
 const description = ref<string>("");
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const requiredTalent = ref<TalentModel>();
 const skill = ref<Skill>();
@@ -90,7 +89,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

@@ -30,7 +30,6 @@ const aspect = ref<AspectModel>();
 const description = ref<string>("");
 const discountedSkill1 = ref<Skill>();
 const discountedSkill2 = ref<Skill>();
-const hasLoaded = ref<boolean>(false);
 const mandatoryAttribute1 = ref<Attribute>();
 const mandatoryAttribute2 = ref<Attribute>();
 const name = ref<string>("");
@@ -126,7 +125,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

@@ -26,7 +26,6 @@ const worldStore = useWorldStore();
 const { t } = useI18n();
 
 const description = ref<string>("");
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const slug = ref<string>("");
 const world = ref<WorldModel>();
@@ -80,7 +79,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

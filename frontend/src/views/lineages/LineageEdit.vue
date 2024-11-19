@@ -47,7 +47,6 @@ const { t } = useI18n();
 const ages = ref<AgesModel>({});
 const attributes = ref<AttributeBonusesModel>({ agility: 0, coordination: 0, intellect: 0, presence: 0, sensitivity: 0, spirit: 0, vigor: 0, extra: 0 });
 const description = ref<string>("");
-const hasLoaded = ref<boolean>(false);
 const languages = ref<LanguagesPayload>({ ids: [], extra: 0 });
 const languagesReference = ref<LanguagesPayload>({ ids: [], extra: 0 });
 const lineage = ref<LineageModel>();
@@ -171,7 +170,6 @@ watch(
           handleError(e);
         }
       }
-      hasLoaded.value = true;
     }
   },
   { deep: true, immediate: true },
