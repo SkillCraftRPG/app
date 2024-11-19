@@ -2,6 +2,10 @@ import { parsingUtils } from "logitar-js";
 
 const { parseNumber } = parsingUtils;
 
+export function calculateModifier(score: number): number {
+  return Math.floor(score / 2.0) - 5;
+}
+
 export function roll(roll: string): number {
   let value: number = 0;
   roll
@@ -18,4 +22,6 @@ export function roll(roll: string): number {
       }
     });
   return value;
-} // TODO(fpion): tests
+}
+
+// TODO(fpion): tests
