@@ -45,33 +45,6 @@ async function onComplete(): Promise<void> {
     }
   }
 }
-
-/* TODO(fpion): exceptions
- * (✅) AspectsNotFoundException
- * (✅) CasteHasNoSkillTalentException
- * (✅) CasteNotFoundException
- * (✅) CustomizationsCannotIncludePersonalityGiftException
- * (✅) CustomizationsNotFoundException
- * (✅) EducationHasNoSkillTalentException
- * (✅) EducationNotFoundException
- * (✅) InvalidAspectAttributeSelectionException
- * (✅) InvalidCasteEducationSelectionException
- * (✅) InvalidCharacterCustomizationsException
- * (✅) InvalidCharacterLineageException
- * (✅) InvalidExtraAttributesException
- * (✅) InvalidExtraLanguagesException
- * (✅) InvalidSkillTalentSelectionException
- * (✅) InvalidStartingWealthSelectionException
- * (✅) ItemNotFoundException
- * (✅) LanguagesCannotIncludeLineageLanguageException
- * (✅) LanguagesNotFoundException
- * (✅) LineageNotFoundException
- * (✅) NotEnoughAvailableStorageException
- * (✅) PermissionDeniedException
- * (✅) PersonalityNotFoundException
- * (✅) TalentsNotFoundException
- * ( ) ValidationException
- */
 </script>
 
 <template>
