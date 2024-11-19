@@ -3,15 +3,17 @@ import type { SelectOption } from "logitar-vue3-ui";
 import { computed, onMounted, ref } from "vue";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { ItemModel, SearchItemsPayload } from "@/types/items";
-import type { SearchResults } from "@/types/search";
+import type { ItemCategory, ItemModel, SearchItemsPayload } from "@/types/items";
+import type { NumberFilter, SearchResults } from "@/types/search";
 import { searchItems } from "@/api/items";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    category?: ItemCategory;
     id?: string;
     label?: string;
     modelValue?: string;
+    value?: NumberFilter;
   }>(),
   {
     id: "item",
@@ -39,8 +41,10 @@ function onModelValueUpdate(id?: string) {
 onMounted(async () => {
   try {
     const payload: SearchItemsPayload = {
+      category: props.category,
       ids: [],
       search: { terms: [], operator: "And" },
+      value: props.value,
       sort: [{ field: "Name", isDescending: false }],
       skip: 0,
       limit: 0,

@@ -44,6 +44,9 @@
   },
   "empty": "Cette liste est vide.",
   "height": "Hauteur",
+  "inventory": {
+    "quantity": "Quantité"
+  },
   "languages": {
     "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires.",
     "label": "Langues"

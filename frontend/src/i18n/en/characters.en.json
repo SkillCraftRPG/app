@@ -44,6 +44,9 @@
   },
   "empty": "This list is empty.",
   "height": "Height",
+  "inventory": {
+    "quantity": "Quantity"
+  },
   "languages": {
     "label": "Languages",
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
