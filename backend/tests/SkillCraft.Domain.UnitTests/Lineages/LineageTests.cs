@@ -26,18 +26,18 @@ public class LineageTests
     Assert.Equal("parent", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when removing an empty feature ID.")]
-  public void It_should_throw_ArgumentOutOfRangeException_when_removing_an_empty_feature_Id()
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when removing an empty trait ID.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_removing_an_empty_trait_Id()
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _lineage.RemoveFeature(Guid.Empty));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _lineage.RemoveTrait(Guid.Empty));
     Assert.Equal("id", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting an empty feature ID.")]
-  public void It_should_throw_ArgumentOutOfRangeException_when_setting_an_empty_feature_Id()
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting an empty trait ID.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_an_empty_trait_Id()
   {
-    Feature feature = new(new Name("Vagabond"), Description: null);
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _lineage.SetFeature(Guid.Empty, feature));
+    Trait trait = new(new Name("Vagabond"), Description: null);
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _lineage.SetTrait(Guid.Empty, trait));
     Assert.Equal("id", exception.ParamName);
   }
 }
