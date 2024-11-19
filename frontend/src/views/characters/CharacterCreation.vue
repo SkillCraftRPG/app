@@ -60,7 +60,7 @@ async function onComplete(): Promise<void> {
  * (✅) InvalidCharacterLineageException
  * (✅) InvalidExtraAttributesException
  * (✅) InvalidExtraLanguagesException
- * ( ) InvalidSkillTalentSelectionException
+ * (✅) InvalidSkillTalentSelectionException
  * (✅) InvalidStartingWealthSelectionException
  * (✅) ItemNotFoundException
  * (✅) LanguagesCannotIncludeLineageLanguageException
