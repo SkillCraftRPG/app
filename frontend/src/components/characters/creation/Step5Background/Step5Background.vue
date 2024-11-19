@@ -29,7 +29,7 @@ const caste = ref<CasteModel>();
 const education = ref<EducationModel>();
 const item = ref<ItemModel>();
 const quantity = ref<number>(0);
-const talents = ref<Map<Skill, TalentModel>>(new Map<Skill, TalentModel>());
+const talents = ref<Set<Skill>>(new Set<Skill>());
 
 const isCasteValid = computed<boolean>(() => (caste.value?.skill ? talents.value.has(caste.value.skill) : false));
 const isCompleted = computed<boolean>(() => isCasteValid.value && isEducationValid.value && caste.value?.skill !== education.value?.skill);
@@ -83,7 +83,7 @@ onMounted(async () => {
     const results: SearchResults<TalentModel> = await searchTalents(payload);
     results.items.forEach((talent) => {
       if (talent.skill) {
-        talents.value.set(talent.skill, talent);
+        talents.value.add(talent.skill);
       }
     });
   } catch (e: unknown) {
