@@ -26,7 +26,6 @@ const { t } = useI18n();
 
 const language = ref<LanguageModel>();
 const description = ref<string>("");
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const script = ref<string>("");
 const typicalSpeakers = ref<string>("");
@@ -82,7 +81,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

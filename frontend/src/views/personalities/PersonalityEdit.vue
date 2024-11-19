@@ -29,7 +29,6 @@ const { t } = useI18n();
 const attribute = ref<Attribute>();
 const description = ref<string>("");
 const gift = ref<CustomizationModel>();
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const personality = ref<PersonalityModel>();
 
@@ -84,7 +83,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 
 import CasteDetail from "./CasteDetail.vue";
 import CasteSelect from "@/components/castes/CasteSelect.vue";
-import EducationSelect from "@/components/castes/EducationSelect.vue";
+import EducationSelect from "@/components/educations/EducationSelect.vue";
 import ItemSelect from "@/components/items/ItemSelect.vue";
 import MarkdownText from "@/components/shared/MarkdownText.vue";
 import QuantityInput from "./QuantityInput.vue";

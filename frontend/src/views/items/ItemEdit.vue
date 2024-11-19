@@ -41,7 +41,6 @@ const consumable = ref<ConsumablePropertiesModel>();
 const container = ref<ContainerPropertiesModel>();
 const description = ref<string>("");
 const equipment = ref<EquipmentPropertiesModel>();
-const hasLoaded = ref<boolean>(false);
 const isAttunementRequired = ref<boolean>(false);
 const isConsumableValid = ref<boolean>(true);
 const item = ref<ItemModel>();
@@ -123,7 +122,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

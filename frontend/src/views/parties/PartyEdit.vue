@@ -23,7 +23,6 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const description = ref<string>("");
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const party = ref<PartyModel>();
 
@@ -67,7 +66,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 
