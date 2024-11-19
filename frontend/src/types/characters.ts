@@ -159,7 +159,8 @@ export type Step4 = {
 export type Step5 = {
   caste: CasteModel;
   education: EducationModel;
-  startingWealth?: StartingWealthPayload;
+  item?: ItemModel;
+  quantity: number;
 };
 
 export type Step6 = {
