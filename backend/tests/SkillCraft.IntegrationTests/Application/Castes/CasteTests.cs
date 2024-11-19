@@ -32,8 +32,8 @@ public class CasteTests : IntegrationTests
       Skill = Skill.Survival,
       WealthRoll = new Roll("6d6")
     };
-    _exile.AddTrait(new Trait(new Name("Rancunier"), new Description("Peu importe la raison, le personnage a renoncé à sa fidélité envers son seigneur. Il connaît les rouages du système lorsqu’il est question d’éviter de payer des taxes et de jouer avec les lois en place. Lorsqu’il se trouve dans son pays d’origine, il peut réduire ses dépenses essentielles de 10 %.")));
-    _exile.AddTrait(new Trait(new Name("Vagabond"), new Description("Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de Survie afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue.")));
+    _exile.AddFeature(new Feature(new Name("Rancunier"), new Description("Peu importe la raison, le personnage a renoncé à sa fidélité envers son seigneur. Il connaît les rouages du système lorsqu’il est question d’éviter de payer des taxes et de jouer avec les lois en place. Lorsqu’il se trouve dans son pays d’origine, il peut réduire ses dépenses essentielles de 10 %.")));
+    _exile.AddFeature(new Feature(new Name("Vagabond"), new Description("Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de Survie afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue.")));
     _exile.Update(UserId);
     _guerisseur = new(World.Id, new Name("Guérisseur"), UserId);
   }
@@ -54,11 +54,11 @@ public class CasteTests : IntegrationTests
       Skill = Skill.Craft,
       WealthRoll = "8d6"
     };
-    payload.Traits.Add(new TraitPayload("Professionnel")
+    payload.Features.Add(new FeaturePayload("Professionnel")
     {
       Description = "Les apprentissages et réalisations du personnage lui ont permis de devenir membre d’une organisation de professionnels comme lui, telle une guilde d’artisans ou de marchands. S’il ne peut payer pour un toit ou de la nourriture, il peut facilement trouver du travail afin de couvrir ces dépenses essentielles."
     });
-    payload.Traits.Add(new TraitPayload("Sujet")
+    payload.Features.Add(new FeaturePayload("Sujet")
     {
       Id = Guid.NewGuid(),
       Description = "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
@@ -85,10 +85,10 @@ public class CasteTests : IntegrationTests
     Assert.Equal(payload.Skill, caste.Skill);
     Assert.Equal(payload.WealthRoll, caste.WealthRoll);
 
-    Assert.Equal(payload.Traits.Count, caste.Traits.Count);
-    foreach (TraitPayload trait in payload.Traits)
+    Assert.Equal(payload.Features.Count, caste.Features.Count);
+    foreach (FeaturePayload feature in payload.Features)
     {
-      Assert.Contains(caste.Traits, t => (trait.Id == null || trait.Id == t.Id) && t.Name == trait.Name && t.Description == trait.Description);
+      Assert.Contains(caste.Features, t => (feature.Id == null || feature.Id == t.Id) && t.Name == feature.Name && t.Description == feature.Description);
     }
 
     Assert.NotNull(await SkillCraftContext.Castes.AsNoTracking().SingleOrDefaultAsync(x => x.Id == caste.Id));
@@ -110,11 +110,11 @@ public class CasteTests : IntegrationTests
       Skill = Skill.Performance,
       WealthRoll = "8d6"
     };
-    payload.Traits.Add(new TraitPayload("Protégé")
+    payload.Features.Add(new FeaturePayload("Protégé")
     {
       Description = "Par le prestige de sa famille et sa participation à des événements de l’aristocratie, le personnage est connu de la noblesse locale. Il peut demander gîte et couvert membres de la noblesse. En échange, ceux-ci peuvent lui demander une ou plusieurs faveurs immédiates, futures ou encore invoquer le droit de surprise, c’est-à-dire une faveur d’un quelconque ordre de grandeur lorsque l’occasion de présenter."
     });
-    payload.Traits.Add(new TraitPayload("Vagabond")
+    payload.Features.Add(new FeaturePayload("Vagabond")
     {
       Id = Guid.NewGuid(),
       Description = "Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de Survie afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue."
@@ -137,10 +137,10 @@ public class CasteTests : IntegrationTests
     Assert.Equal(payload.Skill, caste.Skill);
     Assert.Equal(payload.WealthRoll, caste.WealthRoll);
 
-    Assert.Equal(payload.Traits.Count, caste.Traits.Count);
-    foreach (TraitPayload trait in payload.Traits)
+    Assert.Equal(payload.Features.Count, caste.Features.Count);
+    foreach (FeaturePayload feature in payload.Features)
     {
-      Assert.Contains(caste.Traits, t => (trait.Id == null || trait.Id == t.Id) && t.Name == trait.Name && t.Description == trait.Description);
+      Assert.Contains(caste.Features, t => (feature.Id == null || feature.Id == t.Id) && t.Name == feature.Name && t.Description == feature.Description);
     }
   }
 
@@ -215,10 +215,10 @@ public class CasteTests : IntegrationTests
     Assert.Equal(_exile.Skill, caste.Skill);
     Assert.Equal(_exile.WealthRoll?.Value, caste.WealthRoll);
 
-    Assert.Equal(_exile.Traits.Count, caste.Traits.Count);
-    foreach (KeyValuePair<Guid, Trait> trait in _exile.Traits)
+    Assert.Equal(_exile.Features.Count, caste.Features.Count);
+    foreach (KeyValuePair<Guid, Feature> feature in _exile.Features)
     {
-      Assert.Contains(caste.Traits, t => t.Id == trait.Key && t.Name == trait.Value.Name.Value && t.Description == trait.Value.Description?.Value);
+      Assert.Contains(caste.Features, t => t.Id == feature.Key && t.Name == feature.Value.Name.Value && t.Description == feature.Value.Description?.Value);
     }
   }
 }

@@ -78,8 +78,8 @@ public class CharacterTests : IntegrationTests
       Languages = new Domain.Lineages.Languages(languages: [], extra: 1, text: null),
       Speeds = new Speeds(walk: 6, climb: 0, swim: 0, fly: 0, hover: 0, burrow: 0)
     };
-    _humain.AddFeature(new Feature(new Name("Apprentissage accéléré"), new Description("Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.).")));
-    _humain.AddFeature(new Feature(new Name("Versatilité"), new Description("Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence.")));
+    _humain.AddTrait(new Trait(new Name("Apprentissage accéléré"), new Description("Le personnage débute avec 4 points d’Apprentissage supplémentaires et acquiert 1 point d’Apprentissage supplémentaire à chaque fois qu’il atteint un niveau pair (2, 4, 6, 8, 10, etc.).")));
+    _humain.AddTrait(new Trait(new Name("Versatilité"), new Description("Le personnage acquiert gratuitement un talent associé à une compétence. Ces talents portent le même nom qu’une compétence.")));
     _humain.Update(UserId);
     _orrin = new Lineage(World.Id, _humain, new Name("Orrin"), UserId)
     {
