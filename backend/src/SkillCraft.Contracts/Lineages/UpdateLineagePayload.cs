@@ -6,7 +6,7 @@ public record UpdateLineagePayload
   public Change<string>? Description { get; set; }
 
   public UpdateAttributeBonusesPayload Attributes { get; set; } = new();
-  public List<UpdateFeaturePayload> Features { get; set; } = [];
+  public List<UpdateTraitPayload> Traits { get; set; } = [];
 
   public UpdateLanguagesPayload Languages { get; set; } = new();
   public UpdateNamesPayload Names { get; set; } = new();

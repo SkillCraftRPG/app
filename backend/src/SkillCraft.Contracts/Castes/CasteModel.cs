@@ -13,7 +13,7 @@ public class CasteModel : Aggregate
   public Skill? Skill { get; set; }
   public string? WealthRoll { get; set; }
 
-  public List<TraitModel> Traits { get; set; }
+  public List<FeatureModel> Features { get; set; }
 
   public CasteModel() : this(new WorldModel(), string.Empty)
   {
@@ -25,7 +25,7 @@ public class CasteModel : Aggregate
 
     Name = name;
 
-    Traits = [];
+    Features = [];
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";

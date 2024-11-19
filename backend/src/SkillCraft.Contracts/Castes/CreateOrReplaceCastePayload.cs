@@ -8,7 +8,7 @@ public record CreateOrReplaceCastePayload
   public Skill? Skill { get; set; }
   public string? WealthRoll { get; set; }
 
-  public List<TraitPayload> Traits { get; set; }
+  public List<FeaturePayload> Features { get; set; }
 
   public CreateOrReplaceCastePayload() : this(string.Empty)
   {
@@ -18,6 +18,6 @@ public record CreateOrReplaceCastePayload
   {
     Name = name;
 
-    Traits = [];
+    Features = [];
   }
 }
