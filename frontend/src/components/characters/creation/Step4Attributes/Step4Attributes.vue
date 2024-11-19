@@ -25,25 +25,61 @@ type AttributeRow = {
   score: number;
   modifier: number;
 };
+type MandatoryAttribute = {
+  attribute: Attribute;
+  text: string;
+  selected: "best" | "mandatory" | "worst";
+};
+type OptionalAttribute = {
+  attribute: Attribute;
+  text: string;
+  selected: boolean;
+};
 
 const agility = ref<number>(8);
-const best = ref<Attribute>();
 const coordination = ref<number>(8);
 const extra = ref<Attribute[]>([]);
 const intellect = ref<number>(8);
-const optional = ref<Attribute[]>([]);
+const mandatory = ref<MandatoryAttribute[]>([]);
+const optional = ref<OptionalAttribute[]>([]);
 const presence = ref<number>(8);
 const sensitivity = ref<number>(8);
 const spirit = ref<number>(8);
 const vigor = ref<number>(8);
-const worst = ref<Attribute>();
 
 function calculateAspectBonus(attribute: Attribute): number {
-  return 0; // TODO(fpion): implement
+  let bonus: number = 0;
+  mandatory.value
+    .filter((mandatory) => mandatory.attribute === attribute)
+    .forEach(({ selected }) => {
+      switch (selected) {
+        case "best":
+          bonus += 3;
+          break;
+        case "worst":
+          bonus += 1;
+          break;
+        default:
+          bonus += 2;
+          break;
+      }
+    });
+  bonus += optional.value.filter((optional) => optional.attribute === attribute && optional.selected).length;
+  return bonus;
 }
 
+const best = computed<Attribute | undefined>(() => {
+  const best: Attribute[] = mandatory.value.filter(({ selected }) => selected === "best").map(({ attribute }) => attribute);
+  return best.length === 1 ? best[0] : undefined;
+});
 const isCompleted = computed<boolean>(
-  () => remainingPoints.value === 0 && requiredExtra.value === 0 && Boolean(best.value) && Boolean(worst.value) && optional.value.length === 2,
+  () =>
+    remainingPoints.value === 0 &&
+    Boolean(best.value) &&
+    Boolean(worst.value) &&
+    best.value !== worst.value &&
+    requiredOptional.value === 0 &&
+    requiredExtra.value === 0,
 );
 const lineageAttributes = computed<AttributeBonusesModel>(() => {
   const step1: Step1 | undefined = character.creation.step1;
@@ -68,6 +104,7 @@ const remainingPoints = computed<number>(
   () => 57 - agility.value - coordination.value - intellect.value - presence.value - sensitivity.value - spirit.value - vigor.value,
 );
 const requiredExtra = computed<number>(() => lineageAttributes.value.extra - extra.value.length);
+const requiredOptional = computed<number>(() => 2 - optional.value.filter(({ selected }) => selected).length);
 const rows = computed<AttributeRow[]>(() => {
   const step2: Step2 | undefined = character.creation.step2;
   const rows: AttributeRow[] = [
@@ -148,6 +185,10 @@ const rows = computed<AttributeRow[]>(() => {
   });
   return orderBy(rows, "text");
 });
+const worst = computed<Attribute | undefined>(() => {
+  const worst: Attribute[] = mandatory.value.filter(({ selected }) => selected === "worst").map(({ attribute }) => attribute);
+  return worst.length === 1 ? worst[0] : undefined;
+});
 
 defineEmits<{
   (e: "error", value: unknown): void;
@@ -208,6 +249,50 @@ function increaseBase(row: AttributeRow): void {
   }
 }
 
+function setBest(index: number): void {
+  for (let i = 0; i < mandatory.value.length; i++) {
+    let attribute: MandatoryAttribute = mandatory.value[i];
+    if (i === index) {
+      if (attribute.selected !== "best") {
+        attribute = { ...attribute, selected: "best" };
+        mandatory.value.splice(i, 1, attribute);
+      }
+    } else if (attribute.selected === "best") {
+      attribute = { ...attribute, selected: "mandatory" };
+      mandatory.value.splice(i, 1, attribute);
+    }
+  }
+}
+function setMandatory(index: number): void {
+  let attribute: MandatoryAttribute | undefined = mandatory.value[index];
+  if (attribute?.selected !== "mandatory") {
+    attribute = { ...attribute, selected: "mandatory" };
+    mandatory.value.splice(index, 1, attribute);
+  }
+}
+function setWorst(index: number): void {
+  for (let i = 0; i < mandatory.value.length; i++) {
+    let attribute: MandatoryAttribute = mandatory.value[i];
+    if (i === index) {
+      if (attribute.selected !== "worst") {
+        attribute = { ...attribute, selected: "worst" };
+        mandatory.value.splice(i, 1, attribute);
+      }
+    } else if (attribute.selected === "worst") {
+      attribute = { ...attribute, selected: "mandatory" };
+      mandatory.value.splice(i, 1, attribute);
+    }
+  }
+}
+
+function toggleOptional(index: number): void {
+  let attribute: OptionalAttribute | undefined = optional.value[index];
+  if (attribute) {
+    attribute = { ...attribute, selected: !attribute.selected };
+    optional.value.splice(index, 1, attribute);
+  }
+}
+
 const { handleSubmit } = useForm();
 const onSubmit = handleSubmit(() => {
   if (best.value && worst.value) {
@@ -222,7 +307,7 @@ const onSubmit = handleSubmit(() => {
         vigor: vigor.value,
         best: best.value,
         worst: worst.value,
-        optional: optional.value,
+        optional: optional.value.filter(({ selected }) => selected).map(({ attribute }) => attribute),
         extra: extra.value,
       },
     };
@@ -232,6 +317,25 @@ const onSubmit = handleSubmit(() => {
 
 onMounted(() => {
   try {
+    const step3: Step3 | undefined = character.creation.step3;
+    if (step3) {
+      step3.aspects.forEach(({ attributes }) => {
+        if (attributes.mandatory1) {
+          mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attributes.${attributes.mandatory1}`), selected: "mandatory" });
+        }
+        if (attributes.mandatory2) {
+          mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attributes.${attributes.mandatory2}`), selected: "mandatory" });
+        }
+        if (attributes.optional1) {
+          optional.value.push({ attribute: attributes.optional1, text: t(`game.attributes.${attributes.optional1}`), selected: false });
+        }
+        if (attributes.optional2) {
+          optional.value.push({ attribute: attributes.optional2, text: t(`game.attributes.${attributes.optional2}`), selected: false });
+        }
+      });
+      mandatory.value = orderBy(mandatory.value, "text");
+      optional.value = orderBy(optional.value, "text");
+    }
     const step4: Step4 | undefined = character.creation.step4;
     if (step4) {
       agility.value = step4.attributes.agility;
@@ -241,9 +345,9 @@ onMounted(() => {
       sensitivity.value = step4.attributes.sensitivity;
       spirit.value = step4.attributes.spirit;
       vigor.value = step4.attributes.vigor;
-      best.value = step4.attributes.best;
-      worst.value = step4.attributes.worst;
-      optional.value = [...step4.attributes.optional];
+      // best.value = step4.attributes.best; // TODO(fpion): implement
+      // worst.value = step4.attributes.worst; // TODO(fpion): implement
+      // optional.value = [...step4.attributes.optional]; // TODO(fpion): implement
       extra.value = [...step4.attributes.extra];
     }
   } catch (e: unknown) {
@@ -289,11 +393,56 @@ onMounted(() => {
       </p>
       <h5>{{ t("characters.aspects.label") }}</h5>
       <h6>{{ t("aspects.attributes.mandatory") }}</h6>
-      <p>TODO(fpion): mandatory attributes</p>
-      <p class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> TODO(fpion): warning</p>
+      <div class="mb-3 row">
+        <div v-for="(mandatory, index) in mandatory" :key="index" class="col">
+          <TarCard :title="mandatory.text" :subtitle="t(`characters.attributes.mandatory.${mandatory.selected}`)">
+            <TarButton
+              v-if="mandatory.selected !== 'worst'"
+              class="me-1"
+              icon="fas fa-minus"
+              :text="t('characters.attributes.worst.label')"
+              @click="setWorst(index)"
+            />
+            <TarButton
+              v-if="mandatory.selected !== 'mandatory'"
+              :class="{ 'me-1': mandatory.selected !== 'best', 'ms-1': mandatory.selected !== 'worst' }"
+              icon="fas fa-equals"
+              :text="t('characters.attributes.mandatory.label')"
+              @click="setMandatory(index)"
+            />
+            <TarButton
+              v-if="mandatory.selected !== 'best'"
+              class="ms-1"
+              icon="fas fa-plus"
+              :text="t('characters.attributes.best.label')"
+              @click="setBest(index)"
+            />
+          </TarCard>
+        </div>
+      </div>
+      <p v-if="!best" class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.best.select") }}</p>
+      <p v-else-if="!worst" class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.worst.select") }}</p>
+      <p v-if="best && best === worst" class="text-danger">
+        <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.bestCannotBeWorst") }}
+      </p>
       <h6>{{ t("aspects.attributes.optional") }}</h6>
-      <p>TODO(fpion): optional attributes</p>
-      <p class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> TODO(fpion): warning</p>
+      <div class="align-items-stretch mb-3 row">
+        <div v-for="(optional, index) in optional" :key="index" class="col">
+          <TarCard :class="{ 'h-100 optional': true, selected: optional.selected }" :title="optional.text" @click="toggleOptional(index)">
+            <template v-if="optional.selected" #subtitle-override>
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                <font-awesome-icon icon="fas fa-check" /> {{ t("characters.attributes.optional.selected") }}
+              </h6>
+            </template>
+          </TarCard>
+        </div>
+      </div>
+      <p v-if="requiredOptional < 0" class="text-danger">
+        <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.optional.less", { n: -requiredOptional }) }}
+      </p>
+      <p v-if="requiredOptional > 0" class="text-danger">
+        <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.optional.more", { n: requiredOptional }) }}
+      </p>
       <template v-if="lineageAttributes.extra > 0">
         <h5>{{ t("characters.lineage") }}</h5>
         <p v-if="requiredExtra > 0" class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> requiredExtra: {{ requiredExtra }}</p>
@@ -304,3 +453,13 @@ onMounted(() => {
     </form>
   </div>
 </template>
+
+<style scoped>
+.optional.selected {
+  background-color: var(--bs-tertiary-bg);
+}
+.optional:hover {
+  background-color: var(--bs-secondary-bg);
+  cursor: pointer;
+}
+</style>

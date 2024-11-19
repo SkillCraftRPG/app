@@ -6,9 +6,29 @@
   },
   "attributes": {
     "bases": "Bases",
+    "best": {
+      "label": "Best",
+      "select": "You must select one best attribute."
+    },
+    "bestCannotBeWorst": "The best attribute must be different from the worst attribute.",
     "extra": "extra | extra different",
     "label": "Attributes",
-    "spend": "You must spend {n} additional attribute point. | You must spend {n} additional attribute points."
+    "mandatory": {
+      "best": "Best (+3)",
+      "label": "Mandatory",
+      "mandatory": "Mandatory (+2)",
+      "worst": "Worst (+1)"
+    },
+    "optional": {
+      "less": "You have selected {n} optional attribute too many. | You have selected {n} optional attributes too many.",
+      "selected": "Selected (+1)",
+      "more": "You must select {n} additional optional attribute. | You must select {n} additional optional attributes."
+    },
+    "spend": "You must spend {n} additional attribute point. | You must spend {n} additional attribute points.",
+    "worst": {
+      "label": "Worst",
+      "select": "You must select one worst attribute."
+    }
   },
   "create": "Create Character",
   "customizations": {

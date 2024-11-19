@@ -54,7 +54,7 @@ async function onComplete(): Promise<void> {
  * (✅) CustomizationsNotFoundException
  * ( ) EducationHasNoSkillTalentException
  * (✅) EducationNotFoundException
- * ( ) InvalidAspectAttributeSelectionException
+ * (✅) InvalidAspectAttributeSelectionException
  * ( ) InvalidCasteEducationSelectionException
  * (✅) InvalidCharacterCustomizationsException
  * (✅) InvalidCharacterLineageException

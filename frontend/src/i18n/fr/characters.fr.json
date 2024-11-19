@@ -6,9 +6,29 @@
   },
   "attributes": {
     "bases": "Bases",
+    "best": {
+      "label": "Meilleur",
+      "select": "Vous devez sélectionner un meilleur attribut."
+    },
+    "bestCannotBeWorst": "Le meilleur attribut doit être différent du pire attribut.",
     "extra": "au choix | différents au choix",
     "label": "Attributs",
-    "spend": "Vous devez dépenser {n} point d’attribut supplémentaire. | Vous devez dépenser {n} points d’attribut supplémentaires."
+    "mandatory": {
+      "best": "Meilleur (+3)",
+      "label": "Obligatoire",
+      "mandatory": "Obligatoire (+2)",
+      "worst": "Pire (+1)"
+    },
+    "optional": {
+      "less": "Vous avez sélectionné {n} attribut optionnel en trop. | Vous avez sélectionné {n} attributs optionnels en trop.",
+      "selected": "Sélectionné (+1)",
+      "more": "Vous devez sélectionner {n} attribut optionnel supplémentaire. | Vous devez sélectionner {n} attributs optionnels supplémentaires."
+    },
+    "spend": "Vous devez dépenser {n} point d’attribut supplémentaire. | Vous devez dépenser {n} points d’attribut supplémentaires.",
+    "worst": {
+      "label": "Pire",
+      "select": "Vous devez sélectionner un pire attribut."
+    }
   },
   "create": "Création de personnage",
   "customizations": {
