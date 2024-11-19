@@ -43,7 +43,7 @@ const attributes = computed<string>(() => {
     .filter(([, bonus]) => bonus > 0)
     .map(([attribute, bonus]) => `+${bonus} ${t(`game.attributes.${attribute}`)}`);
   if (extra > 0) {
-    bonuses.push(`+${extra} ${t("characters.attributes.extra", extra)}`);
+    bonuses.push(`+${extra} ${t("characters.attributes.extra.label", extra)}`);
   }
   return bonuses.join(", ");
 });

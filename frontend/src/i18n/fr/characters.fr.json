@@ -11,7 +11,11 @@
       "select": "Vous devez sélectionner un meilleur attribut."
     },
     "bestCannotBeWorst": "Le meilleur attribut doit être différent du pire attribut.",
-    "extra": "au choix | différents au choix",
+    "extra": {
+      "label": "au choix | différents au choix",
+      "less": "Vous avez sélectionné {n} attribut additionnel en trop. | Vous avez sélectionné {n} attributs additionnels en trop.",
+      "more": "Vous devez sélectionner {n} attribut additionnel supplémentaire. | Vous devez sélectionner {n} attributs additionnels supplémentaires."
+    },
     "label": "Attributs",
     "mandatory": {
       "best": "Meilleur (+3)",
@@ -21,9 +25,9 @@
     },
     "optional": {
       "less": "Vous avez sélectionné {n} attribut optionnel en trop. | Vous avez sélectionné {n} attributs optionnels en trop.",
-      "selected": "Sélectionné (+1)",
       "more": "Vous devez sélectionner {n} attribut optionnel supplémentaire. | Vous devez sélectionner {n} attributs optionnels supplémentaires."
     },
+    "selected": "Sélectionné (+1)",
     "spend": "Vous devez dépenser {n} point d’attribut supplémentaire. | Vous devez dépenser {n} points d’attribut supplémentaires.",
     "worst": {
       "label": "Pire",

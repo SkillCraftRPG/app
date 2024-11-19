@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import AttributeCard from "./AttributeCard.vue";
 import type { Attribute } from "@/types/game";
 import type { AttributeBonusesModel, LineageModel } from "@/types/lineages";
 import type { Step1, Step2, Step3, Step4 } from "@/types/characters";
@@ -285,6 +286,15 @@ function setWorst(index: number): void {
   }
 }
 
+function toggleExtra(attribute: Attribute): void {
+  const index: number = extra.value.findIndex((a) => a === attribute);
+  if (index < 0) {
+    extra.value.push(attribute);
+  } else {
+    extra.value.splice(index, 1);
+  }
+}
+
 function toggleOptional(index: number): void {
   let attribute: OptionalAttribute | undefined = optional.value[index];
   if (attribute) {
@@ -428,13 +438,7 @@ onMounted(() => {
       <h6>{{ t("aspects.attributes.optional") }}</h6>
       <div class="align-items-stretch mb-3 row">
         <div v-for="(optional, index) in optional" :key="index" class="col">
-          <TarCard :class="{ 'h-100 optional': true, selected: optional.selected }" :title="optional.text" @click="toggleOptional(index)">
-            <template v-if="optional.selected" #subtitle-override>
-              <h6 class="card-subtitle mb-2 text-body-secondary">
-                <font-awesome-icon icon="fas fa-check" /> {{ t("characters.attributes.optional.selected") }}
-              </h6>
-            </template>
-          </TarCard>
+          <AttributeCard :attribute="optional.attribute" :selected="optional.selected" @click="toggleOptional(index)" />
         </div>
       </div>
       <p v-if="requiredOptional < 0" class="text-danger">
@@ -445,21 +449,20 @@ onMounted(() => {
       </p>
       <template v-if="lineageAttributes.extra > 0">
         <h5>{{ t("characters.lineage") }}</h5>
-        <p v-if="requiredExtra > 0" class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> requiredExtra: {{ requiredExtra }}</p>
-        <p>TODO(fpion): extra attributes</p>
+        <div class="mb-3 row">
+          <div v-for="row in rows" :key="row.attribute" class="col">
+            <AttributeCard :attribute="row.attribute" :selected="extra.includes(row.attribute)" @click="toggleExtra(row.attribute)" />
+          </div>
+        </div>
+        <p v-if="requiredExtra < 0" class="text-danger">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.extra.less", { n: -requiredExtra }) }}
+        </p>
+        <p v-if="requiredExtra > 0" class="text-danger">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.extra.more", { n: requiredExtra }) }}
+        </p>
       </template>
       <TarButton class="me-1" icon="fas fa-arrow-left" :text="t('actions.back')" variant="secondary" @click="character.goBack()" />
       <TarButton class="ms-1" :disabled="!isCompleted" icon="fas fa-arrow-right" :text="t('actions.continue')" type="submit" />
     </form>
   </div>
 </template>
-
-<style scoped>
-.optional.selected {
-  background-color: var(--bs-tertiary-bg);
-}
-.optional:hover {
-  background-color: var(--bs-secondary-bg);
-  cursor: pointer;
-}
-</style>
