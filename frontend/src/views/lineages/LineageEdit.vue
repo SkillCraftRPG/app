@@ -115,7 +115,7 @@ function setModel(model: LineageModel): void {
   };
   size.value = { ...model.size, roll: model.size.roll ?? "" };
   speeds.value = { ...model.speeds };
-  traits.value = model.features.map((trait) => ({ trait, isRemoved: false, isUpdated: false }));
+  traits.value = model.traits.map((trait) => ({ trait, isRemoved: false, isUpdated: false }));
   weight.value = {
     starved: model.weight.starved ?? "",
     skinny: model.weight.skinny ?? "",
@@ -134,7 +134,7 @@ const onSubmit = handleSubmit(async () => {
         name: name.value,
         description: description.value,
         attributes: attributes.value,
-        features: traits.value.filter(({ isRemoved }) => !isRemoved).map(({ trait }) => trait),
+        traits: traits.value.filter(({ isRemoved }) => !isRemoved).map(({ trait }) => trait),
         languages: languages.value,
         names: names.value,
         speeds: speeds.value,

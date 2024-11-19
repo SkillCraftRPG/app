@@ -104,7 +104,7 @@ onMounted(async () => {
       </div>
       <template v-if="caste">
         <MarkdownText v-if="caste.description" :text="caste.description" />
-        <CasteDetail v-if="caste.traits.length > 0" :caste="caste" />
+        <CasteDetail v-if="caste.features.length > 0" :caste="caste" />
         <p v-if="!isCasteValid" class="text-danger">
           <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t(caste.skill ? "characters.caste.invalid.talent" : "characters.caste.invalid.skill") }}
         </p>

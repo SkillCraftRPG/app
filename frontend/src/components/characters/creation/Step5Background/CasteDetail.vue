@@ -3,7 +3,7 @@ import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 
 import MarkdownText from "@/components/shared/MarkdownText.vue";
-import type { TraitModel, CasteModel } from "@/types/castes";
+import type { FeatureModel, CasteModel } from "@/types/castes";
 
 const { orderBy } = arrayUtils;
 
@@ -11,7 +11,7 @@ const props = defineProps<{
   caste: CasteModel;
 }>();
 
-const features = computed<TraitModel[]>(() => orderBy(props.caste.traits, "name"));
+const features = computed<FeatureModel[]>(() => orderBy(props.caste.features, "name"));
 </script>
 
 <template>

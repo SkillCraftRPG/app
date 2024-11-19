@@ -45,9 +45,9 @@ const sortOptions = computed<SelectOption[]>(() =>
   ),
 );
 
-function formatTraits(caste: CasteModel): string {
-  const traits: string[] = caste.traits.map(({ name }) => name);
-  return traits.join("<br />") || "—";
+function formatFeatures(caste: CasteModel): string {
+  const features: string[] = caste.features.map(({ name }) => name);
+  return features.join("<br />") || "—";
 }
 
 function onCreated(caste: CasteModel): void {
@@ -168,7 +168,7 @@ watch(
             <th scope="col">{{ t("castes.sort.options.Name") }}</th>
             <th scope="col">{{ t("game.skill") }}</th>
             <th scope="col">{{ t("game.startingWealth") }}</th>
-            <th scope="col">{{ t("castes.traits.label") }}</th>
+            <th scope="col">{{ t("castes.features.label") }}</th>
             <th scope="col">{{ t("castes.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
@@ -179,7 +179,7 @@ watch(
             </td>
             <td>{{ caste.skill ? t(`game.skills.options.${caste.skill}`) : "—" }}</td>
             <td>{{ caste.wealthRoll ?? "—" }}</td>
-            <td v-html="formatTraits(caste)"></td>
+            <td v-html="formatFeatures(caste)"></td>
             <td><StatusBlock :actor="caste.updatedBy" :date="caste.updatedOn" /></td>
           </tr>
         </tbody>

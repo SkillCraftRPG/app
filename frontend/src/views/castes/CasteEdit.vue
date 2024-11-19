@@ -7,14 +7,14 @@ import { useRoute, useRouter } from "vue-router";
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import BackButton from "@/components/shared/BackButton.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
+import FeatureList from "@/components/castes/FeatureList.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SaveButton from "@/components/shared/SaveButton.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
-import TraitList from "@/components/castes/TraitList.vue";
 import WealthRollInput from "@/components/castes/WealthRollInput.vue";
 import type { ApiError } from "@/types/api";
-import type { CreateOrReplaceCastePayload, CasteModel, TraitStatus, TraitPayload, TraitUpdated } from "@/types/castes";
+import type { CreateOrReplaceCastePayload, CasteModel, FeatureStatus, FeaturePayload, FeatureUpdated } from "@/types/castes";
 import type { Skill } from "@/types/game";
 import { handleErrorKey } from "@/inject/App";
 import { readCaste, replaceCaste } from "@/api/castes";
@@ -28,10 +28,10 @@ const { t } = useI18n();
 
 const caste = ref<CasteModel>();
 const description = ref<string>("");
+const features = ref<FeatureStatus[]>([]);
 const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const skill = ref<Skill>();
-const traits = ref<TraitStatus[]>([]);
 const wealthRoll = ref<string>("");
 
 const hasChanges = computed<boolean>(
@@ -41,7 +41,7 @@ const hasChanges = computed<boolean>(
       skill.value !== (caste.value.skill ?? undefined) ||
       wealthRoll.value !== (caste.value.wealthRoll ?? "") ||
       description.value !== (caste.value.description ?? "") ||
-      traits.value.some((trait) => !trait.trait.id || trait.isRemoved || trait.isUpdated)),
+      features.value.some((feature) => !feature.feature.id || feature.isRemoved || feature.isUpdated)),
 );
 
 function setModel(model: CasteModel): void {
@@ -49,29 +49,29 @@ function setModel(model: CasteModel): void {
   description.value = model.description ?? "";
   name.value = model.name;
   skill.value = model.skill ?? undefined;
-  traits.value = model.traits.map((trait) => ({ trait: { ...trait }, isRemoved: false, isUpdated: false }));
+  features.value = model.features.map((feature) => ({ feature: { ...feature }, isRemoved: false, isUpdated: false }));
   wealthRoll.value = model.wealthRoll ?? "";
 }
 
-function onTraitAdded(trait: TraitPayload): void {
-  traits.value.push({ trait, isRemoved: false, isUpdated: false });
+function onFeatureAdded(feature: FeaturePayload): void {
+  features.value.push({ feature, isRemoved: false, isUpdated: false });
 }
-function onTraitRemoved(index: number): void {
-  const trait: TraitStatus | undefined = traits.value[index];
-  if (trait) {
-    if (trait.trait.id) {
-      trait.isRemoved = !trait.isRemoved;
+function onFeatureRemoved(index: number): void {
+  const feature: FeatureStatus | undefined = features.value[index];
+  if (feature) {
+    if (feature.feature.id) {
+      feature.isRemoved = !feature.isRemoved;
     } else {
-      traits.value.splice(index, 1);
+      features.value.splice(index, 1);
     }
   }
 }
-function onTraitUpdated(event: TraitUpdated): void {
-  const trait: TraitStatus | undefined = traits.value[event.index];
-  if (trait) {
-    trait.trait = event.trait;
-    if (trait.trait.id) {
-      trait.isUpdated = true;
+function onFeatureUpdated(event: FeatureUpdated): void {
+  const feature: FeatureStatus | undefined = features.value[event.index];
+  if (feature) {
+    feature.feature = event.feature;
+    if (feature.feature.id) {
+      feature.isUpdated = true;
     }
   }
 }
@@ -85,7 +85,7 @@ const onSubmit = handleSubmit(async () => {
         description: description.value,
         skill: skill.value,
         wealthRoll: wealthRoll.value,
-        traits: traits.value.filter(({ isRemoved }) => !isRemoved).map(({ trait }) => trait),
+        features: features.value.filter(({ isRemoved }) => !isRemoved).map(({ feature }) => feature),
       };
       const model: CasteModel = await replaceCaste(caste.value.id, payload, caste.value.version);
       setModel(model);
@@ -128,7 +128,7 @@ onMounted(async () => {
           <WealthRollInput class="col-lg-4" v-model="wealthRoll" />
         </div>
         <DescriptionTextarea v-model="description" />
-        <TraitList :traits="traits" @added="onTraitAdded" @removed="onTraitRemoved" @updated="onTraitUpdated" />
+        <FeatureList :features="features" @added="onFeatureAdded" @removed="onFeatureRemoved" @updated="onFeatureUpdated" />
         <div>
           <SaveButton class="me-1" :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
           <BackButton class="ms-1" :has-changes="hasChanges" />

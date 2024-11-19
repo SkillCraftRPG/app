@@ -9,7 +9,7 @@ export type CasteModel = Aggregate & {
   description?: string;
   skill?: Skill;
   wealthRoll?: string;
-  traits: TraitModel[];
+  features: FeatureModel[];
 };
 
 export type CasteSort = "CreatedOn" | "Name" | "UpdatedOn";
@@ -23,33 +23,33 @@ export type CreateOrReplaceCastePayload = {
   description?: string;
   skill?: Skill;
   wealthRoll?: string;
-  traits: TraitPayload[];
+  features: FeaturePayload[];
 };
 
-export type SearchCastesPayload = SearchPayload & {
-  skill?: Skill;
-  sort: CasteSortOption[];
-};
-
-export type TraitModel = {
+export type FeatureModel = {
   id: string;
   name: string;
   description?: string;
 };
 
-export type TraitPayload = {
+export type FeaturePayload = {
   id?: string;
   name: string;
   description?: string;
 };
 
-export type TraitStatus = {
-  trait: TraitPayload;
+export type FeatureStatus = {
+  feature: FeaturePayload;
   isRemoved: boolean;
   isUpdated: boolean;
 };
 
-export type TraitUpdated = {
+export type FeatureUpdated = {
   index: number;
-  trait: TraitPayload;
+  feature: FeaturePayload;
+};
+
+export type SearchCastesPayload = SearchPayload & {
+  skill?: Skill;
+  sort: CasteSortOption[];
 };
