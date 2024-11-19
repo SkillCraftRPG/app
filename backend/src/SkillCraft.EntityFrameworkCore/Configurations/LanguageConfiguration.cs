@@ -20,7 +20,7 @@ internal class LanguageConfiguration : AggregateConfiguration<LanguageEntity>, I
     builder.HasIndex(x => x.Script);
     builder.HasIndex(x => x.TypicalSpeakers);
 
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.Script).HasMaxLength(Script.MaximumLength);
     builder.Property(x => x.TypicalSpeakers).HasMaxLength(TypicalSpeakers.MaximumLength);
 

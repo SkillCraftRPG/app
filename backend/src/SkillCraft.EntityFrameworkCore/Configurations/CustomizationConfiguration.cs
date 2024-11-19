@@ -20,7 +20,7 @@ internal class CustomizationConfiguration : AggregateConfiguration<Customization
     builder.HasIndex(x => x.Type);
     builder.HasIndex(x => x.Name);
 
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.Type).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<CustomizationType>());
 
     builder.HasOne(x => x.World).WithMany(x => x.Customizations)

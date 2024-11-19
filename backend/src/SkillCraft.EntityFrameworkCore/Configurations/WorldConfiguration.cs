@@ -22,7 +22,7 @@ internal class WorldConfiguration : AggregateConfiguration<WorldEntity>, IEntity
 
     builder.Property(x => x.Slug).HasMaxLength(Slug.MaximumLength);
     builder.Property(x => x.SlugNormalized).HasMaxLength(Slug.MaximumLength);
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
 
     builder.HasOne(x => x.Owner).WithMany(x => x.Worlds)
       .HasPrincipalKey(x => x.UserId).HasForeignKey(x => x.UserId)

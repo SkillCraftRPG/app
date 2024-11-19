@@ -23,7 +23,7 @@ internal class ItemConfiguration : AggregateConfiguration<ItemEntity>, IEntityTy
     builder.HasIndex(x => x.IsAttunementRequired);
     builder.HasIndex(x => x.Category);
 
-    builder.Property(x => x.Name).HasMaxLength(Slug.MaximumLength);
+    builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.Category).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<ItemCategory>());
 
     builder.HasOne(x => x.World).WithMany(x => x.Items)
