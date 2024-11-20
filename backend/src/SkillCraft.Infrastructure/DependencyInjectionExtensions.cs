@@ -57,7 +57,7 @@ public static class DependencyInjectionExtensions
     new LanguageIdConverter(),
     new LineageIdConverter(),
     new NameConverter(),
-    new PersonalityIdConverter(),
+    new NatureIdConverter(),
     new PlayerNameConverter(),
     new RollConverter(),
     new ScriptConverter(),
