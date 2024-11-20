@@ -124,6 +124,7 @@ export type InventoryModel = {
 };
 
 export type SearchCharactersPayload = SearchPayload & {
+  playerName?: string;
   sort: CharacterSortOption[];
 };
 

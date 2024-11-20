@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Logitar.Portal.Contracts.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillCraft.Application;
 using SkillCraft.Application.Characters.Commands;
@@ -7,6 +8,7 @@ using SkillCraft.Constants;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
+using SkillCraft.Models.Characters;
 
 namespace SkillCraft.Controllers;
 
@@ -32,10 +34,24 @@ public class CharacterController : ControllerBase
     return Created(location, character);
   }
 
+  [HttpGet("players")]
+  public async Task<ActionResult<SearchResults<string>>> ListPlayersAsync(CancellationToken cancellationToken)
+  {
+    SearchResults<string> players = await _pipeline.ExecuteAsync(new SearchPlayersQuery(), cancellationToken);
+    return Ok(players);
+  }
+
   [HttpGet("{id}")]
   public async Task<ActionResult<CharacterModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new ReadCharacterQuery(id), cancellationToken);
     return character == null ? NotFound() : Ok(character);
+  }
+
+  [HttpGet]
+  public async Task<ActionResult<SearchResults<CharacterModel>>> SearchAsync([FromQuery] SearchCharactersParameters parameters, CancellationToken cancellationToken)
+  {
+    SearchResults<CharacterModel> castes = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(castes);
   }
 }

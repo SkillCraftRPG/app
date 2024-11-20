@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
 
 namespace SkillCraft.Application.Customizations.Queries;
@@ -33,5 +34,7 @@ public class SearchCustomizationsQueryHandlerTests
     SearchResults<CustomizationModel> customizations = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, customizations);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Customization, _cancellationToken), Times.Once);
   }
 }

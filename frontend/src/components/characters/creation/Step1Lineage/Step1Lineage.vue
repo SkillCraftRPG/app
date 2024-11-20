@@ -248,7 +248,7 @@ onMounted(() => {
         <h5>{{ t("characters.name") }}</h5>
         <div class="row">
           <NameInput class="col" required v-model="name" />
-          <NameInput class="col" id="player" label="characters.player" placeholder="characters.player" v-model="player" />
+          <NameInput class="col" id="player" label="characters.player.label" placeholder="characters.player.label" v-model="player" />
         </div>
         <LineageNames :lineage="nation ?? species" />
         <LineageSpeeds :lineage="nation ?? species" />

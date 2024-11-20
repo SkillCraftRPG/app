@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Lineages;
 
 namespace SkillCraft.Application.Lineages.Queries;
@@ -33,5 +34,7 @@ public class SearchLineagesQueryHandlerTests
     SearchResults<LineageModel> lineages = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, lineages);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Lineage, _cancellationToken), Times.Once);
   }
 }
