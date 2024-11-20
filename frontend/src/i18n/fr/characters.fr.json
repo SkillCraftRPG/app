@@ -66,7 +66,10 @@
   "list": "Personnages",
   "name": "Nom du personnage",
   "natureAttributeBonus": "Bonus d’attribut (+1)",
-  "player": "Nom du joueur",
+  "player": {
+    "all": "Tous joueurs",
+    "label": "Nom du joueur"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

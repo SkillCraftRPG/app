@@ -8,6 +8,7 @@ import { useRoute, useRouter } from "vue-router";
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import PlayerSelect from "@/components/characters/PlayerSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
@@ -29,6 +30,7 @@ const total = ref<number>(0);
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
+const player = computed<string>(() => route.query.player?.toString() ?? "");
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
@@ -42,6 +44,7 @@ const sortOptions = computed<SelectOption[]>(() =>
 async function refresh(): Promise<void> {
   const payload: SearchCharactersPayload = {
     ids: [],
+    playerName: player.value,
     search: {
       terms: search.value
         .split(" ")
@@ -57,12 +60,11 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    // const results = await searchCharacters(payload);
-    // if (now === timestamp.value) {
-    //   characters.value = results.items;
-    //   total.value = results.total;
-    // }
-    // TODO(fpion): implement
+    const results = await searchCharacters(payload);
+    if (now === timestamp.value) {
+      characters.value = results.items;
+      total.value = results.total;
+    }
   } catch (e: unknown) {
     handleError(e);
   } finally {
@@ -75,6 +77,7 @@ async function refresh(): Promise<void> {
 function setQuery(key: string, value: string): void {
   const query = { ...route.query, [key]: value };
   switch (key) {
+    case "player":
     case "search":
     case "count":
       query.page = "1";
@@ -93,6 +96,7 @@ watch(
           ...route,
           query: objectUtils.isEmpty(query)
             ? {
+                player: "",
                 search: "",
                 sort: "Name",
                 isDescending: "false",
@@ -133,32 +137,35 @@ watch(
       </RouterLink>
     </div>
     <div class="row">
-      <SearchInput class="col-lg-4" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
+      <PlayerSelect class="col-lg-3" :model-value="player" @update:model-value="setQuery('player', $event ?? '')" />
+      <SearchInput class="col-lg-3" :model-value="search" @update:model-value="setQuery('search', $event ?? '')" />
       <SortSelect
-        class="col-lg-4"
+        class="col-lg-3"
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
         @update:model-value="setQuery('sort', $event ?? '')"
       />
-      <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
+      <CountSelect class="col-lg-3" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
     <template v-if="characters.length">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("characters.sort.options.Name") }}</th>
+            <th scope="col">{{ t("characters.name") }}</th>
+            <th scope="col">{{ t("characters.player.label") }}</th>
             <th scope="col">{{ t("characters.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="character in characters" :key="character.id">
             <td>
-              <RouterLink :to="{ name: 'CharacterEdit', params: { id: character.id } }"
-                ><font-awesome-icon icon="fas fa-edit" />{{ character.name }}</RouterLink
-              >
+              <RouterLink :to="{ name: 'CharacterEdit', params: { id: character.id } }">
+                <font-awesome-icon icon="fas fa-edit" />{{ character.name }}
+              </RouterLink>
             </td>
+            <td>{{ character.playerName ?? "—" }}</td>
             <td><StatusBlock :actor="character.updatedBy" :date="character.updatedOn" /></td>
           </tr>
         </tbody>

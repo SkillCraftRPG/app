@@ -13,6 +13,11 @@ export async function createCharacter(payload: CreateCharacterPayload): Promise<
   return (await post<CreateCharacterPayload, CharacterModel>(url, payload)).data;
 }
 
+export async function listPlayers(): Promise<SearchResults<string>> {
+  const url: string = createUrlBuilder("players").buildRelative();
+  return (await get<SearchResults<string>>(url)).data;
+}
+
 export async function readCharacter(id: string): Promise<CharacterModel> {
   const url: string = createUrlBuilder(id).buildRelative();
   return (await get<CharacterModel>(url)).data;
@@ -21,6 +26,7 @@ export async function readCharacter(id: string): Promise<CharacterModel> {
 export async function searchCharacters(payload: SearchCharactersPayload): Promise<SearchResults<CharacterModel>> {
   const url: string = createUrlBuilder()
     .setQuery("ids", payload.ids)
+    .setQuery("player", payload.playerName ?? "")
     .setQuery(
       "search",
       payload.search.terms.map(({ value }) => value),
