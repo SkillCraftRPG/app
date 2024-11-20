@@ -29,6 +29,29 @@ onMounted(async () => {
     }
   }
 });
+
+/*
+ * (❌) Account
+ * (❌) Worlds
+ * (🚧) Membership
+ * (⭐) Parties
+ * (⭐) Characters
+ * (✅) Lineages
+ * (✅) Castes
+ * (✅) Educations
+ * (✅) Natures
+ * (✅) Specializations
+ * (✅) Aspects
+ * (✅) Customizations
+ * (✅) Languages
+ * (✅) Items
+ * (✅) Talents
+ * (✅) Powers
+ * (❌) Comments
+ * (❌) Documents
+ * (❌) Permissions
+ * (❌) Player Interface
+ */
 </script>
 
 <template>
@@ -43,41 +66,56 @@ onMounted(async () => {
           </RouterLink>
         </div>
       </div>
-      <ul>
-        <li>
-          <RouterLink :to="{ name: 'LanguageList', params: { slug: world.slug } }">{{ t("languages.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'LineageList', params: { slug: world.slug } }">{{ t("lineages.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'CustomizationList', params: { slug: world.slug } }">{{ t("customizations.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'NatureList', params: { slug: world.slug } }">{{ t("natures.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'CasteList', params: { slug: world.slug } }">{{ t("castes.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'EducationList', params: { slug: world.slug } }">{{ t("educations.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'TalentList', params: { slug: world.slug } }">{{ t("talents.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'ItemList', params: { slug: world.slug } }">{{ t("items.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'PartyList', params: { slug: world.slug } }">{{ t("parties.list") }}</RouterLink>
-        </li>
-        <li>
-          <RouterLink :to="{ name: 'CharacterList', params: { slug: world.slug } }">{{ t("characters.list") }}</RouterLink>
-        </li>
-      </ul>
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'LanguageList', params: { slug: world.slug } }">{{ t("languages.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'LineageList', params: { slug: world.slug } }">{{ t("lineages.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'CustomizationList', params: { slug: world.slug } }">{{ t("customizations.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'NatureList', params: { slug: world.slug } }">{{ t("natures.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'CasteList', params: { slug: world.slug } }">{{ t("castes.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'EducationList', params: { slug: world.slug } }">{{ t("educations.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'TalentList', params: { slug: world.slug } }">{{ t("talents.list") }}</RouterLink>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'ItemList', params: { slug: world.slug } }">{{ t("items.list") }}</RouterLink>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'PartyList', params: { slug: world.slug } }">{{ t("parties.list") }}</RouterLink>
+        </div>
+        <div class="col-sm-6 mb-3">
+          <RouterLink class="tile" :to="{ name: 'CharacterList', params: { slug: world.slug } }">{{ t("characters.list") }}</RouterLink>
+        </div>
+      </div>
     </template>
   </main>
 </template>
+
+<style scoped>
+.tile {
+  background-color: var(--bs-tertiary-bg);
+  border: 0.25rem solid var(--bs-border-color);
+  height: 200px;
+  width: 200px;
+}
+.tile:hover {
+  background-color: var(--bs-secondary-bg);
+  cursor: pointer;
+}
+</style>
