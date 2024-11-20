@@ -20,11 +20,11 @@ const props = defineProps<{
   modelValue: AttributeBonusesModel;
 }>();
 
-const attributes = computed<Attribute[]>(() =>
+const attributes = computed<TranslatedAttribute[]>(() =>
   orderBy(
     Object.entries(tm(rt("game.attributes.options"))).map(([attribute, text]) => ({ attribute, text }) as TranslatedAttribute),
     "text",
-  ).map(({ attribute }) => attribute),
+  ),
 );
 
 const emit = defineEmits<{
@@ -90,8 +90,12 @@ function setExtra(extra: number): void {
   <div>
     <h3>{{ t("game.attributes.label") }}</h3>
     <div class="row">
-      <div v-for="attribute in attributes" :key="attribute" class="col">
-        <AttributeBonusInput :attribute="attribute" :model-value="getAttribute(attribute)" @update:model-value="setAttribute(attribute, $event)" />
+      <div v-for="translation in attributes" :key="translation.attribute" class="col">
+        <AttributeBonusInput
+          :attribute="translation.attribute"
+          :model-value="getAttribute(translation.attribute)"
+          @update:model-value="setAttribute(translation.attribute, $event)"
+        />
       </div>
       <div class="col">
         <ExtraAttributesInput :attributes="modelValue" :model-value="modelValue.extra" @update:model-value="setExtra($event ?? 0)" />
