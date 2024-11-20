@@ -75,12 +75,13 @@ public class SetCharacterLanguageCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    _characterRepository.Verify(x => x.SaveAsync(
-      It.Is<Character>(y => y.Equals(character) && y.Languages.Count == 1
-        && y.Languages.Any(l => l.Key == language.Id && l.Value.Notes != null && l.Value.Notes.Value == payload.Notes.Trim())),
-      _cancellationToken), Times.Once);
+    KeyValuePair<LanguageId, LanguageMetadata> relation = Assert.Single(character.Languages);
+    Assert.Equal(language.Id, relation.Key);
+    Assert.Equal(payload.Notes.Trim(), relation.Value.Notes?.Value);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, character.GetMetadata(), _cancellationToken), Times.Once);
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(command, EntityType.Language, _cancellationToken), Times.Once);
+
+    _characterRepository.Verify(x => x.SaveAsync(character, _cancellationToken), Times.Once);
   }
 }
