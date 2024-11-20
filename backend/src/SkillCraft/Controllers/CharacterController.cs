@@ -54,4 +54,11 @@ public class CharacterController : ControllerBase
     SearchResults<CharacterModel> castes = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
     return Ok(castes);
   }
+
+  [HttpPut("{characterId}/languages/{languageId}")]
+  public async Task<ActionResult<CharacterModel>> SetLanguageAsync(Guid characterId, Guid languageId, [FromBody] CharacterLanguagePayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterLanguageCommand(characterId, languageId, payload), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
+  }
 }
