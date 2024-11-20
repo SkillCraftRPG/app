@@ -2,9 +2,9 @@
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Worlds;
 
-namespace SkillCraft.Contracts.Personalities;
+namespace SkillCraft.Contracts.Natures;
 
-public class PersonalityModel : Aggregate
+public class NatureModel : Aggregate
 {
   public WorldModel World { get; set; }
 
@@ -14,11 +14,11 @@ public class PersonalityModel : Aggregate
   public Attribute? Attribute { get; set; }
   public CustomizationModel? Gift { get; set; }
 
-  public PersonalityModel() : this(new WorldModel(), string.Empty)
+  public NatureModel() : this(new WorldModel(), string.Empty)
   {
   }
 
-  public PersonalityModel(WorldModel world, string name)
+  public NatureModel(WorldModel world, string name)
   {
     World = world;
 

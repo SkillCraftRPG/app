@@ -4,7 +4,7 @@ using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Lineages;
-using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Natures;
 using SkillCraft.Contracts.Worlds;
 
 namespace SkillCraft.Contracts.Characters;
@@ -22,7 +22,7 @@ public class CharacterModel : Aggregate
   public int Age { get; set; }
   public List<CharacterLanguageModel> Languages { get; set; } = [];
 
-  public PersonalityModel Personality { get; set; } = new();
+  public NatureModel Nature { get; set; } = new();
   public List<CustomizationModel> Customizations { get; set; } = [];
 
   public List<AspectModel> Aspects { get; set; } = [];

@@ -1,6 +1,6 @@
-﻿namespace SkillCraft.Contracts.Personalities;
+﻿namespace SkillCraft.Contracts.Natures;
 
-public record UpdatePersonalityPayload
+public record UpdateNaturePayload
 {
   public string? Name { get; set; }
   public Change<string>? Description { get; set; }
