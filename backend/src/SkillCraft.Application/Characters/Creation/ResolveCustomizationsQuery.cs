@@ -5,12 +5,12 @@ using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Customizations;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Characters.Creation;
 
-internal record ResolveCustomizationsQuery(Activity Activity, Personality Personality, IEnumerable<Guid> Ids) : IRequest<IReadOnlyCollection<Customization>>;
+internal record ResolveCustomizationsQuery(Activity Activity, Nature Nature, IEnumerable<Guid> Ids) : IRequest<IReadOnlyCollection<Customization>>;
 
 internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustomizationsQuery, IReadOnlyCollection<Customization>>
 {
@@ -39,14 +39,14 @@ internal class ResolveCustomizationsQueryHandler : IRequestHandler<ResolveCustom
     IEnumerable<CustomizationId> ids = query.Ids.Distinct().Select(id => new CustomizationId(worldId, id));
     IReadOnlyCollection<Customization> customizations = await _customizationRepository.LoadAsync(ids, cancellationToken);
 
-    Personality personality = query.Personality;
+    Nature nature = query.Nature;
     int gifts = 0;
     int disabilities = 0;
     foreach (Customization customization in customizations)
     {
-      if (customization.Id == personality.GiftId)
+      if (customization.Id == nature.GiftId)
       {
-        throw new CustomizationsCannotIncludePersonalityGiftException(personality, PropertyName);
+        throw new CustomizationsCannotIncludeNatureGiftException(nature, PropertyName);
       }
 
       switch (customization.Type)

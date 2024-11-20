@@ -17,7 +17,7 @@ internal class CreateCharacterValidator : AbstractValidator<CreateCharacterPaylo
     RuleFor(x => x.Age).GreaterThan(0);
     RuleForEach(x => x.LanguageIds).NotEmpty();
 
-    RuleFor(x => x.PersonalityId).NotEmpty();
+    RuleFor(x => x.NatureId).NotEmpty();
     RuleForEach(x => x.CustomizationIds).NotEmpty();
 
     RuleForEach(x => x.AspectIds).NotEmpty();

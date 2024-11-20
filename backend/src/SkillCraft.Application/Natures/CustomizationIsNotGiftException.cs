@@ -4,7 +4,7 @@ using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Errors;
 using SkillCraft.Domain.Customizations;
 
-namespace SkillCraft.Application.Personalities;
+namespace SkillCraft.Application.Natures;
 
 internal class CustomizationIsNotGiftException : BadRequestException
 {

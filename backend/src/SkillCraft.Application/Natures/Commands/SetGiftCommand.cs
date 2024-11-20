@@ -2,15 +2,15 @@
 using SkillCraft.Application.Customizations;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Customizations;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 
-namespace SkillCraft.Application.Personalities.Commands;
+namespace SkillCraft.Application.Natures.Commands;
 
-internal record SetGiftCommand(Personality Personality, Guid? Id) : IRequest;
+internal record SetGiftCommand(Nature Nature, Guid? Id) : IRequest;
 
 internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
 {
-  private const string PropertyName = nameof(Personality.GiftId);
+  private const string PropertyName = nameof(Nature.GiftId);
 
   private readonly ICustomizationRepository _customizationRepository;
 
@@ -21,12 +21,12 @@ internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
 
   public async Task Handle(SetGiftCommand command, CancellationToken cancellationToken)
   {
-    Personality personality = command.Personality;
+    Nature nature = command.Nature;
 
     Customization? gift = null;
     if (command.Id.HasValue)
     {
-      CustomizationId giftId = new(personality.WorldId, command.Id.Value);
+      CustomizationId giftId = new(nature.WorldId, command.Id.Value);
       gift = await _customizationRepository.LoadAsync(giftId, cancellationToken)
         ?? throw new CustomizationNotFoundException(giftId, PropertyName);
       if (gift.Type != CustomizationType.Gift)
@@ -35,6 +35,6 @@ internal class SetGiftCommandHandler : IRequestHandler<SetGiftCommand>
       }
     }
 
-    personality.SetGift(gift);
+    nature.SetGift(gift);
   }
 }

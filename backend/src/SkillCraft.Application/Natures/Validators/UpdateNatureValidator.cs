@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Natures;
 using SkillCraft.Domain.Validators;
 
-namespace SkillCraft.Application.Personalities.Validators;
+namespace SkillCraft.Application.Natures.Validators;
 
-internal class UpdatePersonalityValidator : AbstractValidator<UpdatePersonalityPayload>
+internal class UpdateNatureValidator : AbstractValidator<UpdateNaturePayload>
 {
-  public UpdatePersonalityValidator()
+  public UpdateNatureValidator()
   {
     When(x => !string.IsNullOrWhiteSpace(x.Name), () => RuleFor(x => x.Name!).Name());
     When(x => !string.IsNullOrWhiteSpace(x.Description?.Value), () => RuleFor(x => x.Description!.Value!).Description());
