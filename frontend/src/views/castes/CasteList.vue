@@ -9,6 +9,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateCaste from "@/components/castes/CreateCaste.vue";
+import FeaturesBlock from "@/components/castes/FeaturesBlock.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -44,11 +45,6 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
-
-function formatFeatures(caste: CasteModel): string {
-  const features: string[] = caste.features.map(({ name }) => name);
-  return features.join("<br />") || "—";
-}
 
 function onCreated(caste: CasteModel): void {
   toasts.success("castes.created");
@@ -179,7 +175,7 @@ watch(
             </td>
             <td>{{ caste.skill ? t(`game.skills.options.${caste.skill}`) : "—" }}</td>
             <td>{{ caste.wealthRoll ?? "—" }}</td>
-            <td v-html="formatFeatures(caste)"></td>
+            <td><FeaturesBlock :caste="caste" /></td>
             <td><StatusBlock :actor="caste.updatedBy" :date="caste.updatedOn" /></td>
           </tr>
         </tbody>
