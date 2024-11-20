@@ -38,8 +38,8 @@ internal class CharacterQuerier : ICharacterQuerier
       .Include(x => x.Customizations).ThenInclude(x => x.World)
       .Include(x => x.Education).ThenInclude(x => x!.World)
       .Include(x => x.Lineage).ThenInclude(x => x!.World)
-      .Include(x => x.Personality).ThenInclude(x => x!.Gift).ThenInclude(x => x!.World)
-      .Include(x => x.Personality).ThenInclude(x => x!.World)
+      .Include(x => x.Nature).ThenInclude(x => x!.Gift).ThenInclude(x => x!.World)
+      .Include(x => x.Nature).ThenInclude(x => x!.World)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 

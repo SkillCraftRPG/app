@@ -28,8 +28,8 @@ internal static class Characters
   public static readonly ColumnId LineageId = new(nameof(CharacterEntity.LineageId), Table);
   public static readonly ColumnId MandatoryAttributes = new(nameof(CharacterEntity.MandatoryAttributes), Table);
   public static readonly ColumnId Name = new(nameof(CharacterEntity.Name), Table);
+  public static readonly ColumnId NatureId = new(nameof(CharacterEntity.NatureId), Table);
   public static readonly ColumnId OptionalAttributes = new(nameof(CharacterEntity.OptionalAttributes), Table);
-  public static readonly ColumnId PersonalityId = new(nameof(CharacterEntity.PersonalityId), Table);
   public static readonly ColumnId PlayerName = new(nameof(CharacterEntity.PlayerName), Table);
   public static readonly ColumnId Presence = new(nameof(CharacterEntity.Presence), Table);
   public static readonly ColumnId Sensitivity = new(nameof(CharacterEntity.Sensitivity), Table);

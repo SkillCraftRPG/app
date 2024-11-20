@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SkillCraft.Domain.Customizations;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using SkillCraft.EntityFrameworkCore.Entities;
 
 namespace SkillCraft.EntityFrameworkCore.Handlers;
 
-internal static class PersonalityEvents
+internal static class NatureEvents
 {
-  public class CreatedEventHandler : INotificationHandler<Personality.CreatedEvent>
+  public class CreatedEventHandler : INotificationHandler<Nature.CreatedEvent>
   {
     private readonly SkillCraftContext _context;
 
@@ -17,27 +17,27 @@ internal static class PersonalityEvents
       _context = context;
     }
 
-    public async Task Handle(Personality.CreatedEvent @event, CancellationToken cancellationToken)
+    public async Task Handle(Nature.CreatedEvent @event, CancellationToken cancellationToken)
     {
-      PersonalityEntity? personality = await _context.Personalities.AsNoTracking()
+      NatureEntity? nature = await _context.Natures.AsNoTracking()
         .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken);
-      if (personality == null)
+      if (nature == null)
       {
-        Guid worldId = new PersonalityId(@event.AggregateId).WorldId.ToGuid();
+        Guid worldId = new NatureId(@event.AggregateId).WorldId.ToGuid();
         WorldEntity world = await _context.Worlds
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
 
-        personality = new(world, @event);
+        nature = new(world, @event);
 
-        _context.Personalities.Add(personality);
+        _context.Natures.Add(nature);
 
         await _context.SaveChangesAsync(cancellationToken);
       }
     }
   }
 
-  public class UpdatedEventHandler : INotificationHandler<Personality.UpdatedEvent>
+  public class UpdatedEventHandler : INotificationHandler<Nature.UpdatedEvent>
   {
     private readonly SkillCraftContext _context;
 
@@ -46,11 +46,11 @@ internal static class PersonalityEvents
       _context = context;
     }
 
-    public async Task Handle(Personality.UpdatedEvent @event, CancellationToken cancellationToken)
+    public async Task Handle(Nature.UpdatedEvent @event, CancellationToken cancellationToken)
     {
-      PersonalityEntity personality = await _context.Personalities
+      NatureEntity nature = await _context.Natures
         .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
-        ?? throw new InvalidOperationException($"The personality entity 'AggregateId={@event.AggregateId}' could not be found.");
+        ?? throw new InvalidOperationException($"The nature entity 'AggregateId={@event.AggregateId}' could not be found.");
 
       CustomizationEntity? gift = null;
       if (@event.GiftId?.Value != null)
@@ -61,7 +61,7 @@ internal static class PersonalityEvents
           ?? throw new InvalidOperationException($"The customization entity 'AggregateId={giftId}' could not be found.");
       }
 
-      personality.Update(@event, gift);
+      nature.Update(@event, gift);
 
       await _context.SaveChangesAsync(cancellationToken);
     }

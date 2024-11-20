@@ -35,8 +35,8 @@ internal class CharacterConfiguration : AggregateConfiguration<CharacterEntity>,
     builder.HasOne(x => x.Lineage).WithMany(x => x.Characters)
       .HasPrincipalKey(x => x.LineageId).HasForeignKey(x => x.LineageId)
       .OnDelete(DeleteBehavior.Restrict);
-    builder.HasOne(x => x.Personality).WithMany(x => x.Characters)
-      .HasPrincipalKey(x => x.PersonalityId).HasForeignKey(x => x.PersonalityId)
+    builder.HasOne(x => x.Nature).WithMany(x => x.Characters)
+      .HasPrincipalKey(x => x.NatureId).HasForeignKey(x => x.NatureId)
       .OnDelete(DeleteBehavior.Restrict);
     builder.HasMany(x => x.Customizations).WithMany(x => x.Characters)
       .UsingEntity<CharacterCustomizationEntity>(join =>

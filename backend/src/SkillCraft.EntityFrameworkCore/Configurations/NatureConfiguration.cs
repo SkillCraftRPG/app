@@ -7,14 +7,14 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.EntityFrameworkCore.Configurations;
 
-internal class PersonalityConfiguration : AggregateConfiguration<PersonalityEntity>, IEntityTypeConfiguration<PersonalityEntity>
+internal class NatureConfiguration : AggregateConfiguration<NatureEntity>, IEntityTypeConfiguration<NatureEntity>
 {
-  public override void Configure(EntityTypeBuilder<PersonalityEntity> builder)
+  public override void Configure(EntityTypeBuilder<NatureEntity> builder)
   {
     base.Configure(builder);
 
-    builder.ToTable(SkillCraftDb.Personalities.Table.Table ?? string.Empty, SkillCraftDb.Personalities.Table.Schema);
-    builder.HasKey(x => x.PersonalityId);
+    builder.ToTable(SkillCraftDb.Natures.Table.Table ?? string.Empty, SkillCraftDb.Natures.Table.Schema);
+    builder.HasKey(x => x.NatureId);
 
     builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
@@ -23,10 +23,10 @@ internal class PersonalityConfiguration : AggregateConfiguration<PersonalityEnti
     builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.Attribute).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Attribute>());
 
-    builder.HasOne(x => x.Gift).WithMany(x => x.Personalities)
+    builder.HasOne(x => x.Gift).WithMany(x => x.Natures)
       .HasPrincipalKey(x => x.CustomizationId).HasForeignKey(x => x.GiftId)
       .OnDelete(DeleteBehavior.Restrict);
-    builder.HasOne(x => x.World).WithMany(x => x.Personalities)
+    builder.HasOne(x => x.World).WithMany(x => x.Natures)
       .HasPrincipalKey(x => x.WorldId).HasForeignKey(x => x.WorldId)
       .OnDelete(DeleteBehavior.Restrict);
   }

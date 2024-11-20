@@ -25,8 +25,8 @@ internal class CharacterEntity : AggregateEntity
   public int Age { get; private set; }
   public List<CharacterLanguageEntity> Languages { get; private set; } = [];
 
-  public PersonalityEntity? Personality { get; private set; }
-  public int PersonalityId { get; private set; }
+  public NatureEntity? Nature { get; private set; }
+  public int NatureId { get; private set; }
   public List<CustomizationEntity> Customizations { get; private set; } = [];
 
   public List<AspectEntity> Aspects { get; private set; } = [];
@@ -56,7 +56,7 @@ internal class CharacterEntity : AggregateEntity
   public CharacterEntity(
     WorldEntity world,
     LineageEntity lineage,
-    PersonalityEntity personality,
+    NatureEntity nature,
     IEnumerable<CustomizationEntity> customizations,
     IEnumerable<AspectEntity> aspects,
     CasteEntity caste,
@@ -77,8 +77,8 @@ internal class CharacterEntity : AggregateEntity
     Weight = @event.Weight;
     Age = @event.Age;
 
-    Personality = personality;
-    PersonalityId = personality.PersonalityId;
+    Nature = nature;
+    NatureId = nature.NatureId;
     Customizations.AddRange(customizations);
 
     Aspects.AddRange(aspects);
@@ -125,9 +125,9 @@ internal class CharacterEntity : AggregateEntity
         actorIds.AddRange(relation.Language.GetActorIds());
       }
     }
-    if (Personality != null)
+    if (Nature != null)
     {
-      actorIds.AddRange(Personality.GetActorIds());
+      actorIds.AddRange(Nature.GetActorIds());
     }
     foreach (CustomizationEntity customization in Customizations)
     {

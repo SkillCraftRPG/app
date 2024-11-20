@@ -1,12 +1,12 @@
 ﻿using Logitar.EventSourcing;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.EntityFrameworkCore.Entities;
 
-internal class PersonalityEntity : AggregateEntity
+internal class NatureEntity : AggregateEntity
 {
-  public int PersonalityId { get; private set; }
+  public int NatureId { get; private set; }
   public Guid Id { get; private set; }
 
   public WorldEntity? World { get; private set; }
@@ -21,9 +21,9 @@ internal class PersonalityEntity : AggregateEntity
 
   public List<CharacterEntity> Characters { get; private set; } = [];
 
-  public PersonalityEntity(WorldEntity world, Personality.CreatedEvent @event) : base(@event)
+  public NatureEntity(WorldEntity world, Nature.CreatedEvent @event) : base(@event)
   {
-    Id = new PersonalityId(@event.AggregateId).EntityId;
+    Id = new NatureId(@event.AggregateId).EntityId;
 
     World = world;
     WorldId = world.WorldId;
@@ -31,7 +31,7 @@ internal class PersonalityEntity : AggregateEntity
     Name = @event.Name.Value;
   }
 
-  private PersonalityEntity() : base()
+  private NatureEntity() : base()
   {
   }
 
@@ -49,7 +49,7 @@ internal class PersonalityEntity : AggregateEntity
     return actorIds.AsReadOnly();
   }
 
-  public void Update(Personality.UpdatedEvent @event, CustomizationEntity? gift)
+  public void Update(Nature.UpdatedEvent @event, CustomizationEntity? gift)
   {
     base.Update(@event);
 

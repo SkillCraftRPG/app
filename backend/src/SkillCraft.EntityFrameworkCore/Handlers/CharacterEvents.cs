@@ -30,9 +30,9 @@ internal static class CharacterEvents
         LineageEntity lineage = await _context.Lineages
           .SingleOrDefaultAsync(x => x.AggregateId == @event.LineageId.Value, cancellationToken)
           ?? throw new InvalidOperationException($"The lineage entity 'AggregateId={@event.LineageId}' could not be found.");
-        PersonalityEntity personality = await _context.Personalities
-          .SingleOrDefaultAsync(x => x.AggregateId == @event.PersonalityId.Value, cancellationToken)
-          ?? throw new InvalidOperationException($"The personality entity 'AggregateId={@event.PersonalityId}' could not be found.");
+        NatureEntity personality = await _context.Natures
+          .SingleOrDefaultAsync(x => x.AggregateId == @event.NatureId.Value, cancellationToken)
+          ?? throw new InvalidOperationException($"The nature entity 'AggregateId={@event.NatureId}' could not be found.");
         CasteEntity caste = await _context.Castes
           .SingleOrDefaultAsync(x => x.AggregateId == @event.CasteId.Value, cancellationToken)
           ?? throw new InvalidOperationException($"The caste entity 'AggregateId={@event.CasteId}' could not be found.");
