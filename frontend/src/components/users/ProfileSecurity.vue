@@ -4,20 +4,11 @@ import { ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+// import PhoneNumberInput from "./PhoneNumberInput.vue"; // ISSUE: https://github.com/SkillCraftRPG/app/issues/21
 import EmailAddressInput from "./EmailAddressInput.vue";
 import PasswordInput from "./PasswordInput.vue";
-// import PhoneNumberInput from "./PhoneNumberInput.vue"; // ISSUE: https://github.com/SkillCraftRPG/app/issues/21
 import type { MultiFactorAuthenticationMode, SecurityInformation } from "@/types/account";
-import type { PasswordSettings } from "@/types/settings";
 
-const passwordSettings: PasswordSettings = {
-  minimumLength: 8,
-  uniqueCharacters: 8,
-  requireNonAlphanumeric: true,
-  requireLowercase: true,
-  requireUppercase: true,
-  requireDigit: true,
-}; // ISSUE: https://github.com/SkillCraftRPG/app/issues/22
 const { t } = useI18n();
 
 defineProps<{
@@ -80,14 +71,7 @@ const onSubmit = handleSubmit(() => {
       <div v-if="usePassword">
         <h5>{{ t("users.password.label") }}</h5>
         <div class="row">
-          <PasswordInput
-            class="col-lg-6"
-            id="new-password"
-            label="users.password.new"
-            :required="usePassword"
-            :settings="passwordSettings"
-            v-model="newPassword"
-          />
+          <PasswordInput class="col-lg-6" id="new-password" label="users.password.new" :required="usePassword" v-model="newPassword" />
           <PasswordInput
             class="col-lg-6"
             :confirm="{ value: newPassword, label: 'users.password.new' }"
