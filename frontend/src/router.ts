@@ -128,6 +128,17 @@ const router = createRouter({
       path: "/worlds/:slug/lineages",
       component: () => import("./views/lineages/LineageList.vue"),
     },
+    // Natures
+    {
+      name: "NatureEdit",
+      path: "/worlds/:slug/natures/:id",
+      component: () => import("./views/natures/NatureEdit.vue"),
+    },
+    {
+      name: "NatureList",
+      path: "/worlds/:slug/natures",
+      component: () => import("./views/natures/NatureList.vue"),
+    },
     // Parties
     {
       name: "PartyEdit",
@@ -138,17 +149,6 @@ const router = createRouter({
       name: "PartyList",
       path: "/worlds/:slug/parties",
       component: () => import("./views/parties/PartyList.vue"),
-    },
-    // Personalities
-    {
-      name: "PersonalityEdit",
-      path: "/worlds/:slug/personalities/:id",
-      component: () => import("./views/personalities/PersonalityEdit.vue"),
-    },
-    {
-      name: "PersonalityList",
-      path: "/worlds/:slug/personalities",
-      component: () => import("./views/personalities/PersonalityList.vue"),
     },
     // Talents
     {

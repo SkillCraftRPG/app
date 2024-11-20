@@ -9,15 +9,15 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreatePersonality from "@/components/personalities/CreatePersonality.vue";
+import CreateNature from "@/components/natures/CreateNature.vue";
 import CustomizationSelect from "@/components/customizations/CustomizationSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { Attribute } from "@/types/game";
-import type { PersonalityModel, PersonalitySort, SearchPersonalitiesPayload } from "@/types/personalities";
+import type { NatureModel, NatureSort, SearchNaturesPayload } from "@/types/natures";
 import { handleErrorKey } from "@/inject/App";
-import { searchPersonalities } from "@/api/personalities";
+import { searchNatures } from "@/api/natures";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -28,7 +28,7 @@ const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
 const isLoading = ref<boolean>(false);
-const personalities = ref<PersonalityModel[]>([]);
+const natures = ref<NatureModel[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
@@ -42,18 +42,18 @@ const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 
 const sortOptions = computed<SelectOption[]>(() =>
   arrayUtils.orderBy(
-    Object.entries(tm(rt("personalities.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("natures.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
-function onCreated(personality: PersonalityModel): void {
-  toasts.success("personalities.created");
-  router.push({ name: "PersonalityEdit", params: { id: personality.id } });
+function onCreated(nature: NatureModel): void {
+  toasts.success("natures.created");
+  router.push({ name: "NatureEdit", params: { id: nature.id } });
 }
 
 async function refresh(): Promise<void> {
-  const payload: SearchPersonalitiesPayload = {
+  const payload: SearchNaturesPayload = {
     ids: [],
     search: {
       terms: search.value
@@ -64,7 +64,7 @@ async function refresh(): Promise<void> {
     },
     attribute: attribute.value,
     giftId: giftId.value,
-    sort: sort.value ? [{ field: sort.value as PersonalitySort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as NatureSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -72,9 +72,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results = await searchPersonalities(payload);
+    const results = await searchNatures(payload);
     if (now === timestamp.value) {
-      personalities.value = results.items;
+      natures.value = results.items;
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -102,7 +102,7 @@ function setQuery(key: string, value: string): void {
 watch(
   () => route,
   (route) => {
-    if (route.name === "PersonalityList") {
+    if (route.name === "NatureList") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
@@ -134,8 +134,8 @@ watch(
 
 <template>
   <main class="container">
-    <h1>{{ t("personalities.list") }}</h1>
-    <AppBreadcrumb :current="t('personalities.list')" @error="handleError" />
+    <h1>{{ t("natures.list") }}</h1>
+    <AppBreadcrumb :current="t('natures.list')" @error="handleError" />
     <div class="my-3">
       <TarButton
         class="me-1"
@@ -146,7 +146,7 @@ watch(
         :text="t('actions.refresh')"
         @click="refresh()"
       />
-      <CreatePersonality class="ms-1" @created="onCreated" @error="handleError" />
+      <CreateNature class="ms-1" @created="onCreated" @error="handleError" />
     </div>
     <div class="row">
       <AttributeSelect class="col-lg-6" :model-value="attribute" validation="server" @update:model-value="setQuery('attribute', $event ?? '')" />
@@ -173,36 +173,34 @@ watch(
       />
       <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
-    <template v-if="personalities.length">
+    <template v-if="natures.length">
       <table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">{{ t("personalities.sort.options.Name") }}</th>
+            <th scope="col">{{ t("natures.sort.options.Name") }}</th>
             <th scope="col">{{ t("game.attribute.label") }}</th>
             <th scope="col">{{ t("customizations.type.options.Gift") }}</th>
-            <th scope="col">{{ t("personalities.sort.options.UpdatedOn") }}</th>
+            <th scope="col">{{ t("natures.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="personality in personalities" :key="personality.id">
+          <tr v-for="nature in natures" :key="nature.id">
             <td>
-              <RouterLink :to="{ name: 'PersonalityEdit', params: { id: personality.id } }">
-                <font-awesome-icon icon="fas fa-edit" />{{ personality.name }}
-              </RouterLink>
+              <RouterLink :to="{ name: 'NatureEdit', params: { id: nature.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ nature.name }} </RouterLink>
             </td>
-            <td>{{ personality.attribute ? t(`game.attributes.options.${personality.attribute}`) : "—" }}</td>
+            <td>{{ nature.attribute ? t(`game.attributes.options.${nature.attribute}`) : "—" }}</td>
             <td>
-              <RouterLink v-if="personality.gift" :to="{ name: 'CustomizationEdit', params: { id: personality.gift.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" />{{ personality.gift.name }}
+              <RouterLink v-if="nature.gift" :to="{ name: 'CustomizationEdit', params: { id: nature.gift.id } }" target="_blank">
+                <font-awesome-icon icon="fas fa-eye" />{{ nature.gift.name }}
               </RouterLink>
               <template v-else>{{ "—" }}</template>
             </td>
-            <td><StatusBlock :actor="personality.updatedBy" :date="personality.updatedOn" /></td>
+            <td><StatusBlock :actor="nature.updatedBy" :date="nature.updatedOn" /></td>
           </tr>
         </tbody>
       </table>
       <AppPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event.toString())" />
     </template>
-    <p v-else>{{ t("personalities.empty") }}</p>
+    <p v-else>{{ t("natures.empty") }}</p>
   </main>
 </template>

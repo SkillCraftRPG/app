@@ -5,8 +5,8 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import NameInput from "@/components/shared/NameInput.vue";
-import type { CreateOrReplacePersonalityPayload, PersonalityModel } from "@/types/personalities";
-import { createPersonality } from "@/api/personalities";
+import type { CreateOrReplaceNaturePayload, NatureModel } from "@/types/natures";
+import { createNature } from "@/api/natures";
 
 const { t } = useI18n();
 
@@ -20,7 +20,7 @@ function hide(): void {
 }
 
 const emit = defineEmits<{
-  (e: "created", value: PersonalityModel): void;
+  (e: "created", value: NatureModel): void;
   (e: "error", value: unknown): void;
 }>();
 
@@ -32,11 +32,11 @@ function onCancel(): void {
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
   try {
-    const payload: CreateOrReplacePersonalityPayload = {
+    const payload: CreateOrReplaceNaturePayload = {
       name: name.value,
     };
-    const personality: PersonalityModel = await createPersonality(payload);
-    emit("created", personality);
+    const nature: NatureModel = await createNature(payload);
+    emit("created", nature);
     hide();
   } catch (e: unknown) {
     emit("error", e);
@@ -46,8 +46,8 @@ const onSubmit = handleSubmit(async () => {
 
 <template>
   <span>
-    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-personality" />
-    <TarModal :close="t('actions.close')" id="create-personality" ref="modalRef" :title="t('personalities.create')">
+    <TarButton icon="fas fa-plus" :text="t('actions.create')" variant="success" data-bs-toggle="modal" data-bs-target="#create-nature" />
+    <TarModal :close="t('actions.close')" id="create-nature" ref="modalRef" :title="t('natures.create')">
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />
       </form>

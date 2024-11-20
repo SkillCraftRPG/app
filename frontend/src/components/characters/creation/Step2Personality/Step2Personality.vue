@@ -8,15 +8,15 @@ import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CustomizationCard from "@/components/customizations/CustomizationCard.vue";
 import CustomizationSelect from "@/components/customizations/CustomizationSelect.vue";
 import MarkdownText from "@/components/shared/MarkdownText.vue";
-import PersonalitySelect from "@/components/personalities/PersonalitySelect.vue";
+import NatureSelect from "@/components/natures/NatureSelect.vue";
 import type { CustomizationModel } from "@/types/customizations";
-import type { PersonalityModel } from "@/types/personalities";
+import type { NatureModel } from "@/types/natures";
 import type { Step2 } from "@/types/characters";
 import { useCharacterStore } from "@/stores/character";
 
 type Customization = {
   customization: CustomizationModel;
-  source: "extra" | "personality";
+  source: "extra" | "nature";
 };
 
 const character = useCharacterStore();
@@ -24,12 +24,12 @@ const { t } = useI18n();
 
 const customization = ref<CustomizationModel>();
 const customizations = ref<CustomizationModel[]>([]);
-const personality = ref<PersonalityModel>();
+const nature = ref<NatureModel>();
 
 const allCustomizations = computed<Customization[]>(() => {
   const allCustomizations: Customization[] = [];
-  if (personality.value?.gift) {
-    allCustomizations.push({ customization: personality.value.gift, source: "personality" } as Customization);
+  if (nature.value?.gift) {
+    allCustomizations.push({ customization: nature.value.gift, source: "nature" } as Customization);
   }
   allCustomizations.push(...customizations.value.map((customization) => ({ customization, source: "extra" }) as Customization));
   return allCustomizations;
@@ -60,8 +60,8 @@ function removeCustomization(customization: CustomizationModel): void {
   }
 }
 
-function setPersonality(value?: PersonalityModel): void {
-  personality.value = value;
+function setNature(value?: NatureModel): void {
+  nature.value = value;
   customizations.value = [];
 }
 
@@ -71,9 +71,9 @@ defineEmits<{
 
 const { handleSubmit } = useForm();
 const onSubmit = handleSubmit(() => {
-  if (personality.value) {
+  if (nature.value) {
     const payload: Step2 = {
-      personality: personality.value,
+      nature: nature.value,
       customizations: customizations.value,
     };
     character.setStep2(payload);
@@ -84,7 +84,7 @@ const onSubmit = handleSubmit(() => {
 onMounted(() => {
   const step2: Step2 | undefined = character.creation.step2;
   if (step2) {
-    setPersonality(step2.personality);
+    setNature(step2.nature);
     customizations.value = [...step2.customizations];
   }
 });
@@ -95,17 +95,17 @@ onMounted(() => {
     <h3>{{ t("characters.steps.personality") }}</h3>
     <form @submit="onSubmit">
       <div class="row">
-        <PersonalitySelect class="col" :model-value="personality?.id" required @error="$emit('error', $event)" @selected="setPersonality" />
+        <NatureSelect class="col" :model-value="nature?.id" required @error="$emit('error', $event)" @selected="setNature" />
         <AttributeSelect
-          v-if="personality?.attribute"
+          v-if="nature?.attribute"
           class="col"
           disabled
-          label="characters.personalityAttributeBonus"
-          :model-value="personality.attribute"
+          label="characters.natureAttributeBonus"
+          :model-value="nature.attribute"
           validation="server"
         />
       </div>
-      <MarkdownText v-if="personality?.description" :text="personality.description" />
+      <MarkdownText v-if="nature?.description" :text="nature.description" />
       <template v-if="allCustomizations.length > 0">
         <h5>{{ t("customizations.list") }}</h5>
         <CustomizationSelect :exclude="excludedCustomizations" :model-value="customization?.id" validation="server" @selected="customization = $event">

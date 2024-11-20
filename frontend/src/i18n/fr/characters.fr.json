@@ -65,7 +65,7 @@
   "lineage": "Lignée",
   "list": "Personnages",
   "name": "Nom du personnage",
-  "personalityAttributeBonus": "Bonus d’attribut (+1)",
+  "natureAttributeBonus": "Bonus d’attribut (+1)",
   "player": "Nom du joueur",
   "sort": {
     "options": {

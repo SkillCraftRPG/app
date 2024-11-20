@@ -7,7 +7,7 @@ import type { EducationModel } from "./educations";
 import type { ItemModel } from "./items";
 import type { LanguageModel } from "./languages";
 import type { LineageModel } from "./lineages";
-import type { PersonalityModel } from "./personalities";
+import type { NatureModel } from "./natures";
 import type { SearchPayload, SortOption } from "./search";
 import type { TalentModel } from "./talents";
 import type { WorldModel } from "./worlds";
@@ -64,7 +64,7 @@ export type CharacterModel = Aggregate & {
   weight: number;
   age: number;
   languages: CharacterLanguageModel[];
-  personality: PersonalityModel;
+  nature: NatureModel;
   customizations: CustomizationModel[];
   aspects: AspectModel[];
   baseAttributes: BaseAttributesModel;
@@ -96,7 +96,7 @@ export type CreateCharacterPayload = {
   weight: number;
   age: number;
   languageIds: string[];
-  personalityId: string;
+  natureId: string;
   customizationIds: string[];
   aspectIds: string[];
   attributes: BaseAttributesPayload;
@@ -144,7 +144,7 @@ export type Step1 = {
 };
 
 export type Step2 = {
-  personality: PersonalityModel;
+  nature: NatureModel;
   customizations: CustomizationModel[];
 };
 

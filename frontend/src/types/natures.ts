@@ -4,14 +4,14 @@ import type { CustomizationModel } from "./customizations";
 import type { SearchPayload, SortOption } from "./search";
 import type { WorldModel } from "./worlds";
 
-export type CreateOrReplacePersonalityPayload = {
+export type CreateOrReplaceNaturePayload = {
   name: string;
   description?: string;
   attribute?: Attribute;
   giftId?: string;
 };
 
-export type PersonalityModel = Aggregate & {
+export type NatureModel = Aggregate & {
   world: WorldModel;
   name: string;
   description?: string;
@@ -19,14 +19,14 @@ export type PersonalityModel = Aggregate & {
   gift?: CustomizationModel;
 };
 
-export type PersonalitySort = "CreatedOn" | "Name" | "UpdatedOn";
+export type NatureSort = "CreatedOn" | "Name" | "UpdatedOn";
 
-export type PersonalitySortOption = SortOption & {
-  field: PersonalitySort;
+export type NatureSortOption = SortOption & {
+  field: NatureSort;
 };
 
-export type SearchPersonalitiesPayload = SearchPayload & {
+export type SearchNaturesPayload = SearchPayload & {
   attribute?: Attribute;
   giftId?: string;
-  sort: PersonalitySortOption[];
+  sort: NatureSortOption[];
 };

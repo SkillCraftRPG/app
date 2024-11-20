@@ -44,7 +44,7 @@ async function onComplete(): Promise<void> {
         weight: step1.weight,
         age: step1.age,
         languageIds: step1.languages.map(({ id }) => id),
-        personalityId: step2.personality.id,
+        natureId: step2.nature.id,
         customizationIds: step2.customizations.map(({ id }) => id),
         aspectIds: step3.aspects.map(({ id }) => id),
         attributes: step4.attributes,

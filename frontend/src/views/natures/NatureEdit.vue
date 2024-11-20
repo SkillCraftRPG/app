@@ -14,10 +14,10 @@ import SaveButton from "@/components/shared/SaveButton.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { Attribute } from "@/types/game";
-import type { CreateOrReplacePersonalityPayload, PersonalityModel } from "@/types/personalities";
+import type { CreateOrReplaceNaturePayload, NatureModel } from "@/types/natures";
 import type { CustomizationModel } from "@/types/customizations";
 import { handleErrorKey } from "@/inject/App";
-import { readPersonality, replacePersonality } from "@/api/personalities";
+import { readNature, replaceNature } from "@/api/natures";
 import { useToastStore } from "@/stores/toast";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
@@ -30,19 +30,19 @@ const attribute = ref<Attribute>();
 const description = ref<string>("");
 const gift = ref<CustomizationModel>();
 const name = ref<string>("");
-const personality = ref<PersonalityModel>();
+const nature = ref<NatureModel>();
 
 const hasChanges = computed<boolean>(
   () =>
-    !!personality.value &&
-    (name.value !== personality.value.name ||
-      attribute.value !== (personality.value.attribute ?? undefined) ||
-      gift.value?.id !== personality.value.gift?.id ||
-      description.value !== (personality.value.description ?? "")),
+    !!nature.value &&
+    (name.value !== nature.value.name ||
+      attribute.value !== (nature.value.attribute ?? undefined) ||
+      gift.value?.id !== nature.value.gift?.id ||
+      description.value !== (nature.value.description ?? "")),
 );
 
-function setModel(model: PersonalityModel): void {
-  personality.value = model;
+function setModel(model: NatureModel): void {
+  nature.value = model;
   attribute.value = model.attribute ?? undefined;
   description.value = model.description ?? "";
   gift.value = model.gift ?? undefined;
@@ -51,17 +51,17 @@ function setModel(model: PersonalityModel): void {
 
 const { handleSubmit, isSubmitting } = useForm();
 const onSubmit = handleSubmit(async () => {
-  if (personality.value) {
+  if (nature.value) {
     try {
-      const payload: CreateOrReplacePersonalityPayload = {
+      const payload: CreateOrReplaceNaturePayload = {
         name: name.value,
         description: description.value,
         attribute: attribute.value,
         giftId: gift.value?.id,
       };
-      const model: PersonalityModel = await replacePersonality(personality.value.id, payload, personality.value.version);
+      const model: NatureModel = await replaceNature(nature.value.id, payload, nature.value.version);
       setModel(model);
-      toasts.success("personalities.updated");
+      toasts.success("natures.updated");
     } catch (e: unknown) {
       handleError(e);
     }
@@ -72,8 +72,8 @@ onMounted(async () => {
   try {
     const id = route.params.id?.toString();
     if (id) {
-      const personality: PersonalityModel = await readPersonality(id);
-      setModel(personality);
+      const nature: NatureModel = await readNature(id);
+      setModel(nature);
     }
   } catch (e: unknown) {
     const { status } = e as ApiError;
@@ -88,15 +88,10 @@ onMounted(async () => {
 
 <template>
   <main class="container">
-    <template v-if="personality">
-      <h1>{{ personality.name }}</h1>
-      <AppBreadcrumb
-        :current="personality.name"
-        :parent="{ route: { name: 'PersonalityList' }, text: t('personalities.list') }"
-        :world="personality.world"
-        @error="handleError"
-      />
-      <StatusDetail :aggregate="personality" />
+    <template v-if="nature">
+      <h1>{{ nature.name }}</h1>
+      <AppBreadcrumb :current="nature.name" :parent="{ route: { name: 'NatureList' }, text: t('natures.list') }" :world="nature.world" @error="handleError" />
+      <StatusDetail :aggregate="nature" />
       <form @submit.prevent="onSubmit">
         <div class="row">
           <NameInput class="col-lg-4" required v-model="name" />

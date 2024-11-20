@@ -9,8 +9,8 @@ import index from "./index.fr.json";
 import items from "./items.fr.json";
 import languages from "./languages.fr.json";
 import lineages from "./lineages.fr.json";
+import natures from "./natures.fr.json";
 import parties from "./parties.fr.json";
-import personalities from "./personalities.fr.json";
 import talents from "./talents.fr.json";
 import users from "./users.fr.json";
 import worlds from "./worlds.fr.json";
@@ -27,8 +27,8 @@ export default {
   items,
   languages,
   lineages,
+  natures,
   parties,
-  personalities,
   talents,
   users,
   worlds,
