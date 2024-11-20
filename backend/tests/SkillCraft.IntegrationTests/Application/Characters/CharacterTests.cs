@@ -27,6 +27,7 @@ public class CharacterTests : IntegrationTests
 {
   private readonly IAspectRepository _aspectRepository;
   private readonly ICasteRepository _casteRepository;
+  private readonly ICharacterQuerier _characterQuerier;
   private readonly ICharacterRepository _characterRepository;
   private readonly ICustomizationRepository _customizationRepository;
   private readonly IEducationRepository _educationRepository;
@@ -72,6 +73,7 @@ public class CharacterTests : IntegrationTests
   {
     _aspectRepository = ServiceProvider.GetRequiredService<IAspectRepository>();
     _casteRepository = ServiceProvider.GetRequiredService<ICasteRepository>();
+    _characterQuerier = ServiceProvider.GetRequiredService<ICharacterQuerier>();
     _characterRepository = ServiceProvider.GetRequiredService<ICharacterRepository>();
     _customizationRepository = ServiceProvider.GetRequiredService<ICustomizationRepository>();
     _educationRepository = ServiceProvider.GetRequiredService<IEducationRepository>();
@@ -384,5 +386,40 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(2, results.Total);
     CharacterModel caste = Assert.Single(results.Items);
     Assert.Equal(_kassandra.EntityId, caste.Id);
+  }
+
+  [Fact(DisplayName = "It should remove a character language.")]
+  public async Task It_should_remove_a_character_language()
+  {
+    _kassandra.SetLanguage(_cassite, notes: null, UserId);
+    await _characterRepository.SaveAsync(_kassandra);
+
+    CharacterModel? character = await _characterQuerier.ReadAsync(_kassandra);
+    Assert.NotNull(character);
+    Assert.NotEmpty(character.Languages);
+
+    RemoveCharacterLanguageCommand command = new(_kassandra.EntityId, _cassite.EntityId);
+    character = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotNull(character);
+    Assert.Empty(character.Languages);
+  }
+
+  [Fact(DisplayName = "It should set a character language.")]
+  public async Task It_should_set_a_character_language()
+  {
+    await _characterRepository.SaveAsync(_kassandra);
+
+    CharacterLanguagePayload payload = new()
+    {
+      Notes = "  Level 1  "
+    };
+    SetCharacterLanguageCommand command = new(_kassandra.EntityId, _cassite.EntityId, payload);
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotNull(character);
+    CharacterLanguageModel language = Assert.Single(character.Languages);
+    Assert.Equal(_cassite.EntityId, language.Language.Id);
+    Assert.Equal(payload.Notes.Trim(), language.Notes);
   }
 }
