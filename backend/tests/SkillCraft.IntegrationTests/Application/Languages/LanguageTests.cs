@@ -100,6 +100,16 @@ public class LanguageTests : IntegrationTests
     Assert.NotNull(await SkillCraftContext.Languages.AsNoTracking().SingleOrDefaultAsync(x => x.Id == language.Id));
   }
 
+  [Fact(DisplayName = "It should list the scripts.")]
+  public async Task It_should_list_the_scripts()
+  {
+    SearchScriptsQuery query = new();
+    SearchResults<string> results = await Pipeline.ExecuteAsync(query);
+
+    Assert.Equal(2, results.Total);
+    Assert.Equal([_script.Value, "Elfique"], results.Items);
+  }
+
   [Fact(DisplayName = "It should replace an existing language.")]
   public async Task It_should_replace_an_existing_language()
   {

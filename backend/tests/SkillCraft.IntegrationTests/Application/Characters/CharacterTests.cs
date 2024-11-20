@@ -329,6 +329,20 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(character, model);
   }
 
+  [Fact(DisplayName = "It should list the players.")]
+  public async Task It_should_list_the_players()
+  {
+    Assert.NotNull(_herakles.Player);
+
+    await _characterRepository.SaveAsync([_alexios, _herakles, _kassandra, _leonidas, _stentor]);
+
+    SearchPlayersQuery query = new();
+    SearchResults<string> results = await Pipeline.ExecuteAsync(query);
+
+    Assert.Equal(2, results.Total);
+    Assert.Equal(new string[] { _player.Value, _herakles.Player.Value }.OrderBy(x => x), results.Items);
+  }
+
   [Fact(DisplayName = "It should return empty search results.")]
   public async Task It_should_return_empty_search_results()
   {
