@@ -1,19 +1,19 @@
 ﻿using GraphQL.Types;
-using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Natures;
 using SkillCraft.GraphQL.Search;
 
-namespace SkillCraft.GraphQL.Personalities;
+namespace SkillCraft.GraphQL.Natures;
 
-internal class SearchPersonalitiesPayloadGraphType : SearchPayloadInputGraphType<SearchPersonalitiesPayload>
+internal class SearchNaturesPayloadGraphType : SearchPayloadInputGraphType<SearchNaturesPayload>
 {
-  public SearchPersonalitiesPayloadGraphType() : base()
+  public SearchNaturesPayloadGraphType() : base()
   {
     Field(x => x.Attribute, type: typeof(AttributeGraphType))
       .Description("When specified, only personalities granting a bonus to this attribute will match.");
     Field(x => x.GiftId, type: typeof(IdGraphType))
       .Description("When specified, only personalities granting this gift will match.");
 
-    Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<PersonalitySortOptionGraphType>>>))
+    Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<NatureSortOptionGraphType>>>))
       .DefaultValue([])
       .Description("The sort parameters of the search.");
   }
