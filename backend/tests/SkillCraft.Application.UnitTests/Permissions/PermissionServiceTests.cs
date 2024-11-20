@@ -8,7 +8,7 @@ using SkillCraft.Application.Customizations.Commands;
 using SkillCraft.Application.Educations.Commands;
 using SkillCraft.Application.Languages.Commands;
 using SkillCraft.Application.Lineages.Queries;
-using SkillCraft.Application.Personalities.Commands;
+using SkillCraft.Application.Natures.Commands;
 using SkillCraft.Application.Settings;
 using SkillCraft.Application.Worlds;
 using SkillCraft.Application.Worlds.Commands;
@@ -19,7 +19,7 @@ using SkillCraft.Contracts.Castes;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Languages;
-using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Natures;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Worlds;
@@ -108,10 +108,10 @@ public class PermissionServiceTests
   [Fact(DisplayName = "EnsureCanAsync(Entity): it should throw PermissionDeniedException when the entity does not reside in the world.")]
   public async Task EnsureCanAsyncEntity_it_should_throw_PermissionDeniedException_when_the_entity_does_not_reside_in_the_world()
   {
-    UpdatePersonalityCommand command = new(Guid.NewGuid(), new UpdatePersonalityPayload());
+    UpdateNatureCommand command = new(Guid.NewGuid(), new UpdateNaturePayload());
     command.Contextualize(_user, _world);
 
-    EntityMetadata entity = new(WorldId.NewId(), new EntityKey(EntityType.Personality, command.Id), size: 7);
+    EntityMetadata entity = new(WorldId.NewId(), new EntityKey(EntityType.Nature, command.Id), size: 7);
     var exception = await Assert.ThrowsAsync<PermissionDeniedException>(async () => await _service.EnsureCanUpdateAsync(command, entity, _cancellationToken));
     Assert.Equal(Action.Update, exception.Action);
     Assert.Equal(entity.Type, exception.EntityType);

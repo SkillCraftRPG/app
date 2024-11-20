@@ -9,8 +9,8 @@ using SkillCraft.Application.Educations;
 using SkillCraft.Application.Items;
 using SkillCraft.Application.Languages;
 using SkillCraft.Application.Lineages;
+using SkillCraft.Application.Natures;
 using SkillCraft.Application.Permissions;
-using SkillCraft.Application.Personalities;
 using SkillCraft.Application.Storages;
 using SkillCraft.Application.Talents;
 using SkillCraft.Contracts;
@@ -24,7 +24,7 @@ using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Characters.Commands;
@@ -32,7 +32,7 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="AspectsNotFoundException"></exception>
 /// <exception cref="CasteHasNoSkillTalentException"></exception>
 /// <exception cref="CasteNotFoundException"></exception>
-/// <exception cref="CustomizationsCannotIncludePersonalityGiftException"></exception>
+/// <exception cref="CustomizationsCannotIncludeNatureGiftException"></exception>
 /// <exception cref="CustomizationsNotFoundException"></exception>
 /// <exception cref="EducationHasNoSkillTalentException"></exception>
 /// <exception cref="EducationNotFoundException"></exception>
@@ -48,9 +48,9 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="LanguagesCannotIncludeLineageLanguageException"></exception>
 /// <exception cref="LanguagesNotFoundException"></exception>
 /// <exception cref="LineageNotFoundException"></exception>
+/// <exception cref="NatureNotFoundException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
-/// <exception cref="PersonalityNotFoundException"></exception>
 /// <exception cref="TalentsNotFoundException"></exception>
 /// <exception cref="ValidationException"></exception>
 public record CreateCharacterCommand(CreateCharacterPayload Payload) : Activity, IRequest<CharacterModel>;
@@ -89,9 +89,9 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
         ?? throw new InvalidOperationException($"The lineage 'Id={lineage.ParentId}' could not be found.");
     }
 
-    Personality personality = await _sender.Send(new ResolvePersonalityQuery(command, payload.PersonalityId), cancellationToken);
+    Nature nature = await _sender.Send(new ResolveNatureQuery(command, payload.NatureId), cancellationToken);
     IReadOnlyCollection<Customization> customizations = await _sender.Send(
-      new ResolveCustomizationsQuery(command, personality, payload.CustomizationIds),
+      new ResolveCustomizationsQuery(command, nature, payload.CustomizationIds),
       cancellationToken);
     IReadOnlyCollection<Aspect> aspects = await _sender.Send(new ResolveAspectsQuery(command, payload.AspectIds), cancellationToken);
     BaseAttributes baseAttributes = await _sender.Send(new ResolveBaseAttributesQuery(payload.Attributes, aspects, lineage, parent), cancellationToken);
@@ -107,7 +107,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       payload.Height,
       payload.Weight,
       payload.Age,
-      personality,
+      nature,
       customizations,
       aspects,
       baseAttributes,

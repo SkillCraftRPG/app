@@ -11,8 +11,8 @@ public enum EntityType
   Item,
   Language,
   Lineage,
+  Nature,
   Party,
-  Personality,
   Talent,
   World
 }

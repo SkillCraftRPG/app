@@ -20,8 +20,8 @@ public class EntityExtensionsTests
   [InlineData(EntityType.Education)]
   [InlineData(EntityType.Language)]
   [InlineData(EntityType.Lineage)]
+  [InlineData(EntityType.Nature)]
   [InlineData(EntityType.Party)]
-  [InlineData(EntityType.Personality)]
   [InlineData(EntityType.Talent)]
   [InlineData(EntityType.World)]
   public void IsGameEntity_it_should_return_true_when_the_entity_is_not_a_game_entity(EntityType type)

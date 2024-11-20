@@ -30,9 +30,9 @@ internal static class CharacterEvents
         LineageEntity lineage = await _context.Lineages
           .SingleOrDefaultAsync(x => x.AggregateId == @event.LineageId.Value, cancellationToken)
           ?? throw new InvalidOperationException($"The lineage entity 'AggregateId={@event.LineageId}' could not be found.");
-        PersonalityEntity personality = await _context.Personalities
-          .SingleOrDefaultAsync(x => x.AggregateId == @event.PersonalityId.Value, cancellationToken)
-          ?? throw new InvalidOperationException($"The personality entity 'AggregateId={@event.PersonalityId}' could not be found.");
+        NatureEntity nature = await _context.Natures
+          .SingleOrDefaultAsync(x => x.AggregateId == @event.NatureId.Value, cancellationToken)
+          ?? throw new InvalidOperationException($"The nature entity 'AggregateId={@event.NatureId}' could not be found.");
         CasteEntity caste = await _context.Castes
           .SingleOrDefaultAsync(x => x.AggregateId == @event.CasteId.Value, cancellationToken)
           ?? throw new InvalidOperationException($"The caste entity 'AggregateId={@event.CasteId}' could not be found.");
@@ -50,7 +50,7 @@ internal static class CharacterEvents
           .Where(x => aspectIds.Contains(x.AggregateId))
           .ToArrayAsync(cancellationToken);
 
-        character = new(world, lineage, personality, customizations, aspects, caste, education, @event);
+        character = new(world, lineage, nature, customizations, aspects, caste, education, @event);
 
         _context.Characters.Add(character);
 

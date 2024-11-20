@@ -21,7 +21,7 @@ type AttributeRow = {
   text: string;
   base: number;
   lineage: number;
-  personality: number;
+  nature: number;
   aspects: number;
   score: number;
   modifier: number;
@@ -114,7 +114,7 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Agility"),
       base: agility.value,
       lineage: lineageAttributes.value.agility + (extra.value.includes("Agility") ? 1 : 0),
-      personality: step2?.personality.attribute === "Agility" ? 1 : 0,
+      nature: step2?.nature.attribute === "Agility" ? 1 : 0,
       aspects: calculateAspectBonus("Agility"),
       score: 0,
       modifier: 0,
@@ -124,7 +124,7 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Coordination"),
       base: coordination.value,
       lineage: lineageAttributes.value.coordination + (extra.value.includes("Coordination") ? 1 : 0),
-      personality: step2?.personality.attribute === "Coordination" ? 1 : 0,
+      nature: step2?.nature.attribute === "Coordination" ? 1 : 0,
       aspects: calculateAspectBonus("Coordination"),
       score: 0,
       modifier: 0,
@@ -134,7 +134,7 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Intellect"),
       base: intellect.value,
       lineage: lineageAttributes.value.intellect + (extra.value.includes("Intellect") ? 1 : 0),
-      personality: step2?.personality.attribute === "Intellect" ? 1 : 0,
+      nature: step2?.nature.attribute === "Intellect" ? 1 : 0,
       aspects: calculateAspectBonus("Intellect"),
       score: 0,
       modifier: 0,
@@ -144,7 +144,7 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Presence"),
       base: presence.value,
       lineage: lineageAttributes.value.presence + (extra.value.includes("Presence") ? 1 : 0),
-      personality: step2?.personality.attribute === "Presence" ? 1 : 0,
+      nature: step2?.nature.attribute === "Presence" ? 1 : 0,
       aspects: calculateAspectBonus("Presence"),
       score: 0,
       modifier: 0,
@@ -154,7 +154,7 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Sensitivity"),
       base: sensitivity.value,
       lineage: lineageAttributes.value.sensitivity + (extra.value.includes("Sensitivity") ? 1 : 0),
-      personality: step2?.personality.attribute === "Sensitivity" ? 1 : 0,
+      nature: step2?.nature.attribute === "Sensitivity" ? 1 : 0,
       aspects: calculateAspectBonus("Sensitivity"),
       score: 0,
       modifier: 0,
@@ -164,7 +164,7 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Spirit"),
       base: spirit.value,
       lineage: lineageAttributes.value.spirit + (extra.value.includes("Spirit") ? 1 : 0),
-      personality: step2?.personality.attribute === "Spirit" ? 1 : 0,
+      nature: step2?.nature.attribute === "Spirit" ? 1 : 0,
       aspects: calculateAspectBonus("Spirit"),
       score: 0,
       modifier: 0,
@@ -174,14 +174,14 @@ const rows = computed<AttributeRow[]>(() => {
       text: t("game.attributes.options.Vigor"),
       base: vigor.value,
       lineage: lineageAttributes.value.vigor + (extra.value.includes("Vigor") ? 1 : 0),
-      personality: step2?.personality.attribute === "Vigor" ? 1 : 0,
+      nature: step2?.nature.attribute === "Vigor" ? 1 : 0,
       aspects: calculateAspectBonus("Vigor"),
       score: 0,
       modifier: 0,
     },
   ];
   rows.forEach((row) => {
-    row.score = row.base + row.lineage + row.personality + row.aspects;
+    row.score = row.base + row.lineage + row.nature + row.aspects;
     row.modifier = calculateModifier(row.score);
   });
   return orderBy(rows, "text");
@@ -390,7 +390,7 @@ onMounted(() => {
             <th scope="col">{{ t("game.attribute.label") }}</th>
             <th scope="col">{{ t("characters.attributes.bases") }}</th>
             <th scope="col">{{ t("characters.lineage") }}</th>
-            <th scope="col">{{ t("personalities.select.label") }}</th>
+            <th scope="col">{{ t("natures.select.label") }}</th>
             <th scope="col">{{ t("aspects.list") }}</th>
             <th scope="col">{{ t("game.attribute.score") }}</th>
             <th scope="col">{{ t("game.attribute.modifier") }}</th>
@@ -405,7 +405,7 @@ onMounted(() => {
               <TarButton class="ms-1" :disabled="row.base >= 11 || remainingPoints <= 0" icon="fas fa-plus" size="small" @click="increaseBase(row)" />
             </td>
             <td>{{ row.lineage }}</td>
-            <td>{{ row.personality }}</td>
+            <td>{{ row.nature }}</td>
             <td>{{ row.aspects }}</td>
             <td>{{ row.score }}</td>
             <td>{{ row.modifier < 0 ? row.modifier : `+${row.modifier}` }}</td>

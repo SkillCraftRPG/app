@@ -7,8 +7,8 @@ using SkillCraft.GraphQL.Educations;
 using SkillCraft.GraphQL.Items;
 using SkillCraft.GraphQL.Languages;
 using SkillCraft.GraphQL.Lineages;
+using SkillCraft.GraphQL.Natures;
 using SkillCraft.GraphQL.Parties;
-using SkillCraft.GraphQL.Personalities;
 using SkillCraft.GraphQL.Talents;
 using SkillCraft.GraphQL.Worlds;
 
@@ -28,8 +28,8 @@ internal class RootQuery : ObjectGraphType
     ItemQueries.Register(this);
     LanguageQueries.Register(this);
     LineageQueries.Register(this);
+    NatureQueries.Register(this);
     PartyQueries.Register(this);
-    PersonalityQueries.Register(this);
     TalentQueries.Register(this);
     WorldQueries.Register(this);
   }

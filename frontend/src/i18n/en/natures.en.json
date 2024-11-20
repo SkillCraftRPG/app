@@ -1,0 +1,18 @@
+{
+  "create": "Create Nature",
+  "created": "The nature has been created.",
+  "empty": "This list is empty.",
+  "list": "Natures",
+  "select": {
+    "label": "Nature",
+    "placeholder": "Select a nature"
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Updated on"
+    }
+  },
+  "updated": "The nature has been updated."
+}

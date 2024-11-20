@@ -19,8 +19,8 @@ internal class EntityTypeGraphType : EnumerationGraphType<EntityType>
     AddValue(EntityType.Item, "The entity is a character item.");
     AddValue(EntityType.Language, "The entity is a character language.");
     AddValue(EntityType.Lineage, "The entity is a character lineage.");
+    AddValue(EntityType.Nature, "The entity is a character nature.");
     AddValue(EntityType.Party, "The entity is a character party.");
-    AddValue(EntityType.Personality, "The entity is a character personality.");
     AddValue(EntityType.Talent, "The entity is a character talent.");
     AddValue(EntityType.World, "The entity is a game world.");
   }

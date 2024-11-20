@@ -13,8 +13,8 @@ internal static class Routes
   public const string Item = "items";
   public const string Language = "languages";
   public const string Lineage = "lineages";
+  public const string Nature = "natures";
   public const string Party = "parties";
-  public const string Personality = "personalities";
   public const string Talent = "talents";
   public const string World = "worlds";
 
@@ -29,8 +29,8 @@ internal static class Routes
     [Item] = EntityType.Item,
     [Language] = EntityType.Language,
     [Lineage] = EntityType.Lineage,
+    [Nature] = EntityType.Nature,
     [Party] = EntityType.Party,
-    [Personality] = EntityType.Personality,
     [Talent] = EntityType.Talent,
     [World] = EntityType.World
   };

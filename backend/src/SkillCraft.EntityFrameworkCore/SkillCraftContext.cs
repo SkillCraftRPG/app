@@ -24,8 +24,8 @@ public class SkillCraftContext : DbContext
   internal DbSet<LanguageEntity> Languages { get; private set; }
   internal DbSet<LineageEntity> Lineages { get; private set; }
   internal DbSet<LineageLanguageEntity> LineageLanguages { get; private set; }
+  internal DbSet<NatureEntity> Natures { get; private set; }
   internal DbSet<PartyEntity> Parties { get; private set; }
-  internal DbSet<PersonalityEntity> Personalities { get; private set; }
   internal DbSet<StorageDetailEntity> StorageDetails { get; private set; }
   internal DbSet<StorageSummaryEntity> StorageSummaries { get; private set; }
   internal DbSet<TalentEntity> Talents { get; private set; }

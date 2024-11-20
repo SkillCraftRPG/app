@@ -11,8 +11,8 @@ using SkillCraft.Contracts.Educations;
 using SkillCraft.Contracts.Items;
 using SkillCraft.Contracts.Languages;
 using SkillCraft.Contracts.Lineages;
+using SkillCraft.Contracts.Natures;
 using SkillCraft.Contracts.Parties;
-using SkillCraft.Contracts.Personalities;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
 using SkillCraft.Domain.Items;
@@ -108,9 +108,9 @@ internal class Mapper
     {
       destination.Lineage = ToLineage(source.Lineage);
     }
-    if (source.Personality != null)
+    if (source.Nature != null)
     {
-      destination.Personality = ToPersonality(source.Personality);
+      destination.Nature = ToNature(source.Nature);
     }
     if (source.Caste != null)
     {
@@ -334,24 +334,7 @@ internal class Mapper
     return destination;
   }
 
-  public PartyModel ToParty(PartyEntity source)
-  {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
-
-    PartyModel destination = new(world, source.Name)
-    {
-      Id = source.Id,
-      Description = source.Description
-    };
-
-    MapAggregate(source, destination);
-
-    return destination;
-  }
-
-  public PersonalityModel ToPersonality(PersonalityEntity source)
+  public NatureModel ToNature(NatureEntity source)
   {
     WorldModel world = source.World == null
       ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
@@ -363,12 +346,29 @@ internal class Mapper
     }
     CustomizationModel? gift = source.Gift == null ? null : ToCustomization(source.Gift, world);
 
-    PersonalityModel destination = new(world, source.Name)
+    NatureModel destination = new(world, source.Name)
     {
       Id = source.Id,
       Description = source.Description,
       Attribute = source.Attribute,
       Gift = gift
+    };
+
+    MapAggregate(source, destination);
+
+    return destination;
+  }
+
+  public PartyModel ToParty(PartyEntity source)
+  {
+    WorldModel world = source.World == null
+      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
+      : ToWorld(source.World);
+
+    PartyModel destination = new(world, source.Name)
+    {
+      Id = source.Id,
+      Description = source.Description
     };
 
     MapAggregate(source, destination);

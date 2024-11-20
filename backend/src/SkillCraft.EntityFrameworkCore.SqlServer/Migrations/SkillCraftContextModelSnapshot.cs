@@ -304,12 +304,12 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("NatureId")
+                        .HasColumnType("int");
+
                     b.Property<string>("OptionalAttributes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("PersonalityId")
-                        .HasColumnType("int");
 
                     b.Property<string>("PlayerName")
                         .HasMaxLength(255)
@@ -366,7 +366,7 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("PersonalityId");
+                    b.HasIndex("NatureId");
 
                     b.HasIndex("PlayerName");
 
@@ -1113,6 +1113,86 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("LineageLanguages", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.NatureEntity", b =>
+                {
+                    b.Property<int>("NatureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NatureId"));
+
+                    b.Property<string>("AggregateId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Attribute")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("GiftId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WorldId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NatureId");
+
+                    b.HasIndex("AggregateId")
+                        .IsUnique();
+
+                    b.HasIndex("Attribute");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("GiftId");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("UpdatedBy");
+
+                    b.HasIndex("UpdatedOn");
+
+                    b.HasIndex("Version");
+
+                    b.HasIndex("WorldId", "Id")
+                        .IsUnique();
+
+                    b.ToTable("Natures", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PartyEntity", b =>
                 {
                     b.Property<int>("PartyId")
@@ -1180,86 +1260,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Parties", (string)null);
-                });
-
-            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PersonalityEntity", b =>
-                {
-                    b.Property<int>("PersonalityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonalityId"));
-
-                    b.Property<string>("AggregateId")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Attribute")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("GiftId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("Version")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("WorldId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PersonalityId");
-
-                    b.HasIndex("AggregateId")
-                        .IsUnique();
-
-                    b.HasIndex("Attribute");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("CreatedOn");
-
-                    b.HasIndex("GiftId");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("UpdatedOn");
-
-                    b.HasIndex("Version");
-
-                    b.HasIndex("WorldId", "Id")
-                        .IsUnique();
-
-                    b.ToTable("Personalities", (string)null);
                 });
 
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.StorageDetailEntity", b =>
@@ -1669,9 +1669,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.PersonalityEntity", "Personality")
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.NatureEntity", "Nature")
                         .WithMany("Characters")
-                        .HasForeignKey("PersonalityId")
+                        .HasForeignKey("NatureId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1687,7 +1687,7 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.Navigation("Lineage");
 
-                    b.Navigation("Personality");
+                    b.Navigation("Nature");
 
                     b.Navigation("World");
                 });
@@ -1837,6 +1837,24 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.NatureEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.CustomizationEntity", "Gift")
+                        .WithMany("Natures")
+                        .HasForeignKey("GiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
+                        .WithMany("Natures")
+                        .HasForeignKey("WorldId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Gift");
+
+                    b.Navigation("World");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PartyEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
@@ -1844,24 +1862,6 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasForeignKey("WorldId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("World");
-                });
-
-            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PersonalityEntity", b =>
-                {
-                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.CustomizationEntity", "Gift")
-                        .WithMany("Personalities")
-                        .HasForeignKey("GiftId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.WorldEntity", "World")
-                        .WithMany("Personalities")
-                        .HasForeignKey("WorldId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Gift");
 
                     b.Navigation("World");
                 });
@@ -1941,7 +1941,7 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CustomizationEntity", b =>
                 {
-                    b.Navigation("Personalities");
+                    b.Navigation("Natures");
                 });
 
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.EducationEntity", b =>
@@ -1966,7 +1966,7 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Navigation("Nations");
                 });
 
-            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.PersonalityEntity", b =>
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.NatureEntity", b =>
                 {
                     b.Navigation("Characters");
                 });
@@ -2007,9 +2007,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.Navigation("Lineages");
 
-                    b.Navigation("Parties");
+                    b.Navigation("Natures");
 
-                    b.Navigation("Personalities");
+                    b.Navigation("Parties");
 
                     b.Navigation("StorageDetails");
 

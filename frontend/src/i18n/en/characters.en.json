@@ -65,7 +65,7 @@
   "lineage": "Lineage",
   "list": "Characters",
   "name": "Character Name",
-  "personalityAttributeBonus": "Attribute Bonus (+1)",
+  "natureAttributeBonus": "Attribute Bonus (+1)",
   "player": "Player Name",
   "sort": {
     "options": {

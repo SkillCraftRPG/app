@@ -7,7 +7,7 @@ using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Customizations;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 
 namespace SkillCraft.Application.Characters.Creation;
 
@@ -25,7 +25,7 @@ public class ResolveCustomizationsQueryHandlerTests
   private readonly Customization _customization;
   private readonly Customization _disability;
   private readonly Customization _gift;
-  private readonly Personality _personality;
+  private readonly Nature _nature;
   private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
 
   public ResolveCustomizationsQueryHandlerTests()
@@ -39,9 +39,9 @@ public class ResolveCustomizationsQueryHandlerTests
     _gift = new(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId);
     _customizationRepository.Setup(x => x.LoadAsync(_gift.Id, _cancellationToken)).ReturnsAsync(_gift);
 
-    _personality = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
-    _personality.SetGift(_customization);
-    _personality.Update(_world.OwnerId);
+    _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
+    _nature.SetGift(_customization);
+    _nature.Update(_world.OwnerId);
 
     _activity.Contextualize(_world);
   }
@@ -49,7 +49,7 @@ public class ResolveCustomizationsQueryHandlerTests
   [Fact(DisplayName = "It should return prematurely when there is no ID.")]
   public async Task It_should_return_prematurely_when_there_is_no_Id()
   {
-    ResolveCustomizationsQuery query = new(_activity, _personality, Ids: []);
+    ResolveCustomizationsQuery query = new(_activity, _nature, Ids: []);
 
     IReadOnlyCollection<Customization> customizations = await _handler.Handle(query, _cancellationToken);
     Assert.Empty(customizations);
@@ -60,7 +60,7 @@ public class ResolveCustomizationsQueryHandlerTests
   [Fact(DisplayName = "It should return the found customizations.")]
   public async Task It_should_return_the_found_customizations()
   {
-    ResolveCustomizationsQuery query = new(_activity, _personality, [_disability.EntityId, _gift.EntityId]);
+    ResolveCustomizationsQuery query = new(_activity, _nature, [_disability.EntityId, _gift.EntityId]);
 
     IEnumerable<CustomizationId> customizationIds = query.Ids.Distinct().Select(id => new CustomizationId(_world.Id, id));
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_disability, _gift]);
@@ -73,17 +73,17 @@ public class ResolveCustomizationsQueryHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(_activity, EntityType.Customization, _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should throw CustomizationsCannotIncludePersonalityGiftException when the personality's gift is included in customizations.")]
-  public async Task It_should_throw_CustomizationsCannotIncludePersonalityGiftException_when_the_personality_s_git_is_included_in_customizations()
+  [Fact(DisplayName = "It should throw CustomizationsCannotIncludeNatureGiftException when the nature's gift is included in customizations.")]
+  public async Task It_should_throw_CustomizationsCannotIncludeNatureGiftException_when_the_nature_s_git_is_included_in_customizations()
   {
-    ResolveCustomizationsQuery query = new(_activity, _personality, [_customization.EntityId, _disability.EntityId, _gift.EntityId]);
+    ResolveCustomizationsQuery query = new(_activity, _nature, [_customization.EntityId, _disability.EntityId, _gift.EntityId]);
 
     IEnumerable<CustomizationId> customizationIds = query.Ids.Distinct().Select(id => new CustomizationId(_world.Id, id));
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_customization, _disability, _gift]);
 
-    var exception = await Assert.ThrowsAsync<CustomizationsCannotIncludePersonalityGiftException>(async () => await _handler.Handle(query, _cancellationToken));
+    var exception = await Assert.ThrowsAsync<CustomizationsCannotIncludeNatureGiftException>(async () => await _handler.Handle(query, _cancellationToken));
     Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(_personality.EntityId, exception.PersonalityId);
+    Assert.Equal(_nature.EntityId, exception.NatureId);
     Assert.Equal(_customization.EntityId, exception.GiftId);
     Assert.Equal("CustomizationIds", exception.PropertyName);
   }
@@ -91,7 +91,7 @@ public class ResolveCustomizationsQueryHandlerTests
   [Fact(DisplayName = "It should throw CustomizationsNotFoundException when some customizations could not be found.")]
   public async Task It_should_throw_CustomizationsNotFoundException_some_customizations_could_not_be_found()
   {
-    ResolveCustomizationsQuery query = new(_activity, _personality, [_disability.EntityId, _gift.EntityId, Guid.NewGuid(), Guid.Empty]);
+    ResolveCustomizationsQuery query = new(_activity, _nature, [_disability.EntityId, _gift.EntityId, Guid.NewGuid(), Guid.Empty]);
 
     IEnumerable<CustomizationId> customizationIds = query.Ids.Distinct().Select(id => new CustomizationId(_world.Id, id));
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_disability, _gift]);
@@ -105,7 +105,7 @@ public class ResolveCustomizationsQueryHandlerTests
   [Fact(DisplayName = "It should throw InvalidCharacterCustomizationsException when the number of gifts does not equal the number of disabilities.")]
   public async Task It_should_throw_InvalidCharacterCustomizationsException_when_the_number_of_gifts_does_not_equal_the_number_of_disabilities()
   {
-    ResolveCustomizationsQuery query = new(_activity, _personality, [_gift.EntityId]);
+    ResolveCustomizationsQuery query = new(_activity, _nature, [_gift.EntityId]);
 
     IEnumerable<CustomizationId> customizationIds = query.Ids.Distinct().Select(id => new CustomizationId(_world.Id, id));
     _customizationRepository.Setup(x => x.LoadAsync(customizationIds, _cancellationToken)).ReturnsAsync([_gift]);

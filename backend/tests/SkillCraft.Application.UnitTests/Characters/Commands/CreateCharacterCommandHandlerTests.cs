@@ -16,7 +16,7 @@ using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Items.Properties;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Talents;
 using Attribute = SkillCraft.Contracts.Attribute;
 
@@ -38,7 +38,7 @@ public class CreateCharacterCommandHandlerTests
   private readonly WorldMock _world = new();
   private readonly Lineage _species;
   private readonly Lineage _nation;
-  private readonly Personality _personality;
+  private readonly Nature _nature;
   private readonly Customization[] _customizations;
   private readonly Aspect[] _aspects;
   private readonly BaseAttributes _baseAttributes = new(agility: 9, coordination: 9, intellect: 6, presence: 10, sensitivity: 7, spirit: 6, vigor: 10,
@@ -63,7 +63,7 @@ public class CreateCharacterCommandHandlerTests
       Languages = new(ids: [], extra: 1, text: null)
     };
     _nation = new(_world.Id, _species, new Name("Orrin"), _world.OwnerId);
-    _personality = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
+    _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
     _customizations =
     [
       new Customization(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId),
@@ -126,7 +126,7 @@ public class CreateCharacterCommandHandlerTests
       Weight = 84.6,
       Age = 30,
       LanguageIds = [_language.EntityId],
-      PersonalityId = _personality.EntityId,
+      NatureId = _nature.EntityId,
       CustomizationIds = _customizations.Select(x => x.EntityId).ToList(),
       AspectIds = _aspects.Select(x => x.EntityId).ToList(),
       Attributes = new()
@@ -156,9 +156,9 @@ public class CreateCharacterCommandHandlerTests
     command.Contextualize(_world);
 
     _sender.Setup(x => x.Send(It.Is<ResolveLineageQuery>(y => y.Activity == command && y.Id == payload.LineageId), _cancellationToken)).ReturnsAsync(_nation);
-    _sender.Setup(x => x.Send(It.Is<ResolvePersonalityQuery>(y => y.Activity == command && y.Id == payload.PersonalityId), _cancellationToken)).ReturnsAsync(_personality);
+    _sender.Setup(x => x.Send(It.Is<ResolveNatureQuery>(y => y.Activity == command && y.Id == payload.NatureId), _cancellationToken)).ReturnsAsync(_nature);
     _sender.Setup(x => x.Send(It.Is<ResolveCustomizationsQuery>(y => y.Activity == command
-      && y.Personality == _personality && y.Ids == payload.CustomizationIds), _cancellationToken)).ReturnsAsync(_customizations);
+      && y.Nature == _nature && y.Ids == payload.CustomizationIds), _cancellationToken)).ReturnsAsync(_customizations);
     _sender.Setup(x => x.Send(It.Is<ResolveAspectsQuery>(y => y.Activity == command && y.Ids == payload.AspectIds), _cancellationToken)).ReturnsAsync(_aspects);
     _sender.Setup(x => x.Send(It.Is<ResolveBaseAttributesQuery>(y => y.Payload == payload.Attributes && y.Aspects == _aspects
       && y.Lineage == _nation && y.Parent == _species), _cancellationToken)).ReturnsAsync(_baseAttributes);
@@ -185,7 +185,7 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.Height == payload.Height
       && y.Character.Weight == payload.Weight
       && y.Character.Age == payload.Age
-      && y.Character.PersonalityId == _personality.Id
+      && y.Character.NatureId == _nature.Id
       && y.Character.CustomizationIds.SequenceEqual(_customizations.Select(x => x.Id))
       && y.Character.AspectIds.SequenceEqual(_aspects.Select(x => x.Id))
       && y.Character.BaseAttributes == _baseAttributes
@@ -206,7 +206,7 @@ public class CreateCharacterCommandHandlerTests
       Height = 1.84,
       Weight = 84.6,
       Age = 30,
-      PersonalityId = Guid.Empty,
+      NatureId = Guid.Empty,
       CustomizationIds = [Guid.Empty],
       AspectIds = [aspectId, aspectId],
       Attributes = new()
@@ -237,7 +237,7 @@ public class CreateCharacterCommandHandlerTests
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(12, exception.Errors.Count());
 
-    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "PersonalityId" && (Guid?)e.AttemptedValue == payload.PersonalityId);
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "NatureId" && (Guid?)e.AttemptedValue == payload.NatureId);
     Assert.Contains(exception.Errors, e => e.ErrorCode == "NotEmptyValidator" && e.PropertyName == "CustomizationIds[0]");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "CreateCharacterValidator" && e.PropertyName == "AspectIds");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "InclusiveBetweenValidator" && e.PropertyName == "Attributes.Agility" && (int?)e.AttemptedValue == payload.Attributes.Agility);

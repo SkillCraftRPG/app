@@ -14,7 +14,7 @@ using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Items.Properties;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Talents;
 using Attribute = SkillCraft.Contracts.Attribute;
 
@@ -30,7 +30,7 @@ public class CharacterTests : IntegrationTests
   private readonly IItemRepository _itemRepository;
   private readonly ILanguageRepository _languageRepository;
   private readonly ILineageRepository _lineageRepository;
-  private readonly IPersonalityRepository _personalityRepository;
+  private readonly INatureRepository _natureRepository;
   private readonly ITalentRepository _talentRepository;
 
   private readonly Language _cassite;
@@ -42,7 +42,7 @@ public class CharacterTests : IntegrationTests
   private readonly Customization _chaotique;
   private readonly Customization _durACuire;
   private readonly Customization _feroce;
-  private readonly Personality _courrouce;
+  private readonly Nature _courrouce;
 
   private readonly Aspect _farouche;
   private readonly Aspect _gymnaste;
@@ -66,7 +66,7 @@ public class CharacterTests : IntegrationTests
     _itemRepository = ServiceProvider.GetRequiredService<IItemRepository>();
     _languageRepository = ServiceProvider.GetRequiredService<ILanguageRepository>();
     _lineageRepository = ServiceProvider.GetRequiredService<ILineageRepository>();
-    _personalityRepository = ServiceProvider.GetRequiredService<IPersonalityRepository>();
+    _natureRepository = ServiceProvider.GetRequiredService<INatureRepository>();
     _talentRepository = ServiceProvider.GetRequiredService<ITalentRepository>();
 
     _cassite = new Language(World.Id, new Name("Cassite"), UserId);
@@ -102,7 +102,7 @@ public class CharacterTests : IntegrationTests
       Description = new Description("Une fois par round, le personnage peut rouler deux fois les dés de dégâts d’une attaque. Il peut ensuite utiliser le résultat de son choix.")
     };
     _feroce.Update(UserId);
-    _courrouce = new Personality(World.Id, new Name("Courroucé"), UserId)
+    _courrouce = new Nature(World.Id, new Name("Courroucé"), UserId)
     {
       Description = new Description("Les émotions du personnage sont vives et ses mouvements sont brusques."),
       Attribute = Attribute.Agility
@@ -174,7 +174,7 @@ public class CharacterTests : IntegrationTests
     await _languageRepository.SaveAsync([_cassite, _orrinique]);
     await _lineageRepository.SaveAsync([_humain, _orrin]);
     await _customizationRepository.SaveAsync([_chaotique, _durACuire, _feroce]);
-    await _personalityRepository.SaveAsync(_courrouce);
+    await _natureRepository.SaveAsync(_courrouce);
     await _aspectRepository.SaveAsync([_farouche, _gymnaste]);
     await _casteRepository.SaveAsync(_milicien);
     await _educationRepository.SaveAsync(_champsDeBataille);
@@ -193,7 +193,7 @@ public class CharacterTests : IntegrationTests
       Weight = 84.6,
       Age = 30,
       LanguageIds = [_cassite.EntityId],
-      PersonalityId = _courrouce.EntityId,
+      NatureId = _courrouce.EntityId,
       CustomizationIds = [_durACuire.EntityId, _chaotique.EntityId],
       AspectIds = [_farouche.EntityId, _gymnaste.EntityId],
       Attributes = new BaseAttributesPayload
@@ -244,7 +244,7 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(_cassite.EntityId, language.Language.Id);
     Assert.Equal("Lineage Extra Language", language.Notes);
 
-    Assert.Equal(_courrouce.EntityId, character.Personality.Id);
+    Assert.Equal(_courrouce.EntityId, character.Nature.Id);
     Assert.Equal(2, character.Customizations.Count);
     Assert.Contains(character.Customizations, c => c.Id == _chaotique.EntityId);
     Assert.Contains(character.Customizations, c => c.Id == _durACuire.EntityId);
