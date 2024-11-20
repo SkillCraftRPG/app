@@ -7,7 +7,7 @@ using SkillCraft.Domain.Castes;
 using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Lineages;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Characters.Commands;
@@ -34,7 +34,7 @@ public class SaveCharacterCommandHandlerTests
     WorldMock world = new();
     Lineage species = new(world.Id, parent: null, new Name("Humain"), world.OwnerId);
     Lineage nation = new(world.Id, species, new Name("Orrin"), world.OwnerId);
-    Personality personality = new(world.Id, new Name("Courroucé"), world.OwnerId);
+    Nature nature = new(world.Id, new Name("Courroucé"), world.OwnerId);
     Aspect[] aspects =
     [
       new(world.Id, new Name("Farouche"), world.OwnerId),
@@ -46,7 +46,7 @@ public class SaveCharacterCommandHandlerTests
     Caste caste = new(world.Id, new Name("Milicien"), world.OwnerId);
     Education education = new(world.Id, new Name("Champs de bataille"), world.OwnerId);
     Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName),
-      nation, height: 1.84, weight: 84.6, age: 30, personality, customizations: [], aspects, baseAttributes,
+      nation, height: 1.84, weight: 84.6, age: 30, nature, customizations: [], aspects, baseAttributes,
       caste, education, world.OwnerId);
 
     SaveCharacterCommand command = new(character);

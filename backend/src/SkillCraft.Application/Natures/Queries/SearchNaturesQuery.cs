@@ -7,20 +7,20 @@ using SkillCraft.Contracts.Natures;
 namespace SkillCraft.Application.Natures.Queries;
 
 /// <exception cref="PermissionDeniedException"></exception>
-public record SearchPersonalitiesQuery(SearchNaturesPayload Payload) : Activity, IRequest<SearchResults<NatureModel>>;
+public record SearchNaturesQuery(SearchNaturesPayload Payload) : Activity, IRequest<SearchResults<NatureModel>>;
 
-internal class SearchPersonalitiesQueryHandler : IRequestHandler<SearchPersonalitiesQuery, SearchResults<NatureModel>>
+internal class SearchNaturesQueryHandler : IRequestHandler<SearchNaturesQuery, SearchResults<NatureModel>>
 {
   private readonly INatureQuerier _natureQuerier;
   private readonly IPermissionService _permissionService;
 
-  public SearchPersonalitiesQueryHandler(INatureQuerier natureQuerier, IPermissionService permissionService)
+  public SearchNaturesQueryHandler(INatureQuerier natureQuerier, IPermissionService permissionService)
   {
     _natureQuerier = natureQuerier;
     _permissionService = permissionService;
   }
 
-  public async Task<SearchResults<NatureModel>> Handle(SearchPersonalitiesQuery query, CancellationToken cancellationToken)
+  public async Task<SearchResults<NatureModel>> Handle(SearchNaturesQuery query, CancellationToken cancellationToken)
   {
     await _permissionService.EnsureCanPreviewAsync(query, EntityType.Nature, cancellationToken);
 

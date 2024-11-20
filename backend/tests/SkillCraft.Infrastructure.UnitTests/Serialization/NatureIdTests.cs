@@ -1,35 +1,35 @@
-﻿using SkillCraft.Domain.Personalities;
+﻿using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Worlds;
 using SkillCraft.Infrastructure.Converters;
 
 namespace SkillCraft.Infrastructure.Serialization;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class PersonalityIdTests
+public class NatureIdTests
 {
   private readonly JsonSerializerOptions _options = new();
 
-  private readonly PersonalityId _id = new(WorldId.NewId());
+  private readonly NatureId _id = new(WorldId.NewId());
 
-  public PersonalityIdTests()
+  public NatureIdTests()
   {
-    _options.Converters.Add(new PersonalityIdConverter());
+    _options.Converters.Add(new NatureIdConverter());
   }
 
   [Fact(DisplayName = "It should deserialize correctly.")]
   public void It_should_deserialize_correctly()
   {
     string json = string.Concat('"', _id, '"');
-    PersonalityId personalityId = JsonSerializer.Deserialize<PersonalityId>(json, _options);
-    Assert.Equal(json.Trim('"'), personalityId.Value);
+    NatureId natureId = JsonSerializer.Deserialize<NatureId>(json, _options);
+    Assert.Equal(json.Trim('"'), natureId.Value);
   }
 
   [Fact(DisplayName = "It should handle null deserialization correctly.")]
   public void It_should_handle_null_deserialization_correctly()
   {
     string json = "null";
-    PersonalityId personalityId = JsonSerializer.Deserialize<PersonalityId>(json, _options);
-    Assert.Equal(string.Empty, personalityId.Value);
+    NatureId natureId = JsonSerializer.Deserialize<NatureId>(json, _options);
+    Assert.Equal(string.Empty, natureId.Value);
   }
 
   [Fact(DisplayName = "It should serialize correctly.")]
