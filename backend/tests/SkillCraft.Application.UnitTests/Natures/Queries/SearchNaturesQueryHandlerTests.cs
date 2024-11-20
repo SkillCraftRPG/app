@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Natures;
 
 namespace SkillCraft.Application.Natures.Queries;
@@ -33,5 +34,7 @@ public class SearchNaturesQueryHandlerTests
     SearchResults<NatureModel> natures = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, natures);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Nature, _cancellationToken), Times.Once);
   }
 }

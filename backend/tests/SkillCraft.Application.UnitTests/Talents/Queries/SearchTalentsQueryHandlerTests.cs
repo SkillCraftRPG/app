@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Talents;
 
 namespace SkillCraft.Application.Talents.Queries;
@@ -33,5 +34,7 @@ public class SearchTalentsQueryHandlerTests
     SearchResults<TalentModel> talents = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, talents);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Talent, _cancellationToken), Times.Once);
   }
 }

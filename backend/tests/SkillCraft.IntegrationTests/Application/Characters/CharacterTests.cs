@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Logitar.Portal.Contracts.Search;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Characters.Queries;
@@ -8,6 +9,7 @@ using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
+using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Items;
@@ -25,6 +27,7 @@ public class CharacterTests : IntegrationTests
 {
   private readonly IAspectRepository _aspectRepository;
   private readonly ICasteRepository _casteRepository;
+  private readonly ICharacterRepository _characterRepository;
   private readonly ICustomizationRepository _customizationRepository;
   private readonly IEducationRepository _educationRepository;
   private readonly IItemRepository _itemRepository;
@@ -57,10 +60,18 @@ public class CharacterTests : IntegrationTests
 
   private readonly Item _denier;
 
+  private readonly PlayerName _player;
+  private readonly Character _alexios;
+  private readonly Character _herakles;
+  private readonly Character _kassandra;
+  private readonly Character _leonidas;
+  private readonly Character _stentor;
+
   public CharacterTests() : base()
   {
     _aspectRepository = ServiceProvider.GetRequiredService<IAspectRepository>();
     _casteRepository = ServiceProvider.GetRequiredService<ICasteRepository>();
+    _characterRepository = ServiceProvider.GetRequiredService<ICharacterRepository>();
     _customizationRepository = ServiceProvider.GetRequiredService<ICustomizationRepository>();
     _educationRepository = ServiceProvider.GetRequiredService<IEducationRepository>();
     _itemRepository = ServiceProvider.GetRequiredService<IItemRepository>();
@@ -165,6 +176,21 @@ public class CharacterTests : IntegrationTests
       Weight = 0.005
     };
     _denier.Update(UserId);
+
+    BaseAttributes baseAttributes = new(agility: 9, coordination: 8, intellect: 8, presence: 8, sensitivity: 8, spirit: 8, vigor: 8,
+      best: Attribute.Agility, worst: Attribute.Sensitivity, mandatory: [Attribute.Agility, Attribute.Vigor],
+      optional: [Attribute.Sensitivity, Attribute.Vigor], extra: [Attribute.Agility, Attribute.Vigor]);
+    _player = new(Faker.Person.FullName);
+    _alexios = new(World.Id, new Name("Alexios"), _player, _orrin, height: 1.71, weight: 67.3, age: 18,
+      _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
+    _herakles = new(World.Id, new Name("Herakles"), new PlayerName(Faker.Name.FullName()), _orrin, height: 1.67, weight: 62.8, age: 18,
+      _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
+    _kassandra = new(World.Id, new Name("Kassandra"), _player, _orrin, height: 1.76, weight: 68.1, age: 18,
+      _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
+    _leonidas = new(World.Id, new Name("Leonidas"), _player, _orrin, height: 1.84, weight: 81.3, age: 61,
+      _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
+    _stentor = new(World.Id, new Name("Stentor"), _player, _orrin, height: 1.66, weight: 57.9, age: 16,
+      _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
   }
 
   public override async Task InitializeAsync()
@@ -301,5 +327,48 @@ public class CharacterTests : IntegrationTests
     CharacterModel? model = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(model);
     Assert.Equal(character, model);
+  }
+
+  [Fact(DisplayName = "It should return empty search results.")]
+  public async Task It_should_return_empty_search_results()
+  {
+    await _characterRepository.SaveAsync([_alexios, _herakles, _kassandra, _leonidas, _stentor]);
+
+    SearchCharactersPayload payload = new();
+    payload.Search.Terms.Add(new SearchTerm("test"));
+
+    SearchCharactersQuery query = new(payload);
+    SearchResults<CharacterModel> results = await Pipeline.ExecuteAsync(query);
+
+    Assert.Equal(0, results.Total);
+    Assert.Empty(results.Items);
+  }
+
+  [Fact(DisplayName = "It should return the correct search results.")]
+  public async Task It_should_return_the_correct_search_results()
+  {
+    await _characterRepository.SaveAsync([_alexios, _herakles, _kassandra, _leonidas, _stentor]);
+
+    SearchCharactersPayload payload = new()
+    {
+      PlayerName = _player.Value,
+      Skip = 1,
+      Limit = 1
+    };
+    payload.Search.Operator = SearchOperator.Or;
+    payload.Search.Terms.Add(new SearchTerm("%s"));
+    payload.Search.Terms.Add(new SearchTerm("%ss%"));
+    payload.Sort.Add(new CharacterSortOption(CharacterSort.Name, isDescending: false));
+
+    payload.Ids.Add(Guid.Empty);
+    payload.Ids.AddRange((await _characterRepository.LoadAsync()).Select(caste => caste.EntityId));
+    payload.Ids.Remove(_leonidas.EntityId);
+
+    SearchCharactersQuery query = new(payload);
+    SearchResults<CharacterModel> results = await Pipeline.ExecuteAsync(query);
+
+    Assert.Equal(2, results.Total);
+    CharacterModel caste = Assert.Single(results.Items);
+    Assert.Equal(_kassandra.EntityId, caste.Id);
   }
 }

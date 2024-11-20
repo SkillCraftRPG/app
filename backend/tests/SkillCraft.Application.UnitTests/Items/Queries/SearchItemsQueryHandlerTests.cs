@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Items;
 
 namespace SkillCraft.Application.Items.Queries;
@@ -33,5 +34,7 @@ public class SearchItemsQueryHandlerTests
     SearchResults<ItemModel> items = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, items);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Item, _cancellationToken), Times.Once);
   }
 }
