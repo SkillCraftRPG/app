@@ -8,10 +8,12 @@ import { useRoute, useRouter } from "vue-router";
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
+import AttributesBlock from "@/components/aspects/AttributesBlock.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateAspect from "@/components/aspects/CreateAspect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
+import SkillsBlock from "@/components/aspects/SkillsBlock.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { AspectModel, AspectSort, SearchAspectsPayload } from "@/types/aspects";
@@ -46,25 +48,6 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
-
-type AttributeCategory = "mandatory" | "optional";
-function formatAttributes(aspect: AspectModel, category: AttributeCategory): string {
-  const attributes: string[] =
-    category === "mandatory"
-      ? [aspect.attributes.mandatory1, aspect.attributes.mandatory2]
-          .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.options.${attribute}`))
-      : [aspect.attributes.optional1, aspect.attributes.optional2]
-          .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.options.${attribute}`));
-  return attributes.join("<br />") || "—";
-}
-function formatSkills(aspect: AspectModel): string {
-  const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2]
-    .filter((skill) => Boolean(skill))
-    .map((skill) => t(`game.skills.options.${skill}`));
-  return skills.join("<br />") || "—";
-}
 
 function onCreated(aspect: AspectModel): void {
   toasts.success("aspects.created");
@@ -199,9 +182,9 @@ watch(
             <td>
               <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }"><font-awesome-icon icon="fas fa-edit" />{{ aspect.name }}</RouterLink>
             </td>
-            <td v-html="formatAttributes(aspect, 'mandatory')"></td>
-            <td v-html="formatAttributes(aspect, 'optional')"></td>
-            <td v-html="formatSkills(aspect)"></td>
+            <td><AttributesBlock :aspect="aspect" /></td>
+            <td><AttributesBlock :aspect="aspect" optional /></td>
+            <td><SkillsBlock :aspect="aspect" /></td>
             <td><StatusBlock :actor="aspect.updatedBy" :date="aspect.updatedOn" /></td>
           </tr>
         </tbody>

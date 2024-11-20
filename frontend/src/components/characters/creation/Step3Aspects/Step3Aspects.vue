@@ -5,6 +5,8 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import AspectSelect from "@/components/aspects/AspectSelect.vue";
+import AttributesBlock from "@/components/aspects/AttributesBlock.vue";
+import SkillsBlock from "@/components/aspects/SkillsBlock.vue";
 import type { AspectModel } from "@/types/aspects";
 import type { Step3 } from "@/types/characters";
 import { useCharacterStore } from "@/stores/character";
@@ -33,25 +35,6 @@ function removeAspect(aspect: AspectModel): void {
   if (index >= 0) {
     aspects.value.splice(index, 1);
   }
-}
-
-type AttributeCategory = "mandatory" | "optional";
-function formatAttributes(aspect: AspectModel, category: AttributeCategory): string {
-  const attributes: string[] =
-    category === "mandatory"
-      ? [aspect.attributes.mandatory1, aspect.attributes.mandatory2]
-          .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.options.${attribute}`))
-      : [aspect.attributes.optional1, aspect.attributes.optional2]
-          .filter((attribute) => Boolean(attribute))
-          .map((attribute) => t(`game.attributes.options.${attribute}`));
-  return attributes.join("<br />") || "—";
-}
-function formatSkills(aspect: AspectModel): string {
-  const skills: string[] = [aspect.skills.discounted1, aspect.skills.discounted2]
-    .filter((skill) => Boolean(skill))
-    .map((skill) => t(`game.skills.options.${skill}`));
-  return skills.join("<br />") || "—";
 }
 
 const { handleSubmit } = useForm();
@@ -98,9 +81,9 @@ onMounted(() => {
                 <font-awesome-icon icon="fas fa-eye" /> {{ aspect.name }}
               </RouterLink>
             </td>
-            <td v-html="formatAttributes(aspect, 'mandatory')"></td>
-            <td v-html="formatAttributes(aspect, 'optional')"></td>
-            <td v-html="formatSkills(aspect)"></td>
+            <td><AttributesBlock :aspect="aspect" /></td>
+            <td><AttributesBlock :aspect="aspect" optional /></td>
+            <td><SkillsBlock :aspect="aspect" /></td>
             <td>
               <TarButton icon="fas fa-trash" :text="t('actions.remove')" variant="danger" @click="removeAspect(aspect)" />
             </td>

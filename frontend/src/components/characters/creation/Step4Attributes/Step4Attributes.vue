@@ -452,7 +452,7 @@ onMounted(() => {
       <h6>{{ t("aspects.attributes.optional") }}</h6>
       <div class="align-items-stretch mb-3 row">
         <div v-for="(optional, index) in optional" :key="index" class="col">
-          <AttributeCard :attribute="optional.attribute" :selected="optional.selected" @click="toggleOptional(index)" />
+          <AttributeCard :attribute="optional.attribute" class="h-100" :selected="optional.selected" @click="toggleOptional(index)" />
         </div>
       </div>
       <p v-if="requiredOptional < 0" class="text-danger">
