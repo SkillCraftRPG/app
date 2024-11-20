@@ -11,7 +11,7 @@ public record CreateCharacterPayload
   public int Age { get; set; }
   public List<Guid> LanguageIds { get; set; }
 
-  public Guid PersonalityId { get; set; }
+  public Guid NatureId { get; set; }
   public List<Guid> CustomizationIds { get; set; }
 
   public List<Guid> AspectIds { get; set; }

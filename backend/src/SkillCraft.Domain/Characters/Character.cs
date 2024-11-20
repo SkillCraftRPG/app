@@ -8,7 +8,7 @@ using SkillCraft.Domain.Educations;
 using SkillCraft.Domain.Items;
 using SkillCraft.Domain.Languages;
 using SkillCraft.Domain.Lineages;
-using SkillCraft.Domain.Personalities;
+using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
 
@@ -29,7 +29,7 @@ public class Character : AggregateRoot
   public double Weight { get; private set; }
   public int Age { get; private set; }
 
-  public PersonalityId PersonalityId { get; private set; }
+  public NatureId NatureId { get; private set; }
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
 
   public IReadOnlyCollection<AspectId> AspectIds { get; private set; } = [];
@@ -69,7 +69,7 @@ public class Character : AggregateRoot
     double height,
     double weight,
     int age,
-    Personality personality,
+    Nature nature,
     IEnumerable<Customization> customizations,
     IEnumerable<Aspect> aspects,
     BaseAttributes baseAttributes,
@@ -85,11 +85,11 @@ public class Character : AggregateRoot
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0.0, nameof(height));
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(weight, 0.0, nameof(weight));
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(age, 0, nameof(age));
-    if (personality.WorldId != worldId)
+    if (nature.WorldId != worldId)
     {
-      throw new ArgumentException("The personality does not reside in the same world as the character.", nameof(personality));
+      throw new ArgumentException("The nature does not reside in the same world as the character.", nameof(nature));
     }
-    IReadOnlyCollection<CustomizationId> customizationIds = GetCustomizationIds(personality, customizations);
+    IReadOnlyCollection<CustomizationId> customizationIds = GetCustomizationIds(nature, customizations);
     IReadOnlyCollection<AspectId> aspectIds = GetAspectIds(worldId, aspects);
     if (caste.WorldId != worldId)
     {
@@ -100,7 +100,7 @@ public class Character : AggregateRoot
       throw new ArgumentException("The education does not reside in the same world as the character.", nameof(education));
     }
 
-    CreatedEvent @event = new(name, player, lineage.Id, height, weight, age, personality.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
+    CreatedEvent @event = new(name, player, lineage.Id, height, weight, age, nature.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
     Raise(@event, userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
@@ -113,7 +113,7 @@ public class Character : AggregateRoot
     Weight = @event.Weight;
     Age = @event.Age;
 
-    PersonalityId = @event.PersonalityId;
+    NatureId = @event.NatureId;
     CustomizationIds = @event.CustomizationIds;
 
     AspectIds = @event.AspectIds;
@@ -258,7 +258,7 @@ public class Character : AggregateRoot
     return aspectIds;
   }
 
-  private static IReadOnlyCollection<CustomizationId> GetCustomizationIds(Personality personality, IEnumerable<Customization> customizations)
+  private static IReadOnlyCollection<CustomizationId> GetCustomizationIds(Nature nature, IEnumerable<Customization> customizations)
   {
     HashSet<CustomizationId> customizationIds = new(capacity: customizations.Count());
     int gifts = 0;
@@ -269,13 +269,13 @@ public class Character : AggregateRoot
       {
         customizationIds.Add(customization.Id);
 
-        if (customization.WorldId != personality.WorldId)
+        if (customization.WorldId != nature.WorldId)
         {
           throw new ArgumentException("One or more customizations do not reside in the same world as the character.", nameof(customizations));
         }
-        else if (customization.Id == personality.GiftId)
+        else if (customization.Id == nature.GiftId)
         {
-          throw new ArgumentException("The customizations cannot include the same gift as the personality.", nameof(customizations));
+          throw new ArgumentException("The customizations cannot include the gift of the nature.", nameof(customizations));
         }
 
         switch (customization.Type)
@@ -306,7 +306,7 @@ public class Character : AggregateRoot
     public double Weight { get; }
     public int Age { get; }
 
-    public PersonalityId PersonalityId { get; }
+    public NatureId NatureId { get; }
     public IReadOnlyCollection<CustomizationId> CustomizationIds { get; }
 
     public IReadOnlyCollection<AspectId> AspectIds { get; }
@@ -317,7 +317,7 @@ public class Character : AggregateRoot
     public EducationId EducationId { get; }
 
     public CreatedEvent(Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
-      PersonalityId personalityId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds,
+      NatureId natureId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds,
       BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
     {
       Name = name;
@@ -328,7 +328,7 @@ public class Character : AggregateRoot
       Weight = weight;
       Age = age;
 
-      PersonalityId = personalityId;
+      NatureId = natureId;
       CustomizationIds = customizationIds;
 
       AspectIds = aspectIds;

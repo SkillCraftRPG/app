@@ -1,9 +1,9 @@
 ﻿using Logitar.EventSourcing;
 using SkillCraft.Domain.Worlds;
 
-namespace SkillCraft.Domain.Personalities;
+namespace SkillCraft.Domain.Natures;
 
-public readonly struct PersonalityId
+public readonly struct NatureId
 {
   private const char Separator = ':';
 
@@ -12,21 +12,21 @@ public readonly struct PersonalityId
   public AggregateId AggregateId { get; }
   public string Value => AggregateId.Value;
 
-  public PersonalityId(WorldId worldId, Guid? entityId = null)
+  public NatureId(WorldId worldId, Guid? entityId = null)
   {
     WorldId = worldId;
     EntityId = entityId ?? Guid.NewGuid();
     AggregateId = new(string.Join(Separator, WorldId, new AggregateId(EntityId)));
   }
-  public PersonalityId(AggregateId aggregateId) : this(aggregateId.Value)
+  public NatureId(AggregateId aggregateId) : this(aggregateId.Value)
   {
   }
-  public PersonalityId(string value)
+  public NatureId(string value)
   {
     string[] values = value.Split(Separator);
     if (values.Length != 2)
     {
-      throw new ArgumentException("The value is not a valid personality ID.", nameof(value));
+      throw new ArgumentException("The value is not a valid nature ID.", nameof(value));
     }
 
     WorldId = new(values[0]);
@@ -34,10 +34,10 @@ public readonly struct PersonalityId
     AggregateId = new(value);
   }
 
-  public static bool operator ==(PersonalityId left, PersonalityId right) => left.Equals(right);
-  public static bool operator !=(PersonalityId left, PersonalityId right) => !left.Equals(right);
+  public static bool operator ==(NatureId left, NatureId right) => left.Equals(right);
+  public static bool operator !=(NatureId left, NatureId right) => !left.Equals(right);
 
-  public override bool Equals([NotNullWhen(true)] object? obj) => obj is PersonalityId userId && userId.Value == Value;
+  public override bool Equals([NotNullWhen(true)] object? obj) => obj is NatureId userId && userId.Value == Value;
   public override int GetHashCode() => Value.GetHashCode();
   public override string ToString() => Value;
 }

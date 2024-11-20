@@ -6,13 +6,13 @@ using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Worlds;
 using Attribute = SkillCraft.Contracts.Attribute;
 
-namespace SkillCraft.Domain.Personalities;
+namespace SkillCraft.Domain.Natures;
 
-public class Personality : AggregateRoot
+public class Nature : AggregateRoot
 {
   private UpdatedEvent _updatedEvent = new();
 
-  public new PersonalityId Id => new(base.Id);
+  public new NatureId Id => new(base.Id);
   public WorldId WorldId => Id.WorldId;
   public Guid EntityId => Id.EntityId;
 
@@ -63,11 +63,11 @@ public class Personality : AggregateRoot
   }
   public CustomizationId? GiftId { get; private set; }
 
-  public Personality() : base()
+  public Nature() : base()
   {
   }
 
-  public Personality(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new PersonalityId(worldId, entityId).AggregateId)
+  public Nature(WorldId worldId, Name name, UserId userId, Guid? entityId = null) : base(new NatureId(worldId, entityId).AggregateId)
   {
     Raise(new CreatedEvent(name), userId.ActorId);
   }
@@ -82,7 +82,7 @@ public class Personality : AggregateRoot
     {
       if (gift.WorldId != WorldId)
       {
-        throw new ArgumentException("The gift does not reside in the same world as the personality.", nameof(gift));
+        throw new ArgumentException("The gift does not reside in the same world as the nature.", nameof(gift));
       }
       else if (gift.Type != CustomizationType.Gift)
       {
