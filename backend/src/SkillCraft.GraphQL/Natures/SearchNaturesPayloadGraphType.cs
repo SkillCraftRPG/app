@@ -9,9 +9,9 @@ internal class SearchNaturesPayloadGraphType : SearchPayloadInputGraphType<Searc
   public SearchNaturesPayloadGraphType() : base()
   {
     Field(x => x.Attribute, type: typeof(AttributeGraphType))
-      .Description("When specified, only personalities granting a bonus to this attribute will match.");
+      .Description("When specified, only natures granting a bonus to this attribute will match.");
     Field(x => x.GiftId, type: typeof(IdGraphType))
-      .Description("When specified, only personalities granting this gift will match.");
+      .Description("When specified, only natures granting this gift will match.");
 
     Field(x => x.Sort, type: typeof(NonNullGraphType<ListGraphType<NonNullGraphType<NatureSortOptionGraphType>>>))
       .DefaultValue([])

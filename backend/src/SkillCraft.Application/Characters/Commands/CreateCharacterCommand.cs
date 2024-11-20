@@ -9,6 +9,7 @@ using SkillCraft.Application.Educations;
 using SkillCraft.Application.Items;
 using SkillCraft.Application.Languages;
 using SkillCraft.Application.Lineages;
+using SkillCraft.Application.Natures;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Application.Storages;
 using SkillCraft.Application.Talents;
@@ -47,9 +48,9 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="LanguagesCannotIncludeLineageLanguageException"></exception>
 /// <exception cref="LanguagesNotFoundException"></exception>
 /// <exception cref="LineageNotFoundException"></exception>
+/// <exception cref="NatureNotFoundException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
-/// <exception cref="PersonalityNotFoundException"></exception>
 /// <exception cref="TalentsNotFoundException"></exception>
 /// <exception cref="ValidationException"></exception>
 public record CreateCharacterCommand(CreateCharacterPayload Payload) : Activity, IRequest<CharacterModel>;
