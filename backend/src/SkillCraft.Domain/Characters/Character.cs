@@ -163,6 +163,18 @@ public class Character : AggregateRoot
     _inventory[@event.InventoryId] = @event.Item;
   }
 
+  public void RemoveLanguage(LanguageId languageId, UserId userId)
+  {
+    if (_languages.ContainsKey(languageId))
+    {
+      Raise(new LanguageRemovedEvent(languageId), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(LanguageRemovedEvent @event)
+  {
+    _languages.Remove(@event.LanguageId);
+  }
+
   public void SetLanguage(Language language, Description? notes, UserId userId)
   {
     if (language.WorldId != WorldId)
@@ -349,6 +361,16 @@ public class Character : AggregateRoot
     {
       InventoryId = inventoryId;
       Item = item;
+    }
+  }
+
+  public class LanguageRemovedEvent : DomainEvent, INotification
+  {
+    public LanguageId LanguageId { get; }
+
+    public LanguageRemovedEvent(LanguageId languageId)
+    {
+      LanguageId = languageId;
     }
   }
 

@@ -403,6 +403,27 @@ public class CharacterTests
     Assert.Equal("weight", exception.ParamName);
   }
 
+  [Fact(DisplayName = "RemoveLanguage: it should not do anything when the language was not found.")]
+  public void RemoveLanguage_it_should_not_do_anything_when_the_language_was_not_found()
+  {
+    Assert.Empty(_character.Languages);
+    _character.RemoveLanguage(_language.Id, _world.OwnerId);
+
+    Assert.DoesNotContain(_character.Changes, change => change is Character.LanguageRemovedEvent);
+  }
+
+  [Fact(DisplayName = "RemoveLanguage: it should remove an existing language.")]
+  public void RemoveLanguage_it_should_remove_an_existing_language()
+  {
+    _character.SetLanguage(_language, notes: null, _world.OwnerId);
+    Assert.NotEmpty(_character.Languages);
+
+    _character.RemoveLanguage(_language.Id, _world.OwnerId);
+    Assert.Empty(_character.Languages);
+
+    Assert.Contains(_character.Changes, change => change is Character.LanguageRemovedEvent e && e.LanguageId == _language.Id);
+  }
+
   [Fact(DisplayName = "SetItem: it should add a new item.")]
   public void SetItem_it_should_add_a_new_item()
   {

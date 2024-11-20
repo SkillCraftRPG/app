@@ -48,10 +48,24 @@ public class CharacterController : ControllerBase
     return character == null ? NotFound() : Ok(character);
   }
 
+  [HttpDelete("{characterId}/languages/{languageId}")]
+  public async Task<ActionResult<CharacterModel>> RemoveLanguageAsync(Guid characterId, Guid languageId, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new RemoveCharacterLanguageCommand(characterId, languageId), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
+  }
+
   [HttpGet]
   public async Task<ActionResult<SearchResults<CharacterModel>>> SearchAsync([FromQuery] SearchCharactersParameters parameters, CancellationToken cancellationToken)
   {
     SearchResults<CharacterModel> castes = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
     return Ok(castes);
+  }
+
+  [HttpPut("{characterId}/languages/{languageId}")]
+  public async Task<ActionResult<CharacterModel>> SetLanguageAsync(Guid characterId, Guid languageId, [FromBody] CharacterLanguagePayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterLanguageCommand(characterId, languageId, payload), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
   }
 }
