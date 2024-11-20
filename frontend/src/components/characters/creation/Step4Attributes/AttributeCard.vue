@@ -22,7 +22,7 @@ defineEmits<{
 </script>
 
 <template>
-  <TarCard :class="{ 'clickable h-100': true, selected: isSelected }" :title="t(`game.attributes.options.${attribute}`)" @click="$emit('click')">
+  <TarCard :class="{ clickable: true, selected: isSelected }" :title="t(`game.attributes.options.${attribute}`)" @click="$emit('click')">
     <template v-if="isSelected" #subtitle-override>
       <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-check" /> {{ t("characters.attributes.selected") }}</h6>
     </template>

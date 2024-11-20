@@ -24,7 +24,7 @@ defineEmits<{
 </script>
 
 <template>
-  <TarCard :title="language.name" :subtitle="language.script">
+  <TarCard :title="language.name" :subtitle="language.script ?? '—'">
     <div v-if="hasRemove || hasView" class="float-end">
       <RouterLink
         v-if="hasView"
