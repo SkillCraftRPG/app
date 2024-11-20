@@ -32,7 +32,8 @@
     }
   },
   "background": {
-    "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence."
+    "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence.",
+    "label": "Historique"
   },
   "caste": {
     "invalid": {

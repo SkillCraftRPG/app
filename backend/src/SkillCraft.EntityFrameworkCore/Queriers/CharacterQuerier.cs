@@ -49,13 +49,13 @@ internal class CharacterQuerier : ICharacterQuerier
   public async Task<CharacterModel?> ReadAsync(WorldId worldId, Guid id, CancellationToken cancellationToken)
   {
     CharacterEntity? character = await _context.Characters.AsNoTracking()
-      .Include(x => x.Aspects).ThenInclude(x => x.World)
-      .Include(x => x.Caste).ThenInclude(x => x!.World)
-      .Include(x => x.Customizations).ThenInclude(x => x.World)
-      .Include(x => x.Education).ThenInclude(x => x!.World)
-      .Include(x => x.Lineage).ThenInclude(x => x!.World)
-      .Include(x => x.Nature).ThenInclude(x => x!.Gift).ThenInclude(x => x!.World)
-      .Include(x => x.Nature).ThenInclude(x => x!.World)
+      .Include(x => x.Aspects)
+      .Include(x => x.Caste)
+      .Include(x => x.Customizations)
+      .Include(x => x.Education)
+      .Include(x => x.Lineage).ThenInclude(x => x!.Languages)
+      .Include(x => x.Lineage).ThenInclude(x => x!.Species).ThenInclude(x => x!.Languages)
+      .Include(x => x.Nature).ThenInclude(x => x!.Gift)
       .Include(x => x.World)
       .SingleOrDefaultAsync(x => x.World!.Id == worldId.ToGuid() && x.Id == id, cancellationToken);
 
@@ -65,19 +65,19 @@ internal class CharacterQuerier : ICharacterQuerier
     }
 
     CharacterLanguageEntity[] languages = await _context.CharacterLanguages.AsNoTracking()
-      .Include(x => x.Language).ThenInclude(x => x!.World)
+      .Include(x => x.Language)
       .Where(x => x.CharacterId == character.CharacterId)
       .ToArrayAsync(cancellationToken);
     character.Languages.AddRange(languages);
 
     CharacterTalentEntity[] talents = await _context.CharacterTalents.AsNoTracking()
-      .Include(x => x.Talent).ThenInclude(x => x!.World)
+      .Include(x => x.Talent)
       .Where(x => x.CharacterId == character.CharacterId)
       .ToArrayAsync(cancellationToken);
     character.Talents.AddRange(talents);
 
     InventoryEntity[] inventory = await _context.Inventory.AsNoTracking()
-      .Include(x => x.Item).ThenInclude(x => x!.World)
+      .Include(x => x.Item)
       .Where(x => x.CharacterId == character.CharacterId)
       .ToArrayAsync(cancellationToken);
     character.Inventory.AddRange(inventory);
@@ -99,6 +99,10 @@ internal class CharacterQuerier : ICharacterQuerier
     }
 
     IQueryable<CharacterEntity> query = _context.Characters.FromQuery(builder).AsNoTracking()
+      .Include(x => x.Caste)
+      .Include(x => x.Education)
+      .Include(x => x.Lineage).ThenInclude(x => x!.Species)
+      .Include(x => x.Nature).ThenInclude(x => x!.Gift)
       .Include(x => x.World);
 
     long total = await query.LongCountAsync(cancellationToken);

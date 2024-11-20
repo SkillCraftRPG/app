@@ -47,11 +47,10 @@ internal class Mapper
     PictureUrl = source.PictureUrl
   };
 
-  public AspectModel ToAspect(AspectEntity source)
+  public AspectModel ToAspect(AspectEntity source) => ToAspect(source, world: null);
+  public AspectModel ToAspect(AspectEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     AspectModel destination = new(world, source.Name)
     {
@@ -66,11 +65,10 @@ internal class Mapper
     return destination;
   }
 
-  public CasteModel ToCaste(CasteEntity source)
+  public CasteModel ToCaste(CasteEntity source) => ToCaste(source, world: null);
+  public CasteModel ToCaste(CasteEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     CasteModel destination = new(world, source.Name)
     {
@@ -106,35 +104,35 @@ internal class Mapper
 
     if (source.Lineage != null)
     {
-      destination.Lineage = ToLineage(source.Lineage);
+      destination.Lineage = ToLineage(source.Lineage, world);
     }
     if (source.Nature != null)
     {
-      destination.Nature = ToNature(source.Nature);
+      destination.Nature = ToNature(source.Nature, world);
     }
     if (source.Caste != null)
     {
-      destination.Caste = ToCaste(source.Caste);
+      destination.Caste = ToCaste(source.Caste, world);
     }
     if (source.Education != null)
     {
-      destination.Education = ToEducation(source.Education);
+      destination.Education = ToEducation(source.Education, world);
     }
 
     foreach (CustomizationEntity customization in source.Customizations)
     {
-      destination.Customizations.Add(ToCustomization(customization));
+      destination.Customizations.Add(ToCustomization(customization, world));
     }
     foreach (AspectEntity aspect in source.Aspects)
     {
-      destination.Aspects.Add(ToAspect(aspect));
+      destination.Aspects.Add(ToAspect(aspect, world));
     }
 
     foreach (CharacterLanguageEntity relation in source.Languages)
     {
       if (relation.Language != null)
       {
-        LanguageModel language = ToLanguage(relation.Language);
+        LanguageModel language = ToLanguage(relation.Language, world);
         destination.Languages.Add(new CharacterLanguageModel(language)
         {
           Notes = relation.Notes
@@ -146,7 +144,7 @@ internal class Mapper
     {
       if (relation.Talent != null)
       {
-        TalentModel talent = ToTalent(relation.Talent);
+        TalentModel talent = ToTalent(relation.Talent, world);
         destination.Talents.Add(new CharacterTalentModel(talent)
         {
           Id = relation.Id,
@@ -161,7 +159,7 @@ internal class Mapper
     {
       if (inventory.Item != null)
       {
-        ItemModel item = ToItem(inventory.Item);
+        ItemModel item = ToItem(inventory.Item, world);
         destination.Inventory.Add(new InventoryModel(item)
         {
           Id = inventory.Id,
@@ -220,11 +218,10 @@ internal class Mapper
     return destination;
   }
 
-  public EducationModel ToEducation(EducationEntity source)
+  public EducationModel ToEducation(EducationEntity source) => ToEducation(source, world: null);
+  public EducationModel ToEducation(EducationEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     EducationModel destination = new(world, source.Name)
     {
@@ -239,11 +236,10 @@ internal class Mapper
     return destination;
   }
 
-  public ItemModel ToItem(ItemEntity source)
+  public ItemModel ToItem(ItemEntity source) => ToItem(source, world: null);
+  public ItemModel ToItem(ItemEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     ItemModel destination = new(world, source.Name)
     {
@@ -334,11 +330,10 @@ internal class Mapper
     return destination;
   }
 
-  public NatureModel ToNature(NatureEntity source)
+  public NatureModel ToNature(NatureEntity source) => ToNature(source, world: null);
+  public NatureModel ToNature(NatureEntity source, WorldModel? world)
   {
-    WorldModel world = source.World == null
-      ? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source))
-      : ToWorld(source.World);
+    world ??= ToWorld(source.World ?? throw new ArgumentException($"The {nameof(source.World)} is required.", nameof(source)));
 
     if (source.GiftId.HasValue && source.Gift == null)
     {
