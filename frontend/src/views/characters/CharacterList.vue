@@ -155,6 +155,9 @@ watch(
           <tr>
             <th scope="col">{{ t("characters.name") }}</th>
             <th scope="col">{{ t("characters.player.label") }}</th>
+            <th scope="col">{{ t("characters.lineage") }}</th>
+            <th scope="col">{{ t("characters.background.label") }}</th>
+            <th scope="col">{{ t("natures.select.label") }}</th>
             <th scope="col">{{ t("characters.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
@@ -166,6 +169,31 @@ watch(
               </RouterLink>
             </td>
             <td>{{ character.playerName ?? "—" }}</td>
+            <td>
+              <template v-if="character.lineage.species">
+                <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.species.id } }" target="_blank">
+                  <font-awesome-icon icon="fas fa-eye" /> {{ character.lineage.species.name }}
+                </RouterLink>
+                <br />
+              </template>
+              <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.id } }" target="_blank">
+                <font-awesome-icon icon="fas fa-eye" /> {{ character.lineage.name }}
+              </RouterLink>
+            </td>
+            <td>
+              <RouterLink :to="{ name: 'CasteEdit', params: { id: character.caste.id } }" target="_blank">
+                <font-awesome-icon icon="fas fa-eye" /> {{ character.caste.name }}
+              </RouterLink>
+              <br />
+              <RouterLink :to="{ name: 'EducationEdit', params: { id: character.education.id } }" target="_blank">
+                <font-awesome-icon icon="fas fa-eye" /> {{ character.education.name }}
+              </RouterLink>
+            </td>
+            <td>
+              <RouterLink :to="{ name: 'NatureEdit', params: { id: character.nature.id } }" target="_blank">
+                <font-awesome-icon icon="fas fa-eye" /> {{ character.nature.name }}
+              </RouterLink>
+            </td>
             <td><StatusBlock :actor="character.updatedBy" :date="character.updatedOn" /></td>
           </tr>
         </tbody>
