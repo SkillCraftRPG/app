@@ -1,12 +1,12 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Microsoft.AspNetCore.Mvc;
-using SkillCraft.Contracts.Personalities;
+using SkillCraft.Contracts.Natures;
 using SkillCraft.Models.Search;
 using Attribute = SkillCraft.Contracts.Attribute;
 
-namespace SkillCraft.Models.Personalities;
+namespace SkillCraft.Models.Natures;
 
-public record SearchPersonalitiesParameters : SearchParameters
+public record SearchNaturesParameters : SearchParameters
 {
   [FromQuery(Name = "attribute")]
   public Attribute? Attribute { get; set; }
@@ -14,9 +14,9 @@ public record SearchPersonalitiesParameters : SearchParameters
   [FromQuery(Name = "gift")]
   public Guid? GiftId { get; set; }
 
-  public SearchPersonalitiesPayload ToPayload()
+  public SearchNaturesPayload ToPayload()
   {
-    SearchPersonalitiesPayload payload = new()
+    SearchNaturesPayload payload = new()
     {
       Attribute = Attribute,
       GiftId = GiftId
@@ -25,9 +25,9 @@ public record SearchPersonalitiesParameters : SearchParameters
 
     foreach (SortOption sort in ((SearchPayload)payload).Sort)
     {
-      if (Enum.TryParse(sort.Field, out PersonalitySort field))
+      if (Enum.TryParse(sort.Field, out NatureSort field))
       {
-        payload.Sort.Add(new PersonalitySortOption(field, sort.IsDescending));
+        payload.Sort.Add(new NatureSortOption(field, sort.IsDescending));
       }
     }
 
