@@ -43,20 +43,11 @@ function setRoll(category: WeightCategory, value?: string): void {
   <div>
     <h3>{{ t("game.weight.label") }}</h3>
     <div class="row">
-      <WeightRollInput category="Starved" class="col-weight" :model-value="modelValue.starved" @update:model-value="setRoll('Starved', $event)" />
-      <WeightRollInput category="Skinny" class="col-weight" :model-value="modelValue.skinny" @update:model-value="setRoll('Skinny', $event)" />
-      <WeightRollInput category="Normal" class="col-weight" :model-value="modelValue.normal" @update:model-value="setRoll('Normal', $event)" />
-      <WeightRollInput category="Overweight" class="col-weight" :model-value="modelValue.overweight" @update:model-value="setRoll('Overweight', $event)" />
-      <WeightRollInput category="Obese" class="col-weight" :model-value="modelValue.obese" @update:model-value="setRoll('Obese', $event)" />
+      <WeightRollInput category="Starved" class="col" :model-value="modelValue.starved" @update:model-value="setRoll('Starved', $event)" />
+      <WeightRollInput category="Skinny" class="col" :model-value="modelValue.skinny" @update:model-value="setRoll('Skinny', $event)" />
+      <WeightRollInput category="Normal" class="col" :model-value="modelValue.normal" @update:model-value="setRoll('Normal', $event)" />
+      <WeightRollInput category="Overweight" class="col" :model-value="modelValue.overweight" @update:model-value="setRoll('Overweight', $event)" />
+      <WeightRollInput category="Obese" class="col" :model-value="modelValue.obese" @update:model-value="setRoll('Obese', $event)" />
     </div>
   </div>
 </template>
-
-<style scoped>
-@media (min-width: 992px) {
-  .col-weight {
-    flex: 0 0 auto;
-    width: 20%;
-  }
-}
-</style>
