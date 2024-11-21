@@ -25,6 +25,8 @@ public class CharacterModel : Aggregate
   public int BloodAlcoholContent { get; set; }
   public int Intoxication { get; set; }
 
+  public List<BonusModel> Bonuses { get; set; } = [];
+
   public LineageModel Lineage { get; set; } = new();
   public double Height { get; set; }
   public double Weight { get; set; }
