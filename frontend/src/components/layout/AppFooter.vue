@@ -13,7 +13,7 @@ const version = import.meta.env.VITE_APP_VERSION;
         <img src="@/assets/img/logo.png" :alt="`${t('brand')} Logo`" height="32" />
       </RouterLink>
       {{ " " }}
-      <RouterLink :to="{ name: 'Home' }" class="text-light">
+      <RouterLink :to="{ name: 'Home' }" class="text-light text-decoration-none">
         {{ t("copyright", { version, year }) }}
       </RouterLink>
     </div>

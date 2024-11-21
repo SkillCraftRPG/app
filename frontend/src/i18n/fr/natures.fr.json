@@ -1,11 +1,11 @@
 {
-  "create": "Créer un caractère",
-  "created": "Le caractère a été créé.",
+  "create": "Créer une nature",
+  "created": "La nature a été créée.",
   "empty": "Cette liste est vide.",
-  "list": "Caractères",
+  "list": "Natures",
   "select": {
-    "label": "Caractère",
-    "placeholder": "Sélectionnez un caractère"
+    "label": "Nature",
+    "placeholder": "Sélectionnez un nature"
   },
   "sort": {
     "options": {
@@ -14,5 +14,5 @@
       "UpdatedOn": "Dernière modification"
     }
   },
-  "updated": "Le caractère a été modifié."
+  "updated": "Le nature a été modifié."
 }
