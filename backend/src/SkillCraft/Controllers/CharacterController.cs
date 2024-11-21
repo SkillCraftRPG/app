@@ -53,6 +53,13 @@ public class CharacterController : ControllerBase
     return GetActionResult(character);
   }
 
+  [HttpDelete("{characterId}/bonuses/{bonusId}")]
+  public async Task<ActionResult<CharacterModel>> RemoveBonusAsync(Guid characterId, Guid bonusId, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new RemoveCharacterBonusCommand(characterId, bonusId), cancellationToken);
+    return GetActionResult(character);
+  }
+
   [HttpDelete("{characterId}/languages/{languageId}")]
   public async Task<ActionResult<CharacterModel>> RemoveLanguageAsync(Guid characterId, Guid languageId, CancellationToken cancellationToken)
   {
@@ -79,6 +86,13 @@ public class CharacterController : ControllerBase
   {
     SearchResults<CharacterModel> characters = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
     return Ok(characters);
+  }
+
+  [HttpPut("{characterId}/bonuses/{bonusId}")]
+  public async Task<ActionResult<CharacterModel>> SetBonusAsync(Guid characterId, Guid bonusId, [FromBody] BonusPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterBonusCommand(characterId, bonusId, payload), cancellationToken);
+    return GetActionResult(character);
   }
 
   [HttpPut("{characterId}/languages/{languageId}")]
