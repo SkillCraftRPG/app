@@ -1,9 +1,15 @@
 ﻿using FluentValidation;
+using SkillCraft.Contracts.Characters;
 
 namespace SkillCraft.Domain.Validators;
 
 public static class ValidationExtensions
 {
+  public static IRuleBuilderOptions<T, string> BonusTarget<T>(this IRuleBuilder<T, string> ruleBuilder) where T : IBonus
+  {
+    return ruleBuilder.SetValidator(new BonusTargetValidator<T>());
+  }
+
   public static IRuleBuilderOptions<T, string> CommentText<T>(this IRuleBuilder<T, string> ruleBuilder)
   {
     return ruleBuilder.NotEmpty()
