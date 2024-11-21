@@ -133,6 +133,28 @@ internal static class CharacterEvents
     }
   }
 
+  public class CharacterTalentRemovedEventHandler : INotificationHandler<Character.TalentRemovedEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterTalentRemovedEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.TalentRemovedEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .Include(x => x.Talents)
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.RemoveTalent(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
   public class CharacterTalentUpdatedEventHandler : INotificationHandler<Character.TalentUpdatedEvent>
   {
     private readonly SkillCraftContext _context;

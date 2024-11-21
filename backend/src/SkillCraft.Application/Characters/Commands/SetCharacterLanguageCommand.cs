@@ -2,6 +2,7 @@
 using MediatR;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
@@ -13,6 +14,7 @@ namespace SkillCraft.Application.Characters.Commands;
 
 public record SetCharacterLanguageCommand(Guid CharacterId, Guid LanguageId, CharacterLanguagePayload Payload) : Activity, IRequest<CharacterModel?>;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="ValidationException"></exception>
 internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacterLanguageCommand, CharacterModel?>
@@ -56,7 +58,7 @@ internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacter
     Description? notes = Description.TryCreate(payload.Notes);
     character.SetLanguage(language, notes, command.GetUserId());
 
-    await _characterRepository.SaveAsync(character, cancellationToken);
+    await _characterRepository.SaveAsync(character, cancellationToken); // TODO(fpion): SaveCharacterCommand
 
     return await _characterQuerier.ReadAsync(character, cancellationToken);
   }

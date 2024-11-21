@@ -204,28 +204,28 @@ public class Character : AggregateRoot
     }
     else if (talent.Tier > Tier)
     {
-      throw new ArgumentException($"The talent tier ({talent.Tier}) cannot exceed the character tier ({Tier}).", nameof(talent));
+      throw new TalentTierCannotExceedCharacterTierException(this, talent, "TalentId");
     }
     else if (talent.RequiredTalentId.HasValue && !_talentIds.ContainsKey(talent.RequiredTalentId.Value))
     {
-      throw new ArgumentException("The character did not purchase the required talent yet.", nameof(talent));
+      throw new RequiredTalentNotPurchasedException(this, talent, "TalentId");
     }
 
     if (!talent.AllowMultiplePurchases && _talentIds.TryGetValue(talent.Id, out HashSet<Guid>? relationIds) && relationIds.Any(relationId => relationId != id))
     {
-      throw new ArgumentException("The talent cannot be purchased multiple times.", nameof(talent));
+      throw new TalentCannotBePurchasedMultipleTimesException(talent, "TalentId");
     }
 
     options ??= new();
-    int maximumCost = talent.Tier + 2;
-    int cost = options.Cost ?? maximumCost;
-    if (cost > maximumCost)
+    int cost = options.Cost ?? talent.MaximumCost;
+    talent.ThrowIfMaximumCostExceeded(cost, "Cost");
+    if (cost < 0)
     {
-      throw new ArgumentException($"The cost cannot exceed the maximum cost ({maximumCost}) for the talent '{talent}' of tier {talent.Tier}.", nameof(options));
+      throw new ArgumentOutOfRangeException(nameof(options), "The talent cost cannot be negative.");
     }
     else if (cost > RemainingTalentPoints)
     {
-      throw new ArgumentException($"The cost ({cost}) exceeds the remaining talent points ({RemainingTalentPoints}).", nameof(talent));
+      throw new NotEnoughRemainingTalentPointsException(this, talent, cost, "TalentId");
     }
 
     CharacterTalent characterTalent = new(talent.Id, cost, options.Precision, options.Notes);
@@ -244,6 +244,31 @@ public class Character : AggregateRoot
     relationIds.Add(@event.RelationId);
 
     _talents[@event.RelationId] = @event.Talent;
+  }
+
+  public void RemoveTalent(Guid id, UserId userId)
+  {
+    if (_talents.ContainsKey(id))
+    {
+      Raise(new TalentRemovedEvent(id), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(TalentRemovedEvent @event)
+  {
+    if (_talents.TryGetValue(@event.RelationId, out CharacterTalent? relation))
+    {
+      TalentId talentId = relation.Id;
+      if (_talentIds.TryGetValue(talentId, out HashSet<Guid>? relationIds))
+      {
+        relationIds.Remove(@event.RelationId);
+        if (relationIds.Count == 0)
+        {
+          _talentIds.Remove(talentId);
+        }
+      }
+
+      _talents.Remove(@event.RelationId);
+    }
   }
 
   public override string ToString() => $"{Name} | {base.ToString()}";
@@ -383,6 +408,16 @@ public class Character : AggregateRoot
     {
       LanguageId = languageId;
       Metadata = metadata;
+    }
+  }
+
+  public class TalentRemovedEvent : DomainEvent, INotification
+  {
+    public Guid RelationId { get; }
+
+    public TalentRemovedEvent(Guid relationId)
+    {
+      RelationId = relationId;
     }
   }
 

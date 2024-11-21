@@ -135,7 +135,7 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
 
       SetTalentOptions options = new()
       {
-        Cost = talent.Tier + 2
+        Cost = talent.MaximumCost
       };
       if (talent.Skill == caste.Skill)
       {

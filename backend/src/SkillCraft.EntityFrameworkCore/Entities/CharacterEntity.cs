@@ -209,14 +209,25 @@ internal class CharacterEntity : AggregateEntity
     }
   }
 
-  public void RemoveLanguage(Character.LanguageRemovedEvent e)
+  public void RemoveLanguage(Character.LanguageRemovedEvent @event)
   {
-    base.Update(e);
+    base.Update(@event);
 
-    CharacterLanguageEntity? relation = Languages.SingleOrDefault(l => l.Language?.Id == e.LanguageId.EntityId);
+    CharacterLanguageEntity? relation = Languages.SingleOrDefault(l => l.Language?.Id == @event.LanguageId.EntityId);
     if (relation != null)
     {
       Languages.Remove(relation);
+    }
+  }
+
+  public void RemoveTalent(Character.TalentRemovedEvent @event)
+  {
+    base.Update(@event);
+
+    CharacterTalentEntity? relation = Talents.SingleOrDefault(t => t.Id == @event.RelationId);
+    if (relation != null)
+    {
+      Talents.Remove(relation);
     }
   }
 
