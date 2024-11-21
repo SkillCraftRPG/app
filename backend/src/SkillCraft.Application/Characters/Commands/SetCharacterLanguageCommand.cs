@@ -23,17 +23,20 @@ internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacter
   private readonly ICharacterRepository _characterRepository;
   private readonly ILanguageRepository _languageRepository;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
   public SetCharacterLanguageCommandHandler(
     ICharacterQuerier characterQuerier,
     ICharacterRepository characterRepository,
     ILanguageRepository languageRepository,
-    IPermissionService permissionService)
+    IPermissionService permissionService,
+    ISender sender)
   {
     _characterQuerier = characterQuerier;
     _characterRepository = characterRepository;
     _languageRepository = languageRepository;
     _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<CharacterModel?> Handle(SetCharacterLanguageCommand command, CancellationToken cancellationToken)
@@ -58,7 +61,7 @@ internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacter
     Description? notes = Description.TryCreate(payload.Notes);
     character.SetLanguage(language, notes, command.GetUserId());
 
-    await _characterRepository.SaveAsync(character, cancellationToken); // TODO(fpion): SaveCharacterCommand
+    await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 
     return await _characterQuerier.ReadAsync(character, cancellationToken);
   }

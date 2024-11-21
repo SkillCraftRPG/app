@@ -345,6 +345,12 @@ public class CharacterTests : IntegrationTests
     Assert.Equal([_player1.Value, _player2.Value], results.Items);
   }
 
+  [Fact(DisplayName = "It should replace an existing character.")]
+  public async Task It_should_replace_an_existing_character()
+  {
+    await Task.Delay(1); // TODO(fpion): implement
+  }
+
   [Fact(DisplayName = "It should return empty search results.")]
   public async Task It_should_return_empty_search_results()
   {
@@ -464,5 +470,11 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(payload.Cost, relation.Cost);
     Assert.Equal(payload.Precision.Trim(), relation.Precision);
     Assert.Equal(payload.Notes.Trim(), relation.Notes);
+  }
+
+  [Fact(DisplayName = "It should update an existing character.")]
+  public async Task It_should_update_an_existing_character()
+  {
+    await Task.Delay(1); // TODO(fpion): implement
   }
 }

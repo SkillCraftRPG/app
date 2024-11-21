@@ -18,6 +18,15 @@ internal class CharacterEntity : AggregateEntity
   public string Name { get; private set; } = string.Empty;
   public string? PlayerName { get; private set; }
 
+  public int Experience { get; private set; }
+  public int Level { get; private set; }
+  public int Tier { get; private set; }
+
+  public int Vitality { get; private set; }
+  public int Stamina { get; private set; }
+  public int BloodAlcoholContent { get; private set; }
+  public int Intoxication { get; private set; }
+
   public LineageEntity? Lineage { get; private set; }
   public int LineageId { get; private set; }
   public double Height { get; private set; }
@@ -162,6 +171,13 @@ internal class CharacterEntity : AggregateEntity
     return actorIds.AsReadOnly();
   }
 
+  public void GainExperience(Character.ExperienceGainedEvent @event)
+  {
+    base.Update(@event);
+
+    Experience += @event.Experience;
+  }
+
   public BaseAttributesModel GetBaseAttributes()
   {
     BaseAttributesModel model = new()
@@ -260,6 +276,54 @@ internal class CharacterEntity : AggregateEntity
     else
     {
       relation.Update(@event);
+    }
+  }
+
+  public void Update(Character.UpdatedEvent @event)
+  {
+    base.Update(@event);
+
+    if (@event.Name != null)
+    {
+      Name = @event.Name.Value;
+    }
+    if (@event.Player != null)
+    {
+      PlayerName = @event.Player.Value?.Value;
+    }
+
+    if (@event.Height.HasValue)
+    {
+      Height = @event.Height.Value;
+    }
+    if (@event.Weight.HasValue)
+    {
+      Weight = @event.Weight.Value;
+    }
+    if (@event.Age.HasValue)
+    {
+      Age = @event.Age.Value;
+    }
+
+    if (@event.Experience.HasValue)
+    {
+      Experience = @event.Experience.Value;
+    }
+    if (@event.Vitality.HasValue)
+    {
+      Vitality = @event.Vitality.Value;
+    }
+    if (@event.Stamina.HasValue)
+    {
+      Stamina = @event.Stamina.Value;
+    }
+    if (@event.BloodAlcoholContent.HasValue)
+    {
+      BloodAlcoholContent = @event.BloodAlcoholContent.Value;
+    }
+    if (@event.Intoxication.HasValue)
+    {
+      Intoxication = @event.Intoxication.Value;
     }
   }
 }

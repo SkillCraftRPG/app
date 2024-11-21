@@ -1,5 +1,6 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
@@ -16,18 +17,82 @@ namespace SkillCraft.Domain.Characters;
 
 public class Character : AggregateRoot
 {
+  private UpdatedEvent _updatedEvent = new();
+
   public new CharacterId Id => new(base.Id);
   public WorldId WorldId => Id.WorldId;
   public Guid EntityId => Id.EntityId;
 
   private Name? _name = null;
-  public Name Name => _name ?? throw new InvalidOperationException($"The {nameof(Name)} has not been initialized yet.");
-  public PlayerName? Player { get; private set; }
+  public Name Name
+  {
+    get => _name ?? throw new InvalidOperationException($"The {nameof(Name)} has not been initialized yet.");
+    set
+    {
+      if (_name != value)
+      {
+        _name = value;
+        _updatedEvent.Name = value;
+      }
+    }
+  }
+  private PlayerName? _player = null;
+  public PlayerName? Player
+  {
+    get => _player;
+    set
+    {
+      if (_player != value)
+      {
+        _player = value;
+        _updatedEvent.Player = new Change<PlayerName>(value);
+      }
+    }
+  }
 
   public LineageId LineageId { get; private set; }
-  public double Height { get; private set; }
-  public double Weight { get; private set; }
-  public int Age { get; private set; }
+  private double _height = 0.0;
+  public double Height
+  {
+    get => _height;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0.0, nameof(Height));
+      if (_height != value)
+      {
+        _height = value;
+        _updatedEvent.Height = value;
+      }
+    }
+  }
+  private double _weight = 0.0;
+  public double Weight
+  {
+    get => _weight;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0.0, nameof(Weight));
+      if (_weight != value)
+      {
+        _weight = value;
+        _updatedEvent.Weight = value;
+      }
+    }
+  }
+  private int _age = 0;
+  public int Age
+  {
+    get => _age;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(value, 0, nameof(Age));
+      if (_age != value)
+      {
+        _age = value;
+        _updatedEvent.Age = value;
+      }
+    }
+  }
 
   public NatureId NatureId { get; private set; }
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
@@ -40,8 +105,81 @@ public class Character : AggregateRoot
   public CasteId CasteId { get; private set; }
   public EducationId EducationId { get; private set; }
 
+  private int _experience = 0;
+  public int Experience
+  {
+    get => _experience;
+    set
+    {
+      int minimumExperience = ExperienceTable.GetTotalExperience(Level);
+      ArgumentOutOfRangeException.ThrowIfLessThan(value, minimumExperience, nameof(Experience));
+      if (_experience != value)
+      {
+        _experience = value;
+        _updatedEvent.Experience = value;
+      }
+    }
+  }
   public int Level => 0;
+  public bool CanLevelUp => Level < 20 && Experience >= ExperienceTable.GetTotalExperience(Level + 1);
   public int Tier => 0;
+
+  private int _vitality = 0;
+  public int Vitality
+  {
+    get => _vitality;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(Vitality));
+      if (_vitality != value)
+      {
+        _vitality = value;
+        _updatedEvent.Vitality = value;
+      }
+    }
+  }
+  private int _stamina = 0;
+  public int Stamina
+  {
+    get => _stamina;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(Stamina));
+      if (_stamina != value)
+      {
+        _stamina = value;
+        _updatedEvent.Stamina = value;
+      }
+    }
+  }
+  private int _bloodAlcoholContent = 0;
+  public int BloodAlcoholContent
+  {
+    get => _bloodAlcoholContent;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(BloodAlcoholContent));
+      if (_bloodAlcoholContent != value)
+      {
+        _bloodAlcoholContent = value;
+        _updatedEvent.BloodAlcoholContent = value;
+      }
+    }
+  }
+  private int _intoxication = 0;
+  public int Intoxication
+  {
+    get => _intoxication;
+    set
+    {
+      ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(Intoxication));
+      if (_intoxication != value)
+      {
+        _intoxication = value;
+        _updatedEvent.Intoxication = value;
+      }
+    }
+  }
 
   private readonly Dictionary<LanguageId, LanguageMetadata> _languages = [];
   public IReadOnlyDictionary<LanguageId, LanguageMetadata> Languages => _languages.AsReadOnly();
@@ -163,6 +301,17 @@ public class Character : AggregateRoot
     _inventory[@event.InventoryId] = @event.Item;
   }
 
+  public void GainExperience(int experience, UserId userId)
+  {
+    ArgumentOutOfRangeException.ThrowIfNegativeOrZero(experience, nameof(experience));
+
+    Raise(new ExperienceGainedEvent(experience), userId.ActorId);
+  }
+  protected virtual void Apply(ExperienceGainedEvent @event)
+  {
+    _experience += @event.Experience;
+  }
+
   public void RemoveLanguage(LanguageId languageId, UserId userId)
   {
     if (_languages.ContainsKey(languageId))
@@ -268,6 +417,60 @@ public class Character : AggregateRoot
       }
 
       _talents.Remove(@event.RelationId);
+    }
+  }
+
+  public void Update(UserId userId)
+  {
+    if (_updatedEvent.HasChanges)
+    {
+      Raise(_updatedEvent, userId.ActorId, DateTime.Now);
+      _updatedEvent = new();
+    }
+  }
+  protected virtual void Apply(UpdatedEvent @event)
+  {
+    if (@event.Name != null)
+    {
+      _name = @event.Name;
+    }
+    if (@event.Player != null)
+    {
+      _player = @event.Player.Value;
+    }
+
+    if (@event.Height.HasValue)
+    {
+      _height = @event.Height.Value;
+    }
+    if (@event.Weight.HasValue)
+    {
+      _weight = @event.Weight.Value;
+    }
+    if (@event.Age.HasValue)
+    {
+      _age = @event.Age.Value;
+    }
+
+    if (@event.Experience.HasValue)
+    {
+      _experience = @event.Experience.Value;
+    }
+    if (@event.Vitality.HasValue)
+    {
+      _vitality = @event.Vitality.Value;
+    }
+    if (@event.Stamina.HasValue)
+    {
+      _stamina = @event.Stamina.Value;
+    }
+    if (@event.BloodAlcoholContent.HasValue)
+    {
+      _bloodAlcoholContent = @event.BloodAlcoholContent.Value;
+    }
+    if (@event.Intoxication.HasValue)
+    {
+      _intoxication = @event.Intoxication.Value;
     }
   }
 
@@ -377,6 +580,16 @@ public class Character : AggregateRoot
     }
   }
 
+  public class ExperienceGainedEvent : DomainEvent, INotification
+  {
+    public int Experience { get; }
+
+    public ExperienceGainedEvent(int experience)
+    {
+      Experience = experience;
+    }
+  }
+
   public class InventoryUpdatedEvent : DomainEvent, INotification
   {
     public Guid InventoryId { get; }
@@ -431,5 +644,24 @@ public class Character : AggregateRoot
       RelationId = relationId;
       Talent = talent;
     }
+  }
+
+  public class UpdatedEvent : DomainEvent, INotification
+  {
+    public Name? Name { get; set; }
+    public Change<PlayerName>? Player { get; set; }
+
+    public double? Height { get; set; }
+    public double? Weight { get; set; }
+    public int? Age { get; set; }
+
+    public int? Experience { get; set; }
+    public int? Vitality { get; set; }
+    public int? Stamina { get; set; }
+    public int? BloodAlcoholContent { get; set; }
+    public int? Intoxication { get; set; }
+
+    public bool HasChanges => Name != null || Player != null || Height != null || Weight != null || Age != null
+      || Experience != null || Vitality != null || Stamina != null || BloodAlcoholContent != null || Intoxication != null;
   }
 }

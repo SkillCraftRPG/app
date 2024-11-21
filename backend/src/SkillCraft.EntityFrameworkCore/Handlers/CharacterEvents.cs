@@ -59,6 +59,27 @@ internal static class CharacterEvents
     }
   }
 
+  public class CharacterExperienceGainedEventHandler : INotificationHandler<Character.ExperienceGainedEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterExperienceGainedEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.ExperienceGainedEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.GainExperience(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
   public class CharacterInventoryUpdatedEventHandler : INotificationHandler<Character.InventoryUpdatedEvent>
   {
     private readonly SkillCraftContext _context;
@@ -176,6 +197,27 @@ internal static class CharacterEvents
         ?? throw new InvalidOperationException($"The talent entity 'AggregateId={@event.Talent.Id}' could not be found.");
 
       character.SetTalent(talent, @event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
+  public class CharacterUpdatedEventHandler : INotificationHandler<Character.UpdatedEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterUpdatedEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.UpdatedEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.Update(@event);
 
       await _context.SaveChangesAsync(cancellationToken);
     }

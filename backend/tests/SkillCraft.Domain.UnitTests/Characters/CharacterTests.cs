@@ -289,6 +289,44 @@ public class CharacterTests
     Assert.Equal("TalentId", exception.PropertyName);
   }
 
+  [Fact(DisplayName = "CanLevelUp: it should return false when the character cannot level-up yet.")]
+  public void CanLevelUp_it_should_return_false_when_the_character_cannot_level_up_yet()
+  {
+    Assert.False(_character.CanLevelUp);
+
+    _character.GainExperience(50, _world.OwnerId);
+    Assert.False(_character.CanLevelUp);
+  }
+
+  [Fact(DisplayName = "CanLevelUp: it should return true when the character can level-up.")]
+  public void CanLevelUp_it_should_return_true_when_the_character_can_level_up()
+  {
+    Assert.False(_character.CanLevelUp);
+
+    _character.GainExperience(500, _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+  }
+
+  [Theory(DisplayName = "GainExperience: it should increase the character experience by a positive number.")]
+  [InlineData(30)]
+  public void GainExperience_it_should_increase_the_character_experience_by_a_positive_number(int experience)
+  {
+    int previousExperience = _character.Experience;
+
+    _character.GainExperience(experience, _world.OwnerId);
+    Assert.Equal(previousExperience + experience, _character.Experience);
+    Assert.Contains(_character.Changes, change => change is Character.ExperienceGainedEvent e && e.Experience == experience);
+  }
+
+  [Theory(DisplayName = "GainExperience: it should throw ArgumentOutOfRangeException when experience gain was zero or negative.")]
+  [InlineData(0)]
+  [InlineData(-25)]
+  public void GainExperience_it_should_throw_ArgumentOutOfRangeException_when_experience_gain_was_zero_or_negative(int experience)
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.GainExperience(experience, _world.OwnerId));
+    Assert.Equal("experience", exception.ParamName);
+  }
+
   [Fact(DisplayName = "It should account for correct talent points.")]
   public void It_should_account_for_correct_talent_points()
   {
@@ -401,6 +439,41 @@ public class CharacterTests
     Assert.Equal("nature", exception.ParamName);
   }
 
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting a negative Blood Alcohol Content.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_a_negative_Blood_Alcohol_Content()
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.BloodAlcoholContent = -1);
+    Assert.Equal("BloodAlcoholContent", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting a negative Intoxication.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_a_negative_Intoxication()
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Intoxication = -3);
+    Assert.Equal("Intoxication", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting a negative Stamina.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_a_negative_Stamina()
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Stamina = -12);
+    Assert.Equal("Stamina", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting a negative Vitality.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_a_negative_Vitality()
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Vitality = -5);
+    Assert.Equal("Vitality", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting the experience below current level total experience.")]
+  public void It_should_throw_ArgumentOutOfRangeException_when_setting_the_experience_below_current_level_total_experience()
+  {
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Experience = -100);
+    Assert.Equal("Experience", exception.ParamName);
+  }
+
   [Theory(DisplayName = "It should throw ArgumentOutOfRangeException when the age is not stricly positive.")]
   [InlineData(0)]
   [InlineData(-30)]
@@ -409,6 +482,9 @@ public class CharacterTests
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
       weight: 84.6, age, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("age", exception.ParamName);
+
+    exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Age = age);
+    Assert.Equal("Age", exception.ParamName);
   }
 
   [Theory(DisplayName = "It should throw ArgumentOutOfRangeException when the height is not stricly positive.")]
@@ -419,6 +495,9 @@ public class CharacterTests
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height,
       weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("height", exception.ParamName);
+
+    exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Height = height);
+    Assert.Equal("Height", exception.ParamName);
   }
 
   [Theory(DisplayName = "It should throw ArgumentOutOfRangeException when the weight is not stricly positive.")]
@@ -429,6 +508,9 @@ public class CharacterTests
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
       weight, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("weight", exception.ParamName);
+
+    exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Weight = weight);
+    Assert.Equal("Weight", exception.ParamName);
   }
 
   [Fact(DisplayName = "RemoveLanguage: it should not do anything when the language was not found.")]
