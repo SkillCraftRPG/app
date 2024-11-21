@@ -244,12 +244,12 @@ public class Character : AggregateRoot
   protected virtual void Apply(CreatedEvent @event)
   {
     _name = @event.Name;
-    Player = @event.Player;
+    _player = @event.Player;
 
     LineageId = @event.LineageId;
-    Height = @event.Height;
-    Weight = @event.Weight;
-    Age = @event.Age;
+    _height = @event.Height;
+    _weight = @event.Weight;
+    _age = @event.Age;
 
     NatureId = @event.NatureId;
     CustomizationIds = @event.CustomizationIds;
