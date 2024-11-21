@@ -405,6 +405,24 @@ public class CharacterTests : IntegrationTests
     Assert.Empty(character.Languages);
   }
 
+  [Fact(DisplayName = "It should remove a character talent.")]
+  public async Task It_should_remove_a_character_talent()
+  {
+    Guid relationId = Guid.NewGuid();
+    _kassandra.SetTalent(relationId, _melee, UserId);
+    await _characterRepository.SaveAsync(_kassandra);
+
+    CharacterModel? character = await _characterQuerier.ReadAsync(_kassandra);
+    Assert.NotNull(character);
+    Assert.NotEmpty(character.Talents);
+
+    RemoveCharacterTalentCommand command = new(_kassandra.EntityId, relationId);
+    character = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotNull(character);
+    Assert.Empty(character.Languages);
+  }
+
   [Fact(DisplayName = "It should set a character language.")]
   public async Task It_should_set_a_character_language()
   {
@@ -418,8 +436,33 @@ public class CharacterTests : IntegrationTests
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
-    CharacterLanguageModel language = Assert.Single(character.Languages);
-    Assert.Equal(_cassite.EntityId, language.Language.Id);
-    Assert.Equal(payload.Notes.Trim(), language.Notes);
+    CharacterLanguageModel relation = Assert.Single(character.Languages);
+    Assert.Equal(_cassite.EntityId, relation.Language.Id);
+    Assert.Equal(payload.Notes.Trim(), relation.Notes);
+  }
+
+  [Fact(DisplayName = "It should set a character talent.")]
+  public async Task It_should_set_a_character_talent()
+  {
+    _kassandra.AddTalent(_melee, UserId);
+    Guid relationId = Assert.Single(_kassandra.Talents).Key;
+    await _characterRepository.SaveAsync(_kassandra);
+
+    CharacterTalentPayload payload = new()
+    {
+      TalentId = Guid.NewGuid(),
+      Cost = 1,
+      Precision = " Melee ",
+      Notes = "  Discounted by Aspect: Farouche  "
+    };
+    SetCharacterTalentCommand command = new(_kassandra.EntityId, relationId, payload);
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotNull(character);
+    CharacterTalentModel relation = Assert.Single(character.Talents);
+    Assert.Equal(_melee.EntityId, relation.Talent.Id);
+    Assert.Equal(payload.Cost, relation.Cost);
+    Assert.Equal(payload.Precision.Trim(), relation.Precision);
+    Assert.Equal(payload.Notes.Trim(), relation.Notes);
   }
 }
