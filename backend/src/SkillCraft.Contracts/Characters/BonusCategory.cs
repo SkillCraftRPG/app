@@ -6,5 +6,5 @@ public enum BonusCategory
   Statistic = 1,
   Skill = 2,
   Speed = 3,
-  Miscellaneous = 4 // Vitality, Stamina, BloodAlcoholContent, Intoxication, Esquive, Défense
+  Miscellaneous = 4
 }
