@@ -15,7 +15,7 @@ namespace SkillCraft.Application.Characters;
 internal class CharacterBuilder
 {
   public World World { get; }
-  public Guid? EntityId { get; }
+  public Guid? EntityId { get; private set; }
 
   public Name Name { get; }
   public PlayerName? Player { get; }
@@ -52,6 +52,12 @@ internal class CharacterBuilder
       optional: [Attribute.Sensitivity, Attribute.Vigor], extra: [Attribute.Agility, Attribute.Vigor]);
     Caste = new Caste(World.Id, new Name("Exilé"), World.OwnerId);
     Education = new Education(World.Id, new Name("Champs de bataille"), World.OwnerId);
+  }
+
+  public CharacterBuilder WithId(CharacterId id)
+  {
+    EntityId = id.EntityId;
+    return this;
   }
 
   public Character Build() => new(World.Id, Name, Player, Lineage, height: 1.67, weight: 62.8, age: 20,
