@@ -14,6 +14,7 @@ public class Talent : AggregateRoot
   public Guid EntityId => Id.EntityId;
 
   public int Tier { get; private set; }
+  public int MaximumCost => Tier + 2;
 
   private Name? _name = null;
   public Name Name
@@ -113,6 +114,14 @@ public class Talent : AggregateRoot
     {
       RequiredTalentId = requiredTalent?.Id;
       _updatedEvent.RequiredTalentId = new Change<TalentId?>(requiredTalent?.Id);
+    }
+  }
+
+  public void ThrowIfMaximumCostExceeded(int cost, string propertyName)
+  {
+    if (cost > MaximumCost)
+    {
+      throw new TalentMaximumCostExceededException(this, cost, propertyName);
     }
   }
 

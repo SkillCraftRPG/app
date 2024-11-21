@@ -25,6 +25,13 @@ public class CharacterController : ControllerBase
     _pipeline = pipeline;
   }
 
+  [HttpPost("{characterId}/talents")]
+  public async Task<ActionResult<CharacterModel>> AddTalentAsync(Guid characterId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterTalentCommand(characterId, RelationId: null, payload), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
+  }
+
   [HttpPost]
   public async Task<ActionResult<CharacterModel>> CreateAsync([FromBody] CreateCharacterPayload payload, CancellationToken cancellationToken)
   {
@@ -55,6 +62,13 @@ public class CharacterController : ControllerBase
     return character == null ? NotFound() : Ok(character);
   }
 
+  [HttpDelete("{characterId}/talents/{relationId}")]
+  public async Task<ActionResult<CharacterModel>> RemoveTalentAsync(Guid characterId, Guid relationId, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new RemoveCharacterTalentCommand(characterId, relationId), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
+  }
+
   [HttpGet]
   public async Task<ActionResult<SearchResults<CharacterModel>>> SearchAsync([FromQuery] SearchCharactersParameters parameters, CancellationToken cancellationToken)
   {
@@ -66,6 +80,13 @@ public class CharacterController : ControllerBase
   public async Task<ActionResult<CharacterModel>> SetLanguageAsync(Guid characterId, Guid languageId, [FromBody] CharacterLanguagePayload payload, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterLanguageCommand(characterId, languageId, payload), cancellationToken);
+    return character == null ? NotFound() : Ok(character);
+  }
+
+  [HttpPut("{characterId}/talents/{relationId}")]
+  public async Task<ActionResult<CharacterModel>> SetTalentAsync(Guid characterId, Guid relationId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterTalentCommand(characterId, relationId, payload), cancellationToken);
     return character == null ? NotFound() : Ok(character);
   }
 }
