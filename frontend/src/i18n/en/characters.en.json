@@ -32,7 +32,8 @@
     }
   },
   "background": {
-    "invalid": "The selected caste and education cannot be associated to the same skill."
+    "invalid": "The selected caste and education cannot be associated to the same skill.",
+    "label": "Background"
   },
   "caste": {
     "invalid": {
@@ -66,7 +67,10 @@
   "list": "Characters",
   "name": "Character Name",
   "natureAttributeBonus": "Attribute Bonus (+1)",
-  "player": "Player Name",
+  "player": {
+    "all": "All players",
+    "label": "Player Name"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",

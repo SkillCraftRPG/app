@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n";
 
 import AppInput from "@/components/shared/AppInput.vue";
 import type { ConfirmedParams, ValidationRules } from "@/types/validation";
-import type { PasswordSettings } from "@/types/settings";
+import { passwordSettings } from "@/types/settings";
 
 const { t } = useI18n();
 
@@ -15,7 +15,6 @@ const props = withDefaults(
     label?: string;
     modelValue?: string;
     required?: boolean | string;
-    settings?: PasswordSettings;
   }>(),
   {
     id: "password",
@@ -29,23 +28,23 @@ const rules = computed<ValidationRules>(() => {
   const rules: ValidationRules = {};
   if (props.confirm) {
     rules.confirmed = [props.confirm.value, t(props.confirm.label).toLowerCase()];
-  } else if (props.settings) {
-    if (props.settings.minimumLength) {
-      rules.min_length = props.settings.minimumLength;
+  } else if (passwordSettings) {
+    if (passwordSettings.minimumLength) {
+      rules.min_length = passwordSettings.minimumLength;
     }
-    if (props.settings.uniqueCharacters) {
-      rules.unique_chars = props.settings.uniqueCharacters;
+    if (passwordSettings.uniqueCharacters) {
+      rules.unique_chars = passwordSettings.uniqueCharacters;
     }
-    if (props.settings.requireNonAlphanumeric) {
+    if (passwordSettings.requireNonAlphanumeric) {
       rules.require_non_alphanumeric = true;
     }
-    if (props.settings.requireLowercase) {
+    if (passwordSettings.requireLowercase) {
       rules.require_lowercase = true;
     }
-    if (props.settings.requireUppercase) {
+    if (passwordSettings.requireUppercase) {
       rules.require_uppercase = true;
     }
-    if (props.settings.requireDigit) {
+    if (passwordSettings.requireDigit) {
       rules.require_digit = true;
     }
   }

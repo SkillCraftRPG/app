@@ -1,6 +1,7 @@
 ﻿using Logitar.Portal.Contracts.Search;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Languages;
 
 namespace SkillCraft.Application.Languages.Queries;
@@ -33,5 +34,7 @@ public class SearchLanguagesQueryHandlerTests
     SearchResults<LanguageModel> languages = await _handler.Handle(query, _cancellationToken);
 
     Assert.Same(results, languages);
+
+    _permissionService.Verify(x => x.EnsureCanPreviewAsync(query, EntityType.Language, _cancellationToken), Times.Once);
   }
 }

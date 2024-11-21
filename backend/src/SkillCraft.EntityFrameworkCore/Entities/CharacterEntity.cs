@@ -209,6 +209,17 @@ internal class CharacterEntity : AggregateEntity
     }
   }
 
+  public void RemoveLanguage(Character.LanguageRemovedEvent e)
+  {
+    base.Update(e);
+
+    CharacterLanguageEntity? relation = Languages.SingleOrDefault(l => l.Language?.Id == e.LanguageId.EntityId);
+    if (relation != null)
+    {
+      Languages.Remove(relation);
+    }
+  }
+
   public void SetLanguage(LanguageEntity language, Character.LanguageUpdatedEvent @event)
   {
     base.Update(@event);

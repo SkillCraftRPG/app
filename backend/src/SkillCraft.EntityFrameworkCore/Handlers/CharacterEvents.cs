@@ -85,6 +85,28 @@ internal static class CharacterEvents
     }
   }
 
+  public class CharacterLanguageRemovedEventHandler : INotificationHandler<Character.LanguageRemovedEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterLanguageRemovedEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.LanguageRemovedEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .Include(x => x.Languages).ThenInclude(x => x.Language)
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.RemoveLanguage(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
   public class CharacterLanguageUpdatedEventHandler : INotificationHandler<Character.LanguageUpdatedEvent>
   {
     private readonly SkillCraftContext _context;

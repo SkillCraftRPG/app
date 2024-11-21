@@ -6,3 +6,12 @@ export type PasswordSettings = {
   requireUppercase?: boolean;
   requireDigit?: boolean;
 };
+
+export const passwordSettings: PasswordSettings = {
+  minimumLength: 8,
+  uniqueCharacters: 8,
+  requireNonAlphanumeric: true,
+  requireLowercase: true,
+  requireUppercase: true,
+  requireDigit: true,
+};

@@ -32,7 +32,8 @@
     }
   },
   "background": {
-    "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence."
+    "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence.",
+    "label": "Historique"
   },
   "caste": {
     "invalid": {
@@ -66,7 +67,10 @@
   "list": "Personnages",
   "name": "Nom du personnage",
   "natureAttributeBonus": "Bonus d’attribut (+1)",
-  "player": "Nom du joueur",
+  "player": {
+    "all": "Tous joueurs",
+    "label": "Nom du joueur"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
