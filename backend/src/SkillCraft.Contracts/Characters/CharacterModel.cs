@@ -16,6 +16,15 @@ public class CharacterModel : Aggregate
   public string Name { get; set; } = string.Empty;
   public string? PlayerName { get; set; }
 
+  public int Experience { get; set; }
+  public int Level { get; set; }
+  public int Tier { get; set; }
+
+  public int Vitality { get; set; }
+  public int Stamina { get; set; }
+  public int BloodAlcoholContent { get; set; }
+  public int Intoxication { get; set; }
+
   public LineageModel Lineage { get; set; } = new();
   public double Height { get; set; }
   public double Weight { get; set; }

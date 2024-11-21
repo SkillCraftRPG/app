@@ -345,6 +345,50 @@ public class CharacterTests : IntegrationTests
     Assert.Equal([_player1.Value, _player2.Value], results.Items);
   }
 
+  [Fact(DisplayName = "It should replace an existing character.")]
+  public async Task It_should_replace_an_existing_character()
+  {
+    await _characterRepository.SaveAsync(_kassandra);
+    long version = _kassandra.Version;
+
+    _kassandra.Player = _player2;
+    _kassandra.Update(UserId);
+    await _characterRepository.SaveAsync(_kassandra);
+
+    ReplaceCharacterPayload payload = new(" Kassandra ")
+    {
+      Player = _player1.Value,
+      Height = 1.8,
+      Weight = 71.3,
+      Age = 19,
+      Experience = 100,
+      Vitality = 50,
+      Stamina = 45,
+      BloodAlcoholContent = 1,
+      Intoxication = 2
+    };
+    ReplaceCharacterCommand command = new(_kassandra.EntityId, payload, version);
+
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(character);
+
+    Assert.Equal(command.Id, character.Id);
+    Assert.Equal(version + 2, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    Assert.Equal(payload.Name.Trim(), character.Name);
+    Assert.Equal(_player2.Value, character.PlayerName);
+    Assert.Equal(payload.Height, character.Height);
+    Assert.Equal(payload.Weight, character.Weight);
+    Assert.Equal(payload.Age, character.Age);
+    Assert.Equal(payload.Experience, character.Experience);
+    Assert.Equal(payload.Vitality, character.Vitality);
+    Assert.Equal(payload.Stamina, character.Stamina);
+    Assert.Equal(payload.BloodAlcoholContent, character.BloodAlcoholContent);
+    Assert.Equal(payload.Intoxication, character.Intoxication);
+  }
+
   [Fact(DisplayName = "It should return empty search results.")]
   public async Task It_should_return_empty_search_results()
   {
@@ -464,5 +508,41 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(payload.Cost, relation.Cost);
     Assert.Equal(payload.Precision.Trim(), relation.Precision);
     Assert.Equal(payload.Notes.Trim(), relation.Notes);
+  }
+
+  [Fact(DisplayName = "It should update an existing character.")]
+  public async Task It_should_update_an_existing_character()
+  {
+    await _characterRepository.SaveAsync(_alexios);
+
+    UpdateCharacterPayload payload = new()
+    {
+      Player = new Change<string>($"  {_player2}  "),
+      Height = 1.7,
+      Weight = 66.4,
+      Experience = 100,
+      BloodAlcoholContent = 1,
+      Intoxication = 2
+    };
+    UpdateCharacterCommand command = new(_alexios.EntityId, payload);
+
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(character);
+
+    Assert.Equal(command.Id, character.Id);
+    Assert.Equal(_alexios.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    Assert.Equal(_alexios.Name.Value, character.Name);
+    Assert.Equal(payload.Player.Value?.Trim(), character.PlayerName);
+    Assert.Equal(payload.Height, character.Height);
+    Assert.Equal(payload.Weight, character.Weight);
+    Assert.Equal(_alexios.Age, character.Age);
+    Assert.Equal(payload.Experience, character.Experience);
+    Assert.Equal(_alexios.Vitality, character.Vitality);
+    Assert.Equal(_alexios.Stamina, character.Stamina);
+    Assert.Equal(payload.BloodAlcoholContent, character.BloodAlcoholContent);
+    Assert.Equal(payload.Intoxication, character.Intoxication);
   }
 }

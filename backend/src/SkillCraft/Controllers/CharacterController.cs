@@ -29,16 +29,14 @@ public class CharacterController : ControllerBase
   public async Task<ActionResult<CharacterModel>> AddTalentAsync(Guid characterId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterTalentCommand(characterId, RelationId: null, payload), cancellationToken);
-    return character == null ? NotFound() : Ok(character);
+    return GetActionResult(character);
   }
 
   [HttpPost]
   public async Task<ActionResult<CharacterModel>> CreateAsync([FromBody] CreateCharacterPayload payload, CancellationToken cancellationToken)
   {
     CharacterModel character = await _pipeline.ExecuteAsync(new CreateCharacterCommand(payload), cancellationToken);
-    Uri location = HttpContext.BuildLocation($"{Routes.Character}/{{id}}", [new KeyValuePair<string, string>("id", character.Id.ToString())]);
-
-    return Created(location, character);
+    return GetActionResult(character, created: true);
   }
 
   [HttpGet("players")]
@@ -52,41 +50,70 @@ public class CharacterController : ControllerBase
   public async Task<ActionResult<CharacterModel>> ReadAsync(Guid id, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new ReadCharacterQuery(id), cancellationToken);
-    return character == null ? NotFound() : Ok(character);
+    return GetActionResult(character);
   }
 
   [HttpDelete("{characterId}/languages/{languageId}")]
   public async Task<ActionResult<CharacterModel>> RemoveLanguageAsync(Guid characterId, Guid languageId, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new RemoveCharacterLanguageCommand(characterId, languageId), cancellationToken);
-    return character == null ? NotFound() : Ok(character);
+    return GetActionResult(character);
   }
 
   [HttpDelete("{characterId}/talents/{relationId}")]
   public async Task<ActionResult<CharacterModel>> RemoveTalentAsync(Guid characterId, Guid relationId, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new RemoveCharacterTalentCommand(characterId, relationId), cancellationToken);
-    return character == null ? NotFound() : Ok(character);
+    return GetActionResult(character);
+  }
+
+  [HttpPut("{id}")]
+  public async Task<ActionResult<CharacterModel>> ReplaceAsync(Guid id, [FromBody] ReplaceCharacterPayload payload, long? version, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new ReplaceCharacterCommand(id, payload, version), cancellationToken);
+    return GetActionResult(character);
   }
 
   [HttpGet]
   public async Task<ActionResult<SearchResults<CharacterModel>>> SearchAsync([FromQuery] SearchCharactersParameters parameters, CancellationToken cancellationToken)
   {
-    SearchResults<CharacterModel> castes = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
-    return Ok(castes);
+    SearchResults<CharacterModel> characters = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
+    return Ok(characters);
   }
 
   [HttpPut("{characterId}/languages/{languageId}")]
   public async Task<ActionResult<CharacterModel>> SetLanguageAsync(Guid characterId, Guid languageId, [FromBody] CharacterLanguagePayload payload, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterLanguageCommand(characterId, languageId, payload), cancellationToken);
-    return character == null ? NotFound() : Ok(character);
+    return GetActionResult(character);
   }
 
   [HttpPut("{characterId}/talents/{relationId}")]
   public async Task<ActionResult<CharacterModel>> SetTalentAsync(Guid characterId, Guid relationId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterTalentCommand(characterId, relationId, payload), cancellationToken);
-    return character == null ? NotFound() : Ok(character);
+    return GetActionResult(character);
+  }
+
+  [HttpPatch("{id}")]
+  public async Task<ActionResult<CharacterModel>> UpdateAsync(Guid id, [FromBody] UpdateCharacterPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new UpdateCharacterCommand(id, payload), cancellationToken);
+    return GetActionResult(character);
+  }
+
+  private ActionResult<CharacterModel> GetActionResult(CharacterModel? character, bool created = false)
+  {
+    if (character == null)
+    {
+      return NotFound();
+    }
+    if (created)
+    {
+      Uri location = HttpContext.BuildLocation($"{Routes.Character}/{{id}}", [new KeyValuePair<string, string>("id", character.Id.ToString())]);
+      return Created(location, character);
+    }
+
+    return Ok(character);
   }
 }

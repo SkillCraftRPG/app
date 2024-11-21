@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using MediatR;
+using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
@@ -15,6 +16,7 @@ public class RemoveCharacterLanguageCommandHandlerTests
   private readonly Mock<ICharacterQuerier> _characterQuerier = new();
   private readonly Mock<ICharacterRepository> _characterRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
+  private readonly Mock<ISender> _sender = new();
 
   private readonly RemoveCharacterLanguageCommandHandler _handler;
 
@@ -22,7 +24,7 @@ public class RemoveCharacterLanguageCommandHandlerTests
 
   public RemoveCharacterLanguageCommandHandlerTests()
   {
-    _handler = new(_characterQuerier.Object, _characterRepository.Object, _permissionService.Object);
+    _handler = new(_characterQuerier.Object, _characterRepository.Object, _permissionService.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should not do anything when the language could not be found.")]
@@ -44,11 +46,11 @@ public class RemoveCharacterLanguageCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, character.GetMetadata(), _cancellationToken), Times.Once);
 
-    _characterRepository.Verify(x => x.SaveAsync(character, _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.Equals(character)), _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should remove the character language.")]
-  public async Task It_should_set_the_character_language()
+  [Fact(DisplayName = "It should remove an existing character language.")]
+  public async Task It_should_set_an_existing_character_language()
   {
     Character character = new CharacterBuilder(_world).Build();
     _characterRepository.Setup(x => x.LoadAsync(character.Id, _cancellationToken)).ReturnsAsync(character);
@@ -72,7 +74,7 @@ public class RemoveCharacterLanguageCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, character.GetMetadata(), _cancellationToken), Times.Once);
 
-    _characterRepository.Verify(x => x.SaveAsync(character, _cancellationToken), Times.Once);
+    _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.Equals(character)), _cancellationToken), Times.Once);
   }
 
   [Fact(DisplayName = "It should return null when the character could not be found.")]

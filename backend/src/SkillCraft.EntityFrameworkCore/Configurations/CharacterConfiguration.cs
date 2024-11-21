@@ -20,6 +20,8 @@ internal class CharacterConfiguration : AggregateConfiguration<CharacterEntity>,
     builder.HasIndex(x => new { x.WorldId, x.Id }).IsUnique();
     builder.HasIndex(x => x.Name);
     builder.HasIndex(x => x.PlayerName);
+    builder.HasIndex(x => x.Level);
+    builder.HasIndex(x => x.Tier);
 
     builder.Property(x => x.Name).HasMaxLength(Name.MaximumLength);
     builder.Property(x => x.PlayerName).HasMaxLength(PlayerName.MaximumLength);

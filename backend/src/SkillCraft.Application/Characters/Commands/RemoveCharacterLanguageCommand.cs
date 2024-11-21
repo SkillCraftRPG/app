@@ -15,12 +15,18 @@ internal class RemoveCharacterLanguageCommandHandler : IRequestHandler<RemoveCha
   private readonly ICharacterQuerier _characterQuerier;
   private readonly ICharacterRepository _characterRepository;
   private readonly IPermissionService _permissionService;
+  private readonly ISender _sender;
 
-  public RemoveCharacterLanguageCommandHandler(ICharacterQuerier characterQuerier, ICharacterRepository characterRepository, IPermissionService permissionService)
+  public RemoveCharacterLanguageCommandHandler(
+    ICharacterQuerier characterQuerier,
+    ICharacterRepository characterRepository,
+    IPermissionService permissionService,
+    ISender sender)
   {
     _characterQuerier = characterQuerier;
     _characterRepository = characterRepository;
     _permissionService = permissionService;
+    _sender = sender;
   }
 
   public async Task<CharacterModel?> Handle(RemoveCharacterLanguageCommand command, CancellationToken cancellationToken)
@@ -38,7 +44,7 @@ internal class RemoveCharacterLanguageCommandHandler : IRequestHandler<RemoveCha
     LanguageId languageId = new(worldId, command.LanguageId);
     character.RemoveLanguage(languageId, command.GetUserId());
 
-    await _characterRepository.SaveAsync(character, cancellationToken); // TODO(fpion): SaveCharacterCommand
+    await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 
     return await _characterQuerier.ReadAsync(character, cancellationToken);
   }

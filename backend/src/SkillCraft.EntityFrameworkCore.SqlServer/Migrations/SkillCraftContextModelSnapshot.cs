@@ -262,6 +262,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("BloodAlcoholContent")
+                        .HasColumnType("int");
+
                     b.Property<int>("CasteId")
                         .HasColumnType("int");
 
@@ -279,6 +282,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<int>("EducationId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Experience")
+                        .HasColumnType("int");
+
                     b.Property<string>("ExtraAttributes")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -290,6 +296,12 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Intellect")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Intoxication")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<int>("LineageId")
@@ -324,6 +336,12 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<int>("Spirit")
                         .HasColumnType("int");
 
+                    b.Property<int>("Stamina")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tier")
+                        .HasColumnType("int");
+
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -336,6 +354,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<int>("Vigor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Vitality")
                         .HasColumnType("int");
 
                     b.Property<double>("Weight")
@@ -362,6 +383,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasIndex("EducationId");
 
+                    b.HasIndex("Level");
+
                     b.HasIndex("LineageId");
 
                     b.HasIndex("Name");
@@ -369,6 +392,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("NatureId");
 
                     b.HasIndex("PlayerName");
+
+                    b.HasIndex("Tier");
 
                     b.HasIndex("UpdatedBy");
 

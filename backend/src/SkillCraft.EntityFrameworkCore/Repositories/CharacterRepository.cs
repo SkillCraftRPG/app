@@ -18,7 +18,11 @@ internal class CharacterRepository : Logitar.EventSourcing.EntityFrameworkCore.R
 
   public async Task<Character?> LoadAsync(CharacterId id, CancellationToken cancellationToken)
   {
-    return await base.LoadAsync<Character>(id.AggregateId, cancellationToken);
+    return await LoadAsync(id, version: null, cancellationToken);
+  }
+  public async Task<Character?> LoadAsync(CharacterId id, long? version, CancellationToken cancellationToken)
+  {
+    return await base.LoadAsync<Character>(id.AggregateId, version, cancellationToken);
   }
 
   public async Task SaveAsync(Character character, CancellationToken cancellationToken)
