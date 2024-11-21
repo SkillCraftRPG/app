@@ -29,29 +29,6 @@ onMounted(async () => {
     }
   }
 });
-
-/*
- * (❌) Account
- * (❌) Worlds
- * (🚧) Membership
- * (⭐) Parties
- * (⭐) Characters
- * (✅) Lineages
- * (✅) Castes
- * (✅) Educations
- * (✅) Natures
- * (✅) Specializations
- * (✅) Aspects
- * (✅) Customizations
- * (✅) Languages
- * (✅) Items
- * (✅) Talents
- * (✅) Powers
- * (❌) Comments
- * (❌) Documents
- * (❌) Permissions
- * (❌) Player Interface
- */
 </script>
 
 <template>
@@ -66,41 +43,46 @@ onMounted(async () => {
           </RouterLink>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'LanguageList', params: { slug: world.slug } }">{{ t("languages.list") }}</RouterLink>
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <div class="sc-grid-main">
+          <RouterLink class="tile" :to="{ name: 'LanguageList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-language" /> {{ t("languages.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'LineageList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-paw" /> {{ t("lineages.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'CustomizationList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-list" /> {{ t("customizations.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'NatureList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-brain" /> {{ t("natures.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'AspectList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-circle-info" /> {{ t("aspects.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'CasteList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-screwdriver-wrench" /> {{ t("castes.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'EducationList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-graduation-cap" /> {{ t("educations.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'TalentList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-code-branch" /> {{ t("talents.list") }}
+          </RouterLink>
+          <div class="tile"><font-awesome-icon class="icon" icon="fas fa-wand-sparkles" /> Pouvoirs</div>
+          <RouterLink class="tile" :to="{ name: 'ItemList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-shopping-cart" /> {{ t("items.list") }}
+          </RouterLink>
+          <div class="tile"><font-awesome-icon class="icon" icon="fas fa-question" /> TODO</div>
+          <div class="tile"><font-awesome-icon class="icon" icon="fas fa-question" /> TODO</div>
         </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'LineageList', params: { slug: world.slug } }">{{ t("lineages.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'CustomizationList', params: { slug: world.slug } }">{{ t("customizations.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'NatureList', params: { slug: world.slug } }">{{ t("natures.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'AspectList', params: { slug: world.slug } }">{{ t("aspects.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'CasteList', params: { slug: world.slug } }">{{ t("castes.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'EducationList', params: { slug: world.slug } }">{{ t("educations.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'TalentList', params: { slug: world.slug } }">{{ t("talents.list") }}</RouterLink>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'ItemList', params: { slug: world.slug } }">{{ t("items.list") }}</RouterLink>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'PartyList', params: { slug: world.slug } }">{{ t("parties.list") }}</RouterLink>
-        </div>
-        <div class="col-sm-6 mb-3">
-          <RouterLink class="tile" :to="{ name: 'CharacterList', params: { slug: world.slug } }">{{ t("characters.list") }}</RouterLink>
+        <div class="sc-grid-secondary">
+          <RouterLink class="tile" :to="{ name: 'PartyList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-users" /> {{ t("parties.list") }}
+          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'CharacterList', params: { slug: world.slug } }">
+            <font-awesome-icon class="icon" icon="fas fa-gamepad" /> {{ t("characters.list") }}
+          </RouterLink>
         </div>
       </div>
     </template>
@@ -108,14 +90,89 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.tile {
-  background-color: var(--bs-tertiary-bg);
-  border: 0.25rem solid var(--bs-border-color);
-  height: 200px;
-  width: 200px;
+.sc-grid-main,
+.sc-grid-secondary {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), var(--column-width));
+  gap: var(--gap);
+  max-width: calc(var(--columns) * var(--column-width) + (var(--columns) - 1) * var(--gap));
+  margin-bottom: var(--gap);
 }
+
+.sc-grid-main {
+  --columns: 1;
+  --gap: 1.5rem;
+  --column-width: 13.5rem;
+  --column-height: 13.5rem;
+}
+
+.sc-grid-secondary {
+  --columns: 1;
+  --gap: 1.5rem;
+  --column-width: 13.5rem;
+  --column-height: 13.5rem;
+}
+
+.tile {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.75rem;
+  width: 100%;
+  max-width: var(--column-width);
+  height: var(--column-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  text-decoration: none;
+  gap: 0.5rem;
+}
+
 .tile:hover {
   background-color: var(--bs-secondary-bg);
   cursor: pointer;
+  text-decoration: underline;
+}
+
+.sc-grid-secondary .tile {
+  aspect-ratio: var(--columns) / 1;
+}
+
+.tile .icon {
+  font-size: 4.5rem;
+}
+
+@media (min-width: 576px) {
+  .sc-grid-main {
+    --columns: 2;
+  }
+
+  .sc-grid-secondary {
+    --column-width: 28.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .sc-grid-main {
+    --columns: 3;
+  }
+
+  .sc-grid-secondary {
+    --columns: 2;
+    --column-width: 21rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .sc-grid-main {
+    --columns: 4;
+  }
+
+  .sc-grid-secondary {
+    --columns: 2;
+    --column-width: 28.5rem;
+  }
 }
 </style>
