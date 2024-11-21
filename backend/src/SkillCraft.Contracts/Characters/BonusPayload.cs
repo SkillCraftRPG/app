@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Characters;
 
-public record BonusPayload
+public record BonusPayload : IBonus
 {
   public BonusCategory Category { get; set; }
   public string Target { get; set; }

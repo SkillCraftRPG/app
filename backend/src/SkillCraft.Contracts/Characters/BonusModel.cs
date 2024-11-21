@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Contracts.Characters;
 
-public class BonusModel
+public class BonusModel : IBonus
 {
   public Guid Id { get; set; }
 
