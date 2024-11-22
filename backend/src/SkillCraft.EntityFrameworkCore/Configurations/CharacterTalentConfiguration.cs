@@ -12,7 +12,7 @@ internal class CharacterTalentConfiguration : IEntityTypeConfiguration<Character
     builder.ToTable(SkillCraftDb.CharacterTalents.Table.Table ?? string.Empty, SkillCraftDb.CharacterTalents.Table.Schema);
     builder.HasKey(x => x.CharacterTalentId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.CharacterId, x.Id }).IsUnique();
 
     builder.Property(x => x.Precision).HasMaxLength(Name.MaximumLength);
 

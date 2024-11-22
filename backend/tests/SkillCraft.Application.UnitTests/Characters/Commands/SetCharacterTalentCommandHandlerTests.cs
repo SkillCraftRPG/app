@@ -76,22 +76,8 @@ public class SetCharacterTalentCommandHandlerTests
     _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.Equals(character)), _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should return null when the character could not be found.")]
-  public async Task It_should_return_null_when_the_character_could_not_be_found()
-  {
-    CharacterTalentPayload payload = new()
-    {
-      TalentId = Guid.NewGuid()
-    };
-    SetCharacterTalentCommand command = new(Guid.Empty, RelationId: null, payload);
-    command.Contextualize(_world);
-
-    CharacterModel? character = await _handler.Handle(command, _cancellationToken);
-    Assert.Null(character);
-  }
-
-  [Fact(DisplayName = "It should set an existing character talent.")]
-  public async Task It_should_set_an_existing_character_talent()
+  [Fact(DisplayName = "It should replace an existing character talent.")]
+  public async Task It_should_replace_an_existing_character_talent()
   {
     Guid relationId = Guid.NewGuid();
 
@@ -123,6 +109,20 @@ public class SetCharacterTalentCommandHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(command, EntityType.Talent, _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.Equals(character)), _cancellationToken), Times.Once);
+  }
+
+  [Fact(DisplayName = "It should return null when the character could not be found.")]
+  public async Task It_should_return_null_when_the_character_could_not_be_found()
+  {
+    CharacterTalentPayload payload = new()
+    {
+      TalentId = Guid.NewGuid()
+    };
+    SetCharacterTalentCommand command = new(Guid.Empty, RelationId: null, payload);
+    command.Contextualize(_world);
+
+    CharacterModel? character = await _handler.Handle(command, _cancellationToken);
+    Assert.Null(character);
   }
 
   [Theory(DisplayName = "It should throw TalentNotFoundException when the talent could not be found.")]

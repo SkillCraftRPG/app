@@ -64,6 +64,11 @@ internal class CharacterQuerier : ICharacterQuerier
       return null;
     }
 
+    CharacterBonusEntity[] bonuses = await _context.CharacterBonuses.AsNoTracking()
+      .Where(x => x.CharacterId == character.CharacterId)
+      .ToArrayAsync(cancellationToken);
+    character.Bonuses.AddRange(bonuses);
+
     CharacterLanguageEntity[] languages = await _context.CharacterLanguages.AsNoTracking()
       .Include(x => x.Language)
       .Where(x => x.CharacterId == character.CharacterId)

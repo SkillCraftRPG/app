@@ -12,6 +12,7 @@ public class SkillCraftContext : DbContext
   internal DbSet<AspectEntity> Aspects { get; private set; }
   internal DbSet<CasteEntity> Castes { get; private set; }
   internal DbSet<CharacterAspectEntity> CharacterAspects { get; private set; }
+  internal DbSet<CharacterBonusEntity> CharacterBonuses { get; private set; }
   internal DbSet<CharacterCustomizationEntity> CharacterCustomizations { get; private set; }
   internal DbSet<CharacterEntity> Characters { get; private set; }
   internal DbSet<CharacterLanguageEntity> CharacterLanguages { get; private set; }

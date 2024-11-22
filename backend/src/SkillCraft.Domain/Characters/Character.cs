@@ -94,6 +94,9 @@ public class Character : AggregateRoot
     }
   }
 
+  private readonly Dictionary<Guid, Bonus> _bonuses = [];
+  public IReadOnlyDictionary<Guid, Bonus> Bonuses => _bonuses.AsReadOnly();
+
   public NatureId NatureId { get; private set; }
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
 
@@ -262,6 +265,19 @@ public class Character : AggregateRoot
     EducationId = @event.EducationId;
   }
 
+  public void AddBonus(Bonus bonus, UserId userId) => SetBonus(Guid.NewGuid(), bonus, userId);
+  public void SetBonus(Guid id, Bonus bonus, UserId userId)
+  {
+    if (!_bonuses.TryGetValue(id, out Bonus? existingBonus) || existingBonus != bonus)
+    {
+      Raise(new BonusUpdatedEvent(id, bonus), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(BonusUpdatedEvent @event)
+  {
+    _bonuses[@event.BonusId] = @event.Bonus;
+  }
+
   public void AddItem(Item item, UserId userId) => AddItem(item, options: null, userId);
   public void AddItem(Item item, SetItemOptions? options, UserId userId) => SetItem(Guid.NewGuid(), item, options, userId);
   public void SetItem(Guid inventoryId, Item item, UserId userId) => SetItem(inventoryId, item, options: null, userId);
@@ -310,6 +326,18 @@ public class Character : AggregateRoot
   protected virtual void Apply(ExperienceGainedEvent @event)
   {
     _experience += @event.Experience;
+  }
+
+  public void RemoveBonus(Guid id, UserId userId)
+  {
+    if (_bonuses.ContainsKey(id))
+    {
+      Raise(new BonusRemovedEvent(id), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(BonusRemovedEvent @event)
+  {
+    _bonuses.Remove(@event.BonusId);
   }
 
   public void RemoveLanguage(LanguageId languageId, UserId userId)
@@ -534,6 +562,28 @@ public class Character : AggregateRoot
       throw new ArgumentException("The customizations must contain an equal number of gifts and disabilities.", nameof(customizations));
     }
     return customizationIds;
+  }
+
+  public class BonusRemovedEvent : DomainEvent, INotification
+  {
+    public Guid BonusId { get; }
+
+    public BonusRemovedEvent(Guid bonusId)
+    {
+      BonusId = bonusId;
+    }
+  }
+
+  public class BonusUpdatedEvent : DomainEvent, INotification
+  {
+    public Guid BonusId { get; }
+    public Bonus Bonus { get; }
+
+    public BonusUpdatedEvent(Guid bonusId, Bonus bonus)
+    {
+      BonusId = bonusId;
+      Bonus = bonus;
+    }
   }
 
   public class CreatedEvent : DomainEvent, INotification

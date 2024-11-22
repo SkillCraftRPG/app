@@ -223,6 +223,61 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.ToTable("CharacterAspects", (string)null);
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CharacterBonusEntity", b =>
+                {
+                    b.Property<int>("CharacterBonusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CharacterBonusId"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsTemporary")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Precision")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Target")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("CharacterBonusId");
+
+                    b.HasIndex("Category");
+
+                    b.HasIndex("IsTemporary");
+
+                    b.HasIndex("Precision");
+
+                    b.HasIndex("Target");
+
+                    b.HasIndex("Value");
+
+                    b.HasIndex("CharacterId", "Id")
+                        .IsUnique();
+
+                    b.ToTable("CharacterBonuses", (string)null);
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CharacterCustomizationEntity", b =>
                 {
                     b.Property<int>("CharacterId")
@@ -454,12 +509,10 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasKey("CharacterTalentId");
 
-                    b.HasIndex("CharacterId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("TalentId");
+
+                    b.HasIndex("CharacterId", "Id")
+                        .IsUnique();
 
                     b.ToTable("CharacterTalents", (string)null);
                 });
@@ -750,14 +803,12 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
                     b.HasKey("InventoryId");
 
-                    b.HasIndex("CharacterId");
-
                     b.HasIndex("ContainingItemId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("CharacterId", "Id")
+                        .IsUnique();
 
                     b.ToTable("Inventory", (string)null);
                 });
@@ -1659,6 +1710,17 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CharacterBonusEntity", b =>
+                {
+                    b.HasOne("SkillCraft.EntityFrameworkCore.Entities.CharacterEntity", "Character")
+                        .WithMany("Bonuses")
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
+                });
+
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CharacterCustomizationEntity", b =>
                 {
                     b.HasOne("SkillCraft.EntityFrameworkCore.Entities.CharacterEntity", null)
@@ -1957,6 +2019,8 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
 
             modelBuilder.Entity("SkillCraft.EntityFrameworkCore.Entities.CharacterEntity", b =>
                 {
+                    b.Navigation("Bonuses");
+
                     b.Navigation("Inventory");
 
                     b.Navigation("Languages");

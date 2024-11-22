@@ -59,6 +59,7 @@ internal class CharacterEntity : AggregateEntity
   public string? OptionalAttributes { get; private set; }
   public string? ExtraAttributes { get; private set; }
 
+  public List<CharacterBonusEntity> Bonuses { get; private set; } = [];
   public List<InventoryEntity> Inventory { get; private set; } = [];
   public List<CharacterTalentEntity> Talents { get; private set; } = [];
 
@@ -209,19 +210,14 @@ internal class CharacterEntity : AggregateEntity
     return model;
   }
 
-  public void SetItem(ItemEntity item, Character.InventoryUpdatedEvent @event)
+  public void RemoveBonus(Character.BonusRemovedEvent @event)
   {
     base.Update(@event);
 
-    InventoryEntity? relation = Inventory.SingleOrDefault(i => i.Id == @event.InventoryId);
-    if (relation == null)
+    CharacterBonusEntity? bonus = Bonuses.SingleOrDefault(b => b.Id == @event.BonusId);
+    if (bonus != null)
     {
-      relation = new InventoryEntity(this, item, @event);
-      Inventory.Add(relation);
-    }
-    else
-    {
-      relation.Update(@event);
+      Bonuses.Remove(bonus);
     }
   }
 
@@ -244,6 +240,38 @@ internal class CharacterEntity : AggregateEntity
     if (relation != null)
     {
       Talents.Remove(relation);
+    }
+  }
+
+  public void SetBonus(Character.BonusUpdatedEvent @event)
+  {
+    base.Update(@event);
+
+    CharacterBonusEntity? bonus = Bonuses.SingleOrDefault(b => b.Id == @event.BonusId);
+    if (bonus == null)
+    {
+      bonus = new CharacterBonusEntity(this, @event);
+      Bonuses.Add(bonus);
+    }
+    else
+    {
+      bonus.Update(@event);
+    }
+  }
+
+  public void SetItem(ItemEntity item, Character.InventoryUpdatedEvent @event)
+  {
+    base.Update(@event);
+
+    InventoryEntity? relation = Inventory.SingleOrDefault(i => i.Id == @event.InventoryId);
+    if (relation == null)
+    {
+      relation = new InventoryEntity(this, item, @event);
+      Inventory.Add(relation);
+    }
+    else
+    {
+      relation.Update(@event);
     }
   }
 
