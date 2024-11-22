@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
-using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
-using SkillCraft.Domain.Languages;
 
 namespace SkillCraft.Application.Characters.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class RemoveCharacterLanguageCommandHandlerTests
+public class RemoveCharacterBonusCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
@@ -18,22 +17,22 @@ public class RemoveCharacterLanguageCommandHandlerTests
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
 
-  private readonly RemoveCharacterLanguageCommandHandler _handler;
+  private readonly RemoveCharacterBonusCommandHandler _handler;
 
   private readonly WorldMock _world = new();
 
-  public RemoveCharacterLanguageCommandHandlerTests()
+  public RemoveCharacterBonusCommandHandlerTests()
   {
     _handler = new(_characterQuerier.Object, _characterRepository.Object, _permissionService.Object, _sender.Object);
   }
 
-  [Fact(DisplayName = "It should not do anything when the language could not be found.")]
-  public async Task It_should_not_do_anything_when_the_language_could_not_be_found()
+  [Fact(DisplayName = "It should not do anything when the bonus could not be found.")]
+  public async Task It_should_not_do_anything_when_the_bonus_could_not_be_found()
   {
     Character character = new CharacterBuilder(_world).Build();
     _characterRepository.Setup(x => x.LoadAsync(character.Id, _cancellationToken)).ReturnsAsync(character);
 
-    RemoveCharacterLanguageCommand command = new(character.EntityId, Guid.Empty);
+    RemoveCharacterBonusCommand command = new(character.EntityId, Guid.Empty);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -48,17 +47,19 @@ public class RemoveCharacterLanguageCommandHandlerTests
     _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.Equals(character)), _cancellationToken), Times.Once);
   }
 
-  [Fact(DisplayName = "It should remove an existing character language.")]
-  public async Task It_should_remove_an_existing_character_language()
+  [Fact(DisplayName = "It should remove an existing character bonus.")]
+  public async Task It_should_remove_an_existing_character_bonus()
   {
     Character character = new CharacterBuilder(_world).Build();
     _characterRepository.Setup(x => x.LoadAsync(character.Id, _cancellationToken)).ReturnsAsync(character);
 
-    Language language = new(_world.Id, new Name("Orrinique"), _world.OwnerId);
-    character.SetLanguage(language, notes: null, _world.OwnerId);
-    Assert.NotEmpty(character.Languages);
+    Assert.Empty(character.Bonuses);
+    Guid bonusId = Guid.NewGuid();
+    Bonus bonus = new(BonusCategory.Skill, Skill.Melee.ToString(), value: +2);
+    character.SetBonus(bonusId, bonus, _world.OwnerId);
+    Assert.NotEmpty(character.Bonuses);
 
-    RemoveCharacterLanguageCommand command = new(character.EntityId, language.EntityId);
+    RemoveCharacterBonusCommand command = new(character.EntityId, bonusId);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -68,8 +69,8 @@ public class RemoveCharacterLanguageCommandHandlerTests
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    Assert.Empty(character.Languages);
-    Assert.Contains(character.Changes, change => change is Character.LanguageRemovedEvent e && e.LanguageId == language.Id);
+    Assert.Empty(character.Bonuses);
+    Assert.Contains(character.Changes, change => change is Character.BonusRemovedEvent e && e.BonusId == bonusId);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(command, character.GetMetadata(), _cancellationToken), Times.Once);
 
@@ -79,7 +80,7 @@ public class RemoveCharacterLanguageCommandHandlerTests
   [Fact(DisplayName = "It should return null when the character could not be found.")]
   public async Task It_should_return_null_when_the_character_could_not_be_found()
   {
-    RemoveCharacterLanguageCommand command = new(Guid.Empty, Guid.Empty);
+    RemoveCharacterBonusCommand command = new(Guid.Empty, Guid.Empty);
     command.Contextualize(_world);
 
     CharacterModel? character = await _handler.Handle(command, _cancellationToken);
