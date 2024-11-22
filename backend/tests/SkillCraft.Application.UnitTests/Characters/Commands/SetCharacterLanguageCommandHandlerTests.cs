@@ -30,7 +30,7 @@ public class SetCharacterLanguageCommandHandlerTests
   }
 
   [Fact(DisplayName = "It should add a new character language.")]
-  public async Task It_should_add_a_character_language()
+  public async Task It_should_add_a_new_character_language()
   {
     Character character = new CharacterBuilder(_world).Build();
     _characterRepository.Setup(x => x.LoadAsync(character.Id, _cancellationToken)).ReturnsAsync(character);
