@@ -4,10 +4,22 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
+import AspectIcon from "@/components/aspects/AspectIcon.vue";
+import CasteIcon from "@/components/castes/CasteIcon.vue";
+import CharacterIcon from "@/components/characters/CharacterIcon.vue";
+import CustomizationIcon from "@/components/customizations/CustomizationIcon.vue";
+import EducationIcon from "@/components/educations/EducationIcon.vue";
+import ItemIcon from "@/components/items/ItemIcon.vue";
+import LanguageIcon from "@/components/languages/LanguageIcon.vue";
+import LineageIcon from "@/components/lineages/LineageIcon.vue";
+import NatureIcon from "@/components/natures/NatureIcon.vue";
+import PartyIcon from "@/components/parties/PartyIcon.vue";
+import SpellIcon from "@/components/spells/SpellIcon.vue";
+import TalentIcon from "@/components/talents/TalentIcon.vue";
+import type { ApiError } from "@/types/api";
 import type { WorldModel } from "@/types/worlds";
 import { handleErrorKey } from "@/inject/App";
 import { readWorld } from "@/api/worlds";
-import type { ApiError } from "@/types/api";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
@@ -46,42 +58,30 @@ onMounted(async () => {
       <div class="d-flex flex-column justify-content-center align-items-center">
         <div class="sc-grid-main">
           <RouterLink class="tile" :to="{ name: 'LanguageList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-language" /> {{ t("languages.list") }}
+            <LanguageIcon class="icon" /> {{ t("languages.list") }}
           </RouterLink>
           <RouterLink class="tile" :to="{ name: 'LineageList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-paw" /> {{ t("lineages.list") }}
+            <LineageIcon class="icon" /> {{ t("lineages.list") }}
           </RouterLink>
           <RouterLink class="tile" :to="{ name: 'CustomizationList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-list" /> {{ t("customizations.list") }}
+            <CustomizationIcon class="icon" /> {{ t("customizations.list") }}
           </RouterLink>
-          <RouterLink class="tile" :to="{ name: 'NatureList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-brain" /> {{ t("natures.list") }}
-          </RouterLink>
-          <RouterLink class="tile" :to="{ name: 'AspectList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-circle-info" /> {{ t("aspects.list") }}
-          </RouterLink>
-          <RouterLink class="tile" :to="{ name: 'CasteList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-screwdriver-wrench" /> {{ t("castes.list") }}
-          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'NatureList', params: { slug: world.slug } }"><NatureIcon class="icon" /> {{ t("natures.list") }}</RouterLink>
+          <RouterLink class="tile" :to="{ name: 'AspectList', params: { slug: world.slug } }"><AspectIcon class="icon" /> {{ t("aspects.list") }}</RouterLink>
+          <RouterLink class="tile" :to="{ name: 'CasteList', params: { slug: world.slug } }"><CasteIcon class="icon" /> {{ t("castes.list") }}</RouterLink>
           <RouterLink class="tile" :to="{ name: 'EducationList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-graduation-cap" /> {{ t("educations.list") }}
+            <EducationIcon class="icon" /> {{ t("educations.list") }}
           </RouterLink>
-          <RouterLink class="tile" :to="{ name: 'TalentList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-code-branch" /> {{ t("talents.list") }}
-          </RouterLink>
-          <div class="tile"><font-awesome-icon class="icon" icon="fas fa-wand-sparkles" /> Pouvoirs</div>
-          <RouterLink class="tile" :to="{ name: 'ItemList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-shopping-cart" /> {{ t("items.list") }}
-          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'TalentList', params: { slug: world.slug } }"><TalentIcon class="icon" /> {{ t("talents.list") }}</RouterLink>
+          <div class="tile"><SpellIcon class="icon" /> Pouvoirs</div>
+          <RouterLink class="tile" :to="{ name: 'ItemList', params: { slug: world.slug } }"><ItemIcon class="icon" /> {{ t("items.list") }}</RouterLink>
           <div class="tile"><font-awesome-icon class="icon" icon="fas fa-question" /> TODO</div>
           <div class="tile"><font-awesome-icon class="icon" icon="fas fa-question" /> TODO</div>
         </div>
         <div class="sc-grid-secondary">
-          <RouterLink class="tile" :to="{ name: 'PartyList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-users" /> {{ t("parties.list") }}
-          </RouterLink>
+          <RouterLink class="tile" :to="{ name: 'PartyList', params: { slug: world.slug } }"><PartyIcon class="icon" /> {{ t("parties.list") }}</RouterLink>
           <RouterLink class="tile" :to="{ name: 'CharacterList', params: { slug: world.slug } }">
-            <font-awesome-icon class="icon" icon="fas fa-gamepad" /> {{ t("characters.list") }}
+            <CharacterIcon class="icon" /> {{ t("characters.list") }}
           </RouterLink>
         </div>
       </div>

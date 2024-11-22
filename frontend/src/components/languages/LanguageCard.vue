@@ -4,6 +4,7 @@ import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
+import LanguageIcon from "./LanguageIcon.vue";
 import type { LanguageModel } from "@/types/languages";
 
 const { parseBoolean } = parsingUtils;
@@ -24,7 +25,10 @@ defineEmits<{
 </script>
 
 <template>
-  <TarCard :title="language.name" :subtitle="language.script ?? '—'">
+  <TarCard :title="language.name">
+    <template #subtitle-override>
+      <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-scroll" /> {{ language.script ?? "—" }}</h6>
+    </template>
     <div v-if="hasRemove || hasView" class="float-end">
       <RouterLink
         v-if="hasView"
@@ -32,7 +36,7 @@ defineEmits<{
         :to="{ name: 'LanguageEdit', params: { id: language.id } }"
         target="_blank"
       >
-        <font-awesome-icon icon="fas fa-eye" /> {{ t("actions.view") }}
+        <LanguageIcon /> {{ t("actions.view") }}
       </RouterLink>
       <TarButton v-if="hasRemove" :class="{ 'ms-1': hasView }" icon="fas fa-times" :text="t('actions.remove')" variant="danger" @click="$emit('removed')" />
     </div>

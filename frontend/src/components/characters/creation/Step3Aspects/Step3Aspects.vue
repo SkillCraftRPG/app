@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import AspectIcon from "@/components/aspects/AspectIcon.vue";
 import AspectSelect from "@/components/aspects/AspectSelect.vue";
 import AttributesBlock from "@/components/aspects/AttributesBlock.vue";
 import SkillsBlock from "@/components/aspects/SkillsBlock.vue";
@@ -77,9 +78,7 @@ onMounted(() => {
         <tbody>
           <tr v-for="aspect in aspects" :key="aspect.id">
             <td>
-              <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" /> {{ aspect.name }}
-              </RouterLink>
+              <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }" target="_blank"> <AspectIcon /> {{ aspect.name }} </RouterLink>
             </td>
             <td><AttributesBlock :aspect="aspect" /></td>
             <td><AttributesBlock :aspect="aspect" optional /></td>

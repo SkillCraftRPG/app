@@ -46,8 +46,8 @@ watch(() => props.range, onRoll, { immediate: true });
     type="number"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"
   >
-    <template #prepend>
-      <TarButton v-if="isRangeValid" icon="fas fa-dice" :text="text" @click="onRoll" />
+    <template v-if="isRangeValid" #prepend>
+      <TarButton icon="fas fa-dice" :text="text" @click="onRoll" />
     </template>
     <template #append>
       <span class="input-group-text">{{ t("game.units.year", modelValue ?? 0) }}</span>

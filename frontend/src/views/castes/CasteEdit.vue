@@ -29,7 +29,6 @@ const { t } = useI18n();
 const caste = ref<CasteModel>();
 const description = ref<string>("");
 const features = ref<FeatureStatus[]>([]);
-const hasLoaded = ref<boolean>(false);
 const name = ref<string>("");
 const skill = ref<Skill>();
 const wealthRoll = ref<string>("");
@@ -111,7 +110,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
-  hasLoaded.value = true;
 });
 </script>
 

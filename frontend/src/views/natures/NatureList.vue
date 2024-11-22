@@ -10,6 +10,7 @@ import AppPagination from "@/components/shared/AppPagination.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateNature from "@/components/natures/CreateNature.vue";
+import CustomizationIcon from "@/components/customizations/CustomizationIcon.vue";
 import CustomizationSelect from "@/components/customizations/CustomizationSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -191,7 +192,7 @@ watch(
             <td>{{ nature.attribute ? t(`game.attributes.options.${nature.attribute}`) : "—" }}</td>
             <td>
               <RouterLink v-if="nature.gift" :to="{ name: 'CustomizationEdit', params: { id: nature.gift.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" />{{ nature.gift.name }}
+                <CustomizationIcon />{{ nature.gift.name }}
               </RouterLink>
               <template v-else>{{ "—" }}</template>
             </td>

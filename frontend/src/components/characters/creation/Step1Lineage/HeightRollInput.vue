@@ -42,8 +42,8 @@ watch(() => props.roll, onRoll, { immediate: true });
     type="number"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"
   >
-    <template #prepend>
-      <TarButton v-if="roll" icon="fas fa-dice" :text="roll" @click="onRoll" />
+    <template v-if="roll" #prepend>
+      <TarButton icon="fas fa-dice" :text="roll" @click="onRoll" />
     </template>
     <template #append>
       <span class="input-group-text">{{ t("game.units.centimeters") }}</span>

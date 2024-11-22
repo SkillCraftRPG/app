@@ -40,7 +40,7 @@ async function onComplete(): Promise<void> {
         name: step1.name,
         player: step1.player,
         lineageId: step1.nation?.id ?? step1.species.id,
-        height: step1.height,
+        height: step1.height / 100.0,
         weight: step1.weight,
         age: step1.age,
         languageIds: step1.languages.map(({ id }) => id),

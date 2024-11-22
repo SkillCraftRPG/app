@@ -29,7 +29,8 @@
   },
   "nation": {
     "label": "Nation",
-    "placeholder": "Select a nation"
+    "placeholder": "Select a nation",
+    "none": "None"
   },
   "nations": {
     "empty": "This list is empty.",

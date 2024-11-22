@@ -29,7 +29,8 @@
   },
   "nation": {
     "label": "Peuple",
-    "placeholder": "Sélectionnez un peuple"
+    "placeholder": "Sélectionnez un peuple",
+    "none": "Aucun"
   },
   "nations": {
     "empty": "Cette liste est vide.",

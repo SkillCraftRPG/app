@@ -4,6 +4,7 @@ import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
+import TalentIcon from "./TalentIcon.vue";
 import type { TalentModel } from "@/types/talents";
 
 const { parseBoolean } = parsingUtils;
@@ -32,7 +33,7 @@ defineEmits<{
         :to="{ name: 'TalentEdit', params: { id: talent.id } }"
         target="_blank"
       >
-        <font-awesome-icon icon="fas fa-eye" /> {{ t("actions.view") }}
+        <TalentIcon /> {{ t("actions.view") }}
       </RouterLink>
       <TarButton v-if="hasRemove" :class="{ 'ms-1': hasView }" icon="fas fa-times" :text="t('actions.remove')" variant="danger" @click="$emit('removed')" />
     </div>

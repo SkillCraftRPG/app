@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
-import DescriptionTextarea from "../shared/DescriptionTextarea.vue";
+import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import type { TraitPayload } from "@/types/lineages";
 

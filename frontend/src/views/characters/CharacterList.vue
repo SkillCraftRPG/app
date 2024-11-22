@@ -7,7 +7,11 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
+import CasteIcon from "@/components/castes/CasteIcon.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
+import EducationIcon from "@/components/educations/EducationIcon.vue";
+import LineageIcon from "@/components/lineages/LineageIcon.vue";
+import NatureIcon from "@/components/natures/NatureIcon.vue";
 import PlayerSelect from "@/components/characters/PlayerSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -159,6 +163,7 @@ watch(
             <th scope="col">{{ t("characters.background.label") }}</th>
             <th scope="col">{{ t("natures.select.label") }}</th>
             <th scope="col">{{ t("characters.sort.options.UpdatedOn") }}</th>
+            <!-- TODO(fpion): Level, Tier -->
           </tr>
         </thead>
         <tbody>
@@ -172,26 +177,26 @@ watch(
             <td>
               <template v-if="character.lineage.species">
                 <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.species.id } }" target="_blank">
-                  <font-awesome-icon icon="fas fa-eye" /> {{ character.lineage.species.name }}
+                  <LineageIcon /> {{ character.lineage.species.name }}
                 </RouterLink>
                 <br />
               </template>
               <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" /> {{ character.lineage.name }}
+                <LineageIcon /> {{ character.lineage.name }}
               </RouterLink>
             </td>
             <td>
               <RouterLink :to="{ name: 'CasteEdit', params: { id: character.caste.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" /> {{ character.caste.name }}
+                <CasteIcon /> {{ character.caste.name }}
               </RouterLink>
               <br />
               <RouterLink :to="{ name: 'EducationEdit', params: { id: character.education.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" /> {{ character.education.name }}
+                <EducationIcon /> {{ character.education.name }}
               </RouterLink>
             </td>
             <td>
               <RouterLink :to="{ name: 'NatureEdit', params: { id: character.nature.id } }" target="_blank">
-                <font-awesome-icon icon="fas fa-eye" /> {{ character.nature.name }}
+                <NatureIcon /> {{ character.nature.name }}
               </RouterLink>
             </td>
             <td><StatusBlock :actor="character.updatedBy" :date="character.updatedOn" /></td>
