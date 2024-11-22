@@ -35,12 +35,14 @@
     "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence.",
     "label": "Historique"
   },
+  "bloodAlcoholContent": "Alcoolémie",
   "caste": {
     "invalid": {
       "skill": "Aucune compétence n’est associée à la caste sélectionnée.",
       "talent": "Il n’existe aucun talent associé à la compétence de la caste sélectionnée."
     }
   },
+  "characteristics": "Caractéristiques",
   "create": "Création de personnage",
   "created": "Le personnage a été créé.",
   "customizations": {
@@ -56,13 +58,16 @@
     }
   },
   "empty": "Cette liste est vide.",
+  "experience": "Expérience",
   "height": "Hauteur",
+  "intoxication": "Intoxication",
   "inventory": {
     "quantity": "Quantité"
   },
   "languages": {
     "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires."
   },
+  "level": "Niveau",
   "lineage": "Lignée",
   "list": "Personnages",
   "name": "Nom du personnage",
@@ -78,6 +83,7 @@
       "UpdatedOn": "Dernière modification"
     }
   },
+  "stamina": "Énergie",
   "steps": {
     "aspects": "Étape 3 – Aspects",
     "attributes": "Étape 4 – Attributs",
@@ -89,5 +95,8 @@
   },
   "talents": {
     "select": "Vous devez sélectionner {n} talent supplémentaire. | Vous devez sélectionner {n} talents supplémentaires."
-  }
+  },
+  "tier": "Tiers",
+  "updated": "Le personnage a été modifié.",
+  "vitality": "Vitalité"
 }

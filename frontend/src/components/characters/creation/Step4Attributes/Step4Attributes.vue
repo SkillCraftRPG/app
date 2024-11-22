@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { TarButton, TarCard } from "logitar-vue3-ui";
+import { TarButton } from "logitar-vue3-ui";
 import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
-import AttributeCard from "./AttributeCard.vue";
+import MandatoryAttributeCard from "./MandatoryAttributeCard.vue";
+import OptionalAttributeCard from "./OptionalAttributeCard.vue";
 import type { Attribute } from "@/types/game";
 import type { AttributeBonusesModel, LineageModel } from "@/types/lineages";
+import type { MandatoryAttribute } from "@/types/aspects";
 import type { Step1, Step2, Step3, Step4 } from "@/types/characters";
 import { calculateModifier } from "@/helpers/gameUtils";
 import { useCharacterStore } from "@/stores/character";
@@ -25,11 +27,6 @@ type AttributeRow = {
   aspects: number;
   score: number;
   modifier: number;
-};
-type MandatoryAttribute = {
-  attribute: Attribute;
-  text: string;
-  selected: "best" | "mandatory" | "worst";
 };
 type OptionalAttribute = {
   attribute: Attribute;
@@ -419,29 +416,7 @@ onMounted(() => {
       <h6>{{ t("aspects.attributes.mandatory") }}</h6>
       <div class="mb-3 row">
         <div v-for="(mandatory, index) in mandatory" :key="index" class="col">
-          <TarCard :title="mandatory.text" :subtitle="t(`characters.attributes.mandatory.${mandatory.selected}`)">
-            <TarButton
-              v-if="mandatory.selected !== 'worst'"
-              class="me-1"
-              icon="fas fa-minus"
-              :text="t('characters.attributes.worst.label')"
-              @click="setWorst(index)"
-            />
-            <TarButton
-              v-if="mandatory.selected !== 'mandatory'"
-              :class="{ 'me-1': mandatory.selected !== 'best', 'ms-1': mandatory.selected !== 'worst' }"
-              icon="fas fa-equals"
-              :text="t('characters.attributes.mandatory.label')"
-              @click="setMandatory(index)"
-            />
-            <TarButton
-              v-if="mandatory.selected !== 'best'"
-              class="ms-1"
-              icon="fas fa-plus"
-              :text="t('characters.attributes.best.label')"
-              @click="setBest(index)"
-            />
-          </TarCard>
+          <MandatoryAttributeCard v-bind="mandatory" @best="setBest(index)" @mandatory="setMandatory(index)" @worst="setWorst(index)" />
         </div>
       </div>
       <p v-if="!best" class="text-danger"><font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("characters.attributes.best.select") }}</p>
@@ -452,7 +427,7 @@ onMounted(() => {
       <h6>{{ t("aspects.attributes.optional") }}</h6>
       <div class="align-items-stretch mb-3 row">
         <div v-for="(optional, index) in optional" :key="index" class="col">
-          <AttributeCard :attribute="optional.attribute" class="h-100" :selected="optional.selected" @click="toggleOptional(index)" />
+          <OptionalAttributeCard :attribute="optional.attribute" class="h-100" :selected="optional.selected" @click="toggleOptional(index)" />
         </div>
       </div>
       <p v-if="requiredOptional < 0" class="text-danger">
@@ -465,7 +440,7 @@ onMounted(() => {
         <h5>{{ t("characters.lineage") }}</h5>
         <div class="mb-3 row">
           <div v-for="row in rows" :key="row.attribute" class="col">
-            <AttributeCard :attribute="row.attribute" :selected="extra.includes(row.attribute)" @click="toggleExtra(row.attribute)" />
+            <OptionalAttributeCard :attribute="row.attribute" :selected="extra.includes(row.attribute)" @click="toggleExtra(row.attribute)" />
           </div>
         </div>
         <p v-if="requiredExtra < 0" class="text-danger">

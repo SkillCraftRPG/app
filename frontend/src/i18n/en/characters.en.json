@@ -35,12 +35,14 @@
     "invalid": "The selected caste and education cannot be associated to the same skill.",
     "label": "Background"
   },
+  "bloodAlcoholContent": "Blood Alcohol Content",
   "caste": {
     "invalid": {
       "skill": "There is not skill associated to the selected caste.",
       "talent": "There is no talent associated to the caste's skill."
     }
   },
+  "characteristics": "Characteristics",
   "create": "Create Character",
   "created": "The character has been created.",
   "customizations": {
@@ -56,13 +58,16 @@
     }
   },
   "empty": "This list is empty.",
+  "experience": "Experience",
   "height": "Height",
+  "intoxication": "Intoxication",
   "inventory": {
     "quantity": "Quantity"
   },
   "languages": {
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
+  "level": "Level",
   "lineage": "Lineage",
   "list": "Characters",
   "name": "Character Name",
@@ -78,6 +83,7 @@
       "UpdatedOn": "Updated on"
     }
   },
+  "stamina": "Stamina",
   "steps": {
     "aspects": "Step #3 – Aspects",
     "attributes": "Step #4 – Attributes",
@@ -89,5 +95,8 @@
   },
   "talents": {
     "select": "You must select {n} additional talent. | You must select {n} additional talents."
-  }
+  },
+  "tier": "Tier",
+  "updated": "The character has been updated.",
+  "vitality": "Vitality"
 }

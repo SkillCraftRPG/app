@@ -41,6 +41,18 @@ export type BaseAttributesPayload = {
   extra: Attribute[];
 };
 
+export type BonusCategory = "Attribute" | "Miscellaneous" | "Skill" | "Speed" | "Statistic";
+
+export type BonusModel = {
+  id: string;
+  category: BonusCategory;
+  target: string;
+  value: number;
+  isTemporary: boolean;
+  precision?: string;
+  notes?: string;
+};
+
 export type CharacterCreation = {
   step1?: Step1;
   step2?: Step2;
@@ -59,6 +71,14 @@ export type CharacterModel = Aggregate & {
   world: WorldModel;
   name: string;
   playerName?: string;
+  experience: number;
+  level: number;
+  tier: number;
+  vitality: number;
+  stamina: number;
+  bloodAlcoholContent: number;
+  intoxication: number;
+  bonuses: BonusModel[];
   lineage: LineageModel;
   height: number;
   weight: number;
@@ -121,6 +141,19 @@ export type InventoryModel = {
   nameOverride?: string;
   descriptionOverride?: string;
   valueOverride?: number;
+};
+
+export type ReplaceCharacterPayload = {
+  name: string;
+  player?: string;
+  height: number;
+  weight: number;
+  age: number;
+  experience: number;
+  vitality: number;
+  stamina: number;
+  bloodAlcoholContent: number;
+  intoxication: number;
 };
 
 export type SearchCharactersPayload = SearchPayload & {

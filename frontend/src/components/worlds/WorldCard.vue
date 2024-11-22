@@ -17,7 +17,7 @@ defineEmits<{
 </script>
 
 <template>
-  <TarCard class="card" :title="world.name ?? world.slug" :subtitle="subtitle ? world.slug : undefined" @click="$emit('entered')">
+  <TarCard class="clickable" :title="world.name ?? world.slug" :subtitle="subtitle ? world.slug : undefined" @click="$emit('entered')">
     <div class="my-2">
       {{ t("worlds.ownedBy") }}
       <TarAvatar :display-name="world.owner.displayName" :email-address="world.owner.emailAddress" icon="fas fa-user" :url="world.owner.pictureUrl" />
@@ -28,7 +28,7 @@ defineEmits<{
 </template>
 
 <style scoped>
-.card:hover {
+.clickable:hover {
   background-color: var(--bs-secondary-bg);
   cursor: pointer;
 }

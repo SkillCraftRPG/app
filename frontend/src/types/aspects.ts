@@ -31,6 +31,12 @@ export type CreateOrReplaceAspectPayload = {
   skills: SkillsModel;
 };
 
+export type MandatoryAttribute = {
+  attribute: Attribute;
+  text: string;
+  selected: "best" | "mandatory" | "worst";
+};
+
 export type SearchAspectsPayload = SearchPayload & {
   attribute?: Attribute;
   skill?: Skill;
