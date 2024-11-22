@@ -14,7 +14,7 @@ internal class InventoryConfiguration : IEntityTypeConfiguration<InventoryEntity
     builder.ToTable(SkillCraftDb.Inventory.Table.Table ?? string.Empty, SkillCraftDb.Inventory.Table.Schema);
     builder.HasKey(x => x.InventoryId);
 
-    builder.HasIndex(x => x.Id).IsUnique();
+    builder.HasIndex(x => new { x.CharacterId, x.Id }).IsUnique();
     builder.HasIndex(x => x.ContainingItemId);
 
     builder.Property(x => x.Skill).HasMaxLength(byte.MaxValue).HasConversion(new EnumToStringConverter<Skill>());

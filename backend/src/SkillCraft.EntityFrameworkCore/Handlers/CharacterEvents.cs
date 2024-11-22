@@ -7,6 +7,50 @@ namespace SkillCraft.EntityFrameworkCore.Handlers;
 
 internal static class CharacterEvents
 {
+  public class CharacterBonusRemovedEventHandler : INotificationHandler<Character.BonusRemovedEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterBonusRemovedEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.BonusRemovedEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .Include(x => x.Bonuses)
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.RemoveBonus(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
+  public class CharacterBonusUpdatedEventHandler : INotificationHandler<Character.BonusUpdatedEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterBonusUpdatedEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.BonusUpdatedEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .Include(x => x.Bonuses)
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.SetBonus(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
   public class CharacterCreatedEventHandler : INotificationHandler<Character.CreatedEvent>
   {
     private readonly SkillCraftContext _context;
