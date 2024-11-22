@@ -45,14 +45,22 @@ internal class SetCharacterBonusCommandHandler : IRequestHandler<SetCharacterBon
 
     Name? precision = Name.TryCreate(payload.Precision);
     Description? notes = Description.TryCreate(payload.Notes);
-    Bonus bonus = new(payload.Category, payload.Target, payload.Value, payload.IsTemporary, precision, notes);
     UserId userId = command.GetUserId();
     if (command.BonusId.HasValue)
     {
+      _ = character.Bonuses.TryGetValue(command.BonusId.Value, out Bonus? existingBonus);
+      Bonus bonus = new(
+        existingBonus?.Category ?? payload.Category,
+        existingBonus?.Target ?? payload.Target,
+        payload.Value,
+        payload.IsTemporary,
+        precision,
+        notes);
       character.SetBonus(command.BonusId.Value, bonus, userId);
     }
     else
     {
+      Bonus bonus = new(payload.Category, payload.Target, payload.Value, payload.IsTemporary, precision, notes);
       character.AddBonus(bonus, userId);
     }
 

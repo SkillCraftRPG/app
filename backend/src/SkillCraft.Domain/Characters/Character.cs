@@ -568,9 +568,9 @@ public class Character : AggregateRoot
   {
     public Guid BonusId { get; }
 
-    public BonusRemovedEvent(Guid id)
+    public BonusRemovedEvent(Guid bonusId)
     {
-      BonusId = id;
+      BonusId = bonusId;
     }
   }
 
@@ -579,9 +579,9 @@ public class Character : AggregateRoot
     public Guid BonusId { get; }
     public Bonus Bonus { get; }
 
-    public BonusUpdatedEvent(Guid id, Bonus bonus)
+    public BonusUpdatedEvent(Guid bonusId, Bonus bonus)
     {
-      BonusId = id;
+      BonusId = bonusId;
       Bonus = bonus;
     }
   }

@@ -432,6 +432,30 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(_kassandra.EntityId, caste.Id);
   }
 
+  [Fact(DisplayName = "It should remove a character bonus.")]
+  public async Task It_should_remove_a_character_bonus()
+  {
+    Guid bonusId = Guid.NewGuid();
+    Bonus bonus = new(BonusCategory.Skill, Skill.Melee.ToString(), value: +3);
+    _stentor.SetBonus(bonusId, bonus, UserId);
+    await _characterRepository.SaveAsync(_stentor);
+
+    CharacterModel? character = await _characterQuerier.ReadAsync(_stentor);
+    Assert.NotNull(character);
+    Assert.NotEmpty(character.Bonuses);
+
+    RemoveCharacterBonusCommand command = new(_stentor.EntityId, bonusId);
+    character = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotNull(character);
+    Assert.Equal(command.CharacterId, character.Id);
+    Assert.Equal(_stentor.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    Assert.Empty(character.Bonuses);
+  }
+
   [Fact(DisplayName = "It should remove a character language.")]
   public async Task It_should_remove_a_character_language()
   {
@@ -446,6 +470,11 @@ public class CharacterTests : IntegrationTests
     character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
+    Assert.Equal(command.CharacterId, character.Id);
+    Assert.Equal(_kassandra.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
     Assert.Empty(character.Languages);
   }
 
@@ -464,7 +493,44 @@ public class CharacterTests : IntegrationTests
     character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
+    Assert.Equal(command.CharacterId, character.Id);
+    Assert.Equal(_kassandra.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
     Assert.Empty(character.Languages);
+  }
+
+  [Fact(DisplayName = "It should set a character bonus.")]
+  public async Task It_should_set_a_character_bonus()
+  {
+    Guid bonusId = Guid.NewGuid();
+    Bonus bonus = new(BonusCategory.Skill, Skill.Melee.ToString(), value: +3, isTemporary: true);
+    _stentor.SetBonus(bonusId, bonus, UserId);
+    await _characterRepository.SaveAsync(_stentor);
+
+    BonusPayload payload = new(BonusCategory.Attribute, Attribute.Agility.ToString(), value: +2)
+    {
+      IsTemporary = false,
+      Precision = " Item: Belt of Stone Giant Strength ",
+      Notes = "  Granted by the item \"Belt of Stone Giant Strength\"  "
+    };
+    SetCharacterBonusCommand command = new(_stentor.EntityId, bonusId, payload);
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+
+    Assert.NotNull(character);
+    Assert.Equal(command.CharacterId, character.Id);
+    Assert.Equal(_stentor.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    BonusModel model = Assert.Single(character.Bonuses);
+    Assert.Equal(bonus.Category, model.Category);
+    Assert.Equal(bonus.Target, model.Target);
+    Assert.Equal(payload.Value, model.Value);
+    Assert.Equal(payload.IsTemporary, model.IsTemporary);
+    Assert.Equal(payload.Precision.Trim(), model.Precision);
+    Assert.Equal(payload.Notes.Trim(), model.Notes);
   }
 
   [Fact(DisplayName = "It should set a character language.")]
@@ -480,6 +546,11 @@ public class CharacterTests : IntegrationTests
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
+    Assert.Equal(command.CharacterId, character.Id);
+    Assert.Equal(_kassandra.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
     CharacterLanguageModel relation = Assert.Single(character.Languages);
     Assert.Equal(_cassite.EntityId, relation.Language.Id);
     Assert.Equal(payload.Notes.Trim(), relation.Notes);
@@ -503,6 +574,11 @@ public class CharacterTests : IntegrationTests
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
+    Assert.Equal(command.CharacterId, character.Id);
+    Assert.Equal(_kassandra.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
     CharacterTalentModel relation = Assert.Single(character.Talents);
     Assert.Equal(_melee.EntityId, relation.Talent.Id);
     Assert.Equal(payload.Cost, relation.Cost);

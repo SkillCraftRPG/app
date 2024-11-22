@@ -4,6 +4,7 @@ using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Characters;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Application.Characters.Commands;
 
@@ -83,7 +84,7 @@ public class SetCharacterBonusCommandHandlerTests
     Bonus bonus = new(BonusCategory.Skill, Skill.Melee.ToString(), value: +3);
     character.SetBonus(bonusId, bonus, _world.OwnerId);
 
-    BonusPayload payload = new(bonus.Category, bonus.Target, value: +2)
+    BonusPayload payload = new(BonusCategory.Attribute, Attribute.Agility.ToString(), value: +2)
     {
       IsTemporary = true,
       Precision = " Item: Belt of Stone Giant Strength ",
