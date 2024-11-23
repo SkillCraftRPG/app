@@ -33,9 +33,9 @@ public class CharacterController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<CharacterModel>> CreateAsync([FromBody] CreateCharacterPayload payload, CancellationToken cancellationToken)
+  public async Task<ActionResult<CharacterModel>> CreateAsync([FromBody] CreateCharacterPayload payload, Guid? id, CancellationToken cancellationToken)
   {
-    CharacterModel character = await _pipeline.ExecuteAsync(new CreateCharacterCommand(payload), cancellationToken);
+    CharacterModel character = await _pipeline.ExecuteAsync(new CreateCharacterCommand(id, payload), cancellationToken);
     return GetActionResult(character, created: true);
   }
 

@@ -247,12 +247,12 @@ public class CharacterTests : IntegrationTests
         Quantity = 100
       }
     };
-    CreateCharacterCommand command = new(payload);
+    CreateCharacterCommand command = new(Guid.NewGuid(), payload);
 
     CharacterModel character = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(character);
 
-    Assert.NotEqual(default, character.Id);
+    Assert.Equal(command.Id, character.Id);
     Assert.Equal(7, character.Version);
     Assert.Equal(DateTime.UtcNow, character.CreatedOn, TimeSpan.FromSeconds(10));
     Assert.True(character.CreatedOn < character.UpdatedOn);

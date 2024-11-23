@@ -21,7 +21,7 @@ public class ResolveNatureQueryHandlerTests
 
   private readonly WorldMock _world = new();
   private readonly Nature _nature;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveNatureQueryHandlerTests()
   {

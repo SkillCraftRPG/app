@@ -1,0 +1,35 @@
+﻿[
+  {
+    "Id": "1e419a36-d07e-4613-ae48-9f414321d37e",
+    "Name": "Moe Lester",
+    "Player": "Mojo",
+    "LineageId": "01049dc5-cd53-4e55-aae5-e2a2c9c2e52e",
+    "Height": 1.56,
+    "Weight": 68.1,
+    "Age": 169,
+    "LanguageIds": [ "4075292c-216f-47d7-a478-10bd5ff83980", "44e67e11-4220-448d-b429-70ceceb3916c" ],
+    "NatureId": "4f622766-a1f9-4226-8b2d-dd687783d566",
+    "CustomizationIds": [],
+    "AspectIds": [ "4073e8f5-af38-4e59-9737-18656ce04115", "02e25a00-f11f-4557-8591-7dcba9220bcd" ],
+    "Attributes": {
+      "Agility": 10,
+      "Coordination": 6,
+      "Intellect": 6,
+      "Presence": 11,
+      "Sensitivity": 6,
+      "Spirit": 10,
+      "Vigor": 8,
+      "Best": "Presence",
+      "Worst": "Sensitivity",
+      "Optional": [ "Agility", "Spirit" ],
+      "Extra": [ "Agility" ]
+    },
+    "CasteId": "1a9d75d1-2e0c-429e-a722-52c481ca1ba8",
+    "EducationId": "0010262f-35f9-42b9-9412-573d5ad46337",
+    "TalentIds": [ "029afe9f-59af-4669-9528-2e2c9aa28d2b", "62514977-ec0c-4b47-8b5a-5c24548d74cc" ],
+    "StartingWealth": {
+      "ItemId": "f3106a5f-6d06-40bc-9754-fa21e8dfb07a",
+      "Quantity": 400
+    }
+  }
+]

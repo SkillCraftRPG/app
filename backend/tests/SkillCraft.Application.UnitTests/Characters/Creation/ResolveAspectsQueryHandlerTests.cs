@@ -22,7 +22,7 @@ public class ResolveAspectsQueryHandlerTests
   private readonly WorldMock _world = new();
   private readonly Aspect _aspect1;
   private readonly Aspect _aspect2;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveAspectsQueryHandlerTests()
   {

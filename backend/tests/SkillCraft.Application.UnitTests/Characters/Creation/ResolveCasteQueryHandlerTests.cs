@@ -21,7 +21,7 @@ public class ResolveCasteQueryHandlerTests
 
   private readonly WorldMock _world = new();
   private readonly Caste _caste;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveCasteQueryHandlerTests()
   {

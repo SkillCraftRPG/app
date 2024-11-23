@@ -21,7 +21,7 @@ public class ResolveEducationQueryHandlerTests
 
   private readonly WorldMock _world = new();
   private readonly Education _education;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveEducationQueryHandlerTests()
   {

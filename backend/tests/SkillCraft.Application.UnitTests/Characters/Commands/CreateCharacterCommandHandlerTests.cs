@@ -115,9 +115,13 @@ public class CreateCharacterCommandHandlerTests
     _lineageRepository.Setup(x => x.LoadAsync(_species.Id, _cancellationToken)).ReturnsAsync(_species);
   }
 
-  [Fact(DisplayName = "It should create a new character.")]
-  public async Task It_should_create_a_new_character()
+  [Theory(DisplayName = "It should create a new character.")]
+  [InlineData(null)]
+  [InlineData("051b0e50-58bc-42d0-9f18-e63e34bd881c")]
+  public async Task It_should_create_a_new_character(string? idValue)
   {
+    Guid? id = idValue == null ? null : Guid.Parse(idValue);
+
     CreateCharacterPayload payload = new("  Heracles Aetos  ")
     {
       Player = $"  {_faker.Person.FullName}  ",
@@ -152,7 +156,7 @@ public class CreateCharacterCommandHandlerTests
         Quantity = 100
       }
     };
-    CreateCharacterCommand command = new(payload);
+    CreateCharacterCommand command = new(id, payload);
     command.Contextualize(_world);
 
     _sender.Setup(x => x.Send(It.Is<ResolveLineageQuery>(y => y.Activity == command && y.Id == payload.LineageId), _cancellationToken)).ReturnsAsync(_nation);
@@ -178,7 +182,8 @@ public class CreateCharacterCommandHandlerTests
 
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Character, _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => y.Character.WorldId == _world.Id
+    _sender.Verify(x => x.Send(It.Is<SaveCharacterCommand>(y => (id.HasValue ? y.Character.EntityId == id.Value : y.Character.EntityId != default)
+      && y.Character.WorldId == _world.Id
       && y.Character.Name.Value == payload.Name.Trim()
       && y.Character.Player != null && y.Character.Player.Value == payload.Player.Trim()
       && y.Character.LineageId == _nation.Id
@@ -232,7 +237,7 @@ public class CreateCharacterCommandHandlerTests
         Quantity = -100
       }
     };
-    CreateCharacterCommand command = new(payload);
+    CreateCharacterCommand command = new(Id: null, payload);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(12, exception.Errors.Count());

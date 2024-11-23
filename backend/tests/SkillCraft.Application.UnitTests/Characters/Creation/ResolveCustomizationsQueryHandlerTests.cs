@@ -26,7 +26,7 @@ public class ResolveCustomizationsQueryHandlerTests
   private readonly Customization _disability;
   private readonly Customization _gift;
   private readonly Nature _nature;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveCustomizationsQueryHandlerTests()
   {

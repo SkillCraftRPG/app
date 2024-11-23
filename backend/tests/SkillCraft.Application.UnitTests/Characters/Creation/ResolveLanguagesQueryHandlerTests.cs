@@ -25,7 +25,7 @@ public class ResolveLanguagesQueryHandlerTests
   private readonly Lineage _nation;
   private readonly Language _language1;
   private readonly Language _language2;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveLanguagesQueryHandlerTests()
   {

@@ -24,7 +24,7 @@ public class ResolveItemQueryHandlerTests
   private readonly Item _denier;
   private readonly Item _dime;
   private readonly Item _goldOre;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveItemQueryHandlerTests()
   {
