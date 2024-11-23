@@ -25,6 +25,16 @@ internal class CharacterQuerier : ICharacterQuerier
     _sqlHelper = sqlHelper;
   }
 
+  public async Task<IReadOnlyCollection<Guid>> FindExistingAsync(WorldId worldId, IEnumerable<Guid> ids, CancellationToken cancellationToken)
+  {
+    Guid[] existingIds = await _context.Characters.AsNoTracking()
+      .Where(x => ids.Contains(x.Id))
+      .Select(x => x.Id)
+      .Distinct()
+      .ToArrayAsync(cancellationToken);
+
+    return existingIds.AsReadOnly();
+  }
   public async Task<IReadOnlyCollection<string>> ListPlayersAsync(WorldId worldId, CancellationToken cancellationToken)
   {
     string[] scripts = await _context.Characters.AsNoTracking()
