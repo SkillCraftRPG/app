@@ -26,7 +26,7 @@ public class ResolveLineageQueryHandlerTests
   private readonly Lineage _lineage;
   private readonly Lineage _species;
   private readonly Lineage _nation;
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveLineageQueryHandlerTests()
   {

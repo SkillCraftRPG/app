@@ -37,7 +37,7 @@ public class ResolveTalentsQueryHandlerTests
   private readonly Talent _melee;
   private readonly Talent _resistance;
 
-  private readonly CreateCharacterCommand _activity = new(new CreateCharacterPayload());
+  private readonly CreateCharacterCommand _activity = new(Id: null, new CreateCharacterPayload());
 
   public ResolveTalentsQueryHandlerTests()
   {
