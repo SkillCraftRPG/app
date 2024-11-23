@@ -36,11 +36,12 @@ defineEmits<{
 <template>
   <div>
     <h5>{{ t("characters.lineage") }}</h5>
-    <div class="mb-3 row">
+    <div v-if="lineageLanguages.length > 0" class="mb-3 row">
       <div v-for="language in lineageLanguages" :key="language.id" class="col-lg-3">
         <LanguageCard :language="language" view />
       </div>
     </div>
+    <p v-else>{{ t("characters.languages.empty") }}</p>
     <h5>{{ t("characters.languages.extra") }}</h5>
     <div class="mb-3">
       <CharacterLanguageEdit :character="character" :exclude="excludedLanguages" @error="$emit('error', $event)" />
