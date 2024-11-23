@@ -1,9 +1,37 @@
 ﻿[
   {
+    "Id": "7475d7b6-3cbd-444c-ab3f-e815e8aa1eba",
+    "Name": "Coriace",
+    "Description": "Le personnage est tenace et solide, il maintient fermement ses positions.",
+    "Attribute": "Vigor",
+    "GiftId": "cf500d72-c2e0-4c81-9d28-e20e5161e651"
+  },
+  {
     "Id": "aa26d8fa-6748-49c3-842c-ffdbf18d3080",
     "Name": "Courroucé",
     "Description": "Les émotions du personnage sont vives et ses mouvements sont brusques.",
     "Attribute": "Agility",
     "GiftId": "534fc3e3-a606-4139-b527-eb3331f80645"
+  },
+  {
+    "Id": "ac005f77-0868-45d1-8c5f-781c19d1d707",
+    "Name": "Mystérieux",
+    "Description": "Le personnage s’entoure de secrets et de mystères, il laisse peu paraître ses idées et émotions.",
+    "Attribute": "Spirit",
+    "GiftId": "456dbab7-3eb0-4dac-a70a-980a93f01b9c"
+  },
+  {
+    "Id": "014ca0a1-5009-44b3-98b9-a2fcf002bd81",
+    "Name": "Solitaire",
+    "Description": "Le personnage cherche la solitude, il s’attache peu aux autres.",
+    "Attribute": "Sensitivity",
+    "GiftId": "05dd2438-eeae-49ac-b0de-306d5c379a3e"
+  },
+  {
+    "Id": "4f622766-a1f9-4226-8b2d-dd687783d566",
+    "Name": "Sournois",
+    "Description": "Le personnage cache ses pensées, ses sentiments véritables, il arrive à ses fins en étant malveillant, hypocrite ou manipulateur.",
+    "Attribute": "Presence",
+    "GiftId": "ba626dff-5fb6-4392-9cc8-3e75caa2d86d"
   }
 ]

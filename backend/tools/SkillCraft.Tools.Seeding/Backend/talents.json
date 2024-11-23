@@ -1,23 +1,5 @@
 ﻿[
   {
-    "Id": "87681992-ae4e-433d-acb3-5ace81c16863",
-    "Tier": 0,
-    "Name": "Survie",
-    "Description": "Permet au personnage d’effectuer des tâches banales sans posséder les outils nécessaires et en utilisant les ressources du milieu naturel et sauvage dans lequel il se trouve, par exemple allumer un feu, fabriquer un abri ou cuisiner.\n\nÉgalement, pendant une halte et en utilisant les ressources provenant d’une carcasse, il peut fabriquer un bouclier léger, une arme simple de mêlée, ou 1d4 pièces de munitions tels des dards ou des flèches. La carcasse doit être celle d’une bête, d’une construction, d’un dragon, d’une monstruosité, ou d’une plante, et la créature doit être de taille petite ou supérieure.",
-    "AllowMultiplePurchases": false,
-    "RequiredTalentId": null,
-    "Skill": "Survival"
-  },
-  {
-    "Id": "d57bfcda-7b30-45c5-9fa1-2757edb00c4e",
-    "Tier": 0,
-    "Name": "Résistance",
-    "Description": "Confère au personnage un bonus permanent de 5 points de Vitalité.",
-    "AllowMultiplePurchases": false,
-    "RequiredTalentId": null,
-    "Skill": "Resistance"
-  },
-  {
     "Id": "8ab02dfe-66bb-4276-aba4-3ed7438a6107",
     "Tier": 0,
     "Name": "Acrobaties",
@@ -36,6 +18,33 @@
     "Skill": "Athletics"
   },
   {
+    "Id": "fdfa437b-76b9-4c3c-827f-ea3be02232fa",
+    "Tier": 0,
+    "Name": "Connaissance",
+    "Description": "Le personnage acquiert des connaissances sur un nombre de domaines égal à son rang de _Connaissance_. Chaque fois que son rang de _Connaissance_ augmente d’un point, il acquiert des connaissances sur un domaine supplémentaire de son choix. Le joueur et le maître de jeu collaborent afin de définir les sujets pouvant constituer un domaine de connaissances.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Knowledge"
+  },
+  {
+    "Id": "1c7ae935-7187-4bb2-9b51-5e4cfb500ecb",
+    "Tier": 0,
+    "Name": "Discipline",
+    "Description": "Confère au personnage un bonus permanent de 5 points d’Énergie.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Discipline"
+  },
+  {
+    "Id": "700acfa8-046c-4e97-86df-5392be65e07d",
+    "Tier": 0,
+    "Name": "Médecine",
+    "Description": "Le personnage acquiert les capacités suivantes :\n\n- Il est formé à l’utilisation de la trousse de premiers soins.\n- Il peut Faire 10 lorsqu’il effectue un test de _Médecine_ en utilisant une charge d’une trousse de premiers soins, même lorsqu’il se trouve en situation de combat.\n- Lorsque le personnage stabilise une créature en utilisant une charge d’une trousse de premiers soins, s’il obtient une réussite critique ou une réussite avec Espérance à son test de _Médecine_, alors la créature récupère des points de Vitalité et reprend conscience à la suite d’une seule minute de repos.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Medicine"
+  },
+  {
     "Id": "029afe9f-59af-4669-9528-2e2c9aa28d2b",
     "Tier": 0,
     "Name": "Mêlée",
@@ -43,6 +52,60 @@
     "AllowMultiplePurchases": false,
     "RequiredTalentId": null,
     "Skill": "Melee"
+  },
+  {
+    "Id": "5115fbb2-1a4c-4a19-b11c-1f153f7ba9bc",
+    "Tier": 0,
+    "Name": "Occultisme",
+    "Description": "Lorsque le personnage voit une créature canaliser un pouvoir, il peut déterminer si les capacités surnaturelles de la créature sont inférieures, supérieures ou équivalentes aux siennes.\n\nÉgalement, il peut lire et examiner un parchemin de pouvoir pendant une minute afin de déterminer quel pouvoir est inscrit sur le parchemin, à quel niveau celui-ci sera-t-il canalisé lors de l’utilisation du parchemin, ainsi que les effets déclenchés par l’utilisation du parchemin.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Occultism"
+  },
+  {
+    "Id": "6421ab45-5448-4cd2-a3d4-abbf6f3c4de0",
+    "Tier": 0,
+    "Name": "Perception",
+    "Description": "Le personnage peut déceler des détails ou du texte précis depuis un document, un objet ou toute autre surface. Il peut également entendre clairement une discussion chuchotée. La distance de cette capacité est égale à 0,3 mètre multiplié par le résultat de son test passif de _Perception_. Par exemple, pour un test passif de _Perception_ de 15, la distance de cette capacité est égale à 4,5 mètres, soit 3 cases.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Perception"
+  },
+  {
+    "Id": "d57bfcda-7b30-45c5-9fa1-2757edb00c4e",
+    "Tier": 0,
+    "Name": "Résistance",
+    "Description": "Confère au personnage un bonus permanent de 5 points de Vitalité.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Resistance"
+  },
+  {
+    "Id": "87681992-ae4e-433d-acb3-5ace81c16863",
+    "Tier": 0,
+    "Name": "Survie",
+    "Description": "Permet au personnage d’effectuer des tâches banales sans posséder les outils nécessaires et en utilisant les ressources du milieu naturel et sauvage dans lequel il se trouve, par exemple allumer un feu, fabriquer un abri ou cuisiner.\n\nÉgalement, pendant une halte et en utilisant les ressources provenant d’une carcasse, il peut fabriquer un bouclier léger, une arme simple de mêlée, ou 1d4 pièces de munitions tels des dards ou des flèches. La carcasse doit être celle d’une bête, d’une construction, d’un dragon, d’une monstruosité, ou d’une plante, et la créature doit être de taille petite ou supérieure.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Survival"
+  },
+  {
+    "Id": "62514977-ec0c-4b47-8b5a-5c24548d74cc",
+    "Tier": 0,
+    "Name": "Tromperie",
+    "Description": "Lorsque le personnage réussit un test de _Tromperie_ contre une créature, si celle-ci entre en situation de combat contre le personnage dans la prochaine minute, alors son test d’Initiative se voit affligé du désavantage. Également, il formé à l’utilisation de la trousse de déguisement.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": "Deception"
+  },
+  {
+    "Id": "ff216255-073d-4f44-8b9c-9ae064ad4542",
+    "Tier": 0,
+    "Name": "Vigilance",
+    "Description": "Confère un bonus permanent de +1 à l’Initiative du personnage. Le personnage n’est jamais pris au dépourvu avant d’avoir joué son premier tour en combat. Au cours de son premier tour, il peut également dégainer l’arme de son choix par une action libre, même lorsqu’il est surpris. Enfin, lorsqu’il est surpris, il peut tout de même effectuer une seule action pendant son tour.",
+    "AllowMultiplePurchases": false,
+    "RequiredTalentId": null,
+    "Skill": null
   },
   {
     "Id": "68d309fb-dc16-40fc-ae98-d77fae525bb4",
@@ -54,12 +117,12 @@
     "Skill": null
   },
   {
-    "Id": "ff216255-073d-4f44-8b9c-9ae064ad4542",
+    "Id": "310d695a-14e2-48ac-9310-c5238bfdb83c",
     "Tier": 0,
-    "Name": "Vigilance",
-    "Description": "Confère un bonus permanent de +1 à l’Initiative du personnage. Le personnage n’est jamais pris au dépourvu avant d’avoir joué son premier tour en combat. Au cours de son premier tour, il peut également dégainer l’arme de son choix par une action libre, même lorsqu’il est surpris. Enfin, lorsqu’il est surpris, il peut tout de même effectuer une seule action pendant son tour.",
+    "Name": "Spiritualité",
+    "Description": "Le personnage sélectionne un domaine divin ou un domaine d’animisme. L’animisme est l’ensemble des croyances consistant à octroyer une âme aux objets et aux animaux. Les domaines divins sont quant à eux associés à une ou plusieurs divinités. Ces domaines relèvent de cultes et de religions qui sont décrits en annexe à cet ouvrage. Le personnage acquiert gratuitement un pouvoir de tiers 0 associé à ce domaine et peut désormais acquérir les pouvoirs de tiers 0 associés à ce domaine. Il acquiert également une capacité spécifique au domaine qu’il a sélectionné. Ces capacités sont décrites en annexe à cet ouvrage.",
     "AllowMultiplePurchases": false,
-    "RequiredTalentId": null,
+    "RequiredTalentId": "5115fbb2-1a4c-4a19-b11c-1f153f7ba9bc",
     "Skill": null
   },
   {

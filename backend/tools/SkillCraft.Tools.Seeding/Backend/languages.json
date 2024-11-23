@@ -1,27 +1,27 @@
 ﻿[
   {
-    "Id": "22555040-9008-486d-8893-3024d86e38e2",
-    "Name": "Celfique",
-    "Script": "Elfique",
-    "TypicalSpeakers": "Angolite, Daéronais, Elfes cramoisis, Elfes sylvains, Haut-Elfes",
-    "Description": "Cette langue ancienne est issue des Elfes sylvains et est partagée par plusieurs autres peuples elfiques, ainsi que par les Daéronais et les Angolites. C’est une langue très utilisée en Ouespéro en raison de la grande dispersion de ses locuteurs."
+    "Id": "4075292c-216f-47d7-a478-10bd5ff83980",
+    "Name": "Dallois",
+    "Script": "Rénon, Runique",
+    "TypicalSpeakers": "Dallois",
+    "Description": "Le Dallois est une langue dérivée du Norrois, tel le Gormanche. Il est principalement parlé dans les Triskîles et est la langue officielle du Royaume d’Ellesdales. À l’origine très proche du Norrois, cette langue est aujourd’hui très similaire à la Languedoïl. Il y a environ deux siècles, la noblesse d’Ellesdales a été remplacée par celle du Royaume de Vaillance. Pendant près de 150 ans, cette noblesse a gouverné Ellesdales en utilisant la Languedoïl, avec peu d’égard envers le Dallois, langue utilisée par la populace. Cela explique pourquoi près du tiers du lexique Dallois est emprunté à la Languedoïl."
   },
   {
-    "Id": "556c57b4-3e2f-4ef1-b4bb-874d51643898",
-    "Name": "Onérique",
-    "Script": null,
-    "TypicalSpeakers": "Onériques",
-    "Description": "L’Onérique est la langue des Onériques, peuple humain habitant l’île de Sicagie et le Sud du continent, partageant leur territoire avec les Sarnes. Elle est peu utilisée à l’extérieur de cette région."
+    "Id": "44e67e11-4220-448d-b429-70ceceb3916c",
+    "Name": "Languedoïl",
+    "Script": "Rénon",
+    "TypicalSpeakers": "Gitsani, Vaillançais",
+    "Description": "Autrefois un dialecte du Rénon vulgaire, cette langue correspond à l’évolution de ce dialecte dans la région de Vaillance. Par l’influence des Vaillançais sur le Saint-Empire ainsi que leur neutralité dans le conflit opposant cet empire à l’Union de Kraken, cette langue est très répandue en Ouespéro. C’est la langue utilisée de facto par les diplomates et les marchands. Elle est surnommée pour cette raison « Commun ». Elle se prononce « langue d’oye »."
   },
   {
-    "Id": "1ea92dc2-662a-43db-8f18-ee7de8e55309",
-    "Name": "Orrinique",
-    "Script": null,
-    "TypicalSpeakers": "Chalites, Minotaures, Orrins, Satyres, Sophitéons",
-    "Description": "L’Onérique est la langue des Onériques, peuple humain habitant l’île de Sicagie et le Sud du continent, partageant leur territoire avec les Sarnes. Elle est peu utilisée à l’extérieur de cette région."
+    "Id": "45beb3c2-91fe-4219-bc99-92f0cb68fd46",
+    "Name": "Rénon",
+    "Script": "Rénon",
+    "TypicalSpeakers": null,
+    "Description": "Le Rénon est une langue très ancienne, datant d’environ deux millénaires. Les différents dialectes de sa dernière forme parlée, le Rénon vulgaire, ont évolué en plusieurs langues mutuellement inintelligibles au cours des derniers siècles. Bien que le Rénon ne soit plus parlé, c’est la langue de facto utilisée par les érudits et les ecclésiastes afin de rédiger les textes scientifiques et religieux. Elle est également utilisée par le Saint-Empire afin de rédiger les documents administratifs et légaux. Pour cette raison, elle est surnommée « Impérial »."
   },
   {
-    "Id": "bcbeee34-a6a5-4c79-9ada-1c4c7e86d29f",
+    "Id": "bd5d3cb5-afb0-40d8-a6e6-59a7dc916050",
     "Name": "Vodyanoi",
     "Script": null,
     "TypicalSpeakers": "Vodyanoy",

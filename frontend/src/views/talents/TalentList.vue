@@ -232,7 +232,7 @@ watch(
             <td>{{ talent.tier }}</td>
             <td>
               <RouterLink v-if="talent.requiredTalent" :to="{ name: 'TalentEdit', params: { id: talent.requiredTalent.id } }" target="_blank">
-                <TalentIcon /> {{ talent.requiredTalent.name }}
+                <TalentIcon />{{ talent.requiredTalent.name }}
               </RouterLink>
               <template v-else>{{ "—" }}</template>
             </td>

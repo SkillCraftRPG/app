@@ -17,5 +17,43 @@
         "Description": "Aucun village ni aucune ville n’est un meilleur domicile pour le personnage que la route. Qu’il soit nomade par choix ou par obligation, ses tests de _Survie_ afin de trouver de l’eau, de la nourriture ou un abri se voient conférer l’avantage lorsqu’il se trouve à proximité d’une route maintenue."
       }
     ]
+  },
+  {
+    "Id": "4887b937-bccf-455d-8fd4-a8d0b0f42cbd",
+    "Name": "Milicien",
+    "Description": "Le milicien est responsable de protéger les citoyens sur les terres de son seigneur. Il possède les droits mais également la responsabilité de faire appliquer les lois. Il doit également parfois jouer le rôle d’éclaireur et de soldat au sein de l’armée de sa patrie.",
+    "Skill": "Melee",
+    "WealthRoll": "7d6",
+    "Features": [
+      {
+        "Id": "176de40a-65c3-4c49-adba-65d04fb9c6d1",
+        "Name": "Guetteur",
+        "Description": "Le personnage ne dort que d’un oeil, toujours aux aguets afin d’appréhender n’importe quel danger. Ses tests de _Perception_ ne sont pas affligés du désavantage lorsqu’il dort en moyenne 4 heures par tranche de deux journées consécutives."
+      },
+      {
+        "Id": "153177d5-922a-4ea8-b112-aa083582f135",
+        "Name": "Sujet",
+        "Description": "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
+      }
+    ]
+  },
+  {
+    "Id": "1a9d75d1-2e0c-429e-a722-52c481ca1ba8",
+    "Name": "Religieux",
+    "Description": "Les religieux sont responsables du culte et des traditions de leur société. Ils ont également le mandat de traiter les événements surnaturels et de rassurer la population quant à ceux-ci. Les religieux oeuvrent dans un temple, un sanctuaire, une église ou tout autre lieu de culture. Il peut compter sur l’aide d’autres fidèles impliqués comme lui mais doit également rendre de nombreux services à son culte.",
+    "Skill": "Occultism",
+    "WealthRoll": "9d6",
+    "Features": [
+      {
+        "Id": "37b527b4-99a3-4a9b-9453-1ed13a100c4a",
+        "Name": "Révérend",
+        "Description": "En arborant les vertus de son culte et en accomplissant plusieurs tâches au sein de celui-ci, le personnage est désormais connu et peut compter sur l’aide de ses pairs. S’il n’a pas assez d’argent pour payer ses dépenses essentielles, il peut quérir le support de son culte et faire don de tout l’argent qu’il lui reste en échange du gîte et couvert. Son culte peut lui demander des faveurs en échange. S’il est découvert à tromper son culte sur l’argent qu’il possède réellement, il est expulsé jusqu’à ce qu’il ne se repente."
+      },
+      {
+        "Id": "153177d5-922a-4ea8-b112-aa083582f135",
+        "Name": "Sujet",
+        "Description": "Sujet d’un seigneur quelconque, le personnage n’est victime d’aucune taxe imposée aux voyageurs étrangers. Il peut réduire ses dépenses essentielles de 10 % sur sa terre natale."
+      }
+    ]
   }
 ]
