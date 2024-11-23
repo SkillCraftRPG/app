@@ -21,8 +21,8 @@
       "Vigor": 8,
       "Best": "Presence",
       "Worst": "Sensitivity",
-      "Optional": [ "Presence", "Spirit" ],
-      "Extra": [ "Agility", "Spirit" ]
+      "Optional": [ "Agility", "Spirit" ],
+      "Extra": [ "Agility" ]
     },
     "CasteId": "1a9d75d1-2e0c-429e-a722-52c481ca1ba8",
     "EducationId": "0010262f-35f9-42b9-9412-573d5ad46337",
