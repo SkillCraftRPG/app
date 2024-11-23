@@ -1,5 +1,11 @@
 ﻿[
   {
+    "Id": "73167f5f-0a05-4561-9c46-0f9f4d5ad2b8",
+    "Type": "Disability",
+    "Name": "Chaotique",
+    "Description": "Affligé d’un grand besoin de liberté, le personnage a tendance à désobéir lorsqu’il le peut et à contredire les lois. Ses tests de _Discipline_ sont effectués avec désavantage."
+  },
+  {
     "Id": "cf500d72-c2e0-4c81-9d28-e20e5161e651",
     "Type": "Gift",
     "Name": "Dur à cuire",
@@ -12,9 +18,21 @@
     "Description": "Une fois par round, le personnage peut rouler deux fois les dés de dégâts d’une attaque. Il peut ensuite utiliser le résultat de son choix."
   },
   {
-    "Id": "73167f5f-0a05-4561-9c46-0f9f4d5ad2b8",
-    "Type": "Disability",
-    "Name": "Chaotique",
-    "Description": "Affligé d’un grand besoin de liberté, le personnage a tendance à désobéir lorsqu’il le peut et à contredire les lois. Ses tests de _Discipline_ sont effectués avec désavantage."
+    "Id": "05dd2438-eeae-49ac-b0de-306d5c379a3e",
+    "Type": "Gift",
+    "Name": "Globe-trotteur",
+    "Description": "Le personnage acquiert les capacités suivantes :\n\n- Il choisit un des types de climat suivant, et son groupe n’est pas ralentit par le terrain difficile de ce type de climat lorsque le personnage en fait partie : arctique, côte, désert, forêt, marécage, montagne, prairie ou souterrains.\n- Le personnage ignore les effets du climat rigoureux, comme une température très chaude ou très froide, ainsi que les désavantages infligés aux déplacements par les surfaces naturelles comme la glace.\n- Les tests du personnage afin de détecter la présente de pièges et de passages secrets se voient conférer l’avantage, et il peut effectuer ces tests en se déplaçant sans réduire sa vitesse."
+  },
+  {
+    "Id": "456dbab7-3eb0-4dac-a70a-980a93f01b9c",
+    "Type": "Gift",
+    "Name": "Mysticisme",
+    "Description": "Le personnage sélectionne un domaine de magie ou de spiritualisme (religion, culte ou divinité). Il naît avec un pouvoir de tiers 0 de son choix associé au domaine sélectionné, et acquiert gratuitement un pouvoir de tiers 1 de son choix associé au domaine sélectionné lorsqu’il atteint le tiers 1. Également, il se voit conférer un des bonus suivants en fonction du domaine sélectionné.\n\n- (_Magie_) Une fois par round, lorsque le personnage réussit une attaque dirigée contre une créature issue d’une autre réalité ou dimension, il ajoute à son attaque un nombre de points de dégâts égal à son modificateur d’Esprit (minimum 1).\n- (_Spiritualisme_) Pendant qu’il sommeille, le personnage peut communiquer avec une entité de sa religion ou de son culte afin de lui poser une question ou de placer une requête. L’entité peut ignorer le personnage ou intervenir si elle le désire, à la discrétion du maître de jeu. Si le personnage profane le dogme de sa religion ou de son culte, il perd cette capacité jusqu’à ce qu’il se repente auprès de l’entité."
+  },
+  {
+    "Id": "ba626dff-5fb6-4392-9cc8-3e75caa2d86d",
+    "Type": "Gift",
+    "Name": "Ventriloque",
+    "Description": "Permet au personnage d’imiter avec exactitude la voix et les paroles d’une créature en l’écoutant parler pendant une minute. Il peut également imiter les sons d’une créature en l’écoutant effectuer ces sons pendant une minute. S’il tente de dévier des paroles de la créature ou qu’il altère d’une quelconque manière les sons produits, les créatures qui l’écoutent peuvent effectuer un test d’_Intuition_ opposé à un test de _Tromperie_ du personnage afin de déterminer que l’effet est truqué.\n\nÉgalement, lorsque le personnage parle, il peut donner l’impression que les paroles dites ou les sons produits sont émis d’une source quelconque située à 9 mètres ou moins de sa position, par exemple une autre créature. Il peut utiliser cette capacité en canalisant un pouvoir afin de donner l’impression qu’une autre créature est en train de canaliser ce pouvoir. Les créatures qui l’écoutent peuvent effectuer un test d’_Intuition_ opposé à un test de _Tromperie_ du personnage afin de détecter la supercherie."
   }
 ]
