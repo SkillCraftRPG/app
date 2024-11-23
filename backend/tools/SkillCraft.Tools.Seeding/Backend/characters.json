@@ -31,5 +31,71 @@
       "ItemId": "f3106a5f-6d06-40bc-9754-fa21e8dfb07a",
       "Quantity": 400
     }
+  },
+  {
+    "Id": "4a4b0f8e-b500-4a6e-a9d2-7917eaf686b7",
+    "Name": "Orlulo Starlight",
+    "Player": "Tostitos",
+    "LineageId": "d2a89acd-814c-4172-8ed3-93e08de43449",
+    "Height": 1.75,
+    "Weight": 61.3,
+    "Age": 69,
+    "LanguageIds": [ "4075292c-216f-47d7-a478-10bd5ff83980", "44e67e11-4220-448d-b429-70ceceb3916c" ],
+    "NatureId": "014ca0a1-5009-44b3-98b9-a2fcf002bd81",
+    "CustomizationIds": [],
+    "AspectIds": [ "17d9cbd0-2234-49f4-a694-3c852d5a4ef0", "660557e4-839c-4f77-af7e-ac6262d5982f" ],
+    "Attributes": {
+      "Agility": 8,
+      "Coordination": 9,
+      "Intellect": 9,
+      "Presence": 6,
+      "Sensitivity": 9,
+      "Spirit": 8,
+      "Vigor": 8,
+      "Best": "Coordination",
+      "Worst": "Agility",
+      "Optional": [ "Intellect", "Spirit" ],
+      "Extra": [ "Spirit" ]
+    },
+    "CasteId": "735b8380-b9e8-4aac-ae56-320e223465ca",
+    "EducationId": "b6317165-f5d9-4826-b117-11500f5d6275",
+    "TalentIds": [ "8ab02dfe-66bb-4276-aba4-3ed7438a6107", "5115fbb2-1a4c-4a19-b11c-1f153f7ba9bc" ],
+    "StartingWealth": {
+      "ItemId": "f3106a5f-6d06-40bc-9754-fa21e8dfb07a",
+      "Quantity": 250
+    }
+  },
+  {
+    "Id": "dd51b540-209d-469d-92bf-2844c29404a2",
+    "Name": "Shake Oslong",
+    "Player": "Galvin",
+    "LineageId": "53ab34aa-202c-47dd-b550-047653e3a4a9",
+    "Height": 1.82,
+    "Weight": 95.5,
+    "Age": 32,
+    "LanguageIds": [ "44e67e11-4220-448d-b429-70ceceb3916c" ],
+    "NatureId": "7475d7b6-3cbd-444c-ab3f-e815e8aa1eba",
+    "CustomizationIds": [],
+    "AspectIds": [ "e9d2a3d4-b194-41e0-999e-c495331e0e14", "02e25a00-f11f-4557-8591-7dcba9220bcd" ],
+    "Attributes": {
+      "Agility": 10,
+      "Coordination": 6,
+      "Intellect": 8,
+      "Presence": 6,
+      "Sensitivity": 8,
+      "Spirit": 8,
+      "Vigor": 11,
+      "Best": "Vigor",
+      "Worst": "Presence",
+      "Optional": [ "Presence", "Sensitivity" ],
+      "Extra": [ "Agility", "Sensitivity" ]
+    },
+    "CasteId": "4887b937-bccf-455d-8fd4-a8d0b0f42cbd",
+    "EducationId": "b6317165-f5d9-4826-b117-11500f5d6275",
+    "TalentIds": [ "47569ef4-7b81-46e0-ac84-50cfd7b5fe1f", "1c7ae935-7187-4bb2-9b51-5e4cfb500ecb" ],
+    "StartingWealth": {
+      "ItemId": "f3106a5f-6d06-40bc-9754-fa21e8dfb07a",
+      "Quantity": 300
+    }
   }
 ]

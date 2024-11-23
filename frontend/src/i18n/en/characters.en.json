@@ -65,6 +65,18 @@
     "quantity": "Quantity"
   },
   "languages": {
+    "add": "Add Language",
+    "added": "The language has been added.",
+    "edit": "Edit Language",
+    "edited": "The language has been edited.",
+    "empty": "This list is empty.",
+    "extra": "Extra Languages",
+    "notes": "Notes",
+    "remove": {
+      "confirm": "Do you really want to remove the following language?",
+      "label": "Remove Language"
+    },
+    "removed": "The language has been removed.",
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
   "level": "Level",
