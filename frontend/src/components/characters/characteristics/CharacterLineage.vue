@@ -23,7 +23,7 @@ const lineage = computed<LineageModel | undefined>(() => {
   if (isNation.value) {
     return props.character.lineage.species ? props.character.lineage : undefined;
   }
-  return props.character.lineage.species ? props.character.lineage.species : undefined;
+  return props.character.lineage.species ? props.character.lineage.species : props.character.lineage;
 });
 const value = computed<string>(() => lineage.value?.name ?? t("lineages.nation.none"));
 

@@ -12,6 +12,7 @@ const props = defineProps<{
   disabled?: boolean | string;
   exclude?: (string | LanguageModel)[];
   modelValue?: string;
+  required?: boolean | string;
   validation?: ValidationType;
 }>();
 
@@ -63,6 +64,7 @@ onMounted(async () => {
     :model-value="modelValue"
     :options="options"
     placeholder="languages.select.placeholder"
+    :required="required"
     :validation="validation"
     @update:model-value="onModelValueUpdate"
   >

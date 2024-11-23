@@ -5,6 +5,7 @@ import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import LanguageIcon from "./LanguageIcon.vue";
+import ScriptIcon from "./ScriptIcon.vue";
 import type { LanguageModel } from "@/types/languages";
 
 const { parseBoolean } = parsingUtils;
@@ -27,7 +28,7 @@ defineEmits<{
 <template>
   <TarCard :title="language.name">
     <template #subtitle-override>
-      <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-scroll" /> {{ language.script ?? "—" }}</h6>
+      <h6 class="card-subtitle mb-2 text-body-secondary"><ScriptIcon /> {{ language.script ?? "—" }}</h6>
     </template>
     <div v-if="hasRemove || hasView" class="float-end">
       <RouterLink

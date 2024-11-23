@@ -67,6 +67,10 @@ export type CharacterLanguageModel = {
   notes?: string;
 };
 
+export type CharacterLanguagePayload = {
+  notes?: string;
+};
+
 export type CharacterModel = Aggregate & {
   world: WorldModel;
   name: string;

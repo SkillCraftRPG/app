@@ -140,8 +140,6 @@ watch(() => props.character, setModel, { deep: true, immediate: true });
         <SaveButton :disabled="isSubmitting || !hasChanges" :loading="isSubmitting" />
       </div>
     </form>
-    <!-- TODO(fpion): back button? -->
     <CharacterCustomizations :character="character" />
-    <!-- TODO(fpion): Languages -->
   </div>
 </template>

@@ -191,7 +191,7 @@ watch(
               </RouterLink>
               <br />
               <RouterLink :to="{ name: 'EducationEdit', params: { id: character.education.id } }" target="_blank">
-                <EducationIcon /> {{ character.education.name }}
+                <EducationIcon />{{ character.education.name }}
               </RouterLink>
             </td>
             <td>
