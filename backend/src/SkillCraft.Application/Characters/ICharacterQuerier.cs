@@ -7,6 +7,7 @@ namespace SkillCraft.Application.Characters;
 
 public interface ICharacterQuerier
 {
+  Task<IReadOnlyCollection<Guid>> FindExistingAsync(WorldId worldId, IEnumerable<Guid> ids, CancellationToken cancellationToken = default);
   Task<IReadOnlyCollection<string>> ListPlayersAsync(WorldId worldId, CancellationToken cancellationToken = default);
 
   Task<CharacterModel> ReadAsync(Character character, CancellationToken cancellationToken = default);

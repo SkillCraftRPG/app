@@ -53,7 +53,7 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="TalentsNotFoundException"></exception>
 /// <exception cref="ValidationException"></exception>
-public record CreateCharacterCommand(CreateCharacterPayload Payload) : Activity, IRequest<CharacterModel>;
+public record CreateCharacterCommand(Guid? Id, CreateCharacterPayload Payload) : Activity, IRequest<CharacterModel>;
 
 internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCommand, CharacterModel>
 {
@@ -113,7 +113,8 @@ internal class CreateCharacterCommandHandler : IRequestHandler<CreateCharacterCo
       baseAttributes,
       caste,
       education,
-      userId);
+      userId,
+      command.Id);
 
     IReadOnlyCollection<Language> languages = await _sender.Send(new ResolveLanguagesQuery(command, lineage, parent, payload.LanguageIds), cancellationToken);
     foreach (Language language in languages)
