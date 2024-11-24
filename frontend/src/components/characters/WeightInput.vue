@@ -54,8 +54,6 @@ watch(
   { immediate: true },
 );
 watch(() => props.roll, onRoll, { immediate: true });
-
-// TODO(fpion): name conflict
 </script>
 
 <template>

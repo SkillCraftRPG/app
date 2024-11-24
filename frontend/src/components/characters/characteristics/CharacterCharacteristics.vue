@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 import { useForm } from "vee-validate";
 
-import AgeRollInput from "@/components/characters/creation/Step1Lineage/AgeRollInput.vue";
+import AgeRollInput from "@/components/characters/AgeRollInput.vue";
 import BloodAlcoholContentInput from "./BloodAlcoholContentInput.vue";
 import CharacterAspect from "./CharacterAspect.vue";
 import CharacterCaste from "./CharacterCaste.vue";
@@ -13,13 +13,13 @@ import CharacterLineage from "./CharacterLineage.vue";
 import CharacterNature from "./CharacterNature.vue";
 import CharacterTier from "./CharacterTier.vue";
 import ExperienceInput from "./ExperienceInput.vue";
-import HeightRollInput from "@/components/characters/creation/Step1Lineage/HeightRollInput.vue";
+import HeightRollInput from "@/components/characters/HeightRollInput.vue";
 import IntoxicationInput from "./IntoxicationInput.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SaveButton from "@/components/shared/SaveButton.vue";
 import StaminaInput from "./StaminaInput.vue";
 import VitalityInput from "./VitalityInput.vue";
-import WeightInput from "@/components/characters/creation/Step1Lineage/WeightInput.vue";
+import WeightInput from "@/components/characters/WeightInput.vue";
 import type { CharacterModel, ReplaceCharacterPayload } from "@/types/characters";
 import { replaceCharacter } from "@/api/characters";
 import { useToastStore } from "@/stores/toast";

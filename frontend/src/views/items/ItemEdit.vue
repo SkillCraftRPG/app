@@ -12,12 +12,12 @@ import ContainerProperties from "@/components/items/ContainerProperties.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import EquipmentProperties from "@/components/items/EquipmentProperties.vue";
 import ItemCategorySelect from "@/components/items/ItemCategorySelect.vue";
+import ItemValueInput from "@/components/items/ItemValueInput.vue";
+import ItemWeightInput from "@/components/items/ItemWeightInput.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import SaveButton from "@/components/shared/SaveButton.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
-import ValueInput from "@/components/items/ValueInput.vue";
 import WeaponProperties from "@/components/items/WeaponProperties.vue";
-import WeightInput from "@/components/items/WeightInput.vue";
 import type { ApiError } from "@/types/api";
 import type {
   ConsumablePropertiesModel,
@@ -137,8 +137,8 @@ onMounted(async () => {
           <ItemCategorySelect class="col-lg-6" disabled :model-value="item.category" validation="server" />
         </div>
         <div class="row">
-          <ValueInput class="col-lg-6" v-model="value" />
-          <WeightInput class="col-lg-6" v-model="weight" />
+          <ItemValueInput class="col-lg-6" v-model="value" />
+          <ItemWeightInput class="col-lg-6" v-model="weight" />
         </div>
         <TarCheckbox class="mb-3" id="is-attunement-required" :label="t('items.isAttunementRequired')" v-model="isAttunementRequired" />
         <DescriptionTextarea v-model="description" />
