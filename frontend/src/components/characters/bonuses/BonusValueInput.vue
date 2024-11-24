@@ -2,13 +2,12 @@
 import { parsingUtils } from "logitar-js";
 
 import AppInput from "@/components/shared/AppInput.vue";
-import type { Attribute } from "@/types/game";
 
 const { parseNumber } = parsingUtils;
 
 defineProps<{
-  attribute: Attribute;
   modelValue?: number;
+  required?: boolean | string;
 }>();
 
 defineEmits<{
@@ -19,13 +18,12 @@ defineEmits<{
 <template>
   <AppInput
     floating
-    :id="`${attribute.toLowerCase()}-bonus`"
-    :label="`game.attribute.options.${attribute}`"
-    min="0"
-    max="2"
+    id="value"
+    label="characters.bonuses.value"
     :model-value="modelValue?.toString()"
-    :placeholder="`game.attribute.options.${attribute}`"
-    required
+    placeholder="characters.bonuses.value"
+    :required="required"
+    :rules="{ is_not: '0' }"
     step="1"
     type="number"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"

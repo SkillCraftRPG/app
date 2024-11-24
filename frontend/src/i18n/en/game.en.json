@@ -13,10 +13,6 @@
   "attribute": {
     "label": "Attribute",
     "modifier": "Modifier",
-    "score": "Score"
-  },
-  "attributes": {
-    "label": "Attributes",
     "options": {
       "Agility": "Agility",
       "Coordination": "Coordination",
@@ -25,8 +21,11 @@
       "Sensitivity": "Sensitivity",
       "Spirit": "Spirit",
       "Vigor": "Vigor"
-    }
+    },
+    "placeholder": "Select an attribute",
+    "score": "Score"
   },
+  "attributes": "Attributes",
   "damage": {
     "type": {
       "label": "Type",
@@ -63,9 +62,8 @@
     "category": "Size Category",
     "label": "Size"
   },
-  "skill": "Skill",
-  "skills": {
-    "label": "Skills",
+  "skill": {
+    "label": "Skill",
     "options": {
       "Acrobatics": "Acrobatics",
       "Athletics": "Athletics",
@@ -87,16 +85,32 @@
       "Stealth": "Stealth",
       "Survival": "Survival",
       "Thievery": "Thievery"
+    },
+    "placeholder": "Select a skill"
+  },
+  "skills": "Skills",
+  "speed": {
+    "options": {
+      "Burrow": "Burrow",
+      "Climb": "Climb",
+      "Fly": "Fly",
+      "Hover": "Hover",
+      "Swim": "Swim",
+      "Walk": "Walk"
     }
   },
-  "speed": "Speed",
-  "speeds": {
-    "Burrow": "Burrow",
-    "Climb": "Climb",
-    "Fly": "Fly",
-    "Hover": "Hover",
-    "Swim": "Swim",
-    "Walk": "Walk"
+  "statistic": {
+    "label": "Statistic",
+    "options": {
+      "Constitution": "Constitution",
+      "Initiative": "Initiative",
+      "Learning": "Learning",
+      "Power": "Power",
+      "Precision": "Precision",
+      "Reputation": "Reputation",
+      "Strength": "Strength"
+    },
+    "placeholder": "Select a statistic"
   },
   "startingWealth": "Starting Wealth",
   "tier": {

@@ -27,11 +27,11 @@ defineEmits<{
     :disabled="disabled"
     floating
     :id="`speed-${speed}`"
-    :label="`game.speeds.${speed}`"
+    :label="`game.speed.options.${speed}`"
     :min="0"
     :max="8"
     :model-value="modelValue?.toString()"
-    :placeholder="`game.speeds.${speed}`"
+    :placeholder="`game.speed.options.${speed}`"
     :required="required"
     step="1"
     type="number"

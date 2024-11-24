@@ -42,3 +42,5 @@ export type Skill =
   | "Thievery";
 
 export type Speed = "Walk" | "Climb" | "Swim" | "Fly" | "Hover" | "Burrow";
+
+export type Statistic = "Constitution" | "Initiative" | "Learning" | "Power" | "Precision" | "Reputation" | "Strength";

@@ -162,7 +162,7 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("castes.sort.options.Name") }}</th>
-            <th scope="col">{{ t("game.skill") }}</th>
+            <th scope="col">{{ t("game.skill.label") }}</th>
             <th scope="col">{{ t("game.startingWealth") }}</th>
             <th scope="col">{{ t("castes.features.label") }}</th>
             <th scope="col">{{ t("castes.sort.options.UpdatedOn") }}</th>
@@ -173,7 +173,7 @@ watch(
             <td>
               <RouterLink :to="{ name: 'CasteEdit', params: { id: caste.id } }"><font-awesome-icon icon="fas fa-edit" />{{ caste.name }}</RouterLink>
             </td>
-            <td>{{ caste.skill ? t(`game.skills.options.${caste.skill}`) : "—" }}</td>
+            <td>{{ caste.skill ? t(`game.skill.options.${caste.skill}`) : "—" }}</td>
             <td>{{ caste.wealthRoll ?? "—" }}</td>
             <td><FeaturesBlock :caste="caste" /></td>
             <td><StatusBlock :actor="caste.updatedBy" :date="caste.updatedOn" /></td>

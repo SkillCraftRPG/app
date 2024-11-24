@@ -4,6 +4,7 @@
   "email": "Veuillez entrer une adresse courriel valide.",
   "identifier": "Le champs « {field} » ne peut commencer par un chiffre et il ne peut contenir que des lettres, des chiffres et des tirets bas (_).",
   "max_length": "Le champs « {field} » ne peut contenir plus de 0:{length} caractères.",
+  "is_not": "Le champs « {field} » doit être différent de 0:{is_not}.",
   "max_value": "Le champs « {field} » doit être inférieur ou égal à 0:{max}.",
   "min_length": "Le champs « {field} » doit contenir au moins 0:{length} caractères.",
   "min_value": "Le champs « {field} » doit être supérieur ou égal à 0:{min}.",

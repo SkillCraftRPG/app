@@ -24,17 +24,17 @@ const attributes = computed<TranslatedAttribute[]>(() => {
   const attributes: TranslatedAttribute[] = [];
   if (parseBoolean(props.optional)) {
     if (props.aspect.attributes.optional1) {
-      attributes.push({ attribute: props.aspect.attributes.optional1, text: t(`game.attributes.options.${props.aspect.attributes.optional1}`) });
+      attributes.push({ attribute: props.aspect.attributes.optional1, text: t(`game.attribute.options.${props.aspect.attributes.optional1}`) });
     }
     if (props.aspect.attributes.optional2) {
-      attributes.push({ attribute: props.aspect.attributes.optional2, text: t(`game.attributes.options.${props.aspect.attributes.optional2}`) });
+      attributes.push({ attribute: props.aspect.attributes.optional2, text: t(`game.attribute.options.${props.aspect.attributes.optional2}`) });
     }
   } else {
     if (props.aspect.attributes.mandatory1) {
-      attributes.push({ attribute: props.aspect.attributes.mandatory1, text: t(`game.attributes.options.${props.aspect.attributes.mandatory1}`) });
+      attributes.push({ attribute: props.aspect.attributes.mandatory1, text: t(`game.attribute.options.${props.aspect.attributes.mandatory1}`) });
     }
     if (props.aspect.attributes.mandatory2) {
-      attributes.push({ attribute: props.aspect.attributes.mandatory2, text: t(`game.attributes.options.${props.aspect.attributes.mandatory2}`) });
+      attributes.push({ attribute: props.aspect.attributes.mandatory2, text: t(`game.attribute.options.${props.aspect.attributes.mandatory2}`) });
     }
   }
   return orderBy(attributes, "text");

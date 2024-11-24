@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
+import CharacterBonuses from "@/components/characters/bonuses/CharacterBonuses.vue";
 import CharacterCharacteristics from "@/components/characters/characteristics/CharacterCharacteristics.vue";
 import CharacterLanguages from "@/components/characters/languages/CharacterLanguages.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
@@ -53,11 +54,14 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab active id="characteristics" :title="t('characters.characteristics')">
+        <TarTab id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.list')">
           <CharacterLanguages :character="character" @error="handleError" @updated="onUpdated" />
+        </TarTab>
+        <TarTab active id="bonuses" :title="t('characters.bonuses.label')">
+          <CharacterBonuses :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
       </TarTabs>
     </template>

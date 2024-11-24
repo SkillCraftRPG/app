@@ -36,6 +36,47 @@
     "label": "Historique"
   },
   "bloodAlcoholContent": "Alcoolémie",
+  "bonuses": {
+    "add": "Ajouter un bonus",
+    "added": "Le bonus a été ajouté.",
+    "category": {
+      "label": "Catégorie",
+      "options": {
+        "Attribute": "Attribut",
+        "Miscellaneous": "Divers",
+        "Skill": "Compétence",
+        "Speed": "Vitesse",
+        "Statistic": "Statistique"
+      },
+      "placeholder": "Sélectionnez une catégorie"
+    },
+    "edit": "Modifier un bonus",
+    "edited": "Le bonus a été modifié.",
+    "empty": "Cette liste est vide.",
+    "label": "Bonus",
+    "miscellaneous": {
+      "label": "Propriété",
+      "options": {
+        "BloodAlcoholContent": "Alcoolémie",
+        "Defense": "Défense",
+        "Dodge": "Esquive",
+        "Intoxication": "Intoxication",
+        "Stamina": "Énergie",
+        "Vitality": "Vitalité"
+      },
+      "placeholder": "Sélectionnez une propriété"
+    },
+    "notes": "Notes",
+    "precision": "Précision",
+    "remove": {
+      "confirm": "Désirez-vous vraiment retirer le bonus suivant ?",
+      "label": "Retirer un bonus"
+    },
+    "removed": "Le bonus a été retiré.",
+    "target": "Cible",
+    "temporary": "Temporaire",
+    "value": "Valeur"
+  },
   "caste": {
     "invalid": {
       "skill": "Aucune compétence n’est associée à la caste sélectionnée.",
@@ -75,7 +116,7 @@
       "confirm": "Désirez-vous vraiment retirer la langue suivante ?",
       "label": "Retirer une langue"
     },
-    "removed": "La langue a été retirée",
+    "removed": "La langue a été retirée.",
     "notes": "Notes",
     "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires."
   },
@@ -88,6 +129,7 @@
     "all": "Tous joueurs",
     "label": "Nom du joueur"
   },
+  "progression": "Progression",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

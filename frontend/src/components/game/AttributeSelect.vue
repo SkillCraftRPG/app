@@ -17,17 +17,20 @@ withDefaults(
     id?: string;
     label?: string;
     modelValue?: Attribute;
+    placeholder?: string;
+    required?: boolean | string;
     validation?: ValidationType;
   }>(),
   {
     id: "attribute",
     label: "game.attribute.label",
+    placeholder: "game.attribute.placeholder",
   },
 );
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.attributes.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("game.attribute.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
@@ -45,7 +48,8 @@ defineEmits<{
     :label="label"
     :model-value="modelValue"
     :options="options"
-    placeholder="game.attribute.label"
+    :placeholder="placeholder"
+    :required="required"
     :validation="validation"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as Attribute))"
   />

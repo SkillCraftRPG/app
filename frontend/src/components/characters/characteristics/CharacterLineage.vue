@@ -26,8 +26,6 @@ const lineage = computed<LineageModel | undefined>(() => {
   return props.character.lineage.species ? props.character.lineage.species : props.character.lineage;
 });
 const value = computed<string>(() => lineage.value?.name ?? t("lineages.nation.none"));
-
-// TODO(fpion): button-links text should be centered
 </script>
 
 <template>

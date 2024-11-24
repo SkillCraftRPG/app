@@ -1,11 +1,23 @@
 import { urlUtils } from "logitar-js";
 
-import type { CharacterLanguagePayload, CharacterModel, CreateCharacterPayload, ReplaceCharacterPayload, SearchCharactersPayload } from "@/types/characters";
+import type {
+  BonusPayload,
+  CharacterLanguagePayload,
+  CharacterModel,
+  CreateCharacterPayload,
+  ReplaceCharacterPayload,
+  SearchCharactersPayload,
+} from "@/types/characters";
 import type { SearchResults } from "@/types/search";
 import { _delete, get, post, put } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/characters" });
+}
+
+export async function addBonus(characterId: string, payload: BonusPayload): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder().setPath("/characters/{characterId}/bonuses").setParameter("characterId", characterId).buildRelative();
+  return (await post<BonusPayload, CharacterModel>(url, payload)).data;
 }
 
 export async function createCharacter(payload: CreateCharacterPayload): Promise<CharacterModel> {
@@ -23,6 +35,14 @@ export async function readCharacter(id: string): Promise<CharacterModel> {
   return (await get<CharacterModel>(url)).data;
 }
 
+export async function removeBonus(characterId: string, bonusId: string): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/bonuses/{bonusId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("bonusId", bonusId)
+    .buildRelative();
+  return (await _delete<CharacterModel>(url)).data;
+}
+
 export async function removeCharacterLanguage(characterId: string, languageId: string): Promise<CharacterModel> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/languages/{languageId}" })
     .setParameter("characterId", characterId)
@@ -36,6 +56,15 @@ export async function replaceCharacter(id: string, payload: ReplaceCharacterPayl
     .setQuery("version", version?.toString() ?? "")
     .buildRelative();
   return (await put<ReplaceCharacterPayload, CharacterModel>(url, payload)).data;
+}
+
+export async function saveBonus(characterId: string, bonusId: string, payload: BonusPayload): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder()
+    .setPath("/characters/{characterId}/bonuses/{bonusId}")
+    .setParameter("characterId", characterId)
+    .setParameter("bonusId", bonusId)
+    .buildRelative();
+  return (await put<BonusPayload, CharacterModel>(url, payload)).data;
 }
 
 export async function saveCharacterLanguage(characterId: string, languageId: string, payload: CharacterLanguagePayload): Promise<CharacterModel> {

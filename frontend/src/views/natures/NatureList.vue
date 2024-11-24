@@ -189,7 +189,7 @@ watch(
             <td>
               <RouterLink :to="{ name: 'NatureEdit', params: { id: nature.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ nature.name }} </RouterLink>
             </td>
-            <td>{{ nature.attribute ? t(`game.attributes.options.${nature.attribute}`) : "—" }}</td>
+            <td>{{ nature.attribute ? t(`game.attribute.options.${nature.attribute}`) : "—" }}</td>
             <td>
               <RouterLink v-if="nature.gift" :to="{ name: 'CustomizationEdit', params: { id: nature.gift.id } }" target="_blank">
                 <CustomizationIcon />{{ nature.gift.name }}

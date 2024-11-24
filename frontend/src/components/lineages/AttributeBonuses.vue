@@ -22,7 +22,7 @@ const props = defineProps<{
 
 const attributes = computed<TranslatedAttribute[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.attributes.options"))).map(([attribute, text]) => ({ attribute, text }) as TranslatedAttribute),
+    Object.entries(tm(rt("game.attribute.options"))).map(([attribute, text]) => ({ attribute, text }) as TranslatedAttribute),
     "text",
   ),
 );
@@ -88,7 +88,7 @@ function setExtra(extra: number): void {
 
 <template>
   <div>
-    <h3>{{ t("game.attributes.label") }}</h3>
+    <h3>{{ t("game.attributes") }}</h3>
     <div class="row">
       <div v-for="translation in attributes" :key="translation.attribute" class="col">
         <AttributeBonusInput

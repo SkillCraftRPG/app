@@ -161,7 +161,7 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("educations.sort.options.Name") }}</th>
-            <th scope="col">{{ t("game.skill") }}</th>
+            <th scope="col">{{ t("game.skill.label") }}</th>
             <th scope="col">{{ t("game.startingWealth") }}</th>
             <th scope="col">{{ t("educations.sort.options.UpdatedOn") }}</th>
           </tr>
@@ -173,7 +173,7 @@ watch(
                 <font-awesome-icon icon="fas fa-edit" />{{ education.name }}
               </RouterLink>
             </td>
-            <td>{{ education.skill ? t(`game.skills.options.${education.skill}`) : "—" }}</td>
+            <td>{{ education.skill ? t(`game.skill.options.${education.skill}`) : "—" }}</td>
             <td>{{ education.wealthMultiplier ? `×${education.wealthMultiplier}` : "—" }}</td>
             <td><StatusBlock :actor="education.updatedBy" :date="education.updatedOn" /></td>
           </tr>

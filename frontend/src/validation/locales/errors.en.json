@@ -3,6 +3,7 @@
   "confirmed": "The 1:{target} and the {field} do not match.",
   "email": "Please enter a valid email address.",
   "identifier": "The {field} cannot start with a digit and it may only contain letters, digits and underscores (_).",
+  "is_not": "The {field} must be different from 0:{is_not}.",
   "max_length": "The {field} cannot contain more than 0:{length} characters.",
   "max_value": "The {field} must be lesser than or equal to 0:{max}.",
   "min_length": "The {field} must contain at least 0:{length} characters.",

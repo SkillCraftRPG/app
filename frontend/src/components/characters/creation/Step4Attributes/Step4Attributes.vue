@@ -108,7 +108,7 @@ const rows = computed<AttributeRow[]>(() => {
   const rows: AttributeRow[] = [
     {
       attribute: "Agility",
-      text: t("game.attributes.options.Agility"),
+      text: t("game.attribute.options.Agility"),
       base: agility.value,
       lineage: lineageAttributes.value.agility + (extra.value.includes("Agility") ? 1 : 0),
       nature: step2?.nature.attribute === "Agility" ? 1 : 0,
@@ -118,7 +118,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Coordination",
-      text: t("game.attributes.options.Coordination"),
+      text: t("game.attribute.options.Coordination"),
       base: coordination.value,
       lineage: lineageAttributes.value.coordination + (extra.value.includes("Coordination") ? 1 : 0),
       nature: step2?.nature.attribute === "Coordination" ? 1 : 0,
@@ -128,7 +128,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Intellect",
-      text: t("game.attributes.options.Intellect"),
+      text: t("game.attribute.options.Intellect"),
       base: intellect.value,
       lineage: lineageAttributes.value.intellect + (extra.value.includes("Intellect") ? 1 : 0),
       nature: step2?.nature.attribute === "Intellect" ? 1 : 0,
@@ -138,7 +138,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Presence",
-      text: t("game.attributes.options.Presence"),
+      text: t("game.attribute.options.Presence"),
       base: presence.value,
       lineage: lineageAttributes.value.presence + (extra.value.includes("Presence") ? 1 : 0),
       nature: step2?.nature.attribute === "Presence" ? 1 : 0,
@@ -148,7 +148,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Sensitivity",
-      text: t("game.attributes.options.Sensitivity"),
+      text: t("game.attribute.options.Sensitivity"),
       base: sensitivity.value,
       lineage: lineageAttributes.value.sensitivity + (extra.value.includes("Sensitivity") ? 1 : 0),
       nature: step2?.nature.attribute === "Sensitivity" ? 1 : 0,
@@ -158,7 +158,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Spirit",
-      text: t("game.attributes.options.Spirit"),
+      text: t("game.attribute.options.Spirit"),
       base: spirit.value,
       lineage: lineageAttributes.value.spirit + (extra.value.includes("Spirit") ? 1 : 0),
       nature: step2?.nature.attribute === "Spirit" ? 1 : 0,
@@ -168,7 +168,7 @@ const rows = computed<AttributeRow[]>(() => {
     },
     {
       attribute: "Vigor",
-      text: t("game.attributes.options.Vigor"),
+      text: t("game.attribute.options.Vigor"),
       base: vigor.value,
       lineage: lineageAttributes.value.vigor + (extra.value.includes("Vigor") ? 1 : 0),
       nature: step2?.nature.attribute === "Vigor" ? 1 : 0,
@@ -328,16 +328,16 @@ onMounted(() => {
   if (step3) {
     step3.aspects.forEach(({ attributes }) => {
       if (attributes.mandatory1) {
-        mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attributes.options.${attributes.mandatory1}`), selected: "mandatory" });
+        mandatory.value.push({ attribute: attributes.mandatory1, text: t(`game.attribute.options.${attributes.mandatory1}`), selected: "mandatory" });
       }
       if (attributes.mandatory2) {
-        mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attributes.options.${attributes.mandatory2}`), selected: "mandatory" });
+        mandatory.value.push({ attribute: attributes.mandatory2, text: t(`game.attribute.options.${attributes.mandatory2}`), selected: "mandatory" });
       }
       if (attributes.optional1) {
-        optional.value.push({ attribute: attributes.optional1, text: t(`game.attributes.options.${attributes.optional1}`), selected: false });
+        optional.value.push({ attribute: attributes.optional1, text: t(`game.attribute.options.${attributes.optional1}`), selected: false });
       }
       if (attributes.optional2) {
-        optional.value.push({ attribute: attributes.optional2, text: t(`game.attributes.options.${attributes.optional2}`), selected: false });
+        optional.value.push({ attribute: attributes.optional2, text: t(`game.attribute.options.${attributes.optional2}`), selected: false });
       }
     });
     mandatory.value = orderBy(mandatory.value, "text");

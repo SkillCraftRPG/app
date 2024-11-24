@@ -36,6 +36,47 @@
     "label": "Background"
   },
   "bloodAlcoholContent": "Blood Alcohol Content",
+  "bonuses": {
+    "add": "Add Bonus",
+    "added": "The bonus has been added.",
+    "category": {
+      "label": "Category",
+      "options": {
+        "Attribute": "Attribute",
+        "Miscellaneous": "Miscellaneous",
+        "Skill": "Skill",
+        "Speed": "Speed",
+        "Statistic": "Statistic"
+      },
+      "placeholder": "Select a category"
+    },
+    "edit": "Edit Bonus",
+    "edited": "The bonus has been edited.",
+    "empty": "This list is empty.",
+    "label": "Bonuses",
+    "miscellaneous": {
+      "label": "Property",
+      "options": {
+        "BloodAlcoholContent": "Blood Alcohol Content",
+        "Defense": "Defense",
+        "Dodge": "Dodge",
+        "Intoxication": "Intoxication",
+        "Stamina": "Stamina",
+        "Vitality": "Vitality"
+      },
+      "placeholder": "Select a property"
+    },
+    "notes": "Notes",
+    "precision": "Precision",
+    "remove": {
+      "confirm": "Do you really want to remove the following bonus?",
+      "label": "Remove Bonus"
+    },
+    "removed": "The bonus has been removed.",
+    "target": "Target",
+    "temporary": "Temporary",
+    "value": "Value"
+  },
   "caste": {
     "invalid": {
       "skill": "There is not skill associated to the selected caste.",
@@ -88,6 +129,7 @@
     "all": "All players",
     "label": "Player Name"
   },
+  "progression": "Progression",
   "sort": {
     "options": {
       "CreatedOn": "Created on",

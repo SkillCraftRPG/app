@@ -12,8 +12,6 @@ defineProps<{
 defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
-
-// TODO(fpion): min should depend upon character current level
 </script>
 
 <template>

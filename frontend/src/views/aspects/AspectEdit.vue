@@ -137,7 +137,7 @@ onMounted(async () => {
       <form @submit.prevent="onSubmit">
         <NameInput required v-model="name" />
         <DescriptionTextarea v-model="description" />
-        <h3>{{ t("game.attributes.label") }}</h3>
+        <h3>{{ t("game.attributes") }}</h3>
         <TarAlert :show="!areAttributesValid" variant="danger">
           <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("aspects.attributes.invalid") }}
         </TarAlert>
@@ -147,7 +147,7 @@ onMounted(async () => {
           <AttributeSelect class="col-lg-3" id="optional-attribute-1" label="aspects.attributes.optional1" v-model="optionalAttribute1" />
           <AttributeSelect class="col-lg-3" id="optional-attribute-2" label="aspects.attributes.optional2" v-model="optionalAttribute2" />
         </div>
-        <h3>{{ t("game.skills.label") }}</h3>
+        <h3>{{ t("game.skills") }}</h3>
         <TarAlert :show="!areSkillsValid" variant="danger">
           <font-awesome-icon icon="fas fa-triangle-exclamation" /> {{ t("aspects.skills.invalid") }}
         </TarAlert>

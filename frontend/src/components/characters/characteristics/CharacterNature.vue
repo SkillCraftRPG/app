@@ -10,8 +10,6 @@ const { t } = useI18n();
 defineProps<{
   character: CharacterModel;
 }>();
-
-// TODO(fpion): button-links text should be centered
 </script>
 
 <template>

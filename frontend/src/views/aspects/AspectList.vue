@@ -173,7 +173,7 @@ watch(
             <th scope="col">{{ t("aspects.sort.options.Name") }}</th>
             <th scope="col">{{ t("aspects.attributes.mandatory") }}</th>
             <th scope="col">{{ t("aspects.attributes.optional") }}</th>
-            <th scope="col">{{ t("game.skills.label") }}</th>
+            <th scope="col">{{ t("game.skills") }}</th>
             <th scope="col">{{ t("aspects.sort.options.UpdatedOn") }}</th>
           </tr>
         </thead>
