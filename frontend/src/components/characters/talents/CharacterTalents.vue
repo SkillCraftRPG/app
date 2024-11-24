@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterTalentEdit from "./CharacterTalentEdit.vue";
-import RemainingTalentPoints from "./RemainingTalentPoints.vue";
+import CharacterTalentRemove from "./CharacterTalentRemove.vue";
 import TalentIcon from "@/components/talents/TalentIcon.vue";
 import type { CharacterModel, CharacterTalentModel } from "@/types/characters";
 import type { SearchResults } from "@/types/search";
@@ -37,6 +37,10 @@ const sortedTalents = computed<SortedTalent[]>(() =>
     "sort",
   ),
 );
+
+const availablePoints = computed<number>(() => 8 + props.character.level * 4);
+const spentPoints = computed<number>(() => props.character.talents.reduce((acc, { cost }) => acc + cost, 0));
+const remainingPoints = computed<number>(() => availablePoints.value - spentPoints.value);
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
@@ -74,9 +78,9 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div class="mb-3 row">
-      <CharacterTalentEdit :character="character" class="col" :talents="availableTalents" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-      <RemainingTalentPoints :character="character" class="col" />
+    <p>{{ t("characters.talents.remainingPoints", { n: remainingPoints }) }}</p>
+    <div class="mb-3">
+      <CharacterTalentEdit :character="character" :talents="availableTalents" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     </div>
     <table v-if="sortedTalents.length > 0" class="table table-striped">
       <thead>
@@ -100,7 +104,7 @@ onMounted(async () => {
           <td class="notes">{{ talent.notes ?? "—" }}</td>
           <td>
             <CharacterTalentEdit class="me-1" :character="character" :talent="talent" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-            <!-- TODO(fpion): remove -->
+            <CharacterTalentRemove class="ms-1" :character="character" :talent="talent" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
           </td>
         </tr>
       </tbody>

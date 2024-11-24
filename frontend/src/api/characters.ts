@@ -58,7 +58,7 @@ export async function removeCharacterLanguage(characterId: string, languageId: s
 }
 
 export async function removeCharacterTalent(characterId: string, talentId: string): Promise<CharacterModel> {
-  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/bonuses/{talentId}" })
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/talents/{talentId}" })
     .setParameter("characterId", characterId)
     .setParameter("talentId", talentId)
     .buildRelative();

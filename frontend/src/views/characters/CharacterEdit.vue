@@ -41,8 +41,6 @@ onMounted(async () => {
     }
   }
 });
-
-// TODO(fpion): active characteristics, not talents
 </script>
 
 <template>
@@ -57,7 +55,7 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab id="characteristics" :title="t('characters.characteristics')">
+        <TarTab active id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.list')">
@@ -66,7 +64,7 @@ onMounted(async () => {
         <TarTab id="bonuses" :title="t('characters.bonuses.label')">
           <CharacterBonuses :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
-        <TarTab active id="talents" :title="t('talents.list')">
+        <TarTab id="talents" :title="t('talents.list')">
           <CharacterTalents :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
       </TarTabs>
