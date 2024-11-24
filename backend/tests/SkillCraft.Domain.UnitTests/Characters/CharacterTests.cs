@@ -912,6 +912,7 @@ public class CharacterTests
   [Fact(DisplayName = "SetTalent: it should update an existing talent.")]
   public void SetTalent_it_should_update_an_existing_talent()
   {
+    _character.AddTalent(_melee, _world.OwnerId);
     _character.AddTalent(_occultisme, _world.OwnerId);
     _character.AddTalent(_elementarisme, new SetTalentOptions { Precision = new Name("Terre") }, _world.OwnerId);
 
