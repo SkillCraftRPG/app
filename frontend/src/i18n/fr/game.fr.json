@@ -90,6 +90,7 @@
   },
   "skills": "Compétences",
   "speed": {
+    "label": "Vitesse",
     "options": {
       "Burrow": "Creusage",
       "Climb": "Escalade",
@@ -97,7 +98,8 @@
       "Hover": "Lévitation",
       "Swim": "Nage",
       "Walk": "Marche"
-    }
+    },
+    "placeholder": "Sélectionnez une vitesse"
   },
   "startingWealth": "Richesse initiale",
   "statistic": {

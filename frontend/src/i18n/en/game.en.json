@@ -90,6 +90,7 @@
   },
   "skills": "Skills",
   "speed": {
+    "label": "Speed",
     "options": {
       "Burrow": "Burrow",
       "Climb": "Climb",
@@ -97,7 +98,8 @@
       "Hover": "Hover",
       "Swim": "Swim",
       "Walk": "Walk"
-    }
+    },
+    "placeholder": "Select a speed"
   },
   "statistic": {
     "label": "Statistic",
