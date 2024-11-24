@@ -158,12 +158,11 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("characters.name") }}</th>
-            <th scope="col">{{ t("characters.player.label") }}</th>
+            <th scope="col">TODO</th>
             <th scope="col">{{ t("characters.lineage") }}</th>
             <th scope="col">{{ t("characters.background.label") }}</th>
             <th scope="col">{{ t("natures.select.label") }}</th>
             <th scope="col">{{ t("characters.sort.options.UpdatedOn") }}</th>
-            <!-- TODO(fpion): Level, Tier -->
           </tr>
         </thead>
         <tbody>
@@ -172,8 +171,16 @@ watch(
               <RouterLink :to="{ name: 'CharacterEdit', params: { id: character.id } }">
                 <font-awesome-icon icon="fas fa-edit" />{{ character.name }}
               </RouterLink>
+              <template v-if="character.playerName">
+                <br />
+                <font-awesome-icon icon="fas fa-user" /> {{ character.playerName }}
+              </template>
             </td>
-            <td>{{ character.playerName ?? "—" }}</td>
+            <td>
+              {{ t("characters.level") }} {{ character.level }}
+              <br />
+              {{ t("characters.tier") }} {{ character.tier }}
+            </td>
             <td>
               <template v-if="character.lineage.species">
                 <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.species.id } }" target="_blank">
