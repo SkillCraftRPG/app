@@ -158,7 +158,7 @@ watch(
         <thead>
           <tr>
             <th scope="col">{{ t("characters.name") }}</th>
-            <th scope="col">TODO</th>
+            <th scope="col">{{ t("characters.progression") }}</th>
             <th scope="col">{{ t("characters.lineage") }}</th>
             <th scope="col">{{ t("characters.background.label") }}</th>
             <th scope="col">{{ t("natures.select.label") }}</th>
@@ -184,18 +184,16 @@ watch(
             <td>
               <template v-if="character.lineage.species">
                 <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.species.id } }" target="_blank">
-                  <LineageIcon /> {{ character.lineage.species.name }}
+                  <LineageIcon />{{ character.lineage.species.name }}
                 </RouterLink>
                 <br />
               </template>
               <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.id } }" target="_blank">
-                <LineageIcon /> {{ character.lineage.name }}
+                <LineageIcon />{{ character.lineage.name }}
               </RouterLink>
             </td>
             <td>
-              <RouterLink :to="{ name: 'CasteEdit', params: { id: character.caste.id } }" target="_blank">
-                <CasteIcon /> {{ character.caste.name }}
-              </RouterLink>
+              <RouterLink :to="{ name: 'CasteEdit', params: { id: character.caste.id } }" target="_blank"> <CasteIcon />{{ character.caste.name }} </RouterLink>
               <br />
               <RouterLink :to="{ name: 'EducationEdit', params: { id: character.education.id } }" target="_blank">
                 <EducationIcon />{{ character.education.name }}
@@ -203,7 +201,7 @@ watch(
             </td>
             <td>
               <RouterLink :to="{ name: 'NatureEdit', params: { id: character.nature.id } }" target="_blank">
-                <NatureIcon /> {{ character.nature.name }}
+                <NatureIcon />{{ character.nature.name }}
               </RouterLink>
             </td>
             <td><StatusBlock :actor="character.updatedBy" :date="character.updatedOn" /></td>
