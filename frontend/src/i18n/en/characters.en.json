@@ -156,6 +156,7 @@
     "empty": "This list is empty.",
     "notes": "Notes",
     "precision": "Precision",
+    "remainingPoints": "Remaining points",
     "remove": {
       "confirm": "Do you really want to remove the following talent?",
       "label": "Remove Talent"

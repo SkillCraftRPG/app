@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterTalentEdit from "./CharacterTalentEdit.vue";
+import RemainingTalentPoints from "./RemainingTalentPoints.vue";
 import TalentIcon from "@/components/talents/TalentIcon.vue";
 import type { CharacterModel, CharacterTalentModel } from "@/types/characters";
+import type { SearchResults } from "@/types/search";
+import type { SearchTalentsPayload, TalentModel } from "@/types/talents";
+import { searchTalents } from "@/api/talents";
 
 type SortedTalent = CharacterTalentModel & {
   sort: string;
@@ -18,6 +22,15 @@ const props = defineProps<{
   character: CharacterModel;
 }>();
 
+const talents = ref<TalentModel[]>([]);
+
+const acquiredTalentIds = computed<Set<string>>(() => new Set<string>(props.character.talents.map(({ talent }) => talent.id)));
+const availableTalents = computed<TalentModel[]>(() =>
+  talents.value.filter(
+    ({ allowMultiplePurchases, id, requiredTalent }) =>
+      (allowMultiplePurchases || !acquiredTalentIds.value.has(id)) && (!requiredTalent || acquiredTalentIds.value.has(requiredTalent.id)),
+  ),
+);
 const sortedTalents = computed<SortedTalent[]>(() =>
   orderBy(
     props.character.talents.map((item) => ({ ...item, sort: [item.talent.tier, item.talent.name, item.precision].join(".") })),
@@ -25,27 +38,45 @@ const sortedTalents = computed<SortedTalent[]>(() =>
   ),
 );
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "error", value: unknown): void;
   (e: "updated", value: CharacterModel): void;
 }>();
 
+onMounted(async () => {
+  try {
+    const payload: SearchTalentsPayload = {
+      ids: [],
+      search: { terms: [], operator: "And" },
+      tier: { values: [props.character.tier], operator: "lte" },
+      sort: [{ field: "Name", isDescending: false }],
+      skip: 0,
+      limit: 0,
+    };
+    const results: SearchResults<TalentModel> = await searchTalents(payload);
+    talents.value = [...results.items];
+  } catch (e: unknown) {
+    emit("error", e);
+  }
+});
+
 /* TODO(fpion):
- * ( ) Display remaining talent points
+ * (✅) Display remaining talent points
  * ( ) NotEnoughRemainingTalentPointsException
- * ( ) RequiredTalentNotPurchasedException
- * ( ) TalentCannotBePurchasedMultipleTimesException
+ * (✅) RequiredTalentNotPurchasedException
+ * (✅) TalentCannotBePurchasedMultipleTimesException
  * (✅) TalentMaximumCostExceededException
- * ( ) TalentNotFoundException
- * ( ) TalentTierCannotExceedCharacterTierException
+ * (✅) TalentNotFoundException
+ * (✅) TalentTierCannotExceedCharacterTierException
  * (✅) ValidationException
  */
 </script>
 
 <template>
   <div>
-    <div class="mb-3">
-      <CharacterTalentEdit :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
+    <div class="mb-3 row">
+      <CharacterTalentEdit :character="character" class="col" :talents="availableTalents" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
+      <RemainingTalentPoints :character="character" class="col" />
     </div>
     <table v-if="sortedTalents.length > 0" class="table table-striped">
       <thead>
@@ -69,6 +100,7 @@ defineEmits<{
           <td class="notes">{{ talent.notes ?? "—" }}</td>
           <td>
             <CharacterTalentEdit class="me-1" :character="character" :talent="talent" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
+            <!-- TODO(fpion): remove -->
           </td>
         </tr>
       </tbody>

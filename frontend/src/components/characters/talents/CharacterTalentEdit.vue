@@ -6,6 +6,7 @@ import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
 import CharacterTalent from "./CharacterTalent.vue";
+import CharacterTalentSelect from "./CharacterTalentSelect.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import TalentCostInput from "./TalentCostInput.vue";
@@ -20,6 +21,7 @@ const { t } = useI18n();
 const props = defineProps<{
   character: CharacterModel;
   talent?: CharacterTalentModel;
+  talents?: TalentModel[];
 }>();
 
 const cost = ref<number>(0);
@@ -51,6 +53,13 @@ function setModel(model?: CharacterTalentModel): void {
 function onCancel(): void {
   setModel(props.talent);
   hide();
+}
+
+function onTalentSelected(id?: string): void {
+  if (props.talents) {
+    const index: number = props.talents.findIndex((talent) => talent.id === id);
+    selectedTalent.value = index < 0 ? undefined : props.talents[index];
+  }
 }
 
 const emit = defineEmits<{
@@ -99,6 +108,7 @@ watch(() => props.talent, setModel, { deep: true, immediate: true });
     <TarModal :close="t('actions.close')" :id="id" ref="modalRef" :title="t(talent ? 'characters.talents.edit' : 'characters.talents.add')">
       <form @submit.prevent="onSubmit">
         <CharacterTalent v-if="talent" :talent="talent.talent" />
+        <CharacterTalentSelect v-else-if="talents" :model-value="selectedTalent?.id" :talents="talents" @update:model-value="onTalentSelected" />
         <TalentCostInput :tier="selectedTalent?.tier ?? 3" v-model="cost" />
         <NameInput id="precision" label="characters.talents.precision" placeholder="characters.talents.precision" v-model="precision" />
         <DescriptionTextarea id="notes" label="characters.talents.notes" placeholder="characters.talents.notes" rows="5" v-model="notes" />

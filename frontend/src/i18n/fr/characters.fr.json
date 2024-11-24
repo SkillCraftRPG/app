@@ -156,6 +156,7 @@
     "empty": "Cette liste est vide.",
     "notes": "Notes",
     "precision": "Précision",
+    "remainingPoints": "Points restant",
     "remove": {
       "confirm": "Désirez-vous vraiment retirer le talent suivant ?",
       "label": "Retirer un talent"
