@@ -91,7 +91,7 @@ export async function saveCharacterLanguage(characterId: string, languageId: str
 
 export async function saveCharacterTalent(characterId: string, talentId: string, payload: CharacterTalentPayload): Promise<CharacterModel> {
   const url: string = new urlUtils.UrlBuilder()
-    .setPath("/characters/{characterId}/bonuses/{talentId}")
+    .setPath("/characters/{characterId}/talents/{talentId}")
     .setParameter("characterId", characterId)
     .setParameter("talentId", talentId)
     .buildRelative();

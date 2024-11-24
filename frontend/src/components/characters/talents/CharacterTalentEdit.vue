@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
 
+import CharacterTalent from "./CharacterTalent.vue";
 import DescriptionTextarea from "@/components/shared/DescriptionTextarea.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import TalentCostInput from "./TalentCostInput.vue";
@@ -100,6 +101,7 @@ watchEffect(() => {
     />
     <TarModal :close="t('actions.close')" :id="id" ref="modalRef" :title="t(talent ? 'characters.talents.edit' : 'characters.talents.add')">
       <form @submit.prevent="onSubmit">
+        <CharacterTalent v-if="talent" :talent="talent.talent" />
         <TalentCostInput v-if="selectedTalent" :tier="selectedTalent.tier" v-model="cost" />
         <NameInput id="precision" label="characters.talents.precision" placeholder="characters.talents.precision" v-model="precision" />
         <DescriptionTextarea id="notes" label="characters.talents.notes" placeholder="characters.talents.notes" rows="5" v-model="notes" />
