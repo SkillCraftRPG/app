@@ -13,8 +13,6 @@ defineProps<{
 defineEmits<{
   (e: "update:model-value", value?: number): void;
 }>();
-
-// TODO(fpion): not equal 0
 </script>
 
 <template>
@@ -25,6 +23,7 @@ defineEmits<{
     :model-value="modelValue?.toString()"
     placeholder="characters.bonuses.value"
     :required="required"
+    :rules="{ is_not: '0' }"
     step="1"
     type="number"
     @update:model-value="$emit('update:model-value', $event === '' ? undefined : parseNumber($event))"

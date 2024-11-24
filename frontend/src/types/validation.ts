@@ -16,6 +16,7 @@ export type ValidationRules = {
   confirmed?: string[];
   email?: boolean;
   identifier?: boolean;
+  is_not?: any;
   max_length?: number;
   max_value?: number;
   min_length?: number;
