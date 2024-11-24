@@ -13,10 +13,6 @@
   "attribute": {
     "label": "Attribut",
     "modifier": "Modificateur",
-    "score": "Score"
-  },
-  "attributes": {
-    "label": "Attributs",
     "options": {
       "Agility": "Agilité",
       "Coordination": "Coordination",
@@ -25,8 +21,11 @@
       "Sensitivity": "Sensibilité",
       "Spirit": "Esprit",
       "Vigor": "Vigueur"
-    }
+    },
+    "placeholder": "Sélectionnez un attribut",
+    "score": "Score"
   },
+  "attributes": "Attributs",
   "damage": {
     "type": {
       "label": "Type",
@@ -63,9 +62,8 @@
     "category": "Catégorie de taille",
     "label": "Taille"
   },
-  "skill": "Compétence",
-  "skills": {
-    "label": "Compétences",
+  "skill": {
+    "label": "Compétence",
     "options": {
       "Acrobatics": "Acrobaties",
       "Athletics": "Athlétisme",
@@ -87,18 +85,34 @@
       "Stealth": "Furtivité",
       "Survival": "Survie",
       "Thievery": "Roublardise"
+    },
+    "placeholder": "Sélectionnez une compétence"
+  },
+  "skills": "Compétences",
+  "speed": {
+    "options": {
+      "Burrow": "Creusage",
+      "Climb": "Escalade",
+      "Fly": "Vol",
+      "Hover": "Lévitation",
+      "Swim": "Nage",
+      "Walk": "Marche"
     }
   },
-  "speed": "Vitesse",
-  "speeds": {
-    "Burrow": "Creusage",
-    "Climb": "Escalade",
-    "Fly": "Vol",
-    "Hover": "Lévitation",
-    "Swim": "Nage",
-    "Walk": "Marche"
-  },
   "startingWealth": "Richesse initiale",
+  "statistic": {
+    "label": "Statistique",
+    "options": {
+      "Constitution": "Constitution",
+      "Initiative": "Initiative",
+      "Learning": "Apprentissage",
+      "Power": "Puissance",
+      "Precision": "Précision",
+      "Reputation": "Renom",
+      "Strength": "Force"
+    },
+    "placeholder": "Sélectionnez une statistique"
+  },
   "tier": {
     "all": "Tous tiers",
     "label": "Tiers",

@@ -71,14 +71,14 @@ onMounted(() => {
             <th scope="col">{{ t("name") }}</th>
             <th scope="col">{{ t("aspects.attributes.mandatory") }}</th>
             <th scope="col">{{ t("aspects.attributes.optional") }}</th>
-            <th scope="col">{{ t("game.skills.label") }}</th>
+            <th scope="col">{{ t("game.skills") }}</th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="aspect in aspects" :key="aspect.id">
             <td>
-              <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }" target="_blank"> <AspectIcon /> {{ aspect.name }} </RouterLink>
+              <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }" target="_blank"><AspectIcon />{{ aspect.name }}</RouterLink>
             </td>
             <td><AttributesBlock :aspect="aspect" /></td>
             <td><AttributesBlock :aspect="aspect" optional /></td>

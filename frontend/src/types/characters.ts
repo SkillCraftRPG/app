@@ -43,6 +43,15 @@ export type BaseAttributesPayload = {
 
 export type BonusCategory = "Attribute" | "Miscellaneous" | "Skill" | "Speed" | "Statistic";
 
+export type BonusPayload = {
+  category: BonusCategory;
+  target: string;
+  value: number;
+  isTemporary: boolean;
+  precision?: string;
+  notes?: string;
+};
+
 export type BonusModel = {
   id: string;
   category: BonusCategory;
@@ -146,6 +155,8 @@ export type InventoryModel = {
   descriptionOverride?: string;
   valueOverride?: number;
 };
+
+export type MiscellaneousBonusTarget = "BloodAlcoholContent" | "Defense" | "Dodge" | "Intoxication" | "Stamina" | "Vitality";
 
 export type ReplaceCharacterPayload = {
   name: string;

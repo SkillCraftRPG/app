@@ -21,10 +21,10 @@ const props = defineProps<{
 const skills = computed<TranslatedSkill[]>(() => {
   const skills: TranslatedSkill[] = [];
   if (props.aspect.skills.discounted1) {
-    skills.push({ skill: props.aspect.skills.discounted1, text: t(`game.skills.options.${props.aspect.skills.discounted1}`) });
+    skills.push({ skill: props.aspect.skills.discounted1, text: t(`game.skill.options.${props.aspect.skills.discounted1}`) });
   }
   if (props.aspect.skills.discounted2) {
-    skills.push({ skill: props.aspect.skills.discounted2, text: t(`game.skills.options.${props.aspect.skills.discounted2}`) });
+    skills.push({ skill: props.aspect.skills.discounted2, text: t(`game.skill.options.${props.aspect.skills.discounted2}`) });
   }
   return orderBy(skills, "text");
 });

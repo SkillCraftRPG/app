@@ -5,7 +5,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AppSelect from "@/components/shared/AppSelect.vue";
-import type { Skill } from "@/types/game";
+import type { MiscellaneousBonusTarget } from "@/types/characters";
 import type { ValidationType } from "@/types/validation";
 
 const { orderBy } = arrayUtils;
@@ -16,26 +16,26 @@ withDefaults(
     disabled?: boolean | string;
     id?: string;
     label?: string;
-    modelValue?: Skill;
+    modelValue?: MiscellaneousBonusTarget;
     placeholder?: string;
     validation?: ValidationType;
   }>(),
   {
-    id: "skill",
-    label: "game.skill.label",
-    placeholder: "game.skill.placeholder",
+    id: "target",
+    label: "characters.bonuses.miscellaneous.label",
+    placeholder: "characters.bonuses.miscellaneous.placeholder",
   },
 );
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.skill.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("characters.bonuses.miscellaneous.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
 defineEmits<{
-  (e: "update:model-value", value?: Skill): void;
+  (e: "update:model-value", value?: MiscellaneousBonusTarget): void;
 }>();
 </script>
 
@@ -49,6 +49,6 @@ defineEmits<{
     :options="options"
     :placeholder="placeholder"
     :validation="validation"
-    @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as Skill))"
+    @update:model-value="$emit('update:model-value', $event === '' ? undefined : ($event as MiscellaneousBonusTarget))"
   />
 </template>

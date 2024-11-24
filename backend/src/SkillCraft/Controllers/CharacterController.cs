@@ -25,6 +25,13 @@ public class CharacterController : ControllerBase
     _pipeline = pipeline;
   }
 
+  [HttpPost("{characterId}/bonuses")]
+  public async Task<ActionResult<CharacterModel>> AddBonusAsync(Guid characterId, [FromBody] BonusPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterBonusCommand(characterId, BonusId: null, payload), cancellationToken);
+    return GetActionResult(character);
+  }
+
   [HttpPost("{characterId}/talents")]
   public async Task<ActionResult<CharacterModel>> AddTalentAsync(Guid characterId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
   {

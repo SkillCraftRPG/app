@@ -219,7 +219,7 @@ watch(
             <th scope="col">{{ t("talents.sort.options.Name") }}</th>
             <th scope="col">{{ t("game.tier.label") }}</th>
             <th scope="col">{{ t("talents.required") }}</th>
-            <th scope="col">{{ t("game.skill") }}</th>
+            <th scope="col">{{ t("game.skill.label") }}</th>
             <th scope="col">{{ t("talents.allowMultiplePurchases") }}</th>
             <th scope="col">{{ t("talents.sort.options.UpdatedOn") }}</th>
           </tr>
@@ -236,7 +236,7 @@ watch(
               </RouterLink>
               <template v-else>{{ "—" }}</template>
             </td>
-            <td>{{ talent.skill ? t(`game.skills.options.${talent.skill}`) : "—" }}</td>
+            <td>{{ talent.skill ? t(`game.skill.options.${talent.skill}`) : "—" }}</td>
             <td>
               <template v-if="talent.allowMultiplePurchases"> <font-awesome-icon icon="fas fa-check" /> {{ t("yes") }} </template>
               <template v-else> <font-awesome-icon icon="fas fa-times" /> {{ t("no") }} </template>
