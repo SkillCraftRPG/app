@@ -77,7 +77,7 @@ function setModel(model?: BonusModel): void {
   precision.value = model?.precision ?? "";
   value.value = model?.value ?? 0;
 
-  switch (category.value) {
+  switch (model?.category) {
     case "Attribute":
       attribute.value = model?.target as Attribute;
       break;
@@ -121,7 +121,7 @@ const onSubmit = handleSubmit(async () => {
     try {
       const payload: BonusPayload = {
         category: category.value,
-        target: target.value,
+        target: "target.value",
         value: value.value,
         isTemporary: isTemporary.value,
         precision: precision.value,
