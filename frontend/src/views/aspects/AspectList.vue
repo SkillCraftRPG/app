@@ -162,7 +162,7 @@ watch(
         :model-value="sort"
         :options="sortOptions"
         @descending="setQuery('isDescending', $event.toString())"
-        @update:model-value="setQuery('sort', $eveant ?? '')"
+        @update:model-value="setQuery('sort', $event ?? '')"
       />
       <CountSelect class="col-lg-4" :model-value="count" @update:model-value="setQuery('count', ($event ?? 10).toString())" />
     </div>
