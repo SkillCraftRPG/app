@@ -1,5 +1,5 @@
 import { configure, defineRule } from "vee-validate";
-import { email, max, max_value, min, min_value, regex, required } from "@vee-validate/rules";
+import { email, is_not, max, max_value, min, min_value, regex, required } from "@vee-validate/rules";
 import { localize } from "@vee-validate/i18n";
 
 import allowedCharacters from "./rules/allowedCharacters";
@@ -18,6 +18,7 @@ defineRule("allowed_characters", allowedCharacters);
 defineRule("confirmed", confirmed);
 defineRule("email", email);
 defineRule("identifier", identifier);
+defineRule("is_not", is_not);
 defineRule("max_length", max);
 defineRule("max_value", max_value);
 defineRule("min_length", min);

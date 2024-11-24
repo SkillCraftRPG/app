@@ -129,6 +129,7 @@
     "all": "All players",
     "label": "Player Name"
   },
+  "progression": "Progression",
   "sort": {
     "options": {
       "CreatedOn": "Created on",

@@ -27,21 +27,17 @@ const props = defineProps<{
   character: CharacterModel;
 }>();
 
+const attribute = ref<Attribute>();
 const category = ref<BonusCategory>();
 const isTemporary = ref<boolean>(false);
+const miscellaneous = ref<MiscellaneousBonusTarget>();
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 const notes = ref<string>("");
 const precision = ref<string>("");
-const target = ref<string>();
+const skill = ref<Skill>();
+const speed = ref<Speed>();
+const statistic = ref<Statistic>();
 const value = ref<number>(0);
-
-// TODO(fpion): BEGIN REFACTOR
-const attribute = computed<Attribute | undefined>(() => (target.value ? (target.value as Attribute) : undefined));
-const miscellaneous = computed<MiscellaneousBonusTarget | undefined>(() => (target.value ? (target.value as MiscellaneousBonusTarget) : undefined));
-const skill = computed<Skill | undefined>(() => (target.value ? (target.value as Skill) : undefined));
-const speed = computed<Speed | undefined>(() => (target.value ? (target.value as Speed) : undefined));
-const statistic = computed<Statistic | undefined>(() => (target.value ? (target.value as Statistic) : undefined));
-// TODO(fpion): END REFACTOR
 
 const hasChanges = computed<boolean>(
   () =>
@@ -53,6 +49,22 @@ const hasChanges = computed<boolean>(
     notes.value !== (props.bonus?.notes ?? ""),
 );
 const id = computed<string>(() => (props.bonus ? `edit-bonus-${props.bonus.id ?? nanoid()}` : "add-bonus"));
+const target = computed<string | undefined>(() => {
+  switch (category.value) {
+    case "Attribute":
+      return attribute.value;
+    case "Miscellaneous":
+      return miscellaneous.value;
+    case "Skill":
+      return skill.value;
+    case "Speed":
+      return speed.value;
+    case "Statistic":
+      return statistic.value;
+    default:
+      return undefined;
+  }
+});
 
 function hide(): void {
   modalRef.value?.hide();
@@ -63,8 +75,25 @@ function setModel(model?: BonusModel): void {
   isTemporary.value = model?.isTemporary ?? false;
   notes.value = model?.notes ?? "";
   precision.value = model?.precision ?? "";
-  target.value = model?.target ?? undefined;
   value.value = model?.value ?? 0;
+
+  switch (model?.category) {
+    case "Attribute":
+      attribute.value = model?.target as Attribute;
+      break;
+    case "Miscellaneous":
+      miscellaneous.value = model?.target as MiscellaneousBonusTarget;
+      break;
+    case "Skill":
+      skill.value = model?.target as Skill;
+      break;
+    case "Speed":
+      speed.value = model?.target as Speed;
+      break;
+    case "Statistic":
+      statistic.value = model?.target as Statistic;
+      break;
+  }
 }
 
 function onCancel(): void {
@@ -74,7 +103,11 @@ function onCancel(): void {
 
 function setCategory(value?: BonusCategory): void {
   category.value = value;
-  target.value = undefined;
+  attribute.value = undefined;
+  miscellaneous.value = undefined;
+  skill.value = undefined;
+  speed.value = undefined;
+  statistic.value = undefined;
 }
 
 const emit = defineEmits<{
@@ -140,46 +173,41 @@ watchEffect(() => {
             v-if="category === 'Attribute'"
             class="col"
             :disabled="Boolean(bonus)"
-            :model-value="attribute"
             :required="!bonus"
             :validation="bonus ? 'server' : undefined"
-            @update:model-value="target = $event"
+            v-model="attribute"
           />
           <MiscellaneousBonusSelect
             v-else-if="category === 'Miscellaneous'"
             class="col"
             :disabled="Boolean(bonus)"
-            :model-value="miscellaneous"
             :required="!bonus"
             :validation="bonus ? 'server' : undefined"
-            @update:model-value="target = $event"
+            v-model="miscellaneous"
           />
           <SkillSelect
             v-else-if="category === 'Skill'"
             class="col"
             :disabled="Boolean(bonus)"
-            :model-value="skill"
             :required="!bonus"
             :validation="bonus ? 'server' : undefined"
-            @update:model-value="target = $event"
+            v-model="skill"
           />
           <SpeedSelect
             v-else-if="category === 'Speed'"
             class="col"
             :disabled="Boolean(bonus)"
-            :model-value="speed"
             :required="!bonus"
             :validation="bonus ? 'server' : undefined"
-            @update:model-value="target = $event"
+            v-model="speed"
           />
           <StatisticSelect
             v-else-if="category === 'Statistic'"
             class="col"
             :disabled="Boolean(bonus)"
-            :model-value="statistic"
             :required="!bonus"
             :validation="bonus ? 'server' : undefined"
-            @update:model-value="target = $event"
+            v-model="statistic"
           />
         </div>
         <div class="row">
