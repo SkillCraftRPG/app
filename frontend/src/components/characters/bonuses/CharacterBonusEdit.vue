@@ -121,7 +121,7 @@ const onSubmit = handleSubmit(async () => {
     try {
       const payload: BonusPayload = {
         category: category.value,
-        target: "target.value",
+        target: target.value,
         value: value.value,
         isTemporary: isTemporary.value,
         precision: precision.value,
