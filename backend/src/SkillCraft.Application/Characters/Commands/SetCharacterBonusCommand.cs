@@ -2,12 +2,16 @@
 using MediatR;
 using SkillCraft.Application.Characters.Validators;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Application.Storages;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain;
 using SkillCraft.Domain.Characters;
 
 namespace SkillCraft.Application.Characters.Commands;
 
+/// <exception cref="NotEnoughAvailableStorageException"></exception>
+/// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="ValidationException"></exception>
 public record SetCharacterBonusCommand(Guid CharacterId, Guid? BonusId, BonusPayload Payload) : Activity, IRequest<CharacterModel?>;
 
 internal class SetCharacterBonusCommandHandler : IRequestHandler<SetCharacterBonusCommand, CharacterModel?>
