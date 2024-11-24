@@ -52,14 +52,15 @@ onMounted(async () => {
   }
 });
 
-// TODO(fpion):
-/* ( ) Display remaining talent points
-/* ( ) NotEnoughRemainingTalentPointsException
-/* ( ) TalentCannotBePurchasedMultipleTimesException
-/* (✅) TalentMaximumCostExceededException
-/* (✅) TalentNotFoundException
-/* (✅) TalentTierCannotExceedCharacterTierException
-/* (✅) ValidationException
+/* TODO(fpion):
+ * ( ) Display remaining talent points
+ * ( ) NotEnoughRemainingTalentPointsException
+ * ( ) RequiredTalentNotPurchasedException
+ * ( ) TalentCannotBePurchasedMultipleTimesException
+ * (✅) TalentMaximumCostExceededException
+ * (✅) TalentNotFoundException
+ * (✅) TalentTierCannotExceedCharacterTierException
+ * (✅) ValidationException
  */
 </script>
 
