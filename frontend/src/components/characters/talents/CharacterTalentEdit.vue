@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton, TarModal } from "logitar-vue3-ui";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { nanoid } from "nanoid";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -30,7 +30,7 @@ const selectedTalent = ref<TalentModel>();
 
 const hasChanges = computed<boolean>(
   () =>
-    selectedTalent.value?.id !== (props.talent?.talent.id ?? undefined) ||
+    selectedTalent.value?.id !== props.talent?.talent.id ||
     cost.value !== (props.talent?.cost ?? 0) ||
     precision.value !== (props.talent?.precision ?? "") ||
     notes.value !== (props.talent?.notes ?? ""),
@@ -84,10 +84,7 @@ const onSubmit = handleSubmit(async () => {
   onCancel();
 });
 
-watchEffect(() => {
-  const talent: CharacterTalentModel | undefined = props.talent;
-  setModel(talent);
-});
+watch(() => props.talent, setModel, { deep: true, immediate: true });
 </script>
 
 <template>
@@ -102,7 +99,7 @@ watchEffect(() => {
     <TarModal :close="t('actions.close')" :id="id" ref="modalRef" :title="t(talent ? 'characters.talents.edit' : 'characters.talents.add')">
       <form @submit.prevent="onSubmit">
         <CharacterTalent v-if="talent" :talent="talent.talent" />
-        <TalentCostInput v-if="selectedTalent" :tier="selectedTalent.tier" v-model="cost" />
+        <TalentCostInput :tier="selectedTalent?.tier ?? 3" v-model="cost" />
         <NameInput id="precision" label="characters.talents.precision" placeholder="characters.talents.precision" v-model="precision" />
         <DescriptionTextarea id="notes" label="characters.talents.notes" placeholder="characters.talents.notes" rows="5" v-model="notes" />
       </form>

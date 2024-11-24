@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
-import { computed, onMounted, ref } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterTalentEdit from "./CharacterTalentEdit.vue";
 import TalentIcon from "@/components/talents/TalentIcon.vue";
 import type { CharacterModel, CharacterTalentModel } from "@/types/characters";
-import type { SearchResults } from "@/types/search";
-import type { SearchTalentsPayload, TalentModel } from "@/types/talents";
-import { searchTalents } from "@/api/talents";
 
 type SortedTalent = CharacterTalentModel & {
   sort: string;
@@ -21,8 +18,6 @@ const props = defineProps<{
   character: CharacterModel;
 }>();
 
-const talents = ref<TalentModel[]>([]);
-
 const sortedTalents = computed<SortedTalent[]>(() =>
   orderBy(
     props.character.talents.map((item) => ({ ...item, sort: [item.talent.tier, item.talent.name, item.precision].join(".") })),
@@ -30,27 +25,10 @@ const sortedTalents = computed<SortedTalent[]>(() =>
   ),
 );
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "error", value: unknown): void;
   (e: "updated", value: CharacterModel): void;
 }>();
-
-onMounted(async () => {
-  try {
-    const payload: SearchTalentsPayload = {
-      ids: [],
-      search: { terms: [], operator: "And" },
-      tier: { values: [props.character.tier], operator: "lte" },
-      sort: [{ field: "Name", isDescending: false }],
-      skip: 0,
-      limit: 0,
-    };
-    const results: SearchResults<TalentModel> = await searchTalents(payload);
-    talents.value = [...results.items];
-  } catch (e: unknown) {
-    emit("error", e);
-  }
-});
 
 /* TODO(fpion):
  * ( ) Display remaining talent points
@@ -58,8 +36,8 @@ onMounted(async () => {
  * ( ) RequiredTalentNotPurchasedException
  * ( ) TalentCannotBePurchasedMultipleTimesException
  * (✅) TalentMaximumCostExceededException
- * (✅) TalentNotFoundException
- * (✅) TalentTierCannotExceedCharacterTierException
+ * ( ) TalentNotFoundException
+ * ( ) TalentTierCannotExceedCharacterTierException
  * (✅) ValidationException
  */
 </script>
@@ -85,7 +63,7 @@ onMounted(async () => {
           <td>{{ talent.talent.tier }}</td>
           <td>{{ talent.cost }}</td>
           <td>
-            <RouterLink :to="{ name: 'TalentEdit', params: { id: talent.talent.id } }" target="_blank"> <TalentIcon />{{ talent.talent.name }} </RouterLink>
+            <RouterLink :to="{ name: 'TalentEdit', params: { id: talent.talent.id } }" target="_blank"><TalentIcon />{{ talent.talent.name }}</RouterLink>
           </td>
           <td>{{ talent.precision ?? "—" }}</td>
           <td class="notes">{{ talent.notes ?? "—" }}</td>
