@@ -148,6 +148,19 @@
     "talents": "Étape 6 – Talents"
   },
   "talents": {
+    "add": "Ajouter un talent",
+    "added": "Le talent a été ajouté.",
+    "cost": "Coût",
+    "edit": "Modifier un talent",
+    "edited": "Le talent a été modifié.",
+    "empty": "Cette liste est vide.",
+    "notes": "Notes",
+    "precision": "Précision",
+    "remove": {
+      "confirm": "Désirez-vous vraiment retirer le talent suivant ?",
+      "label": "Retirer un talent"
+    },
+    "removed": "Le talent a été retiré.",
     "select": "Vous devez sélectionner {n} talent supplémentaire. | Vous devez sélectionner {n} talents supplémentaires."
   },
   "tier": "Tiers",

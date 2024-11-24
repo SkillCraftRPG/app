@@ -121,6 +121,13 @@ export type CharacterTalentModel = {
   notes?: string;
 };
 
+export type CharacterTalentPayload = {
+  talentId: string;
+  cost: number;
+  precision?: string;
+  notes?: string;
+};
+
 export type CreateCharacterPayload = {
   name: string;
   player?: string;

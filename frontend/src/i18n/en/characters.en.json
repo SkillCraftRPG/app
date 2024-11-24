@@ -148,6 +148,19 @@
     "talents": "Step #6 – Talents"
   },
   "talents": {
+    "add": "Add Talent",
+    "added": "The talent has been added.",
+    "cost": "Cost",
+    "edit": "Edit Talent",
+    "edited": "The talent has been edited.",
+    "empty": "This list is empty.",
+    "notes": "Notes",
+    "precision": "Precision",
+    "remove": {
+      "confirm": "Do you really want to remove the following talent?",
+      "label": "Remove Talent"
+    },
+    "removed": "The talent has been removed.",
     "select": "You must select {n} additional talent. | You must select {n} additional talents."
   },
   "tier": "Tier",

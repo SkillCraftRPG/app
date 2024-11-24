@@ -9,7 +9,7 @@ import CharacterBonusRemove from "./CharacterBonusRemove.vue";
 import type { BonusModel, CharacterModel } from "@/types/characters";
 
 type SortedBonus = BonusModel & {
-  key: string;
+  sort: string;
 };
 
 const { orderBy } = arrayUtils;
@@ -21,8 +21,8 @@ const props = defineProps<{
 
 const bonuses = computed<SortedBonus[]>(() =>
   orderBy(
-    props.character.bonuses.map((bonus) => ({ ...bonus, key: [bonus.category, bonus.target].join(".") })),
-    "key",
+    props.character.bonuses.map((bonus) => ({ ...bonus, sort: [bonus.category, bonus.target].join(".") })),
+    "sort",
   ),
 );
 

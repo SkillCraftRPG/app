@@ -8,6 +8,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import CharacterBonuses from "@/components/characters/bonuses/CharacterBonuses.vue";
 import CharacterCharacteristics from "@/components/characters/characteristics/CharacterCharacteristics.vue";
 import CharacterLanguages from "@/components/characters/languages/CharacterLanguages.vue";
+import CharacterTalents from "@/components/characters/talents/CharacterTalents.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { CharacterModel } from "@/types/characters";
@@ -40,6 +41,8 @@ onMounted(async () => {
     }
   }
 });
+
+// TODO(fpion): active characteristics, not talents
 </script>
 
 <template>
@@ -54,7 +57,7 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab active id="characteristics" :title="t('characters.characteristics')">
+        <TarTab id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.list')">
@@ -62,6 +65,9 @@ onMounted(async () => {
         </TarTab>
         <TarTab id="bonuses" :title="t('characters.bonuses.label')">
           <CharacterBonuses :character="character" @error="handleError" @updated="onUpdated" />
+        </TarTab>
+        <TarTab active id="talents" :title="t('talents.list')">
+          <CharacterTalents :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
       </TarTabs>
     </template>
