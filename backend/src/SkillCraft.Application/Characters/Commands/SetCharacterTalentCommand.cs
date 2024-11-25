@@ -16,6 +16,7 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="NotEnoughRemainingTalentPointsException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="RequiredTalentNotPurchasedException"></exception>
 /// <exception cref="TalentCannotBePurchasedMultipleTimesException"></exception>
 /// <exception cref="TalentMaximumCostExceededException"></exception>
 /// <exception cref="TalentNotFoundException"></exception>

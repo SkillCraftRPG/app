@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton, TarModal } from "logitar-vue3-ui";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { nanoid } from "nanoid";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -64,10 +64,7 @@ const onSubmit = handleSubmit(async () => {
   onCancel();
 });
 
-watchEffect(() => {
-  const language: CharacterLanguageModel | undefined = props.language;
-  setModel(language);
-});
+watch(() => props.language, setModel, { deep: true, immediate: true });
 </script>
 
 <template>

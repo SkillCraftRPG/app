@@ -400,14 +400,16 @@ public class Character : AggregateRoot
     {
       throw new ArgumentOutOfRangeException(nameof(options), "The talent cost cannot be negative.");
     }
-    else if (cost > RemainingTalentPoints)
-    {
-      throw new NotEnoughRemainingTalentPointsException(this, talent, cost, "TalentId");
-    }
 
     CharacterTalent characterTalent = new(talent.Id, cost, options.Precision, options.Notes);
     if (!_talents.TryGetValue(id, out CharacterTalent? existingTalent) || existingTalent != characterTalent)
     {
+      int actualCost = characterTalent.Cost - (existingTalent?.Cost ?? 0);
+      if (actualCost > RemainingTalentPoints)
+      {
+        throw new NotEnoughRemainingTalentPointsException(this, talent, cost, "TalentId");
+      }
+
       Raise(new TalentUpdatedEvent(id, characterTalent), userId.ActorId);
     }
   }

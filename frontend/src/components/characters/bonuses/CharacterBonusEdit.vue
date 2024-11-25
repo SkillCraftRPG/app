@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton, TarCheckbox, TarModal } from "logitar-vue3-ui";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import { nanoid } from "nanoid";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -41,7 +41,7 @@ const value = ref<number>(0);
 
 const hasChanges = computed<boolean>(
   () =>
-    category.value !== (props.bonus?.category ?? undefined) ||
+    category.value !== props.bonus?.category ||
     (target.value ?? "") !== (props.bonus?.target ?? "") ||
     value.value !== (props.bonus?.value ?? 0) ||
     isTemporary.value !== (props.bonus?.isTemporary ?? false) ||
@@ -143,10 +143,7 @@ const onSubmit = handleSubmit(async () => {
   onCancel();
 });
 
-watchEffect(() => {
-  const bonus: BonusModel | undefined = props.bonus;
-  setModel(bonus);
-});
+watch(() => props.bonus, setModel, { deep: true, immediate: true });
 </script>
 
 <template>

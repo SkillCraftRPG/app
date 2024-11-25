@@ -4,6 +4,7 @@ import type {
   BonusPayload,
   CharacterLanguagePayload,
   CharacterModel,
+  CharacterTalentPayload,
   CreateCharacterPayload,
   ReplaceCharacterPayload,
   SearchCharactersPayload,
@@ -18,6 +19,11 @@ function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
 export async function addBonus(characterId: string, payload: BonusPayload): Promise<CharacterModel> {
   const url: string = new urlUtils.UrlBuilder().setPath("/characters/{characterId}/bonuses").setParameter("characterId", characterId).buildRelative();
   return (await post<BonusPayload, CharacterModel>(url, payload)).data;
+}
+
+export async function addCharacterTalent(characterId: string, payload: CharacterTalentPayload): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder().setPath("/characters/{characterId}/talents").setParameter("characterId", characterId).buildRelative();
+  return (await post<CharacterTalentPayload, CharacterModel>(url, payload)).data;
 }
 
 export async function createCharacter(payload: CreateCharacterPayload): Promise<CharacterModel> {
@@ -51,6 +57,14 @@ export async function removeCharacterLanguage(characterId: string, languageId: s
   return (await _delete<CharacterModel>(url)).data;
 }
 
+export async function removeCharacterTalent(characterId: string, talentId: string): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/talents/{talentId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("talentId", talentId)
+    .buildRelative();
+  return (await _delete<CharacterModel>(url)).data;
+}
+
 export async function replaceCharacter(id: string, payload: ReplaceCharacterPayload, version?: number): Promise<CharacterModel> {
   const url: string = createUrlBuilder(id)
     .setQuery("version", version?.toString() ?? "")
@@ -73,6 +87,15 @@ export async function saveCharacterLanguage(characterId: string, languageId: str
     .setParameter("languageId", languageId)
     .buildRelative();
   return (await put<CharacterLanguagePayload, CharacterModel>(url, payload)).data;
+}
+
+export async function saveCharacterTalent(characterId: string, talentId: string, payload: CharacterTalentPayload): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder()
+    .setPath("/characters/{characterId}/talents/{talentId}")
+    .setParameter("characterId", characterId)
+    .setParameter("talentId", talentId)
+    .buildRelative();
+  return (await put<CharacterTalentPayload, CharacterModel>(url, payload)).data;
 }
 
 export async function searchCharacters(payload: SearchCharactersPayload): Promise<SearchResults<CharacterModel>> {

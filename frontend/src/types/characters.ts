@@ -104,6 +104,9 @@ export type CharacterModel = Aggregate & {
   caste: CasteModel;
   education: EducationModel;
   talents: CharacterTalentModel[];
+  availableTalentPoints: number;
+  spentTalentPoints: number;
+  remainingTalentPoints: number;
   inventory: InventoryModel;
 };
 
@@ -116,6 +119,13 @@ export type CharacterSortOption = SortOption & {
 export type CharacterTalentModel = {
   id: string;
   talent: TalentModel;
+  cost: number;
+  precision?: string;
+  notes?: string;
+};
+
+export type CharacterTalentPayload = {
+  talentId: string;
   cost: number;
   precision?: string;
   notes?: string;

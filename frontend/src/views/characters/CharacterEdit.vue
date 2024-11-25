@@ -8,6 +8,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import CharacterBonuses from "@/components/characters/bonuses/CharacterBonuses.vue";
 import CharacterCharacteristics from "@/components/characters/characteristics/CharacterCharacteristics.vue";
 import CharacterLanguages from "@/components/characters/languages/CharacterLanguages.vue";
+import CharacterTalents from "@/components/characters/talents/CharacterTalents.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
 import type { CharacterModel } from "@/types/characters";
@@ -62,6 +63,9 @@ onMounted(async () => {
         </TarTab>
         <TarTab id="bonuses" :title="t('characters.bonuses.label')">
           <CharacterBonuses :character="character" @error="handleError" @updated="onUpdated" />
+        </TarTab>
+        <TarTab id="talents" :title="t('talents.list')">
+          <CharacterTalents :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
       </TarTabs>
     </template>

@@ -44,6 +44,9 @@ public class CharacterModel : Aggregate
   public EducationModel Education { get; set; } = new();
 
   public List<CharacterTalentModel> Talents { get; set; } = [];
+  public int AvailableTalentPoints => 8 + (Level * 4);
+  public int SpentTalentPoints => Talents.Sum(talent => talent.Cost);
+  public int RemainingTalentPoints => AvailableTalentPoints - SpentTalentPoints;
 
   public List<InventoryModel> Inventory { get; set; } = [];
 
