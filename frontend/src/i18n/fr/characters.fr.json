@@ -154,6 +154,7 @@
     "edit": "Modifier un talent",
     "edited": "Le talent a été modifié.",
     "empty": "Cette liste est vide.",
+    "notEnoughPoints": "Le personnage ne possède pas assez de points de talents.",
     "notes": "Notes",
     "precision": "Précision",
     "remainingPoints": "Point restant : {n} | Point restant : {n} | Points restant : {n}",

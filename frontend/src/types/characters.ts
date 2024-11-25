@@ -104,6 +104,9 @@ export type CharacterModel = Aggregate & {
   caste: CasteModel;
   education: EducationModel;
   talents: CharacterTalentModel[];
+  availableTalentPoints: number;
+  spentTalentPoints: number;
+  remainingTalentPoints: number;
   inventory: InventoryModel;
 };
 

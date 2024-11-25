@@ -38,10 +38,6 @@ const sortedTalents = computed<SortedTalent[]>(() =>
   ),
 );
 
-const availablePoints = computed<number>(() => 8 + props.character.level * 4);
-const spentPoints = computed<number>(() => props.character.talents.reduce((acc, { cost }) => acc + cost, 0));
-const remainingPoints = computed<number>(() => availablePoints.value - spentPoints.value);
-
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
   (e: "updated", value: CharacterModel): void;
@@ -63,22 +59,11 @@ onMounted(async () => {
     emit("error", e);
   }
 });
-
-/* TODO(fpion):
- * (✅) Display remaining talent points
- * ( ) NotEnoughRemainingTalentPointsException
- * (✅) RequiredTalentNotPurchasedException
- * (✅) TalentCannotBePurchasedMultipleTimesException
- * (✅) TalentMaximumCostExceededException
- * (✅) TalentNotFoundException
- * (✅) TalentTierCannotExceedCharacterTierException
- * (✅) ValidationException
- */
 </script>
 
 <template>
   <div>
-    <p>{{ t("characters.talents.remainingPoints", { n: remainingPoints }) }}</p>
+    <p>{{ t("characters.talents.remainingPoints", { n: character.remainingTalentPoints }) }}</p>
     <div class="mb-3">
       <CharacterTalentEdit :character="character" :talents="availableTalents" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     </div>

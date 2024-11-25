@@ -154,6 +154,7 @@
     "edit": "Edit Talent",
     "edited": "The talent has been edited.",
     "empty": "This list is empty.",
+    "notEnoughPoints": "The character does not have enough remaining talent points.",
     "notes": "Notes",
     "precision": "Precision",
     "remainingPoints": "Remaining point: {n} | Remaining point: {n} | Remaining points: {n}",

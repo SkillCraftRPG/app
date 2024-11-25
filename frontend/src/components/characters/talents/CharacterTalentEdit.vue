@@ -30,6 +30,7 @@ const notes = ref<string>("");
 const precision = ref<string>("");
 const selectedTalent = ref<TalentModel>();
 
+const actualCost = computed<number>(() => cost.value - (props.talent?.cost ?? 0));
 const hasChanges = computed<boolean>(
   () =>
     selectedTalent.value?.id !== props.talent?.talent.id ||
@@ -37,6 +38,7 @@ const hasChanges = computed<boolean>(
     precision.value !== (props.talent?.precision ?? "") ||
     notes.value !== (props.talent?.notes ?? ""),
 );
+const hasEnoughTalentPoints = computed<boolean>(() => props.character.remainingTalentPoints >= actualCost.value);
 const id = computed<string>(() => (props.talent ? `edit-talent-${props.talent.id ?? nanoid()}` : "add-talent"));
 
 function hide(): void {
@@ -113,10 +115,11 @@ watch(() => props.talent, setModel, { deep: true, immediate: true });
         <NameInput id="precision" label="characters.talents.precision" placeholder="characters.talents.precision" v-model="precision" />
         <DescriptionTextarea id="notes" label="characters.talents.notes" placeholder="characters.talents.notes" rows="5" v-model="notes" />
       </form>
+      <p v-if="!hasEnoughTalentPoints" class="text-danger">{{ t("characters.talents.notEnoughPoints") }}</p>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />
         <TarButton
-          :disabled="isSubmitting || !hasChanges"
+          :disabled="isSubmitting || !hasChanges || !hasEnoughTalentPoints"
           :icon="talent ? 'fas fa-save' : 'fas fa-plus'"
           :loading="isSubmitting"
           :status="t('loading')"
