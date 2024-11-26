@@ -55,7 +55,9 @@ public class Character : AggregateRoot
   public LineageId SpeciesId { get; private set; }
   public LineageId? NationId { get; private set; }
   private readonly Dictionary<LineageId, AttributeBonuses> _lineageAttributes = [];
+  public IReadOnlyDictionary<LineageId, AttributeBonuses> LineageAttributes => _lineageAttributes.AsReadOnly();
   private readonly Dictionary<LineageId, Speeds> _lineageSpeeds = [];
+  public IReadOnlyDictionary<LineageId, Speeds> LineageSpeeds => _lineageSpeeds.AsReadOnly();
 
   private double _height = 0.0;
   public double Height
@@ -104,7 +106,7 @@ public class Character : AggregateRoot
   public IReadOnlyDictionary<Guid, Bonus> Bonuses => _bonuses.AsReadOnly();
 
   public NatureId NatureId { get; private set; }
-  private Attribute? _natureAttribute = null;
+  public Attribute? NatureAttribute { get; private set; }
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
 
   public IReadOnlyCollection<AspectId> AspectIds { get; private set; } = [];
@@ -130,8 +132,11 @@ public class Character : AggregateRoot
       }
     }
   }
-  public int Level => 0;
+  private readonly List<LevelUp> _levelUps = [];
+  public IReadOnlyCollection<LevelUp> LevelUps => _levelUps.AsReadOnly();
+  public int Level => _levelUps.Count;
   public bool CanLevelUp => Level < 20 && Experience >= ExperienceTable.GetTotalExperience(Level + 1);
+
   public int Tier => 0;
 
   private int _vitality = 0;
@@ -196,84 +201,18 @@ public class Character : AggregateRoot
   {
     get
     {
-      if (_attributes == null)
-      {
-        Dictionary<Attribute, int> scores = new()
-        {
-          [Attribute.Agility] = BaseAttributes.Agility,
-          [Attribute.Coordination] = BaseAttributes.Coordination,
-          [Attribute.Intellect] = BaseAttributes.Intellect,
-          [Attribute.Presence] = BaseAttributes.Presence,
-          [Attribute.Sensitivity] = BaseAttributes.Sensitivity,
-          [Attribute.Spirit] = BaseAttributes.Spirit,
-          [Attribute.Vigor] = BaseAttributes.Vigor
-        };
-        Dictionary<Attribute, int> temporaryScores = new()
-        {
-          [Attribute.Agility] = 0,
-          [Attribute.Coordination] = 0,
-          [Attribute.Intellect] = 0,
-          [Attribute.Presence] = 0,
-          [Attribute.Sensitivity] = 0,
-          [Attribute.Spirit] = 0,
-          [Attribute.Vigor] = 0
-        };
-
-        foreach (AttributeBonuses bonuses in _lineageAttributes.Values)
-        {
-          scores[Attribute.Agility] += bonuses.Agility;
-          scores[Attribute.Coordination] += bonuses.Coordination;
-          scores[Attribute.Intellect] += bonuses.Intellect;
-          scores[Attribute.Presence] += bonuses.Presence;
-          scores[Attribute.Sensitivity] += bonuses.Sensitivity;
-          scores[Attribute.Spirit] += bonuses.Spirit;
-          scores[Attribute.Vigor] += bonuses.Vigor;
-        }
-        foreach (Attribute extra in BaseAttributes.Extra)
-        {
-          scores[extra] += 1;
-        }
-
-        if (_natureAttribute.HasValue)
-        {
-          scores[_natureAttribute.Value] += 1;
-        }
-
-        scores[BaseAttributes.Best] += 3;
-        scores[BaseAttributes.Worst] += 1;
-        foreach (Attribute mandatory in BaseAttributes.Mandatory)
-        {
-          scores[mandatory] += 2;
-        }
-        foreach (Attribute optional in BaseAttributes.Optional)
-        {
-          scores[optional] += 1;
-        }
-
-        foreach (Bonus bonus in _bonuses.Values)
-        {
-          if (bonus.Category == BonusCategory.Attribute && Enum.TryParse(bonus.Target, out Attribute attribute))
-          {
-            if (bonus.IsTemporary)
-            {
-              temporaryScores[attribute] += bonus.Value;
-            }
-            else
-            {
-              scores[attribute] += bonus.Value;
-            }
-          }
-        }
-
-        foreach (KeyValuePair<Attribute, int> score in scores)
-        {
-          temporaryScores[score.Key] += score.Value;
-        }
-
-        _attributes = new CharacterAttributes(scores, temporaryScores);
-      }
-
+      _attributes ??= new CharacterAttributes(this);
       return _attributes;
+    }
+  }
+
+  private CharacterStatistics? _statistics = null;
+  public CharacterStatistics Statistics
+  {
+    get
+    {
+      _statistics ??= new CharacterStatistics(this);
+      return _statistics;
     }
   }
 
@@ -282,27 +221,7 @@ public class Character : AggregateRoot
   {
     get
     {
-      if (_speeds == null)
-      {
-        Dictionary<SpeedKind, int> speeds = new()
-        {
-          [SpeedKind.Walk] = _lineageSpeeds.Values.Max(speed => speed.Walk),
-          [SpeedKind.Climb] = _lineageSpeeds.Values.Max(speed => speed.Climb),
-          [SpeedKind.Swim] = _lineageSpeeds.Values.Max(speed => speed.Swim),
-          [SpeedKind.Fly] = _lineageSpeeds.Values.Max(speed => speed.Fly),
-          [SpeedKind.Hover] = _lineageSpeeds.Values.Max(speed => speed.Hover),
-          [SpeedKind.Burrow] = _lineageSpeeds.Values.Max(speed => speed.Burrow)
-        };
-        foreach (Bonus bonus in _bonuses.Values)
-        {
-          if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind kind))
-          {
-            speeds[kind] += bonus.Value;
-          }
-        }
-        _speeds = new CharacterSpeeds(speeds);
-      }
-
+      _speeds ??= new CharacterSpeeds(this);
       return _speeds;
     }
   }
@@ -399,7 +318,7 @@ public class Character : AggregateRoot
     _age = @event.Age;
 
     NatureId = @event.NatureId;
-    _natureAttribute = @event.NatureAttribute;
+    NatureAttribute = @event.NatureAttribute;
     CustomizationIds = @event.CustomizationIds;
 
     AspectIds = @event.AspectIds;
@@ -427,9 +346,13 @@ public class Character : AggregateRoot
     {
       case BonusCategory.Attribute:
         _attributes = null;
+        _statistics = null;
         break;
       case BonusCategory.Speed:
         _speeds = null;
+        break;
+      case BonusCategory.Statistic:
+        _statistics = null;
         break;
     }
   }
@@ -484,6 +407,52 @@ public class Character : AggregateRoot
     _experience += @event.Experience;
   }
 
+  public void CancelLevelUp(UserId userId)
+  {
+    if (_levelUps.Count > 0)
+    {
+      Raise(new LevelUpCancelledEvent(), userId.ActorId);
+    }
+  }
+  protected virtual void Apply(LevelUpCancelledEvent _)
+  {
+    _levelUps.RemoveAt(_levelUps.Count - 1);
+  }
+  public void LevelUp(Attribute attribute, UserId userId)
+  {
+    if (!CanLevelUp)
+    {
+      throw new CharacterCannotLevelUpYetException(this);
+    }
+
+    int score = attribute switch
+    {
+      Attribute.Agility => Attributes.Agility.Score,
+      Attribute.Coordination => Attributes.Coordination.Score,
+      Attribute.Intellect => Attributes.Intellect.Score,
+      Attribute.Presence => Attributes.Presence.Score,
+      Attribute.Sensitivity => Attributes.Sensitivity.Score,
+      Attribute.Spirit => Attributes.Spirit.Score,
+      Attribute.Vigor => Attributes.Vigor.Score,
+      _ => throw new ArgumentOutOfRangeException(nameof(attribute)),
+    };
+    if (score >= 20)
+    {
+      throw new NotImplementedException(); // TODO(fpion): implement
+    }
+
+    LevelUp levelUp = new(attribute, (int)Statistics.Constitution.Increment, Statistics.Initiative.Increment, (int)Statistics.Learning.Increment,
+      Statistics.Power.Increment, Statistics.Precision.Increment, Statistics.Reputation.Increment, Statistics.Strength.Increment);
+    Raise(new LeveledUpEvent(levelUp), userId.ActorId);
+  }
+  protected virtual void Apply(LeveledUpEvent @event)
+  {
+    _levelUps.Add(@event.LevelUp);
+
+    _attributes = null;
+    _statistics = null;
+  }
+
   public void RemoveBonus(Guid id, UserId userId)
   {
     if (_bonuses.ContainsKey(id))
@@ -501,6 +470,10 @@ public class Character : AggregateRoot
       {
         case BonusCategory.Attribute:
           _attributes = null;
+          _statistics = null;
+          break;
+        case BonusCategory.Statistic:
+          _statistics = null;
           break;
         case BonusCategory.Speed:
           _speeds = null;
@@ -859,6 +832,18 @@ public class Character : AggregateRoot
     {
       LanguageId = languageId;
       Metadata = metadata;
+    }
+  }
+
+  public class LevelUpCancelledEvent : DomainEvent, INotification;
+
+  public class LeveledUpEvent : DomainEvent, INotification
+  {
+    public LevelUp LevelUp { get; }
+
+    public LeveledUpEvent(LevelUp levelUp)
+    {
+      LevelUp = levelUp;
     }
   }
 

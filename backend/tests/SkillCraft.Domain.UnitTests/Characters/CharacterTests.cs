@@ -333,6 +333,32 @@ public class CharacterTests
     Assert.True(_character.CanLevelUp);
   }
 
+  [Fact(DisplayName = "CancelLevelUp: it should not do anything when there is no level-up.")]
+  public void CancelLevelUp_it_should_not_do_anything_when_there_is_no_level_up()
+  {
+    _character.ClearChanges();
+    Assert.False(_character.HasChanges);
+    Assert.Empty(_character.Changes);
+
+    _character.CancelLevelUp(_world.OwnerId);
+    Assert.False(_character.HasChanges);
+    Assert.Empty(_character.Changes);
+  }
+
+  [Fact(DisplayName = "CancelLevelUp: it should cancel the last level-up.")]
+  public void CancelLevelUp_it_should_cancel_the_last_level_up()
+  {
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    _character.LevelUp(Attribute.Agility, _world.OwnerId);
+    _character.CancelLevelUp(_world.OwnerId);
+    Assert.Empty(_character.LevelUps);
+    Assert.Equal(0, _character.Level);
+
+    Assert.Equal(16, _character.Attributes.Agility.Score);
+  }
+
   [Theory(DisplayName = "GainExperience: it should increase the character experience by a positive number.")]
   [InlineData(30)]
   public void GainExperience_it_should_increase_the_character_experience_by_a_positive_number(int experience)
@@ -351,6 +377,72 @@ public class CharacterTests
   {
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.GainExperience(experience, _world.OwnerId));
     Assert.Equal("experience", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should level-up the character.")]
+  public void LevelUp_it_should_level_up_the_character()
+  {
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    _character.LevelUp(Attribute.Agility, _world.OwnerId);
+    Assert.Equal(1, _character.Level);
+
+    LevelUp levelUp = Assert.Single(_character.LevelUps);
+    Assert.Equal(Attribute.Agility, levelUp.Attribute);
+    Assert.Equal(7, levelUp.Constitution);
+    Assert.Equal(0.2, levelUp.Initiative);
+    Assert.Equal(1, levelUp.Learning);
+    Assert.Equal(0.15, levelUp.Power);
+    Assert.Equal(0.25, levelUp.Precision);
+    Assert.Equal(0.5, levelUp.Reputation);
+    //Assert.Equal(0.425, levelUp.Strength); // TODO(fpion): level-up attribute not applied to statistic increments
+
+    Assert.Equal(17, _character.Attributes.Agility.Score);
+
+    Assert.Equal(42, _character.Statistics.Constitution.Value);
+    Assert.Equal(-1, _character.Statistics.Initiative.Value);
+    Assert.Equal(6, _character.Statistics.Learning.Value);
+    Assert.Equal(-2, _character.Statistics.Power.Value);
+    Assert.Equal(0, _character.Statistics.Precision.Value);
+    Assert.Equal(0, _character.Statistics.Reputation.Value);
+    Assert.Equal(3, _character.Statistics.Strength.Value);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should throw ArgumentOutOfRangeException when the attribute is not defined.")]
+  public void LevelUp_it_should_throw_ArgumentOutOfRangeException_when_the_attribute_is_not_defined()
+  {
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.LevelUp((Attribute)(-1), _world.OwnerId));
+    Assert.Equal("attribute", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should throw CharacterCannotLevelUpYetException when the character cannot level-up.")]
+  public void LevelUp_it_should_throw_CharacterCannotLevelUpYetException_when_the_character_cannot_level_up()
+  {
+    _character.GainExperience(75, _world.OwnerId);
+    Assert.True(_character.Experience < ExperienceTable.GetTotalExperience(_character.Level + 1));
+
+    var exception = Assert.Throws<CharacterCannotLevelUpYetException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
+    Assert.Equal(_character.WorldId.ToGuid(), exception.WorldId);
+    Assert.Equal(_character.EntityId, exception.CharacterId);
+    Assert.Equal(_character.Experience, exception.CurrentExperience);
+    Assert.Equal(_character.Level, exception.CurrentLevel);
+    Assert.Equal(ExperienceTable.GetTotalExperience(_character.Level + 1), exception.RequiredExperience);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should throw NotImplementedException when the attribute score is already superior or equal to 20.")]
+  public void LevelUp_it_should_throw_NotImplementedException_when_the_attribute_score_is_already_superior_or_equal_to_20()
+  {
+    _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Agility.ToString(), value: 4), _world.OwnerId);
+    Assert.Equal(20, _character.Attributes.Agility.Score);
+
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    Assert.Throws<NotImplementedException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
   }
 
   [Fact(DisplayName = "It should account for correct talent points.")]
@@ -376,9 +468,14 @@ public class CharacterTests
     _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Spirit.ToString(), value: -2), _world.OwnerId);
     _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Intellect.ToString(), value: +13, isTemporary: true), _world.OwnerId);
 
-    Assert.Equal(16, _character.Attributes.Agility.Score);
+    _character.Experience = ExperienceTable.GetTotalExperience(_character.Level + 1);
+    _character.Update(_world.OwnerId);
+
+    _character.LevelUp(Attribute.Agility, _world.OwnerId);
+
+    Assert.Equal(17, _character.Attributes.Agility.Score);
     Assert.Equal(3, _character.Attributes.Agility.Modifier);
-    Assert.Equal(16, _character.Attributes.Agility.TemporaryScore);
+    Assert.Equal(17, _character.Attributes.Agility.TemporaryScore);
     Assert.Equal(3, _character.Attributes.Agility.TemporaryModifier);
 
     Assert.Equal(10, _character.Attributes.Coordination.Score);
@@ -426,44 +523,60 @@ public class CharacterTests
     Assert.Equal(0, _character.Speeds.Burrow);
   }
 
+  [Fact(DisplayName = "It should account for the correct statistics.")]
+  public void It_should_account_for_the_correct_statistics()
+  {
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    _character.LevelUp(Attribute.Agility, _world.OwnerId);
+
+    _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Agility.ToString(), value: +2), _world.OwnerId);
+    _character.AddBonus(new Bonus(BonusCategory.Statistic, Statistic.Learning.ToString(), value: +4), _world.OwnerId);
+
+    Assert.Equal(42, _character.Statistics.Constitution.Value);
+    Assert.Equal(7, _character.Statistics.Constitution.Increment);
+
+    Assert.Equal(-1, _character.Statistics.Initiative.Value);
+    Assert.Equal(0.2, _character.Statistics.Initiative.Increment);
+
+    Assert.Equal(10, _character.Statistics.Learning.Value);
+    Assert.Equal(1, _character.Statistics.Learning.Increment);
+
+    Assert.Equal(-2, _character.Statistics.Power.Value);
+    Assert.Equal(0.15, _character.Statistics.Power.Increment);
+
+    Assert.Equal(0, _character.Statistics.Precision.Value);
+    Assert.Equal(0.25, _character.Statistics.Precision.Increment);
+
+    Assert.Equal(0, _character.Statistics.Reputation.Value);
+    Assert.Equal(0.5, _character.Statistics.Reputation.Increment);
+
+    Assert.Equal(4, _character.Statistics.Strength.Value);
+    Assert.Equal(0.475, _character.Statistics.Strength.Increment);
+  }
+
   [Fact(DisplayName = "It should store the lineage attributes.")]
   public void It_should_store_the_lineage_attributes()
   {
-    FieldInfo? field = _character.GetType().GetField("_lineageAttributes", BindingFlags.NonPublic | BindingFlags.Instance);
-    Assert.NotNull(field);
-
-    var lineageAttributes = field.GetValue(_character) as Dictionary<LineageId, AttributeBonuses>;
-    Assert.NotNull(lineageAttributes);
-
-    Assert.Equal(2, lineageAttributes.Count);
-    Assert.Equal(_species.Attributes, lineageAttributes[_species.Id]);
-    Assert.Equal(_nation.Attributes, lineageAttributes[_nation.Id]);
+    Assert.Equal(2, _character.LineageAttributes.Count);
+    Assert.Equal(_species.Attributes, _character.LineageAttributes[_species.Id]);
+    Assert.Equal(_nation.Attributes, _character.LineageAttributes[_nation.Id]);
   }
 
   [Fact(DisplayName = "It should store the lineage speeds.")]
   public void It_should_store_the_lineage_speeds()
   {
-    FieldInfo? field = _character.GetType().GetField("_lineageSpeeds", BindingFlags.NonPublic | BindingFlags.Instance);
-    Assert.NotNull(field);
-
-    var lineageSpeeds = field.GetValue(_character) as Dictionary<LineageId, Speeds>;
-    Assert.NotNull(lineageSpeeds);
-
-    Assert.Equal(2, lineageSpeeds.Count);
-    Assert.Equal(_species.Speeds, lineageSpeeds[_species.Id]);
-    Assert.Equal(_nation.Speeds, lineageSpeeds[_nation.Id]);
+    Assert.Equal(2, _character.LineageSpeeds.Count);
+    Assert.Equal(_species.Speeds, _character.LineageSpeeds[_species.Id]);
+    Assert.Equal(_nation.Speeds, _character.LineageSpeeds[_nation.Id]);
   }
 
   [Fact(DisplayName = "It should store the nature attribute.")]
   public void It_should_store_the_nature_attribute()
   {
-    FieldInfo? field = _character.GetType().GetField("_natureAttribute", BindingFlags.NonPublic | BindingFlags.Instance);
-    Assert.NotNull(field);
-
-    var natureAttribute = field.GetValue(_character) as Attribute?;
-    Assert.NotNull(natureAttribute);
-
-    Assert.Equal(_nature.Attribute, natureAttribute);
+    Assert.True(_character.NatureAttribute.HasValue);
+    Assert.Equal(_nature.Attribute, _character.NatureAttribute);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the nature's gift.")]
