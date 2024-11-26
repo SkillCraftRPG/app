@@ -50,7 +50,10 @@ public class CharacterTests
   {
     _lineage = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId);
     _customization = new(_world.Id, CustomizationType.Gift, new Name("Féroce"), _world.OwnerId);
-    _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
+    _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId)
+    {
+      Attribute = Attribute.Agility
+    };
     _nature.SetGift(_customization);
     _nature.Update(_world.OwnerId);
     _aspects =
@@ -358,6 +361,12 @@ public class CharacterTests
     Assert.Equal(8, _character.AvailableTalentPoints);
     Assert.Equal(6, _character.SpentTalentPoints);
     Assert.Equal(2, _character.RemainingTalentPoints);
+  }
+
+  [Fact(DisplayName = "It should store the nature attribute bonus.")]
+  public void It_should_store_the_nature_attribute_bonus()
+  {
+    Assert.Equal(_nature.Attribute, _character.NatureAttribute);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the nature's gift.")]
