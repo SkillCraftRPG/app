@@ -312,9 +312,9 @@ public class Character : AggregateRoot
     Bonus bonus = @event.Bonus;
     _bonuses[@event.BonusId] = bonus;
 
-    if (bonus.Category == BonusCategory.Speed)
+    if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
     {
-      UpdateSpeeds(Enum.Parse<SpeedKind>(bonus.Target));
+      UpdateSpeeds(speed);
     }
   }
 
@@ -381,9 +381,9 @@ public class Character : AggregateRoot
     {
       _bonuses.Remove(@event.BonusId);
 
-      if (bonus.Category == BonusCategory.Speed)
+      if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
       {
-        UpdateSpeeds(Enum.Parse<SpeedKind>(bonus.Target));
+        UpdateSpeeds(speed);
       }
     }
   }
