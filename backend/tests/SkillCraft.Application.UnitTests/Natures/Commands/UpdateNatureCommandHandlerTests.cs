@@ -4,8 +4,10 @@ using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
+using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Natures;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Natures;
 using Attribute = SkillCraft.Contracts.Attribute;
 
@@ -16,6 +18,7 @@ public class UpdateNatureCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
+  private readonly Mock<ICustomizationRepository> _customizationRepository = new();
   private readonly Mock<INatureQuerier> _natureQuerier = new();
   private readonly Mock<INatureRepository> _natureRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
@@ -27,7 +30,7 @@ public class UpdateNatureCommandHandlerTests
 
   public UpdateNatureCommandHandlerTests()
   {
-    _handler = new(_natureQuerier.Object, _natureRepository.Object, _permissionService.Object, _sender.Object);
+    _handler = new(_customizationRepository.Object, _natureQuerier.Object, _natureRepository.Object, _permissionService.Object, _sender.Object);
   }
 
   [Fact(DisplayName = "It should return null when the nature could not be found.")]
@@ -60,6 +63,9 @@ public class UpdateNatureCommandHandlerTests
   [Fact(DisplayName = "It should update an existing nature.")]
   public async Task It_should_update_an_existing_nature()
   {
+    Customization gift = new(_world.Id, CustomizationType.Gift, new Name("Mysticisme"), _world.OwnerId);
+    _customizationRepository.Setup(x => x.LoadAsync(gift.Id, _cancellationToken)).ReturnsAsync(gift);
+
     Nature nature = new(_world.Id, new Name("mysterieux"), _world.OwnerId)
     {
       Description = new Description("Le personnage s’entoure de secrets et de mystères, il laisse peu paraître ses idées et émotions."),
@@ -72,7 +78,7 @@ public class UpdateNatureCommandHandlerTests
     {
       Name = " Mystérieux ",
       Description = new Change<string>("    "),
-      GiftId = new Change<Guid?>(Guid.NewGuid())
+      GiftId = new Change<Guid?>(gift.EntityId)
     };
     UpdateNatureCommand command = new(nature.EntityId, payload);
     command.Contextualize(_world);
@@ -90,13 +96,14 @@ public class UpdateNatureCommandHandlerTests
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(
-      It.Is<SetGiftCommand>(y => y.Nature.Equals(nature) && y.Id == payload.GiftId.Value),
-      _cancellationToken), Times.Once);
-    _sender.Verify(x => x.Send(
       It.Is<SaveNatureCommand>(y => y.Nature.Equals(nature)
         && y.Nature.Name.Value == payload.Name.Trim()
         && y.Nature.Description == null
-        && y.Nature.Attribute == Attribute.Spirit),
+        && y.Nature.Attribute == Attribute.Spirit
+        && y.Nature.GiftId == gift.Id),
       _cancellationToken), Times.Once);
   }
+
+  // TODO(fpion): set null GiftId?
+  // TODO(fpion): CustomizationNotFoundException
 }

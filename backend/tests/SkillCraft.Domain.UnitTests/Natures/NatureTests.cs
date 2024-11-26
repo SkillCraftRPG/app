@@ -8,15 +8,11 @@ namespace SkillCraft.Domain.Natures;
 [Trait(Traits.Category, Categories.Unit)]
 public class NatureTests
 {
-  private readonly Nature _nature = new(WorldId.NewId(), new Name("Timide"), UserId.NewId());
-
-  [Fact(DisplayName = "It should throw ArgumentException when setting a customization that is not a gift.")]
-  public void It_should_throw_ArgumentException_when_setting_a_customization_that_is_not_a_gift()
+  private readonly UserId _userId = UserId.NewId();
+  private readonly Nature _nature;
+  public NatureTests()
   {
-    Customization gift = new(_nature.WorldId, CustomizationType.Disability, new Name("Cleptomane"), new UserId(_nature.CreatedBy));
-    var exception = Assert.Throws<ArgumentException>(() => _nature.SetGift(gift));
-    Assert.StartsWith("The customization is not a gift.", exception.Message);
-    Assert.Equal("gift", exception.ParamName);
+    _nature = new(WorldId.NewId(), new Name("Timide"), _userId);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when setting a gift from another world.")]
@@ -33,5 +29,16 @@ public class NatureTests
   {
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _nature.Attribute = (Attribute)(-1));
     Assert.Equal("Attribute", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw CustomizationIsNotGiftException when setting a customization that is not a Gift.")]
+  public void It_should_throw_CustomizationIsNotGiftException_when_setting_a_customization_that_is_not_a_Gift()
+  {
+    Customization disability = new(_nature.WorldId, CustomizationType.Disability, new Name("Chaotique"), _userId);
+    var exception = Assert.Throws<CustomizationIsNotGiftException>(() => _nature.SetGift(disability));
+    Assert.Equal(disability.WorldId.ToGuid(), exception.WorldId);
+    Assert.Equal(disability.EntityId, exception.CustomizationId);
+    Assert.Equal(disability.Type, exception.CustomizationType);
+    Assert.Equal("GiftId", exception.PropertyName);
   }
 }

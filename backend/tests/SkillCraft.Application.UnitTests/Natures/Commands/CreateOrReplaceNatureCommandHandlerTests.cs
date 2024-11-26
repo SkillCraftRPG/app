@@ -4,8 +4,10 @@ using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
+using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Natures;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Natures;
 using Attribute = SkillCraft.Contracts.Attribute;
 
@@ -16,6 +18,7 @@ public class CreateOrReplaceNatureCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
+  private readonly Mock<ICustomizationRepository> _customizationRepository = new();
   private readonly Mock<INatureQuerier> _natureQuerier = new();
   private readonly Mock<INatureRepository> _natureRepository = new();
   private readonly Mock<IPermissionService> _permissionService = new();
@@ -24,12 +27,16 @@ public class CreateOrReplaceNatureCommandHandlerTests
   private readonly CreateOrReplaceNatureCommandHandler _handler;
 
   private readonly WorldMock _world = new();
+  private readonly Customization _gift;
   private readonly Nature _nature;
   private readonly NatureModel _model = new();
 
   public CreateOrReplaceNatureCommandHandlerTests()
   {
-    _handler = new(_natureQuerier.Object, _natureRepository.Object, _permissionService.Object, _sender.Object);
+    _handler = new(_customizationRepository.Object, _natureQuerier.Object, _natureRepository.Object, _permissionService.Object, _sender.Object);
+
+    _gift = new(_world.Id, CustomizationType.Gift, new Name("Féroce"), _world.OwnerId);
+    _customizationRepository.Setup(x => x.LoadAsync(_gift.Id, _cancellationToken)).ReturnsAsync(_gift);
 
     _nature = new(_world.Id, new Name("courrouce"), _world.OwnerId);
     _natureRepository.Setup(x => x.LoadAsync(_nature.Id, _cancellationToken)).ReturnsAsync(_nature);
@@ -46,7 +53,7 @@ public class CreateOrReplaceNatureCommandHandlerTests
     {
       Description = "  Les émotions du personnage sont vives et ses mouvements sont brusques.  ",
       Attribute = Attribute.Agility,
-      GiftId = Guid.NewGuid()
+      GiftId = _gift.EntityId
     };
 
     bool parsed = Guid.TryParse(idValue, out Guid id);
@@ -60,12 +67,12 @@ public class CreateOrReplaceNatureCommandHandlerTests
     _permissionService.Verify(x => x.EnsureCanPreviewAsync(command, EntityType.Customization, _cancellationToken), Times.Once);
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Nature, _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Id == payload.GiftId), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(
       It.Is<SaveNatureCommand>(y => (!parsed || y.Nature.EntityId == id)
         && y.Nature.Name.Value == payload.Name.Trim()
         && y.Nature.Description != null && y.Nature.Description.Value == payload.Description.Trim()
-        && y.Nature.Attribute == payload.Attribute),
+        && y.Nature.Attribute == payload.Attribute
+        && y.Nature.GiftId == _gift.Id),
       _cancellationToken), Times.Once);
   }
 
@@ -76,7 +83,7 @@ public class CreateOrReplaceNatureCommandHandlerTests
     {
       Description = "  Les émotions du personnage sont vives et ses mouvements sont brusques.  ",
       Attribute = Attribute.Agility,
-      GiftId = Guid.NewGuid()
+      GiftId = _gift.EntityId
     };
 
     CreateOrReplaceNatureCommand command = new(_nature.EntityId, payload, Version: null);
@@ -92,12 +99,12 @@ public class CreateOrReplaceNatureCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Nature && y.Id == _nature.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Nature.Equals(_nature) && y.Id == payload.GiftId), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(
       It.Is<SaveNatureCommand>(y => y.Nature.Equals(_nature)
         && y.Nature.Name.Value == payload.Name.Trim()
         && y.Nature.Description != null && y.Nature.Description.Value == payload.Description.Trim()
-        && y.Nature.Attribute == payload.Attribute),
+        && y.Nature.Attribute == payload.Attribute
+        && y.Nature.GiftId == _gift.Id),
       _cancellationToken), Times.Once);
   }
 
@@ -142,7 +149,7 @@ public class CreateOrReplaceNatureCommandHandlerTests
     {
       Description = "    ",
       Attribute = Attribute.Agility,
-      GiftId = Guid.NewGuid()
+      GiftId = _gift.EntityId
     };
 
     CreateOrReplaceNatureCommand command = new(_nature.EntityId, payload, reference.Version);
@@ -158,12 +165,15 @@ public class CreateOrReplaceNatureCommandHandlerTests
       It.Is<EntityMetadata>(y => y.WorldId == _world.Id && y.Type == EntityType.Nature && y.Id == _nature.EntityId && y.Size > 0),
       _cancellationToken), Times.Once);
 
-    _sender.Verify(x => x.Send(It.Is<SetGiftCommand>(y => y.Nature.Equals(_nature) && y.Id == payload.GiftId), _cancellationToken), Times.Once);
     _sender.Verify(x => x.Send(
       It.Is<SaveNatureCommand>(y => y.Nature.Equals(_nature)
         && y.Nature.Name.Value == payload.Name.Trim()
         && y.Nature.Description == description
-        && y.Nature.Attribute == payload.Attribute),
+        && y.Nature.Attribute == payload.Attribute
+        && y.Nature.GiftId == _gift.Id),
       _cancellationToken), Times.Once);
   }
+
+  // TODO(fpion): set null GiftId?
+  // TODO(fpion): CustomizationNotFoundException
 }

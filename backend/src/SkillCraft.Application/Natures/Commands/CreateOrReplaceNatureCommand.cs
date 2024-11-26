@@ -23,17 +23,20 @@ public record CreateOrReplaceNatureCommand(Guid? Id, CreateOrReplaceNaturePayloa
 
 internal class CreateOrReplaceNatureCommandHandler : IRequestHandler<CreateOrReplaceNatureCommand, CreateOrReplaceNatureResult>
 {
+  private readonly ICustomizationRepository _customizationRepository;
   private readonly INatureQuerier _natureQuerier;
   private readonly INatureRepository _natureRepository;
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
   public CreateOrReplaceNatureCommandHandler(
+    ICustomizationRepository customizationRepository,
     INatureQuerier natureQuerier,
     INatureRepository natureRepository,
     IPermissionService permissionService,
     ISender sender)
   {
+    _customizationRepository = customizationRepository;
     _natureQuerier = natureQuerier;
     _natureRepository = natureRepository;
     _permissionService = permissionService;
@@ -92,7 +95,13 @@ internal class CreateOrReplaceNatureCommandHandler : IRequestHandler<CreateOrRep
       Attribute = payload.Attribute
     };
 
-    await _sender.Send(new SetGiftCommand(nature, payload.GiftId), cancellationToken);
+    if (payload.GiftId.HasValue)
+    {
+      CustomizationId giftId = new(nature.WorldId, payload.GiftId.Value);
+      Customization gift = await _customizationRepository.LoadAsync(giftId, cancellationToken)
+        ?? throw new CustomizationNotFoundException(giftId, nameof(payload.GiftId));
+      nature.SetGift(gift);
+    }
 
     nature.Update(userId);
 
@@ -132,7 +141,13 @@ internal class CreateOrReplaceNatureCommandHandler : IRequestHandler<CreateOrRep
     CustomizationId? giftId = payload.GiftId.HasValue ? new(nature.WorldId, payload.GiftId.Value) : null;
     if (giftId != reference.GiftId)
     {
-      await _sender.Send(new SetGiftCommand(nature, payload.GiftId), cancellationToken);
+      Customization? gift = null;
+      if (giftId.HasValue)
+      {
+        gift = await _customizationRepository.LoadAsync(giftId.Value, cancellationToken)
+          ?? throw new CustomizationNotFoundException(giftId.Value, nameof(payload.GiftId));
+      }
+      nature.SetGift(gift);
     }
 
     nature.Update(userId);
