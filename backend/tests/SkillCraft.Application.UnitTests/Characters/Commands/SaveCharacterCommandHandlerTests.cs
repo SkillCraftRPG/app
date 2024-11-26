@@ -46,8 +46,8 @@ public class SaveCharacterCommandHandlerTests
     Caste caste = new(world.Id, new Name("Milicien"), world.OwnerId);
     Education education = new(world.Id, new Name("Champs de bataille"), world.OwnerId);
     Character character = new(world.Id, new Name("Heracles Aetos"), new PlayerName(_faker.Person.FullName),
-      nation, height: 1.84, weight: 84.6, age: 30, nature, customizations: [], aspects, baseAttributes,
-      caste, education, world.OwnerId);
+      species, nation, height: 1.84, weight: 84.6, age: 30, nature, customizations: [],
+      aspects, baseAttributes, caste, education, world.OwnerId);
 
     SaveCharacterCommand command = new(character);
 

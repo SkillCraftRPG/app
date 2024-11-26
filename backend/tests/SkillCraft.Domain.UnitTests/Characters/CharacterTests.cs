@@ -20,7 +20,8 @@ namespace SkillCraft.Domain.Characters;
 public class CharacterTests
 {
   private readonly World _world = new(new Slug("ungar"), UserId.NewId());
-  private readonly Lineage _lineage;
+  private readonly Lineage _species;
+  private readonly Lineage _nation;
   private readonly Customization _customization;
   private readonly Nature _nature;
   private readonly Aspect[] _aspects;
@@ -48,9 +49,13 @@ public class CharacterTests
 
   public CharacterTests()
   {
-    _lineage = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId);
+    _species = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId);
+    _nation = new(_world.Id, _species, new Name("Orrin"), _world.OwnerId);
     _customization = new(_world.Id, CustomizationType.Gift, new Name("Féroce"), _world.OwnerId);
-    _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
+    _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId)
+    {
+      Attribute = Attribute.Agility
+    };
     _nature.SetGift(_customization);
     _nature.Update(_world.OwnerId);
     _aspects =
@@ -96,7 +101,8 @@ public class CharacterTests
       _world.Id,
       new Name("Heracles Aetos"),
       player: null,
-      _lineage,
+      _species,
+      _nation,
       height: 1.84,
       weight: 84.6,
       age: 30,
@@ -360,12 +366,52 @@ public class CharacterTests
     Assert.Equal(2, _character.RemainingTalentPoints);
   }
 
+  [Fact(DisplayName = "It should store the lineage attributes.")]
+  public void It_should_store_the_lineage_attributes()
+  {
+    FieldInfo? field = _character.GetType().GetField("_lineageAttributes", BindingFlags.NonPublic | BindingFlags.Instance);
+    Assert.NotNull(field);
+
+    var lineageAttributes = field.GetValue(_character) as Dictionary<LineageId, AttributeBonuses>;
+    Assert.NotNull(lineageAttributes);
+
+    Assert.Equal(2, lineageAttributes.Count);
+    Assert.Equal(_species.Attributes, lineageAttributes[_species.Id]);
+    Assert.Equal(_nation.Attributes, lineageAttributes[_nation.Id]);
+  }
+
+  [Fact(DisplayName = "It should store the lineage speeds.")]
+  public void It_should_store_the_lineage_speeds()
+  {
+    FieldInfo? field = _character.GetType().GetField("_lineageSpeeds", BindingFlags.NonPublic | BindingFlags.Instance);
+    Assert.NotNull(field);
+
+    var lineageSpeeds = field.GetValue(_character) as Dictionary<LineageId, Speeds>;
+    Assert.NotNull(lineageSpeeds);
+
+    Assert.Equal(2, lineageSpeeds.Count);
+    Assert.Equal(_species.Speeds, lineageSpeeds[_species.Id]);
+    Assert.Equal(_nation.Speeds, lineageSpeeds[_nation.Id]);
+  }
+
+  [Fact(DisplayName = "It should store the nature attribute.")]
+  public void It_should_store_the_nature_attribute()
+  {
+    FieldInfo? field = _character.GetType().GetField("_natureAttribute", BindingFlags.NonPublic | BindingFlags.Instance);
+    Assert.NotNull(field);
+
+    var natureAttribute = field.GetValue(_character) as Attribute?;
+    Assert.NotNull(natureAttribute);
+
+    Assert.Equal(_nature.Attribute, natureAttribute);
+  }
+
   [Fact(DisplayName = "It should throw ArgumentException when a customization is the same as the nature's gift.")]
   public void It_should_throw_ArgumentException_when_a_customization_is_the_same_as_the_nature_s_gift()
   {
     Customization[] customizations = [_customization];
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations, _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations, _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.StartsWith("The customizations cannot include the gift of the nature.", exception.Message);
     Assert.Equal("customizations", exception.ParamName);
   }
@@ -374,8 +420,8 @@ public class CharacterTests
   public void It_should_throw_ArgumentException_when_a_customization_resides_in_another_world()
   {
     Customization[] customizations = [new(WorldId.NewId(), CustomizationType.Gift, new Name("Féroce"), UserId.NewId())];
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations, _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations, _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.StartsWith("One or more customizations do not reside in the same world as the character.", exception.Message);
     Assert.Equal("customizations", exception.ParamName);
   }
@@ -384,8 +430,8 @@ public class CharacterTests
   public void It_should_throw_ArgumentException_when_an_aspect_resides_in_another_world()
   {
     Aspect[] aspects = [_aspects[0], new(WorldId.NewId(), new Name("Gymnaste"), UserId.NewId())];
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations: [], aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.StartsWith("One or more aspects do not reside in the same world as the character.", exception.Message);
     Assert.Equal("aspects", exception.ParamName);
   }
@@ -394,8 +440,8 @@ public class CharacterTests
   public void It_should_throw_ArgumentException_when_not_exactly_two_different_aspects_were_provided()
   {
     Aspect[] aspects = [_aspects[0], _aspects[0]];
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations: [], aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.StartsWith("Exactly 2 different aspects should be provided.", exception.Message);
     Assert.Equal("aspects", exception.ParamName);
   }
@@ -405,8 +451,8 @@ public class CharacterTests
   {
     Caste caste = new(WorldId.NewId(), new Name("Amuseur"), UserId.NewId());
 
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, caste, _education, _world.OwnerId));
     Assert.StartsWith("The caste does not reside in the same world as the character.", exception.Message);
     Assert.Equal("caste", exception.ParamName);
   }
@@ -416,21 +462,22 @@ public class CharacterTests
   {
     Education education = new(WorldId.NewId(), new Name("Rebelle"), UserId.NewId());
 
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, education, _world.OwnerId));
     Assert.StartsWith("The education does not reside in the same world as the character.", exception.Message);
     Assert.Equal("education", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentException when the lineage resides in another world.")]
-  public void It_should_throw_ArgumentException_when_the_lineage_resides_in_another_world()
+  [Fact(DisplayName = "It should throw ArgumentException when the nation belongs to another species.")]
+  public void It_should_throw_ArgumentException_when_the_nation_belongs_to_another_species()
   {
-    Lineage lineage = new(WorldId.NewId(), parent: null, new Name("Elfe"), UserId.NewId());
+    Lineage species = new(_world.Id, parent: null, new Name("Elfe"), _world.OwnerId);
+    Lineage nation = new(_world.Id, species, new Name("Haut-Elfe"), _world.OwnerId);
 
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
-    Assert.StartsWith("The lineage does not reside in the same world as the character.", exception.Message);
-    Assert.Equal("lineage", exception.ParamName);
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    Assert.StartsWith("The nation must belong to the species.", exception.Message);
+    Assert.Equal("nation", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw ArgumentException when the number of gifts does not equal the number of disabilities.")]
@@ -438,8 +485,8 @@ public class CharacterTests
   {
 
     Customization[] customizations = [new(_world.Id, CustomizationType.Gift, new Name("Réflexes"), _world.OwnerId)];
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, _nature, customizations, _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations, _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.StartsWith("The customizations must contain an equal number of gifts and disabilities.", exception.Message);
     Assert.Equal("customizations", exception.ParamName);
   }
@@ -449,10 +496,30 @@ public class CharacterTests
   {
     Nature nature = new(WorldId.NewId(), new Name("Courroucé"), UserId.NewId());
 
-    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age: 30, nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age: 30, nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.StartsWith("The nature does not reside in the same world as the character.", exception.Message);
     Assert.Equal("nature", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentException when the species is a nation.")]
+  public void It_should_throw_ArgumentException_when_the_species_is_a_nation()
+  {
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, species: _nation, nation: null,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    Assert.StartsWith("The species cannot be a nation.", exception.Message);
+    Assert.Equal("species", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw ArgumentException when the species resides in another world.")]
+  public void It_should_throw_ArgumentException_when_the_species_resides_in_another_world()
+  {
+    Lineage species = new(WorldId.NewId(), parent: null, new Name("Elfe"), UserId.NewId());
+
+    var exception = Assert.Throws<ArgumentException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, species, _nation,
+      height: 1.84, weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    Assert.StartsWith("The species does not reside in the same world as the character.", exception.Message);
+    Assert.Equal("species", exception.ParamName);
   }
 
   [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when setting a negative Blood Alcohol Content.")]
@@ -495,8 +562,8 @@ public class CharacterTests
   [InlineData(-30)]
   public void It_should_throw_ArgumentOutOfRangeException_when_the_age_is_not_stricly_positive(int age)
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight: 84.6, age, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight: 84.6, age, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("age", exception.ParamName);
 
     exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Age = age);
@@ -508,8 +575,8 @@ public class CharacterTests
   [InlineData(-1.84)]
   public void It_should_throw_ArgumentOutOfRangeException_when_the_height_is_not_stricly_positive(double height)
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height,
-      weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height, weight: 84.6, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("height", exception.ParamName);
 
     exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Height = height);
@@ -521,8 +588,8 @@ public class CharacterTests
   [InlineData(-84.6)]
   public void It_should_throw_ArgumentOutOfRangeException_when_the_weight_is_not_stricly_positive(double weight)
   {
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _lineage, height: 1.84,
-      weight, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Character(_world.Id, new Name("Heracles Aetos"), player: null, _species, _nation,
+      height: 1.84, weight, age: 30, _nature, customizations: [], _aspects, _baseAttributes, _caste, _education, _world.OwnerId));
     Assert.Equal("weight", exception.ParamName);
 
     exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Weight = weight);

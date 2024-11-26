@@ -20,7 +20,8 @@ internal class CharacterBuilder
   public Name Name { get; }
   public PlayerName? Player { get; }
 
-  public Lineage Lineage { get; }
+  public Lineage Species { get; }
+  public Lineage? Nation { get; }
   public Nature Nature { get; }
   public IReadOnlyCollection<Customization> Customizations { get; }
   public IReadOnlyCollection<Aspect> Aspects { get; }
@@ -34,8 +35,8 @@ internal class CharacterBuilder
 
     Name = new Name("Heracles Aetos");
 
-    Lineage parent = new(World.Id, parent: null, new Name("Humain"), World.OwnerId);
-    Lineage = new Lineage(World.Id, parent, new Name("Orrin"), World.OwnerId);
+    Species = new Lineage(World.Id, parent: null, new Name("Humain"), World.OwnerId);
+    Nation = new Lineage(World.Id, Species, new Name("Orrin"), World.OwnerId);
     Nature = new Nature(World.Id, new Name("Courroucé"), World.OwnerId);
     Customizations =
     [
@@ -60,6 +61,6 @@ internal class CharacterBuilder
     return this;
   }
 
-  public Character Build() => new(World.Id, Name, Player, Lineage, height: 1.67, weight: 62.8, age: 20,
-    Nature, Customizations, Aspects, BaseAttributes, Caste, Education, World.OwnerId, EntityId);
+  public Character Build() => new(World.Id, Name, Player, Species, Nation, height: 1.67, weight: 62.8,
+    age: 20, Nature, Customizations, Aspects, BaseAttributes, Caste, Education, World.OwnerId, EntityId);
 }

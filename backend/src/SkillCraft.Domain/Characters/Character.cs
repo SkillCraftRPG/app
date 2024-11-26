@@ -12,6 +12,7 @@ using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
+using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Domain.Characters;
 
@@ -50,7 +51,11 @@ public class Character : AggregateRoot
     }
   }
 
-  public LineageId LineageId { get; private set; }
+  public LineageId SpeciesId { get; private set; }
+  public LineageId? NationId { get; private set; }
+  private readonly Dictionary<LineageId, AttributeBonuses> _lineageAttributes = [];
+  private readonly Dictionary<LineageId, Speeds> _lineageSpeeds = [];
+
   private double _height = 0.0;
   public double Height
   {
@@ -98,6 +103,7 @@ public class Character : AggregateRoot
   public IReadOnlyDictionary<Guid, Bonus> Bonuses => _bonuses.AsReadOnly();
 
   public NatureId NatureId { get; private set; }
+  private Attribute? _natureAttribute = null;
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
 
   public IReadOnlyCollection<AspectId> AspectIds { get; private set; } = [];
@@ -206,7 +212,8 @@ public class Character : AggregateRoot
     WorldId worldId,
     Name name,
     PlayerName? player,
-    Lineage lineage,
+    Lineage species,
+    Lineage? nation,
     double height,
     double weight,
     int age,
@@ -219,9 +226,17 @@ public class Character : AggregateRoot
     UserId userId,
     Guid? entityId = null) : base(new CharacterId(worldId, entityId).AggregateId)
   {
-    if (lineage.WorldId != worldId)
+    if (species.WorldId != worldId)
     {
-      throw new ArgumentException("The lineage does not reside in the same world as the character.", nameof(lineage));
+      throw new ArgumentException("The species does not reside in the same world as the character.", nameof(species));
+    }
+    else if (species.ParentId.HasValue)
+    {
+      throw new ArgumentException("The species cannot be a nation.", nameof(species));
+    }
+    else if (nation != null && nation.ParentId != species.Id)
+    {
+      throw new ArgumentException("The nation must belong to the species.", nameof(nation));
     }
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(height, 0.0, nameof(height));
     ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(weight, 0.0, nameof(weight));
@@ -241,7 +256,9 @@ public class Character : AggregateRoot
       throw new ArgumentException("The education does not reside in the same world as the character.", nameof(education));
     }
 
-    CreatedEvent @event = new(name, player, lineage.Id, height, weight, age, nature.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
+    CreatedEvent @event = new(name, player, species.Id, species.Attributes, species.Speeds,
+      nation?.Id, nation?.Attributes, nation?.Speeds, height, weight, age,
+      nature.Id, nature.Attribute, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
     Raise(@event, userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
@@ -249,12 +266,23 @@ public class Character : AggregateRoot
     _name = @event.Name;
     _player = @event.Player;
 
-    LineageId = @event.LineageId;
+    SpeciesId = @event.SpeciesId;
+    _lineageAttributes[@event.SpeciesId] = @event.SpeciesAttributes;
+    _lineageSpeeds[@event.SpeciesId] = @event.SpeciesSpeeds;
+
+    if (@event.NationId.HasValue && @event.NationAttributes != null && @event.NationSpeeds != null)
+    {
+      NationId = @event.NationId.Value;
+      _lineageAttributes[@event.NationId.Value] = @event.NationAttributes;
+      _lineageSpeeds[@event.NationId.Value] = @event.NationSpeeds;
+    }
+
     _height = @event.Height;
     _weight = @event.Weight;
     _age = @event.Age;
 
     NatureId = @event.NatureId;
+    _natureAttribute = @event.NatureAttribute;
     CustomizationIds = @event.CustomizationIds;
 
     AspectIds = @event.AspectIds;
@@ -593,12 +621,20 @@ public class Character : AggregateRoot
     public Name Name { get; }
     public PlayerName? Player { get; }
 
-    public LineageId LineageId { get; }
+    public LineageId SpeciesId { get; }
+    public AttributeBonuses SpeciesAttributes { get; }
+    public Speeds SpeciesSpeeds { get; }
+
+    public LineageId? NationId { get; }
+    public AttributeBonuses? NationAttributes { get; }
+    public Speeds? NationSpeeds { get; }
+
     public double Height { get; }
     public double Weight { get; }
     public int Age { get; }
 
     public NatureId NatureId { get; }
+    public Attribute? NatureAttribute { get; }
     public IReadOnlyCollection<CustomizationId> CustomizationIds { get; }
 
     public IReadOnlyCollection<AspectId> AspectIds { get; }
@@ -608,19 +644,28 @@ public class Character : AggregateRoot
     public CasteId CasteId { get; }
     public EducationId EducationId { get; }
 
-    public CreatedEvent(Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
-      NatureId natureId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds,
-      BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
+    public CreatedEvent(Name name, PlayerName? player, LineageId speciesId, AttributeBonuses speciesAttributes, Speeds speciesSpeeds,
+      LineageId? nationId, AttributeBonuses? nationAttributes, Speeds? nationSpeeds, double height, double weight, int age,
+      NatureId natureId, Attribute? natureAttribute, IReadOnlyCollection<CustomizationId> customizationIds,
+      IReadOnlyCollection<AspectId> aspectIds, BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
     {
       Name = name;
       Player = player;
 
-      LineageId = lineageId;
+      SpeciesId = speciesId;
+      SpeciesAttributes = speciesAttributes;
+      SpeciesSpeeds = speciesSpeeds;
+
+      NationId = nationId;
+      NationAttributes = nationAttributes;
+      NationSpeeds = nationSpeeds;
+
       Height = height;
       Weight = weight;
       Age = age;
 
       NatureId = natureId;
+      NatureAttribute = natureAttribute;
       CustomizationIds = customizationIds;
 
       AspectIds = aspectIds;

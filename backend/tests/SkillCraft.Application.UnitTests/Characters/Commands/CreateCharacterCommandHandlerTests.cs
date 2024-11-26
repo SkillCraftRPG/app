@@ -186,7 +186,8 @@ public class CreateCharacterCommandHandlerTests
       && y.Character.WorldId == _world.Id
       && y.Character.Name.Value == payload.Name.Trim()
       && y.Character.Player != null && y.Character.Player.Value == payload.Player.Trim()
-      && y.Character.LineageId == _nation.Id
+      && y.Character.SpeciesId == _species.Id
+      && y.Character.NationId == _nation.Id
       && y.Character.Height == payload.Height
       && y.Character.Weight == payload.Weight
       && y.Character.Age == payload.Age
