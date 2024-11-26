@@ -57,35 +57,6 @@ public class Character : AggregateRoot
   private readonly Dictionary<LineageId, AttributeBonuses> _lineageAttributes = [];
   private readonly Dictionary<LineageId, Speeds> _lineageSpeeds = [];
 
-  private CharacterSpeeds? _speeds = null;
-  public CharacterSpeeds Speeds
-  {
-    get
-    {
-      if (_speeds == null)
-      {
-        Dictionary<SpeedKind, int> speeds = new()
-        {
-          [SpeedKind.Walk] = _lineageSpeeds.Values.Max(speed => speed.Walk),
-          [SpeedKind.Climb] = _lineageSpeeds.Values.Max(speed => speed.Climb),
-          [SpeedKind.Swim] = _lineageSpeeds.Values.Max(speed => speed.Swim),
-          [SpeedKind.Fly] = _lineageSpeeds.Values.Max(speed => speed.Fly),
-          [SpeedKind.Hover] = _lineageSpeeds.Values.Max(speed => speed.Hover),
-          [SpeedKind.Burrow] = _lineageSpeeds.Values.Max(speed => speed.Burrow)
-        };
-        foreach (Bonus bonus in _bonuses.Values)
-        {
-          if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind kind))
-          {
-            speeds[kind] += bonus.Value;
-          }
-        }
-        _speeds = new CharacterSpeeds(speeds);
-      }
-      return _speeds;
-    }
-  }
-
   private double _height = 0.0;
   public double Height
   {
@@ -217,6 +188,35 @@ public class Character : AggregateRoot
         _intoxication = value;
         _updatedEvent.Intoxication = value;
       }
+    }
+  }
+
+  private CharacterSpeeds? _speeds = null;
+  public CharacterSpeeds Speeds
+  {
+    get
+    {
+      if (_speeds == null)
+      {
+        Dictionary<SpeedKind, int> speeds = new()
+        {
+          [SpeedKind.Walk] = _lineageSpeeds.Values.Max(speed => speed.Walk),
+          [SpeedKind.Climb] = _lineageSpeeds.Values.Max(speed => speed.Climb),
+          [SpeedKind.Swim] = _lineageSpeeds.Values.Max(speed => speed.Swim),
+          [SpeedKind.Fly] = _lineageSpeeds.Values.Max(speed => speed.Fly),
+          [SpeedKind.Hover] = _lineageSpeeds.Values.Max(speed => speed.Hover),
+          [SpeedKind.Burrow] = _lineageSpeeds.Values.Max(speed => speed.Burrow)
+        };
+        foreach (Bonus bonus in _bonuses.Values)
+        {
+          if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind kind))
+          {
+            speeds[kind] += bonus.Value;
+          }
+        }
+        _speeds = new CharacterSpeeds(speeds);
+      }
+      return _speeds;
     }
   }
 
