@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using MediatR;
 using Moq;
+using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
@@ -76,6 +77,40 @@ public class CreateOrReplaceNatureCommandHandlerTests
       _cancellationToken), Times.Once);
   }
 
+  [Theory(DisplayName = "It should nullify the gift.")]
+  [InlineData(null)]
+  [InlineData("de7ee9b0-6feb-4b62-856f-848de57c3c10")]
+  public async Task It_should_nullify_the_gift(string? idValue)
+  {
+    Nature? nature = null;
+    if (idValue != null)
+    {
+      nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId, Guid.Parse(idValue));
+      _natureRepository.Setup(x => x.LoadAsync(nature.Id, _cancellationToken)).ReturnsAsync(nature);
+
+      Customization gift = new(_world.Id, CustomizationType.Gift, new Name("Féroce"), _world.OwnerId);
+      nature.SetGift(gift);
+      nature.Update(_world.OwnerId);
+    }
+
+    CreateOrReplaceNaturePayload payload = new("Courroucé");
+    CreateOrReplaceNatureCommand command = new(nature?.EntityId, payload, Version: null);
+    command.Contextualize(_world);
+
+    CreateOrReplaceNatureResult result = await _handler.Handle(command, _cancellationToken);
+    Assert.Same(_model, result.Nature);
+    Assert.Equal(idValue == null, result.Created);
+
+    if (nature == null)
+    {
+      _sender.Verify(x => x.Send(It.Is<SaveNatureCommand>(y => y.Nature.GiftId == null), _cancellationToken), Times.Once);
+    }
+    else
+    {
+      Assert.Null(nature.GiftId);
+    }
+  }
+
   [Fact(DisplayName = "It should replace an existing nature.")]
   public async Task It_should_replace_an_existing_nature()
   {
@@ -116,6 +151,31 @@ public class CreateOrReplaceNatureCommandHandlerTests
 
     CreateOrReplaceNatureResult result = await _handler.Handle(command, _cancellationToken);
     Assert.Null(result.Nature);
+  }
+
+  [Theory(DisplayName = "It should throw CustomizationNotFoundException when the customization could not be found.")]
+  [InlineData(null)]
+  [InlineData("bfd82453-f40f-430f-8feb-0aad4eed8ded")]
+  public async Task It_should_throw_CustomizationNotFoundException_when_the_customization_could_not_be_found(string? idValue)
+  {
+    Nature? nature = null;
+    if (idValue != null)
+    {
+      nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId, Guid.Parse(idValue));
+      _natureRepository.Setup(x => x.LoadAsync(nature.Id, _cancellationToken)).ReturnsAsync(nature);
+    }
+
+    CreateOrReplaceNaturePayload payload = new("Courroucé")
+    {
+      GiftId = Guid.NewGuid()
+    };
+    CreateOrReplaceNatureCommand command = new(nature?.EntityId, payload, Version: null);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<CustomizationNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.GiftId, exception.CustomizationId);
+    Assert.Equal("GiftId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -173,7 +233,4 @@ public class CreateOrReplaceNatureCommandHandlerTests
         && y.Nature.GiftId == _gift.Id),
       _cancellationToken), Times.Once);
   }
-
-  // TODO(fpion): set null GiftId?
-  // TODO(fpion): CustomizationNotFoundException
 }

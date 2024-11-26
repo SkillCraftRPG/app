@@ -2,6 +2,7 @@
 using Logitar.Security.Cryptography;
 using MediatR;
 using Moq;
+using SkillCraft.Application.Customizations;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Customizations;
@@ -33,6 +34,33 @@ public class UpdateNatureCommandHandlerTests
     _handler = new(_customizationRepository.Object, _natureQuerier.Object, _natureRepository.Object, _permissionService.Object, _sender.Object);
   }
 
+  [Fact(DisplayName = "It should nullify the gift.")]
+  public async Task It_should_nullify_the_gift()
+  {
+    Nature nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId);
+    _natureRepository.Setup(x => x.LoadAsync(nature.Id, _cancellationToken)).ReturnsAsync(nature);
+
+    Customization gift = new(_world.Id, CustomizationType.Gift, new Name("Féroce"), _world.OwnerId);
+    nature.SetGift(gift);
+    nature.Update(_world.OwnerId);
+
+    UpdateNaturePayload payload = new()
+    {
+      GiftId = new Change<Guid?>(null)
+    };
+    UpdateNatureCommand command = new(nature.EntityId, payload);
+    command.Contextualize(_world);
+
+    NatureModel model = new();
+    _natureQuerier.Setup(x => x.ReadAsync(nature, _cancellationToken)).ReturnsAsync(model);
+
+    NatureModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
+
+    Assert.Null(nature.GiftId);
+  }
+
   [Fact(DisplayName = "It should return null when the nature could not be found.")]
   public async Task It_should_return_null_when_the_nature_could_not_be_found()
   {
@@ -41,6 +69,25 @@ public class UpdateNatureCommandHandlerTests
     command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
+  }
+
+  [Fact(DisplayName = "It should throw CustomizationNotFoundException when the customization could not be found.")]
+  public async Task It_should_throw_CustomizationNotFoundException_when_the_customization_could_not_be_found()
+  {
+    Nature nature = new(_world.Id, new Name("Mystérieux"), _world.OwnerId);
+    _natureRepository.Setup(x => x.LoadAsync(nature.Id, _cancellationToken)).ReturnsAsync(nature);
+
+    UpdateNaturePayload payload = new()
+    {
+      GiftId = new Change<Guid?>(Guid.NewGuid())
+    };
+    UpdateNatureCommand command = new(nature.EntityId, payload);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<CustomizationNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.GiftId.Value, exception.CustomizationId);
+    Assert.Equal("GiftId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -103,7 +150,4 @@ public class UpdateNatureCommandHandlerTests
         && y.Nature.GiftId == gift.Id),
       _cancellationToken), Times.Once);
   }
-
-  // TODO(fpion): set null GiftId?
-  // TODO(fpion): CustomizationNotFoundException
 }
