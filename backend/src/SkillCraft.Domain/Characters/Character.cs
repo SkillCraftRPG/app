@@ -12,7 +12,6 @@ using SkillCraft.Domain.Lineages;
 using SkillCraft.Domain.Natures;
 using SkillCraft.Domain.Talents;
 using SkillCraft.Domain.Worlds;
-using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Domain.Characters;
 
@@ -99,7 +98,6 @@ public class Character : AggregateRoot
   public IReadOnlyDictionary<Guid, Bonus> Bonuses => _bonuses.AsReadOnly();
 
   public NatureId NatureId { get; private set; }
-  public Attribute? NatureAttribute { get; private set; }
   public IReadOnlyCollection<CustomizationId> CustomizationIds { get; private set; } = [];
 
   public IReadOnlyCollection<AspectId> AspectIds { get; private set; } = [];
@@ -243,7 +241,7 @@ public class Character : AggregateRoot
       throw new ArgumentException("The education does not reside in the same world as the character.", nameof(education));
     }
 
-    CreatedEvent @event = new(name, player, lineage.Id, height, weight, age, nature.Id, nature.Attribute, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
+    CreatedEvent @event = new(name, player, lineage.Id, height, weight, age, nature.Id, customizationIds, aspectIds, baseAttributes, caste.Id, education.Id);
     Raise(@event, userId.ActorId);
   }
   protected virtual void Apply(CreatedEvent @event)
@@ -257,7 +255,6 @@ public class Character : AggregateRoot
     _age = @event.Age;
 
     NatureId = @event.NatureId;
-    NatureAttribute = @event.NatureAttribute;
     CustomizationIds = @event.CustomizationIds;
 
     AspectIds = @event.AspectIds;
@@ -602,7 +599,6 @@ public class Character : AggregateRoot
     public int Age { get; }
 
     public NatureId NatureId { get; }
-    public Attribute? NatureAttribute { get; }
     public IReadOnlyCollection<CustomizationId> CustomizationIds { get; }
 
     public IReadOnlyCollection<AspectId> AspectIds { get; }
@@ -613,8 +609,8 @@ public class Character : AggregateRoot
     public EducationId EducationId { get; }
 
     public CreatedEvent(Name name, PlayerName? player, LineageId lineageId, double height, double weight, int age,
-      NatureId natureId, Attribute? natureAttribute, IReadOnlyCollection<CustomizationId> customizationIds,
-      IReadOnlyCollection<AspectId> aspectIds, BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
+      NatureId natureId, IReadOnlyCollection<CustomizationId> customizationIds, IReadOnlyCollection<AspectId> aspectIds,
+      BaseAttributes baseAttributes, CasteId casteId, EducationId educationId)
     {
       Name = name;
       Player = player;
@@ -625,7 +621,6 @@ public class Character : AggregateRoot
       Age = age;
 
       NatureId = natureId;
-      NatureAttribute = natureAttribute;
       CustomizationIds = customizationIds;
 
       AspectIds = aspectIds;
