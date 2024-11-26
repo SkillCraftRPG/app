@@ -1,6 +1,7 @@
 ﻿using Logitar.EventSourcing;
 using MediatR;
 using SkillCraft.Contracts;
+using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Customizations;
 using SkillCraft.Domain.Aspects;
 using SkillCraft.Domain.Castes;
@@ -55,6 +56,9 @@ public class Character : AggregateRoot
   public LineageId? NationId { get; private set; }
   private readonly Dictionary<LineageId, AttributeBonuses> _lineageAttributes = [];
   private readonly Dictionary<LineageId, Speeds> _lineageSpeeds = [];
+
+  private readonly Dictionary<SpeedKind, int> _speeds = [];
+  public CharacterSpeeds Speeds => new(_speeds);
 
   private double _height = 0.0;
   public double Height
@@ -277,6 +281,8 @@ public class Character : AggregateRoot
       _lineageSpeeds[@event.NationId.Value] = @event.NationSpeeds;
     }
 
+    UpdateSpeeds();
+
     _height = @event.Height;
     _weight = @event.Weight;
     _age = @event.Age;
@@ -303,7 +309,13 @@ public class Character : AggregateRoot
   }
   protected virtual void Apply(BonusUpdatedEvent @event)
   {
-    _bonuses[@event.BonusId] = @event.Bonus;
+    Bonus bonus = @event.Bonus;
+    _bonuses[@event.BonusId] = bonus;
+
+    if (bonus.Category == BonusCategory.Speed)
+    {
+      UpdateSpeeds(Enum.Parse<SpeedKind>(bonus.Target));
+    }
   }
 
   public void AddItem(Item item, UserId userId) => AddItem(item, options: null, userId);
@@ -365,7 +377,15 @@ public class Character : AggregateRoot
   }
   protected virtual void Apply(BonusRemovedEvent @event)
   {
-    _bonuses.Remove(@event.BonusId);
+    if (_bonuses.TryGetValue(@event.BonusId, out Bonus? bonus))
+    {
+      _bonuses.Remove(@event.BonusId);
+
+      if (bonus.Category == BonusCategory.Speed)
+      {
+        UpdateSpeeds(Enum.Parse<SpeedKind>(bonus.Target));
+      }
+    }
   }
 
   public void RemoveLanguage(LanguageId languageId, UserId userId)
@@ -592,6 +612,62 @@ public class Character : AggregateRoot
       throw new ArgumentException("The customizations must contain an equal number of gifts and disabilities.", nameof(customizations));
     }
     return customizationIds;
+  }
+
+  private void UpdateSpeeds(SpeedKind? kind = null)
+  {
+    if (kind.HasValue)
+    {
+      int speed = kind.Value switch
+      {
+        SpeedKind.Burrow => _lineageSpeeds.Values.Select(speed => speed.Burrow).Max(),
+        SpeedKind.Climb => _lineageSpeeds.Values.Select(speed => speed.Climb).Max(),
+        SpeedKind.Fly => _lineageSpeeds.Values.Select(speed => speed.Fly).Max(),
+        SpeedKind.Hover => _lineageSpeeds.Values.Select(speed => speed.Hover).Max(),
+        SpeedKind.Swim => _lineageSpeeds.Values.Select(speed => speed.Swim).Max(),
+        SpeedKind.Walk => _lineageSpeeds.Values.Select(speed => speed.Walk).Max(),
+        _ => 0,
+      };
+
+      string target = kind.Value.ToString();
+      foreach (Bonus bonus in _bonuses.Values)
+      {
+        if (bonus.Category == BonusCategory.Speed && bonus.Target == target)
+        {
+          speed += bonus.Value;
+        }
+      }
+
+      _speeds[kind.Value] = speed;
+    }
+    else
+    {
+      _speeds.Clear();
+      _speeds[SpeedKind.Burrow] = 0;
+      _speeds[SpeedKind.Climb] = 0;
+      _speeds[SpeedKind.Fly] = 0;
+      _speeds[SpeedKind.Hover] = 0;
+      _speeds[SpeedKind.Swim] = 0;
+      _speeds[SpeedKind.Walk] = 0;
+
+      foreach (Speeds speeds in _lineageSpeeds.Values)
+      {
+        _speeds[SpeedKind.Burrow] = Math.Max(_speeds[SpeedKind.Burrow], speeds.Burrow);
+        _speeds[SpeedKind.Climb] = Math.Max(_speeds[SpeedKind.Climb], speeds.Climb);
+        _speeds[SpeedKind.Fly] = Math.Max(_speeds[SpeedKind.Fly], speeds.Fly);
+        _speeds[SpeedKind.Hover] = Math.Max(_speeds[SpeedKind.Hover], speeds.Hover);
+        _speeds[SpeedKind.Swim] = Math.Max(_speeds[SpeedKind.Swim], speeds.Swim);
+        _speeds[SpeedKind.Walk] = Math.Max(_speeds[SpeedKind.Walk], speeds.Walk);
+      }
+
+      foreach (Bonus bonus in _bonuses.Values)
+      {
+        if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
+        {
+          _speeds[speed] += bonus.Value;
+        }
+      }
+    }
   }
 
   public class BonusRemovedEvent : DomainEvent, INotification

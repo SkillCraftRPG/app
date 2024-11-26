@@ -49,7 +49,11 @@ public class CharacterTests
 
   public CharacterTests()
   {
-    _species = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId);
+    _species = new(_world.Id, parent: null, new Name("Humain"), _world.OwnerId)
+    {
+      Speeds = new Speeds(walk: 6, climb: 0, swim: 0, fly: 0, hover: 0, burrow: 0)
+    };
+    _species.Update(_world.OwnerId);
     _nation = new(_world.Id, _species, new Name("Orrin"), _world.OwnerId);
     _customization = new(_world.Id, CustomizationType.Gift, new Name("Féroce"), _world.OwnerId);
     _nature = new(_world.Id, new Name("Courroucé"), _world.OwnerId)
@@ -364,6 +368,20 @@ public class CharacterTests
     Assert.Equal(8, _character.AvailableTalentPoints);
     Assert.Equal(6, _character.SpentTalentPoints);
     Assert.Equal(2, _character.RemainingTalentPoints);
+  }
+
+  [Fact(DisplayName = "It should account for the correct speeds.")]
+  public void It_should_account_for_the_correct_speeds()
+  {
+    _character.AddBonus(new Bonus(BonusCategory.Speed, SpeedKind.Climb.ToString(), value: 3), _world.OwnerId);
+    _character.AddBonus(new Bonus(BonusCategory.Speed, SpeedKind.Swim.ToString(), value: 3), _world.OwnerId);
+
+    Assert.Equal(6, _character.Speeds.Walk);
+    Assert.Equal(3, _character.Speeds.Climb);
+    Assert.Equal(3, _character.Speeds.Swim);
+    Assert.Equal(0, _character.Speeds.Fly);
+    Assert.Equal(0, _character.Speeds.Hover);
+    Assert.Equal(0, _character.Speeds.Burrow);
   }
 
   [Fact(DisplayName = "It should store the lineage attributes.")]
