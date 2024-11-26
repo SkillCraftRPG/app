@@ -4,9 +4,9 @@ using SkillCraft.Contracts.Customizations;
 using SkillCraft.Contracts.Errors;
 using SkillCraft.Domain.Customizations;
 
-namespace SkillCraft.Application.Natures;
+namespace SkillCraft.Domain.Natures;
 
-internal class CustomizationIsNotGiftException : BadRequestException
+internal class CustomizationIsNotGiftException : DomainException
 {
   private const string ErrorMessage = "The specified customization is not a gift.";
 

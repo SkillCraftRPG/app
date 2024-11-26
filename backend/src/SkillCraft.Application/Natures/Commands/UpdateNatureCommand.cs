@@ -7,6 +7,7 @@ using SkillCraft.Application.Storages;
 using SkillCraft.Contracts;
 using SkillCraft.Contracts.Natures;
 using SkillCraft.Domain;
+using SkillCraft.Domain.Customizations;
 using SkillCraft.Domain.Natures;
 
 namespace SkillCraft.Application.Natures.Commands;
@@ -20,17 +21,20 @@ public record UpdateNatureCommand(Guid Id, UpdateNaturePayload Payload) : Activi
 
 internal class UpdateNatureCommandHandler : IRequestHandler<UpdateNatureCommand, NatureModel?>
 {
+  private readonly ICustomizationRepository _customizationRepository;
   private readonly INatureQuerier _natureQuerier;
   private readonly INatureRepository _natureRepository;
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
   public UpdateNatureCommandHandler(
+    ICustomizationRepository customizationRepository,
     INatureQuerier natureQuerier,
     INatureRepository natureRepository,
     IPermissionService permissionService,
     ISender sender)
   {
+    _customizationRepository = customizationRepository;
     _natureQuerier = natureQuerier;
     _natureRepository = natureRepository;
     _permissionService = permissionService;
@@ -67,7 +71,14 @@ internal class UpdateNatureCommandHandler : IRequestHandler<UpdateNatureCommand,
     }
     if (payload.GiftId != null)
     {
-      await _sender.Send(new SetGiftCommand(nature, payload.GiftId.Value), cancellationToken);
+      Customization? gift = null;
+      if (payload.GiftId.Value.HasValue)
+      {
+        CustomizationId giftId = new(nature.WorldId, payload.GiftId.Value.Value);
+        gift = await _customizationRepository.LoadAsync(giftId, cancellationToken)
+          ?? throw new CustomizationNotFoundException(giftId, nameof(payload.GiftId));
+      }
+      nature.SetGift(gift);
     }
 
     nature.Update(command.GetUserId());

@@ -86,7 +86,7 @@ public class Nature : AggregateRoot
       }
       else if (gift.Type != CustomizationType.Gift)
       {
-        throw new ArgumentException("The customization is not a gift.", nameof(gift));
+        throw new CustomizationIsNotGiftException(gift, nameof(GiftId));
       }
     }
 
