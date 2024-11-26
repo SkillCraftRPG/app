@@ -71,9 +71,10 @@ internal static class CharacterEvents
           .SingleOrDefaultAsync(x => x.Id == worldId, cancellationToken)
           ?? throw new InvalidOperationException($"The world entity 'Id={worldId}' could not be found.");
 
+        string lineageId = (@event.NationId ?? @event.SpeciesId).Value;
         LineageEntity lineage = await _context.Lineages
-          .SingleOrDefaultAsync(x => x.AggregateId == @event.LineageId.Value, cancellationToken)
-          ?? throw new InvalidOperationException($"The lineage entity 'AggregateId={@event.LineageId}' could not be found.");
+          .SingleOrDefaultAsync(x => x.AggregateId == lineageId, cancellationToken)
+          ?? throw new InvalidOperationException($"The lineage entity 'AggregateId={lineageId}' could not be found.");
         NatureEntity nature = await _context.Natures
           .SingleOrDefaultAsync(x => x.AggregateId == @event.NatureId.Value, cancellationToken)
           ?? throw new InvalidOperationException($"The nature entity 'AggregateId={@event.NatureId}' could not be found.");

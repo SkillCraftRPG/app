@@ -183,15 +183,15 @@ public class CharacterTests : IntegrationTests
     BaseAttributes baseAttributes = new(agility: 9, coordination: 8, intellect: 8, presence: 8, sensitivity: 8, spirit: 8, vigor: 8,
       best: Attribute.Agility, worst: Attribute.Sensitivity, mandatory: [Attribute.Agility, Attribute.Vigor],
       optional: [Attribute.Sensitivity, Attribute.Vigor], extra: [Attribute.Agility, Attribute.Vigor]);
-    _alexios = new(World.Id, new Name("Alexios"), _player1, _orrin, height: 1.71, weight: 67.3, age: 18,
+    _alexios = new(World.Id, new Name("Alexios"), _player1, _humain, _orrin, height: 1.71, weight: 67.3, age: 18,
       _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
-    _herakles = new(World.Id, new Name("Herakles"), _player2, _orrin, height: 1.67, weight: 62.8, age: 18,
+    _herakles = new(World.Id, new Name("Herakles"), _player2, _humain, _orrin, height: 1.67, weight: 62.8, age: 18,
       _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
-    _kassandra = new(World.Id, new Name("Kassandra"), _player1, _orrin, height: 1.76, weight: 68.1, age: 18,
+    _kassandra = new(World.Id, new Name("Kassandra"), _player1, _humain, _orrin, height: 1.76, weight: 68.1, age: 18,
       _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
-    _leonidas = new(World.Id, new Name("Leonidas"), _player1, _orrin, height: 1.84, weight: 81.3, age: 61,
+    _leonidas = new(World.Id, new Name("Leonidas"), _player1, _humain, _orrin, height: 1.84, weight: 81.3, age: 61,
       _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
-    _stentor = new(World.Id, new Name("Stentor"), _player1, _orrin, height: 1.66, weight: 57.9, age: 16,
+    _stentor = new(World.Id, new Name("Stentor"), _player1, _humain, _orrin, height: 1.66, weight: 57.9, age: 16,
       _courrouce, customizations: [], aspects: [_farouche, _gymnaste], baseAttributes, _milicien, _champsDeBataille, UserId);
   }
 
