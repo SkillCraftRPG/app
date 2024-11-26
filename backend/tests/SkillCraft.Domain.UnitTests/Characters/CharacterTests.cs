@@ -370,6 +370,48 @@ public class CharacterTests
     Assert.Equal(2, _character.RemainingTalentPoints);
   }
 
+  [Fact(DisplayName = "It should account for the correct attributes.")]
+  public void It_should_account_for_the_correct_attributes()
+  {
+    _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Spirit.ToString(), value: -2), _world.OwnerId);
+    _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Intellect.ToString(), value: +13, isTemporary: true), _world.OwnerId);
+
+    Assert.Equal(16, _character.Attributes.Agility.Score);
+    Assert.Equal(3, _character.Attributes.Agility.Modifier);
+    Assert.Equal(16, _character.Attributes.Agility.TemporaryScore);
+    Assert.Equal(3, _character.Attributes.Agility.TemporaryModifier);
+
+    Assert.Equal(10, _character.Attributes.Coordination.Score);
+    Assert.Equal(0, _character.Attributes.Coordination.Modifier);
+    Assert.Equal(10, _character.Attributes.Coordination.TemporaryScore);
+    Assert.Equal(0, _character.Attributes.Coordination.TemporaryModifier);
+
+    Assert.Equal(6, _character.Attributes.Intellect.Score);
+    Assert.Equal(-2, _character.Attributes.Intellect.Modifier);
+    Assert.Equal(19, _character.Attributes.Intellect.TemporaryScore);
+    Assert.Equal(4, _character.Attributes.Intellect.TemporaryModifier);
+
+    Assert.Equal(10, _character.Attributes.Presence.Score);
+    Assert.Equal(0, _character.Attributes.Presence.Modifier);
+    Assert.Equal(10, _character.Attributes.Presence.TemporaryScore);
+    Assert.Equal(0, _character.Attributes.Presence.TemporaryModifier);
+
+    Assert.Equal(8, _character.Attributes.Sensitivity.Score);
+    Assert.Equal(-1, _character.Attributes.Sensitivity.Modifier);
+    Assert.Equal(8, _character.Attributes.Sensitivity.TemporaryScore);
+    Assert.Equal(-1, _character.Attributes.Sensitivity.TemporaryModifier);
+
+    Assert.Equal(4, _character.Attributes.Spirit.Score);
+    Assert.Equal(-3, _character.Attributes.Spirit.Modifier);
+    Assert.Equal(4, _character.Attributes.Spirit.TemporaryScore);
+    Assert.Equal(-3, _character.Attributes.Spirit.TemporaryModifier);
+
+    Assert.Equal(14, _character.Attributes.Vigor.Score);
+    Assert.Equal(2, _character.Attributes.Vigor.Modifier);
+    Assert.Equal(14, _character.Attributes.Vigor.TemporaryScore);
+    Assert.Equal(2, _character.Attributes.Vigor.TemporaryModifier);
+  }
+
   [Fact(DisplayName = "It should account for the correct speeds.")]
   public void It_should_account_for_the_correct_speeds()
   {

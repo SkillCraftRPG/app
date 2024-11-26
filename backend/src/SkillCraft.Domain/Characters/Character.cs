@@ -191,6 +191,92 @@ public class Character : AggregateRoot
     }
   }
 
+  private CharacterAttributes? _attributes = null;
+  public CharacterAttributes Attributes
+  {
+    get
+    {
+      if (_attributes == null)
+      {
+        Dictionary<Attribute, int> scores = new()
+        {
+          [Attribute.Agility] = BaseAttributes.Agility,
+          [Attribute.Coordination] = BaseAttributes.Coordination,
+          [Attribute.Intellect] = BaseAttributes.Intellect,
+          [Attribute.Presence] = BaseAttributes.Presence,
+          [Attribute.Sensitivity] = BaseAttributes.Sensitivity,
+          [Attribute.Spirit] = BaseAttributes.Spirit,
+          [Attribute.Vigor] = BaseAttributes.Vigor
+        };
+        Dictionary<Attribute, int> temporaryScores = new()
+        {
+          [Attribute.Agility] = 0,
+          [Attribute.Coordination] = 0,
+          [Attribute.Intellect] = 0,
+          [Attribute.Presence] = 0,
+          [Attribute.Sensitivity] = 0,
+          [Attribute.Spirit] = 0,
+          [Attribute.Vigor] = 0
+        };
+
+        foreach (AttributeBonuses bonuses in _lineageAttributes.Values)
+        {
+          scores[Attribute.Agility] += bonuses.Agility;
+          scores[Attribute.Coordination] += bonuses.Coordination;
+          scores[Attribute.Intellect] += bonuses.Intellect;
+          scores[Attribute.Presence] += bonuses.Presence;
+          scores[Attribute.Sensitivity] += bonuses.Sensitivity;
+          scores[Attribute.Spirit] += bonuses.Spirit;
+          scores[Attribute.Vigor] += bonuses.Vigor;
+        }
+        foreach (Attribute extra in BaseAttributes.Extra)
+        {
+          scores[extra] += 1;
+        }
+
+        if (_natureAttribute.HasValue)
+        {
+          scores[_natureAttribute.Value] += 1;
+        }
+
+        scores[BaseAttributes.Best] += 3;
+        scores[BaseAttributes.Worst] += 1;
+        foreach (Attribute mandatory in BaseAttributes.Mandatory)
+        {
+          scores[mandatory] += 2;
+        }
+        foreach (Attribute optional in BaseAttributes.Optional)
+        {
+          scores[optional] += 1;
+        }
+
+        foreach (Bonus bonus in _bonuses.Values)
+        {
+          if (bonus.Category == BonusCategory.Attribute && Enum.TryParse(bonus.Target, out Attribute attribute))
+          {
+            if (bonus.IsTemporary)
+            {
+              temporaryScores[attribute] += bonus.Value;
+            }
+            else
+            {
+              scores[attribute] += bonus.Value;
+            }
+          }
+        }
+
+        foreach (KeyValuePair<Attribute, int> score in scores)
+        {
+          temporaryScores[score.Key] += score.Value;
+        }
+
+        _attributes = new CharacterAttributes(scores, temporaryScores);
+      }
+
+      return _attributes;
+    }
+  }
+
   private CharacterSpeeds? _speeds = null;
   public CharacterSpeeds Speeds
   {
@@ -216,6 +302,7 @@ public class Character : AggregateRoot
         }
         _speeds = new CharacterSpeeds(speeds);
       }
+
       return _speeds;
     }
   }
@@ -333,7 +420,18 @@ public class Character : AggregateRoot
   }
   protected virtual void Apply(BonusUpdatedEvent @event)
   {
+    Bonus bonus = @event.Bonus;
     _bonuses[@event.BonusId] = @event.Bonus;
+
+    switch (bonus.Category)
+    {
+      case BonusCategory.Attribute:
+        _attributes = null;
+        break;
+      case BonusCategory.Speed:
+        _speeds = null;
+        break;
+    }
   }
 
   public void AddItem(Item item, UserId userId) => AddItem(item, options: null, userId);
@@ -395,7 +493,20 @@ public class Character : AggregateRoot
   }
   protected virtual void Apply(BonusRemovedEvent @event)
   {
-    _bonuses.Remove(@event.BonusId);
+    if (_bonuses.TryGetValue(@event.BonusId, out Bonus? bonus))
+    {
+      _bonuses.Remove(@event.BonusId);
+
+      switch (bonus.Category)
+      {
+        case BonusCategory.Attribute:
+          _attributes = null;
+          break;
+        case BonusCategory.Speed:
+          _speeds = null;
+          break;
+      }
+    }
   }
 
   public void RemoveLanguage(LanguageId languageId, UserId userId)
