@@ -312,9 +312,9 @@ public class Character : AggregateRoot
     Bonus bonus = @event.Bonus;
     _bonuses[@event.BonusId] = bonus;
 
-    if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
+    if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind kind))
     {
-      UpdateSpeeds(speed);
+      UpdateSpeed(kind);
     }
   }
 
@@ -381,9 +381,9 @@ public class Character : AggregateRoot
     {
       _bonuses.Remove(@event.BonusId);
 
-      if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
+      if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind kind))
       {
-        UpdateSpeeds(speed);
+        UpdateSpeed(kind);
       }
     }
   }
@@ -614,58 +614,55 @@ public class Character : AggregateRoot
     return customizationIds;
   }
 
-  private void UpdateSpeeds(SpeedKind? kind = null)
+  private void UpdateSpeed(SpeedKind kind)
   {
-    if (kind.HasValue)
+    int speed = kind switch
     {
-      int speed = kind.Value switch
-      {
-        SpeedKind.Burrow => _lineageSpeeds.Values.Select(speed => speed.Burrow).Max(),
-        SpeedKind.Climb => _lineageSpeeds.Values.Select(speed => speed.Climb).Max(),
-        SpeedKind.Fly => _lineageSpeeds.Values.Select(speed => speed.Fly).Max(),
-        SpeedKind.Hover => _lineageSpeeds.Values.Select(speed => speed.Hover).Max(),
-        SpeedKind.Swim => _lineageSpeeds.Values.Select(speed => speed.Swim).Max(),
-        SpeedKind.Walk => _lineageSpeeds.Values.Select(speed => speed.Walk).Max(),
-        _ => 0,
-      };
+      SpeedKind.Burrow => _lineageSpeeds.Values.Select(speed => speed.Burrow).Max(),
+      SpeedKind.Climb => _lineageSpeeds.Values.Select(speed => speed.Climb).Max(),
+      SpeedKind.Fly => _lineageSpeeds.Values.Select(speed => speed.Fly).Max(),
+      SpeedKind.Hover => _lineageSpeeds.Values.Select(speed => speed.Hover).Max(),
+      SpeedKind.Swim => _lineageSpeeds.Values.Select(speed => speed.Swim).Max(),
+      SpeedKind.Walk => _lineageSpeeds.Values.Select(speed => speed.Walk).Max(),
+      _ => 0,
+    };
 
-      string target = kind.Value.ToString();
-      foreach (Bonus bonus in _bonuses.Values)
+    string target = kind.ToString();
+    foreach (Bonus bonus in _bonuses.Values)
+    {
+      if (bonus.Category == BonusCategory.Speed && bonus.Target == target)
       {
-        if (bonus.Category == BonusCategory.Speed && bonus.Target == target)
-        {
-          speed += bonus.Value;
-        }
+        speed += bonus.Value;
       }
-
-      _speeds[kind.Value] = speed;
     }
-    else
+
+    _speeds[kind] = speed;
+  }
+  private void UpdateSpeeds()
+  {
+    _speeds.Clear();
+    _speeds[SpeedKind.Burrow] = 0;
+    _speeds[SpeedKind.Climb] = 0;
+    _speeds[SpeedKind.Fly] = 0;
+    _speeds[SpeedKind.Hover] = 0;
+    _speeds[SpeedKind.Swim] = 0;
+    _speeds[SpeedKind.Walk] = 0;
+
+    foreach (Speeds speeds in _lineageSpeeds.Values)
     {
-      _speeds.Clear();
-      _speeds[SpeedKind.Burrow] = 0;
-      _speeds[SpeedKind.Climb] = 0;
-      _speeds[SpeedKind.Fly] = 0;
-      _speeds[SpeedKind.Hover] = 0;
-      _speeds[SpeedKind.Swim] = 0;
-      _speeds[SpeedKind.Walk] = 0;
+      _speeds[SpeedKind.Burrow] = Math.Max(_speeds[SpeedKind.Burrow], speeds.Burrow);
+      _speeds[SpeedKind.Climb] = Math.Max(_speeds[SpeedKind.Climb], speeds.Climb);
+      _speeds[SpeedKind.Fly] = Math.Max(_speeds[SpeedKind.Fly], speeds.Fly);
+      _speeds[SpeedKind.Hover] = Math.Max(_speeds[SpeedKind.Hover], speeds.Hover);
+      _speeds[SpeedKind.Swim] = Math.Max(_speeds[SpeedKind.Swim], speeds.Swim);
+      _speeds[SpeedKind.Walk] = Math.Max(_speeds[SpeedKind.Walk], speeds.Walk);
+    }
 
-      foreach (Speeds speeds in _lineageSpeeds.Values)
+    foreach (Bonus bonus in _bonuses.Values)
+    {
+      if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
       {
-        _speeds[SpeedKind.Burrow] = Math.Max(_speeds[SpeedKind.Burrow], speeds.Burrow);
-        _speeds[SpeedKind.Climb] = Math.Max(_speeds[SpeedKind.Climb], speeds.Climb);
-        _speeds[SpeedKind.Fly] = Math.Max(_speeds[SpeedKind.Fly], speeds.Fly);
-        _speeds[SpeedKind.Hover] = Math.Max(_speeds[SpeedKind.Hover], speeds.Hover);
-        _speeds[SpeedKind.Swim] = Math.Max(_speeds[SpeedKind.Swim], speeds.Swim);
-        _speeds[SpeedKind.Walk] = Math.Max(_speeds[SpeedKind.Walk], speeds.Walk);
-      }
-
-      foreach (Bonus bonus in _bonuses.Values)
-      {
-        if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
-        {
-          _speeds[speed] += bonus.Value;
-        }
+        _speeds[speed] += bonus.Value;
       }
     }
   }
