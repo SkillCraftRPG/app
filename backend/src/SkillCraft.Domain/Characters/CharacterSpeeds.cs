@@ -36,6 +36,8 @@ public record CharacterSpeeds : ISpeeds
         case SpeedKind.Walk:
           Walk = speed.Value;
           break;
+        default:
+          throw new ArgumentException($"The speed kind '{speed.Key}' is not supported.", nameof(speeds));
       }
     }
   }
