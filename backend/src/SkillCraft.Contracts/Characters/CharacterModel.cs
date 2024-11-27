@@ -50,5 +50,7 @@ public class CharacterModel : Aggregate
 
   public List<InventoryModel> Inventory { get; set; } = [];
 
+  public List<LevelUpModel> LevelUps { get; set; } = [];
+
   public override string ToString() => $"{Name} | {base.ToString()}";
 }

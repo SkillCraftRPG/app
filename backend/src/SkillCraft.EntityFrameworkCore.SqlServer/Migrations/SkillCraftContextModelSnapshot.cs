@@ -359,6 +359,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
+                    b.Property<string>("LevelUps")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("LineageId")
                         .HasColumnType("int");
 

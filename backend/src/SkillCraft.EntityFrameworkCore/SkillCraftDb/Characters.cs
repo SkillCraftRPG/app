@@ -29,6 +29,7 @@ internal static class Characters
   public static readonly ColumnId Intellect = new(nameof(CharacterEntity.Intellect), Table);
   public static readonly ColumnId Intoxication = new(nameof(CharacterEntity.Intoxication), Table);
   public static readonly ColumnId Level = new(nameof(CharacterEntity.Level), Table);
+  public static readonly ColumnId LevelUps = new(nameof(CharacterEntity.LevelUps), Table);
   public static readonly ColumnId LineageId = new(nameof(CharacterEntity.LineageId), Table);
   public static readonly ColumnId MandatoryAttributes = new(nameof(CharacterEntity.MandatoryAttributes), Table);
   public static readonly ColumnId Name = new(nameof(CharacterEntity.Name), Table);

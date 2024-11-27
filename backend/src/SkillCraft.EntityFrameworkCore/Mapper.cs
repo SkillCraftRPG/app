@@ -197,6 +197,8 @@ internal class Mapper
       }
     }
 
+    destination.LevelUps.AddRange(source.GetLevelUps());
+
     MapAggregate(source, destination);
 
     return destination;
