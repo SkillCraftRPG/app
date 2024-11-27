@@ -621,4 +621,7 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(payload.BloodAlcoholContent, character.BloodAlcoholContent);
     Assert.Equal(payload.Intoxication, character.Intoxication);
   }
+
+  // TODO(fpion): cancel level-up
+  // TODO(fpion): level-up
 }
