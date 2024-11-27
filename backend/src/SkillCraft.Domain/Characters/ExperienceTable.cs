@@ -1,6 +1,6 @@
 ﻿namespace SkillCraft.Domain.Characters;
 
-internal static class ExperienceTable
+public static class ExperienceTable
 {
   private static readonly int[] _requiredExperience =
   [
