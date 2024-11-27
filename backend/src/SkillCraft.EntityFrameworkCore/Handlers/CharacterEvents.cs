@@ -199,6 +199,48 @@ internal static class CharacterEvents
     }
   }
 
+  public class CharacterLevelUpCancelledEventHandler : INotificationHandler<Character.LevelUpCancelledEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterLevelUpCancelledEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.LevelUpCancelledEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.CancelLevelUp(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
+  public class CharacterLeveledUpEventHandler : INotificationHandler<Character.LeveledUpEvent>
+  {
+    private readonly SkillCraftContext _context;
+
+    public CharacterLeveledUpEventHandler(SkillCraftContext context)
+    {
+      _context = context;
+    }
+
+    public async Task Handle(Character.LeveledUpEvent @event, CancellationToken cancellationToken)
+    {
+      CharacterEntity character = await _context.Characters
+        .SingleOrDefaultAsync(x => x.AggregateId == @event.AggregateId.Value, cancellationToken)
+        ?? throw new InvalidOperationException($"The character entity 'AggregateId={@event.AggregateId}' could not be found.");
+
+      character.LevelUp(@event);
+
+      await _context.SaveChangesAsync(cancellationToken);
+    }
+  }
+
   public class CharacterTalentRemovedEventHandler : INotificationHandler<Character.TalentRemovedEvent>
   {
     private readonly SkillCraftContext _context;

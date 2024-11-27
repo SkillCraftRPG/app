@@ -210,6 +210,19 @@ internal class CharacterEntity : AggregateEntity
     return model;
   }
 
+  public void CancelLevelUp(Character.LevelUpCancelledEvent @event)
+  {
+    base.Update(@event);
+
+    // TODO(fpion): implement
+  }
+  public void LevelUp(Character.LeveledUpEvent @event)
+  {
+    base.Update(@event);
+
+    // TODO(fpion): implement
+  }
+
   public void RemoveBonus(Character.BonusRemovedEvent @event)
   {
     base.Update(@event);
