@@ -433,8 +433,8 @@ public class CharacterTests
     Assert.Equal(ExperienceTable.GetTotalExperience(_character.Level + 1), exception.RequiredExperience);
   }
 
-  [Fact(DisplayName = "LevelUp: it should throw NotImplementedException when the attribute score is already superior or equal to 20.")]
-  public void LevelUp_it_should_throw_NotImplementedException_when_the_attribute_score_is_already_superior_or_equal_to_20()
+  [Fact(DisplayName = "LevelUp: it should throw AttributeMaximumScoreReachedException when the attribute score is already superior or equal to 20.")]
+  public void LevelUp_it_should_throw_AttributeMaximumScoreReachedException_when_the_attribute_score_is_already_superior_or_equal_to_20()
   {
     _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Agility.ToString(), value: 4), _world.OwnerId);
     Assert.Equal(20, _character.Attributes.Agility.Score);
@@ -442,7 +442,11 @@ public class CharacterTests
     _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
     Assert.True(_character.CanLevelUp);
 
-    Assert.Throws<NotImplementedException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
+    var exception = Assert.Throws<AttributeMaximumScoreReachedException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_character.EntityId, exception.CharacterId);
+    Assert.Equal(Attribute.Agility, exception.Attribute);
+    Assert.Equal("Attribute", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should account for correct talent points.")]

@@ -438,9 +438,10 @@ public class Character : AggregateRoot
     };
     if (score >= 20)
     {
-      throw new NotImplementedException(); // TODO(fpion): implement
+      throw new AttributeMaximumScoreReachedException(this, attribute, "Attribute");
     }
 
+    // TODO(fpion): store statistic increment as Attribute has been incremented
     LevelUp levelUp = new(attribute, (int)Statistics.Constitution.Increment, Statistics.Initiative.Increment, (int)Statistics.Learning.Increment,
       Statistics.Power.Increment, Statistics.Precision.Increment, Statistics.Reputation.Increment, Statistics.Strength.Increment);
     Raise(new LeveledUpEvent(levelUp), userId.ActorId);
