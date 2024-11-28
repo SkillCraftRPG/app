@@ -441,9 +441,16 @@ public class Character : AggregateRoot
       throw new AttributeMaximumScoreReachedException(this, attribute, "Attribute");
     }
 
-    // TODO(fpion): store statistic increment as Attribute has been incremented
-    LevelUp levelUp = new(attribute, (int)Statistics.Constitution.Increment, Statistics.Initiative.Increment, (int)Statistics.Learning.Increment,
-      Statistics.Power.Increment, Statistics.Precision.Increment, Statistics.Reputation.Increment, Statistics.Strength.Increment);
+    CharacterAttributes attributes = new(
+      BaseAttributes,
+      LineageAttributes.Values,
+      NatureAttribute,
+      Bonuses.Values,
+      LevelUps.Concat([new LevelUp(attribute, Constitution: 0, Initiative: 0.0, Learning: 0, Power: 0.0, Precision: 0.0, Reputation: 0.0, Strength: 0.0)]));
+    CharacterStatistics statistics = new(attributes, LevelUps, Bonuses.Values);
+
+    LevelUp levelUp = new(attribute, (int)statistics.Constitution.Increment, statistics.Initiative.Increment, (int)statistics.Learning.Increment,
+      statistics.Power.Increment, statistics.Precision.Increment, statistics.Reputation.Increment, statistics.Strength.Increment);
     Raise(new LeveledUpEvent(levelUp), userId.ActorId);
   }
   protected virtual void Apply(LeveledUpEvent @event)

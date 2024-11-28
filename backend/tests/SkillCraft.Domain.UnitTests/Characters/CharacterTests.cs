@@ -396,7 +396,7 @@ public class CharacterTests
     Assert.Equal(0.15, levelUp.Power);
     Assert.Equal(0.25, levelUp.Precision);
     Assert.Equal(0.5, levelUp.Reputation);
-    //Assert.Equal(0.425, levelUp.Strength); // TODO(fpion): level-up attribute not applied to statistic increments
+    Assert.Equal(0.425, levelUp.Strength);
 
     Assert.Equal(17, _character.Attributes.Agility.Score);
 

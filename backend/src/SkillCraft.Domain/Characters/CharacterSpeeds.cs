@@ -1,6 +1,7 @@
 ﻿using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Lineages;
+using SkillCraft.Domain.Lineages;
 
 namespace SkillCraft.Domain.Characters;
 
@@ -13,19 +14,23 @@ public record CharacterSpeeds : ISpeeds
   public int Hover { get; }
   public int Burrow { get; }
 
-  public CharacterSpeeds(Character character)
+  public CharacterSpeeds(Character character) : this(character.LineageSpeeds.Values, character.Bonuses.Values)
+  {
+  }
+
+  public CharacterSpeeds(IEnumerable<Speeds> lineageSpeeds, IEnumerable<Bonus> bonuses)
   {
     Dictionary<SpeedKind, int> speeds = new()
     {
-      [SpeedKind.Walk] = character.LineageSpeeds.Values.Max(speed => speed.Walk),
-      [SpeedKind.Climb] = character.LineageSpeeds.Values.Max(speed => speed.Climb),
-      [SpeedKind.Swim] = character.LineageSpeeds.Values.Max(speed => speed.Swim),
-      [SpeedKind.Fly] = character.LineageSpeeds.Values.Max(speed => speed.Fly),
-      [SpeedKind.Hover] = character.LineageSpeeds.Values.Max(speed => speed.Hover),
-      [SpeedKind.Burrow] = character.LineageSpeeds.Values.Max(speed => speed.Burrow)
+      [SpeedKind.Walk] = lineageSpeeds.Max(speed => speed.Walk),
+      [SpeedKind.Climb] = lineageSpeeds.Max(speed => speed.Climb),
+      [SpeedKind.Swim] = lineageSpeeds.Max(speed => speed.Swim),
+      [SpeedKind.Fly] = lineageSpeeds.Max(speed => speed.Fly),
+      [SpeedKind.Hover] = lineageSpeeds.Max(speed => speed.Hover),
+      [SpeedKind.Burrow] = lineageSpeeds.Max(speed => speed.Burrow)
     };
 
-    foreach (Bonus bonus in character.Bonuses.Values)
+    foreach (Bonus bonus in bonuses)
     {
       if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
       {
