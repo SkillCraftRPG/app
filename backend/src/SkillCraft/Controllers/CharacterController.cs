@@ -39,11 +39,25 @@ public class CharacterController : ControllerBase
     return GetActionResult(character);
   }
 
+  [HttpDelete("{id}/level-up")]
+  public async Task<ActionResult<CharacterModel>> CancelLevelUpAsync(Guid id, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new CancelCharacterLevelUpCommand(id), cancellationToken);
+    return GetActionResult(character);
+  }
+
   [HttpPost]
   public async Task<ActionResult<CharacterModel>> CreateAsync([FromBody] CreateCharacterPayload payload, Guid? id, CancellationToken cancellationToken)
   {
     CharacterModel character = await _pipeline.ExecuteAsync(new CreateCharacterCommand(id, payload), cancellationToken);
     return GetActionResult(character, created: true);
+  }
+
+  [HttpPatch("{id}/level-up")]
+  public async Task<ActionResult<CharacterModel>> LevelUpAsync(Guid id, [FromBody] LevelUpCharacterPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new LevelUpCharacterCommand(id, payload), cancellationToken);
+    return GetActionResult(character);
   }
 
   [HttpGet("players")]

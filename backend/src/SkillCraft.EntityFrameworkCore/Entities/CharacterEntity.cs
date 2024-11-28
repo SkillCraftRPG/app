@@ -63,6 +63,8 @@ internal class CharacterEntity : AggregateEntity
   public List<InventoryEntity> Inventory { get; private set; } = [];
   public List<CharacterTalentEntity> Talents { get; private set; } = [];
 
+  public string? LevelUps { get; private set; }
+
   public CharacterEntity(
     WorldEntity world,
     LineageEntity lineage,
@@ -208,6 +210,46 @@ internal class CharacterEntity : AggregateEntity
     }
 
     return model;
+  }
+
+  public List<LevelUpModel> GetLevelUps()
+  {
+    return (LevelUps == null ? null : JsonSerializer.Deserialize<List<LevelUpModel>>(LevelUps)) ?? [];
+  }
+
+  public void CancelLevelUp(Character.LevelUpCancelledEvent @event)
+  {
+    base.Update(@event);
+
+    List<LevelUpModel> levelUps = GetLevelUps();
+    if (levelUps.Count > 0)
+    {
+      levelUps.RemoveAt(levelUps.Count - 1);
+      SetLevelUps(levelUps);
+    }
+  }
+  public void LevelUp(Character.LeveledUpEvent @event)
+  {
+    base.Update(@event);
+
+    List<LevelUpModel> levelUps = GetLevelUps();
+    levelUps.Add(new LevelUpModel
+    {
+      Attribute = @event.LevelUp.Attribute,
+      Constitution = @event.LevelUp.Constitution,
+      Initiative = @event.LevelUp.Initiative,
+      Learning = @event.LevelUp.Learning,
+      Power = @event.LevelUp.Power,
+      Precision = @event.LevelUp.Precision,
+      Reputation = @event.LevelUp.Reputation,
+      Strength = @event.LevelUp.Strength
+    });
+    SetLevelUps(levelUps);
+  }
+  private void SetLevelUps(IEnumerable<LevelUpModel> levelUps)
+  {
+    Level = levelUps.Count();
+    LevelUps = Level == 0 ? null : JsonSerializer.Serialize(levelUps);
   }
 
   public void RemoveBonus(Character.BonusRemovedEvent @event)

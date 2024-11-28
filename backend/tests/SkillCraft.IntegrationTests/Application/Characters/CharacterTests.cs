@@ -210,6 +210,27 @@ public class CharacterTests : IntegrationTests
     await _itemRepository.SaveAsync(_denier);
   }
 
+  [Fact(DisplayName = "It should cancel the last level-up of an existing character.")]
+  public async Task It_should_cancel_the_last_level_up_of_an_existing_character()
+  {
+    _herakles.GainExperience(100, UserId);
+    _herakles.LevelUp(Attribute.Agility, UserId);
+    await _characterRepository.SaveAsync(_herakles);
+
+    CancelCharacterLevelUpCommand command = new(_herakles.EntityId);
+
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(character);
+
+    Assert.Equal(_herakles.EntityId, character.Id);
+    Assert.Equal(_herakles.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    Assert.Equal(0, character.Level);
+    Assert.Empty(character.LevelUps);
+  }
+
   [Fact(DisplayName = "It should create a new character, then return the character found by ID.")]
   public async Task It_should_create_a_new_character_then_return_the_character_found_by_Id()
   {
@@ -329,6 +350,35 @@ public class CharacterTests : IntegrationTests
     CharacterModel? model = await Pipeline.ExecuteAsync(query);
     Assert.NotNull(model);
     Assert.Equal(character, model);
+  }
+
+  [Fact(DisplayName = "It should level-up an existing character.")]
+  public async Task It_should_level_up_an_existing_character()
+  {
+    _herakles.GainExperience(100, UserId);
+    await _characterRepository.SaveAsync(_herakles);
+
+    LevelUpCharacterPayload payload = new(Attribute.Agility);
+    LevelUpCharacterCommand command = new(_herakles.EntityId, payload);
+
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(character);
+
+    Assert.Equal(_herakles.EntityId, character.Id);
+    Assert.Equal(_herakles.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    Assert.Equal(1, character.Level);
+    LevelUpModel levelUp = Assert.Single(character.LevelUps);
+    Assert.Equal(payload.Attribute, levelUp.Attribute);
+    Assert.Equal(6, levelUp.Constitution);
+    Assert.Equal(0.25, levelUp.Initiative);
+    Assert.Equal(1, levelUp.Learning);
+    Assert.Equal(0.2, levelUp.Power);
+    Assert.Equal(0.2, levelUp.Precision);
+    Assert.Equal(0.4, levelUp.Reputation);
+    Assert.Equal(0.425, levelUp.Strength);
   }
 
   [Fact(DisplayName = "It should list the players.")]
@@ -621,4 +671,7 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(payload.BloodAlcoholContent, character.BloodAlcoholContent);
     Assert.Equal(payload.Intoxication, character.Intoxication);
   }
+
+  // TODO(fpion): cancel level-up
+  // TODO(fpion): level-up
 }

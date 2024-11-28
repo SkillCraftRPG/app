@@ -29,6 +29,8 @@ internal class CharacterBuilder
   public Caste Caste { get; }
   public Education Education { get; }
 
+  public int Experience { get; private set; }
+
   public CharacterBuilder(World? world = null)
   {
     World = world ?? new WorldMock();
@@ -55,12 +57,26 @@ internal class CharacterBuilder
     Education = new Education(World.Id, new Name("Champs de bataille"), World.OwnerId);
   }
 
+  public CharacterBuilder CanLevelUpTo(int level)
+  {
+    Experience = ExperienceTable.GetTotalExperience(level);
+    return this;
+  }
+
   public CharacterBuilder WithId(CharacterId id)
   {
     EntityId = id.EntityId;
     return this;
   }
 
-  public Character Build() => new(World.Id, Name, Player, Species, Nation, height: 1.67, weight: 62.8,
-    age: 20, Nature, Customizations, Aspects, BaseAttributes, Caste, Education, World.OwnerId, EntityId);
+  public Character Build()
+  {
+    Character character = new(World.Id, Name, Player, Species, Nation, height: 1.67, weight: 62.8, age: 20,
+      Nature, Customizations, Aspects, BaseAttributes, Caste, Education, World.OwnerId, EntityId)
+    {
+      Experience = Experience
+    };
+    character.Update(World.OwnerId);
+    return character;
+  }
 }

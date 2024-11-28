@@ -1,5 +1,7 @@
 ﻿using SkillCraft.Contracts;
+using SkillCraft.Contracts.Characters;
 using SkillCraft.Contracts.Lineages;
+using SkillCraft.Domain.Lineages;
 
 namespace SkillCraft.Domain.Characters;
 
@@ -12,33 +14,35 @@ public record CharacterSpeeds : ISpeeds
   public int Hover { get; }
   public int Burrow { get; }
 
-  public CharacterSpeeds(IEnumerable<KeyValuePair<SpeedKind, int>> speeds)
+  public CharacterSpeeds(Character character) : this(character.LineageSpeeds.Values, character.Bonuses.Values)
   {
-    foreach (KeyValuePair<SpeedKind, int> speed in speeds)
+  }
+
+  public CharacterSpeeds(IEnumerable<Speeds> lineageSpeeds, IEnumerable<Bonus> bonuses)
+  {
+    Dictionary<SpeedKind, int> speeds = new()
     {
-      switch (speed.Key)
+      [SpeedKind.Walk] = lineageSpeeds.Max(speed => speed.Walk),
+      [SpeedKind.Climb] = lineageSpeeds.Max(speed => speed.Climb),
+      [SpeedKind.Swim] = lineageSpeeds.Max(speed => speed.Swim),
+      [SpeedKind.Fly] = lineageSpeeds.Max(speed => speed.Fly),
+      [SpeedKind.Hover] = lineageSpeeds.Max(speed => speed.Hover),
+      [SpeedKind.Burrow] = lineageSpeeds.Max(speed => speed.Burrow)
+    };
+
+    foreach (Bonus bonus in bonuses)
+    {
+      if (bonus.Category == BonusCategory.Speed && Enum.TryParse(bonus.Target, out SpeedKind speed))
       {
-        case SpeedKind.Burrow:
-          Burrow = speed.Value;
-          break;
-        case SpeedKind.Climb:
-          Climb = speed.Value;
-          break;
-        case SpeedKind.Fly:
-          Fly = speed.Value;
-          break;
-        case SpeedKind.Hover:
-          Hover = speed.Value;
-          break;
-        case SpeedKind.Swim:
-          Swim = speed.Value;
-          break;
-        case SpeedKind.Walk:
-          Walk = speed.Value;
-          break;
-        default:
-          throw new ArgumentException($"The speed kind '{speed.Key}' is not supported.", nameof(speeds));
+        speeds[speed] += bonus.Value;
       }
     }
+
+    Walk = Math.Max(speeds[SpeedKind.Walk], 0);
+    Climb = Math.Max(speeds[SpeedKind.Climb], 0);
+    Swim = Math.Max(speeds[SpeedKind.Swim], 0);
+    Fly = Math.Max(speeds[SpeedKind.Fly], 0);
+    Hover = Math.Max(speeds[SpeedKind.Hover], 0);
+    Burrow = Math.Max(speeds[SpeedKind.Burrow], 0);
   }
 }
