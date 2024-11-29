@@ -70,7 +70,7 @@ public class LevelUpCharacterCommandHandlerTests
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 
-  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid..")]
+  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
   public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
   {
     LevelUpCharacterPayload payload = new((Attribute)(-1));

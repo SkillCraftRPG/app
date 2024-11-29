@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
+﻿using MediatR;
 using Moq;
 using SkillCraft.Application.Permissions;
 using SkillCraft.Contracts;
@@ -37,15 +35,14 @@ public class IncreaseCharacterSkillRankCommandHandlerTests
     CharacterModel model = new();
     _characterQuerier.Setup(x => x.ReadAsync(character, _cancellationToken)).ReturnsAsync(model);
 
-    IncreaseCharacterSkillRankPayload payload = new(Skill.Resistance);
-    IncreaseCharacterSkillRankCommand command = new(character.EntityId, payload);
+    IncreaseCharacterSkillRankCommand command = new(character.EntityId, Skill.Resistance);
     command.Contextualize(_world);
 
     CharacterModel? result = await _handler.Handle(command, _cancellationToken);
     Assert.NotNull(result);
     Assert.Same(model, result);
 
-    Assert.Equal(1, character.SkillRanks[payload.Skill]);
+    Assert.Equal(1, character.SkillRanks[Skill.Resistance]);
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,
@@ -58,24 +55,18 @@ public class IncreaseCharacterSkillRankCommandHandlerTests
   [Fact(DisplayName = "It should return null when the character could not be found.")]
   public async Task It_should_return_null_when_the_character_could_not_be_found()
   {
-    IncreaseCharacterSkillRankPayload payload = new(Skill.Athletics);
-    IncreaseCharacterSkillRankCommand command = new(Guid.NewGuid(), payload);
+    IncreaseCharacterSkillRankCommand command = new(Guid.NewGuid(), Skill.Athletics);
     command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 
-  [Fact(DisplayName = "It should throw ValidationException when the payload is not valid..")]
-  public async Task It_should_throw_ValidationException_when_the_payload_is_not_valid()
+  [Fact(DisplayName = "It should return null when the skill is not defined.")]
+  public async Task It_should_return_null_when_the_skill_is_not_defined()
   {
-    IncreaseCharacterSkillRankPayload payload = new((Skill)(-1));
-    IncreaseCharacterSkillRankCommand command = new(Guid.Empty, payload);
+    IncreaseCharacterSkillRankCommand command = new(Guid.Empty, (Skill)(-1));
     command.Contextualize(_world);
 
-    var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-
-    ValidationFailure error = Assert.Single(exception.Errors);
-    Assert.Equal("EnumValidator", error.ErrorCode);
-    Assert.Equal("Skill", error.PropertyName);
+    Assert.Null(await _handler.Handle(command, _cancellationToken));
   }
 }

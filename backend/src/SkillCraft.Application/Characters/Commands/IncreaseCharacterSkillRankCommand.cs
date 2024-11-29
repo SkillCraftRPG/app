@@ -1,13 +1,12 @@
-﻿using FluentValidation;
-using MediatR;
-using SkillCraft.Application.Characters.Validators;
+﻿using MediatR;
 using SkillCraft.Application.Permissions;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Characters;
 
 namespace SkillCraft.Application.Characters.Commands;
 
-public record IncreaseCharacterSkillRankCommand(Guid Id, IncreaseCharacterSkillRankPayload Payload) : Activity, IRequest<CharacterModel?>;
+public record IncreaseCharacterSkillRankCommand(Guid Id, Skill Skill) : Activity, IRequest<CharacterModel?>;
 
 internal class IncreaseCharacterSkillRankCommandHandler : IRequestHandler<IncreaseCharacterSkillRankCommand, CharacterModel?>
 {
@@ -30,19 +29,16 @@ internal class IncreaseCharacterSkillRankCommandHandler : IRequestHandler<Increa
 
   public async Task<CharacterModel?> Handle(IncreaseCharacterSkillRankCommand command, CancellationToken cancellationToken)
   {
-    IncreaseCharacterSkillRankPayload payload = command.Payload;
-    new IncreaseCharacterSkillRankValidator().ValidateAndThrow(payload);
-
     CharacterId characterId = new(command.GetWorldId(), command.Id);
     Character? character = await _characterRepository.LoadAsync(characterId, cancellationToken);
-    if (character == null)
+    if (character == null || !Enum.IsDefined(command.Skill))
     {
       return null;
     }
 
     await _permissionService.EnsureCanUpdateAsync(command, character.GetMetadata(), cancellationToken);
 
-    character.IncreaseSkillRank(payload.Skill, command.GetUserId());
+    character.IncreaseSkillRank(command.Skill, command.GetUserId());
 
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 

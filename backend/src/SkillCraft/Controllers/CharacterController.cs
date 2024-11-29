@@ -5,6 +5,7 @@ using SkillCraft.Application;
 using SkillCraft.Application.Characters.Commands;
 using SkillCraft.Application.Characters.Queries;
 using SkillCraft.Constants;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Extensions;
 using SkillCraft.Filters;
@@ -85,6 +86,13 @@ public class CharacterController : ControllerBase
   public async Task<ActionResult<CharacterModel>> RemoveLanguageAsync(Guid characterId, Guid languageId, CancellationToken cancellationToken)
   {
     CharacterModel? character = await _pipeline.ExecuteAsync(new RemoveCharacterLanguageCommand(characterId, languageId), cancellationToken);
+    return GetActionResult(character);
+  }
+
+  [HttpPatch("{id}/skills/{skill}/increase-rank")]
+  public async Task<ActionResult<CharacterModel>> IncreaseSkillRankAsync(Guid id, Skill skill, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new IncreaseCharacterSkillRankCommand(id, skill), cancellationToken);
     return GetActionResult(character);
   }
 

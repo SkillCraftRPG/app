@@ -358,8 +358,7 @@ public class CharacterTests : IntegrationTests
     _herakles.IncreaseSkillRank(Skill.Athletics, UserId);
     await _characterRepository.SaveAsync(_herakles);
 
-    IncreaseCharacterSkillRankPayload payload = new(Skill.Athletics);
-    IncreaseCharacterSkillRankCommand command = new(_herakles.EntityId, payload);
+    IncreaseCharacterSkillRankCommand command = new(_herakles.EntityId, Skill.Athletics);
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
     Assert.NotNull(character);
 
