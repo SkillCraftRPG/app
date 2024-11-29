@@ -6,11 +6,12 @@ import type {
   CharacterModel,
   CharacterTalentPayload,
   CreateCharacterPayload,
+  LevelUpCharacterPayload,
   ReplaceCharacterPayload,
   SearchCharactersPayload,
 } from "@/types/characters";
 import type { SearchResults } from "@/types/search";
-import { _delete, get, post, put } from ".";
+import { _delete, get, patch, post, put } from ".";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/characters" });
@@ -26,9 +27,19 @@ export async function addCharacterTalent(characterId: string, payload: Character
   return (await post<CharacterTalentPayload, CharacterModel>(url, payload)).data;
 }
 
+export async function cancelCharacterLevelUp(id: string): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}/level-up" }).setParameter("id", id).buildRelative();
+  return (await _delete<CharacterModel>(url)).data;
+}
+
 export async function createCharacter(payload: CreateCharacterPayload): Promise<CharacterModel> {
   const url: string = createUrlBuilder().buildRelative();
   return (await post<CreateCharacterPayload, CharacterModel>(url, payload)).data;
+}
+
+export async function levelUpCharacter(id: string, payload: LevelUpCharacterPayload): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}/level-up" }).setParameter("id", id).buildRelative();
+  return (await patch<LevelUpCharacterPayload, CharacterModel>(url, payload)).data;
 }
 
 export async function listPlayers(): Promise<SearchResults<string>> {
