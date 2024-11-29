@@ -391,6 +391,9 @@ namespace SkillCraft.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<int>("Sensitivity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SkillRanks")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Spirit")
                         .HasColumnType("int");
 

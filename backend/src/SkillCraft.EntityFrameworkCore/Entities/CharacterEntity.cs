@@ -1,4 +1,5 @@
 ﻿using Logitar.EventSourcing;
+using SkillCraft.Contracts;
 using SkillCraft.Contracts.Characters;
 using SkillCraft.Domain.Characters;
 using Attribute = SkillCraft.Contracts.Attribute;
@@ -64,6 +65,7 @@ internal class CharacterEntity : AggregateEntity
   public List<CharacterTalentEntity> Talents { get; private set; } = [];
 
   public string? LevelUps { get; private set; }
+  public string? SkillRanks { get; private set; }
 
   public CharacterEntity(
     WorldEntity world,
@@ -215,6 +217,28 @@ internal class CharacterEntity : AggregateEntity
   public List<LevelUpModel> GetLevelUps()
   {
     return (LevelUps == null ? null : JsonSerializer.Deserialize<List<LevelUpModel>>(LevelUps)) ?? [];
+  }
+
+  public IReadOnlyCollection<SkillRankModel> GetSkillRanks()
+  {
+    return DeserializeSkillRanks().Select(pair => new SkillRankModel(pair)).ToArray();
+  }
+  public void IncreaseSkillRank(Character.SkillRankIncreasedEvent @event)
+  {
+    base.Update(@event);
+
+    Dictionary<Skill, int> skillRanks = DeserializeSkillRanks();
+    _ = skillRanks.TryGetValue(@event.Skill, out int rank);
+    skillRanks[@event.Skill] = rank + 1;
+    SetSkillRanks(skillRanks);
+  }
+  private Dictionary<Skill, int> DeserializeSkillRanks()
+  {
+    return (SkillRanks == null ? null : JsonSerializer.Deserialize<Dictionary<Skill, int>>(SkillRanks)) ?? [];
+  }
+  private void SetSkillRanks(Dictionary<Skill, int> skillRanks)
+  {
+    SkillRanks = skillRanks.Count == 0 ? null : JsonSerializer.Serialize(skillRanks);
   }
 
   public void CancelLevelUp(Character.LevelUpCancelledEvent @event)

@@ -138,6 +138,13 @@ public class Character : AggregateRoot
   public bool CanLevelUp => Level < 20 && Experience >= ExperienceTable.GetTotalExperience(Level + 1);
 
   public int Tier => 0;
+  public int MaximumSkillRank => Tier switch
+  {
+    3 => 14,
+    2 => 9,
+    1 => 5,
+    _ => 2,
+  };
 
   private int _vitality = 0;
   public int Vitality
@@ -229,10 +236,15 @@ public class Character : AggregateRoot
   private readonly Dictionary<LanguageId, LanguageMetadata> _languages = [];
   public IReadOnlyDictionary<LanguageId, LanguageMetadata> Languages => _languages.AsReadOnly();
 
+  private readonly Dictionary<Skill, int> _skillRanks = [];
+  public IReadOnlyDictionary<Skill, int> SkillRanks => _skillRanks.AsReadOnly();
+  public int AvailableSkillPoints => Statistics.Learning.Value;
+  public int SpentSkillPoints => _skillRanks.Values.Sum();
+  public int RemainingSkillPoints => AvailableSkillPoints - SpentSkillPoints;
+
   private readonly Dictionary<TalentId, HashSet<Guid>> _talentIds = [];
   private readonly Dictionary<Guid, CharacterTalent> _talents = [];
   public IReadOnlyDictionary<Guid, CharacterTalent> Talents => _talents.AsReadOnly();
-
   public int AvailableTalentPoints => 8 + (Level * 4);
   public int SpentTalentPoints => _talents.Values.Sum(t => t.Cost);
   public int RemainingTalentPoints => AvailableTalentPoints - SpentTalentPoints;
@@ -405,6 +417,29 @@ public class Character : AggregateRoot
   protected virtual void Apply(ExperienceGainedEvent @event)
   {
     _experience += @event.Experience;
+  }
+
+  public void IncreaseSkillRank(Skill skill, UserId userId)
+  {
+    if (!Enum.IsDefined(skill))
+    {
+      throw new ArgumentOutOfRangeException(nameof(skill));
+    }
+    else if (RemainingSkillPoints < 1)
+    {
+      throw new NotEnoughRemainingSkillPointsException(this);
+    }
+    else if (_skillRanks.TryGetValue(skill, out int rank) && rank >= MaximumSkillRank)
+    {
+      throw new SkillMaximumRankReachedException(this, skill, "Skill");
+    }
+
+    Raise(new SkillRankIncreasedEvent(skill), userId.ActorId);
+  }
+  protected virtual void Apply(SkillRankIncreasedEvent @event)
+  {
+    _ = _skillRanks.TryGetValue(@event.Skill, out int rank);
+    _skillRanks[@event.Skill] = rank + 1;
   }
 
   public void CancelLevelUp(UserId userId)
@@ -852,6 +887,16 @@ public class Character : AggregateRoot
     public LeveledUpEvent(LevelUp levelUp)
     {
       LevelUp = levelUp;
+    }
+  }
+
+  public class SkillRankIncreasedEvent : DomainEvent, INotification
+  {
+    public Skill Skill { get; }
+
+    public SkillRankIncreasedEvent(Skill skill)
+    {
+      Skill = skill;
     }
   }
 
