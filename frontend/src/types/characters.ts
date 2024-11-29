@@ -103,23 +103,10 @@ export type CharacterModel = Aggregate & {
   caste: CasteModel;
   education: EducationModel;
   talents: CharacterTalentModel[];
-  availableTalentPoints: number;
-  spentTalentPoints: number;
-  remainingTalentPoints: number;
-  maximumSkillRank: number;
   skillRanks: SkillRankModel[];
-  // TODO(fpion): AvailableSkillPoints
-  // TODO(fpion): SpentSkillPoints
-  // TODO(fpion): RemainingSkillPoints
   inventory: InventoryModel;
-  canLevelUp: boolean;
   levelUps: LevelUpModel[];
   bonuses: BonusModel[];
-  // TODO(fpion): Attributes
-  // TODO(fpion): Statistics
-  // TODO(fpion): Skills
-  // TODO(fpion): Speeds
-  // TODO(fpion): Miscellaneous
 };
 
 export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
@@ -256,6 +243,12 @@ export type Step5 = {
 
 export type Step6 = {
   talents: TalentModel[];
+};
+
+export type TalentPoints = {
+  available: number;
+  spent: number;
+  remaining: number;
 };
 
 export type UpdateCharacterPayload = {

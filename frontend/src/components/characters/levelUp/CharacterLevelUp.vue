@@ -9,6 +9,7 @@ import type { Attribute } from "@/types/game";
 import type { CharacterModel, LevelUpCharacterPayload } from "@/types/characters";
 import { levelUpCharacter } from "@/api/characters";
 import { useToastStore } from "@/stores/toast";
+import { getTotalExperience } from "@/helpers/gameUtils";
 
 const toasts = useToastStore();
 const { t } = useI18n();
@@ -20,6 +21,7 @@ const props = defineProps<{
 const attribute = ref<Attribute>();
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 
+const canLevelUp = computed<boolean>(() => props.character.level < 20 && props.character.experience >= getTotalExperience(props.character.level + 1));
 const hasChanges = computed<boolean>(() => Boolean(attribute.value));
 
 const emit = defineEmits<{
@@ -57,7 +59,7 @@ const onSubmit = handleSubmit(async () => {
 <template>
   <span>
     <TarButton
-      :disabled="!character.canLevelUp"
+      :disabled="!canLevelUp"
       icon="fas fa-trophy"
       :text="t('characters.levelUp.label')"
       variant="success"
