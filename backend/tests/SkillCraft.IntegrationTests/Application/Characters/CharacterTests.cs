@@ -352,6 +352,27 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(character, model);
   }
 
+  [Fact(DisplayName = "It should increase the rank of the skill of an existing character.")]
+  public async Task It_should_increase_the_rank_of_the_skill_of_an_existing_character()
+  {
+    _herakles.IncreaseSkillRank(Skill.Athletics, UserId);
+    await _characterRepository.SaveAsync(_herakles);
+
+    IncreaseCharacterSkillRankPayload payload = new(Skill.Athletics);
+    IncreaseCharacterSkillRankCommand command = new(_herakles.EntityId, payload);
+    CharacterModel? character = await Pipeline.ExecuteAsync(command);
+    Assert.NotNull(character);
+
+    Assert.Equal(_herakles.EntityId, character.Id);
+    Assert.Equal(_herakles.Version + 1, character.Version);
+    Assert.Equal(Actor, character.UpdatedBy);
+    Assert.Equal(DateTime.UtcNow, character.UpdatedOn, TimeSpan.FromSeconds(1));
+
+    SkillRankModel skillRank = Assert.Single(character.SkillRanks);
+    Assert.Equal(Skill.Athletics, skillRank.Skill);
+    Assert.Equal(2, skillRank.Rank);
+  }
+
   [Fact(DisplayName = "It should level-up an existing character.")]
   public async Task It_should_level_up_an_existing_character()
   {
