@@ -15,7 +15,6 @@ using SkillCraft.Contracts.Natures;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
-using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Items;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -163,7 +162,6 @@ internal class Mapper
       }
     }
 
-    destination.MaximumSkillRank = CharacterHelper.GetMaximumRank(destination.Tier);
     destination.SkillRanks.AddRange(source.GetSkillRanks());
 
     foreach (InventoryEntity inventory in source.Inventory)
@@ -190,7 +188,6 @@ internal class Mapper
       }
     }
 
-    destination.CanLevelUp = CharacterHelper.CanLevelUp(destination.Level, destination.Experience);
     destination.LevelUps.AddRange(source.GetLevelUps());
 
     foreach (CharacterBonusEntity bonus in source.Bonuses)

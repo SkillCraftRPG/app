@@ -42,27 +42,13 @@ public class CharacterModel : Aggregate
   public EducationModel Education { get; set; } = new();
 
   public List<CharacterTalentModel> Talents { get; set; } = [];
-  public int AvailableTalentPoints => 8 + (Level * 4);
-  public int SpentTalentPoints => Talents.Sum(talent => talent.Cost);
-  public int RemainingTalentPoints => AvailableTalentPoints - SpentTalentPoints;
 
-  public int MaximumSkillRank { get; set; }
   public List<SkillRankModel> SkillRanks { get; set; } = [];
-  // TODO(fpion): AvailableSkillPoints
-  // TODO(fpion): SpentSkillPoints
-  // TODO(fpion): RemainingSkillPoints
 
   public List<InventoryModel> Inventory { get; set; } = [];
 
-  public bool CanLevelUp { get; set; }
   public List<LevelUpModel> LevelUps { get; set; } = [];
   public List<BonusModel> Bonuses { get; set; } = [];
-
-  // TODO(fpion): Attributes
-  // TODO(fpion): Statistics
-  // TODO(fpion): Skills
-  // TODO(fpion): Speeds
-  // TODO(fpion): Miscellaneous
 
   public override string ToString() => $"{Name} | {base.ToString()}";
 }
