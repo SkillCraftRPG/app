@@ -91,7 +91,6 @@ export type CharacterModel = Aggregate & {
   stamina: number;
   bloodAlcoholContent: number;
   intoxication: number;
-  bonuses: BonusModel[];
   lineage: LineageModel;
   height: number;
   weight: number;
@@ -107,7 +106,20 @@ export type CharacterModel = Aggregate & {
   availableTalentPoints: number;
   spentTalentPoints: number;
   remainingTalentPoints: number;
+  maximumSkillRank: number;
+  skillRanks: SkillRankModel[];
+  // TODO(fpion): AvailableSkillPoints
+  // TODO(fpion): SpentSkillPoints
+  // TODO(fpion): RemainingSkillPoints
   inventory: InventoryModel;
+  canLevelUp: boolean;
+  levelUps: LevelUpModel[];
+  bonuses: BonusModel[];
+  // TODO(fpion): Attributes
+  // TODO(fpion): Statistics
+  // TODO(fpion): Skills
+  // TODO(fpion): Speeds
+  // TODO(fpion): Miscellaneous
 };
 
 export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
@@ -166,6 +178,21 @@ export type InventoryModel = {
   valueOverride?: number;
 };
 
+export type LevelUpCharacterPayload = {
+  attribute: Attribute;
+};
+
+export type LevelUpModel = {
+  attribute: Attribute;
+  constitution: number;
+  initiative: number;
+  learning: number;
+  power: number;
+  precision: number;
+  reputation: number;
+  strength: number;
+};
+
 export type MiscellaneousBonusTarget = "BloodAlcoholContent" | "Defense" | "Dodge" | "Intoxication" | "Stamina" | "Vitality";
 
 export type ReplaceCharacterPayload = {
@@ -184,6 +211,11 @@ export type ReplaceCharacterPayload = {
 export type SearchCharactersPayload = SearchPayload & {
   playerName?: string;
   sort: CharacterSortOption[];
+};
+
+export type SkillRankModel = {
+  skill: Skill;
+  rank: number;
 };
 
 export type StartingWealthPayload = {
@@ -224,4 +256,8 @@ export type Step5 = {
 
 export type Step6 = {
   talents: TalentModel[];
+};
+
+export type UpdateCharacterPayload = {
+  skillRanks: SkillRankModel[];
 };

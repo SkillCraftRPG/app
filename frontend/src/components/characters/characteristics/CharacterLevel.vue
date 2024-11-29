@@ -8,5 +8,9 @@ defineProps<{
 </script>
 
 <template>
-  <AppInput disabled floating id="level" label="characters.level" :model-value="character.level.toString()" type="number" validation="server" />
+  <AppInput disabled floating id="level" label="characters.level" :model-value="character.level.toString()" type="number" validation="server">
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+  </AppInput>
 </template>

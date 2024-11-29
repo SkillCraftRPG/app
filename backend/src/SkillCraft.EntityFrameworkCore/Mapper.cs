@@ -15,6 +15,7 @@ using SkillCraft.Contracts.Natures;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Items;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -109,17 +110,6 @@ internal class Mapper
       BaseAttributes = source.GetBaseAttributes()
     };
 
-    foreach (CharacterBonusEntity bonus in source.Bonuses)
-    {
-      destination.Bonuses.Add(new BonusModel(bonus.Category, bonus.Target, bonus.Value)
-      {
-        Id = bonus.Id,
-        IsTemporary = bonus.IsTemporary,
-        Precision = bonus.Precision,
-        Notes = bonus.Notes
-      });
-    }
-
     if (source.Lineage != null)
     {
       destination.Lineage = ToLineage(source.Lineage, world);
@@ -173,6 +163,9 @@ internal class Mapper
       }
     }
 
+    destination.MaximumSkillRank = CharacterHelper.GetMaximumRank(destination.Tier);
+    destination.SkillRanks.AddRange(source.GetSkillRanks());
+
     foreach (InventoryEntity inventory in source.Inventory)
     {
       if (inventory.Item != null)
@@ -197,8 +190,19 @@ internal class Mapper
       }
     }
 
+    destination.CanLevelUp = CharacterHelper.CanLevelUp(destination.Level, destination.Experience);
     destination.LevelUps.AddRange(source.GetLevelUps());
-    destination.SkillRanks.AddRange(source.GetSkillRanks());
+
+    foreach (CharacterBonusEntity bonus in source.Bonuses)
+    {
+      destination.Bonuses.Add(new BonusModel(bonus.Category, bonus.Target, bonus.Value)
+      {
+        Id = bonus.Id,
+        IsTemporary = bonus.IsTemporary,
+        Precision = bonus.Precision,
+        Notes = bonus.Notes
+      });
+    }
 
     MapAggregate(source, destination);
 

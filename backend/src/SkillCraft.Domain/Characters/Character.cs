@@ -135,16 +135,9 @@ public class Character : AggregateRoot
   private readonly List<LevelUp> _levelUps = [];
   public IReadOnlyCollection<LevelUp> LevelUps => _levelUps.AsReadOnly();
   public int Level => _levelUps.Count;
-  public bool CanLevelUp => Level < 20 && Experience >= ExperienceTable.GetTotalExperience(Level + 1);
+  public bool CanLevelUp => CharacterHelper.CanLevelUp(Level, Experience);
 
   public int Tier => 0;
-  public int MaximumSkillRank => Tier switch
-  {
-    3 => 14,
-    2 => 9,
-    1 => 5,
-    _ => 2,
-  };
 
   private int _vitality = 0;
   public int Vitality
@@ -236,6 +229,7 @@ public class Character : AggregateRoot
   private readonly Dictionary<LanguageId, LanguageMetadata> _languages = [];
   public IReadOnlyDictionary<LanguageId, LanguageMetadata> Languages => _languages.AsReadOnly();
 
+  public int MaximumSkillRank => CharacterHelper.GetMaximumRank(Tier);
   private readonly Dictionary<Skill, int> _skillRanks = [];
   public IReadOnlyDictionary<Skill, int> SkillRanks => _skillRanks.AsReadOnly();
   public int AvailableSkillPoints => Statistics.Learning.Value;

@@ -9,9 +9,11 @@ import type {
   LevelUpCharacterPayload,
   ReplaceCharacterPayload,
   SearchCharactersPayload,
+  UpdateCharacterPayload,
 } from "@/types/characters";
 import type { SearchResults } from "@/types/search";
 import { _delete, get, patch, post, put } from ".";
+import type { Skill } from "@/types/game";
 
 function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/characters" });
@@ -35,6 +37,14 @@ export async function cancelCharacterLevelUp(id: string): Promise<CharacterModel
 export async function createCharacter(payload: CreateCharacterPayload): Promise<CharacterModel> {
   const url: string = createUrlBuilder().buildRelative();
   return (await post<CreateCharacterPayload, CharacterModel>(url, payload)).data;
+}
+
+export async function increaseCharacterSkillRank(id: string, skill: Skill): Promise<CharacterModel> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}/skills/{skill}/increase-rank" })
+    .setParameter("id", id)
+    .setParameter("skill", skill)
+    .buildRelative();
+  return (await patch<undefined, CharacterModel>(url)).data;
 }
 
 export async function levelUpCharacter(id: string, payload: LevelUpCharacterPayload): Promise<CharacterModel> {
@@ -126,4 +136,9 @@ export async function searchCharacters(payload: SearchCharactersPayload): Promis
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
   return (await get<SearchResults<CharacterModel>>(url)).data;
+}
+
+export async function updateCharacter(id: string, payload: UpdateCharacterPayload): Promise<CharacterModel> {
+  const url: string = createUrlBuilder(id).buildRelative();
+  return (await patch<UpdateCharacterPayload, CharacterModel>(url, payload)).data;
 }

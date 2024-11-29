@@ -121,6 +121,16 @@
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
   "level": "Level",
+  "levelUp": {
+    "cancel": "TODO",
+    "empty": "This list is empty.",
+    "label": "Level-Up!"
+  },
+  "levelUpCancelled": "TODO",
+  "leveledUp": "The character has been leveled-up.",
+  "levels": {
+    "label": "Levels"
+  },
   "lineage": "Lineage",
   "list": "Characters",
   "name": "Character Name",

@@ -25,8 +25,6 @@ public class CharacterModel : Aggregate
   public int BloodAlcoholContent { get; set; }
   public int Intoxication { get; set; }
 
-  public List<BonusModel> Bonuses { get; set; } = [];
-
   public LineageModel Lineage { get; set; } = new();
   public double Height { get; set; }
   public double Weight { get; set; }
@@ -48,10 +46,23 @@ public class CharacterModel : Aggregate
   public int SpentTalentPoints => Talents.Sum(talent => talent.Cost);
   public int RemainingTalentPoints => AvailableTalentPoints - SpentTalentPoints;
 
+  public int MaximumSkillRank { get; set; }
+  public List<SkillRankModel> SkillRanks { get; set; } = [];
+  // TODO(fpion): AvailableSkillPoints
+  // TODO(fpion): SpentSkillPoints
+  // TODO(fpion): RemainingSkillPoints
+
   public List<InventoryModel> Inventory { get; set; } = [];
 
+  public bool CanLevelUp { get; set; }
   public List<LevelUpModel> LevelUps { get; set; } = [];
-  public List<SkillRankModel> SkillRanks { get; set; } = [];
+  public List<BonusModel> Bonuses { get; set; } = [];
+
+  // TODO(fpion): Attributes
+  // TODO(fpion): Statistics
+  // TODO(fpion): Skills
+  // TODO(fpion): Speeds
+  // TODO(fpion): Miscellaneous
 
   public override string ToString() => $"{Name} | {base.ToString()}";
 }

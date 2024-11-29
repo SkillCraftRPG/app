@@ -8,6 +8,8 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import CharacterBonuses from "@/components/characters/bonuses/CharacterBonuses.vue";
 import CharacterCharacteristics from "@/components/characters/characteristics/CharacterCharacteristics.vue";
 import CharacterLanguages from "@/components/characters/languages/CharacterLanguages.vue";
+import CharacterLevelUps from "@/components/characters/levelUp/CharacterLevelUps.vue";
+import CharacterSkills from "@/components/characters/skills/CharacterSkills.vue";
 import CharacterTalents from "@/components/characters/talents/CharacterTalents.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
@@ -55,7 +57,7 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab active id="characteristics" :title="t('characters.characteristics')">
+        <TarTab id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.list')">
@@ -63,6 +65,12 @@ onMounted(async () => {
         </TarTab>
         <TarTab id="bonuses" :title="t('characters.bonuses.label')">
           <CharacterBonuses :character="character" @error="handleError" @updated="onUpdated" />
+        </TarTab>
+        <TarTab id="levels" :title="t('characters.levels.label')">
+          <CharacterLevelUps :character="character" @error="handleError" @updated="onUpdated" />
+        </TarTab>
+        <TarTab active id="skills" :title="t('game.skills')">
+          <CharacterSkills />
         </TarTab>
         <TarTab id="talents" :title="t('talents.list')">
           <CharacterTalents :character="character" @error="handleError" @updated="onUpdated" />
