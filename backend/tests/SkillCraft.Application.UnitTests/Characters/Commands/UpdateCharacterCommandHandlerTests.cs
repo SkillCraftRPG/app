@@ -55,13 +55,14 @@ public class UpdateCharacterCommandHandlerTests
       Vitality = -10,
       Stamina = -5,
       BloodAlcoholContent = -1,
-      Intoxication = -2
+      Intoxication = -2,
+      SkillRanks = [new SkillRankModel((Skill)(-1), rank: -1)]
     };
     UpdateCharacterCommand command = new(Guid.Empty, payload);
     command.Contextualize(_world);
 
     var exception = await Assert.ThrowsAsync<FluentValidation.ValidationException>(async () => await _handler.Handle(command, _cancellationToken));
-    Assert.Equal(10, exception.Errors.Count());
+    Assert.Equal(12, exception.Errors.Count());
     Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "Name");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "MaximumLengthValidator" && e.PropertyName == "Player.Value");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanValidator" && e.PropertyName == "Height");
@@ -72,6 +73,8 @@ public class UpdateCharacterCommandHandlerTests
     Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanOrEqualValidator" && e.PropertyName == "Stamina");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanOrEqualValidator" && e.PropertyName == "BloodAlcoholContent");
     Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanOrEqualValidator" && e.PropertyName == "Intoxication");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "EnumValidator" && e.PropertyName == "SkillRanks[0].Skill");
+    Assert.Contains(exception.Errors, e => e.ErrorCode == "GreaterThanOrEqualValidator" && e.PropertyName == "SkillRanks[0].Rank");
   }
 
   [Fact(DisplayName = "It should update an existing character.")]
@@ -91,7 +94,13 @@ public class UpdateCharacterCommandHandlerTests
       Vitality = 50,
       Stamina = 45,
       BloodAlcoholContent = 1,
-      Intoxication = 2
+      Intoxication = 2,
+      SkillRanks =
+      [
+        new SkillRankModel(Skill.Athletics, rank: 2),
+        new SkillRankModel(Skill.Melee, rank: 2),
+        new SkillRankModel(Skill.Resistance, rank: 1)
+      ]
     };
     UpdateCharacterCommand command = new(character.EntityId, payload);
     command.Contextualize(_world);
@@ -113,6 +122,12 @@ public class UpdateCharacterCommandHandlerTests
     Assert.Equal(payload.Stamina, character.Stamina);
     Assert.Equal(payload.BloodAlcoholContent, character.BloodAlcoholContent);
     Assert.Equal(payload.Intoxication, character.Intoxication);
+
+    Assert.Equal(payload.SkillRanks.Count, character.SkillRanks.Count);
+    foreach (SkillRankModel skillRank in payload.SkillRanks)
+    {
+      Assert.Contains(character.SkillRanks, x => x.Key == skillRank.Skill && x.Value == skillRank.Rank);
+    }
 
     _permissionService.Verify(x => x.EnsureCanUpdateAsync(
       command,

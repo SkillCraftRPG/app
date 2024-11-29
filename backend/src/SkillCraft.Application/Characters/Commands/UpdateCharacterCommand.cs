@@ -90,6 +90,11 @@ internal class UpdateCharacterCommandHandler : IRequestHandler<UpdateCharacterCo
       character.Intoxication = payload.Intoxication.Value;
     }
 
+    foreach (SkillRankModel skillRank in payload.SkillRanks)
+    {
+      character.SetSkillRank(skillRank.Skill, skillRank.Rank);
+    }
+
     character.Update(command.GetUserId());
     await _sender.Send(new SaveCharacterCommand(character), cancellationToken);
 

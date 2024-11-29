@@ -14,4 +14,6 @@ public record UpdateCharacterPayload
   public int? Stamina { get; set; }
   public int? BloodAlcoholContent { get; set; }
   public int? Intoxication { get; set; }
+
+  public List<SkillRankModel> SkillRanks { get; set; } = [];
 }
