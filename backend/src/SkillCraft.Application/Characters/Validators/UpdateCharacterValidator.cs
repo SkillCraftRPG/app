@@ -20,5 +20,7 @@ internal class UpdateCharacterValidator : AbstractValidator<UpdateCharacterPaylo
     RuleFor(x => x.Stamina).GreaterThanOrEqualTo(0);
     RuleFor(x => x.BloodAlcoholContent).GreaterThanOrEqualTo(0);
     RuleFor(x => x.Intoxication).GreaterThanOrEqualTo(0);
+
+    RuleForEach(x => x.SkillRanks).SetValidator(new SkillRankValidator());
   }
 }

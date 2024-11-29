@@ -555,6 +555,30 @@ public class Character : AggregateRoot
     _languages[@event.LanguageId] = @event.Metadata;
   }
 
+  public void SetSkillRank(Skill skill, int rank)
+  {
+    if (!Enum.IsDefined(skill))
+    {
+      throw new ArgumentOutOfRangeException(nameof(skill));
+    }
+
+    ArgumentOutOfRangeException.ThrowIfNegative(rank, nameof(rank));
+    if (rank > MaximumSkillRank)
+    {
+      throw new SkillMaximumRankReachedException(this, skill, "Skill");
+    }
+
+    _ = _skillRanks.TryGetValue(skill, out int existingRank);
+    int requiredSkillPoints = rank - existingRank;
+    if (requiredSkillPoints > RemainingSkillPoints)
+    {
+      throw new NotEnoughRemainingSkillPointsException(this);
+    }
+
+    _skillRanks[skill] = rank;
+    _updatedEvent.SkillRanks[skill] = rank;
+  }
+
   public void AddTalent(Talent talent, UserId userId) => AddTalent(talent, options: null, userId);
   public void AddTalent(Talent talent, SetTalentOptions? options, UserId userId) => SetTalent(Guid.NewGuid(), talent, options, userId);
   public void SetTalent(Guid id, Talent talent, UserId userId) => SetTalent(id, talent, options: null, userId);
@@ -686,6 +710,18 @@ public class Character : AggregateRoot
     if (@event.Intoxication.HasValue)
     {
       _intoxication = @event.Intoxication.Value;
+    }
+
+    foreach (KeyValuePair<Skill, int> skillRank in @event.SkillRanks)
+    {
+      if (skillRank.Value == 0)
+      {
+        _skillRanks.Remove(skillRank.Key);
+      }
+      else
+      {
+        _skillRanks[skillRank.Key] = skillRank.Value;
+      }
     }
   }
 
@@ -937,7 +973,10 @@ public class Character : AggregateRoot
     public int? BloodAlcoholContent { get; set; }
     public int? Intoxication { get; set; }
 
+    public Dictionary<Skill, int> SkillRanks { get; set; } = [];
+
     public bool HasChanges => Name != null || Player != null || Height != null || Weight != null || Age != null
-      || Experience != null || Vitality != null || Stamina != null || BloodAlcoholContent != null || Intoxication != null;
+      || Experience != null || Vitality != null || Stamina != null || BloodAlcoholContent != null || Intoxication != null
+      || SkillRanks.Count > 0;
   }
 }

@@ -668,7 +668,8 @@ public class CharacterTests : IntegrationTests
       Weight = 66.4,
       Experience = 100,
       BloodAlcoholContent = 1,
-      Intoxication = 2
+      Intoxication = 2,
+      SkillRanks = [new SkillRankModel(Skill.Melee, rank: +1)]
     };
     UpdateCharacterCommand command = new(_alexios.EntityId, payload);
 
@@ -690,5 +691,6 @@ public class CharacterTests : IntegrationTests
     Assert.Equal(_alexios.Stamina, character.Stamina);
     Assert.Equal(payload.BloodAlcoholContent, character.BloodAlcoholContent);
     Assert.Equal(payload.Intoxication, character.Intoxication);
+    Assert.Equal(payload.SkillRanks, character.SkillRanks);
   }
 }

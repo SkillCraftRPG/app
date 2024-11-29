@@ -419,5 +419,19 @@ internal class CharacterEntity : AggregateEntity
     {
       Intoxication = @event.Intoxication.Value;
     }
+
+    Dictionary<Skill, int> skillRanks = DeserializeSkillRanks();
+    foreach (KeyValuePair<Skill, int> skillRank in @event.SkillRanks)
+    {
+      if (skillRank.Value == 0)
+      {
+        skillRanks.Remove(skillRank.Key);
+      }
+      else
+      {
+        skillRanks[skillRank.Key] = skillRank.Value;
+      }
+    }
+    SetSkillRanks(skillRanks);
   }
 }
