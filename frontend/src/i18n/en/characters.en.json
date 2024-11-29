@@ -31,6 +31,7 @@
       "select": "You must select one worst attribute."
     }
   },
+  "attributesAndStatistics": "Attributes & Statistics",
   "background": {
     "invalid": "The selected caste and education cannot be associated to the same skill.",
     "label": "Background"

@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
+import CharacterAttributes from "@/components/characters/attributes/CharacterAttributes.vue";
 import CharacterBonuses from "@/components/characters/bonuses/CharacterBonuses.vue";
 import CharacterCharacteristics from "@/components/characters/characteristics/CharacterCharacteristics.vue";
 import CharacterLanguages from "@/components/characters/languages/CharacterLanguages.vue";
@@ -60,21 +61,28 @@ onMounted(async () => {
         <TarTab id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
+        <TarTab active id="attributes-statistics" :title="t('characters.attributesAndStatistics')">
+          <CharacterAttributes :character="character" />
+        </TarTab>
+        <TarTab id="skills" :title="t('game.skills')">
+          <CharacterSkills />
+        </TarTab>
+        <!-- TODO(fpion): Speeds -->
         <TarTab id="languages" :title="t('languages.list')">
           <CharacterLanguages :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
+        <TarTab id="talents" :title="t('talents.list')">
+          <CharacterTalents :character="character" @error="handleError" @updated="onUpdated" />
+        </TarTab>
+        <!-- TODO(fpion): Powers -->
+        <!-- TODO(fpion): Inventory, Attacks, Dodge & Defense -->
         <TarTab id="bonuses" :title="t('characters.bonuses.label')">
           <CharacterBonuses :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="levels" :title="t('characters.levels.label')">
           <CharacterLevelUps :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
-        <TarTab active id="skills" :title="t('game.skills')">
-          <CharacterSkills />
-        </TarTab>
-        <TarTab id="talents" :title="t('talents.list')">
-          <CharacterTalents :character="character" @error="handleError" @updated="onUpdated" />
-        </TarTab>
+        <!-- TODO(fpion): Notes -->
       </TarTabs>
     </template>
   </main>

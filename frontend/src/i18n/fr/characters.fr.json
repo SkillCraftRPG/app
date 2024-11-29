@@ -31,6 +31,7 @@
       "select": "Vous devez sélectionner un pire attribut."
     }
   },
+  "attributesAndStatistics": "Attributs & Statistiques",
   "background": {
     "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence.",
     "label": "Historique"

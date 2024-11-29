@@ -12,6 +12,16 @@ import type { SearchPayload, SortOption } from "./search";
 import type { TalentModel } from "./talents";
 import type { WorldModel } from "./worlds";
 
+export type AttributeDetail = {
+  attribute: Attribute;
+  label: string;
+  base: number;
+  nature?: NatureModel;
+  // TODO(fpion): detail
+  score: number;
+  modifier: number;
+};
+
 export type BaseAttributesModel = {
   agility: number;
   coordination: number;
