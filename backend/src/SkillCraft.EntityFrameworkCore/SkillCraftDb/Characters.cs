@@ -38,6 +38,7 @@ internal static class Characters
   public static readonly ColumnId PlayerName = new(nameof(CharacterEntity.PlayerName), Table);
   public static readonly ColumnId Presence = new(nameof(CharacterEntity.Presence), Table);
   public static readonly ColumnId Sensitivity = new(nameof(CharacterEntity.Sensitivity), Table);
+  public static readonly ColumnId SkillRanks = new(nameof(CharacterEntity.SkillRanks), Table);
   public static readonly ColumnId Spirit = new(nameof(CharacterEntity.Spirit), Table);
   public static readonly ColumnId Stamina = new(nameof(CharacterEntity.Stamina), Table);
   public static readonly ColumnId Tier = new(nameof(CharacterEntity.Tier), Table);

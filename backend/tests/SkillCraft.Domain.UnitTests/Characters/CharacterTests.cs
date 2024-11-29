@@ -379,74 +379,71 @@ public class CharacterTests
     Assert.Equal("experience", exception.ParamName);
   }
 
-  [Fact(DisplayName = "LevelUp: it should level-up the character.")]
-  public void LevelUp_it_should_level_up_the_character()
+  [Theory(DisplayName = "IncreaseSkillRank: it should increase the rank of the specified skill.")]
+  [InlineData(Skill.Athletics)]
+  public void IncreaseSkillRank_it_should_increase_the_rank_of_the_specified_skill(Skill skill)
   {
-    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
-    Assert.True(_character.CanLevelUp);
-
-    _character.LevelUp(Attribute.Agility, _world.OwnerId);
-    Assert.Equal(1, _character.Level);
-
-    LevelUp levelUp = Assert.Single(_character.LevelUps);
-    Assert.Equal(Attribute.Agility, levelUp.Attribute);
-    Assert.Equal(7, levelUp.Constitution);
-    Assert.Equal(0.2, levelUp.Initiative);
-    Assert.Equal(1, levelUp.Learning);
-    Assert.Equal(0.15, levelUp.Power);
-    Assert.Equal(0.25, levelUp.Precision);
-    Assert.Equal(0.5, levelUp.Reputation);
-    Assert.Equal(0.425, levelUp.Strength);
-
-    Assert.Equal(17, _character.Attributes.Agility.Score);
-
-    Assert.Equal(42, _character.Statistics.Constitution.Value);
-    Assert.Equal(-1, _character.Statistics.Initiative.Value);
-    Assert.Equal(6, _character.Statistics.Learning.Value);
-    Assert.Equal(-2, _character.Statistics.Power.Value);
-    Assert.Equal(0, _character.Statistics.Precision.Value);
-    Assert.Equal(0, _character.Statistics.Reputation.Value);
-    Assert.Equal(3, _character.Statistics.Strength.Value);
+    _character.IncreaseSkillRank(skill, _world.OwnerId);
+    Assert.Equal(1, _character.SkillRanks[skill]);
   }
 
-  [Fact(DisplayName = "LevelUp: it should throw ArgumentOutOfRangeException when the attribute is not defined.")]
-  public void LevelUp_it_should_throw_ArgumentOutOfRangeException_when_the_attribute_is_not_defined()
+  [Fact(DisplayName = "IncreaseSkillRank: it should throw ArgumentOutOfRangeException when the skill is not defined.")]
+  public void IncreaseSkillRank_it_should_throw_ArgumentOutOfRangeException_when_the_skill_is_not_defined()
   {
-    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
-    Assert.True(_character.CanLevelUp);
-
-    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.LevelUp((Attribute)(-1), _world.OwnerId));
-    Assert.Equal("attribute", exception.ParamName);
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.IncreaseSkillRank((Skill)(-1), _world.OwnerId));
+    Assert.Equal("skill", exception.ParamName);
   }
 
-  [Fact(DisplayName = "LevelUp: it should throw CharacterCannotLevelUpYetException when the character cannot level-up.")]
-  public void LevelUp_it_should_throw_CharacterCannotLevelUpYetException_when_the_character_cannot_level_up()
+  [Fact(DisplayName = "IncreaseSkillRank: it should throw NotEnoughRemainingSkillPointsException when the character has no remaining skill point.")]
+  public void IncreaseSkillRank_it_should_throw_NotEnoughRemainingSkillPointsException_when_the_character_has_no_remaining_skill_point()
   {
-    _character.GainExperience(75, _world.OwnerId);
-    Assert.True(_character.Experience < ExperienceTable.GetTotalExperience(_character.Level + 1));
+    _character.IncreaseSkillRank(Skill.Acrobatics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Acrobatics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Athletics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Athletics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Resistance, _world.OwnerId);
 
-    var exception = Assert.Throws<CharacterCannotLevelUpYetException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
-    Assert.Equal(_character.WorldId.ToGuid(), exception.WorldId);
-    Assert.Equal(_character.EntityId, exception.CharacterId);
-    Assert.Equal(_character.Experience, exception.CurrentExperience);
-    Assert.Equal(_character.Level, exception.CurrentLevel);
-    Assert.Equal(ExperienceTable.GetTotalExperience(_character.Level + 1), exception.RequiredExperience);
-  }
-
-  [Fact(DisplayName = "LevelUp: it should throw AttributeMaximumScoreReachedException when the attribute score is already superior or equal to 20.")]
-  public void LevelUp_it_should_throw_AttributeMaximumScoreReachedException_when_the_attribute_score_is_already_superior_or_equal_to_20()
-  {
-    _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Agility.ToString(), value: 4), _world.OwnerId);
-    Assert.Equal(20, _character.Attributes.Agility.Score);
-
-    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
-    Assert.True(_character.CanLevelUp);
-
-    var exception = Assert.Throws<AttributeMaximumScoreReachedException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
+    var exception = Assert.Throws<NotEnoughRemainingSkillPointsException>(() => _character.IncreaseSkillRank(Skill.Resistance, _world.OwnerId));
     Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
     Assert.Equal(_character.EntityId, exception.CharacterId);
-    Assert.Equal(Attribute.Agility, exception.Attribute);
-    Assert.Equal("Attribute", exception.PropertyName);
+  }
+
+  [Theory(DisplayName = "IncreaseSkillRank: it should throw SkillMaximumRankReachedException when the skill maximum rank has been reached.")]
+  [InlineData(Skill.Athletics)]
+  public void IncreaseSkillRank_it_should_throw_SkillMaximumRankReachedException_when_the_skill_maximum_rank_has_been_reached(Skill skill)
+  {
+    _character.IncreaseSkillRank(skill, _world.OwnerId);
+    _character.IncreaseSkillRank(skill, _world.OwnerId);
+
+    var exception = Assert.Throws<SkillMaximumRankReachedException>(() => _character.IncreaseSkillRank(skill, _world.OwnerId));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_character.EntityId, exception.CharacterId);
+    Assert.Equal(_character.MaximumSkillRank, exception.MaximumSkillRank);
+    Assert.Equal(Skill.Athletics, exception.Skill);
+    Assert.Equal("Skill", exception.PropertyName);
+  }
+
+  [Fact(DisplayName = "It should account for correct skill points.")]
+  public void It_should_account_for_correct_skill_points()
+  {
+    _character.AddBonus(new Bonus(BonusCategory.Statistic, Statistic.Learning.ToString(), value: +4, notes: new Description("Apprentissage accéléré")), _world.OwnerId);
+
+    Assert.Equal(9, _character.AvailableSkillPoints);
+    Assert.Equal(0, _character.SpentSkillPoints);
+    Assert.Equal(9, _character.RemainingSkillPoints);
+
+    _character.IncreaseSkillRank(Skill.Acrobatics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Acrobatics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Athletics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Athletics, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Melee, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Melee, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Survival, _world.OwnerId);
+    _character.IncreaseSkillRank(Skill.Survival, _world.OwnerId);
+
+    Assert.Equal(9, _character.AvailableSkillPoints);
+    Assert.Equal(8, _character.SpentSkillPoints);
+    Assert.Equal(1, _character.RemainingSkillPoints);
   }
 
   [Fact(DisplayName = "It should account for correct talent points.")]
@@ -771,6 +768,84 @@ public class CharacterTests
 
     exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.Weight = weight);
     Assert.Equal("Weight", exception.ParamName);
+  }
+  [Fact(DisplayName = "LevelUp: it should level-up the character.")]
+  public void LevelUp_it_should_level_up_the_character()
+  {
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    _character.LevelUp(Attribute.Agility, _world.OwnerId);
+    Assert.Equal(1, _character.Level);
+
+    LevelUp levelUp = Assert.Single(_character.LevelUps);
+    Assert.Equal(Attribute.Agility, levelUp.Attribute);
+    Assert.Equal(7, levelUp.Constitution);
+    Assert.Equal(0.2, levelUp.Initiative);
+    Assert.Equal(1, levelUp.Learning);
+    Assert.Equal(0.15, levelUp.Power);
+    Assert.Equal(0.25, levelUp.Precision);
+    Assert.Equal(0.5, levelUp.Reputation);
+    Assert.Equal(0.425, levelUp.Strength);
+
+    Assert.Equal(17, _character.Attributes.Agility.Score);
+
+    Assert.Equal(42, _character.Statistics.Constitution.Value);
+    Assert.Equal(-1, _character.Statistics.Initiative.Value);
+    Assert.Equal(6, _character.Statistics.Learning.Value);
+    Assert.Equal(-2, _character.Statistics.Power.Value);
+    Assert.Equal(0, _character.Statistics.Precision.Value);
+    Assert.Equal(0, _character.Statistics.Reputation.Value);
+    Assert.Equal(3, _character.Statistics.Strength.Value);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should throw ArgumentOutOfRangeException when the attribute is not defined.")]
+  public void LevelUp_it_should_throw_ArgumentOutOfRangeException_when_the_attribute_is_not_defined()
+  {
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    var exception = Assert.Throws<ArgumentOutOfRangeException>(() => _character.LevelUp((Attribute)(-1), _world.OwnerId));
+    Assert.Equal("attribute", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should throw CharacterCannotLevelUpYetException when the character cannot level-up.")]
+  public void LevelUp_it_should_throw_CharacterCannotLevelUpYetException_when_the_character_cannot_level_up()
+  {
+    _character.GainExperience(75, _world.OwnerId);
+    Assert.True(_character.Experience < ExperienceTable.GetTotalExperience(_character.Level + 1));
+
+    var exception = Assert.Throws<CharacterCannotLevelUpYetException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
+    Assert.Equal(_character.WorldId.ToGuid(), exception.WorldId);
+    Assert.Equal(_character.EntityId, exception.CharacterId);
+    Assert.Equal(_character.Experience, exception.CurrentExperience);
+    Assert.Equal(_character.Level, exception.CurrentLevel);
+    Assert.Equal(ExperienceTable.GetTotalExperience(_character.Level + 1), exception.RequiredExperience);
+  }
+
+  [Fact(DisplayName = "LevelUp: it should throw AttributeMaximumScoreReachedException when the attribute score is already superior or equal to 20.")]
+  public void LevelUp_it_should_throw_AttributeMaximumScoreReachedException_when_the_attribute_score_is_already_superior_or_equal_to_20()
+  {
+    _character.AddBonus(new Bonus(BonusCategory.Attribute, Attribute.Agility.ToString(), value: 4), _world.OwnerId);
+    Assert.Equal(20, _character.Attributes.Agility.Score);
+
+    _character.GainExperience(ExperienceTable.GetTotalExperience(_character.Level + 1), _world.OwnerId);
+    Assert.True(_character.CanLevelUp);
+
+    var exception = Assert.Throws<AttributeMaximumScoreReachedException>(() => _character.LevelUp(Attribute.Agility, _world.OwnerId));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(_character.EntityId, exception.CharacterId);
+    Assert.Equal(Attribute.Agility, exception.Attribute);
+    Assert.Equal("Attribute", exception.PropertyName);
+  }
+
+  [Theory(DisplayName = "MaximumSkillRank: it should return the correct maximum rank.")]
+  [InlineData(0, 2)]
+  public void MaximumSkillRank_it_should_return_the_correct_maximum_rank(int tier, int maximumRank)
+  {
+    Assert.Equal(0, tier); // NOTE(fpion): reserved for future use.
+
+    Assert.Equal(maximumRank, _character.MaximumSkillRank);
   }
 
   [Fact(DisplayName = "RemoveBonus: it should not do anything when the bonus was not found.")]

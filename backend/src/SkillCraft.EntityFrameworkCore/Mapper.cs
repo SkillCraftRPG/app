@@ -198,6 +198,7 @@ internal class Mapper
     }
 
     destination.LevelUps.AddRange(source.GetLevelUps());
+    destination.SkillRanks.AddRange(source.GetSkillRanks());
 
     MapAggregate(source, destination);
 
