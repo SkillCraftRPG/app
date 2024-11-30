@@ -10,8 +10,8 @@ import AppPagination from "@/components/shared/AppPagination.vue";
 import CasteIcon from "@/components/castes/CasteIcon.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import EducationIcon from "@/components/educations/EducationIcon.vue";
-import LineageIcon from "@/components/lineages/LineageIcon.vue";
-import NatureIcon from "@/components/natures/NatureIcon.vue";
+import LineageLink from "@/components/lineages/LineageLink.vue";
+import NatureLink from "@/components/natures/NatureLink.vue";
 import PlayerSelect from "@/components/characters/PlayerSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -177,20 +177,16 @@ watch(
               </template>
             </td>
             <td>
-              {{ t("characters.level") }} {{ character.level }}
+              {{ t("characters.level.label") }} {{ character.level }}
               <br />
               {{ t("characters.tier") }} {{ character.tier }}
             </td>
             <td>
               <template v-if="character.lineage.species">
-                <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.species.id } }" target="_blank">
-                  <LineageIcon />{{ character.lineage.species.name }}
-                </RouterLink>
+                <LineageLink :lineage="character.lineage.species" />
                 <br />
               </template>
-              <RouterLink :to="{ name: 'LineageEdit', params: { id: character.lineage.id } }" target="_blank">
-                <LineageIcon />{{ character.lineage.name }}
-              </RouterLink>
+              <LineageLink :lineage="character.lineage" />
             </td>
             <td>
               <RouterLink :to="{ name: 'CasteEdit', params: { id: character.caste.id } }" target="_blank"> <CasteIcon />{{ character.caste.name }} </RouterLink>
@@ -199,11 +195,7 @@ watch(
                 <EducationIcon />{{ character.education.name }}
               </RouterLink>
             </td>
-            <td>
-              <RouterLink :to="{ name: 'NatureEdit', params: { id: character.nature.id } }" target="_blank">
-                <NatureIcon />{{ character.nature.name }}
-              </RouterLink>
-            </td>
+            <td><NatureLink :nature="character.nature" /></td>
             <td><StatusBlock :actor="character.updatedBy" :date="character.updatedOn" /></td>
           </tr>
         </tbody>

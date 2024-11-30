@@ -58,16 +58,17 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab id="characteristics" :title="t('characters.characteristics')">
+        <TarTab active id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
-        <TarTab active id="attributes-statistics" :title="t('characters.attributesAndStatistics')">
+        <TarTab id="abilities" :title="t('characters.abilities')">
           <CharacterAttributes :character="character" />
+          <!-- TODO(fpion): Statistics -->
+          <!-- TODO(fpion): Speeds -->
         </TarTab>
         <TarTab id="skills" :title="t('game.skills')">
           <CharacterSkills />
         </TarTab>
-        <!-- TODO(fpion): Speeds -->
         <TarTab id="languages" :title="t('languages.list')">
           <CharacterLanguages :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>

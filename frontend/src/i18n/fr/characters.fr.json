@@ -1,8 +1,10 @@
 {
+  "abilities": "Capacités",
   "aspects": {
     "select": "Vous devez sélectionner {n} aspect supplémentaire. | Vous devez sélectionner {n} aspects supplémentaires."
   },
   "attributes": {
+    "baseFormat": "Base : {base}",
     "bases": "Bases",
     "best": {
       "label": "Meilleur",
@@ -10,6 +12,7 @@
     },
     "bestCannotBeWorst": "Le meilleur attribut doit être différent du pire attribut.",
     "extra": {
+      "bonus": "Extra (+1)",
       "label": "au choix | différents au choix",
       "less": "Vous avez sélectionné {n} attribut additionnel en trop. | Vous avez sélectionné {n} attributs additionnels en trop.",
       "more": "Vous devez sélectionner {n} attribut additionnel supplémentaire. | Vous devez sélectionner {n} attributs additionnels supplémentaires."
@@ -21,9 +24,11 @@
       "worst": "Pire (+1)"
     },
     "optional": {
+      "bonus": "Optionnel (+1)",
       "less": "Vous avez sélectionné {n} attribut optionnel en trop. | Vous avez sélectionné {n} attributs optionnels en trop.",
       "more": "Vous devez sélectionner {n} attribut optionnel supplémentaire. | Vous devez sélectionner {n} attributs optionnels supplémentaires."
     },
+    "scoreFormat": "Score : {score} ({modifier})",
     "selected": "Sélectionné (+1)",
     "spend": "Vous devez dépenser {n} point d’attribut supplémentaire. | Vous devez dépenser {n} points d’attribut supplémentaires.",
     "worst": {
@@ -31,12 +36,12 @@
       "select": "Vous devez sélectionner un pire attribut."
     }
   },
-  "attributesAndStatistics": "Attributs & Statistiques",
   "background": {
     "invalid": "La caste et éducation sélectionnées ne peuvent être associées à la même compétence.",
     "label": "Historique"
   },
   "bloodAlcoholContent": "Alcoolémie",
+  "bonus": "Bonus",
   "bonuses": {
     "add": "Ajouter un bonus",
     "added": "Le bonus a été ajouté.",
@@ -121,7 +126,10 @@
     "notes": "Notes",
     "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires."
   },
-  "level": "Niveau",
+  "level": {
+    "format": "Niveau ${level}",
+    "label": "Niveau"
+  },
   "levelUp": {
     "cancel": "TODO",
     "empty": "Cette liste est vide.",
