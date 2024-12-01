@@ -127,7 +127,7 @@
     "selectExtra": "Vous devez sélectionner {n} langue supplémentaire. | Vous devez sélectionner {n} langues supplémentaires."
   },
   "level": {
-    "format": "Niveau ${level}",
+    "format": "Niveau {level}",
     "label": "Niveau"
   },
   "levelUp": {

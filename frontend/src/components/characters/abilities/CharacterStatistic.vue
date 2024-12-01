@@ -63,7 +63,7 @@ function hide(): void {
     </TarCard>
     <TarModal :close="t('actions.close')" :id="statistic" ref="modalRef" :title="text">
       <div>{{ t("characters.statistics.baseFormat", { base }) }}</div>
-      <div v-for="(increment, index) in levelUps" :key="index">{{ t("characters.level.format", { level: index + 1 }) }} ({{ increment }})</div>
+      <div v-for="(increment, index) in levelUps" :key="index">{{ t("characters.level.format", { level: index + 1 }) }} (+{{ increment }})</div>
       <div v-for="bonus in bonuses" :key="bonus.id">
         {{ bonus.precision ?? t("characters.bonus") }} ({{ bonus.value > 0 ? `+${bonus.value}` : bonus.value }})
       </div>

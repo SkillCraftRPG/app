@@ -52,7 +52,7 @@ const formattedModifier = computed<string>(() => (props.modifier > 0 ? `+${props
 const levels = computed<number[]>(() => {
   const levels: number[] = [];
   for (let i = 0; i < props.character.levelUps.length; i++) {
-    if (props.character.levelUps[i]) {
+    if (props.character.levelUps[i].attribute === props.attribute) {
       levels.push(i + 1);
     }
   }
@@ -127,7 +127,7 @@ function hide(): void {
       <div v-for="(_, index) in mandatory" :key="index">{{ t("characters.attributes.mandatory.mandatory") }}</div>
       <div v-if="character.baseAttributes.worst === attribute">{{ t("characters.attributes.mandatory.worst") }}</div>
       <div v-for="(_, index) in optional" :key="index">{{ t("characters.attributes.optional.bonus") }}</div>
-      <div v-for="level in levels" :key="level">{{ t("characters.level.format", { level }) }}</div>
+      <div v-for="level in levels" :key="level">{{ t("characters.level.format", { level }) }} (+1)</div>
       <div v-for="bonus in bonuses" :key="bonus.id">
         {{ bonus.precision ?? t("characters.bonus") }} ({{ bonus.value > 0 ? `+${bonus.value}` : bonus.value }})
       </div>
