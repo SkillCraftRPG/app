@@ -9,17 +9,54 @@ import type { Statistic } from "@/types/game";
 const { t } = useI18n();
 
 const props = defineProps<{
-  base: number;
   character: CharacterModel;
-  increment: number;
   statistic: Statistic;
   text: string;
-  total: number;
 }>();
 
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 
+const base = computed<number>(() => {
+  switch (props.statistic) {
+    case "Constitution":
+      return props.character.statistics.constitution.base;
+    case "Initiative":
+      return props.character.statistics.initiative.base;
+    case "Learning":
+      return props.character.statistics.learning.base;
+    case "Power":
+      return props.character.statistics.power.base;
+    case "Precision":
+      return props.character.statistics.precision.base;
+    case "Reputation":
+      return props.character.statistics.reputation.base;
+    case "Strength":
+      return props.character.statistics.strength.base;
+    default:
+      throw new Error(`The statistic '${props.statistic}' is not supported.`);
+  }
+});
 const bonuses = computed<BonusModel[]>(() => props.character.bonuses.filter(({ category, target }) => category === "Statistic" && target === props.statistic));
+const increment = computed<number>(() => {
+  switch (props.statistic) {
+    case "Constitution":
+      return props.character.statistics.constitution.increment;
+    case "Initiative":
+      return props.character.statistics.initiative.increment;
+    case "Learning":
+      return props.character.statistics.learning.increment;
+    case "Power":
+      return props.character.statistics.power.increment;
+    case "Precision":
+      return props.character.statistics.precision.increment;
+    case "Reputation":
+      return props.character.statistics.reputation.increment;
+    case "Strength":
+      return props.character.statistics.strength.increment;
+    default:
+      throw new Error(`The statistic '${props.statistic}' is not supported.`);
+  }
+});
 const levelUps = computed<number[]>(() =>
   props.character.levelUps.reduce((values, levelUp) => {
     switch (props.statistic) {
@@ -50,6 +87,26 @@ const levelUps = computed<number[]>(() =>
     return values;
   }, [] as number[]),
 );
+const total = computed<number>(() => {
+  switch (props.statistic) {
+    case "Constitution":
+      return props.character.statistics.constitution.value;
+    case "Initiative":
+      return props.character.statistics.initiative.value;
+    case "Learning":
+      return props.character.statistics.learning.value;
+    case "Power":
+      return props.character.statistics.power.value;
+    case "Precision":
+      return props.character.statistics.precision.value;
+    case "Reputation":
+      return props.character.statistics.reputation.value;
+    case "Strength":
+      return props.character.statistics.strength.value;
+    default:
+      throw new Error(`The statistic '${props.statistic}' is not supported.`);
+  }
+});
 
 function hide(): void {
   modalRef.value?.hide();

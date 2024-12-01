@@ -1,4 +1,6 @@
-﻿namespace SkillCraft.Domain.Characters;
+﻿using SkillCraft.Contracts.Characters;
+
+namespace SkillCraft.Domain.Characters;
 
 public record CharacterAttribute
 {
@@ -11,11 +13,9 @@ public record CharacterAttribute
   public CharacterAttribute(int score, int? temporaryScore = null)
   {
     Score = score;
-    Modifier = CalculateModifier(score);
+    Modifier = CharacterHelper.CalculateModifier(score);
 
     TemporaryScore = temporaryScore ?? score;
-    TemporaryModifier = CalculateModifier(TemporaryScore);
+    TemporaryModifier = CharacterHelper.CalculateModifier(TemporaryScore);
   }
-
-  private static int CalculateModifier(int score) => (int)(Math.Floor(score / 2.0) - 5.0);
 }

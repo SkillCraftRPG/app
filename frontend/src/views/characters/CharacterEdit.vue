@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarTab, TarTabs } from "logitar-vue3-ui";
-import { computed, inject, onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
@@ -16,10 +16,9 @@ import CharacterStatistics from "@/components/characters/abilities/CharacterStat
 import CharacterTalents from "@/components/characters/talents/CharacterTalents.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
-import type { CharacterAttributes as CharacterAttributesT, CharacterModel } from "@/types/characters";
+import type { CharacterModel } from "@/types/characters";
 import { handleErrorKey } from "@/inject/App";
 import { readCharacter } from "@/api/characters";
-import { calculateAttributes } from "@/helpers/characterUtils";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
@@ -27,8 +26,6 @@ const router = useRouter();
 const { t } = useI18n();
 
 const character = ref<CharacterModel>();
-
-const attributes = computed<CharacterAttributesT | undefined>(() => (character.value ? calculateAttributes(character.value) : undefined));
 
 function onUpdated(value: CharacterModel): void {
   character.value = value;
@@ -66,9 +63,9 @@ onMounted(async () => {
         <TarTab id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
-        <TarTab v-if="attributes" active id="abilities" :title="t('characters.abilities')">
-          <CharacterAttributes :attributes="attributes" :character="character" />
-          <CharacterStatistics :attributes="attributes" :character="character" />
+        <TarTab active id="abilities" :title="t('characters.abilities')">
+          <CharacterAttributes :character="character" />
+          <CharacterStatistics :character="character" />
           <CharacterSpeeds :character="character" />
         </TarTab>
         <TarTab id="skills" :title="t('game.skills')">
@@ -88,6 +85,7 @@ onMounted(async () => {
         <TarTab id="levels" :title="t('characters.levels.label')">
           <CharacterLevelUps :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
+        <!-- TODO(fpion): Specializations -->
         <!-- TODO(fpion): Notes -->
       </TarTabs>
     </template>
