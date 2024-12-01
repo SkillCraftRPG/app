@@ -13,7 +13,6 @@ import TalentCostInput from "./TalentCostInput.vue";
 import type { CharacterModel, CharacterTalentModel, CharacterTalentPayload } from "@/types/characters";
 import type { TalentModel } from "@/types/talents";
 import { addCharacterTalent, saveCharacterTalent } from "@/api/characters";
-import { calculateTalentPoints } from "@/helpers/gameUtils";
 import { useToastStore } from "@/stores/toast";
 
 const toasts = useToastStore();
@@ -39,7 +38,7 @@ const hasChanges = computed<boolean>(
     precision.value !== (props.talent?.precision ?? "") ||
     notes.value !== (props.talent?.notes ?? ""),
 );
-const hasEnoughTalentPoints = computed<boolean>(() => calculateTalentPoints(props.character).remaining >= actualCost.value);
+const hasEnoughTalentPoints = computed<boolean>(() => props.character.talentPoints.remaining >= actualCost.value);
 const id = computed<string>(() => (props.talent ? `edit-talent-${props.talent.id ?? nanoid()}` : "add-talent"));
 
 function hide(): void {

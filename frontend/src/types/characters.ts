@@ -120,6 +120,7 @@ export type CharacterModel = Aggregate & {
   caste: CasteModel;
   education: EducationModel;
   talents: CharacterTalentModel[];
+  talentPoints: TalentPointsModel;
   skillRanks: SkillRankModel[];
   inventory: InventoryModel;
   levelUps: LevelUpModel[];
@@ -287,7 +288,7 @@ export type Step6 = {
   talents: TalentModel[];
 };
 
-export type TalentPoints = {
+export type TalentPointsModel = {
   available: number;
   spent: number;
   remaining: number;
