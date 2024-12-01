@@ -106,7 +106,7 @@ public class Talent : AggregateRoot
       }
       else if (requiredTalent.Tier > Tier)
       {
-        throw new ArgumentException("The required talent tier must be inferior or equal to the requiring talent tier.", nameof(requiredTalent));
+        throw new RequiredTalentTierCannotExceedRequiringTalentTierException(requiredTalent, this, "RequiredTalentId");
       }
     }
 

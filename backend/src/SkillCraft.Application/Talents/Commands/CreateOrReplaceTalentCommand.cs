@@ -12,9 +12,9 @@ namespace SkillCraft.Application.Talents.Commands;
 
 public record CreateOrReplaceTalentResult(TalentModel? Talent = null, bool Created = false);
 
-/// <exception cref="InvalidRequiredTalentTierException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="RequiredTalentTierCannotExceedRequiringTalentTierException"></exception>
 /// <exception cref="TalentNotFoundException"></exception>
 /// <exception cref="TalentSkillAlreadyExistingException"></exception>
 /// <exception cref="ValidationException"></exception>
@@ -92,7 +92,10 @@ internal class CreateOrReplaceTalentCommandHandler : IRequestHandler<CreateOrRep
     };
     if (payload.RequiredTalentId.HasValue)
     {
-      await _sender.Send(new SetRequiredTalentCommand(talent, payload.RequiredTalentId.Value), cancellationToken);
+      TalentId talentId = new(talent.WorldId, payload.RequiredTalentId.Value);
+      Talent requiredTalent = await _talentRepository.LoadAsync(talentId, cancellationToken)
+        ?? throw new TalentNotFoundException(talentId, nameof(payload.RequiredTalentId));
+      talent.SetRequiredTalent(requiredTalent);
     }
 
     talent.Update(userId);
@@ -132,7 +135,13 @@ internal class CreateOrReplaceTalentCommandHandler : IRequestHandler<CreateOrRep
     TalentId? requiredTalentId = payload.RequiredTalentId.HasValue ? new(talent.WorldId, payload.RequiredTalentId.Value) : null;
     if (requiredTalentId != reference.RequiredTalentId)
     {
-      await _sender.Send(new SetRequiredTalentCommand(talent, payload.RequiredTalentId), cancellationToken);
+      Talent? requiredTalent = null;
+      if (requiredTalentId.HasValue)
+      {
+        requiredTalent = await _talentRepository.LoadAsync(requiredTalentId.Value, cancellationToken)
+          ?? throw new TalentNotFoundException(requiredTalentId.Value, nameof(payload.RequiredTalentId));
+      }
+      talent.SetRequiredTalent(requiredTalent);
     }
     if (payload.Skill != reference.Skill)
     {

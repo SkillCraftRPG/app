@@ -63,14 +63,44 @@ public class CreateOrReplaceTalentCommandHandlerTests
     _permissionService.Verify(x => x.EnsureCanCreateAsync(command, EntityType.Talent, _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(
-      It.Is<SetRequiredTalentCommand>(y => y.Id == _talent.EntityId),
-      _cancellationToken), Times.Once);
-    _sender.Verify(x => x.Send(
       It.Is<SaveTalentCommand>(y => (!parsed || y.Talent.EntityId == id)
         && y.Talent.Name.Value == payload.Name.Trim()
         && y.Talent.Description == null
-        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases),
+        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+        && y.Talent.RequiredTalentId == _talent.Id),
       _cancellationToken), Times.Once);
+  }
+
+  [Theory(DisplayName = "It should nullify the required talent.")]
+  [InlineData(null)]
+  [InlineData("355eed77-a597-49ac-8414-ab72b836b630")]
+  public async Task It_should_nullify_the_required_talent(string? idValue)
+  {
+    Talent? talent = null;
+    if (idValue != null)
+    {
+      talent = new(_world.Id, tier: 0, new Name("Formation martiale"), _world.OwnerId, Guid.Parse(idValue));
+      talent.SetRequiredTalent(_melee);
+      talent.Update(_world.OwnerId);
+      _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
+    }
+
+    CreateOrReplaceTalentPayload payload = new("Formation martiale");
+    CreateOrReplaceTalentCommand command = new(talent?.EntityId, payload, Version: null);
+    command.Contextualize(_world);
+
+    CreateOrReplaceTalentResult result = await _handler.Handle(command, _cancellationToken);
+    Assert.Same(_model, result.Talent);
+    Assert.Equal(idValue == null, result.Created);
+
+    if (talent == null)
+    {
+      _sender.Verify(x => x.Send(It.Is<SaveTalentCommand>(y => y.Talent.RequiredTalentId == null), _cancellationToken), Times.Once);
+    }
+    else
+    {
+      Assert.Null(talent.RequiredTalentId);
+    }
   }
 
   [Fact(DisplayName = "It should replace an existing talent.")]
@@ -96,13 +126,11 @@ public class CreateOrReplaceTalentCommandHandlerTests
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(
-      It.Is<SetRequiredTalentCommand>(y => y.Talent.Equals(_talent) && y.Id == _melee.EntityId),
-      _cancellationToken), Times.Once);
-    _sender.Verify(x => x.Send(
       It.Is<SaveTalentCommand>(y => y.Talent.Equals(_talent)
         && y.Talent.Name.Value == payload.Name.Trim()
         && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Trim()
-        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases),
+        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+        && y.Talent.RequiredTalentId == _melee.Id),
       _cancellationToken), Times.Once);
   }
 
@@ -114,6 +142,31 @@ public class CreateOrReplaceTalentCommandHandlerTests
 
     CreateOrReplaceTalentResult result = await _handler.Handle(command, _cancellationToken);
     Assert.Null(result.Talent);
+  }
+
+  [Theory(DisplayName = "It should throw TalentNotFoundException when the required talent could not be found.")]
+  [InlineData(null)]
+  [InlineData("4aa35bc6-fbb7-4554-b7a5-1f68128f74c7")]
+  public async Task It_should_throw_TalentNotFoundException_when_the_required_talent_could_not_be_found(string? idValue)
+  {
+    Talent? talent = null;
+    if (idValue != null)
+    {
+      talent = new(_world.Id, tier: 0, new Name("Formation martiale"), _world.OwnerId, Guid.Parse(idValue));
+      _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
+    }
+
+    CreateOrReplaceTalentPayload payload = new("Formation martiale")
+    {
+      RequiredTalentId = Guid.NewGuid()
+    };
+    CreateOrReplaceTalentCommand command = new(talent?.EntityId, payload, Version: null);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<TalentNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.RequiredTalentId, exception.TalentId);
+    Assert.Equal("RequiredTalentId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -168,14 +221,12 @@ public class CreateOrReplaceTalentCommandHandlerTests
       _cancellationToken), Times.Once);
 
     _sender.Verify(x => x.Send(
-      It.Is<SetRequiredTalentCommand>(y => y.Talent.Equals(_talent) && y.Id == _melee.EntityId),
-      _cancellationToken), Times.Once);
-    _sender.Verify(x => x.Send(
       It.Is<SaveTalentCommand>(y => y.Talent.Equals(_talent)
         && y.Talent.Tier == _talent.Tier
         && y.Talent.Name.Value == payload.Name.Trim()
         && y.Talent.Description == description
-        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases),
+        && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+        && y.Talent.RequiredTalentId == _melee.Id),
       _cancellationToken), Times.Once);
   }
 }

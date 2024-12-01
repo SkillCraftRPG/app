@@ -27,20 +27,24 @@ public class TalentTests
     Assert.Equal("requiredTalent", exception.ParamName);
   }
 
-  [Fact(DisplayName = "It should throw ArgumentException when requiring a talent of a higher tier.")]
-  public void It_should_throw_ArgumentException_when_setting_a_customization_that_is_not_a_gift()
-  {
-    Talent talent = new(_talent.WorldId, tier: 2, new Name("Protection"), new UserId(_talent.CreatedBy));
-    var exception = Assert.Throws<ArgumentException>(() => _talent.SetRequiredTalent(talent));
-    Assert.StartsWith("The required talent tier must be inferior or equal to the requiring talent tier.", exception.Message);
-    Assert.Equal("requiredTalent", exception.ParamName);
-  }
-
   [Fact(DisplayName = "It should throw ArgumentOutOfRangeException when the tier is not valid.")]
   public void It_should_throw_ArgumentOutOfRangeException_when_the_tier_is_not_valid()
   {
     var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new Talent(_talent.WorldId, tier: 10, _talent.Name, new UserId(_talent.CreatedBy)));
     Assert.Equal("tier", exception.ParamName);
+  }
+
+  [Fact(DisplayName = "It should throw RequiredTalentTierCannotExceedRequiringTalentTierException when requiring a talent of a higher tier.")]
+  public void It_should_throw_RequiredTalentTierCannotExceedRequiringTalentTierException_when_setting_a_customization_that_is_not_a_gift()
+  {
+    Talent talent = new(_talent.WorldId, tier: 2, new Name("Protection"), new UserId(_talent.CreatedBy));
+    var exception = Assert.Throws<RequiredTalentTierCannotExceedRequiringTalentTierException>(() => _talent.SetRequiredTalent(talent));
+    Assert.Equal(_talent.WorldId.ToGuid(), exception.WorldId);
+    Assert.Equal(talent.EntityId, exception.RequiredTalentId);
+    Assert.Equal(talent.Tier, exception.RequiredTalentTier);
+    Assert.Equal(_talent.EntityId, exception.RequiringTalentId);
+    Assert.Equal(_talent.Tier, exception.RequiringTalentTier);
+    Assert.Equal("RequiredTalentId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "ThrowIfMaximumCostExceeded: it should not do anything when the talent maximum cost was not exceeded.")]

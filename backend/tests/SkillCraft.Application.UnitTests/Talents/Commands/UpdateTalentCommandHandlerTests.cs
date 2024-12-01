@@ -29,6 +29,33 @@ public class UpdateTalentCommandHandlerTests
     _handler = new(_permissionService.Object, _sender.Object, _talentQuerier.Object, _talentRepository.Object);
   }
 
+  [Fact(DisplayName = "It should nullify the required talent.")]
+  public async Task It_should_nullify_the_required_talent()
+  {
+    Talent requiredTalent = new(_world.Id, tier: 0, new Name("Roublardise"), _world.OwnerId);
+
+    Talent talent = new(_world.Id, tier: 0, new Name("Trousses"), _world.OwnerId);
+    talent.SetRequiredTalent(requiredTalent);
+    talent.Update(_world.OwnerId);
+    _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
+
+    UpdateTalentPayload payload = new()
+    {
+      RequiredTalentId = new Change<Guid?>(null)
+    };
+    UpdateTalentCommand command = new(talent.EntityId, payload);
+    command.Contextualize(_world);
+
+    TalentModel model = new();
+    _talentQuerier.Setup(x => x.ReadAsync(talent, _cancellationToken)).ReturnsAsync(model);
+
+    TalentModel? result = await _handler.Handle(command, _cancellationToken);
+    Assert.NotNull(result);
+    Assert.Same(model, result);
+
+    Assert.Null(talent.RequiredTalentId);
+  }
+
   [Fact(DisplayName = "It should return null when the talent could not be found.")]
   public async Task It_should_return_null_when_the_talent_could_not_be_found()
   {
@@ -37,6 +64,25 @@ public class UpdateTalentCommandHandlerTests
     command.Contextualize(_world);
 
     Assert.Null(await _handler.Handle(command, _cancellationToken));
+  }
+
+  [Fact(DisplayName = "It should throw TalentNotFoundException when the required talent could not be found.")]
+  public async Task It_should_throw_TalentNotFoundException_when_the_required_talent_could_not_be_found()
+  {
+    Talent talent = new(_world.Id, tier: 0, new Name("Trousses"), _world.OwnerId);
+    _talentRepository.Setup(x => x.LoadAsync(talent.Id, _cancellationToken)).ReturnsAsync(talent);
+
+    UpdateTalentPayload payload = new()
+    {
+      RequiredTalentId = new Change<Guid?>(Guid.NewGuid())
+    };
+    UpdateTalentCommand command = new(talent.EntityId, payload);
+    command.Contextualize(_world);
+
+    var exception = await Assert.ThrowsAsync<TalentNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
+    Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
+    Assert.Equal(payload.RequiredTalentId.Value, exception.TalentId);
+    Assert.Equal("RequiredTalentId", exception.PropertyName);
   }
 
   [Fact(DisplayName = "It should throw ValidationException when the payload is not valid.")]
@@ -59,6 +105,9 @@ public class UpdateTalentCommandHandlerTests
   [Fact(DisplayName = "It should update an existing talent.")]
   public async Task It_should_update_an_existing_talent()
   {
+    Talent requiredTalent = new(_world.Id, tier: 0, new Name("Tolérance à l’alcool I"), _world.OwnerId);
+    _talentRepository.Setup(x => x.LoadAsync(requiredTalent.Id, _cancellationToken)).ReturnsAsync(requiredTalent);
+
     Talent talent = new(_world.Id, tier: 1, new Name("Résistance"), _world.OwnerId)
     {
       AllowMultiplePurchases = true
@@ -71,7 +120,7 @@ public class UpdateTalentCommandHandlerTests
       Name = " Tolérance à l’alcool II ",
       Description = new Change<string>("  Augmente de manière permanente de +1 le seuil de tolérance à l’alcool du personnage. La durée de ses gueules de bois est également réduite de moitié.  "),
       AllowMultiplePurchases = false,
-      RequiredTalentId = new Change<Guid?>(Guid.NewGuid())
+      RequiredTalentId = new Change<Guid?>(requiredTalent.EntityId)
     };
     UpdateTalentCommand command = new(talent.EntityId, payload);
     command.Contextualize(_world);
@@ -89,13 +138,11 @@ public class UpdateTalentCommandHandlerTests
 
     Assert.NotNull(payload.Description.Value);
     _sender.Verify(x => x.Send(
-      It.Is<SetRequiredTalentCommand>(y => y.Talent == talent && y.Id == payload.RequiredTalentId.Value),
-      _cancellationToken), Times.Once);
-    _sender.Verify(x => x.Send(
       It.Is<SaveTalentCommand>(y => y.Talent.Equals(talent)
         && y.Talent.Name.Value == payload.Name.Trim()
         && y.Talent.Description != null && y.Talent.Description.Value == payload.Description.Value.Trim()
         && y.Talent.AllowMultiplePurchases == payload.AllowMultiplePurchases
+        && y.Talent.RequiredTalentId == requiredTalent.Id
         && y.Talent.Skill == null
       ), _cancellationToken), Times.Once);
   }
