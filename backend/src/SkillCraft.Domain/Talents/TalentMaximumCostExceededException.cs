@@ -4,7 +4,7 @@ using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Domain.Talents;
 
-internal class TalentMaximumCostExceededException : DomainException
+public class TalentMaximumCostExceededException : DomainException
 {
   private const string ErrorMessage = "The talent maximum cost was exceeded.";
 

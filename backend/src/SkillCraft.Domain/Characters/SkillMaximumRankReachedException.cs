@@ -5,7 +5,7 @@ using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class SkillMaximumRankReachedException : DomainException
+public class SkillMaximumRankReachedException : DomainException
 {
   private const string ErrorMessage = "The specified character skill has reached its maximum rank.";
 

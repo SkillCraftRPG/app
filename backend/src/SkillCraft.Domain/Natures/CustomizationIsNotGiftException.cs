@@ -6,7 +6,7 @@ using SkillCraft.Domain.Customizations;
 
 namespace SkillCraft.Domain.Natures;
 
-internal class CustomizationIsNotGiftException : DomainException
+public class CustomizationIsNotGiftException : DomainException
 {
   private const string ErrorMessage = "The specified customization is not a gift.";
 

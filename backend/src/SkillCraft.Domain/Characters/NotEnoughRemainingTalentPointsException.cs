@@ -5,7 +5,7 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class NotEnoughRemainingTalentPointsException : DomainException
+public class NotEnoughRemainingTalentPointsException : DomainException
 {
   private const string ErrorMessage = "The specified talent cannot be purchased since its cost is greater than the character remaining talent points.";
 

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using SkillCraft.Contracts.Characters;
-using SkillCraft.Domain.Validators;
+using SkillCraft.Domain.Characters.Validators;
 
 namespace SkillCraft.Domain.Characters;
 
@@ -24,16 +24,6 @@ public record Bonus : IBonus
     Precision = precision;
     Notes = notes;
 
-    new Validator().ValidateAndThrow(this);
-  }
-
-  internal class Validator : AbstractValidator<Bonus>
-  {
-    public Validator()
-    {
-      RuleFor(x => x.Category).IsInEnum();
-      RuleFor(x => x.Target).BonusTarget();
-      RuleFor(x => x.Value).NotEqual(0);
-    }
+    new BonusValidator().ValidateAndThrow(this);
   }
 }
