@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { calculateModifier, roll } from "../gameUtils";
+import { calculateModifier, getTotalExperience, roll } from "../gameUtils";
 
 describe("gameUtils.calculateModifier", () => {
   it.concurrent("should return the correct modifier", () => {
@@ -26,6 +26,20 @@ describe("gameUtils.calculateModifier", () => {
     expect(calculateModifier(24)).toBe(7);
     expect(calculateModifier(25)).toBe(7);
     expect(calculateModifier(30)).toBe(10);
+  });
+});
+
+describe("gameUtils.getTotalExperience", () => {
+  it.concurrent("should return the correct total experience", () => {
+    expect(getTotalExperience(0)).toBe(0);
+    expect(getTotalExperience(1)).toBe(100);
+    expect(getTotalExperience(10)).toBe(34000);
+    expect(getTotalExperience(20)).toBe(268000);
+  });
+
+  it.concurrent("should throw an error when the level is not within boundaries", () => {
+    expect(() => getTotalExperience(-1)).toThrowError("The level must be comprised between 0 and 20. The boundaries are inclusive.");
+    expect(() => getTotalExperience(21)).toThrowError("The level must be comprised between 0 and 20. The boundaries are inclusive.");
   });
 });
 
