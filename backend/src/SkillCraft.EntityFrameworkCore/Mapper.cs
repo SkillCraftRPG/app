@@ -161,6 +161,7 @@ internal class Mapper
         });
       }
     }
+    destination.TalentPoints = new TalentPointsModel(destination);
 
     destination.SkillRanks.AddRange(source.GetSkillRanks());
 

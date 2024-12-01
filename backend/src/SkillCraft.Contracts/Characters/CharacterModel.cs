@@ -42,6 +42,7 @@ public class CharacterModel : Aggregate
   public EducationModel Education { get; set; } = new();
 
   public List<CharacterTalentModel> Talents { get; set; } = [];
+  public TalentPointsModel TalentPoints { get; set; } = new();
 
   public List<SkillRankModel> SkillRanks { get; set; } = [];
 
