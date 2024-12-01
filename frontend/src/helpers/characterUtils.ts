@@ -1,5 +1,5 @@
-import type { Attribute, Speed, Statistic } from "@/types/game";
-import type { CharacterAttributes, CharacterModel, CharacterSpeeds, CharacterStatistics } from "@/types/characters";
+import type { Attribute, Statistic } from "@/types/game";
+import type { CharacterAttributes, CharacterModel, CharacterStatistics } from "@/types/characters";
 import { calculateModifier } from "./gameUtils";
 
 export function calculateAttributes(character: CharacterModel): CharacterAttributes {
@@ -96,39 +96,6 @@ export function calculateAttributes(character: CharacterModel): CharacterAttribu
       temporaryScore: temporaryScores.get("Vigor") ?? 0,
       temporaryModifier: calculateModifier(temporaryScores.get("Vigor") ?? 0),
     },
-  };
-} // TODO(fpion): unit tests
-
-export function calculateSpeeds(character: CharacterModel): CharacterSpeeds {
-  const speeds = new Map<Speed, number>([
-    ["Walk", character.lineage.speeds.walk],
-    ["Climb", character.lineage.speeds.climb],
-    ["Swim", character.lineage.speeds.swim],
-    ["Fly", character.lineage.speeds.fly],
-    ["Hover", character.lineage.speeds.hover],
-    ["Burrow", character.lineage.speeds.burrow],
-  ]);
-  if (character.lineage.species) {
-    speeds.set("Walk", Math.max(character.lineage.species.speeds.walk, speeds.get("Walk") ?? 0));
-    speeds.set("Climb", Math.max(character.lineage.species.speeds.climb, speeds.get("Climb") ?? 0));
-    speeds.set("Swim", Math.max(character.lineage.species.speeds.swim, speeds.get("Swim") ?? 0));
-    speeds.set("Fly", Math.max(character.lineage.species.speeds.fly, speeds.get("Fly") ?? 0));
-    speeds.set("Hover", Math.max(character.lineage.species.speeds.hover, speeds.get("Hover") ?? 0));
-    speeds.set("Burrow", Math.max(character.lineage.species.speeds.burrow, speeds.get("Burrow") ?? 0));
-  }
-  character.bonuses.forEach((bonus) => {
-    if (bonus.category === "Speed") {
-      const speed = bonus.target as Speed;
-      speeds.set(speed, (speeds.get(speed) ?? 0) + bonus.value);
-    }
-  });
-  return {
-    walk: speeds.get("Walk") ?? 0,
-    climb: speeds.get("Climb") ?? 0,
-    swim: speeds.get("Swim") ?? 0,
-    fly: speeds.get("Fly") ?? 0,
-    hover: speeds.get("Hover") ?? 0,
-    burrow: speeds.get("Burrow") ?? 0,
   };
 } // TODO(fpion): unit tests
 

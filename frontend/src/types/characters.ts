@@ -125,6 +125,7 @@ export type CharacterModel = Aggregate & {
   inventory: InventoryModel;
   levelUps: LevelUpModel[];
   bonuses: BonusModel[];
+  speeds: CharacterSpeedsModel;
 };
 
 export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
@@ -133,7 +134,7 @@ export type CharacterSortOption = SortOption & {
   field: CharacterSort;
 };
 
-export type CharacterSpeeds = {
+export type CharacterSpeedsModel = {
   walk: number;
   climb: number;
   swim: number;

@@ -2,7 +2,6 @@
 import { TarButton, TarCard, TarModal } from "logitar-vue3-ui";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { parsingUtils } from "logitar-vue3-ui";
 
 import LineageLink from "@/components/lineages/LineageLink.vue";
 import type { BonusModel, CharacterModel } from "@/types/characters";
@@ -14,13 +13,11 @@ type LineageSpeed = {
   speed: number;
 };
 
-const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
 const props = defineProps<{
   character: CharacterModel;
   speed: Speed;
-  value: number | string;
 }>();
 
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
@@ -68,7 +65,24 @@ const species = computed<LineageSpeed>(() => {
   }
 });
 const text = computed<string>(() => t(`game.speed.options.${props.speed}`));
-const total = computed<number>(() => parseNumber(props.value) ?? 0);
+const total = computed<number>(() => {
+  switch (props.speed) {
+    case "Burrow":
+      return props.character.speeds.burrow;
+    case "Climb":
+      return props.character.speeds.climb;
+    case "Fly":
+      return props.character.speeds.fly;
+    case "Hover":
+      return props.character.speeds.hover;
+    case "Swim":
+      return props.character.speeds.swim;
+    case "Walk":
+      return props.character.speeds.walk;
+    default:
+      throw new Error(`The speed '${props.speed}' is not supported.`);
+  }
+});
 
 function hide(): void {
   modalRef.value?.hide();

@@ -202,6 +202,8 @@ internal class Mapper
       });
     }
 
+    destination.Speeds = new CharacterSpeedsModel(destination);
+
     MapAggregate(source, destination);
 
     return destination;
