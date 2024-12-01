@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - "backend/**"
+      - 'backend/**'
   pull_request:
     branches:
       - main
     paths:
-      - "backend/**"
+      - 'backend/**'
   workflow_dispatch:
 
 defaults:
@@ -25,5 +25,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        run: docker build . -t francispion.azurecr.io/skillcraftrpg_app:${{ github.sha }} -f src/SkillCraft/Dockerfile
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build Solution
+        run: dotnet build --no-restore
+
+      - name: Test Solution
+        run: dotnet test --no-build --verbosity normal --filter Category=Unit
