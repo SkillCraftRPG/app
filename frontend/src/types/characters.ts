@@ -62,21 +62,21 @@ export type BonusModel = {
   notes?: string;
 };
 
-export type CharacterAttribute = {
+export type CharacterAttributeModel = {
   score: number;
   modifier: number;
   temporaryScore: number;
   temporaryModifier: number;
 };
 
-export type CharacterAttributes = {
-  agility: CharacterAttribute;
-  coordination: CharacterAttribute;
-  intellect: CharacterAttribute;
-  presence: CharacterAttribute;
-  sensitivity: CharacterAttribute;
-  spirit: CharacterAttribute;
-  vigor: CharacterAttribute;
+export type CharacterAttributesModel = {
+  agility: CharacterAttributeModel;
+  coordination: CharacterAttributeModel;
+  intellect: CharacterAttributeModel;
+  presence: CharacterAttributeModel;
+  sensitivity: CharacterAttributeModel;
+  spirit: CharacterAttributeModel;
+  vigor: CharacterAttributeModel;
 };
 
 export type CharacterCreation = {
@@ -125,6 +125,8 @@ export type CharacterModel = Aggregate & {
   inventory: InventoryModel;
   levelUps: LevelUpModel[];
   bonuses: BonusModel[];
+  attributes: CharacterAttributesModel;
+  statistics: CharacterStatisticsModel;
   speeds: CharacterSpeedsModel;
 };
 
@@ -143,20 +145,20 @@ export type CharacterSpeedsModel = {
   burrow: number;
 };
 
-export type CharacterStatistic = {
+export type CharacterStatisticModel = {
+  value: number;
   base: number;
   increment: number;
-  total: number;
 };
 
-export type CharacterStatistics = {
-  constitution: CharacterStatistic;
-  initiative: CharacterStatistic;
-  learning: CharacterStatistic;
-  power: CharacterStatistic;
-  precision: CharacterStatistic;
-  reputation: CharacterStatistic;
-  strength: CharacterStatistic;
+export type CharacterStatisticsModel = {
+  constitution: CharacterStatisticModel;
+  initiative: CharacterStatisticModel;
+  learning: CharacterStatisticModel;
+  power: CharacterStatisticModel;
+  precision: CharacterStatisticModel;
+  reputation: CharacterStatisticModel;
+  strength: CharacterStatisticModel;
 };
 
 export type CharacterTalentModel = {

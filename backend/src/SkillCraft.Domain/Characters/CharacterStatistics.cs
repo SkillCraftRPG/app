@@ -41,33 +41,31 @@ public record CharacterStatistics
       [Statistic.Strength] = attributes.Agility.Score / 40.0
     };
 
-    Dictionary<Statistic, double> sums = bases.ToDictionary(x => x.Key, x => 0.0);
+    Dictionary<Statistic, double> values = bases.ToDictionary(x => x.Key, x => (double)x.Value);
     foreach (LevelUp levelUp in levelUps)
     {
-      sums[Statistic.Constitution] += levelUp.Constitution;
-      sums[Statistic.Initiative] += levelUp.Initiative;
-      sums[Statistic.Learning] += levelUp.Learning;
-      sums[Statistic.Power] += levelUp.Power;
-      sums[Statistic.Precision] += levelUp.Precision;
-      sums[Statistic.Reputation] += levelUp.Reputation;
-      sums[Statistic.Strength] += levelUp.Strength;
+      values[Statistic.Constitution] += levelUp.Constitution;
+      values[Statistic.Initiative] += levelUp.Initiative;
+      values[Statistic.Learning] += levelUp.Learning;
+      values[Statistic.Power] += levelUp.Power;
+      values[Statistic.Precision] += levelUp.Precision;
+      values[Statistic.Reputation] += levelUp.Reputation;
+      values[Statistic.Strength] += levelUp.Strength;
     }
-
-    Dictionary<Statistic, int> statisticBonuses = bases.ToDictionary(x => x.Key, x => 0);
     foreach (Bonus bonus in bonuses)
     {
       if (bonus.Category == BonusCategory.Statistic && Enum.TryParse(bonus.Target, out Statistic statistic))
       {
-        statisticBonuses[statistic] += bonus.Value;
+        values[statistic] += bonus.Value;
       }
     }
 
-    Constitution = new CharacterStatistic(bases[Statistic.Constitution], increments[Statistic.Constitution], sums[Statistic.Constitution], statisticBonuses[Statistic.Constitution]);
-    Initiative = new CharacterStatistic(bases[Statistic.Initiative], increments[Statistic.Initiative], sums[Statistic.Initiative], statisticBonuses[Statistic.Initiative]);
-    Learning = new CharacterStatistic(bases[Statistic.Learning], increments[Statistic.Learning], sums[Statistic.Learning], statisticBonuses[Statistic.Learning]);
-    Power = new CharacterStatistic(bases[Statistic.Power], increments[Statistic.Power], sums[Statistic.Power], statisticBonuses[Statistic.Power]);
-    Precision = new CharacterStatistic(bases[Statistic.Precision], increments[Statistic.Precision], sums[Statistic.Precision], statisticBonuses[Statistic.Precision]);
-    Reputation = new CharacterStatistic(bases[Statistic.Reputation], increments[Statistic.Reputation], sums[Statistic.Reputation], statisticBonuses[Statistic.Reputation]);
-    Strength = new CharacterStatistic(bases[Statistic.Strength], increments[Statistic.Strength], sums[Statistic.Strength], statisticBonuses[Statistic.Strength]);
+    Constitution = new CharacterStatistic((int)Math.Floor(values[Statistic.Constitution]), bases[Statistic.Constitution], increments[Statistic.Constitution]);
+    Initiative = new CharacterStatistic((int)Math.Floor(values[Statistic.Initiative]), bases[Statistic.Initiative], increments[Statistic.Initiative]);
+    Learning = new CharacterStatistic((int)Math.Floor(values[Statistic.Learning]), bases[Statistic.Learning], increments[Statistic.Learning]);
+    Power = new CharacterStatistic((int)Math.Floor(values[Statistic.Power]), bases[Statistic.Power], increments[Statistic.Power]);
+    Precision = new CharacterStatistic((int)Math.Floor(values[Statistic.Precision]), bases[Statistic.Precision], increments[Statistic.Precision]);
+    Reputation = new CharacterStatistic((int)Math.Floor(values[Statistic.Reputation]), bases[Statistic.Reputation], increments[Statistic.Reputation]);
+    Strength = new CharacterStatistic((int)Math.Floor(values[Statistic.Strength]), bases[Statistic.Strength], increments[Statistic.Strength]);
   }
 }

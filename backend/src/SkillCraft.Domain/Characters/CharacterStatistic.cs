@@ -3,11 +3,13 @@
 public record CharacterStatistic
 {
   public int Value { get; }
+  public int Base { get; }
   public double Increment { get; }
 
-  public CharacterStatistic(int @base, double increment, double sum, int bonuses)
+  public CharacterStatistic(int value, int @base, double increment)
   {
-    Value = @base + (int)Math.Floor(sum) + bonuses;
+    Value = value;
+    Base = @base;
     Increment = increment;
   }
 }

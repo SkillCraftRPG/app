@@ -143,24 +143,31 @@ public class CharacterTests
     _character.AddBonus(new Bonus(BonusCategory.Statistic, Statistic.Learning.ToString(), value: +4), _world.OwnerId);
 
     Assert.Equal(42, _character.Statistics.Constitution.Value);
+    Assert.Equal(35, _character.Statistics.Constitution.Base);
     Assert.Equal(7, _character.Statistics.Constitution.Increment);
 
     Assert.Equal(-1, _character.Statistics.Initiative.Value);
+    Assert.Equal(-1, _character.Statistics.Initiative.Base);
     Assert.Equal(0.2, _character.Statistics.Initiative.Increment);
 
     Assert.Equal(10, _character.Statistics.Learning.Value);
+    Assert.Equal(5, _character.Statistics.Learning.Base);
     Assert.Equal(1, _character.Statistics.Learning.Increment);
 
     Assert.Equal(-2, _character.Statistics.Power.Value);
+    Assert.Equal(-2, _character.Statistics.Power.Base);
     Assert.Equal(0.15, _character.Statistics.Power.Increment);
 
     Assert.Equal(0, _character.Statistics.Precision.Value);
+    Assert.Equal(0, _character.Statistics.Precision.Base);
     Assert.Equal(0.25, _character.Statistics.Precision.Increment);
 
     Assert.Equal(0, _character.Statistics.Reputation.Value);
+    Assert.Equal(0, _character.Statistics.Reputation.Base);
     Assert.Equal(0.5, _character.Statistics.Reputation.Increment);
 
     Assert.Equal(4, _character.Statistics.Strength.Value);
+    Assert.Equal(4, _character.Statistics.Strength.Base);
     Assert.Equal(0.475, _character.Statistics.Strength.Increment);
   }
 

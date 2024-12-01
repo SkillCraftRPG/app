@@ -19,8 +19,6 @@ const { t } = useI18n();
 const props = defineProps<{
   attribute: Attribute;
   character: CharacterModel;
-  modifier: number;
-  score: number;
   text: string;
 }>();
 
@@ -48,7 +46,7 @@ const base = computed<number>(() => {
 });
 const bonuses = computed<BonusModel[]>(() => props.character.bonuses.filter(({ category, target }) => category === "Attribute" && target === props.attribute));
 const extra = computed<Attribute[]>(() => props.character.baseAttributes.extra.filter((attribute) => attribute === props.attribute));
-const formattedModifier = computed<string>(() => (props.modifier > 0 ? `+${props.modifier}` : props.modifier).toString());
+const formattedModifier = computed<string>(() => (modifier.value > 0 ? `+${modifier.value}` : modifier.value).toString());
 const levels = computed<number[]>(() => {
   const levels: number[] = [];
   for (let i = 0; i < props.character.levelUps.length; i++) {
@@ -59,6 +57,26 @@ const levels = computed<number[]>(() => {
   return levels;
 });
 const mandatory = computed<Attribute[]>(() => props.character.baseAttributes.mandatory.filter((attribute) => attribute === props.attribute));
+const modifier = computed<number>(() => {
+  switch (props.attribute) {
+    case "Agility":
+      return props.character.attributes.agility.temporaryModifier;
+    case "Coordination":
+      return props.character.attributes.coordination.temporaryModifier;
+    case "Intellect":
+      return props.character.attributes.intellect.temporaryModifier;
+    case "Presence":
+      return props.character.attributes.presence.temporaryModifier;
+    case "Sensitivity":
+      return props.character.attributes.sensitivity.temporaryModifier;
+    case "Spirit":
+      return props.character.attributes.spirit.temporaryModifier;
+    case "Vigor":
+      return props.character.attributes.vigor.temporaryModifier;
+    default:
+      throw new Error(`The attribute '${props.attribute}' is not supported.`);
+  }
+});
 const nation = computed<LineageBonus | undefined>(() => {
   const lineage: LineageModel | undefined = props.character.lineage.species ? props.character.lineage : undefined;
   if (!lineage) {
@@ -84,6 +102,26 @@ const nation = computed<LineageBonus | undefined>(() => {
   }
 });
 const optional = computed<Attribute[]>(() => props.character.baseAttributes.optional.filter((attribute) => attribute === props.attribute));
+const score = computed<number>(() => {
+  switch (props.attribute) {
+    case "Agility":
+      return props.character.attributes.agility.temporaryScore;
+    case "Coordination":
+      return props.character.attributes.coordination.temporaryScore;
+    case "Intellect":
+      return props.character.attributes.intellect.temporaryScore;
+    case "Presence":
+      return props.character.attributes.presence.temporaryScore;
+    case "Sensitivity":
+      return props.character.attributes.sensitivity.temporaryScore;
+    case "Spirit":
+      return props.character.attributes.spirit.temporaryScore;
+    case "Vigor":
+      return props.character.attributes.vigor.temporaryScore;
+    default:
+      throw new Error(`The attribute '${props.attribute}' is not supported.`);
+  }
+});
 const species = computed<LineageBonus>(() => {
   const lineage: LineageModel = props.character.lineage.species ?? props.character.lineage;
   switch (props.attribute) {
