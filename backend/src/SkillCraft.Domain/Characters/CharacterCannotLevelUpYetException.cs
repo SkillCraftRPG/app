@@ -3,7 +3,7 @@ using Logitar.Portal.Contracts.Errors;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class CharacterCannotLevelUpYetException : DomainException
+public class CharacterCannotLevelUpYetException : DomainException
 {
   private const string ErrorMessage = "The specified character cannot level-up yet.";
 

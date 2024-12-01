@@ -3,7 +3,7 @@ using SkillCraft.Contracts.Items;
 
 namespace SkillCraft.Domain.Items;
 
-internal class ItemCategoryMismatchException : Exception
+public class ItemCategoryMismatchException : Exception
 {
   public const string ErrorMessage = "The specified item category was not expected.";
 

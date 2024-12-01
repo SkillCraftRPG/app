@@ -5,7 +5,7 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class TalentTierCannotExceedCharacterTierException : DomainException
+public class TalentTierCannotExceedCharacterTierException : DomainException
 {
   private const string ErrorMessage = "The specified talent tier was greater than the character tier.";
 

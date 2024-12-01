@@ -5,7 +5,7 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class RequiredTalentNotPurchasedException : DomainException
+public class RequiredTalentNotPurchasedException : DomainException
 {
   private const string ErrorMessage = "The specified character did not purchase the required talent.";
 

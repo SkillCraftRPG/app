@@ -3,7 +3,7 @@ using Logitar.Portal.Contracts.Errors;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class NotEnoughRemainingSkillPointsException : DomainException
+public class NotEnoughRemainingSkillPointsException : DomainException
 {
   private const string ErrorMessage = "The character has no remaining skill point.";
 

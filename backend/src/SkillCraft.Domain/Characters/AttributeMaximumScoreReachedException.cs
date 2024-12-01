@@ -5,7 +5,7 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class AttributeMaximumScoreReachedException : DomainException
+public class AttributeMaximumScoreReachedException : DomainException
 {
   private const string ErrorMessage = "The specified character attribute has reached its maximum score.";
 

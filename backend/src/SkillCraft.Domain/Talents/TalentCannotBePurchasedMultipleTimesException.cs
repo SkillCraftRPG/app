@@ -4,7 +4,7 @@ using SkillCraft.Contracts.Errors;
 
 namespace SkillCraft.Domain.Talents;
 
-internal class TalentCannotBePurchasedMultipleTimesException : DomainException
+public class TalentCannotBePurchasedMultipleTimesException : DomainException
 {
   private const string ErrorMessage = "The specified talent cannot be purchased multiple times.";
 
