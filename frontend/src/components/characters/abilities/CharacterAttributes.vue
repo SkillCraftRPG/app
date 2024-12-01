@@ -4,16 +4,18 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterAttribute from "./CharacterAttribute.vue";
-import type { CharacterAttribute as CharacterAttributeT, CharacterAttributes, CharacterModel } from "@/types/characters";
+import type { CharacterAttributes, CharacterModel } from "@/types/characters";
 import type { Attribute } from "@/types/game";
 
 type SortedAttribute = {
   text: string;
   value: Attribute;
-}; // TODO(fpion): refactor to include CharacterAttributeT
+  score: number;
+  modifier: number;
+};
 
 const { orderBy } = arrayUtils;
-const { rt, t, tm } = useI18n();
+const { t } = useI18n();
 
 const props = defineProps<{
   attributes: CharacterAttributes;
@@ -22,37 +24,33 @@ const props = defineProps<{
 
 const sortedAttributes = computed<SortedAttribute[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.attribute.options"))).map(([value, text]) => ({ text, value }) as SortedAttribute),
+    [
+      { text: t("game.attribute.options.Agility"), value: "Agility", score: props.attributes.agility.score, modifier: props.attributes.agility.modifier },
+      {
+        text: t("game.attribute.options.Coordination"),
+        value: "Coordination",
+        score: props.attributes.coordination.score,
+        modifier: props.attributes.coordination.modifier,
+      },
+      {
+        text: t("game.attribute.options.Intellect"),
+        value: "Intellect",
+        score: props.attributes.intellect.score,
+        modifier: props.attributes.intellect.modifier,
+      },
+      { text: t("game.attribute.options.Presence"), value: "Presence", score: props.attributes.presence.score, modifier: props.attributes.presence.modifier },
+      {
+        text: t("game.attribute.options.Sensitivity"),
+        value: "Sensitivity",
+        score: props.attributes.sensitivity.score,
+        modifier: props.attributes.sensitivity.modifier,
+      },
+      { text: t("game.attribute.options.Spirit"), value: "Spirit", score: props.attributes.spirit.score, modifier: props.attributes.spirit.modifier },
+      { text: t("game.attribute.options.Vigor"), value: "Vigor", score: props.attributes.vigor.score, modifier: props.attributes.vigor.modifier },
+    ],
     "text",
   ),
 );
-
-function getAttribute(attribute: Attribute): CharacterAttributeT {
-  switch (attribute) {
-    case "Agility":
-      return props.attributes.agility;
-    case "Coordination":
-      return props.attributes.coordination;
-    case "Intellect":
-      return props.attributes.intellect;
-    case "Presence":
-      return props.attributes.presence;
-    case "Sensitivity":
-      return props.attributes.sensitivity;
-    case "Spirit":
-      return props.attributes.spirit;
-    case "Vigor":
-      return props.attributes.vigor;
-    default:
-      throw new Error(`The attribute '${attribute}' is not supported.`);
-  }
-}
-function getModifier(attribute: Attribute): number {
-  return getAttribute(attribute).modifier;
-}
-function getScore(attribute: Attribute): number {
-  return getAttribute(attribute).score;
-}
 </script>
 
 <template>
@@ -63,8 +61,8 @@ function getScore(attribute: Attribute): number {
         <CharacterAttribute
           :attribute="attribute.value"
           :character="character"
-          :modifier="getModifier(attribute.value)"
-          :score="getScore(attribute.value)"
+          :modifier="attribute.modifier"
+          :score="attribute.score"
           :text="attribute.text"
         />
       </div>

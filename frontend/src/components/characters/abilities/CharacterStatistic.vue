@@ -24,8 +24,6 @@ const bonuses = computed<BonusModel[]>(() => props.character.bonuses.filter(({ c
 function hide(): void {
   modalRef.value?.hide();
 }
-
-// TODO(fpion): Math.floor
 </script>
 
 <template>

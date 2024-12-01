@@ -163,39 +163,39 @@ export function calculateStatistics(character: CharacterModel, attributes?: Char
     constitution: {
       base: bases.get("Constitution") ?? 0,
       increment: attributes.vigor.modifier + 5,
-      total: totals.get("Constitution") ?? 0,
+      total: Math.floor(totals.get("Constitution") ?? 0),
     },
     initiative: {
       base: bases.get("Initiative") ?? 0,
       increment: attributes.sensitivity.score / 40,
-      total: totals.get("Initiative") ?? 0,
+      total: Math.floor(totals.get("Initiative") ?? 0),
     },
     learning: {
       base: bases.get("Learning") ?? 0,
       increment: Math.max(1, attributes.intellect.modifier + 2),
-      total: totals.get("Learning") ?? 0,
+      total: Math.floor(totals.get("Learning") ?? 0),
     },
     power: {
       base: bases.get("Power") ?? 0,
       increment: attributes.spirit.score / 40,
-      total: totals.get("Power") ?? 0,
+      total: Math.floor(totals.get("Power") ?? 0),
     },
     precision: {
       base: bases.get("Precision") ?? 0,
       increment: attributes.coordination.score / 40,
-      total: totals.get("Precision") ?? 0,
+      total: Math.floor(totals.get("Precision") ?? 0),
     },
     reputation: {
       base: bases.get("Reputation") ?? 0,
       increment: attributes.presence.score / 20,
-      total: totals.get("Reputation") ?? 0,
+      total: Math.floor(totals.get("Reputation") ?? 0),
     },
     strength: {
       base: bases.get("Strength") ?? 0,
       increment: attributes.agility.score / 40,
-      total: totals.get("Strength") ?? 0,
+      total: Math.floor(totals.get("Strength") ?? 0),
     },
-  }; // TODO(fpion): Math.floor
+  };
 } // TODO(fpion): unit tests
 
 // TODO(fpion): should not all calculations be made by the backend?
