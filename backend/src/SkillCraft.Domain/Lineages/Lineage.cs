@@ -152,7 +152,7 @@ public class Lineage : AggregateRoot
       }
       else if (parent.ParentId.HasValue)
       {
-        throw new ArgumentException("The parent lineage cannot have a parent lineage.", nameof(parent));
+        throw new InvalidParentLineageException(parent, "ParentId");
       }
     }
 

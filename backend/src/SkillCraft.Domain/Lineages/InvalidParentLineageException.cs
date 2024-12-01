@@ -1,11 +1,10 @@
 ﻿using Logitar;
 using Logitar.Portal.Contracts.Errors;
 using SkillCraft.Contracts.Errors;
-using SkillCraft.Domain.Lineages;
 
-namespace SkillCraft.Application.Lineages;
+namespace SkillCraft.Domain.Lineages;
 
-internal class InvalidParentLineageException : BadRequestException
+public class InvalidParentLineageException : DomainException
 {
   private const string ErrorMessage = "The specified parent lineage has a parent lineage.";
 
@@ -14,10 +13,10 @@ internal class InvalidParentLineageException : BadRequestException
     get => (Guid)Data[nameof(WorldId)]!;
     private set => Data[nameof(WorldId)] = value;
   }
-  public Guid ParentId
+  public Guid LineageId
   {
-    get => (Guid)Data[nameof(ParentId)]!;
-    private set => Data[nameof(ParentId)] = value;
+    get => (Guid)Data[nameof(LineageId)]!;
+    private set => Data[nameof(LineageId)] = value;
   }
   public string PropertyName
   {
@@ -25,18 +24,18 @@ internal class InvalidParentLineageException : BadRequestException
     private set => Data[nameof(PropertyName)] = value;
   }
 
-  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, ParentId, PropertyName);
+  public override Error Error => new PropertyError(this.GetErrorCode(), ErrorMessage, LineageId, PropertyName);
 
-  public InvalidParentLineageException(Lineage parent, string propertyName) : base(BuildMessage(parent, propertyName))
+  public InvalidParentLineageException(Lineage lineage, string propertyName) : base(BuildMessage(lineage, propertyName))
   {
-    WorldId = parent.WorldId.ToGuid();
-    ParentId = parent.EntityId;
+    WorldId = lineage.WorldId.ToGuid();
+    LineageId = lineage.EntityId;
     PropertyName = propertyName;
   }
 
   private static string BuildMessage(Lineage parent, string propertyName) => new ErrorMessageBuilder(ErrorMessage)
     .AddData(nameof(WorldId), parent.WorldId.ToGuid())
-    .AddData(nameof(ParentId), parent.EntityId)
+    .AddData(nameof(LineageId), parent.EntityId)
     .AddData(nameof(PropertyName), propertyName)
     .Build();
 }

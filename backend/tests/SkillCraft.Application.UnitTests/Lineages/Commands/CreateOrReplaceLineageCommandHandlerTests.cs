@@ -212,7 +212,7 @@ public class CreateOrReplaceLineageCommandHandlerTests
 
     var exception = await Assert.ThrowsAsync<InvalidParentLineageException>(async () => await _handler.Handle(command, _cancellationToken));
     Assert.Equal(_world.Id.ToGuid(), exception.WorldId);
-    Assert.Equal(payload.ParentId.Value, exception.ParentId);
+    Assert.Equal(payload.ParentId.Value, exception.LineageId);
     Assert.Equal("ParentId", exception.PropertyName);
   }
 
