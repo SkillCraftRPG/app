@@ -9,6 +9,7 @@ import TalentIcon from "@/components/talents/TalentIcon.vue";
 import type { CharacterModel, CharacterTalentModel } from "@/types/characters";
 import type { SearchResults } from "@/types/search";
 import type { SearchTalentsPayload, TalentModel } from "@/types/talents";
+import { calculateTalentPoints } from "@/helpers/gameUtils";
 import { searchTalents } from "@/api/talents";
 
 type SortedTalent = CharacterTalentModel & {
@@ -63,7 +64,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <p>{{ t("characters.talents.remainingPoints", { n: character.remainingTalentPoints }) }}</p>
+    <p>{{ t("characters.talents.remainingPoints", { n: calculateTalentPoints(character).remaining }) }}</p>
     <div class="mb-3">
       <CharacterTalentEdit :character="character" :talents="availableTalents" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     </div>

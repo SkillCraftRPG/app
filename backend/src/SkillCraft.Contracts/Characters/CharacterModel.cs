@@ -25,8 +25,6 @@ public class CharacterModel : Aggregate
   public int BloodAlcoholContent { get; set; }
   public int Intoxication { get; set; }
 
-  public List<BonusModel> Bonuses { get; set; } = [];
-
   public LineageModel Lineage { get; set; } = new();
   public double Height { get; set; }
   public double Weight { get; set; }
@@ -44,14 +42,13 @@ public class CharacterModel : Aggregate
   public EducationModel Education { get; set; } = new();
 
   public List<CharacterTalentModel> Talents { get; set; } = [];
-  public int AvailableTalentPoints => 8 + (Level * 4);
-  public int SpentTalentPoints => Talents.Sum(talent => talent.Cost);
-  public int RemainingTalentPoints => AvailableTalentPoints - SpentTalentPoints;
+
+  public List<SkillRankModel> SkillRanks { get; set; } = [];
 
   public List<InventoryModel> Inventory { get; set; } = [];
 
   public List<LevelUpModel> LevelUps { get; set; } = [];
-  public List<SkillRankModel> SkillRanks { get; set; } = [];
+  public List<BonusModel> Bonuses { get; set; } = [];
 
   public override string ToString() => $"{Name} | {base.ToString()}";
 }

@@ -124,8 +124,10 @@ watch(() => props.character, setModel, { deep: true, immediate: true });
         <AgeRollInput class="col" v-model="age" />
       </div>
       <div class="row">
-        <ExperienceInput class="col" v-model="experience" />
-        <CharacterLevel class="col" :character="character" />
+        <ExperienceInput class="col" :level="character.level" v-model="experience" />
+        <CharacterLevel class="col" :character="character">
+          <!-- TODO(fpion): Level-Up! -->
+        </CharacterLevel>
         <CharacterTier class="col" :character="character" />
       </div>
       <div class="row">

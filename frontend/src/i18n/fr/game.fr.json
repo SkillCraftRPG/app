@@ -101,6 +101,7 @@
     },
     "placeholder": "Sélectionnez une vitesse"
   },
+  "speeds": "Vitesses",
   "startingWealth": "Richesse initiale",
   "statistic": {
     "label": "Statistique",
@@ -115,6 +116,7 @@
     },
     "placeholder": "Sélectionnez une statistique"
   },
+  "statistics": "Statistiques",
   "tier": {
     "all": "Tous tiers",
     "label": "Tiers",

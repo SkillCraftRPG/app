@@ -47,7 +47,6 @@
     "label": "Species",
     "placeholder": "Select a species"
   },
-  "speeds": "Speeds",
   "traits": {
     "edit": "Edit Trait",
     "empty": "This list is empty.",

@@ -62,6 +62,23 @@ export type BonusModel = {
   notes?: string;
 };
 
+export type CharacterAttribute = {
+  score: number;
+  modifier: number;
+  temporaryScore: number;
+  temporaryModifier: number;
+};
+
+export type CharacterAttributes = {
+  agility: CharacterAttribute;
+  coordination: CharacterAttribute;
+  intellect: CharacterAttribute;
+  presence: CharacterAttribute;
+  sensitivity: CharacterAttribute;
+  spirit: CharacterAttribute;
+  vigor: CharacterAttribute;
+};
+
 export type CharacterCreation = {
   step1?: Step1;
   step2?: Step2;
@@ -91,7 +108,6 @@ export type CharacterModel = Aggregate & {
   stamina: number;
   bloodAlcoholContent: number;
   intoxication: number;
-  bonuses: BonusModel[];
   lineage: LineageModel;
   height: number;
   weight: number;
@@ -104,16 +120,41 @@ export type CharacterModel = Aggregate & {
   caste: CasteModel;
   education: EducationModel;
   talents: CharacterTalentModel[];
-  availableTalentPoints: number;
-  spentTalentPoints: number;
-  remainingTalentPoints: number;
+  skillRanks: SkillRankModel[];
   inventory: InventoryModel;
+  levelUps: LevelUpModel[];
+  bonuses: BonusModel[];
 };
 
 export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
 
 export type CharacterSortOption = SortOption & {
   field: CharacterSort;
+};
+
+export type CharacterSpeeds = {
+  walk: number;
+  climb: number;
+  swim: number;
+  fly: number;
+  hover: number;
+  burrow: number;
+};
+
+export type CharacterStatistic = {
+  base: number;
+  increment: number;
+  total: number;
+};
+
+export type CharacterStatistics = {
+  constitution: CharacterStatistic;
+  initiative: CharacterStatistic;
+  learning: CharacterStatistic;
+  power: CharacterStatistic;
+  precision: CharacterStatistic;
+  reputation: CharacterStatistic;
+  strength: CharacterStatistic;
 };
 
 export type CharacterTalentModel = {
@@ -166,6 +207,21 @@ export type InventoryModel = {
   valueOverride?: number;
 };
 
+export type LevelUpCharacterPayload = {
+  attribute: Attribute;
+};
+
+export type LevelUpModel = {
+  attribute: Attribute;
+  constitution: number;
+  initiative: number;
+  learning: number;
+  power: number;
+  precision: number;
+  reputation: number;
+  strength: number;
+};
+
 export type MiscellaneousBonusTarget = "BloodAlcoholContent" | "Defense" | "Dodge" | "Intoxication" | "Stamina" | "Vitality";
 
 export type ReplaceCharacterPayload = {
@@ -184,6 +240,11 @@ export type ReplaceCharacterPayload = {
 export type SearchCharactersPayload = SearchPayload & {
   playerName?: string;
   sort: CharacterSortOption[];
+};
+
+export type SkillRankModel = {
+  skill: Skill;
+  rank: number;
 };
 
 export type StartingWealthPayload = {
@@ -224,4 +285,14 @@ export type Step5 = {
 
 export type Step6 = {
   talents: TalentModel[];
+};
+
+export type TalentPoints = {
+  available: number;
+  spent: number;
+  remaining: number;
+};
+
+export type UpdateCharacterPayload = {
+  skillRanks: SkillRankModel[];
 };

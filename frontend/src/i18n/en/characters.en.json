@@ -1,8 +1,10 @@
 {
+  "abilities": "Abilities",
   "aspects": {
     "select": "You must select {n} additional aspect. | You must select {n} additional aspects."
   },
   "attributes": {
+    "baseFormat": "Base: {base}",
     "bases": "Bases",
     "best": {
       "label": "Best",
@@ -10,6 +12,7 @@
     },
     "bestCannotBeWorst": "The best attribute must be different from the worst attribute.",
     "extra": {
+      "bonus": "Extra (+1)",
       "label": "extra | extra different",
       "less": "You have selected {n} extra attribute too many. | You have selected {n} extra attributes too many.",
       "more": "You must select {n} additional extra attribute. | You must select {n} additional extra attributes."
@@ -21,9 +24,11 @@
       "worst": "Worst (+1)"
     },
     "optional": {
+      "bonus": "Optional (+1)",
       "less": "You have selected {n} optional attribute too many. | You have selected {n} optional attributes too many.",
       "more": "You must select {n} additional optional attribute. | You must select {n} additional optional attributes."
     },
+    "scoreFormat": "Score: {score} ({modifier})",
     "selected": "Selected (+1)",
     "spend": "You must spend {n} additional attribute point. | You must spend {n} additional attribute points.",
     "worst": {
@@ -36,6 +41,7 @@
     "label": "Background"
   },
   "bloodAlcoholContent": "Blood Alcohol Content",
+  "bonus": "Bonus",
   "bonuses": {
     "add": "Add Bonus",
     "added": "The bonus has been added.",
@@ -120,7 +126,20 @@
     "removed": "The language has been removed.",
     "selectExtra": "You must select {n} additional language. | You must select {n} additional languages."
   },
-  "level": "Level",
+  "level": {
+    "format": "Level {level}",
+    "label": "Level"
+  },
+  "levelUp": {
+    "cancel": "TODO",
+    "empty": "This list is empty.",
+    "label": "Level-Up!"
+  },
+  "levelUpCancelled": "TODO",
+  "leveledUp": "The character has been leveled-up.",
+  "levels": {
+    "label": "Levels"
+  },
   "lineage": "Lineage",
   "list": "Characters",
   "name": "Character Name",
@@ -137,7 +156,14 @@
       "UpdatedOn": "Updated on"
     }
   },
+  "speeds": {
+    "totalFormat": "Total: {total}"
+  },
   "stamina": "Stamina",
+  "statistics": {
+    "baseFormat": "Base: {base}",
+    "totalFormat": "Total: {total} (increment: {increment})"
+  },
   "steps": {
     "aspects": "Step #3 – Aspects",
     "attributes": "Step #4 – Attributes",
