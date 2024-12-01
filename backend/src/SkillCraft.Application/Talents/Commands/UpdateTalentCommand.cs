@@ -9,9 +9,9 @@ using SkillCraft.Domain.Talents;
 
 namespace SkillCraft.Application.Talents.Commands;
 
-/// <exception cref="InvalidRequiredTalentTierException"></exception>
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
+/// <exception cref="RequiredTalentTierCannotExceedRequiringTalentTierException"></exception>
 /// <exception cref="TalentNotFoundException"></exception>
 /// <exception cref="TalentSkillAlreadyExistingException"></exception>
 /// <exception cref="ValidationException"></exception>
@@ -65,7 +65,14 @@ internal class UpdateTalentCommandHandler : IRequestHandler<UpdateTalentCommand,
     }
     if (payload.RequiredTalentId != null)
     {
-      await _sender.Send(new SetRequiredTalentCommand(talent, payload.RequiredTalentId.Value), cancellationToken);
+      Talent? requiredTalent = null;
+      if (payload.RequiredTalentId.Value.HasValue)
+      {
+        TalentId talentId = new(talent.WorldId, payload.RequiredTalentId.Value.Value);
+        requiredTalent = await _talentRepository.LoadAsync(talentId, cancellationToken)
+          ?? throw new TalentNotFoundException(talentId, nameof(payload.RequiredTalentId));
+      }
+      talent.SetRequiredTalent(requiredTalent);
     }
     if (payload.Skill != null)
     {
