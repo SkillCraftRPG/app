@@ -6,9 +6,8 @@ import { useI18n } from "vue-i18n";
 import LineageLink from "@/components/lineages/LineageLink.vue";
 import NatureLink from "@/components/natures/NatureLink.vue";
 import type { Attribute } from "@/types/game";
-import type { CharacterModel } from "@/types/characters";
+import type { BonusModel, CharacterModel } from "@/types/characters";
 import type { LineageModel } from "@/types/lineages";
-import { calculateModifier } from "@/helpers/gameUtils";
 
 type LineageBonus = {
   bonus: number;
@@ -20,6 +19,8 @@ const { t } = useI18n();
 const props = defineProps<{
   attribute: Attribute;
   character: CharacterModel;
+  modifier: number;
+  score: number;
   text: string;
 }>();
 
@@ -45,8 +46,9 @@ const base = computed<number>(() => {
       throw new Error(`The attribute '${props.attribute}' is not supported.`);
   }
 });
+const bonuses = computed<BonusModel[]>(() => props.character.bonuses.filter(({ category, target }) => category === "Attribute" && target === props.attribute));
 const extra = computed<Attribute[]>(() => props.character.baseAttributes.extra.filter((attribute) => attribute === props.attribute));
-const formattedModifier = computed<string>(() => (modifier.value > 0 ? `+${modifier.value}` : modifier.value).toString());
+const formattedModifier = computed<string>(() => (props.modifier > 0 ? `+${props.modifier}` : props.modifier).toString());
 const levels = computed<number[]>(() => {
   const levels: number[] = [];
   for (let i = 0; i < props.character.levelUps.length; i++) {
@@ -56,28 +58,7 @@ const levels = computed<number[]>(() => {
   }
   return levels;
 });
-const lineage = computed<number>(() => {
-  switch (props.attribute) {
-    case "Agility":
-      return props.character.lineage.attributes.agility + (props.character.lineage.species?.attributes.agility ?? 0);
-    case "Coordination":
-      return props.character.lineage.attributes.coordination + (props.character.lineage.species?.attributes.coordination ?? 0);
-    case "Intellect":
-      return props.character.lineage.attributes.intellect + (props.character.lineage.species?.attributes.intellect ?? 0);
-    case "Presence":
-      return props.character.lineage.attributes.presence + (props.character.lineage.species?.attributes.presence ?? 0);
-    case "Sensitivity":
-      return props.character.lineage.attributes.sensitivity + (props.character.lineage.species?.attributes.sensitivity ?? 0);
-    case "Spirit":
-      return props.character.lineage.attributes.spirit + (props.character.lineage.species?.attributes.spirit ?? 0);
-    case "Vigor":
-      return props.character.lineage.attributes.vigor + (props.character.lineage.species?.attributes.vigor ?? 0);
-    default:
-      throw new Error(`The attribute '${props.attribute}' is not supported.`);
-  }
-});
 const mandatory = computed<Attribute[]>(() => props.character.baseAttributes.mandatory.filter((attribute) => attribute === props.attribute));
-const modifier = computed<number>(() => calculateModifier(score.value));
 const nation = computed<LineageBonus | undefined>(() => {
   const lineage: LineageModel | undefined = props.character.lineage.species ? props.character.lineage : undefined;
   if (!lineage) {
@@ -103,25 +84,6 @@ const nation = computed<LineageBonus | undefined>(() => {
   }
 });
 const optional = computed<Attribute[]>(() => props.character.baseAttributes.optional.filter((attribute) => attribute === props.attribute));
-const score = computed<number>(() => {
-  let score: number = base.value;
-  score += lineage.value;
-  score += props.character.baseAttributes.extra.filter((attribute) => attribute === props.attribute).length;
-  if (props.character.nature.attribute === props.attribute) {
-    score++;
-  }
-  if (props.character.baseAttributes.best === props.attribute) {
-    score += 3;
-  }
-  score += props.character.baseAttributes.mandatory.filter((attribute) => attribute === props.attribute).length * 2;
-  if (props.character.baseAttributes.worst === props.attribute) {
-    score += 1;
-  }
-  score += props.character.baseAttributes.optional.filter((attribute) => attribute === props.attribute).length;
-  score += props.character.levelUps.filter(({ attribute }) => attribute === props.attribute).length;
-  score += props.character.bonuses.reduce((sum, bonus) => (sum += bonus.value), 0);
-  return score;
-});
 const species = computed<LineageBonus>(() => {
   const lineage: LineageModel = props.character.lineage.species ?? props.character.lineage;
   switch (props.attribute) {
@@ -152,9 +114,7 @@ function hide(): void {
 <template>
   <span>
     <TarCard class="clickable" :title="text" data-bs-toggle="modal" :data-bs-target="`#${attribute}`">
-      <span>
-        <strong>{{ score }}</strong>
-      </span>
+      <span>{{ score }}</span>
       <span class="float-end">{{ formattedModifier }}</span>
     </TarCard>
     <TarModal :close="t('actions.close')" :id="attribute" ref="modalRef" :title="text">
@@ -168,7 +128,7 @@ function hide(): void {
       <div v-if="character.baseAttributes.worst === attribute">{{ t("characters.attributes.mandatory.worst") }}</div>
       <div v-for="(_, index) in optional" :key="index">{{ t("characters.attributes.optional.bonus") }}</div>
       <div v-for="level in levels" :key="level">{{ t("characters.level.format", { level }) }}</div>
-      <div v-for="bonus in character.bonuses" :key="bonus.id">
+      <div v-for="bonus in bonuses" :key="bonus.id">
         {{ bonus.precision ?? t("characters.bonus") }} ({{ bonus.value > 0 ? `+${bonus.value}` : bonus.value }})
       </div>
       <div class="my-3">

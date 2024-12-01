@@ -45,7 +45,7 @@ function setSpeed(type: Speed, value?: number): void {
 
 <template>
   <div>
-    <h3>{{ t("lineages.speeds") }}</h3>
+    <h3>{{ t("game.speeds") }}</h3>
     <div class="row">
       <SpeedInput class="col-lg-2" :model-value="modelValue.walk" required speed="Walk" @update:model-value="setSpeed('Walk', $event)" />
       <SpeedInput class="col-lg-2" :model-value="modelValue.climb" required speed="Climb" @update:model-value="setSpeed('Climb', $event)" />

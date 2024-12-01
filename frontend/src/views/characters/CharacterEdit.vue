@@ -1,22 +1,25 @@
 <script setup lang="ts">
 import { TarTab, TarTabs } from "logitar-vue3-ui";
-import { inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
-import CharacterAttributes from "@/components/characters/attributes/CharacterAttributes.vue";
+import CharacterAttributes from "@/components/characters/abilities/CharacterAttributes.vue";
 import CharacterBonuses from "@/components/characters/bonuses/CharacterBonuses.vue";
 import CharacterCharacteristics from "@/components/characters/characteristics/CharacterCharacteristics.vue";
 import CharacterLanguages from "@/components/characters/languages/CharacterLanguages.vue";
 import CharacterLevelUps from "@/components/characters/levelUp/CharacterLevelUps.vue";
 import CharacterSkills from "@/components/characters/skills/CharacterSkills.vue";
+import CharacterSpeeds from "@/components/characters/abilities/CharacterSpeeds.vue";
+import CharacterStatistics from "@/components/characters/abilities/CharacterStatistics.vue";
 import CharacterTalents from "@/components/characters/talents/CharacterTalents.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { ApiError } from "@/types/api";
-import type { CharacterModel } from "@/types/characters";
+import type { CharacterAttributes as CharacterAttributesT, CharacterModel } from "@/types/characters";
 import { handleErrorKey } from "@/inject/App";
 import { readCharacter } from "@/api/characters";
+import { calculateAttributes } from "@/helpers/characterUtils";
 
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
@@ -24,6 +27,8 @@ const router = useRouter();
 const { t } = useI18n();
 
 const character = ref<CharacterModel>();
+
+const attributes = computed<CharacterAttributesT | undefined>(() => (character.value ? calculateAttributes(character.value) : undefined));
 
 function onUpdated(value: CharacterModel): void {
   character.value = value;
@@ -58,13 +63,13 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab active id="characteristics" :title="t('characters.characteristics')">
+        <TarTab id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
-        <TarTab id="abilities" :title="t('characters.abilities')">
-          <CharacterAttributes :character="character" />
-          <!-- TODO(fpion): Statistics -->
-          <!-- TODO(fpion): Speeds -->
+        <TarTab v-if="attributes" active id="abilities" :title="t('characters.abilities')">
+          <CharacterAttributes :attributes="attributes" :character="character" />
+          <CharacterStatistics :attributes="attributes" :character="character" />
+          <CharacterSpeeds :character="character" />
         </TarTab>
         <TarTab id="skills" :title="t('game.skills')">
           <CharacterSkills />

@@ -47,7 +47,6 @@
     "label": "Espèce",
     "placeholder": "Sélectionnez une espèce"
   },
-  "speeds": "Vitesses",
   "traits": {
     "edit": "Modifier un trait",
     "empty": "Cette liste est vide.",

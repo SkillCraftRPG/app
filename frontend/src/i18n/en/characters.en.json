@@ -156,7 +156,14 @@
       "UpdatedOn": "Updated on"
     }
   },
+  "speeds": {
+    "totalFormat": "Total: {total}"
+  },
   "stamina": "Stamina",
+  "statistics": {
+    "baseFormat": "Base: {base}",
+    "totalFormat": "Total: {total} (increment: {increment})"
+  },
   "steps": {
     "aspects": "Step #3 – Aspects",
     "attributes": "Step #4 – Attributes",

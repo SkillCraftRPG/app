@@ -101,6 +101,8 @@
     },
     "placeholder": "Select a speed"
   },
+  "speeds": "Speeds",
+  "startingWealth": "Starting Wealth",
   "statistic": {
     "label": "Statistic",
     "options": {
@@ -114,7 +116,7 @@
     },
     "placeholder": "Select a statistic"
   },
-  "startingWealth": "Starting Wealth",
+  "statistics": "Statistics",
   "tier": {
     "all": "All tiers",
     "label": "Tier",

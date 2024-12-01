@@ -62,6 +62,23 @@ export type BonusModel = {
   notes?: string;
 };
 
+export type CharacterAttribute = {
+  score: number;
+  modifier: number;
+  temporaryScore: number;
+  temporaryModifier: number;
+};
+
+export type CharacterAttributes = {
+  agility: CharacterAttribute;
+  coordination: CharacterAttribute;
+  intellect: CharacterAttribute;
+  presence: CharacterAttribute;
+  sensitivity: CharacterAttribute;
+  spirit: CharacterAttribute;
+  vigor: CharacterAttribute;
+};
+
 export type CharacterCreation = {
   step1?: Step1;
   step2?: Step2;
@@ -113,6 +130,31 @@ export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
 
 export type CharacterSortOption = SortOption & {
   field: CharacterSort;
+};
+
+export type CharacterSpeeds = {
+  walk: number;
+  climb: number;
+  swim: number;
+  fly: number;
+  hover: number;
+  burrow: number;
+};
+
+export type CharacterStatistic = {
+  base: number;
+  increment: number;
+  total: number;
+};
+
+export type CharacterStatistics = {
+  constitution: CharacterStatistic;
+  initiative: CharacterStatistic;
+  learning: CharacterStatistic;
+  power: CharacterStatistic;
+  precision: CharacterStatistic;
+  reputation: CharacterStatistic;
+  strength: CharacterStatistic;
 };
 
 export type CharacterTalentModel = {

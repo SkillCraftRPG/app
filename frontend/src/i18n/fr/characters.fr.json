@@ -156,7 +156,14 @@
       "UpdatedOn": "Dernière modification"
     }
   },
+  "speeds": {
+    "totalFormat": "Total : {total}"
+  },
   "stamina": "Énergie",
+  "statistics": {
+    "baseFormat": "Base : {base}",
+    "totalFormat": "Total : {total} (incrément : {increment})"
+  },
   "steps": {
     "aspects": "Étape 3 – Aspects",
     "attributes": "Étape 4 – Attributs",

@@ -40,7 +40,7 @@ const speeds = computed<SpeedsModel>(() => {
 
 <template>
   <div>
-    <h5>{{ t("lineages.speeds") }}</h5>
+    <h5>{{ t("game.speeds") }}</h5>
     <div class="row">
       <SpeedInput class="col" disabled :model-value="speeds.walk" speed="Walk" validation="server" />
       <SpeedInput class="col" disabled :model-value="speeds.climb" speed="Climb" validation="server" />
