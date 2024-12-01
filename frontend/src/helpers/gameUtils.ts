@@ -18,7 +18,7 @@ export function getTotalExperience(level: number): number {
     total += REQUIRED_EXPERIENCE[i];
   }
   return total;
-} // TODO(fpion): unit tests
+}
 
 export function roll(roll: string): number {
   let value: number = 0;
