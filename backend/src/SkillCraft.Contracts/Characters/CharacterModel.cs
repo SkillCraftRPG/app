@@ -51,5 +51,7 @@ public class CharacterModel : Aggregate
   public List<LevelUpModel> LevelUps { get; set; } = [];
   public List<BonusModel> Bonuses { get; set; } = [];
 
+  public CharacterSpeedsModel Speeds { get; set; } = new();
+
   public override string ToString() => $"{Name} | {base.ToString()}";
 }
