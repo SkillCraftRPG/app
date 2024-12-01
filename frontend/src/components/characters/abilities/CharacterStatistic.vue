@@ -20,6 +20,36 @@ const props = defineProps<{
 const modalRef = ref<InstanceType<typeof TarModal> | null>(null);
 
 const bonuses = computed<BonusModel[]>(() => props.character.bonuses.filter(({ category, target }) => category === "Statistic" && target === props.statistic));
+const levelUps = computed<number[]>(() =>
+  props.character.levelUps.reduce((values, levelUp) => {
+    switch (props.statistic) {
+      case "Constitution":
+        values.push(levelUp.constitution);
+        break;
+      case "Initiative":
+        values.push(levelUp.initiative);
+        break;
+      case "Learning":
+        values.push(levelUp.learning);
+        break;
+      case "Power":
+        values.push(levelUp.power);
+        break;
+      case "Precision":
+        values.push(levelUp.precision);
+        break;
+      case "Reputation":
+        values.push(levelUp.reputation);
+        break;
+      case "Strength":
+        values.push(levelUp.strength);
+        break;
+      default:
+        throw new Error(`The statistic '${props.statistic}' is not supported.`);
+    }
+    return values;
+  }, [] as number[]),
+);
 
 function hide(): void {
   modalRef.value?.hide();
@@ -33,7 +63,7 @@ function hide(): void {
     </TarCard>
     <TarModal :close="t('actions.close')" :id="statistic" ref="modalRef" :title="text">
       <div>{{ t("characters.statistics.baseFormat", { base }) }}</div>
-      <!-- TODO(fpion): level-ups -->
+      <div v-for="(increment, index) in levelUps" :key="index">{{ t("characters.level.format", { level: index + 1 }) }} ({{ increment }})</div>
       <div v-for="bonus in bonuses" :key="bonus.id">
         {{ bonus.precision ?? t("characters.bonus") }} ({{ bonus.value > 0 ? `+${bonus.value}` : bonus.value }})
       </div>
