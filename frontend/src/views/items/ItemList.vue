@@ -10,6 +10,7 @@ import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateItem from "@/components/items/CreateItem.vue";
 import ItemCategorySelect from "@/components/items/ItemCategorySelect.vue";
+import ItemLink from "@/components/items/ItemLink.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
@@ -175,7 +176,7 @@ watch(
         <tbody>
           <tr v-for="item in items" :key="item.id">
             <td>
-              <RouterLink :to="{ name: 'ItemEdit', params: { id: item.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ item.name }} </RouterLink>
+              <ItemLink edit :item="item" />
             </td>
             <td>{{ t(`items.category.options.${item.category}`) }}</td>
             <td>{{ item.value ?? "—" }}</td>

@@ -10,8 +10,9 @@ import AppPagination from "@/components/shared/AppPagination.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateNature from "@/components/natures/CreateNature.vue";
-import CustomizationIcon from "@/components/customizations/CustomizationIcon.vue";
+import CustomizationLink from "@/components/customizations/CustomizationLink.vue";
 import CustomizationSelect from "@/components/customizations/CustomizationSelect.vue";
+import NatureLink from "@/components/natures/NatureLink.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
@@ -187,13 +188,11 @@ watch(
         <tbody>
           <tr v-for="nature in natures" :key="nature.id">
             <td>
-              <RouterLink :to="{ name: 'NatureEdit', params: { id: nature.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ nature.name }} </RouterLink>
+              <NatureLink edit :nature="nature" />
             </td>
             <td>{{ nature.attribute ? t(`game.attribute.options.${nature.attribute}`) : "—" }}</td>
             <td>
-              <RouterLink v-if="nature.gift" :to="{ name: 'CustomizationEdit', params: { id: nature.gift.id } }" target="_blank">
-                <CustomizationIcon />{{ nature.gift.name }}
-              </RouterLink>
+              <CustomizationLink v-if="nature.gift" :customization="nature.gift" />
               <template v-else>{{ "—" }}</template>
             </td>
             <td><StatusBlock :actor="nature.updatedBy" :date="nature.updatedOn" /></td>

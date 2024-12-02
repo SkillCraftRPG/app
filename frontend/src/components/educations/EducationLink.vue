@@ -3,14 +3,14 @@ import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 
 import EditIcon from "@/components/shared/EditIcon.vue";
-import LineageIcon from "./LineageIcon.vue";
-import type { LineageModel } from "@/types/lineages";
+import EducationIcon from "./EducationIcon.vue";
+import type { EducationModel } from "@/types/educations";
 
 const { parseBoolean } = parsingUtils;
 
 const props = defineProps<{
   edit?: boolean | string;
-  lineage: LineageModel;
+  education: EducationModel;
 }>();
 
 const target = computed<"_blank" | undefined>(() => (parseBoolean(props.edit) ? undefined : "_blank"));
@@ -18,11 +18,11 @@ const target = computed<"_blank" | undefined>(() => (parseBoolean(props.edit) ? 
 
 <template>
   <span>
-    <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }" :target="target">
+    <RouterLink :to="{ name: 'EducationEdit', params: { id: education.id } }" :target="target">
       <EditIcon v-if="parseBoolean(edit)" />
-      <LineageIcon v-else />
+      <EducationIcon v-else />
     </RouterLink>
     {{ " " }}
-    <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }" :target="target">{{ lineage.name }}</RouterLink>
+    <RouterLink :to="{ name: 'EducationEdit', params: { id: education.id } }" :target="target">{{ education.name }}</RouterLink>
   </span>
 </template>

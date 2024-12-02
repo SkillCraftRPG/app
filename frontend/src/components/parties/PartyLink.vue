@@ -3,14 +3,14 @@ import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 
 import EditIcon from "@/components/shared/EditIcon.vue";
-import LineageIcon from "./LineageIcon.vue";
-import type { LineageModel } from "@/types/lineages";
+import PartyIcon from "./PartyIcon.vue";
+import type { PartyModel } from "@/types/parties";
 
 const { parseBoolean } = parsingUtils;
 
 const props = defineProps<{
   edit?: boolean | string;
-  lineage: LineageModel;
+  party: PartyModel;
 }>();
 
 const target = computed<"_blank" | undefined>(() => (parseBoolean(props.edit) ? undefined : "_blank"));
@@ -18,11 +18,11 @@ const target = computed<"_blank" | undefined>(() => (parseBoolean(props.edit) ? 
 
 <template>
   <span>
-    <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }" :target="target">
+    <RouterLink :to="{ name: 'PartyEdit', params: { id: party.id } }" :target="target">
       <EditIcon v-if="parseBoolean(edit)" />
-      <LineageIcon v-else />
+      <PartyIcon v-else />
     </RouterLink>
     {{ " " }}
-    <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }" :target="target">{{ lineage.name }}</RouterLink>
+    <RouterLink :to="{ name: 'PartyEdit', params: { id: party.id } }" :target="target">{{ party.name }}</RouterLink>
   </span>
 </template>

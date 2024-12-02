@@ -9,6 +9,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateCustomization from "@/components/customizations/CreateCustomization.vue";
+import CustomizationLink from "@/components/customizations/CustomizationLink.vue";
 import CustomizationTypeSelect from "@/components/customizations/CustomizationTypeSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -173,9 +174,7 @@ watch(
         <tbody>
           <tr v-for="customization in customizations" :key="customization.id">
             <td>
-              <RouterLink :to="{ name: 'CustomizationEdit', params: { id: customization.id } }">
-                <font-awesome-icon icon="fas fa-edit" />{{ customization.name }}
-              </RouterLink>
+              <CustomizationLink :customization="customization" edit />
             </td>
             <td>{{ t(`customizations.type.options.${customization.type}`) }}</td>
             <td><StatusBlock :actor="customization.updatedBy" :date="customization.updatedOn" /></td>

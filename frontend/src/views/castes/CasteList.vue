@@ -7,6 +7,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
+import CasteLink from "@/components/castes/CasteLink.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateCaste from "@/components/castes/CreateCaste.vue";
 import FeaturesBlock from "@/components/castes/FeaturesBlock.vue";
@@ -171,7 +172,7 @@ watch(
         <tbody>
           <tr v-for="caste in castes" :key="caste.id">
             <td>
-              <RouterLink :to="{ name: 'CasteEdit', params: { id: caste.id } }"><font-awesome-icon icon="fas fa-edit" />{{ caste.name }}</RouterLink>
+              <CasteLink :caste="caste" edit />
             </td>
             <td>{{ caste.skill ? t(`game.skill.options.${caste.skill}`) : "—" }}</td>
             <td>{{ caste.wealthRoll ?? "—" }}</td>

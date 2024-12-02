@@ -9,6 +9,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLanguage from "@/components/languages/CreateLanguage.vue";
+import LanguageLink from "@/components/languages/LanguageLink.vue";
 import ScriptSelect from "@/components/languages/ScriptSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -168,7 +169,7 @@ watch(
         <tbody>
           <tr v-for="language in languages" :key="language.id">
             <td>
-              <RouterLink :to="{ name: 'LanguageEdit', params: { id: language.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ language.name }} </RouterLink>
+              <LanguageLink edit :language="language" />
             </td>
             <td>{{ language.script ?? "—" }}</td>
             <td>{{ language.typicalSpeakers ?? "—" }}</td>
