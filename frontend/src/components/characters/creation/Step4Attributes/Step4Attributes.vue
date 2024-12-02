@@ -438,9 +438,9 @@ onMounted(() => {
       </p>
       <template v-if="lineageAttributes.extra > 0">
         <h5>{{ t("characters.lineage") }}</h5>
-        <div class="mb-3 row">
+        <div class="align-items-stretch mb-3 row">
           <div v-for="row in rows" :key="row.attribute" class="col">
-            <OptionalAttributeCard :attribute="row.attribute" :selected="extra.includes(row.attribute)" @click="toggleExtra(row.attribute)" />
+            <OptionalAttributeCard :attribute="row.attribute" class="h-100" :selected="extra.includes(row.attribute)" @click="toggleExtra(row.attribute)" />
           </div>
         </div>
         <p v-if="requiredExtra < 0" class="text-danger">

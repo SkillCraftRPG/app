@@ -36,16 +36,9 @@ defineEmits<{
 <template>
   <div>
     <p>{{ t("characters.skills.remainingPoints", { n: character.skillPoints.remaining }) }}</p>
-    <div class="align-items-stretch mb-3 row">
+    <div class="mb-3 row">
       <div v-for="skill in skills" :key="skill.value" class="col-lg-3 mb-3">
-        <CharacterSkill
-          :character="character"
-          class="h-100"
-          :skill="skill.value"
-          :text="skill.text"
-          @error="$emit('error', $event)"
-          @updated="$emit('updated', $event)"
-        />
+        <CharacterSkill :character="character" :skill="skill.value" :text="skill.text" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
     </div>
   </div>

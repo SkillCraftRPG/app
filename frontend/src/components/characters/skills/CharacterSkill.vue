@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TarButton, TarCard, TarModal } from "logitar-vue3-ui";
+import { TarBadge, TarButton, TarCard, TarModal } from "logitar-vue3-ui";
 import { computed, ref, watch } from "vue";
 import { useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
@@ -166,52 +166,52 @@ watch(rank, (rank) => (rankInput.value = rank), { immediate: true });
 </script>
 
 <template>
-  <span>
-    <TarCard :title="text">
-      <template v-if="isTrained" #subtitle-override>
-        <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-check" /> {{ t("characters.skills.trained") }}</h6>
-      </template>
-      <div class="mb-3">
-        <span>{{ t("characters.skills.rank.format", { rank }) }}</span>
-        <span class="float-end"> {{ formatBonus(bonus) }} / {{ neutral }} </span>
+  <TarCard :title="text">
+    <template #title-override>
+      <h5 class="card-title" style="display: inline">
+        {{ text }} <TarBadge v-if="isTrained" class="ms-2" pill variant="success">{{ t("characters.skills.trained") }}</TarBadge>
+      </h5>
+    </template>
+    <div class="mb-3">
+      <span>{{ t("characters.skills.rank.format", { rank }) }}</span>
+      <span class="float-end"> {{ formatBonus(bonus) }} / {{ neutral }} </span>
+    </div>
+    <div class="float-end">
+      <TarButton
+        class="me-1"
+        :disabled="isLoading || character.skillPoints.remaining < 1 || rank >= character.maximumSkillRank"
+        icon="fas fa-plus"
+        :loading="isLoading"
+        :text="t('characters.skills.rank.increase')"
+        variant="warning"
+        @click="onIncrease"
+      />
+      <TarButton class="ms-1" icon="fas fa-list" :text="t('characters.skills.detail')" data-bs-toggle="modal" :data-bs-target="`#${skill}-detail`" />
+    </div>
+    <TarModal :close="t('actions.close')" :id="`${skill}-detail`" ref="modalRef" :title="text">
+      <div>
+        <template v-if="isTrained">{{ t("characters.skills.rank.trained", { rank, bonus: formatBonus(rank) }) }}</template>
+        <template v-else>{{ t("characters.skills.rank.untrained", { rank, bonus: formatBonus(Math.floor(rank / 2)) }) }}</template>
       </div>
-      <div class="float-end">
+      <div>{{ t(`game.attribute.options.${attribute.attribute}`) }} ({{ formatBonus(attribute.bonus) }})</div>
+      <div v-for="bonus in bonuses" :key="bonus.id">{{ bonus.precision ?? t("characters.bonus") }} ({{ formatBonus(bonus.value) }})</div>
+      <div class="my-3">
+        <strong>{{ t("characters.skills.totalFormat", { bonus: formatBonus(bonus), neutral }) }}</strong>
+      </div>
+      <form @submit.prevent="onSubmit">
+        <RankInput :max="character.maximumSkillRank" :skill="skill" v-model="rankInput" />
+      </form>
+      <template #footer>
+        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />
         <TarButton
-          class="me-1"
-          :disabled="isLoading || character.skillPoints.remaining < 1 || rank >= character.maximumSkillRank"
-          icon="fas fa-plus"
-          :loading="isLoading"
-          :text="t('characters.skills.rank.increase')"
-          variant="warning"
-          @click="onIncrease"
+          :disabled="isSubmitting || !hasChanges"
+          icon="fas fa-save"
+          :loading="isSubmitting"
+          :status="t('loading')"
+          :text="t('actions.save')"
+          @click="onSubmit"
         />
-        <TarButton class="ms-1" icon="fas fa-list" :text="t('characters.skills.detail')" data-bs-toggle="modal" :data-bs-target="`#${skill}-detail`" />
-      </div>
-      <TarModal :close="t('actions.close')" :id="`${skill}-detail`" ref="modalRef" :title="text">
-        <div>
-          <template v-if="isTrained">{{ t("characters.skills.rank.trained", { rank, bonus: formatBonus(rank) }) }}</template>
-          <template v-else>{{ t("characters.skills.rank.untrained", { rank, bonus: formatBonus(Math.floor(rank / 2)) }) }}</template>
-        </div>
-        <div>{{ t(`game.attribute.options.${attribute.attribute}`) }} ({{ formatBonus(attribute.bonus) }})</div>
-        <div v-for="bonus in bonuses" :key="bonus.id">{{ bonus.precision ?? t("characters.bonus") }} ({{ formatBonus(bonus.value) }})</div>
-        <div class="my-3">
-          <strong>{{ t("characters.skills.totalFormat", { bonus: formatBonus(bonus), neutral }) }}</strong>
-        </div>
-        <form @submit.prevent="onSubmit">
-          <RankInput :max="character.maximumSkillRank" :skill="skill" v-model="rankInput" />
-        </form>
-        <template #footer>
-          <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />
-          <TarButton
-            :disabled="isSubmitting || !hasChanges"
-            icon="fas fa-save"
-            :loading="isSubmitting"
-            :status="t('loading')"
-            :text="t('actions.save')"
-            @click="onSubmit"
-          />
-        </template>
-      </TarModal>
-    </TarCard>
-  </span>
+      </template>
+    </TarModal>
+  </TarCard>
 </template>
