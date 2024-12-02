@@ -18,6 +18,7 @@ public class CharacterModel : Aggregate
 
   public int Experience { get; set; }
   public int Level { get; set; }
+  public bool CanLevelUp { get; set; }
   public int Tier { get; set; }
 
   public int Vitality { get; set; }

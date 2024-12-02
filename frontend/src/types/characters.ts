@@ -103,6 +103,7 @@ export type CharacterModel = Aggregate & {
   playerName?: string;
   experience: number;
   level: number;
+  canLevelUp: boolean;
   tier: number;
   vitality: number;
   stamina: number;

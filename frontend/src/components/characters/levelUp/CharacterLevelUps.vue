@@ -20,11 +20,32 @@ defineEmits<{
 <template>
   <div>
     <div class="mb-3">
-      <CharacterLevelUp class="me-1" :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-      <CharacterLevelUpCancel class="ms-1" :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
+      <CharacterLevelUp :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     </div>
     <table v-if="character.levelUps.length > 0" class="table table-striped">
-      <!-- TODO(fpion): implement -->
+      <thead>
+        <tr>
+          <th scope="col">{{ t("characters.level.label") }}</th>
+          <th scope="col">{{ t("game.attribute.label") }}</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(levelUp, index) in character.levelUps" :key="index">
+          <td>{{ index + 1 }}</td>
+          <td>{{ t(`game.attribute.options.${levelUp.attribute}`) }}</td>
+          <td>
+            <CharacterLevelUpCancel
+              v-if="index === character.levelUps.length - 1"
+              :attribute="levelUp.attribute"
+              :character="character"
+              :level="index + 1"
+              @error="$emit('error', $event)"
+              @updated="$emit('updated', $event)"
+            />
+          </td>
+        </tr>
+      </tbody>
     </table>
     <p v-else>{{ t("characters.levelUp.empty") }}</p>
   </div>

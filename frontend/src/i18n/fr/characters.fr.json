@@ -131,11 +131,15 @@
     "label": "Niveau"
   },
   "levelUp": {
-    "cancel": "TODO",
-    "empty": "Cette liste est vide.",
-    "label": "Level-Up!"
+    "cancel": {
+      "confirm": "Désirez-vous vraiment annuler le gain de niveau suivant ?",
+      "label": "Annuler le gain de niveau"
+    },
+    "empty": "Le niveau du personnage est 0.",
+    "label": "Level-Up!",
+    "maximumScoreReached": "Le score maximal d’attribut a été atteint."
   },
-  "levelUpCancelled": "TODO",
+  "levelUpCancelled": "Le gain de niveau a été annulé.",
   "leveledUp": "Le niveau du personnage a été modifié.",
   "levels": {
     "label": "Niveaux"
