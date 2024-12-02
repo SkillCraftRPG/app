@@ -10,7 +10,7 @@ using Attribute = SkillCraft.Contracts.Attribute;
 
 namespace SkillCraft.Domain.Characters;
 
-internal class CharacterBuilder
+public class CharacterBuilder
 {
   public World World { get; }
   public Guid? EntityId { get; private set; }
