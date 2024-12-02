@@ -165,6 +165,7 @@ internal class Mapper
     }
     destination.TalentPoints = new TalentPointsModel(destination);
 
+    destination.MaximumSkillRank = CharacterHelper.CalculateMaximumSkillRank(destination.Tier);
     destination.SkillRanks.AddRange(source.GetSkillRanks());
 
     foreach (InventoryEntity inventory in source.Inventory)
@@ -206,7 +207,10 @@ internal class Mapper
 
     destination.Attributes = new CharacterAttributesModel(destination);
     destination.Statistics = new CharacterStatisticsModel(destination);
+    destination.Skills = new CharacterSkillsModel(destination);
     destination.Speeds = new CharacterSpeedsModel(destination);
+
+    destination.SkillPoints = new SkillPointsModel(destination);
 
     MapAggregate(source, destination);
 

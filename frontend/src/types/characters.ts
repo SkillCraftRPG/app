@@ -122,12 +122,15 @@ export type CharacterModel = Aggregate & {
   education: EducationModel;
   talents: CharacterTalentModel[];
   talentPoints: TalentPointsModel;
+  maximumSkillRank: number;
   skillRanks: SkillRankModel[];
+  skillPoints: SkillPointsModel;
   inventory: InventoryModel;
   levelUps: LevelUpModel[];
   bonuses: BonusModel[];
   attributes: CharacterAttributesModel;
   statistics: CharacterStatisticsModel;
+  skills: CharacterSkillsModel;
   speeds: CharacterSpeedsModel;
 };
 
@@ -135,6 +138,34 @@ export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
 
 export type CharacterSortOption = SortOption & {
   field: CharacterSort;
+};
+
+export type CharacterSkillModel = {
+  isTrained: boolean;
+  total: number;
+};
+
+export type CharacterSkillsModel = {
+  acrobatics: CharacterSkillModel;
+  athletics: CharacterSkillModel;
+  craft: CharacterSkillModel;
+  deception: CharacterSkillModel;
+  diplomacy: CharacterSkillModel;
+  discipline: CharacterSkillModel;
+  insight: CharacterSkillModel;
+  investigation: CharacterSkillModel;
+  knowledge: CharacterSkillModel;
+  linguistics: CharacterSkillModel;
+  medicine: CharacterSkillModel;
+  melee: CharacterSkillModel;
+  occultism: CharacterSkillModel;
+  orientation: CharacterSkillModel;
+  perception: CharacterSkillModel;
+  performance: CharacterSkillModel;
+  resistance: CharacterSkillModel;
+  stealth: CharacterSkillModel;
+  survival: CharacterSkillModel;
+  thievery: CharacterSkillModel;
 };
 
 export type CharacterSpeedsModel = {
@@ -245,6 +276,12 @@ export type ReplaceCharacterPayload = {
 export type SearchCharactersPayload = SearchPayload & {
   playerName?: string;
   sort: CharacterSortOption[];
+};
+
+export type SkillPointsModel = {
+  available: number;
+  spent: number;
+  remaining: number;
 };
 
 export type SkillRankModel = {

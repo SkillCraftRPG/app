@@ -153,6 +153,23 @@
     "label": "Nom du joueur"
   },
   "progression": "Progression",
+  "skills": {
+    "bonus": "Bonus",
+    "detail": "Détails",
+    "neutral": "Neutre",
+    "rank": {
+      "format": "Rang : {rank}",
+      "increase": "Augmenter",
+      "increased": "Le rang de la compétence a été augmenté.",
+      "label": "Rang",
+      "trained": "Rang avec formation : {rank} ({bonus})",
+      "untrained": "Rang sans formation : {rank} ({bonus})",
+      "updated": "Le rang de la compétence a été modifié."
+    },
+    "remainingPoints": "Point restant : {n} | Point restant : {n} | Points restant : {n}",
+    "totalFormat": "Total : {bonus} / {neutral}",
+    "trained": "Formation"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

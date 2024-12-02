@@ -69,7 +69,7 @@ onMounted(async () => {
           <CharacterSpeeds :character="character" />
         </TarTab>
         <TarTab id="skills" :title="t('game.skills')">
-          <CharacterSkills />
+          <CharacterSkills :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.list')">
           <CharacterLanguages :character="character" @error="handleError" @updated="onUpdated" />
