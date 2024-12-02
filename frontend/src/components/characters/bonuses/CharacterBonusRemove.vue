@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 
 import { TarButton } from "logitar-vue3-ui";
 import type { BonusModel, CharacterModel } from "@/types/characters";
-import { removeBonus } from "@/api/characters";
+import { removeCharacterBonus } from "@/api/characters";
 import { useToastStore } from "@/stores/toast";
 
 const toasts = useToastStore();
@@ -38,7 +38,7 @@ async function onRemove(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      const character: CharacterModel = await removeBonus(props.character.id, props.bonus.id);
+      const character: CharacterModel = await removeCharacterBonus(props.character.id, props.bonus.id);
       toasts.success("characters.bonuses.removed");
       emit("updated", character);
     } catch (e: unknown) {
