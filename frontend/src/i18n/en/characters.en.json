@@ -153,6 +153,23 @@
     "label": "Player Name"
   },
   "progression": "Progression",
+  "skills": {
+    "bonus": "Bonus",
+    "detail": "Detail",
+    "neutral": "Neutral",
+    "rank": {
+      "format": "Rank: {rank}",
+      "increase": "Increase",
+      "increased": "The skill rank has been increased.",
+      "label": "Rank",
+      "trained": "Rank with training: {rank} ({bonus})",
+      "untrained": "Rank without training: {rank} ({bonus})",
+      "updated": "The skill rank has been updated."
+    },
+    "remainingPoints": "Remaining point: {n} | Remaining point: {n} | Remaining points: {n}",
+    "totalFormat": "Total: {bonus} / {neutral}",
+    "trained": "Trained"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",

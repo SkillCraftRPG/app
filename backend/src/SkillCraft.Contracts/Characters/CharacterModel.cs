@@ -45,7 +45,9 @@ public class CharacterModel : Aggregate
   public List<CharacterTalentModel> Talents { get; set; } = [];
   public TalentPointsModel TalentPoints { get; set; } = new();
 
+  public int MaximumSkillRank { get; set; }
   public List<SkillRankModel> SkillRanks { get; set; } = [];
+  public SkillPointsModel SkillPoints { get; set; } = new();
 
   public List<InventoryModel> Inventory { get; set; } = [];
 
@@ -54,6 +56,7 @@ public class CharacterModel : Aggregate
 
   public CharacterAttributesModel Attributes { get; set; } = new();
   public CharacterStatisticsModel Statistics { get; set; } = new();
+  public CharacterSkillsModel Skills { get; set; } = new();
   public CharacterSpeedsModel Speeds { get; set; } = new();
 
   public override string ToString() => $"{Name} | {base.ToString()}";
