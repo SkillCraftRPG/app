@@ -9,7 +9,7 @@ using Attribute = SkillCraft.Contracts.Attribute;
 namespace SkillCraft.Application.Characters.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class SetCharacterBonusCommandHandlerTests
+public class SaveCharacterBonusCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
@@ -18,11 +18,11 @@ public class SetCharacterBonusCommandHandlerTests
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
 
-  private readonly SetCharacterBonusCommandHandler _handler;
+  private readonly SaveCharacterBonusCommandHandler _handler;
 
   private readonly WorldMock _world = new();
 
-  public SetCharacterBonusCommandHandlerTests()
+  public SaveCharacterBonusCommandHandlerTests()
   {
     _handler = new(_characterQuerier.Object, _characterRepository.Object, _permissionService.Object, _sender.Object);
   }
@@ -43,7 +43,7 @@ public class SetCharacterBonusCommandHandlerTests
       Precision = " Item: Belt of Stone Giant Strength ",
       Notes = "  Granted by the item \"Belt of Stone Giant Strength\"  "
     };
-    SetCharacterBonusCommand command = new(character.EntityId, bonusId, payload);
+    SaveCharacterBonusCommand command = new(character.EntityId, bonusId, payload);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -90,7 +90,7 @@ public class SetCharacterBonusCommandHandlerTests
       Precision = " Item: Belt of Stone Giant Strength ",
       Notes = "  Granted by the item \"Belt of Stone Giant Strength\"  "
     };
-    SetCharacterBonusCommand command = new(character.EntityId, bonusId, payload);
+    SaveCharacterBonusCommand command = new(character.EntityId, bonusId, payload);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -118,7 +118,7 @@ public class SetCharacterBonusCommandHandlerTests
   public async Task It_should_return_null_when_the_character_could_not_be_found()
   {
     BonusPayload payload = new(BonusCategory.Skill, Skill.Melee.ToString(), value: +2);
-    SetCharacterBonusCommand command = new(Guid.Empty, Guid.Empty, payload);
+    SaveCharacterBonusCommand command = new(Guid.Empty, Guid.Empty, payload);
     command.Contextualize(_world);
 
     CharacterModel? character = await _handler.Handle(command, _cancellationToken);

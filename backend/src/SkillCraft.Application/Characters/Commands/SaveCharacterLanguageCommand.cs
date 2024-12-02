@@ -12,12 +12,12 @@ using SkillCraft.Domain.Worlds;
 
 namespace SkillCraft.Application.Characters.Commands;
 
-public record SetCharacterLanguageCommand(Guid CharacterId, Guid LanguageId, CharacterLanguagePayload Payload) : Activity, IRequest<CharacterModel?>;
+public record SaveCharacterLanguageCommand(Guid CharacterId, Guid LanguageId, CharacterLanguagePayload Payload) : Activity, IRequest<CharacterModel?>;
 
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="ValidationException"></exception>
-internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacterLanguageCommand, CharacterModel?>
+internal class SaveCharacterLanguageCommandHandler : IRequestHandler<SaveCharacterLanguageCommand, CharacterModel?>
 {
   private readonly ICharacterQuerier _characterQuerier;
   private readonly ICharacterRepository _characterRepository;
@@ -25,7 +25,7 @@ internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacter
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
-  public SetCharacterLanguageCommandHandler(
+  public SaveCharacterLanguageCommandHandler(
     ICharacterQuerier characterQuerier,
     ICharacterRepository characterRepository,
     ILanguageRepository languageRepository,
@@ -39,7 +39,7 @@ internal class SetCharacterLanguageCommandHandler : IRequestHandler<SetCharacter
     _sender = sender;
   }
 
-  public async Task<CharacterModel?> Handle(SetCharacterLanguageCommand command, CancellationToken cancellationToken)
+  public async Task<CharacterModel?> Handle(SaveCharacterLanguageCommand command, CancellationToken cancellationToken)
   {
     CharacterLanguagePayload payload = command.Payload;
     new CharacterLanguageValidator().ValidateAndThrow(payload);

@@ -22,9 +22,9 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="TalentNotFoundException"></exception>
 /// <exception cref="TalentTierCannotExceedCharacterTierException"></exception>
 /// <exception cref="ValidationException"></exception>
-public record SetCharacterTalentCommand(Guid CharacterId, Guid? RelationId, CharacterTalentPayload Payload) : Activity, IRequest<CharacterModel?>;
+public record SaveCharacterTalentCommand(Guid CharacterId, Guid? RelationId, CharacterTalentPayload Payload) : Activity, IRequest<CharacterModel?>;
 
-internal class SetCharacterTalentCommandHandler : IRequestHandler<SetCharacterTalentCommand, CharacterModel?>
+internal class SaveCharacterTalentCommandHandler : IRequestHandler<SaveCharacterTalentCommand, CharacterModel?>
 {
   private readonly ICharacterQuerier _characterQuerier;
   private readonly ICharacterRepository _characterRepository;
@@ -32,7 +32,7 @@ internal class SetCharacterTalentCommandHandler : IRequestHandler<SetCharacterTa
   private readonly ISender _sender;
   private readonly ITalentRepository _talentRepository;
 
-  public SetCharacterTalentCommandHandler(
+  public SaveCharacterTalentCommandHandler(
     ICharacterQuerier characterQuerier,
     ICharacterRepository characterRepository,
     IPermissionService permissionService,
@@ -46,7 +46,7 @@ internal class SetCharacterTalentCommandHandler : IRequestHandler<SetCharacterTa
     _talentRepository = talentRepository;
   }
 
-  public async Task<CharacterModel?> Handle(SetCharacterTalentCommand command, CancellationToken cancellationToken)
+  public async Task<CharacterModel?> Handle(SaveCharacterTalentCommand command, CancellationToken cancellationToken)
   {
     CharacterTalentPayload payload = command.Payload;
     new CharacterTalentValidator().ValidateAndThrow(payload);

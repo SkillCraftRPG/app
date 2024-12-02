@@ -29,14 +29,14 @@ public class CharacterController : ControllerBase
   [HttpPost("{characterId}/bonuses")]
   public async Task<ActionResult<CharacterModel>> AddBonusAsync(Guid characterId, [FromBody] BonusPayload payload, CancellationToken cancellationToken)
   {
-    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterBonusCommand(characterId, BonusId: null, payload), cancellationToken);
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SaveCharacterBonusCommand(characterId, BonusId: null, payload), cancellationToken);
     return GetActionResult(character);
   }
 
   [HttpPost("{characterId}/talents")]
   public async Task<ActionResult<CharacterModel>> AddTalentAsync(Guid characterId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
   {
-    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterTalentCommand(characterId, RelationId: null, payload), cancellationToken);
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SaveCharacterTalentCommand(characterId, RelationId: null, payload), cancellationToken);
     return GetActionResult(character);
   }
 
@@ -110,32 +110,32 @@ public class CharacterController : ControllerBase
     return GetActionResult(character);
   }
 
+  [HttpPut("{characterId}/bonuses/{bonusId}")]
+  public async Task<ActionResult<CharacterModel>> SaveBonusAsync(Guid characterId, Guid bonusId, [FromBody] BonusPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SaveCharacterBonusCommand(characterId, bonusId, payload), cancellationToken);
+    return GetActionResult(character);
+  }
+
+  [HttpPut("{characterId}/languages/{languageId}")]
+  public async Task<ActionResult<CharacterModel>> SaveLanguageAsync(Guid characterId, Guid languageId, [FromBody] CharacterLanguagePayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SaveCharacterLanguageCommand(characterId, languageId, payload), cancellationToken);
+    return GetActionResult(character);
+  }
+
+  [HttpPut("{characterId}/talents/{relationId}")]
+  public async Task<ActionResult<CharacterModel>> SaveTalentAsync(Guid characterId, Guid relationId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
+  {
+    CharacterModel? character = await _pipeline.ExecuteAsync(new SaveCharacterTalentCommand(characterId, relationId, payload), cancellationToken);
+    return GetActionResult(character);
+  }
+
   [HttpGet]
   public async Task<ActionResult<SearchResults<CharacterModel>>> SearchAsync([FromQuery] SearchCharactersParameters parameters, CancellationToken cancellationToken)
   {
     SearchResults<CharacterModel> characters = await _pipeline.ExecuteAsync(new SearchCharactersQuery(parameters.ToPayload()), cancellationToken);
     return Ok(characters);
-  }
-
-  [HttpPut("{characterId}/bonuses/{bonusId}")]
-  public async Task<ActionResult<CharacterModel>> SetBonusAsync(Guid characterId, Guid bonusId, [FromBody] BonusPayload payload, CancellationToken cancellationToken)
-  {
-    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterBonusCommand(characterId, bonusId, payload), cancellationToken);
-    return GetActionResult(character);
-  }
-
-  [HttpPut("{characterId}/languages/{languageId}")]
-  public async Task<ActionResult<CharacterModel>> SetLanguageAsync(Guid characterId, Guid languageId, [FromBody] CharacterLanguagePayload payload, CancellationToken cancellationToken)
-  {
-    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterLanguageCommand(characterId, languageId, payload), cancellationToken);
-    return GetActionResult(character);
-  }
-
-  [HttpPut("{characterId}/talents/{relationId}")]
-  public async Task<ActionResult<CharacterModel>> SetTalentAsync(Guid characterId, Guid relationId, [FromBody] CharacterTalentPayload payload, CancellationToken cancellationToken)
-  {
-    CharacterModel? character = await _pipeline.ExecuteAsync(new SetCharacterTalentCommand(characterId, relationId, payload), cancellationToken);
-    return GetActionResult(character);
   }
 
   [HttpPatch("{id}")]
