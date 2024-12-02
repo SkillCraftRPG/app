@@ -16,7 +16,7 @@ import SpeedSelect from "@/components/game/SpeedSelect.vue";
 import StatisticSelect from "@/components/game/StatisticSelect.vue";
 import type { Attribute, Skill, Speed, Statistic } from "@/types/game";
 import type { BonusCategory, BonusModel, BonusPayload, CharacterModel, MiscellaneousBonusTarget } from "@/types/characters";
-import { addBonus, saveBonus } from "@/api/characters";
+import { addCharacterBonus, saveCharacterBonus } from "@/api/characters";
 import { useToastStore } from "@/stores/toast";
 
 const toasts = useToastStore();
@@ -129,10 +129,10 @@ const onSubmit = handleSubmit(async () => {
       };
       let character: CharacterModel | undefined = undefined;
       if (props.bonus) {
-        character = await saveBonus(props.character.id, props.bonus.id, payload);
+        character = await saveCharacterBonus(props.character.id, props.bonus.id, payload);
         toasts.success("characters.bonuses.edited");
       } else {
-        character = await addBonus(props.character.id, payload);
+        character = await addCharacterBonus(props.character.id, payload);
         toasts.success("characters.bonuses.added");
       }
       emit("updated", character);

@@ -19,7 +19,7 @@ function createUrlBuilder(id?: string): urlUtils.IUrlBuilder {
   return id ? new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id) : new urlUtils.UrlBuilder({ path: "/characters" });
 }
 
-export async function addBonus(characterId: string, payload: BonusPayload): Promise<CharacterModel> {
+export async function addCharacterBonus(characterId: string, payload: BonusPayload): Promise<CharacterModel> {
   const url: string = new urlUtils.UrlBuilder().setPath("/characters/{characterId}/bonuses").setParameter("characterId", characterId).buildRelative();
   return (await post<BonusPayload, CharacterModel>(url, payload)).data;
 }
@@ -62,7 +62,7 @@ export async function readCharacter(id: string): Promise<CharacterModel> {
   return (await get<CharacterModel>(url)).data;
 }
 
-export async function removeBonus(characterId: string, bonusId: string): Promise<CharacterModel> {
+export async function removeCharacterBonus(characterId: string, bonusId: string): Promise<CharacterModel> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/bonuses/{bonusId}" })
     .setParameter("characterId", characterId)
     .setParameter("bonusId", bonusId)
@@ -93,7 +93,7 @@ export async function replaceCharacter(id: string, payload: ReplaceCharacterPayl
   return (await put<ReplaceCharacterPayload, CharacterModel>(url, payload)).data;
 }
 
-export async function saveBonus(characterId: string, bonusId: string, payload: BonusPayload): Promise<CharacterModel> {
+export async function saveCharacterBonus(characterId: string, bonusId: string, payload: BonusPayload): Promise<CharacterModel> {
   const url: string = new urlUtils.UrlBuilder()
     .setPath("/characters/{characterId}/bonuses/{bonusId}")
     .setParameter("characterId", characterId)
