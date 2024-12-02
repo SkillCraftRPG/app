@@ -60,7 +60,7 @@ onMounted(async () => {
       />
       <StatusDetail :aggregate="character" />
       <TarTabs>
-        <TarTab id="characteristics" :title="t('characters.characteristics')">
+        <TarTab active id="characteristics" :title="t('characters.characteristics')">
           <CharacterCharacteristics :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="abilities" :title="t('characters.abilities')">
@@ -68,7 +68,7 @@ onMounted(async () => {
           <CharacterStatistics :character="character" />
           <CharacterSpeeds :character="character" />
         </TarTab>
-        <TarTab active id="skills" :title="t('game.skills')">
+        <TarTab id="skills" :title="t('game.skills')">
           <CharacterSkills :character="character" @error="handleError" @updated="onUpdated" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.list')">
