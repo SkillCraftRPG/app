@@ -10,7 +10,7 @@ using SkillCraft.Domain.Languages;
 namespace SkillCraft.Application.Characters.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class SetCharacterLanguageCommandHandlerTests
+public class SaveCharacterLanguageCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
@@ -20,11 +20,11 @@ public class SetCharacterLanguageCommandHandlerTests
   private readonly Mock<IPermissionService> _permissionService = new();
   private readonly Mock<ISender> _sender = new();
 
-  private readonly SetCharacterLanguageCommandHandler _handler;
+  private readonly SaveCharacterLanguageCommandHandler _handler;
 
   private readonly WorldMock _world = new();
 
-  public SetCharacterLanguageCommandHandlerTests()
+  public SaveCharacterLanguageCommandHandlerTests()
   {
     _handler = new(_characterQuerier.Object, _characterRepository.Object, _languageRepository.Object, _permissionService.Object, _sender.Object);
   }
@@ -42,7 +42,7 @@ public class SetCharacterLanguageCommandHandlerTests
     {
       Notes = "  Level 1  "
     };
-    SetCharacterLanguageCommand command = new(character.EntityId, language.EntityId, payload);
+    SaveCharacterLanguageCommand command = new(character.EntityId, language.EntityId, payload);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -76,7 +76,7 @@ public class SetCharacterLanguageCommandHandlerTests
     {
       Notes = "  Level 1  "
     };
-    SetCharacterLanguageCommand command = new(character.EntityId, language.EntityId, payload);
+    SaveCharacterLanguageCommand command = new(character.EntityId, language.EntityId, payload);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -100,7 +100,7 @@ public class SetCharacterLanguageCommandHandlerTests
   public async Task It_should_return_null_when_the_character_could_not_be_found()
   {
     CharacterLanguagePayload payload = new();
-    SetCharacterLanguageCommand command = new(Guid.Empty, Guid.Empty, payload);
+    SaveCharacterLanguageCommand command = new(Guid.Empty, Guid.Empty, payload);
     command.Contextualize(_world);
 
     CharacterModel? character = await _handler.Handle(command, _cancellationToken);
@@ -114,7 +114,7 @@ public class SetCharacterLanguageCommandHandlerTests
     _characterRepository.Setup(x => x.LoadAsync(character.Id, _cancellationToken)).ReturnsAsync(character);
 
     CharacterLanguagePayload payload = new();
-    SetCharacterLanguageCommand command = new(character.EntityId, Guid.Empty, payload);
+    SaveCharacterLanguageCommand command = new(character.EntityId, Guid.Empty, payload);
     command.Contextualize(_world);
 
     CharacterModel? result = await _handler.Handle(command, _cancellationToken);

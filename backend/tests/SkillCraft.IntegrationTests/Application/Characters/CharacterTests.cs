@@ -585,7 +585,7 @@ public class CharacterTests : IntegrationTests
       Precision = " Item: Belt of Stone Giant Strength ",
       Notes = "  Granted by the item \"Belt of Stone Giant Strength\"  "
     };
-    SetCharacterBonusCommand command = new(_stentor.EntityId, bonusId, payload);
+    SaveCharacterBonusCommand command = new(_stentor.EntityId, bonusId, payload);
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
@@ -612,7 +612,7 @@ public class CharacterTests : IntegrationTests
     {
       Notes = "  Level 1  "
     };
-    SetCharacterLanguageCommand command = new(_kassandra.EntityId, _cassite.EntityId, payload);
+    SaveCharacterLanguageCommand command = new(_kassandra.EntityId, _cassite.EntityId, payload);
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);
@@ -640,7 +640,7 @@ public class CharacterTests : IntegrationTests
       Precision = " Melee ",
       Notes = "  Discounted by Aspect: Farouche  "
     };
-    SetCharacterTalentCommand command = new(_kassandra.EntityId, relationId, payload);
+    SaveCharacterTalentCommand command = new(_kassandra.EntityId, relationId, payload);
     CharacterModel? character = await Pipeline.ExecuteAsync(command);
 
     Assert.NotNull(character);

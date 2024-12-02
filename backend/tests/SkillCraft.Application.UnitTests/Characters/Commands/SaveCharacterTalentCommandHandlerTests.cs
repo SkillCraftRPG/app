@@ -13,7 +13,7 @@ using SkillCraft.Domain.Talents;
 namespace SkillCraft.Application.Characters.Commands;
 
 [Trait(Traits.Category, Categories.Unit)]
-public class SetCharacterTalentCommandHandlerTests
+public class SaveCharacterTalentCommandHandlerTests
 {
   private readonly CancellationToken _cancellationToken = default;
 
@@ -23,12 +23,12 @@ public class SetCharacterTalentCommandHandlerTests
   private readonly Mock<ISender> _sender = new();
   private readonly Mock<ITalentRepository> _talentRepository = new();
 
-  private readonly SetCharacterTalentCommandHandler _handler;
+  private readonly SaveCharacterTalentCommandHandler _handler;
 
   private readonly WorldMock _world = new();
   private readonly Talent _occultisme;
 
-  public SetCharacterTalentCommandHandlerTests()
+  public SaveCharacterTalentCommandHandlerTests()
   {
     _handler = new(_characterQuerier.Object, _characterRepository.Object, _permissionService.Object, _sender.Object, _talentRepository.Object);
 
@@ -57,7 +57,7 @@ public class SetCharacterTalentCommandHandlerTests
       Precision = " Esprit ",
       Notes = "  Discounted by Aspect: Tenace  "
     };
-    SetCharacterTalentCommand command = new(character.EntityId, relationId, payload);
+    SaveCharacterTalentCommand command = new(character.EntityId, relationId, payload);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -92,7 +92,7 @@ public class SetCharacterTalentCommandHandlerTests
       Precision = " Esprit ",
       Notes = "  Discounted by Aspect: Tenace  "
     };
-    SetCharacterTalentCommand command = new(character.EntityId, relationId, payload);
+    SaveCharacterTalentCommand command = new(character.EntityId, relationId, payload);
     command.Contextualize(_world);
 
     CharacterModel model = new();
@@ -118,7 +118,7 @@ public class SetCharacterTalentCommandHandlerTests
     {
       TalentId = Guid.NewGuid()
     };
-    SetCharacterTalentCommand command = new(Guid.Empty, RelationId: null, payload);
+    SaveCharacterTalentCommand command = new(Guid.Empty, RelationId: null, payload);
     command.Contextualize(_world);
 
     CharacterModel? character = await _handler.Handle(command, _cancellationToken);
@@ -139,7 +139,7 @@ public class SetCharacterTalentCommandHandlerTests
     {
       TalentId = Guid.NewGuid()
     };
-    SetCharacterTalentCommand command = new(character.EntityId, relationId, payload);
+    SaveCharacterTalentCommand command = new(character.EntityId, relationId, payload);
     command.Contextualize(_world);
 
     var exception = await Assert.ThrowsAsync<TalentNotFoundException>(async () => await _handler.Handle(command, _cancellationToken));
@@ -159,7 +159,7 @@ public class SetCharacterTalentCommandHandlerTests
       Cost = -1,
       Precision = RandomStringGenerator.GetString(1000)
     };
-    SetCharacterTalentCommand command = new(Guid.Empty, RelationId: null, payload);
+    SaveCharacterTalentCommand command = new(Guid.Empty, RelationId: null, payload);
     command.Contextualize(_world);
 
     var exception = await Assert.ThrowsAsync<ValidationException>(async () => await _handler.Handle(command, _cancellationToken));

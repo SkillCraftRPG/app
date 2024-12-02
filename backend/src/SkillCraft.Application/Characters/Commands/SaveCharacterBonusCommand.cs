@@ -12,16 +12,16 @@ namespace SkillCraft.Application.Characters.Commands;
 /// <exception cref="NotEnoughAvailableStorageException"></exception>
 /// <exception cref="PermissionDeniedException"></exception>
 /// <exception cref="ValidationException"></exception>
-public record SetCharacterBonusCommand(Guid CharacterId, Guid? BonusId, BonusPayload Payload) : Activity, IRequest<CharacterModel?>;
+public record SaveCharacterBonusCommand(Guid CharacterId, Guid? BonusId, BonusPayload Payload) : Activity, IRequest<CharacterModel?>;
 
-internal class SetCharacterBonusCommandHandler : IRequestHandler<SetCharacterBonusCommand, CharacterModel?>
+internal class SaveCharacterBonusCommandHandler : IRequestHandler<SaveCharacterBonusCommand, CharacterModel?>
 {
   private readonly ICharacterQuerier _characterQuerier;
   private readonly ICharacterRepository _characterRepository;
   private readonly IPermissionService _permissionService;
   private readonly ISender _sender;
 
-  public SetCharacterBonusCommandHandler(
+  public SaveCharacterBonusCommandHandler(
     ICharacterQuerier characterQuerier,
     ICharacterRepository characterRepository,
     IPermissionService permissionService,
@@ -33,7 +33,7 @@ internal class SetCharacterBonusCommandHandler : IRequestHandler<SetCharacterBon
     _sender = sender;
   }
 
-  public async Task<CharacterModel?> Handle(SetCharacterBonusCommand command, CancellationToken cancellationToken)
+  public async Task<CharacterModel?> Handle(SaveCharacterBonusCommand command, CancellationToken cancellationToken)
   {
     BonusPayload payload = command.Payload;
     new BonusValidator().ValidateAndThrow(payload);
