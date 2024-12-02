@@ -2,15 +2,15 @@
 import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 
+import AspectIcon from "./AspectIcon.vue";
 import EditIcon from "@/components/shared/EditIcon.vue";
-import LineageIcon from "./LineageIcon.vue";
-import type { LineageModel } from "@/types/lineages";
+import type { AspectModel } from "@/types/aspects";
 
 const { parseBoolean } = parsingUtils;
 
 const props = defineProps<{
+  aspect: AspectModel;
   edit?: boolean | string;
-  lineage: LineageModel;
 }>();
 
 const target = computed<"_blank" | undefined>(() => (parseBoolean(props.edit) ? undefined : "_blank"));
@@ -18,11 +18,11 @@ const target = computed<"_blank" | undefined>(() => (parseBoolean(props.edit) ? 
 
 <template>
   <span>
-    <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }" :target="target">
+    <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }" :target="target">
       <EditIcon v-if="parseBoolean(edit)" />
-      <LineageIcon v-else />
+      <AspectIcon v-else />
     </RouterLink>
     {{ " " }}
-    <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }" :target="target">{{ lineage.name }}</RouterLink>
+    <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }" :target="target">{{ aspect.name }}</RouterLink>
   </span>
 </template>

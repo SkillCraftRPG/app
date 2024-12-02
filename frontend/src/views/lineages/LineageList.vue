@@ -11,6 +11,7 @@ import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLineage from "@/components/lineages/CreateLineage.vue";
 import LanguageSelect from "@/components/languages/LanguageSelect.vue";
+import LineageLink from "@/components/lineages/LineageLink.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SizeCategorySelect from "@/components/game/SizeCategorySelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -182,7 +183,7 @@ watch(
         <tbody>
           <tr v-for="lineage in lineages" :key="lineage.id">
             <td>
-              <RouterLink :to="{ name: 'LineageEdit', params: { id: lineage.id } }"><font-awesome-icon icon="fas fa-edit" />{{ lineage.name }}</RouterLink>
+              <LineageLink edit :lineage="lineage" />
             </td>
             <td>{{ t(`game.size.categories.${lineage.size.category}`) }}</td>
             <td><StatusBlock :actor="lineage.updatedBy" :date="lineage.updatedOn" /></td>

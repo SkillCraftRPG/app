@@ -7,6 +7,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
+import AspectLink from "@/components/aspects/AspectLink.vue";
 import AttributeSelect from "@/components/game/AttributeSelect.vue";
 import AttributesBlock from "@/components/aspects/AttributesBlock.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
@@ -180,7 +181,7 @@ watch(
         <tbody>
           <tr v-for="aspect in aspects" :key="aspect.id">
             <td>
-              <RouterLink :to="{ name: 'AspectEdit', params: { id: aspect.id } }"><font-awesome-icon icon="fas fa-edit" />{{ aspect.name }}</RouterLink>
+              <AspectLink :aspect="aspect" edit />
             </td>
             <td><AttributesBlock :aspect="aspect" /></td>
             <td><AttributesBlock :aspect="aspect" optional /></td>

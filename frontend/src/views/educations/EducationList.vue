@@ -9,6 +9,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateEducation from "@/components/educations/CreateEducation.vue";
+import EducationLink from "@/components/educations/EducationLink.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -169,9 +170,7 @@ watch(
         <tbody>
           <tr v-for="education in educations" :key="education.id">
             <td>
-              <RouterLink :to="{ name: 'EducationEdit', params: { id: education.id } }">
-                <font-awesome-icon icon="fas fa-edit" />{{ education.name }}
-              </RouterLink>
+              <EducationLink edit :education="education" />
             </td>
             <td>{{ education.skill ? t(`game.skill.options.${education.skill}`) : "—" }}</td>
             <td>{{ education.wealthMultiplier ? `×${education.wealthMultiplier}` : "—" }}</td>

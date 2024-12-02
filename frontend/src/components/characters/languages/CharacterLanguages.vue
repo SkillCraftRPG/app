@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 import CharacterLanguageEdit from "./CharacterLanguageEdit.vue";
 import CharacterLanguageRemove from "./CharacterLanguageRemove.vue";
 import LanguageCard from "@/components/languages/LanguageCard.vue";
-import LanguageIcon from "@/components/languages/LanguageIcon.vue";
+import LanguageLink from "@/components/languages/LanguageLink.vue";
 import ScriptIcon from "@/components/languages/ScriptIcon.vue";
 import type { CharacterModel } from "@/types/characters";
 import type { LanguageModel } from "@/types/languages";
@@ -57,7 +57,7 @@ defineEmits<{
       <tbody>
         <tr v-for="item in character.languages" :key="item.language.id">
           <td>
-            <RouterLink :to="{ name: 'LanguageEdit', params: { id: item.language.id } }" target="_blank"><LanguageIcon />{{ item.language.name }}</RouterLink>
+            <LanguageLink :language="item.language" />
             <br />
             <ScriptIcon /> {{ item.language.script ?? "—" }}
           </td>

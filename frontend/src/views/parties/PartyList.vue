@@ -9,6 +9,7 @@ import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateParty from "@/components/parties/CreateParty.vue";
+import PartyLink from "@/components/parties/PartyLink.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
@@ -159,9 +160,7 @@ watch(
         </thead>
         <tbody>
           <tr v-for="party in parties" :key="party.id">
-            <td>
-              <RouterLink :to="{ name: 'PartyEdit', params: { id: party.id } }"><font-awesome-icon icon="fas fa-edit" />{{ party.name }}</RouterLink>
-            </td>
+            <td><PartyLink edit :party="party" /></td>
             <td><StatusBlock :actor="party.updatedBy" :date="party.updatedOn" /></td>
           </tr>
         </tbody>

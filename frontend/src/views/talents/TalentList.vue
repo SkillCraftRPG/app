@@ -12,7 +12,7 @@ import CreateTalent from "@/components/talents/CreateTalent.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
-import TalentIcon from "@/components/talents/TalentIcon.vue";
+import TalentLink from "@/components/talents/TalentLink.vue";
 import TalentSelect from "@/components/talents/TalentSelect.vue";
 import TierSelect from "@/components/shared/TierSelect.vue";
 import YesNoSelect from "@/components/shared/YesNoSelect.vue";
@@ -227,13 +227,11 @@ watch(
         <tbody>
           <tr v-for="talent in talents" :key="talent.id">
             <td>
-              <RouterLink :to="{ name: 'TalentEdit', params: { id: talent.id } }"> <font-awesome-icon icon="fas fa-edit" />{{ talent.name }} </RouterLink>
+              <TalentLink edit :talent="talent" />
             </td>
             <td>{{ talent.tier }}</td>
             <td>
-              <RouterLink v-if="talent.requiredTalent" :to="{ name: 'TalentEdit', params: { id: talent.requiredTalent.id } }" target="_blank">
-                <TalentIcon />{{ talent.requiredTalent.name }}
-              </RouterLink>
+              <TalentLink v-if="talent.requiredTalent" :talent="talent.requiredTalent" />
               <template v-else>{{ "—" }}</template>
             </td>
             <td>{{ talent.skill ? t(`game.skill.options.${talent.skill}`) : "—" }}</td>

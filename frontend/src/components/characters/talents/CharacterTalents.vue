@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 
 import CharacterTalentEdit from "./CharacterTalentEdit.vue";
 import CharacterTalentRemove from "./CharacterTalentRemove.vue";
-import TalentIcon from "@/components/talents/TalentIcon.vue";
+import TalentLink from "@/components/talents/TalentLink.vue";
 import type { CharacterModel, CharacterTalentModel } from "@/types/characters";
 import type { SearchResults } from "@/types/search";
 import type { SearchTalentsPayload, TalentModel } from "@/types/talents";
@@ -83,7 +83,7 @@ onMounted(async () => {
           <td>{{ talent.talent.tier }}</td>
           <td>{{ talent.cost }}</td>
           <td>
-            <RouterLink :to="{ name: 'TalentEdit', params: { id: talent.talent.id } }" target="_blank"><TalentIcon />{{ talent.talent.name }}</RouterLink>
+            <TalentLink :talent="talent.talent" />
           </td>
           <td>{{ talent.precision ?? "—" }}</td>
           <td class="notes">{{ talent.notes ?? "—" }}</td>

@@ -7,9 +7,10 @@ import { useRoute, useRouter } from "vue-router";
 
 import AppBreadcrumb from "@/components/shared/AppBreadcrumb.vue";
 import AppPagination from "@/components/shared/AppPagination.vue";
-import CasteIcon from "@/components/castes/CasteIcon.vue";
+import CasteLink from "@/components/castes/CasteLink.vue";
+import CharacterLink from "@/components/characters/CharacterLink.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
-import EducationIcon from "@/components/educations/EducationIcon.vue";
+import EducationLink from "@/components/educations/EducationLink.vue";
 import LineageLink from "@/components/lineages/LineageLink.vue";
 import NatureLink from "@/components/natures/NatureLink.vue";
 import PlayerSelect from "@/components/characters/PlayerSelect.vue";
@@ -168,9 +169,7 @@ watch(
         <tbody>
           <tr v-for="character in characters" :key="character.id">
             <td>
-              <RouterLink :to="{ name: 'CharacterEdit', params: { id: character.id } }">
-                <font-awesome-icon icon="fas fa-edit" />{{ character.name }}
-              </RouterLink>
+              <CharacterLink :character="character" edit />
               <template v-if="character.playerName">
                 <br />
                 <font-awesome-icon icon="fas fa-user" /> {{ character.playerName }}
@@ -189,11 +188,9 @@ watch(
               <LineageLink :lineage="character.lineage" />
             </td>
             <td>
-              <RouterLink :to="{ name: 'CasteEdit', params: { id: character.caste.id } }" target="_blank"> <CasteIcon />{{ character.caste.name }} </RouterLink>
+              <CasteLink :caste="character.caste" />
               <br />
-              <RouterLink :to="{ name: 'EducationEdit', params: { id: character.education.id } }" target="_blank">
-                <EducationIcon />{{ character.education.name }}
-              </RouterLink>
+              <EducationLink :education="character.education" />
             </td>
             <td><NatureLink :nature="character.nature" /></td>
             <td><StatusBlock :actor="character.updatedBy" :date="character.updatedOn" /></td>
