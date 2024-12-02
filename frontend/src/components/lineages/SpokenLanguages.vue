@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TarButton } from "logitar-vue3-ui";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ExtraLanguagesInput from "./ExtraLanguagesInput.vue";
@@ -18,7 +18,7 @@ const props = defineProps<{
 }>();
 
 const language = ref<LanguageModel>();
-const selectedLanguages = ref<LanguageModel[]>(props.languages ?? []);
+const selectedLanguages = ref<LanguageModel[]>([]);
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
@@ -52,6 +52,12 @@ function setText(text?: string): void {
   const payload: LanguagesPayload = { ...props.modelValue, text };
   emit("update:model-value", payload);
 }
+
+watch(
+  () => props.languages,
+  (languages) => (selectedLanguages.value = [...(languages ?? [])]),
+  { deep: true, immediate: true },
+);
 </script>
 
 <template>
