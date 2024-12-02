@@ -15,6 +15,7 @@ using SkillCraft.Contracts.Natures;
 using SkillCraft.Contracts.Parties;
 using SkillCraft.Contracts.Talents;
 using SkillCraft.Contracts.Worlds;
+using SkillCraft.Domain.Characters;
 using SkillCraft.Domain.Items;
 using SkillCraft.EntityFrameworkCore.Entities;
 
@@ -108,6 +109,7 @@ internal class Mapper
       Age = source.Age,
       BaseAttributes = source.GetBaseAttributes()
     };
+    destination.CanLevelUp = destination.Level < 20 && destination.Experience >= ExperienceTable.GetTotalExperience(destination.Level + 1);
 
     if (source.Lineage != null)
     {

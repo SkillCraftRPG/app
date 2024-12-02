@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { TarButton } from "logitar-vue3-ui";
 import { computed, ref, watch } from "vue";
 import { useForm } from "vee-validate";
+import { useI18n } from "vue-i18n";
 
 import AgeRollInput from "@/components/characters/AgeRollInput.vue";
 import BloodAlcoholContentInput from "./BloodAlcoholContentInput.vue";
@@ -9,6 +11,7 @@ import CharacterCaste from "./CharacterCaste.vue";
 import CharacterCustomizations from "./CharacterCustomizations.vue";
 import CharacterEducation from "./CharacterEducation.vue";
 import CharacterLevel from "./CharacterLevel.vue";
+import CharacterLevelUp from "@/components/characters/levelUp/CharacterLevelUp.vue";
 import CharacterLineage from "./CharacterLineage.vue";
 import CharacterNature from "./CharacterNature.vue";
 import CharacterTier from "./CharacterTier.vue";
@@ -25,6 +28,7 @@ import { replaceCharacter } from "@/api/characters";
 import { useToastStore } from "@/stores/toast";
 
 const toasts = useToastStore();
+const { t } = useI18n();
 
 const props = defineProps<{
   character: CharacterModel;
@@ -126,7 +130,16 @@ watch(() => props.character, setModel, { deep: true, immediate: true });
       <div class="row">
         <ExperienceInput class="col" :level="character.level" v-model="experience" />
         <CharacterLevel class="col" :character="character">
-          <!-- TODO(fpion): Level-Up! -->
+          <template #append>
+            <TarButton
+              :disabled="!character.canLevelUp"
+              icon="fas fa-trophy"
+              :text="t('characters.levelUp.label')"
+              variant="success"
+              data-bs-toggle="modal"
+              data-bs-target="#level-up-characteristics"
+            />
+          </template>
         </CharacterLevel>
         <CharacterTier class="col" :character="character" />
       </div>
@@ -143,5 +156,6 @@ watch(() => props.character, setModel, { deep: true, immediate: true });
       </div>
     </form>
     <CharacterCustomizations :character="character" />
+    <CharacterLevelUp :character="character" id="level-up-characteristics" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
   </div>
 </template>

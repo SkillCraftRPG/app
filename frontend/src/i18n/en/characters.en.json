@@ -131,11 +131,15 @@
     "label": "Level"
   },
   "levelUp": {
-    "cancel": "TODO",
-    "empty": "This list is empty.",
-    "label": "Level-Up!"
+    "cancel": {
+      "confirm": "Do you really want to cancel the following Level-Up?",
+      "label": "Cancel Level-Up"
+    },
+    "empty": "The character's level is 0.",
+    "label": "Level-Up!",
+    "maximumScoreReached": "The attribute maximum score has been reached."
   },
-  "levelUpCancelled": "TODO",
+  "levelUpCancelled": "The Level-Up has been cancelled.",
   "leveledUp": "The character has been leveled-up.",
   "levels": {
     "label": "Levels"
