@@ -16,25 +16,44 @@
       </Transition>
     </div>
     <LayoutFooter id="footer" />
+    <TarToaster :toasts="toasts.toasts" @hidden="toasts.remove" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterView } from "vue-router";
-import { handleErrorKey } from "./inject";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import { onBeforeUnmount, onMounted, provide, ref } from "vue";
 
 import LayoutFooter from "./components/layout/LayoutFooter.vue";
 import LayoutNavbar from "./components/layout/LayoutNavbar.vue";
+import TarToaster from "@/components/tar/TarToaster.vue";
+import { StatusCodes, type ApiFailure } from "./types/api.ts";
+import { handleErrorKey } from "./inject";
+import { useAccountStore } from "./stores/account";
+import { useToastStore } from "./stores/toast";
+
+const account = useAccountStore();
+const route = useRoute();
+const router = useRouter();
+const toasts = useToastStore();
 
 const footerOverlap = ref<number>(0);
 const showScrollTop = ref<boolean>(false);
 
 function handleError(e: unknown): void {
   if (e) {
-    console.error(e);
+    const { status } = e as ApiFailure;
+    if (status === StatusCodes.Unauthorized) {
+      account.signOut();
+      toasts.warning("toasts.warning.signedOut");
+      router.push({ name: "SignIn", query: { redirect: route.fullPath } });
+    } else {
+      console.error(e);
+      toasts.error();
+    }
+  } else {
+    toasts.error();
   }
-  // TODO(fpion): toasts.error();
 }
 provide(handleErrorKey, handleError);
 
