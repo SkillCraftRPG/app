@@ -6,19 +6,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watchEffect } from "vue";
+import { computed, inject, onMounted, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import EmailVerificationMessageSent from "@/components/accounts/EmailVerificationMessageSent.vue";
 import SignInForm from "@/components/accounts/SignInForm.vue";
 import type { SignInAccountRequest, SignInAccountResponse } from "@/types/account";
+import { handleErrorKey } from "@/inject";
 import { signIn } from "@/api/account";
 import { useAccountStore } from "@/stores/account";
 import { useDocument } from "@/composables/document";
 
 const account = useAccountStore();
 const document = useDocument();
+const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
@@ -26,10 +28,6 @@ const { t } = useI18n();
 const response = ref<SignInAccountResponse>({ allowedFlows: [] });
 
 const title = computed<string>(() => t("account.signIn.title"));
-
-function handleError(e: unknown): void {
-  console.error(e); // TODO(fpion): implement
-}
 
 function handleResponse(res: SignInAccountResponse) {
   if (res.currentUser) {

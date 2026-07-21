@@ -17,5 +17,16 @@
     "auto": "Auto",
     "dark": "Dark",
     "light": "Light"
+  },
+  "toasts": {
+    "error": {
+      "message": "An unexpected error occurred. Please try again later or contact our support team.",
+      "title": "Error!"
+    },
+    "success": "Success!",
+    "warning": {
+      "signedOut": "You have been signed-out, please try sign-in to your account again.",
+      "title": "Warning!"
+    }
   }
 }

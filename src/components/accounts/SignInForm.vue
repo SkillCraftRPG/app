@@ -11,16 +11,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 
 import EmailAddressInput from "./EmailAddressInput.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { SignInAccountRequest, SignInAccountResponse } from "@/types/account.ts";
+import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api.ts";
 import { signIn } from "@/api/account.ts";
-import { useAccountStore } from "@/stores/account.ts";
 
-const account = useAccountStore();
-const router = useRouter();
 const { locale, t } = useI18n();
 
 const emit = defineEmits<{
@@ -31,8 +28,6 @@ const emit = defineEmits<{
 const emailAddress = ref<string>("");
 const isLoading = ref<boolean>(false);
 const password = ref<string>("");
-const showPassword = ref<boolean>(false);
-const showPasswordless = ref<boolean>(false);
 
 const title = computed<string>(() => t("account.signIn.title"));
 
@@ -49,25 +44,18 @@ async function submit(): Promise<void> {
         },
       };
       const response: SignInAccountResponse = await signIn(request);
-      if (response.currentUser) {
-        account.signIn(response.currentUser);
-        router.push({ name: "Home" }); // TODO(fpion): redirect
-      } else if (response.profileCompletionToken) {
-        console.log(response.profileCompletionToken); // TODO(fpion): redirect
-      } else {
-        response.allowedFlows.forEach((flow) => {
-          switch (flow) {
-            case "Password":
-              showPassword.value = true;
-              break;
-            case "Passwordless":
-              showPasswordless.value = true;
-              break;
-          }
-        });
-        emit("submitted", response);
-      }
+      emit("submitted", response);
     } catch (e: unknown) {
+      const failure = e as ApiFailure;
+      if (failure.status === StatusCodes.BadRequest) {
+        const problemDetails = failure.data as ProblemDetails;
+        if (problemDetails.error && problemDetails.error.code === ErrorCodes.InvalidCredentials) {
+          // TODO(fpion): invalidCredentials.value = true;
+          // TODO(fpion): password.value = "";
+          // TODO(fpion): passwordRef.value?.focus();
+          return;
+        }
+      }
       emit("error", e);
     } finally {
       isLoading.value = false;

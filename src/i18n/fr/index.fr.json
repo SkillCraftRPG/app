@@ -17,5 +17,16 @@
     "auto": "Automatique",
     "dark": "Sombre",
     "light": "Clair"
+  },
+  "toasts": {
+    "error": {
+      "message": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
+      "title": "Erreur !"
+    },
+    "success": "Succès !",
+    "warning": {
+      "signedOut": "Vous avez été déconnecté, veuillez vous reconnecter à votre compte.",
+      "title": "Attention !"
+    }
   }
 }

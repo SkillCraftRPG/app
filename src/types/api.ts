@@ -19,7 +19,9 @@ export type ApiVersion = {
   version: string;
 };
 
-export enum ErrorCodes {}
+export enum ErrorCodes {
+  InvalidCredentials = "InvalidCredentials",
+}
 
 export type ProblemDetails = {
   type?: string | null;
@@ -31,5 +33,6 @@ export type ProblemDetails = {
 };
 
 export enum StatusCodes {
+  BadRequest = 400,
   Unauthorized = 401,
 }
