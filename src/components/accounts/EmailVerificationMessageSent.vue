@@ -1,6 +1,6 @@
 <template>
-  <div class="row vh-100 text-center align-items-center">
-    <div class="col jumbotron">
+  <div class="row flex-grow-1 text-center align-items-center mx-0">
+    <div class="col jumbotron mb-0">
       <h1 class="display-4">{{ t("account.email.verificationMessageSent.title") }}</h1>
       <p class="lead">{{ t("account.email.verificationMessageSent.help") }}</p>
       <hr class="my-4" />

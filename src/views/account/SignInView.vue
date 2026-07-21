@@ -1,5 +1,5 @@
 <template>
-  <main class="container">
+  <main class="container flex-grow-1 d-flex flex-column">
     <EmailVerificationMessageSent v-if="response.emailVerificationMessageId" :id="response.emailVerificationMessageId" />
     <SignInForm v-else @error="handleError" @submitted="response = $event" />
   </main>

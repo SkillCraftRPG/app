@@ -1,7 +1,7 @@
 <template>
-  <main class="container">
-    <div class="row vh-100 text-center align-items-center">
-      <div class="col jumbotron">
+  <main class="container flex-grow-1 d-flex flex-column">
+    <div class="row flex-grow-1 text-center align-items-center mx-0">
+      <div class="col jumbotron mb-0">
         <h1 class="display-4">404</h1>
         <p class="lead">{{ title }}</p>
         <hr class="my-4" />

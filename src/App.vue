@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column min-vh-100">
     <LayoutNavbar />
-    <div class="flex-grow-1 py-3">
+    <div class="flex-grow-1 d-flex flex-column py-3">
       <RouterView />
       <Transition name="fade">
         <button
