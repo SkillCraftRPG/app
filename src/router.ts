@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import HomeView from "./views/HomeView.vue";
+import { useAccountStore } from "./stores/account";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +13,12 @@ const router = createRouter({
       meta: { isPublic: true },
     },
     // Account
+    {
+      name: "Profile",
+      path: "/profile",
+      component: () => import("./views/account/ProfileView.vue"),
+      meta: { isPublic: true },
+    },
     {
       name: "SignIn",
       path: "/auth",
@@ -28,6 +36,13 @@ const router = createRouter({
       meta: { isPublic: true },
     },
   ],
+});
+
+router.beforeEach(async (to) => {
+  const account = useAccountStore();
+  if (!to.meta.isPublic && !account.currentUser) {
+    return { name: "SignIn", query: { redirect: to.fullPath } };
+  }
 });
 
 export default router;

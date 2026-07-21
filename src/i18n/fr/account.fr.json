@@ -1,6 +1,19 @@
 {
+  "email": {
+    "address": "Adresse courriel",
+    "verificationMessageSent": {
+      "help": "Un courriel de vérification a été envoyé à votre adresse. Vous pouvez fermer cette page en toute sécurité.",
+      "reference": "Référence du courriel :",
+      "title": "Courriel envoyé"
+    }
+  },
   "signIn": {
+    "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
     "submit": "Se connecter",
-    "title": "Connexion"
+    "title": "Connexion",
+    "welcome": "Bienvenue"
+  },
+  "signOut": {
+    "title": "Déconnexion"
   }
 }

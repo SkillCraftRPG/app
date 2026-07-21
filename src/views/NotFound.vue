@@ -1,14 +1,14 @@
 <template>
-  <main class="container">
-    <div class="row vh-100 text-center align-items-center">
-      <div class="col jumbotron">
+  <main class="container flex-grow-1 d-flex flex-column">
+    <div class="row flex-grow-1 text-center align-items-center mx-0">
+      <div class="col jumbotron mb-0">
         <h1 class="display-4">404</h1>
         <p class="lead">{{ title }}</p>
         <hr class="my-4" />
         <p>{{ t("notFound.help") }}</p>
         <p class="lead">
           <RouterLink :to="{ name: 'Home' }" class="btn btn-primary btn-lg" role="button">
-            <font-awesome-icon icon="fas fa-home" /> {{ t("notFound.link") }}
+            <font-awesome-icon icon="fas fa-home" /> {{ t("home.go") }}
           </RouterLink>
         </p>
       </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useDocument } from "@/composables/document";
@@ -27,21 +27,5 @@ const { t } = useI18n();
 
 const title = computed<string>(() => t("notFound.lead"));
 
-onMounted(() => document.setTitle(title.value));
+watchEffect(() => document.setTitle(title.value));
 </script>
-
-<style scoped>
-@media (min-width: 576px) {
-  .jumbotron {
-    padding: 4rem 2rem;
-  }
-}
-
-.jumbotron {
-  padding: 2rem 1rem;
-  margin-bottom: 2rem;
-  background-color: #e9ecef;
-  border-radius: 0.3rem;
-  text-align: center;
-}
-</style>

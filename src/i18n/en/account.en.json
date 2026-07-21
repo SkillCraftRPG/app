@@ -1,6 +1,19 @@
 {
+  "email": {
+    "address": "Email Address",
+    "verificationMessageSent": {
+      "help": "A verification email has been sent to your address. You can safely close this page.",
+      "reference": "Email reference:",
+      "title": "Email sent"
+    }
+  },
   "signIn": {
+    "help": "Enter your email address to sign in or create an account.",
     "submit": "Sign in",
-    "title": "Sign In"
+    "title": "Sign In",
+    "welcome": "Welcome"
+  },
+  "signOut": {
+    "title": "Sign Out"
   }
 }

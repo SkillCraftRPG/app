@@ -1,6 +1,5 @@
 <template>
   <div class="dropdown" data-bs-theme="dark">
-    <!-- TODO(fpion): button not working -->
     <button class="btn btn-flat btn-sm mt-1 mx-1 dropdown-toggle btn-dark" type="button" id="themeSelector" data-bs-toggle="dropdown" aria-expanded="false">
       <font-awesome-icon icon="fas fa-moon" width="16px" v-if="theme.currentTheme === 'dark'" />
       <font-awesome-icon icon="fas fa-sun" width="16px" v-else-if="theme.currentTheme === 'light'" />
