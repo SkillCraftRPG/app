@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useDocument } from "@/composables/document";
@@ -27,21 +27,5 @@ const { t } = useI18n();
 
 const title = computed<string>(() => t("notFound.lead"));
 
-onMounted(() => document.setTitle(title.value));
+watchEffect(() => document.setTitle(title.value));
 </script>
-
-<style scoped>
-@media (min-width: 576px) {
-  .jumbotron {
-    padding: 4rem 2rem;
-  }
-}
-
-.jumbotron {
-  padding: 2rem 1rem;
-  margin-bottom: 2rem;
-  background-color: #e9ecef;
-  border-radius: 0.3rem;
-  text-align: center;
-}
-</style>

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useDocument } from "@/composables/document";
@@ -16,5 +16,5 @@ const { t } = useI18n();
 
 const title = computed<string>(() => t("home.title"));
 
-onMounted(() => document.setTitle(title.value));
+watchEffect(() => document.setTitle(title.value));
 </script>

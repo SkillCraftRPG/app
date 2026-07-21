@@ -1,5 +1,13 @@
 {
+  "email": {
+    "address": "Adresse courriel"
+  },
   "signIn": {
+    "emailVerificationMessageSent": {
+      "help": "?",
+      "reference": "?",
+      "title": "?"
+    },
     "submit": "Se connecter",
     "title": "Connexion"
   }

@@ -1,4 +1,7 @@
 {
+  "email": {
+    "address": "Email Address"
+  },
   "signIn": {
     "submit": "Sign in",
     "title": "Sign In"

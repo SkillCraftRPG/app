@@ -57,9 +57,3 @@ defineEmits<{
   (e: "click"): void;
 }>();
 </script>
-
-<style scoped>
-button:disabled {
-  cursor: not-allowed !important;
-}
-</style>

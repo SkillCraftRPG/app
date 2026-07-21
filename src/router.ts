@@ -14,6 +14,12 @@ const router = createRouter({
     },
     // Account
     {
+      name: "Profile",
+      path: "/profile",
+      component: () => import("./views/account/ProfileView.vue"),
+      meta: { isPublic: true },
+    },
+    {
       name: "SignIn",
       path: "/auth",
       component: () => import("./views/account/SignInView.vue"),
