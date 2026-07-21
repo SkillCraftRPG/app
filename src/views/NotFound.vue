@@ -8,7 +8,7 @@
         <p>{{ t("notFound.help") }}</p>
         <p class="lead">
           <RouterLink :to="{ name: 'Home' }" class="btn btn-primary btn-lg" role="button">
-            <font-awesome-icon icon="fas fa-home" /> {{ t("notFound.link") }}
+            <font-awesome-icon icon="fas fa-home" /> {{ t("home.go") }}
           </RouterLink>
         </p>
       </div>
