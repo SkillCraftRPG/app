@@ -8,8 +8,10 @@
     }
   },
   "signIn": {
+    "help": "Enter your email address to sign in or create an account.",
     "submit": "Sign in",
-    "title": "Sign In"
+    "title": "Sign In",
+    "welcome": "Welcome"
   },
   "signOut": {
     "title": "Sign Out"

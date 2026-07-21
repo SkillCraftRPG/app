@@ -8,8 +8,10 @@
     }
   },
   "signIn": {
+    "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
     "submit": "Se connecter",
-    "title": "Connexion"
+    "title": "Connexion",
+    "welcome": "Bienvenue"
   },
   "signOut": {
     "title": "Déconnexion"

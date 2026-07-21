@@ -28,7 +28,6 @@ button:disabled {
   background-color: var(--bs-secondary-bg);
   color: var(--bs-body-color);
   border-radius: 0.3rem;
-  text-align: center;
 }
 
 .selected {

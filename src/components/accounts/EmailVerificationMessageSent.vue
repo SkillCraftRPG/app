@@ -8,9 +8,7 @@
         {{ t("account.email.verificationMessageSent.reference") }}&nbsp;<strong>{{ id }}</strong>
       </p>
       <p class="lead">
-        <button v-if="!goToHome" type="button" class="btn btn-primary btn-lg" @click="close">
-          <font-awesome-icon icon="fas fa-xmark" /> {{ t("actions.close") }}
-        </button>
+        <TarButton v-if="!goToHome" icon="fas fa-xmark" size="large" :text="t('actions.close')" @click="close" />
         <RouterLink v-else :to="{ name: 'Home' }" class="btn btn-primary btn-lg" role="button">
           <font-awesome-icon icon="fas fa-home" /> {{ t("home.go") }}
         </RouterLink>
@@ -22,6 +20,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+
+import TarButton from "@/components/tar/TarButton.vue";
 
 const { t } = useI18n();
 
