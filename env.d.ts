@@ -2,6 +2,7 @@
 interface ImportMetaEnv {
   readonly VITE_APP_API_BASE_URL?: string;
   readonly VITE_APP_ASSETS_BASE_URL?: string;
+  readonly VITE_APP_SWAGGER_ENABLED?: boolean;
   readonly VITE_APP_VERSION: string;
 }
 
