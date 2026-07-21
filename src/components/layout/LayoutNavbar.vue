@@ -34,7 +34,7 @@
               </ul>
             </li>
             <li v-else-if="otherLocales.length === 1" class="nav-item">
-              <a class="nav-link" href="#" @click.prevent="i18n.setLocale(otherLocales[0])">{{ otherLocales[0].nativeName }}</a>
+              <a class="nav-link" href="#" @click.prevent="i18n.setLocale(otherLocales[0]!)">{{ otherLocales[0]!.nativeName }}</a>
             </li>
           </template>
           <li class="nav-item">

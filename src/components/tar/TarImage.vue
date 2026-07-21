@@ -1,3 +1,7 @@
+<template>
+  <img :alt="alt" :class="classes" :height="parseNumber(height)" :src="src" :width="parseNumber(width)" />
+</template>
+
 <script setup lang="ts">
 import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
@@ -24,7 +28,3 @@ const classes = computed<string[]>(() => {
   return classes;
 });
 </script>
-
-<template>
-  <img :alt="alt" :class="classes" :height="parseNumber(height)" :src="src" :width="parseNumber(width)" />
-</template>
