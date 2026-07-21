@@ -49,7 +49,7 @@
             </li>
             <li class="nav-item d-block d-lg-none">
               <RouterLink class="nav-link" :to="{ name: 'SignOut' }">
-                <font-awesome-icon icon="fas fa-arrow-right-from-bracket" /> {{ t("users.signOut.title.page") }}
+                <font-awesome-icon icon="fas fa-arrow-right-from-bracket" /> {{ t("account.signOut.title") }}
               </RouterLink>
             </li>
             <li class="nav-item dropdown d-none d-lg-block">
@@ -62,7 +62,7 @@
                 </li>
                 <li>
                   <RouterLink class="dropdown-item" :to="{ name: 'SignOut' }">
-                    <font-awesome-icon icon="fas fa-arrow-right-from-bracket" /> {{ t("users.signOut.title.page") }}
+                    <font-awesome-icon icon="fas fa-arrow-right-from-bracket" /> {{ t("account.signOut.title") }}
                   </RouterLink>
                 </li>
               </ul>

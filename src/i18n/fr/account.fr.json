@@ -10,5 +10,8 @@
   "signIn": {
     "submit": "Se connecter",
     "title": "Connexion"
+  },
+  "signOut": {
+    "title": "Déconnexion"
   }
 }
