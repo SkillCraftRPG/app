@@ -1,0 +1,18 @@
+{
+  "brand": "SkillCraft",
+  "home": {
+    "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",
+    "title": "Accueil"
+  },
+  "notFound": {
+    "help": "La page demandée est introuvable.",
+    "lead": "Page introuvable",
+    "link": "Aller à l’accueil"
+  },
+  "theme": {
+    "title": "Thème",
+    "auto": "Automatique",
+    "dark": "Sombre",
+    "light": "Clair"
+  }
+}

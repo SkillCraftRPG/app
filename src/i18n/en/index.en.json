@@ -1,0 +1,18 @@
+{
+  "brand": "SkillCraft",
+  "home": {
+    "text": "A multi-tenant game Web application managing world-scoped data, character sheets, and real-time gameplay state for interactive roleplaying experiences.",
+    "title": "Home"
+  },
+  "notFound": {
+    "help": "The requested page could not be found.",
+    "lead": "Page Not Found",
+    "link": "Go to Home"
+  },
+  "theme": {
+    "title": "Theme",
+    "auto": "Auto",
+    "dark": "Dark",
+    "light": "Light"
+  }
+}
