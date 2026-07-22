@@ -1,6 +1,10 @@
 {
   "actions": {
-    "close": "Fermer"
+    "abort": "Abandonner",
+    "close": "Fermer",
+    "complete": "Terminer",
+    "next": "Suivant",
+    "previous": "Précédent"
   },
   "brand": "SkillCraft",
   "home": {
@@ -14,7 +18,7 @@
   },
   "theme": {
     "title": "Thème",
-    "auto": "Automatique",
+    "auto": "Auto",
     "dark": "Sombre",
     "light": "Clair"
   },

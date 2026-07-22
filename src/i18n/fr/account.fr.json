@@ -7,6 +7,19 @@
       "title": "Courriel envoyé"
     }
   },
+  "name": {
+    "first": "Prénom",
+    "last": "Nom"
+  },
+  "profile": {
+    "completion": {
+      "identity": {
+        "help": "Ces informations sont recueillies afin de pouvoir vous appeler par votre nom."
+      },
+      "title": "Compléter mon profil"
+    },
+    "title": "Mon profil"
+  },
   "signIn": {
     "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
     "submit": "Se connecter",

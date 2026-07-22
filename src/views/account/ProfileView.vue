@@ -1,37 +1,44 @@
 <template>
   <main class="container">
     <h1>{{ title }}</h1>
+    <ProfileCompletion v-if="token" :token="token" />
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watchEffect } from "vue";
+import { computed, inject, onMounted, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
-import { useAccountStore } from "@/stores/account";
+import ProfileCompletion from "@/components/accounts/ProfileCompletion.vue";
+import type { Profile } from "@/types/account";
+import { getProfile } from "@/api/account";
+import { handleErrorKey } from "@/inject";
 import { useDocument } from "@/composables/document";
 
-const account = useAccountStore();
 const document = useDocument();
+const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
 
-const profileCompletionToken = ref<string>("");
+const profile = ref<Profile>();
+const token = ref<string>("");
 
-const title = computed<string>(() => "ProfileView"); // TODO(fpion): implement
+const title = computed<string>(() => t(token.value ? "account.profile.completion.title" : "account.profile.title"));
 
 watchEffect(() => document.setTitle(title.value));
 
 onMounted(async () => {
-  const token: string = (Array.isArray(route.query.token) ? route.query.token[0] : route.query.token) ?? "";
-  if (token) {
-    profileCompletionToken.value = token;
-  } else if (account.currentUser) {
-    // TODO(fpion): retrieve profile from back-end
-  } else {
-    router.push({ name: "SignIn", query: { redirect: route.fullPath } });
+  const completionToken: string = (Array.isArray(route.query.token) ? route.query.token[0] : route.query.token) ?? "";
+  if (completionToken) {
+    token.value = completionToken;
+    return;
+  }
+
+  try {
+    profile.value = await getProfile();
+  } catch (e: unknown) {
+    handleError(e);
   }
 });
 </script>

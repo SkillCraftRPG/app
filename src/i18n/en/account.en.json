@@ -7,6 +7,19 @@
       "title": "Email sent"
     }
   },
+  "name": {
+    "first": "First Name",
+    "last": "Last Name"
+  },
+  "profile": {
+    "completion": {
+      "identity": {
+        "help": "This information is collected so you can be called by your name."
+      },
+      "title": "Complete My Profile"
+    },
+    "title": "My Profile"
+  },
   "signIn": {
     "help": "Enter your email address to sign in or create an account.",
     "submit": "Sign in",

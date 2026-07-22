@@ -25,7 +25,7 @@ export type CurrentUser = {
   pictureUrl?: string | null;
 };
 
-export type Gender = "Male" | "Female" | "Other";
+export type Gender = "male" | "female" | "other";
 
 export type MultiFactorAuthenticationMessage = {
   oneTimePasswordId: string;
@@ -38,6 +38,22 @@ export type MultiFactorAuthenticationMode = "None" | "Email" | "Phone";
 export type OneTimePasswordValidation = {
   id: string;
   code: string;
+};
+
+export type Profile = {
+  emailAddress: string;
+  passwordChangedOn?: string | null;
+  multiFactorAuthenticationMode: MultiFactorAuthenticationMode;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  birthdate?: string | null;
+  gender?: Gender;
+  locale: string;
+  timeZone: string;
+  createdOn: string;
+  updatedOn: string;
+  authenticatedOn?: string | null;
 };
 
 export type SignInAccountRequest = {
