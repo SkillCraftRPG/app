@@ -22,7 +22,7 @@
           />
         </div>
         <div class="d-flex gap-2">
-          <TarButton icon="fas fa-check" :outline="step !== Step.Experience" :text="t('actions.complete')" type="submit" />
+          <TarButton icon="fas fa-check" :outline="step !== Step.Experience" :text="t('actions.complete')" type="button" />
           <TarButton v-if="step !== Step.Experience" icon="fas fa-arrow-right" :text="t('actions.next')" type="submit" />
         </div>
       </div>

@@ -63,7 +63,7 @@ export type Profile = {
   firstName: string;
   lastName: string;
   fullName: string;
-  birthdate?: string | null;
+  dateOfBirth?: string | null;
   gender?: Gender;
   locale: string;
   timeZone: string;
