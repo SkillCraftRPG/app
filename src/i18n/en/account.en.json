@@ -11,6 +11,22 @@
     "first": "First Name",
     "last": "Last Name"
   },
+  "password": {
+    "label": "Password",
+    "rules": {
+      "digit": "At least 1 digit",
+      "lower": "At least 1 lowercase letter",
+      "min": "Minimum 8 characters",
+      "special": "At least 1 special character",
+      "unique": "Minimum 8 different characters",
+      "upper": "At least 1 uppercase letter"
+    },
+    "strength": {
+      "medium": "Medium",
+      "strong": "Strong",
+      "weak": "Weak"
+    }
+  },
   "profile": {
     "completion": {
       "experience": {
@@ -27,7 +43,23 @@
       },
       "security": {
         "help": "Choose how you want to sign in and protect your account.",
-        "lead": "Account security"
+        "lead": "Account security",
+        "options": {
+          "multiFactor": {
+            "help": "Sign in with your password, then enter the verification code received by email.",
+            "label": "Password with two-factor verification",
+            "note": "One-time link sign-in will not be available."
+          },
+          "password": {
+            "help": "Sign in with your password or request a sign-in link by email.",
+            "label": "Password or email link"
+          },
+          "passwordLess": {
+            "help": "Receive a one-time sign-in link by email.",
+            "label": "Email link",
+            "note": "No password will be created."
+          }
+        }
       },
       "title": "Complete My Profile"
     },

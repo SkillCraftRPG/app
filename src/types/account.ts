@@ -40,6 +40,11 @@ export type OneTimePasswordValidation = {
   code: string;
 };
 
+export type PersonalInformation = {
+  firstName: string;
+  lastName: string;
+};
+
 export type Profile = {
   emailAddress: string;
   passwordChangedOn?: string | null;
@@ -55,6 +60,13 @@ export type Profile = {
   updatedOn: string;
   authenticatedOn?: string | null;
 };
+
+export type SecurityInformation = {
+  mode: SecurityMode;
+  password: string;
+};
+
+export type SecurityMode = "PasswordLess" | "Password" | "MultiFactor";
 
 export type SignInAccountRequest = {
   credentials?: Credentials | null;

@@ -4,16 +4,8 @@
     <h2 class="h3">{{ subtitle }}</h2>
     <p>{{ help }}</p>
     <form @submit.prevent="submit">
-      <div v-if="step === Step.Personal">
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <FirstNameInput required v-model="firstName" />
-          </div>
-          <div class="col-md-6">
-            <LastNameInput required v-model="lastName" />
-          </div>
-        </div>
-      </div>
+      <ProfileStepPersonal v-if="step === Step.Personal" v-model="personal" />
+      <ProfileStepSecurity v-else-if="step === Step.Security" v-model="security" />
       <div class="d-flex justify-content-between">
         <div class="d-flex gap-2">
           <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" />
@@ -40,10 +32,11 @@
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FirstNameInput from "./FirstNameInput.vue";
-import LastNameInput from "./LastNameInput.vue";
+import ProfileStepPersonal from "./ProfileStepPersonal.vue";
+import ProfileStepSecurity from "./ProfileStepSecurity.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
+import type { PersonalInformation, SecurityInformation } from "@/types/account";
 
 const { t } = useI18n();
 
@@ -58,8 +51,8 @@ defineProps<{
   token: string;
 }>();
 
-const firstName = ref<string>("");
-const lastName = ref<string>("");
+const personal = ref<PersonalInformation>({ firstName: "", lastName: "" });
+const security = ref<SecurityInformation>({ mode: "PasswordLess", password: "" });
 const step = ref<Step>(Step.Personal);
 
 function getStepKey(): string | undefined {
@@ -92,6 +85,7 @@ function previous(): void {
 }
 
 async function submit(): Promise<void> {
+  // TODO(fpion): we cannot submit when password rules do not succeed!
   if (step.value !== Step.Experience) {
     step.value++;
   }

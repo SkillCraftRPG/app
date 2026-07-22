@@ -11,6 +11,22 @@
     "first": "Prénom",
     "last": "Nom"
   },
+  "password": {
+    "label": "Mot de passe",
+    "rules": {
+      "digit": "Au moins 1 chiffre",
+      "lower": "Au moins 1 minuscule",
+      "min": "Minimum 8 caractères",
+      "special": "Au moins 1 caractère spécial",
+      "unique": "Minimum 8 caractères différents",
+      "upper": "Au moins 1 majuscule"
+    },
+    "strength": {
+      "medium": "Moyen",
+      "strong": "Fort",
+      "weak": "Faible"
+    }
+  },
   "profile": {
     "completion": {
       "experience": {
@@ -27,7 +43,23 @@
       },
       "security": {
         "help": "Choisissez comment vous souhaitez vous connecter et protéger votre compte.",
-        "lead": "Sécurité du compte"
+        "lead": "Sécurité du compte",
+        "options": {
+          "multiFactor": {
+            "help": "Connectez-vous avec votre mot de passe, puis entrez le code de vérification reçu par courriel.",
+            "label": "Mot de passe avec vérification en deux étapes",
+            "note": "La connexion par lien à usage unique ne sera pas disponible."
+          },
+          "password": {
+            "help": "Connectez-vous avec votre mot de passe ou demandez un lien de connexion par courriel.",
+            "label": "Mot de passe ou lien par courriel"
+          },
+          "passwordLess": {
+            "help": "Recevez un lien de connexion à usage unique par courriel.",
+            "label": "Lien par courriel",
+            "note": "Aucun mot de passe ne sera créé."
+          }
+        }
       },
       "title": "Compléter mon profil"
     },

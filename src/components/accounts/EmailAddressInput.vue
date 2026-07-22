@@ -7,7 +7,7 @@
     :placeholder="t(label)"
     :required="required"
     type="email"
-    @update:model-value="$emit('update:model-value', $event)"
+    @update:model-value="$emit('update:model-value', $event ?? '')"
   />
 </template>
 
@@ -32,6 +32,6 @@ withDefaults(
 );
 
 defineEmits<{
-  (e: "update:model-value", value: string | undefined): void;
+  (e: "update:model-value", value: string): void;
 }>();
 </script>
