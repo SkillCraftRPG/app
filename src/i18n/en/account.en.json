@@ -49,8 +49,19 @@
   "profile": {
     "completion": {
       "experience": {
-        "help": "Choose which section will appear by default after you sign in.",
-        "lead": "Default experience"
+        "help": "Choose which section will appear after you sign in.",
+        "lead": "Default experience",
+        "note": "This choice only determines your default page after signing in. You will still be able to access both areas and change this preference from your profile.",
+        "options": {
+          "Gamemaster": {
+            "help": "Go directly to the Gamemaster portal and your list of worlds after signing in.",
+            "label": "Gamemaster"
+          },
+          "Player": {
+            "help": "Go directly to your character sheets after signing in.",
+            "label": "Player"
+          }
+        }
       },
       "personal": {
         "help": "Enter your first and last name to personalize your profile.",

@@ -1,3 +1,5 @@
+import type { Optional } from "./api";
+
 export type AuthenticationFlow = "Password" | "Passwordless";
 
 export type CompleteProfilePayload = {
@@ -10,6 +12,7 @@ export type CompleteProfilePayload = {
   gender?: Gender | null;
   locale: string;
   timeZone: string;
+  defaultExperience: UserExperience;
 };
 
 export type Credentials = {
@@ -66,6 +69,7 @@ export type Profile = {
   createdOn: string;
   updatedOn: string;
   authenticatedOn?: string | null;
+  defaultExperience: UserExperience;
 };
 
 export type SecurityInformation = {
@@ -94,3 +98,15 @@ export type TimeZone = {
   id: string;
   displayName: string;
 };
+
+export type UpdateProfilePayload = {
+  firstName?: string | null;
+  lastName?: string | null;
+  dateOfBirth?: Optional<Date> | null;
+  gender?: Optional<Gender> | null;
+  locale?: string | null;
+  timeZone?: string | null;
+  defaultExperience?: UserExperience | null;
+};
+
+export type UserExperience = "Player" | "Gamemaster";

@@ -49,8 +49,19 @@
   "profile": {
     "completion": {
       "experience": {
-        "help": "Choisissez la section qui s’affichera par défaut après votre connexion.",
-        "lead": "Expérience par défaut"
+        "help": "Choisissez la section qui s’affichera après votre connexion.",
+        "lead": "Expérience par défaut",
+        "note": "Ce choix détermine uniquement votre page d’accueil après la connexion. Vous pourrez toujours accéder aux deux espaces et modifier ce choix dans votre profil.",
+        "options": {
+          "Gamemaster": {
+            "help": "Accédez directement à votre portail de maître de jeu et à la liste de vos mondes après votre connexion.",
+            "label": "Maître de jeu"
+          },
+          "Player": {
+            "help": "Accédez directement à vos fiches de personnages après votre connexion.",
+            "label": "Joueur"
+          }
+        }
       },
       "personal": {
         "help": "Indiquez votre prénom et votre nom pour personnaliser votre profil.",

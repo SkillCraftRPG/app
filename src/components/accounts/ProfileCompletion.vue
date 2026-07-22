@@ -7,6 +7,7 @@
       <ProfileStepPersonal v-if="step === Step.Personal" v-model="personal" />
       <ProfileStepSecurity v-else-if="step === Step.Security" v-model="security" />
       <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
+      <ProfileStepExperience v-else-if="step === Step.Experience" v-model="experience" />
       <div class="d-flex justify-content-between">
         <div class="d-flex gap-2">
           <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" />
@@ -33,12 +34,13 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
+import ProfileStepExperience from "./ProfileStepExperience.vue";
 import ProfileStepPersonal from "./ProfileStepPersonal.vue";
 import ProfileStepPreferences from "./ProfileStepPreferences.vue";
 import ProfileStepSecurity from "./ProfileStepSecurity.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
-import type { PersonalInformation, PreferencesInformation, SecurityInformation } from "@/types/account";
+import type { PersonalInformation, PreferencesInformation, SecurityInformation, UserExperience } from "@/types/account";
 
 const { locale, t } = useI18n();
 
@@ -53,6 +55,7 @@ defineProps<{
   token: string;
 }>();
 
+const experience = ref<UserExperience>("Player");
 const personal = ref<PersonalInformation>({ firstName: "", lastName: "" });
 const preferences = ref<PreferencesInformation>({
   locale: locale.value,

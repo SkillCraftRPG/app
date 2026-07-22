@@ -23,6 +23,10 @@ export enum ErrorCodes {
   InvalidCredentials = "InvalidCredentials",
 }
 
+export type Optional<T> = {
+  value?: T | null;
+};
+
 export type ProblemDetails = {
   type?: string | null;
   title?: string | null;
