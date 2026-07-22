@@ -141,4 +141,6 @@ onUnmounted(() => {
     unbindField(props.id);
   }
 });
+
+// TODO(fpion): we should sync modelValue with field.value when changing from external.
 </script>
