@@ -13,8 +13,21 @@
   },
   "profile": {
     "completion": {
-      "identity": {
-        "help": "Ces informations sont recueillies afin de pouvoir vous appeler par votre nom."
+      "experience": {
+        "help": "Choisissez la section qui s’affichera par défaut après votre connexion.",
+        "lead": "Expérience par défaut"
+      },
+      "personal": {
+        "help": "Indiquez votre prénom et votre nom pour personnaliser votre profil.",
+        "lead": "Informations personnelles"
+      },
+      "preferences": {
+        "help": "Ajoutez quelques renseignements facultatifs, puis vérifiez votre langue et votre fuseau horaire.",
+        "lead": "Profil et préférences"
+      },
+      "security": {
+        "help": "Choisissez comment vous souhaitez vous connecter et protéger votre compte.",
+        "lead": "Sécurité du compte"
       },
       "title": "Compléter mon profil"
     },

@@ -13,8 +13,21 @@
   },
   "profile": {
     "completion": {
-      "identity": {
-        "help": "This information is collected so you can be called by your name."
+      "experience": {
+        "help": "Choose which section will appear by default after you sign in.",
+        "lead": "Default experience"
+      },
+      "personal": {
+        "help": "Enter your first and last name to personalize your profile.",
+        "lead": "Personal information"
+      },
+      "preferences": {
+        "help": "Add a few optional details, then confirm your language and time zone.",
+        "lead": "Profile and preferences"
+      },
+      "security": {
+        "help": "Choose how you want to sign in and protect your account.",
+        "lead": "Account security"
       },
       "title": "Complete My Profile"
     },

@@ -1,9 +1,10 @@
 <template>
   <div>
     <TarProgress class="mb-3" :value="progress" />
-    <p v-if="step === Step.Identity">{{ t("account.profile.completion.identity.help") }}</p>
+    <h2 class="h3">{{ subtitle }}</h2>
+    <p>{{ help }}</p>
     <form @submit.prevent="submit">
-      <div v-if="step === Step.Identity">
+      <div v-if="step === Step.Personal">
         <div class="row mb-3">
           <div class="col-md-6">
             <FirstNameInput required v-model="firstName" />
@@ -17,7 +18,7 @@
         <div class="d-flex gap-2">
           <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" />
           <TarButton
-            v-if="step !== Step.Identity"
+            v-if="step !== Step.Personal"
             icon="fas fa-arrow-left"
             outline
             :text="t('actions.previous')"
@@ -27,8 +28,8 @@
           />
         </div>
         <div class="d-flex gap-2">
-          <TarButton icon="fas fa-check" :outline="step !== Step.Role" :text="t('actions.complete')" type="submit" />
-          <TarButton v-if="step !== Step.Role" icon="fas fa-arrow-right" :text="t('actions.next')" type="submit" />
+          <TarButton icon="fas fa-check" :outline="step !== Step.Experience" :text="t('actions.complete')" type="submit" />
+          <TarButton v-if="step !== Step.Experience" icon="fas fa-arrow-right" :text="t('actions.next')" type="submit" />
         </div>
       </div>
     </form>
@@ -47,10 +48,10 @@ import TarProgress from "@/components/tar/TarProgress.vue";
 const { t } = useI18n();
 
 enum Step {
-  Identity = 0,
+  Personal = 0,
   Security = 1,
-  Personal = 2,
-  Role = 3,
+  Preferences = 2,
+  Experience = 3,
 }
 
 defineProps<{
@@ -59,18 +60,39 @@ defineProps<{
 
 const firstName = ref<string>("");
 const lastName = ref<string>("");
-const step = ref<Step>(Step.Identity);
+const step = ref<Step>(Step.Personal);
 
+function getStepKey(): string | undefined {
+  switch (step.value) {
+    case Step.Experience:
+      return "experience";
+    case Step.Personal:
+      return "personal";
+    case Step.Preferences:
+      return "preferences";
+    case Step.Security:
+      return "security";
+  }
+}
+
+const help = computed<string>(() => {
+  const key: string | undefined = getStepKey();
+  return key ? t(`account.profile.completion.${key}.help`) : "";
+});
+const subtitle = computed<string>(() => {
+  const key: string | undefined = getStepKey();
+  return key ? t(`account.profile.completion.${key}.lead`) : "";
+});
 const progress = computed<number>(() => Math.floor((step.value * 100) / 3));
 
 function previous(): void {
-  if (step.value !== Step.Identity) {
+  if (step.value !== Step.Personal) {
     step.value--;
   }
 }
 
 async function submit(): Promise<void> {
-  if (step.value !== Step.Role) {
+  if (step.value !== Step.Experience) {
     step.value++;
   }
   // TODO(fpion): implement
