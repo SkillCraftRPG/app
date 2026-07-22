@@ -10,7 +10,7 @@
       <ProfileStepExperience v-else-if="step === Step.Experience" v-model="experience" />
       <div class="d-flex justify-content-between">
         <div class="d-flex gap-2">
-          <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" />
+          <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" @click="abort" />
           <TarButton
             v-if="step !== Step.Personal"
             icon="fas fa-arrow-left"
@@ -33,6 +33,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import ProfileStepExperience from "./ProfileStepExperience.vue";
 import ProfileStepPersonal from "./ProfileStepPersonal.vue";
@@ -43,6 +44,7 @@ import TarProgress from "@/components/tar/TarProgress.vue";
 import type { PersonalInformation, PreferencesInformation, SecurityInformation, UserExperience } from "@/types/account";
 import { useForm } from "@/forms";
 
+const router = useRouter();
 const { locale, t } = useI18n();
 
 enum Step {
@@ -87,6 +89,11 @@ const subtitle = computed<string>(() => {
   return key ? t(`account.profile.completion.${key}.lead`) : "";
 });
 const progress = computed<number>(() => Math.floor((step.value * 100) / 3));
+
+function abort(): void {
+  // TODO(fpion): confirmation modal
+  router.push({ name: "SignIn" });
+}
 
 function previous(): void {
   if (step.value !== Step.Personal) {
