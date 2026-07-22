@@ -10,7 +10,7 @@
       <ProfileStepExperience v-else-if="step === Step.Experience" v-model="experience" />
       <div class="d-flex justify-content-between">
         <div class="d-flex gap-2">
-          <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" @click="abort" />
+          <AbandonProfileCompletion @abandon="abandon" />
           <TarButton
             v-if="step !== Step.Personal"
             icon="fas fa-arrow-left"
@@ -35,6 +35,7 @@ import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import AbandonProfileCompletion from "./AbandonProfileCompletion.vue";
 import ProfileStepExperience from "./ProfileStepExperience.vue";
 import ProfileStepPersonal from "./ProfileStepPersonal.vue";
 import ProfileStepPreferences from "./ProfileStepPreferences.vue";
@@ -90,8 +91,7 @@ const subtitle = computed<string>(() => {
 });
 const progress = computed<number>(() => Math.floor((step.value * 100) / 3));
 
-function abort(): void {
-  // TODO(fpion): confirmation modal
+function abandon(): void {
   router.push({ name: "SignIn" });
 }
 

@@ -65,6 +65,10 @@
   },
   "profile": {
     "completion": {
+      "abandon": {
+        "help": "Les informations saisies ne seront pas enregistrées. Vous devrez recommencer la complétion de votre profil lors de votre prochaine connexion.",
+        "lead": "Abandonner la complétion du profil ?"
+      },
       "experience": {
         "help": "Choisissez la section qui s’affichera après votre connexion.",
         "lead": "Expérience par défaut",

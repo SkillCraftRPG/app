@@ -65,6 +65,10 @@
   },
   "profile": {
     "completion": {
+      "abandon": {
+        "help": "The information you entered will not be saved. You will need to restart profile setup the next time you sign in.",
+        "lead": "Abandon profile setup?"
+      },
       "experience": {
         "help": "Choose which section will appear after you sign in.",
         "lead": "Default experience",
@@ -108,7 +112,7 @@
           }
         }
       },
-      "title": "Complete My Profile"
+      "title": "Set Up My Profile"
     },
     "title": "My Profile"
   },

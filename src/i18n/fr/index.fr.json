@@ -1,6 +1,7 @@
 {
   "actions": {
-    "abort": "Abandonner",
+    "abandon": "Abandonner",
+    "cancel": "Annuler",
     "close": "Fermer",
     "complete": "Terminer",
     "next": "Suivant",

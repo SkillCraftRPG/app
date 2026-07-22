@@ -7,6 +7,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowUp,
+  faBan,
   faCheck,
   faDice,
   faHatWizard,
@@ -18,7 +19,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faAdjust, faArrowLeft, faArrowRight, faArrowUp, faCheck, faDice, faHatWizard, faHome, faMoon, faSun, faUser, faVial, faXmark);
+library.add(faAdjust, faArrowLeft, faArrowRight, faArrowUp, faBan, faCheck, faDice, faHatWizard, faHome, faMoon, faSun, faUser, faVial, faXmark);
 
 export default function (app: App) {
   app.component("font-awesome-icon", FontAwesomeIcon);
