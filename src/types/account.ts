@@ -26,6 +26,7 @@ export type CurrentUser = {
   displayName: string;
   emailAddress?: string | null;
   pictureUrl?: string | null;
+  defaultExperience: UserExperience;
 };
 
 export type Gender = "male" | "female" | "other";
