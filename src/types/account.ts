@@ -45,6 +45,13 @@ export type PersonalInformation = {
   lastName: string;
 };
 
+export type PreferencesInformation = {
+  dateOfBirth?: Date | null;
+  gender?: Gender | null;
+  locale: string;
+  timeZone: string;
+};
+
 export type Profile = {
   emailAddress: string;
   passwordChangedOn?: string | null;
@@ -81,4 +88,9 @@ export type SignInAccountResponse = {
   multiFactorAuthenticationMessage?: MultiFactorAuthenticationMessage | null;
   profileCompletionToken?: string | null;
   currentUser?: CurrentUser | null;
+};
+
+export type TimeZone = {
+  id: string;
+  displayName: string;
 };

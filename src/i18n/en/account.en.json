@@ -1,4 +1,10 @@
 {
+  "birthdate": {
+    "day": "Day",
+    "label": "Date of birth",
+    "month": "Month",
+    "year": "Year"
+  },
   "email": {
     "address": "Email Address",
     "verificationMessageSent": {
@@ -6,6 +12,19 @@
       "reference": "Email reference:",
       "title": "Email sent"
     }
+  },
+  "gender": {
+    "label": "Gender",
+    "options": {
+      "female": "Female",
+      "male": "Male",
+      "other": "Other"
+    },
+    "placeholder": "Select your gender"
+  },
+  "locale": {
+    "label": "Communication language",
+    "placeholder": "Select your preferred communication language"
   },
   "name": {
     "first": "First Name",
@@ -73,5 +92,9 @@
   },
   "signOut": {
     "title": "Sign Out"
+  },
+  "timeZone": {
+    "label": "Time zone",
+    "placeholder": "Select your time zone"
   }
 }

@@ -1,4 +1,10 @@
 {
+  "birthdate": {
+    "day": "Jour",
+    "label": "Date de naissance",
+    "month": "Mois",
+    "year": "Année"
+  },
   "email": {
     "address": "Adresse courriel",
     "verificationMessageSent": {
@@ -6,6 +12,19 @@
       "reference": "Référence du courriel :",
       "title": "Courriel envoyé"
     }
+  },
+  "gender": {
+    "label": "Genre",
+    "options": {
+      "female": "Femme",
+      "male": "Homme",
+      "other": "Autre"
+    },
+    "placeholder": "Sélectionnez votre genre"
+  },
+  "locale": {
+    "label": "Langue de communication",
+    "placeholder": "Sélectionnez votre langue de communication préférée"
   },
   "name": {
     "first": "Prénom",
@@ -73,5 +92,9 @@
   },
   "signOut": {
     "title": "Déconnexion"
+  },
+  "timeZone": {
+    "label": "Fuseau horaire",
+    "placeholder": "Sélectionnez votre fuseau horaire"
   }
 }

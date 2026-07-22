@@ -6,6 +6,7 @@
     <form @submit.prevent="submit">
       <ProfileStepPersonal v-if="step === Step.Personal" v-model="personal" />
       <ProfileStepSecurity v-else-if="step === Step.Security" v-model="security" />
+      <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
       <div class="d-flex justify-content-between">
         <div class="d-flex gap-2">
           <TarButton icon="fas fa-xmark" outline :text="t('actions.abort')" type="button" variant="danger" />
@@ -29,16 +30,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ProfileStepPersonal from "./ProfileStepPersonal.vue";
+import ProfileStepPreferences from "./ProfileStepPreferences.vue";
 import ProfileStepSecurity from "./ProfileStepSecurity.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
-import type { PersonalInformation, SecurityInformation } from "@/types/account";
+import type { PersonalInformation, PreferencesInformation, SecurityInformation } from "@/types/account";
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
 enum Step {
   Personal = 0,
@@ -52,6 +54,10 @@ defineProps<{
 }>();
 
 const personal = ref<PersonalInformation>({ firstName: "", lastName: "" });
+const preferences = ref<PreferencesInformation>({
+  locale: locale.value,
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+});
 const security = ref<SecurityInformation>({ mode: "PasswordLess", password: "" });
 const step = ref<Step>(Step.Personal);
 
@@ -91,4 +97,10 @@ async function submit(): Promise<void> {
   }
   // TODO(fpion): implement
 }
+
+watch(locale, (newValue, oldValue) => {
+  if (!oldValue || preferences.value.locale === oldValue) {
+    preferences.value.locale = newValue;
+  }
+});
 </script>
