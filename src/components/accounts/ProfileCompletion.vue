@@ -3,7 +3,7 @@
     <TarProgress class="mb-3" :value="progress" />
     <h2 class="h3">{{ subtitle }}</h2>
     <p>{{ help }}</p>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="handleSubmit(submit)">
       <ProfileStepPersonal v-if="step === Step.Personal" v-model="personal" />
       <ProfileStepSecurity v-else-if="step === Step.Security" v-model="security" />
       <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
@@ -41,6 +41,7 @@ import ProfileStepSecurity from "./ProfileStepSecurity.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { PersonalInformation, PreferencesInformation, SecurityInformation, UserExperience } from "@/types/account";
+import { useForm } from "@/forms";
 
 const { locale, t } = useI18n();
 
@@ -93,8 +94,8 @@ function previous(): void {
   }
 }
 
+const { handleSubmit } = useForm(); // TODO(fpion): isSubmitting
 async function submit(): Promise<void> {
-  // TODO(fpion): we cannot submit when password rules do not succeed!
   if (step.value !== Step.Experience) {
     step.value++;
   }

@@ -1,13 +1,14 @@
 <template>
   <div>
-    <TarInput
+    <FormInput
       floating
       :id="id"
       :label="t(label)"
-      :min="min"
       :model-value="modelValue"
       :placeholder="t(label)"
+      ref="inputRef"
       :required="required"
+      :rules="rules"
       type="password"
       @update:model-value="$emit('update:model-value', $event ?? '')"
     />
@@ -21,20 +22,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import type { ValidationRuleSet } from "logitar-validation";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import TarInput from "@/components/tar/TarInput.vue";
+import FormInput from "@/components/forms/FormInput.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { ProgressVariant } from "@/types/tar/progress";
 
+const MINIMUM_LENGTH: number = 8;
+const UNIQUE_CHARACTERS: number = 8;
 const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
     id?: string;
     label?: string;
-    min?: number | string;
     modelValue?: string;
     required?: boolean | string;
   }>(),
@@ -48,6 +51,17 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
+const inputRef = ref<InstanceType<typeof FormInput> | null>();
+
+const rules = computed<ValidationRuleSet>(() => ({
+  minimumLength: MINIMUM_LENGTH,
+  uniqueCharacters: UNIQUE_CHARACTERS,
+  containsLowercase: true,
+  containsUppercase: true,
+  containsDigits: true,
+  containsNonAlphanumeric: true,
+}));
+
 type Rule = {
   key: string;
   success: boolean;
@@ -55,8 +69,8 @@ type Rule = {
 const evaluation = computed<Rule[]>(() => {
   const password: string = props.modelValue ?? "";
   return [
-    { key: "min", success: password.length >= 8 },
-    { key: "unique", success: new Set(password).size >= 8 },
+    { key: "min", success: password.length >= MINIMUM_LENGTH },
+    { key: "unique", success: new Set(password).size >= UNIQUE_CHARACTERS },
     { key: "lower", success: /\p{Ll}/u.test(password) },
     { key: "upper", success: /\p{Lu}/u.test(password) },
     { key: "digit", success: /\p{Nd}/u.test(password) },
@@ -83,4 +97,9 @@ const strength = computed<Strength>(() => {
   const label: string = `account.password.strength.${key}`;
   return { label, score, variant };
 });
+
+function focus(): void {
+  inputRef.value?.focus();
+}
+defineExpose({ focus });
 </script>

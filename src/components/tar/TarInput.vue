@@ -76,7 +76,7 @@ import { computed, ref } from "vue";
 import { parsingUtils } from "logitar-js";
 
 import type { InputOptions } from "@/types/tar/input";
-import { isDateTimeInput, isNumericInput, isTextualInput } from "@/utils/inputUtils";
+import { isDateTimeInput, isNumericInput, isTextualInput } from "@/utils/input";
 
 const { parseBoolean, parseNumber } = parsingUtils;
 
