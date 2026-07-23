@@ -1,11 +1,125 @@
 {
+  "dateOfBirth": {
+    "day": "Jour",
+    "label": "Date de naissance",
+    "month": {
+      "label": "Mois",
+      "options": {
+        "01": "janvier",
+        "02": "février",
+        "03": "mars",
+        "04": "avril",
+        "05": "mai",
+        "06": "juin",
+        "07": "juillet",
+        "08": "août",
+        "09": "septembre",
+        "10": "octobre",
+        "11": "novembre",
+        "12": "décembre"
+      },
+      "placeholder": "Sélectionnez"
+    },
+    "year": "Année"
+  },
   "email": {
     "address": "Adresse courriel",
     "verificationMessageSent": {
       "help": "Un courriel de vérification a été envoyé à votre adresse. Vous pouvez fermer cette page en toute sécurité.",
       "reference": "Référence du courriel :",
       "title": "Courriel envoyé"
+    },
+    "verified": "Vérifié"
+  },
+  "gender": {
+    "label": "Genre",
+    "options": {
+      "female": "Femme",
+      "male": "Homme",
+      "other": "Autre"
+    },
+    "placeholder": "Sélectionnez votre genre"
+  },
+  "locale": {
+    "label": "Langue de communication",
+    "placeholder": "Sélectionnez votre langue de communication préférée"
+  },
+  "name": {
+    "first": "Prénom",
+    "last": "Nom"
+  },
+  "password": {
+    "label": "Mot de passe",
+    "rules": {
+      "digit": "Au moins 1 chiffre",
+      "lower": "Au moins 1 minuscule",
+      "min": "Minimum 8 caractères",
+      "special": "Au moins 1 caractère spécial",
+      "unique": "Minimum 8 caractères différents",
+      "upper": "Au moins 1 majuscule"
+    },
+    "strength": {
+      "medium": "Moyen",
+      "strong": "Fort",
+      "weak": "Faible"
     }
+  },
+  "profile": {
+    "completion": {
+      "abandon": {
+        "help": "Les informations saisies ne seront pas enregistrées. Vous devrez recommencer la complétion de votre profil lors de votre prochaine connexion.",
+        "lead": "Abandonner la complétion du profil ?"
+      },
+      "complete": {
+        "help": "Les étapes restantes seront ignorées. Les informations déjà saisies seront enregistrées, et vous pourrez ajouter ou modifier ces renseignements plus tard dans la page <strong>Mon profil</strong>.",
+        "lead": "Terminer la configuration du profil ?"
+      },
+      "experience": {
+        "help": "Choisissez la section qui s’affichera après votre connexion.",
+        "lead": "Expérience par défaut",
+        "note": "Ce choix détermine uniquement votre page d’accueil après la connexion. Vous pourrez toujours accéder aux deux espaces et modifier ce choix dans votre profil.",
+        "options": {
+          "Gamemaster": {
+            "help": "Accédez directement à votre portail de maître de jeu : la liste de vos mondes.",
+            "label": "Maître de jeu"
+          },
+          "Player": {
+            "help": "Accédez directement à vos fiches de personnages.",
+            "label": "Joueur"
+          }
+        }
+      },
+      "personal": {
+        "help": "Indiquez votre prénom et votre nom pour personnaliser votre profil.",
+        "lead": "Informations personnelles"
+      },
+      "preferences": {
+        "help": "Ajoutez quelques renseignements facultatifs, puis vérifiez votre langue et votre fuseau horaire.",
+        "lead": "Profil et préférences"
+      },
+      "security": {
+        "help": "Choisissez comment vous souhaitez vous connecter et protéger votre compte.",
+        "lead": "Sécurité du compte",
+        "options": {
+          "multiFactor": {
+            "help": "Connectez-vous avec votre mot de passe, puis entrez le code de vérification reçu par courriel.",
+            "label": "Mot de passe avec vérification en deux étapes",
+            "note": "La connexion par lien à usage unique ne sera pas disponible."
+          },
+          "password": {
+            "help": "Connectez-vous avec votre mot de passe ou demandez un lien de connexion par courriel.",
+            "label": "Mot de passe ou lien par courriel"
+          },
+          "passwordLess": {
+            "help": "Recevez un lien de connexion à usage unique par courriel.",
+            "label": "Lien par courriel",
+            "note": "Aucun mot de passe ne sera créé."
+          }
+        }
+      },
+      "title": "Compléter mon profil"
+    },
+    "title": "Mon profil"
   },
   "signIn": {
     "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
@@ -15,5 +129,9 @@
   },
   "signOut": {
     "title": "Déconnexion"
+  },
+  "timeZone": {
+    "label": "Fuseau horaire",
+    "placeholder": "Sélectionnez votre fuseau horaire"
   }
 }

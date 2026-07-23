@@ -1,7 +1,7 @@
 <template>
   <main class="container flex-grow-1 d-flex flex-column">
     <EmailVerificationMessageSent v-if="response.emailVerificationMessageId" :id="response.emailVerificationMessageId" />
-    <SignInForm v-else @error="handleError" @submitted="response = $event" />
+    <SignInForm v-else-if="isReady" @error="handleError" @submitted="handleResponse" />
   </main>
 </template>
 
@@ -25,6 +25,7 @@ const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 
+const isReady = ref<boolean>(false);
 const response = ref<SignInAccountResponse>({ allowedFlows: [] });
 
 const title = computed<string>(() => t("account.signIn.title"));
@@ -56,5 +57,6 @@ onMounted(async () => {
       handleError(e);
     }
   }
+  isReady.value = true;
 });
 </script>

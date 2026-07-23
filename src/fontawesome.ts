@@ -2,9 +2,24 @@ import type { App } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faAdjust, faArrowUp, faHome, faMoon, faSun, faUser, faVial, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAdjust,
+  faArrowLeft,
+  faArrowRight,
+  faArrowUp,
+  faBan,
+  faCheck,
+  faDice,
+  faHatWizard,
+  faHome,
+  faMoon,
+  faSun,
+  faUser,
+  faVial,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
-library.add(faAdjust, faArrowUp, faHome, faMoon, faSun, faUser, faVial, faXmark);
+library.add(faAdjust, faArrowLeft, faArrowRight, faArrowUp, faBan, faCheck, faDice, faHatWizard, faHome, faMoon, faSun, faUser, faVial, faXmark);
 
 export default function (app: App) {
   app.component("font-awesome-icon", FontAwesomeIcon);

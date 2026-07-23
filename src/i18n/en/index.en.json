@@ -1,6 +1,11 @@
 {
   "actions": {
-    "close": "Close"
+    "abandon": "Abandon",
+    "cancel": "Cancel",
+    "close": "Close",
+    "complete": "Complete",
+    "next": "Next",
+    "previous": "Previous"
   },
   "brand": "SkillCraft",
   "home": {
