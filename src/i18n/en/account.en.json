@@ -136,8 +136,14 @@
     "welcome": "Welcome"
   },
   "signOut": {
-    "help": "Your session was closed successfully.",
-    "lead": "You’re signed out.",
+    "closed": {
+      "help": "Your session was closed successfully.",
+      "lead": "You’re signed out."
+    },
+    "expired": {
+      "help": "Sign in again to continue.",
+      "lead": "Your session has expired."
+    },
     "title": "Sign Out"
   },
   "timeZone": {

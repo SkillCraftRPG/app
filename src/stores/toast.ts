@@ -34,8 +34,8 @@ export const useToastStore = defineStore("toast", () => {
   }
   function error(text?: string): void {
     toast({
-      text: text ?? "toasts.error.message",
-      title: "toasts.error.title",
+      text: text ?? "error",
+      title: "toasts.error",
       variant: "danger",
     });
   }
@@ -49,7 +49,7 @@ export const useToastStore = defineStore("toast", () => {
   function warning(text: string): void {
     toast({
       text,
-      title: "toasts.warning.title",
+      title: "toasts.warning",
       variant: "warning",
     });
   }

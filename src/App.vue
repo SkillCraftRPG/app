@@ -44,8 +44,7 @@ function handleError(e: unknown): void {
   if (e) {
     const { status } = e as ApiFailure;
     if (status === StatusCodes.Unauthorized) {
-      account.signOut();
-      toasts.warning("toasts.warning.signedOut");
+      account.signOut("expired");
       router.push({ name: "SignIn", query: { redirect: route.fullPath } });
     } else {
       console.error(e);

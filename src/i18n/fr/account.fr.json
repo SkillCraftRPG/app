@@ -136,8 +136,14 @@
     "welcome": "Bienvenue"
   },
   "signOut": {
-    "help": "Votre session a été fermée avec succès.",
-    "lead": "Vous êtes déconnecté.",
+    "closed": {
+      "help": "Votre session a été fermée avec succès.",
+      "lead": "Vous êtes déconnecté."
+    },
+    "expired": {
+      "help": "Connectez-vous de nouveau pour continuer.",
+      "lead": "Votre session a expiré."
+    },
     "title": "Déconnexion"
   },
   "timeZone": {

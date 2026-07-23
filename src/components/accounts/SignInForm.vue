@@ -8,7 +8,8 @@
       <hr class="my-4" />
       <div class="row justify-content-center">
         <form class="col-md-6" @submit.prevent="handleSubmit(submit)">
-          <SignedOut v-model="signedOut" />
+          <SessionClosed v-model="sessionClosed" />
+          <SessionExpired v-model="sessionExpired" />
           <InvalidCredentials v-model="invalidCredentials" />
           <EmailAddressInput class="mb-3" required v-model="emailAddress" />
           <PasswordInput v-if="isPasswordFlowAllowed" class="mb-3" ref="passwordInput" required v-model="password" />
@@ -37,15 +38,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmailAddressInput from "./EmailAddressInput.vue";
 import InvalidCredentials from "./InvalidCredentials.vue";
 import PasswordInput from "./PasswordInput.vue";
-import SignedOut from "@/components/accounts/SignedOut.vue";
+import SessionClosed from "./SessionClosed.vue";
+import SessionExpired from "./SessionExpired.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { AuthenticationFlow, SignInAccountRequest, SignInAccountResponse } from "@/types/account";
+import type { AuthenticationFlow, SignInAccountRequest, SignInAccountResponse, SignOutEvent } from "@/types/account";
 import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api";
 import { signIn } from "@/api/account";
 import { useAccountStore } from "@/stores/account.ts";
@@ -68,7 +70,10 @@ const invalidCredentials = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const password = ref<string>("");
 const passwordInput = ref<InstanceType<typeof PasswordInput> | null>(null);
-const signedOut = ref<boolean>(account.signedOut);
+
+const signOutEvent: SignOutEvent | undefined = account.consumeSignOutEvent();
+const sessionClosed = ref<boolean>(signOutEvent === "closed");
+const sessionExpired = ref<boolean>(signOutEvent === "expired");
 
 const isPasswordFlowAllowed = computed<boolean>(() => props.flows.includes("Password"));
 const isPasswordLessFlowAllowed = computed<boolean>(() => props.flows.includes("Passwordless"));
@@ -128,6 +133,4 @@ async function usePasswordLessFlow(): Promise<void> {
     }
   }
 }
-
-onMounted(() => (account.signedOut = false));
 </script>

@@ -18,7 +18,7 @@ onMounted(async () => {
   if (account.currentUser) {
     try {
       await signOut();
-      account.signOut();
+      account.signOut("closed");
     } catch (e: unknown) {
       handleError(e);
     }

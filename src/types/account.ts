@@ -103,6 +103,8 @@ export type SignInAccountResponse = {
   currentUser?: CurrentUser | null;
 };
 
+export type SignOutEvent = "closed" | "expired";
+
 export type TimeZone = {
   id: string;
   displayName: string;
