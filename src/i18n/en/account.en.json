@@ -123,6 +123,10 @@
   },
   "signIn": {
     "help": "Enter your email address to sign in or create an account.",
+    "invalidCredentials": {
+      "help": "Check your email address and password, then try again.",
+      "lead": "We couldn’t sign you in."
+    },
     "passwordLess": {
       "help": "We’ll send you a one-time sign-in link by email. No password will be required.",
       "lead": "Email me a sign-in link"

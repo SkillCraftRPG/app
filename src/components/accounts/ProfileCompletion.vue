@@ -64,8 +64,8 @@ import type {
   TokenPayload,
   UserExperience,
 } from "@/types/account";
-import { signIn } from "@/api/account.ts";
-import { useAccountStore } from "@/stores/account.ts";
+import { signIn } from "@/api/account";
+import { useAccountStore } from "@/stores/account";
 import { useForm } from "@/forms";
 
 const account = useAccountStore();

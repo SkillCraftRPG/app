@@ -7,9 +7,10 @@
       </div>
       <hr class="my-4" />
       <div class="row justify-content-center">
-        <form class="col-md-6" @submit.prevent="submit">
+        <form class="col-md-6" @submit.prevent="handleSubmit(submit)">
+          <InvalidCredentials v-model="invalidCredentials" />
           <EmailAddressInput class="mb-3" required v-model="emailAddress" />
-          <div v-if="isPasswordFlowAllowed" class="mb-3">🚧 Password Input…</div>
+          <PasswordInput v-if="isPasswordFlowAllowed" class="mb-3" ref="passwordInput" required v-model="password" />
           <TarButton :disabled="isLoading" icon="fas fa-user" :loading="isLoading" size="large" :text="t('account.signIn.submit')" type="submit" />
         </form>
       </div>
@@ -39,10 +40,13 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmailAddressInput from "./EmailAddressInput.vue";
+import InvalidCredentials from "./InvalidCredentials.vue";
+import PasswordInput from "./PasswordInput.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { AuthenticationFlow, SignInAccountRequest, SignInAccountResponse } from "@/types/account.ts";
-import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api.ts";
-import { signIn } from "@/api/account.ts";
+import type { AuthenticationFlow, SignInAccountRequest, SignInAccountResponse } from "@/types/account";
+import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api";
+import { signIn } from "@/api/account";
+import { useForm } from "@/forms";
 
 const { locale, t } = useI18n();
 
@@ -56,16 +60,20 @@ const emit = defineEmits<{
 }>();
 
 const emailAddress = ref<string>("");
+const invalidCredentials = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const password = ref<string>("");
+const passwordInput = ref<InstanceType<typeof PasswordInput> | null>(null);
 
 const isPasswordFlowAllowed = computed<boolean>(() => props.flows.includes("Password"));
 const isPasswordLessFlowAllowed = computed<boolean>(() => props.flows.includes("Passwordless"));
 const title = computed<string>(() => t("account.signIn.welcome"));
 
+const { handleSubmit } = useForm();
 async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
+    invalidCredentials.value = false;
     try {
       const request: SignInAccountRequest = {
         credentials: {
@@ -82,9 +90,9 @@ async function submit(): Promise<void> {
       if (failure.status === StatusCodes.BadRequest) {
         const problemDetails = failure.data as ProblemDetails;
         if (problemDetails.error && problemDetails.error.code === ErrorCodes.InvalidCredentials) {
-          // TODO(fpion): invalidCredentials.value = true;
-          // TODO(fpion): password.value = "";
-          // TODO(fpion): passwordRef.value?.focus();
+          invalidCredentials.value = true;
+          password.value = "";
+          passwordInput.value?.focus();
           return;
         }
       }

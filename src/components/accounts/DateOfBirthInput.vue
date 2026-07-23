@@ -5,7 +5,6 @@
       <!-- TODO(fpion): we should change number inputs to text, and have `inputmode="numeric"` instead with a maxlength. -->
       <div class="col">
         <FormInput
-          floating
           :id="`${id}-day`"
           :label="t('account.dateOfBirth.day')"
           :model-value="day ? day.toString() : ''"
@@ -18,7 +17,6 @@
       </div>
       <div class="col">
         <FormSelect
-          floating
           :id="`${id}-month`"
           :label="t('account.dateOfBirth.month.label')"
           :model-value="month"
@@ -30,7 +28,6 @@
       </div>
       <div class="col">
         <FormInput
-          floating
           :id="`${id}-year`"
           :label="t('account.dateOfBirth.year')"
           :model-value="year ? year.toString() : ''"

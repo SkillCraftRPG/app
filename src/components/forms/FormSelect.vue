@@ -51,9 +51,9 @@ import { nanoid } from "nanoid";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
-import { useField } from "@/forms";
 import TarSelect from "@/components/tar/TarSelect.vue";
-import type { SelectOptions, SelectStatus } from "@/types/tar/select.ts";
+import type { SelectOptions, SelectStatus } from "@/types/tar/select";
+import { useField } from "@/forms";
 
 const { parseBoolean } = parsingUtils;
 const { t } = useI18n();
@@ -65,6 +65,7 @@ const props = withDefaults(
     }
   >(),
   {
+    floating: true,
     id: () => nanoid(),
   },
 );

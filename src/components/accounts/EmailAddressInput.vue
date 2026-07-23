@@ -1,10 +1,8 @@
 <template>
-  <TarInput
-    floating
+  <FormInput
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
-    :placeholder="t(label)"
     :required="required"
     type="email"
     @update:model-value="$emit('update:model-value', $event ?? '')"
@@ -14,7 +12,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import TarInput from "@/components/tar/TarInput.vue";
+import FormInput from "@/components/forms/FormInput.vue";
 
 const { t } = useI18n();
 
