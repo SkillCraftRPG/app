@@ -57,7 +57,9 @@
     "last": "Last Name"
   },
   "password": {
+    "changedOn": "Changed on",
     "label": "Password",
+    "none": "No password set.",
     "rules": {
       "digit": "At least 1 digit",
       "lower": "At least 1 lowercase letter",

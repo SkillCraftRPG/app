@@ -57,7 +57,9 @@
     "last": "Nom"
   },
   "password": {
+    "changedOn": "Modifié le",
     "label": "Mot de passe",
+    "none": "Aucun mot de passe.",
     "rules": {
       "digit": "Au moins 1 chiffre",
       "lower": "Au moins 1 minuscule",

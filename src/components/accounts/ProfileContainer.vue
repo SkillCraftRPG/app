@@ -25,8 +25,8 @@
       <div class="col-md-6">
         <div class="mb-3">
           <div class="fw-bold">{{ t("account.password.label") }}</div>
-          <div v-if="modelValue.passwordChangedOn">{{ d(modelValue.passwordChangedOn, "medium") }}</div>
-          <div v-else>TODO(fpion): 🚧</div>
+          <div v-if="modelValue.passwordChangedOn">{{ t("account.password.changedOn") }}&nbsp;{{ d(modelValue.passwordChangedOn, "medium") }}</div>
+          <div v-else class="text-body-secondary">{{ t("account.password.none") }}</div>
         </div>
       </div>
       <div class="col-md-6">
