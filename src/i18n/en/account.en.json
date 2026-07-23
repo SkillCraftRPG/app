@@ -75,11 +75,11 @@
         "note": "This choice only determines your default page after signing in. You will still be able to access both areas and change this preference from your profile.",
         "options": {
           "Gamemaster": {
-            "help": "Go directly to the Gamemaster portal and your list of worlds after signing in.",
+            "help": "Go directly to the Gamemaster portal: your list of worlds.",
             "label": "Gamemaster"
           },
           "Player": {
-            "help": "Go directly to your character sheets after signing in.",
+            "help": "Go directly to your character sheets.",
             "label": "Player"
           }
         }
