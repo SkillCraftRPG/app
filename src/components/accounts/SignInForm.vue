@@ -9,7 +9,7 @@
       <div class="row justify-content-center">
         <form class="col-md-6" @submit.prevent="submit">
           <EmailAddressInput class="mb-3" required v-model="emailAddress" />
-          <div v-if="isPasswordFlowAllowed" class="mb-3">🚧 Password Input…</div>
+          <PasswordInput v-if="isPasswordFlowAllowed" class="mb-3" required v-model="password" />
           <TarButton :disabled="isLoading" icon="fas fa-user" :loading="isLoading" size="large" :text="t('account.signIn.submit')" type="submit" />
         </form>
       </div>
@@ -39,6 +39,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmailAddressInput from "./EmailAddressInput.vue";
+import PasswordInput from "./PasswordInput.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { AuthenticationFlow, SignInAccountRequest, SignInAccountResponse } from "@/types/account.ts";
 import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api.ts";

@@ -17,7 +17,7 @@
         <div v-if="option.note" class="text-body-secondary mt-1">{{ t(option.note) }}</div>
       </label>
     </div>
-    <PasswordInput v-if="isPasswordRequired" class="mb-3" :model-value="modelValue.password" required @update:model-value="updatePassword" />
+    <PasswordInput v-if="isPasswordRequired" class="mb-3" :model-value="modelValue.password" policy required @update:model-value="updatePassword" />
   </div>
 </template>
 
