@@ -3,10 +3,10 @@
     :close="t('actions.close')"
     :dismissible="isDismissible"
     :model-value="modelValue"
-    variant="success"
+    variant="warning"
     @update:model-value="$emit('update:model-value', $event)"
   >
-    <strong>{{ t("account.signOut.lead") }}</strong> {{ t("account.signOut.help") }}
+    <strong>{{ t("account.signOut.expired.lead") }}</strong> {{ t("account.signOut.expired.help") }}
   </TarAlert>
 </template>
 

@@ -8,6 +8,7 @@
     "previous": "Précédent"
   },
   "brand": "SkillCraft",
+  "error": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
   "home": {
     "go": "Aller à l’accueil",
     "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",
@@ -24,14 +25,8 @@
     "light": "Clair"
   },
   "toasts": {
-    "error": {
-      "message": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
-      "title": "Erreur !"
-    },
+    "error": "Erreur !",
     "success": "Succès !",
-    "warning": {
-      "signedOut": "Vous avez été déconnecté, veuillez vous reconnecter à votre compte.",
-      "title": "Attention !"
-    }
+    "warning": "Attention !"
   }
 }

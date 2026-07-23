@@ -1,3 +1,4 @@
+import type { Locale } from "./i18n";
 import type { Optional } from "./api";
 
 export type AuthenticationFlow = "Password" | "Passwordless";
@@ -73,7 +74,7 @@ export type Profile = {
   fullName: string;
   dateOfBirth?: string | null;
   gender?: Gender;
-  locale: string;
+  locale: Locale;
   timeZone: string;
   createdOn: string;
   updatedOn: string;
@@ -102,6 +103,8 @@ export type SignInAccountResponse = {
   profileCompletionToken?: string | null;
   currentUser?: CurrentUser | null;
 };
+
+export type SignOutEvent = "closed" | "expired";
 
 export type TimeZone = {
   id: string;

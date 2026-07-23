@@ -1,12 +1,6 @@
 <template>
   <div>
-    <TarInput v-if="email" class="mb-3" floating :label="emailAddressLabel" :model-value="email.address" :placeholder="emailAddressLabel" plaintext readonly>
-      <template #append v-if="email.isVerified">
-        <span class="input-group-text border-0 bg-transparent pe-0">
-          <TarBadge pill variant="success"><font-awesome-icon icon="fas fa-check" />&nbsp;{{ t("account.email.verified") }}</TarBadge>
-        </span>
-      </template>
-    </TarInput>
+    <EmailDisplay v-if="email" class="mb-3" :email="email" />
     <div class="row">
       <div class="col-md-6">
         <FirstNameInput class="mb-3" :model-value="modelValue.firstName" required @update:model-value="updateFirstName($event)" />
@@ -19,16 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-
+import EmailDisplay from "./EmailDisplay.vue";
 import FirstNameInput from "./FirstNameInput.vue";
 import LastNameInput from "./LastNameInput.vue";
-import TarBadge from "@/components/tar/TarBadge.vue";
-import TarInput from "@/components/tar/TarInput.vue";
 import type { Email, PersonalInformation } from "@/types/account";
-
-const { t } = useI18n();
 
 const props = defineProps<{
   email?: Email;
@@ -38,8 +26,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "update:model-value", value: PersonalInformation): void;
 }>();
-
-const emailAddressLabel = computed<string>(() => t("account.email.address"));
 
 function updateFirstName(firstName: string): void {
   emit("update:model-value", { ...props.modelValue, firstName });

@@ -1,23 +1,30 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-import type { CurrentUser } from "@/types/account";
+import type { CurrentUser, SignOutEvent } from "@/types/account";
 
 export const useAccountStore = defineStore(
   "account",
   () => {
     const currentUser = ref<CurrentUser>();
-    const signedOut = ref<boolean>(false);
+    const signedOutEvent = ref<SignOutEvent>();
+
+    function consumeSignOutEvent(): SignOutEvent | undefined {
+      const e: SignOutEvent | undefined = signedOutEvent.value;
+      signedOutEvent.value = undefined;
+      return e;
+    }
 
     function signIn(value: CurrentUser): void {
       currentUser.value = value;
     }
-    function signOut(): void {
+
+    function signOut(e: SignOutEvent): void {
       currentUser.value = undefined;
-      signedOut.value = true;
+      signedOutEvent.value = e;
     }
 
-    return { currentUser, signedOut, signIn, signOut };
+    return { currentUser, signedOutEvent, consumeSignOutEvent, signIn, signOut };
   },
   {
     persist: true,

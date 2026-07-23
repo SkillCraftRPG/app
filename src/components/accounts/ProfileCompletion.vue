@@ -7,7 +7,11 @@
       <ProfileStepPersonal v-if="step === Step.Personal" :email="email" v-model="personal" />
       <ProfileStepSecurity v-else-if="step === Step.Security" v-model="security" />
       <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
-      <ProfileStepExperience v-else-if="step === Step.Experience" v-model="experience" />
+      <DefaultExperienceRadio v-else-if="step === Step.Experience" class="mb-3" v-model="experience">
+        <template #after>
+          <div class="form-text mt-3">{{ t("account.profile.experience.note") }}</div>
+        </template>
+      </DefaultExperienceRadio>
       <div class="d-flex justify-content-between">
         <div class="d-flex gap-2">
           <TarButton icon="fas fa-xmark" outline :text="t('actions.abandon')" type="button" variant="danger" @click="openAbandon" />
@@ -46,9 +50,9 @@ import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import DefaultExperienceRadio from "./DefaultExperienceRadio.vue";
 import ProfileAbandonModal from "./ProfileAbandonModal.vue";
 import ProfileCompleteModal from "./ProfileCompleteModal.vue";
-import ProfileStepExperience from "./ProfileStepExperience.vue";
 import ProfileStepPersonal from "./ProfileStepPersonal.vue";
 import ProfileStepPreferences from "./ProfileStepPreferences.vue";
 import ProfileStepSecurity from "./ProfileStepSecurity.vue";
@@ -126,11 +130,11 @@ function getStepKey(): string | undefined {
 
 const help = computed<string>(() => {
   const key: string | undefined = getStepKey();
-  return key ? t(`account.profile.completion.${key}.help`) : "";
+  return key ? t(`account.profile.${key}.help`) : "";
 });
 const subtitle = computed<string>(() => {
   const key: string | undefined = getStepKey();
-  return key ? t(`account.profile.completion.${key}.lead`) : "";
+  return key ? t(`account.profile.${key}.label`) : "";
 });
 const progress = computed<number>(() => Math.floor((step.value * 100) / 3));
 

@@ -47,20 +47,20 @@ type Option = {
 const options: Option[] = [
   {
     value: "PasswordLess",
-    label: "account.profile.completion.security.options.passwordLess.label",
-    help: "account.profile.completion.security.options.passwordLess.help",
-    note: "account.profile.completion.security.options.passwordLess.note",
+    label: "account.profile.security.options.passwordLess.label",
+    help: "account.profile.security.options.passwordLess.help",
+    note: "account.profile.security.options.passwordLess.note",
   },
   {
     value: "Password",
-    label: "account.profile.completion.security.options.password.label",
-    help: "account.profile.completion.security.options.password.help",
+    label: "account.profile.security.options.password.label",
+    help: "account.profile.security.options.password.help",
   },
   {
     value: "MultiFactor",
-    label: "account.profile.completion.security.options.multiFactor.label",
-    help: "account.profile.completion.security.options.multiFactor.help",
-    note: "account.profile.completion.security.options.multiFactor.note",
+    label: "account.profile.security.options.multiFactor.label",
+    help: "account.profile.security.options.multiFactor.help",
+    note: "account.profile.security.options.multiFactor.note",
   },
 ];
 

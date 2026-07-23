@@ -1,4 +1,6 @@
 {
+  "authenticatedOn": "Authenticated on",
+  "createdOn": "Registered on",
   "dateOfBirth": {
     "day": "Day",
     "label": "Date of birth",
@@ -44,12 +46,21 @@
     "label": "Communication language",
     "placeholder": "Select your preferred communication language"
   },
+  "multiFactorAuthentication": {
+    "disabled": "Disabled",
+    "email": "Email",
+    "enabled": "Enabled",
+    "label": "Multi-Factor Authentication",
+    "phone": "Text Message"
+  },
   "name": {
     "first": "First Name",
     "last": "Last Name"
   },
   "password": {
+    "changedOn": "Changed on",
     "label": "Password",
+    "none": "No password set.",
     "rules": {
       "digit": "At least 1 digit",
       "lower": "At least 1 lowercase letter",
@@ -65,61 +76,61 @@
     }
   },
   "profile": {
-    "completion": {
-      "abandon": {
-        "help": "The information you entered will not be saved. You will need to restart profile setup the next time you sign in.",
-        "lead": "Abandon profile setup?"
-      },
-      "complete": {
-        "help": "The remaining steps will be skipped. The information you’ve already entered will be saved, and you can add or update these details later on the <strong>My Profile</strong> page.",
-        "lead": "Finish setting up your profile?"
-      },
-      "experience": {
-        "help": "Choose which section will appear after you sign in.",
-        "lead": "Default experience",
-        "note": "This choice only determines your default page after signing in. You will still be able to access both areas and change this preference from your profile.",
-        "options": {
-          "Gamemaster": {
-            "help": "Go directly to the Gamemaster portal: your list of worlds.",
-            "label": "Gamemaster"
-          },
-          "Player": {
-            "help": "Go directly to your character sheets.",
-            "label": "Player"
-          }
+    "abandon": {
+      "help": "The information you entered will not be saved. You will need to restart profile setup the next time you sign in.",
+      "lead": "Abandon profile setup?"
+    },
+    "complete": {
+      "help": "The remaining steps will be skipped. The information you’ve already entered will be saved, and you can add or update these details later on the <strong>My Profile</strong> page.",
+      "lead": "Finish setting up your profile?"
+    },
+    "experience": {
+      "help": "Choose which section will appear after you sign in.",
+      "label": "Default experience",
+      "note": "This choice only determines your default page after signing in. You will still be able to access both areas and change this preference from your profile.",
+      "options": {
+        "Gamemaster": {
+          "help": "Go directly to the Gamemaster portal: your list of worlds.",
+          "label": "Gamemaster"
+        },
+        "Player": {
+          "help": "Go directly to your character sheets.",
+          "label": "Player"
         }
-      },
-      "personal": {
-        "help": "Enter your first and last name to personalize your profile.",
-        "lead": "Personal information"
-      },
-      "preferences": {
-        "help": "Add a few optional details, then confirm your language and time zone.",
-        "lead": "Profile and preferences"
-      },
-      "security": {
-        "help": "Choose how you want to sign in and protect your account.",
-        "lead": "Account security",
-        "options": {
-          "multiFactor": {
-            "help": "Sign in with your password, then enter the verification code received by email.",
-            "label": "Password with two-factor verification",
-            "note": "One-time link sign-in will not be available."
-          },
-          "password": {
-            "help": "Sign in with your password or request a sign-in link by email.",
-            "label": "Password or email link"
-          },
-          "passwordLess": {
-            "help": "Receive a one-time sign-in link by email.",
-            "label": "Email link",
-            "note": "No password will be created."
-          }
+      }
+    },
+    "personal": {
+      "help": "Enter your first and last name to personalize your profile.",
+      "label": "Personal information"
+    },
+    "preferences": {
+      "help": "Add a few optional details, then confirm your language and time zone.",
+      "label": "Profile and preferences"
+    },
+    "security": {
+      "help": "Choose how you want to sign in and protect your account.",
+      "label": "Account security",
+      "options": {
+        "multiFactor": {
+          "help": "Sign in with your password, then enter the verification code received by email.",
+          "label": "Password with two-factor verification",
+          "note": "One-time link sign-in will not be available."
+        },
+        "password": {
+          "help": "Sign in with your password or request a sign-in link by email.",
+          "label": "Password or email link"
+        },
+        "passwordLess": {
+          "help": "Receive a one-time sign-in link by email.",
+          "label": "Email link",
+          "note": "No password will be created."
         }
-      },
+      }
+    },
+    "setup": {
       "title": "Set Up My Profile"
     },
-    "title": "My Profile"
+    "title": "My profile"
   },
   "signIn": {
     "help": "Enter your email address to sign in or create an account.",
@@ -136,12 +147,19 @@
     "welcome": "Welcome"
   },
   "signOut": {
-    "help": "Your session was closed successfully.",
-    "lead": "You’re signed out.",
+    "closed": {
+      "help": "Your session was closed successfully.",
+      "lead": "You’re signed out."
+    },
+    "expired": {
+      "help": "Sign in again to continue.",
+      "lead": "Your session has expired."
+    },
     "title": "Sign Out"
   },
   "timeZone": {
     "label": "Time zone",
     "placeholder": "Select your time zone"
-  }
+  },
+  "updatedOn": "Updated on"
 }
