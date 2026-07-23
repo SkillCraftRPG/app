@@ -123,6 +123,10 @@
   },
   "signIn": {
     "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
+    "passwordLess": {
+      "help": "Nous vous enverrons un lien à usage unique par courriel. Aucun mot de passe ne sera requis.",
+      "lead": "Recevoir un lien de connexion"
+    },
     "submit": "Se connecter",
     "title": "Connexion",
     "welcome": "Bienvenue"
