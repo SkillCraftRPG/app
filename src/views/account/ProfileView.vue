@@ -31,7 +31,7 @@ onMounted(async () => {
   const completionToken: string = (Array.isArray(route.query.token) ? route.query.token[0] : route.query.token) ?? "";
   if (completionToken) {
     token.value = completionToken;
-    title.value = t("account.profile.completion.title");
+    title.value = t("account.profile.setup.title");
     document.setTitle(title.value);
     return;
   }

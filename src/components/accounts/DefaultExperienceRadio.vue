@@ -1,6 +1,6 @@
 <template>
   <fieldset>
-    <legend class="visually-hidden">{{ t("account.profile.completion.experience.lead") }}</legend>
+    <legend class="visually-hidden">{{ t("account.profile.experience.label") }}</legend>
     <div class="row g-3">
       <div v-for="option in options" :key="option.value" class="col-12 col-md-6">
         <input
@@ -55,14 +55,14 @@ type Option = {
 const options: Option[] = [
   {
     value: "Player",
-    label: "account.profile.completion.experience.options.Player.label",
-    help: "account.profile.completion.experience.options.Player.help",
+    label: "account.profile.experience.options.Player.label",
+    help: "account.profile.experience.options.Player.help",
     icon: "fas fa-dice",
   },
   {
     value: "Gamemaster",
-    label: "account.profile.completion.experience.options.Gamemaster.label",
-    help: "account.profile.completion.experience.options.Gamemaster.help",
+    label: "account.profile.experience.options.Gamemaster.label",
+    help: "account.profile.experience.options.Gamemaster.help",
     icon: "fas fa-hat-wizard",
   },
 ];

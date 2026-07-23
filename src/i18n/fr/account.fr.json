@@ -76,58 +76,58 @@
     }
   },
   "profile": {
-    "completion": {
-      "abandon": {
-        "help": "Les informations saisies ne seront pas enregistrées. Vous devrez recommencer la complétion de votre profil lors de votre prochaine connexion.",
-        "lead": "Abandonner la complétion du profil ?"
-      },
-      "complete": {
-        "help": "Les étapes restantes seront ignorées. Les informations déjà saisies seront enregistrées, et vous pourrez ajouter ou modifier ces renseignements plus tard dans la page <strong>Mon profil</strong>.",
-        "lead": "Terminer la configuration du profil ?"
-      },
-      "experience": {
-        "help": "Choisissez la section qui s’affichera après votre connexion.",
-        "lead": "Expérience par défaut",
-        "note": "Ce choix détermine uniquement votre page d’accueil après la connexion. Vous pourrez toujours accéder aux deux espaces et modifier ce choix dans votre profil.",
-        "options": {
-          "Gamemaster": {
-            "help": "Accédez directement à votre portail de maître de jeu : la liste de vos mondes.",
-            "label": "Maître de jeu"
-          },
-          "Player": {
-            "help": "Accédez directement à vos fiches de personnages.",
-            "label": "Joueur"
-          }
+    "abandon": {
+      "help": "Les informations saisies ne seront pas enregistrées. Vous devrez recommencer la complétion de votre profil lors de votre prochaine connexion.",
+      "lead": "Abandonner la complétion du profil ?"
+    },
+    "complete": {
+      "help": "Les étapes restantes seront ignorées. Les informations déjà saisies seront enregistrées, et vous pourrez ajouter ou modifier ces renseignements plus tard dans la page <strong>Mon profil</strong>.",
+      "lead": "Terminer la configuration du profil ?"
+    },
+    "experience": {
+      "help": "Choisissez la section qui s’affichera après votre connexion.",
+      "label": "Expérience par défaut",
+      "note": "Ce choix détermine uniquement votre page d’accueil après la connexion. Vous pourrez toujours accéder aux deux espaces et modifier ce choix dans votre profil.",
+      "options": {
+        "Gamemaster": {
+          "help": "Accédez directement à votre portail de maître de jeu : la liste de vos mondes.",
+          "label": "Maître de jeu"
+        },
+        "Player": {
+          "help": "Accédez directement à vos fiches de personnages.",
+          "label": "Joueur"
         }
-      },
-      "personal": {
-        "help": "Indiquez votre prénom et votre nom pour personnaliser votre profil.",
-        "lead": "Informations personnelles"
-      },
-      "preferences": {
-        "help": "Ajoutez quelques renseignements facultatifs, puis vérifiez votre langue et votre fuseau horaire.",
-        "lead": "Profil et préférences"
-      },
-      "security": {
-        "help": "Choisissez comment vous souhaitez vous connecter et protéger votre compte.",
-        "lead": "Sécurité du compte",
-        "options": {
-          "multiFactor": {
-            "help": "Connectez-vous avec votre mot de passe, puis entrez le code de vérification reçu par courriel.",
-            "label": "Mot de passe avec vérification en deux étapes",
-            "note": "La connexion par lien à usage unique ne sera pas disponible."
-          },
-          "password": {
-            "help": "Connectez-vous avec votre mot de passe ou demandez un lien de connexion par courriel.",
-            "label": "Mot de passe ou lien par courriel"
-          },
-          "passwordLess": {
-            "help": "Recevez un lien de connexion à usage unique par courriel.",
-            "label": "Lien par courriel",
-            "note": "Aucun mot de passe ne sera créé."
-          }
+      }
+    },
+    "personal": {
+      "help": "Indiquez votre prénom et votre nom pour personnaliser votre profil.",
+      "label": "Informations personnelles"
+    },
+    "preferences": {
+      "help": "Ajoutez quelques renseignements facultatifs, puis vérifiez votre langue et votre fuseau horaire.",
+      "label": "Profil et préférences"
+    },
+    "security": {
+      "help": "Choisissez comment vous souhaitez vous connecter et protéger votre compte.",
+      "label": "Sécurité du compte",
+      "options": {
+        "multiFactor": {
+          "help": "Connectez-vous avec votre mot de passe, puis entrez le code de vérification reçu par courriel.",
+          "label": "Mot de passe avec vérification en deux étapes",
+          "note": "La connexion par lien à usage unique ne sera pas disponible."
+        },
+        "password": {
+          "help": "Connectez-vous avec votre mot de passe ou demandez un lien de connexion par courriel.",
+          "label": "Mot de passe ou lien par courriel"
+        },
+        "passwordLess": {
+          "help": "Recevez un lien de connexion à usage unique par courriel.",
+          "label": "Lien par courriel",
+          "note": "Aucun mot de passe ne sera créé."
         }
-      },
+      }
+    },
+    "setup": {
       "title": "Compléter mon profil"
     },
     "title": "Mon profil"

@@ -9,7 +9,7 @@
       <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
       <DefaultExperienceRadio v-else-if="step === Step.Experience" class="mb-3" v-model="experience">
         <template #after>
-          <div class="form-text mt-3">{{ t("account.profile.completion.experience.note") }}</div>
+          <div class="form-text mt-3">{{ t("account.profile.experience.note") }}</div>
         </template>
       </DefaultExperienceRadio>
       <div class="d-flex justify-content-between">
@@ -130,11 +130,11 @@ function getStepKey(): string | undefined {
 
 const help = computed<string>(() => {
   const key: string | undefined = getStepKey();
-  return key ? t(`account.profile.completion.${key}.help`) : "";
+  return key ? t(`account.profile.${key}.help`) : "";
 });
 const subtitle = computed<string>(() => {
   const key: string | undefined = getStepKey();
-  return key ? t(`account.profile.completion.${key}.lead`) : "";
+  return key ? t(`account.profile.${key}.label`) : "";
 });
 const progress = computed<number>(() => Math.floor((step.value * 100) / 3));
 

@@ -20,7 +20,7 @@
       </div>
     </div>
     <ProfileForm :model-value="modelValue" @error="$emit('error', $event)" @update:model-value="$emit('update:model-value', $event)" />
-    <h2 class="h3">{{ t("account.profile.completion.security.lead") }}</h2>
+    <h2 class="h3">{{ t("account.profile.security.label") }}</h2>
     <div class="row">
       <div class="col-md-6">
         <div class="mb-3">

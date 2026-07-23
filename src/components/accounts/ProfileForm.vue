@@ -28,8 +28,8 @@
       </div>
       <div class="mb-3">
         <div class="mb-3">
-          <div class="fw-bold">{{ t("account.profile.completion.experience.lead") }}</div>
-          <div>{{ t("account.profile.completion.experience.help") }}</div>
+          <div class="fw-bold">{{ t("account.profile.experience.label") }}</div>
+          <div>{{ t("account.profile.experience.help") }}</div>
         </div>
         <DefaultExperienceRadio :model-value="modelValue.defaultExperience" />
       </div>
