@@ -36,9 +36,9 @@
         </div>
       </div>
     </div>
-    <div class="mb-3">
-      <div v-if="modelValue.authenticatedOn">{{ d(modelValue.authenticatedOn, "medium") }}</div>
-      <div v-else>TODO(fpion): 🚧</div>
+    <div v-if="modelValue.authenticatedOn" class="mb-3">
+      <div class="fw-bold">{{ t("account.authenticatedOn") }}</div>
+      <div>{{ d(modelValue.authenticatedOn, "medium") }}</div>
     </div>
   </div>
 </template>

@@ -1,4 +1,5 @@
 {
+  "authenticatedOn": "Authenticated on",
   "createdOn": "Registered on",
   "dateOfBirth": {
     "day": "Day",
