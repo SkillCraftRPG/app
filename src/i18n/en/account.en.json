@@ -136,6 +136,8 @@
     "welcome": "Welcome"
   },
   "signOut": {
+    "help": "Your session was closed successfully.",
+    "lead": "You’re signed out.",
     "title": "Sign Out"
   },
   "timeZone": {
