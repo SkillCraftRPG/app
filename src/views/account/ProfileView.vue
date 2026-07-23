@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <h1>{{ title }}</h1>
-    <ProfileCompletion v-if="token" :token="token" />
+    <ProfileCompletion v-if="token" :token="token" @error="handleError" />
   </main>
 </template>
 

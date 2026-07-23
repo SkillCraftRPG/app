@@ -22,7 +22,15 @@
           />
         </div>
         <div class="d-flex gap-2">
-          <TarButton icon="fas fa-check" id="complete" :outline="step !== Step.Experience" :text="t('actions.complete')" type="submit" />
+          <TarButton
+            :disabled="isLoading"
+            icon="fas fa-check"
+            id="complete"
+            :loading="isLoading"
+            :outline="step !== Step.Experience"
+            :text="t('actions.complete')"
+            type="submit"
+          />
           <TarButton v-if="step !== Step.Experience" icon="fas fa-arrow-right" id="next" :text="t('actions.next')" type="submit" />
         </div>
       </div>
@@ -45,9 +53,19 @@ import ProfileStepPreferences from "./ProfileStepPreferences.vue";
 import ProfileStepSecurity from "./ProfileStepSecurity.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
-import type { PersonalInformation, PreferencesInformation, SecurityInformation, UserExperience } from "@/types/account";
+import type {
+  PersonalInformation,
+  PreferencesInformation,
+  SecurityInformation,
+  SignInAccountRequest,
+  SignInAccountResponse,
+  UserExperience,
+} from "@/types/account";
+import { signIn } from "@/api/account.ts";
+import { useAccountStore } from "@/stores/account.ts";
 import { useForm } from "@/forms";
 
+const account = useAccountStore();
 const router = useRouter();
 const { locale, t } = useI18n();
 
@@ -58,13 +76,18 @@ enum Step {
   Experience = 3,
 }
 
-defineProps<{
+const props = defineProps<{
   token: string;
+}>();
+
+const emit = defineEmits<{
+  (e: "error", value: unknown): void;
 }>();
 
 const abandonModal = ref<InstanceType<typeof ProfileAbandonModal> | null>(null);
 const completeModal = ref<InstanceType<typeof ProfileCompleteModal> | null>(null);
 const experience = ref<UserExperience>("Player");
+const isLoading = ref<boolean>(false);
 const personal = ref<PersonalInformation>({ firstName: "", lastName: "" });
 const preferences = ref<PreferencesInformation>({
   locale: locale.value,
@@ -102,7 +125,34 @@ function abandon(): void {
 }
 
 async function complete(): Promise<void> {
-  alert("submitting…"); // TODO(fpion): implement
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      const request: SignInAccountRequest = {
+        profile: {
+          token: props.token,
+          password: security.value.mode === "PasswordLess" ? null : security.value.password,
+          multiFactorAuthenticationMode: security.value.mode === "MultiFactor" ? "Email" : "None",
+          firstName: personal.value.firstName,
+          lastName: personal.value.lastName,
+          dateOfBirth: preferences.value.dateOfBirth,
+          gender: preferences.value.gender,
+          locale: preferences.value.locale,
+          timeZone: preferences.value.timeZone,
+          defaultExperience: experience.value,
+        },
+      };
+      const response: SignInAccountResponse = await signIn(request);
+      if (response.currentUser) {
+        account.signIn(response.currentUser);
+      }
+      router.push({ name: "Home" });
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
 
 function openAbandon(): void {
