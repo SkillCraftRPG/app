@@ -164,7 +164,7 @@ async function complete(): Promise<void> {
       if (response.currentUser) {
         account.signIn(response.currentUser);
       }
-      router.push({ name: "Profile" });
+      router.push({ name: "Home" });
     } catch (e: unknown) {
       emit("error", e);
     } finally {
