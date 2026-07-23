@@ -4,7 +4,7 @@
     <h2 class="h3">{{ subtitle }}</h2>
     <p>{{ help }}</p>
     <form @submit.prevent="submit">
-      <ProfileStepPersonal v-if="step === Step.Personal" v-model="personal" />
+      <ProfileStepPersonal v-if="step === Step.Personal" :email="email" v-model="personal" />
       <ProfileStepSecurity v-else-if="step === Step.Security" v-model="security" />
       <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
       <ProfileStepExperience v-else-if="step === Step.Experience" v-model="experience" />
@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -54,11 +55,13 @@ import ProfileStepSecurity from "./ProfileStepSecurity.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type {
+  Email,
   PersonalInformation,
   PreferencesInformation,
   SecurityInformation,
   SignInAccountRequest,
   SignInAccountResponse,
+  TokenPayload,
   UserExperience,
 } from "@/types/account";
 import { signIn } from "@/api/account.ts";
@@ -68,6 +71,7 @@ import { useForm } from "@/forms";
 const account = useAccountStore();
 const router = useRouter();
 const { locale, t } = useI18n();
+const { parseBoolean } = parsingUtils;
 
 enum Step {
   Personal = 0,
@@ -96,6 +100,16 @@ const preferences = ref<PreferencesInformation>({
 const security = ref<SecurityInformation>({ mode: "PasswordLess", password: "" });
 const step = ref<Step>(Step.Personal);
 const submitter = ref<string>("");
+
+const email = computed<Email | undefined>(() => {
+  const payload: TokenPayload = JSON.parse(atob(props.token.split(".")[1]!));
+  if (payload.email) {
+    return {
+      address: payload.email,
+      isVerified: parseBoolean(payload.email_verified ?? undefined) ?? false,
+    };
+  }
+});
 
 function getStepKey(): string | undefined {
   switch (step.value) {

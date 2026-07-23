@@ -28,7 +28,8 @@
       "help": "Un courriel de vérification a été envoyé à votre adresse. Vous pouvez fermer cette page en toute sécurité.",
       "reference": "Référence du courriel :",
       "title": "Courriel envoyé"
-    }
+    },
+    "verified": "Vérifié"
   },
   "gender": {
     "label": "Genre",

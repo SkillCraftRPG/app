@@ -15,6 +15,10 @@ export type CompleteProfilePayload = {
   defaultExperience: UserExperience;
 };
 
+export type Contact = {
+  isVerified: boolean;
+};
+
 export type Credentials = {
   locale: string;
   emailAddress: string;
@@ -27,6 +31,10 @@ export type CurrentUser = {
   emailAddress?: string | null;
   pictureUrl?: string | null;
   defaultExperience: UserExperience;
+};
+
+export type Email = Contact & {
+  address: string;
 };
 
 export type Gender = "male" | "female" | "other";
@@ -98,6 +106,11 @@ export type SignInAccountResponse = {
 export type TimeZone = {
   id: string;
   displayName: string;
+};
+
+export type TokenPayload = {
+  email?: string | null;
+  email_verified?: boolean | string | null;
 };
 
 export type UpdateProfilePayload = {
