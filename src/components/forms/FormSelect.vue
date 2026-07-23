@@ -65,6 +65,7 @@ const props = withDefaults(
     }
   >(),
   {
+    floating: true,
     id: () => nanoid(),
   },
 );

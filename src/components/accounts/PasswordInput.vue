@@ -1,7 +1,6 @@
 <template>
   <div>
     <FormInput
-      floating
       :id="id"
       :label="t(label)"
       :model-value="modelValue"
