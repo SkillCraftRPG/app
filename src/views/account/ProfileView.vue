@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watchEffect } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
@@ -24,29 +24,22 @@ const route = useRoute();
 const { t } = useI18n();
 
 const profile = ref<Profile>();
+const title = ref<string>("");
 const token = ref<string>("");
-
-const title = computed<string>(() => {
-  // TODO(fpion): unify both titles
-  if (token.value) {
-    return "account.profile.completion.title";
-  } else if (profile.value) {
-    return profile.value.fullName;
-  }
-  return t("account.profile.title");
-});
-
-watchEffect(() => document.setTitle(title.value));
 
 onMounted(async () => {
   const completionToken: string = (Array.isArray(route.query.token) ? route.query.token[0] : route.query.token) ?? "";
   if (completionToken) {
     token.value = completionToken;
+    title.value = t("account.profile.completion.title");
+    document.setTitle(title.value);
     return;
   }
 
   try {
     profile.value = await getProfile();
+    title.value = profile.value.fullName;
+    document.setTitle(title.value);
   } catch (e: unknown) {
     handleError(e);
   }
