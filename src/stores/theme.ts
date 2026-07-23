@@ -20,7 +20,6 @@ export const useThemeStore = defineStore(
     }
 
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-      console.log("System theme changed");
       if (currentTheme.value !== "light" && currentTheme.value !== "dark") {
         applyTheme("auto");
       }

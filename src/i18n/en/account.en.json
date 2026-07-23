@@ -69,6 +69,10 @@
         "help": "The information you entered will not be saved. You will need to restart profile setup the next time you sign in.",
         "lead": "Abandon profile setup?"
       },
+      "complete": {
+        "help": "The remaining steps will be skipped. The information you’ve already entered will be saved, and you can add or update these details later on the <strong>My Profile</strong> page.",
+        "lead": "Finish setting up your profile?"
+      },
       "experience": {
         "help": "Choose which section will appear after you sign in.",
         "lead": "Default experience",

@@ -69,6 +69,10 @@
         "help": "Les informations saisies ne seront pas enregistrées. Vous devrez recommencer la complétion de votre profil lors de votre prochaine connexion.",
         "lead": "Abandonner la complétion du profil ?"
       },
+      "complete": {
+        "help": "Les étapes restantes seront ignorées. Les informations déjà saisies seront enregistrées, et vous pourrez ajouter ou modifier ces renseignements plus tard dans la page <strong>Mon profil</strong>.",
+        "lead": "Terminer la configuration du profil ?"
+      },
       "experience": {
         "help": "Choisissez la section qui s’affichera après votre connexion.",
         "lead": "Expérience par défaut",
