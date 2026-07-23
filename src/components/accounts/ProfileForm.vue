@@ -26,6 +26,13 @@
           <TimeZoneSelect class="mb-3" :model-value="modelValue.timeZone" required />
         </div>
       </div>
+      <div class="mb-3">
+        <div class="mb-3">
+          <div class="fw-bold">{{ t("account.profile.completion.experience.lead") }}</div>
+          <div>{{ t("account.profile.completion.experience.help") }}</div>
+        </div>
+        <DefaultExperienceRadio :model-value="modelValue.defaultExperience" />
+      </div>
     </form>
   </div>
 </template>
@@ -34,6 +41,7 @@
 import { useI18n } from "vue-i18n";
 
 import DateOfBirthInput from "./DateOfBirthInput.vue";
+import DefaultExperienceRadio from "./DefaultExperienceRadio.vue";
 import FirstNameInput from "./FirstNameInput.vue";
 import GenderRadio from "./GenderRadio.vue";
 import LastNameInput from "./LastNameInput.vue";

@@ -84,6 +84,8 @@ async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     invalidCredentials.value = false;
+    sessionClosed.value = false;
+    sessionExpired.value = false;
     try {
       const request: SignInAccountRequest = {
         credentials: {

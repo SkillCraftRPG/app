@@ -27,7 +27,7 @@
         </label>
       </div>
     </div>
-    <p class="form-text mt-3">{{ t("account.profile.completion.experience.note") }}</p>
+    <slot name="after"></slot>
   </fieldset>
 </template>
 

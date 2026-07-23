@@ -3,16 +3,14 @@
     <div class="row text-body-secondary small">
       <div class="col-md-6">
         <div class="mb-3">
-          <strong>{{ t("account.createdOn") }}</strong>
-          <br />
-          {{ d(modelValue.createdOn, "medium") }}
+          <div class="fw-bold">{{ t("account.createdOn") }}</div>
+          <div>{{ d(modelValue.createdOn, "medium") }}</div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="mb-3">
-          <strong>{{ t("account.updatedOn") }}</strong>
-          <br />
-          {{ d(modelValue.updatedOn, "medium") }}
+          <div class="fw-bold">{{ t("account.updatedOn") }}</div>
+          <div>{{ d(modelValue.updatedOn, "medium") }}</div>
         </div>
       </div>
     </div>
@@ -20,23 +18,23 @@
       <div class="col-md-6">
         <EmailDisplay class="mb-3" :email="email" />
       </div>
+    </div>
+    <ProfileForm :model-value="modelValue" @error="$emit('error', $event)" @update:model-value="$emit('update:model-value', $event)" />
+    <h2 class="h3">{{ t("account.profile.completion.security.lead") }}</h2>
+    <div class="row">
       <div class="col-md-6">
         <div class="mb-3">
-          <strong>{{ t("account.multiFactorAuthentication.label") }}</strong>
-          <br />
+          <div class="fw-bold">{{ t("account.password.label") }}</div>
+          <div v-if="modelValue.passwordChangedOn">{{ d(modelValue.passwordChangedOn, "medium") }}</div>
+          <div v-else>TODO(fpion): 🚧</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3">
+          <div class="fw-bold">{{ t("account.multiFactorAuthentication.label") }}</div>
           <MultiFactorAuthenticationDisplay :mode="modelValue.multiFactorAuthenticationMode" />
         </div>
       </div>
-    </div>
-    <ProfileForm :model-value="modelValue" @error="$emit('error', $event)" @update:model-value="$emit('update:model-value', $event)" />
-    <div class="mb-3">
-      <strong>TODO(fpion): 🚧</strong>
-      <br />
-      {{ modelValue.defaultExperience }}
-    </div>
-    <div class="mb-3">
-      <div v-if="modelValue.passwordChangedOn">{{ d(modelValue.passwordChangedOn, "medium") }}</div>
-      <div v-else>TODO(fpion): 🚧</div>
     </div>
     <div class="mb-3">
       <div v-if="modelValue.authenticatedOn">{{ d(modelValue.authenticatedOn, "medium") }}</div>
@@ -46,13 +44,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import EmailDisplay from "./EmailDisplay.vue";
 import MultiFactorAuthenticationDisplay from "./MultiFactorAuthenticationDisplay.vue";
 import ProfileForm from "./ProfileForm.vue";
 import type { Email, Profile } from "@/types/account";
-import { computed } from "vue";
+import EmailDisplay from "./EmailDisplay.vue";
 
 const { d, t } = useI18n();
 
