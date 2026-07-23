@@ -1,7 +1,7 @@
 <template>
   <main class="container flex-grow-1 d-flex flex-column">
     <EmailVerificationMessageSent v-if="response.emailVerificationMessageId" :id="response.emailVerificationMessageId" />
-    <SignInForm v-else-if="isReady" @error="handleError" @submitted="handleResponse" />
+    <SignInForm v-else-if="isReady" :flows="response.allowedFlows" @error="handleError" @submitted="handleResponse" />
   </main>
 </template>
 

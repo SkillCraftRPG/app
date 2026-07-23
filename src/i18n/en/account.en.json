@@ -123,6 +123,10 @@
   },
   "signIn": {
     "help": "Enter your email address to sign in or create an account.",
+    "passwordLess": {
+      "help": "We’ll send you a one-time sign-in link by email. No password will be required.",
+      "lead": "Email me a sign-in link"
+    },
     "submit": "Sign in",
     "title": "Sign In",
     "welcome": "Welcome"
