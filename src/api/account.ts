@@ -12,3 +12,8 @@ export async function signIn(request: SignInAccountRequest): Promise<SignInAccou
   const url: string = new urlUtils.UrlBuilder({ path: "/sign/in" }).buildRelative();
   return (await post<SignInAccountRequest, SignInAccountResponse>(url, request)).data;
 }
+
+export async function signOut(): Promise<void> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/sign/out" }).buildRelative();
+  (await post(url)).data;
+}
