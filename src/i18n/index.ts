@@ -10,4 +10,26 @@ export default createI18n<[MessageSchema], "en" | "fr">({
   locale: "fr",
   fallbackLocale: "fr",
   messages: { en, fr },
+  datetimeFormats: {
+    en: {
+      medium: {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      },
+    },
+    fr: {
+      medium: {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      },
+    },
+  },
 });

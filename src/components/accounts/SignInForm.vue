@@ -50,7 +50,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import type { AuthenticationFlow, SignInAccountRequest, SignInAccountResponse, SignOutEvent } from "@/types/account";
 import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api";
 import { signIn } from "@/api/account";
-import { useAccountStore } from "@/stores/account.ts";
+import { useAccountStore } from "@/stores/account";
 import { useForm } from "@/forms";
 
 const account = useAccountStore();

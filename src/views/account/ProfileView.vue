@@ -2,6 +2,7 @@
   <main class="container">
     <h1>{{ title }}</h1>
     <ProfileCompletion v-if="token" :token="token" @error="handleError" />
+    <ProfileContainer v-if="profile" v-model="profile" @error="handleError" />
   </main>
 </template>
 
@@ -11,6 +12,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
 import ProfileCompletion from "@/components/accounts/ProfileCompletion.vue";
+import ProfileContainer from "@/components/accounts/ProfileContainer.vue";
 import type { Profile } from "@/types/account";
 import { getProfile } from "@/api/account";
 import { handleErrorKey } from "@/inject";
