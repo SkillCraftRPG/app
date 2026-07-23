@@ -7,15 +7,17 @@ export const useAccountStore = defineStore(
   "account",
   () => {
     const currentUser = ref<CurrentUser>();
+    const signedOut = ref<boolean>(false);
 
     function signIn(value: CurrentUser): void {
       currentUser.value = value;
     }
     function signOut(): void {
       currentUser.value = undefined;
+      signedOut.value = true;
     }
 
-    return { currentUser, signIn, signOut };
+    return { currentUser, signedOut, signIn, signOut };
   },
   {
     persist: true,

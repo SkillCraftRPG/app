@@ -15,12 +15,14 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const router = useRouter();
 
 onMounted(async () => {
-  try {
-    await signOut();
-    account.signOut();
-    router.push({ name: "SignIn" });
-  } catch (e: unknown) {
-    handleError(e);
+  if (account.currentUser) {
+    try {
+      await signOut();
+      account.signOut();
+    } catch (e: unknown) {
+      handleError(e);
+    }
   }
+  router.push({ name: "SignIn" });
 });
 </script>
