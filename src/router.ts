@@ -25,6 +25,12 @@ const router = createRouter({
       component: () => import("./views/account/SignInView.vue"),
       meta: { isPublic: true },
     },
+    {
+      name: "SignOut",
+      path: "/logout",
+      component: () => import("./views/account/SignOutView.vue"),
+      meta: { isPublic: true },
+    },
     // NotFound
     {
       name: "NotFound",
