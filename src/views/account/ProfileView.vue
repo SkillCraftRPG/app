@@ -26,7 +26,15 @@ const { t } = useI18n();
 const profile = ref<Profile>();
 const token = ref<string>("");
 
-const title = computed<string>(() => t(token.value ? "account.profile.completion.title" : "account.profile.title"));
+const title = computed<string>(() => {
+  // TODO(fpion): unify both titles
+  if (token.value) {
+    return "account.profile.completion.title";
+  } else if (profile.value) {
+    return profile.value.fullName;
+  }
+  return t("account.profile.title");
+});
 
 watchEffect(() => document.setTitle(title.value));
 

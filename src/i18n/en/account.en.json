@@ -1,4 +1,5 @@
 {
+  "createdOn": "Registered on",
   "dateOfBirth": {
     "day": "Day",
     "label": "Date of birth",
@@ -43,6 +44,13 @@
   "locale": {
     "label": "Communication language",
     "placeholder": "Select your preferred communication language"
+  },
+  "multiFactorAuthentication": {
+    "disabled": "Disabled",
+    "email": "Email",
+    "enabled": "Enabled",
+    "label": "Multi-Factor Authentication",
+    "phone": "Text Message"
   },
   "name": {
     "first": "First Name",
@@ -149,5 +157,6 @@
   "timeZone": {
     "label": "Time zone",
     "placeholder": "Select your time zone"
-  }
+  },
+  "updatedOn": "Updated on"
 }

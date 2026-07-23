@@ -1,4 +1,5 @@
 {
+  "createdOn": "Inscription",
   "dateOfBirth": {
     "day": "Jour",
     "label": "Date de naissance",
@@ -29,7 +30,7 @@
       "reference": "Référence du courriel :",
       "title": "Courriel envoyé"
     },
-    "verified": "Vérifié"
+    "verified": "Vérifiée"
   },
   "gender": {
     "label": "Genre",
@@ -43,6 +44,13 @@
   "locale": {
     "label": "Langue de communication",
     "placeholder": "Sélectionnez votre langue de communication préférée"
+  },
+  "multiFactorAuthentication": {
+    "disabled": "Désactivée",
+    "email": "Courriel",
+    "enabled": "Activée",
+    "label": "Authentification multifactorielle",
+    "phone": "Message texte"
   },
   "name": {
     "first": "Prénom",
@@ -149,5 +157,6 @@
   "timeZone": {
     "label": "Fuseau horaire",
     "placeholder": "Sélectionnez votre fuseau horaire"
-  }
+  },
+  "updatedOn": "Dernière modification"
 }
