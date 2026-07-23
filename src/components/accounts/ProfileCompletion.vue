@@ -9,7 +9,7 @@
       <ProfileStepPreferences v-else-if="step === Step.Preferences" v-model="preferences" />
       <DefaultExperienceRadio v-else-if="step === Step.Experience" class="mb-3" v-model="experience">
         <template #after>
-          <div class="form-text mt-3">{{ t("account.profile.experience.note") }}</div>
+          <div class="form-text mt-3">{{ t("account.profile.completion.experience.note") }}</div>
         </template>
       </DefaultExperienceRadio>
       <div class="d-flex justify-content-between">

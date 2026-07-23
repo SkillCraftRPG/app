@@ -85,6 +85,21 @@
         "help": "Les étapes restantes seront ignorées. Les informations déjà saisies seront enregistrées, et vous pourrez ajouter ou modifier ces renseignements plus tard dans la page <strong>Mon profil</strong>.",
         "lead": "Terminer la configuration du profil ?"
       },
+      "experience": {
+        "help": "Choisissez la section qui s’affichera après votre connexion.",
+        "lead": "Expérience par défaut",
+        "note": "Ce choix détermine uniquement votre page d’accueil après la connexion. Vous pourrez toujours accéder aux deux espaces et modifier ce choix dans votre profil.",
+        "options": {
+          "Gamemaster": {
+            "help": "Accédez directement à votre portail de maître de jeu : la liste de vos mondes.",
+            "label": "Maître de jeu"
+          },
+          "Player": {
+            "help": "Accédez directement à vos fiches de personnages.",
+            "label": "Joueur"
+          }
+        }
+      },
       "personal": {
         "help": "Indiquez votre prénom et votre nom pour personnaliser votre profil.",
         "lead": "Informations personnelles"
@@ -114,21 +129,6 @@
         }
       },
       "title": "Compléter mon profil"
-    },
-    "experience": {
-      "help": "Choisissez la section qui s’affichera après votre connexion.",
-      "lead": "Expérience par défaut",
-      "note": "Ce choix détermine uniquement votre page d’accueil après la connexion. Vous pourrez toujours accéder aux deux espaces et modifier ce choix dans votre profil.",
-      "options": {
-        "Gamemaster": {
-          "help": "Accédez directement à votre portail de maître de jeu : la liste de vos mondes.",
-          "label": "Maître de jeu"
-        },
-        "Player": {
-          "help": "Accédez directement à vos fiches de personnages.",
-          "label": "Joueur"
-        }
-      }
     },
     "title": "Mon profil"
   },
