@@ -63,6 +63,17 @@ export function useField(id: string, options?: FieldOptions): FormField {
     emit("update:model-value", value.value);
   }
 
+  function setValue(next: string, skipValidation?: boolean): void {
+    if (value.value === next) {
+      return;
+    }
+    value.value = next;
+    events?.updated(id, value.value);
+    if (!(skipValidation ?? typeof validationResult.value === "undefined")) {
+      validate();
+    }
+  }
+
   function validate(): ValidationResult {
     if (!rules.value) {
       return { isValid: true, rules: {}, context: {} };
@@ -79,7 +90,7 @@ export function useField(id: string, options?: FieldOptions): FormField {
     events = bindField(id, actions, initialValue.value);
   }
 
-  return { errors, isValid, value, bindField, focus, handleChange, reinitialize, reset, unbindField, validate };
+  return { errors, isValid, value, bindField, focus, handleChange, reinitialize, reset, setValue, unbindField, validate };
 }
 
 export function useForm(): FormContainer {

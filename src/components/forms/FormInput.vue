@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import type { ValidationResult, ValidationRuleSet } from "logitar-validation";
-import { computed, onUnmounted, ref } from "vue";
+import { computed, onUnmounted, ref, watch } from "vue";
 import { nanoid } from "nanoid";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
@@ -123,7 +123,7 @@ const rules = computed<ValidationRuleSet>(() => {
   }
   return { ...rules, ...props.rules };
 });
-const { errors, isValid, handleChange, unbindField } = useField(props.id, {
+const { errors, isValid, handleChange, setValue, unbindField } = useField(props.id, {
   focus,
   initialValue: props.modelValue,
   name: props.label?.toLowerCase() ?? props.name,
@@ -142,5 +142,8 @@ onUnmounted(() => {
   }
 });
 
-// TODO(fpion): we should sync modelValue with field.value when changing from external.
+watch(
+  () => props.modelValue,
+  (modelValue) => setValue(modelValue ?? ""),
+);
 </script>
