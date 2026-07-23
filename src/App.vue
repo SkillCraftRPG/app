@@ -27,7 +27,7 @@ import { onBeforeUnmount, onMounted, provide, ref } from "vue";
 import LayoutFooter from "./components/layout/LayoutFooter.vue";
 import LayoutNavbar from "./components/layout/LayoutNavbar.vue";
 import TarToaster from "@/components/tar/TarToaster.vue";
-import { StatusCodes, type ApiFailure } from "./types/api.ts";
+import { StatusCodes, type ApiFailure } from "./types/api";
 import { handleErrorKey } from "./inject";
 import { useAccountStore } from "./stores/account";
 import { useToastStore } from "./stores/toast";
