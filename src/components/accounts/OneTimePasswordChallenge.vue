@@ -111,7 +111,8 @@ async function submit(): Promise<void> {
 
 onMounted(() => codeInput.value?.focus());
 
-// TODO(fpion): input should have `inputmode="numeric"`, `autocomplete="one-time-code"` and enterkeyhint="done"
+// TODO(fpion): input should have `inputmode="numeric"`, `autocomplete="one-time-code"` and enterkeyhint="done".
+
 // TODO(fpion): expired code error to handle
 // TODO(fpion): handle when failedAttempts === 5
 </script>
