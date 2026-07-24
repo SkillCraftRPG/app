@@ -54,9 +54,13 @@
       "label": "Email"
     },
     "enabled": "Enabled",
-    "invalidCredentials": {
+    "incorrectCode": {
       "help": "Check the code you received, then try again.",
       "lead": "Incorrect code."
+    },
+    "invalidCode": {
+      "help": "Request a new code, then try again.",
+      "lead": "This code is no longer valid."
     },
     "label": "Multi-Factor Authentication",
     "phone": {

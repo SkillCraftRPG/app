@@ -54,9 +54,13 @@
       "label": "Courriel"
     },
     "enabled": "Activée",
-    "invalidCredentials": {
+    "incorrectCode": {
       "help": "Vérifiez le code reçu, puis réessayez.",
       "lead": "Code incorrect."
+    },
+    "invalidCode": {
+      "help": "Demandez un nouveau code, puis réessayez.",
+      "lead": "Ce code n’est plus valide."
     },
     "label": "Authentification multifactorielle",
     "phone": {
