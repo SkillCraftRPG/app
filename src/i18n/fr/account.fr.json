@@ -147,7 +147,8 @@
     "setup": {
       "title": "Compléter mon profil"
     },
-    "title": "Mon profil"
+    "title": "Mon profil",
+    "updated": "Votre profil a été modifié."
   },
   "signIn": {
     "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
