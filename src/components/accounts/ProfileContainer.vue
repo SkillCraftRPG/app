@@ -44,13 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import EmailDisplay from "./EmailDisplay.vue";
 import MultiFactorAuthenticationDisplay from "./MultiFactorAuthenticationDisplay.vue";
 import ProfileForm from "./ProfileForm.vue";
-import type { Email, Profile } from "@/types/account";
-import EmailDisplay from "./EmailDisplay.vue";
+import type { Email, Profile, Session } from "@/types/account";
+import { listSessions } from "@/api/sessions";
+import type { SearchResults } from "@/types/search";
 
 const { d, t } = useI18n();
 
@@ -58,10 +60,20 @@ const props = defineProps<{
   modelValue: Profile;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "error", value: unknown): void;
   (e: "update:model-value", value: Profile): void;
 }>();
 
+const sessions = ref<SearchResults<Session>>({ items: [], total: 0 });
+
 const email = computed<Email>(() => ({ address: props.modelValue.emailAddress, isVerified: true }));
+
+onMounted(async () => {
+  try {
+    sessions.value = await listSessions();
+  } catch (e: unknown) {
+    emit("error", e);
+  }
+});
 </script>

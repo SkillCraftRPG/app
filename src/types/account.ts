@@ -90,6 +90,17 @@ export type SecurityInformation = {
 
 export type SecurityMode = "PasswordLess" | "Password" | "MultiFactor";
 
+export type Session = /*Aggregate &*/ {
+  id: string; // TODO(fpion): implement
+  // user: User;
+  isPersistent: boolean;
+  refreshToken?: string | null;
+  isActive: boolean;
+  // signedOutBy?: Actor | null;
+  signedOutOn?: string | null;
+  // customAttributes: CustomAttribute[];
+}; // TODO(fpion): complete
+
 export type SignInAccountRequest = {
   credentials?: Credentials | null;
   authenticationToken?: string | null;
