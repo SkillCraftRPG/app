@@ -2,7 +2,6 @@
   <div>
     <p>{{ t("account.dateOfBirth.label") }}</p>
     <div class="row">
-      <!-- TODO(fpion): we should change number inputs to text, and have `inputmode="numeric"` instead with a maxlength. -->
       <div class="col">
         <FormInput
           :id="`${id}-day`"
@@ -143,4 +142,6 @@ function updateYear(value: string | undefined): void {
   }
   updateModelValue();
 }
+
+// TODO(fpion): number inputs should be text, with `inputmode="numeric"` and maxlength.
 </script>
