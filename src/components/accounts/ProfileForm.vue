@@ -53,10 +53,12 @@ import LocaleRadio from "./LocaleRadio.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TimeZoneSelect from "./TimeZoneSelect.vue";
 import type { Gender, Profile, UpdateProfilePayload, UserExperience } from "@/types/account";
-import { saveProfile } from "@/api/account.ts";
+import { saveProfile } from "@/api/account";
+import { useAccountStore } from "@/stores/account";
 import { useForm } from "@/forms";
-import { useToastStore } from "@/stores/toast.ts";
+import { useToastStore } from "@/stores/toast";
 
+const account = useAccountStore();
 const toasts = useToastStore();
 const { t } = useI18n();
 
@@ -111,8 +113,9 @@ async function submit(): Promise<void> {
         defaultExperience: defaultExperience.value,
       };
       const profile: Profile = await saveProfile(payload);
-      emit("update:model-value", profile);
+      account.saveProfile(profile);
       toasts.success("account.profile.updated");
+      emit("update:model-value", profile);
     } catch (e: unknown) {
       emit("error", e);
     } finally {

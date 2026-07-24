@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-import type { CurrentUser, SignOutEvent } from "@/types/account";
+import type { CurrentUser, Profile, SignOutEvent } from "@/types/account";
 
 export const useAccountStore = defineStore(
   "account",
@@ -15,6 +15,20 @@ export const useAccountStore = defineStore(
       return e;
     }
 
+    function saveProfile(profile: Profile): void {
+      if (currentUser.value) {
+        currentUser.value.displayName = profile.fullName;
+        currentUser.value.emailAddress = profile.emailAddress;
+        currentUser.value.defaultExperience = profile.defaultExperience;
+      } else {
+        currentUser.value = {
+          displayName: profile.fullName,
+          emailAddress: profile.emailAddress,
+          defaultExperience: profile.defaultExperience,
+        };
+      }
+    }
+
     function signIn(value: CurrentUser): void {
       currentUser.value = value;
     }
@@ -24,7 +38,7 @@ export const useAccountStore = defineStore(
       signedOutEvent.value = e;
     }
 
-    return { currentUser, signedOutEvent, consumeSignOutEvent, signIn, signOut };
+    return { currentUser, signedOutEvent, consumeSignOutEvent, saveProfile, signIn, signOut };
   },
   {
     persist: true,
