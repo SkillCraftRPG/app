@@ -77,8 +77,8 @@ import EmailDisplay from "./EmailDisplay.vue";
 import MultiFactorAuthenticationDisplay from "./MultiFactorAuthenticationDisplay.vue";
 import ProfileForm from "./ProfileForm.vue";
 import type { Email, Profile, Session } from "@/types/account";
-import { listSessions } from "@/api/sessions";
 import type { SearchResults } from "@/types/search";
+import { listSessions } from "@/api/sessions";
 
 const { d, t } = useI18n();
 
