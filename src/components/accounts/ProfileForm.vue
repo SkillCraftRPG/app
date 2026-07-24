@@ -34,14 +34,14 @@
         <DefaultExperienceRadio v-model="defaultExperience" />
       </div>
       <div class="mb-3">
-        <TarButton :disabled="isLoading" icon="fas fa-floppy-disk" :loading="isLoading" :text="t('actions.save')" type="submit" />
+        <TarButton :disabled="!hasChanges || isLoading" icon="fas fa-floppy-disk" :loading="isLoading" :text="t('actions.save')" type="submit" />
       </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import DateOfBirthInput from "./DateOfBirthInput.vue";
@@ -77,6 +77,24 @@ const isLoading = ref<boolean>(false);
 const lastName = ref<string>("");
 const locale = ref<string>("");
 const timeZone = ref<string>("");
+
+const hasDateOfBirthChanged = computed<boolean>(() => {
+  const profile: string | null = props.modelValue.dateOfBirth ? props.modelValue.dateOfBirth.split("T")[0]! : null;
+  const input: string | null = dateOfBirth.value?.toISOString().split("T")[0]! ?? null;
+  return profile !== input;
+});
+const hasChanges = computed<boolean>(() => {
+  const profile: Profile = props.modelValue;
+  return (
+    profile.firstName !== firstName.value ||
+    profile.lastName !== lastName.value ||
+    hasDateOfBirthChanged.value ||
+    profile.gender !== gender.value ||
+    profile.locale.code !== locale.value ||
+    profile.timeZone !== timeZone.value ||
+    profile.defaultExperience !== defaultExperience.value
+  );
+});
 
 const { handleSubmit } = useForm();
 async function submit(): Promise<void> {
