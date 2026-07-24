@@ -3,15 +3,16 @@
     <div class="col jumbotron mb-0">
       <h1 class="display-4">{{ t("account.email.verificationMessageSent.title") }}</h1>
       <p class="lead">{{ t("account.email.verificationMessageSent.help") }}</p>
-      <hr class="my-4" />
-      <p>
-        {{ t("account.email.verificationMessageSent.reference") }}&nbsp;<strong>{{ id }}</strong>
-      </p>
       <p class="lead">
         <TarButton v-if="!goToHome" icon="fas fa-xmark" size="large" :text="t('actions.close')" @click="close" />
         <RouterLink v-else :to="{ name: 'Home' }" class="btn btn-primary btn-lg" role="button">
           <font-awesome-icon icon="fas fa-home" /> {{ t("home.go") }}
         </RouterLink>
+      </p>
+      <hr class="my-4" />
+      <p>
+        <span class="text-body-secondary">{{ t("account.email.verificationMessageSent.reference") }}</span
+        >&nbsp;<code class="text-body-secondary">{{ id }}</code>
       </p>
     </div>
   </div>

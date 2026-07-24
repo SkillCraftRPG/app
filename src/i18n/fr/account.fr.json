@@ -47,11 +47,21 @@
     "placeholder": "Sélectionnez votre langue de communication préférée"
   },
   "multiFactorAuthentication": {
+    "code": "Code",
     "disabled": "Désactivée",
-    "email": "Courriel",
+    "email": {
+      "help": "Entrez le code à 6 chiffres envoyé à <strong>{contact}</strong>.",
+      "label": "Courriel"
+    },
     "enabled": "Activée",
+    "invalidCredentials": {
+      "help": "Vérifiez le code reçu, puis réessayez.",
+      "lead": "Code incorrect."
+    },
     "label": "Authentification multifactorielle",
-    "phone": "Message texte"
+    "phone": "Message texte",
+    "reference": "Référence du message :",
+    "verify": "Vérifiez votre identité"
   },
   "name": {
     "first": "Prénom",

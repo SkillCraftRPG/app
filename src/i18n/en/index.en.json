@@ -5,7 +5,8 @@
     "close": "Close",
     "complete": "Complete",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "verify": "Verify"
   },
   "brand": "SkillCraft",
   "error": "An unexpected error occurred. Please try again later or contact our support team.",

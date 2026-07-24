@@ -5,7 +5,8 @@
     "close": "Fermer",
     "complete": "Terminer",
     "next": "Suivant",
-    "previous": "Précédent"
+    "previous": "Précédent",
+    "verify": "Vérifier"
   },
   "brand": "SkillCraft",
   "error": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
