@@ -34,6 +34,8 @@ export type CurrentUser = {
   defaultExperience: UserExperience;
 };
 
+export type DeviceType = "Desktop" | "Mobile" | " Tablet";
+
 export type Email = Contact & {
   address: string;
 };
@@ -89,6 +91,17 @@ export type SecurityInformation = {
 };
 
 export type SecurityMode = "PasswordLess" | "Password" | "MultiFactor";
+
+export type Session = {
+  id: string;
+  createdOn: string;
+  updatedOn: string;
+  browser?: string | null;
+  operatingSystem?: string | null;
+  deviceType?: DeviceType | null;
+  ipAddress?: string | null;
+  isCurrent: boolean;
+};
 
 export type SignInAccountRequest = {
   credentials?: Credentials | null;
