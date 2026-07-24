@@ -40,6 +40,32 @@
       <div class="fw-bold">{{ t("account.authenticatedOn") }}</div>
       <div>{{ d(modelValue.authenticatedOn, "medium") }}</div>
     </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">created</th>
+          <th scope="col">updated</th>
+          <th scope="col">browser</th>
+          <th scope="col">os</th>
+          <th scope="col">device</th>
+          <th scope="col">ip</th>
+          <th scope="col">current</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="session in sessions.items" :key="session.id">
+          <td>{{ d(session.createdOn, "medium") }}</td>
+          <td>{{ d(session.updatedOn, "medium") }}</td>
+          <td>{{ session.browser }}</td>
+          <td>{{ session.operatingSystem }}</td>
+          <td>{{ session.deviceType }}</td>
+          <td>{{ session.ipAddress }}</td>
+          <td>
+            <template v-if="session.isCurrent">current</template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
