@@ -9,7 +9,7 @@
         <font-awesome-icon icon="fas fa-envelope" />&nbsp;{{ t("account.multiFactorAuthentication.email.label") }}
       </TarBadge>
       <TarBadge v-else-if="mode === 'Phone'" pill variant="secondary">
-        <font-awesome-icon icon="fas fa-comment-sms" />&nbsp;{{ t("account.multiFactorAuthentication.phone") }}
+        <font-awesome-icon icon="fas fa-comment-sms" />&nbsp;{{ t("account.multiFactorAuthentication.phone.label") }}
       </TarBadge>
     </template>
   </div>

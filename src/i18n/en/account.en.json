@@ -59,7 +59,10 @@
       "lead": "Incorrect code."
     },
     "label": "Multi-Factor Authentication",
-    "phone": "Text Message",
+    "phone": {
+      "help": "Enter the 6-digit code sent by text message to the number ending in <strong>{contact}</strong>.",
+      "label": "Text Message"
+    },
     "reference": "Message reference:",
     "verify": "Verify your identity"
   },

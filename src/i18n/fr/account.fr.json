@@ -59,7 +59,10 @@
       "lead": "Code incorrect."
     },
     "label": "Authentification multifactorielle",
-    "phone": "Message texte",
+    "phone": {
+      "help": "Entrez le code à 6 chiffres envoyé par message texte au numéro se terminant par <strong>{contact}</strong>.",
+      "label": "Message texte"
+    },
     "reference": "Référence du message :",
     "verify": "Vérifiez votre identité"
   },
