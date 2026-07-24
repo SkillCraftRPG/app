@@ -1,6 +1,13 @@
 <template>
   <main class="container flex-grow-1 d-flex flex-column">
     <EmailVerificationMessageSent v-if="response.emailVerificationMessageId" :id="response.emailVerificationMessageId" />
+    <OneTimePasswordChallenge
+      v-else-if="response.multiFactorAuthenticationChallenge"
+      :challenge="response.multiFactorAuthenticationChallenge"
+      @cancel="cancelChallenge"
+      @error="handleError"
+      @response="handleResponse"
+    />
     <SignInForm v-else-if="isReady" :flows="response.allowedFlows" @error="handleError" @submitted="handleResponse" />
   </main>
 </template>
@@ -11,6 +18,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import EmailVerificationMessageSent from "@/components/accounts/EmailVerificationMessageSent.vue";
+import OneTimePasswordChallenge from "@/components/accounts/OneTimePasswordChallenge.vue";
 import SignInForm from "@/components/accounts/SignInForm.vue";
 import type { SignInAccountRequest, SignInAccountResponse } from "@/types/account";
 import { handleErrorKey } from "@/inject";
@@ -29,6 +37,10 @@ const isReady = ref<boolean>(false);
 const response = ref<SignInAccountResponse>({ allowedFlows: [] });
 
 const title = computed<string>(() => t("account.signIn.title"));
+
+function cancelChallenge(): void {
+  response.value.multiFactorAuthenticationChallenge = null;
+}
 
 function handleResponse(res: SignInAccountResponse) {
   if (res.currentUser) {

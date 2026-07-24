@@ -40,10 +40,11 @@ export type Email = Contact & {
 
 export type Gender = "male" | "female" | "other";
 
-export type MultiFactorAuthenticationMessage = {
+export type MultiFactorAuthenticationChallenge = {
   oneTimePasswordId: string;
   messageId: string;
-  multiFactorAuthenticationMode: MultiFactorAuthenticationMode;
+  mode: MultiFactorAuthenticationMode;
+  maskedContact: string;
 };
 
 export type MultiFactorAuthenticationMode = "None" | "Email" | "Phone";
@@ -99,7 +100,7 @@ export type SignInAccountRequest = {
 export type SignInAccountResponse = {
   allowedFlows: AuthenticationFlow[];
   emailVerificationMessageId?: string | null;
-  multiFactorAuthenticationMessage?: MultiFactorAuthenticationMessage | null;
+  multiFactorAuthenticationChallenge?: MultiFactorAuthenticationChallenge | null;
   profileCompletionToken?: string | null;
   currentUser?: CurrentUser | null;
 };

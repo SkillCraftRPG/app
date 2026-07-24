@@ -47,11 +47,28 @@
     "placeholder": "Select your preferred communication language"
   },
   "multiFactorAuthentication": {
+    "code": "Code",
     "disabled": "Disabled",
-    "email": "Email",
+    "email": {
+      "help": "Enter the 6-digit code sent to <strong>{contact}</strong>.",
+      "label": "Email"
+    },
     "enabled": "Enabled",
+    "incorrectCode": {
+      "help": "Check the code you received, then try again.",
+      "lead": "Incorrect code."
+    },
+    "invalidCode": {
+      "help": "Request a new code, then try again.",
+      "lead": "This code is no longer valid."
+    },
     "label": "Multi-Factor Authentication",
-    "phone": "Text Message"
+    "phone": {
+      "help": "Enter the 6-digit code sent by text message to the number ending in <strong>{contact}</strong>.",
+      "label": "Text Message"
+    },
+    "reference": "Message reference:",
+    "verify": "Verify your identity"
   },
   "name": {
     "first": "First Name",

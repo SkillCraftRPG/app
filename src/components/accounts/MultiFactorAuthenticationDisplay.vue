@@ -6,10 +6,10 @@
     <template v-else>
       <TarBadge pill variant="success"> <font-awesome-icon icon="fas fa-check" />&nbsp;{{ t("account.multiFactorAuthentication.enabled") }} </TarBadge>
       <TarBadge v-if="mode === 'Email'" pill variant="secondary">
-        <font-awesome-icon icon="fas fa-envelope" />&nbsp;{{ t("account.multiFactorAuthentication.email") }}
+        <font-awesome-icon icon="fas fa-envelope" />&nbsp;{{ t("account.multiFactorAuthentication.email.label") }}
       </TarBadge>
       <TarBadge v-else-if="mode === 'Phone'" pill variant="secondary">
-        <font-awesome-icon icon="fas fa-comment-sms" />&nbsp;{{ t("account.multiFactorAuthentication.phone") }}
+        <font-awesome-icon icon="fas fa-comment-sms" />&nbsp;{{ t("account.multiFactorAuthentication.phone.label") }}
       </TarBadge>
     </template>
   </div>
