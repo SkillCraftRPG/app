@@ -177,6 +177,8 @@
   },
   "signOut": {
     "all": {
+      "help": "Vous serez déconnecté de tous vos appareils, y compris celui-ci. Vous devrez vous connecter de nouveau pour accéder à votre compte.",
+      "lead": "Déconnecter toutes les sessions ?",
       "submit": "Déconnecter toutes les sessions"
     },
     "closed": {

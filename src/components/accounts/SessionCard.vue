@@ -20,7 +20,9 @@
       <TarBadge v-if="session.isCurrent" pill variant="primary">{{ t("account.sessions.current") }}</TarBadge>
       <TarButton
         v-else
+        :disabled="isLoading"
         icon="fas fa-arrow-right-from-bracket"
+        :loading="isLoading"
         outline
         type="button"
         :text="t('account.signOut.title')"
