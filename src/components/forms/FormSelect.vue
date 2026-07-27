@@ -102,7 +102,7 @@ const rules = computed<ValidationRuleSet>(() => {
 const { errors, isValid, handleChange, setValue, unbindField } = useField(props.id, {
   focus,
   initialValue: props.modelValue,
-  name: props.label?.toLowerCase() ?? props.name,
+  name: props.label ?? props.name,
   rules,
 });
 
