@@ -1,5 +1,5 @@
 <template>
-  <TarCard class="h-100" :class="{ 'border-primary': session.isCurrent }">
+  <TarCard :class="classes">
     <div v-if="deviceIcon || deviceText" class="d-flex align-items-center gap-2">
       <font-awesome-icon v-if="deviceIcon" :icon="deviceIcon" aria-hidden="true" />
       <span v-if="deviceText">{{ deviceText }}</span>
@@ -16,17 +16,9 @@
       <span><font-awesome-icon icon="fas fa-network-wired" /> {{ t("account.sessions.ipAddress") }}</span>
       <span>{{ session.ipAddress }}</span>
     </div>
-    <div class="d-flex align-items-center mt-auto pt-3">
+    <div class="d-flex justify-content-end align-items-center mt-auto pt-3">
       <TarBadge v-if="session.isCurrent" pill variant="primary">{{ t("account.sessions.current") }}</TarBadge>
-      <TarButton
-        class="ms-auto"
-        icon="fas fa-arrow-right-from-bracket"
-        outline
-        type="button"
-        :text="t('account.signOut.title')"
-        :variant="session.isCurrent ? 'danger' : 'secondary'"
-        @click="$emit('sign-out')"
-      />
+      <TarButton v-else icon="fas fa-arrow-right-from-bracket" outline type="button" :text="t('account.signOut.title')" variant="secondary" />
     </div>
   </TarCard>
 </template>
@@ -47,6 +39,13 @@ const props = defineProps<{
   session: Session;
 }>();
 
+const classes = computed<string[]>(() => {
+  const classes: string[] = ["session-card", "h-100"];
+  if (props.session.isCurrent) {
+    classes.push("border-primary");
+  }
+  return classes;
+});
 const deviceIcon = computed<string>(() => {
   switch (props.session.deviceType) {
     case "Desktop":
@@ -72,3 +71,11 @@ const deviceText = computed<string>(() => {
 });
 const updatedOn = computed<string>(() => formatRelativeTime(props.session.updatedOn, `${locale.value}-CA`, t("account.sessions.now")));
 </script>
+
+<style scoped>
+.session-card :deep(.card-body) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+</style>
