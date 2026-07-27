@@ -34,7 +34,14 @@
         <DefaultExperienceRadio v-model="defaultExperience" />
       </div>
       <div class="mb-3">
-        <TarButton :disabled="!hasChanges || isLoading" icon="fas fa-floppy-disk" :loading="isLoading" :text="t('actions.save')" type="submit" />
+        <TarButton
+          :disabled="!hasChanges || isLoading"
+          icon="fas fa-floppy-disk"
+          :loading="isLoading"
+          :status="t('loading')"
+          :text="t('actions.save')"
+          type="submit"
+        />
       </div>
     </form>
   </div>

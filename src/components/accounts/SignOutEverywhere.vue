@@ -9,6 +9,7 @@
           :disabled="isLoading"
           icon="fas fa-arrow-right-from-bracket"
           :loading="isLoading"
+          :status="t('loading')"
           :text="t('account.signOut.all.submit')"
           variant="danger"
           @click="signOutEverywhere"

@@ -18,6 +18,7 @@
             icon="fas fa-arrow-right-to-bracket"
             :loading="isLoading"
             size="large"
+            :status="t('loading')"
             :text="t('account.signIn.submit')"
             type="submit"
           />
@@ -35,6 +36,7 @@
             :loading="isLoading"
             outline
             size="large"
+            :status="t('loading')"
             :text="t('account.signIn.passwordLess.lead')"
             @click="usePasswordLessFlow"
           />

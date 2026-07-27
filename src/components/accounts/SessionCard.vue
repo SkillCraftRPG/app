@@ -24,6 +24,7 @@
         icon="fas fa-arrow-right-from-bracket"
         :loading="isLoading"
         outline
+        :status="t('loading')"
         type="button"
         :text="t('account.signOut.title')"
         variant="secondary"

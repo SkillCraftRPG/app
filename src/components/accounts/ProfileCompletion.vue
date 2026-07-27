@@ -32,6 +32,7 @@
             id="complete"
             :loading="isLoading"
             :outline="step !== Step.Experience"
+            :status="t('loading')"
             :text="t('actions.complete')"
             type="submit"
           />

@@ -30,6 +30,7 @@
               icon="fas fa-check"
               :loading="isLoading"
               size="large"
+              :status="t('loading')"
               :text="t('actions.verify')"
               type="submit"
             />
