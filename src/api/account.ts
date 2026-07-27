@@ -13,8 +13,8 @@ export async function signIn(request: SignInAccountRequest): Promise<SignInAccou
   return (await post<SignInAccountRequest, SignInAccountResponse>(url, request)).data;
 }
 
-export async function signOut(): Promise<void> {
-  const url: string = new urlUtils.UrlBuilder({ path: "/sign/out" }).buildRelative();
+export async function signOut(everywhere?: boolean): Promise<void> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/sign/out" }).setQuery("everywhere", everywhere?.toString() ?? "").buildRelative();
   await post(url);
 }
 

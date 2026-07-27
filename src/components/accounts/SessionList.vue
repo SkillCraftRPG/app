@@ -7,7 +7,7 @@
           {{ t("account.sessions.help") }}
         </p>
       </div>
-      <TarButton icon="fas fa-arrow-right-from-bracket" :text="t('account.signOut.all.submit')" variant="danger" />
+      <SignOutEverywhere />
     </div>
     <div class="row">
       <div v-for="session in sessions" :key="session.id" class="col-md-6 col-lg-4 mb-3">
@@ -22,7 +22,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import SessionCard from "./SessionCard.vue";
-import TarButton from "@/components/tar/TarButton.vue";
+import SignOutEverywhere from "./SignOutEverywhere.vue";
 import type { Session } from "@/types/account";
 import type { SearchResults } from "@/types/search";
 import { listActiveSessions } from "@/api/sessions";

@@ -177,6 +177,8 @@
   },
   "signOut": {
     "all": {
+      "help": "You’ll be signed out on all your devices, including this one. You’ll need to sign in again to access your account.",
+      "lead": "Sign out of all sessions?",
       "submit": "Sign out of all sessions"
     },
     "closed": {
