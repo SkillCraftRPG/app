@@ -1,7 +1,7 @@
 import { urlUtils } from "logitar-js";
 
 import type { Profile, SignInAccountRequest, SignInAccountResponse, UpdateProfilePayload } from "@/types/account";
-import { get, patch, post } from "./index";
+import { _delete, get, patch, post } from "./index";
 
 export async function getProfile(): Promise<Profile> {
   const url: string = new urlUtils.UrlBuilder({ path: "/profile" }).buildRelative();
@@ -13,9 +13,14 @@ export async function signIn(request: SignInAccountRequest): Promise<SignInAccou
   return (await post<SignInAccountRequest, SignInAccountResponse>(url, request)).data;
 }
 
-export async function signOut(): Promise<void> {
-  const url: string = new urlUtils.UrlBuilder({ path: "/sign/out" }).buildRelative();
-  (await post(url)).data;
+export async function signOut(sessionId?: string): Promise<void> {
+  if (sessionId) {
+    const url: string = new urlUtils.UrlBuilder({ path: "/sessions/{sessionId}" }).setParameter("sessionId", sessionId).buildRelative();
+    await _delete(url);
+  } else {
+    const url: string = new urlUtils.UrlBuilder({ path: "/sign/out" }).buildRelative();
+    await post(url);
+  }
 }
 
 export async function saveProfile(payload: UpdateProfilePayload): Promise<Profile> {

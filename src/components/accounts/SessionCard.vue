@@ -18,13 +18,21 @@
     </div>
     <div class="d-flex justify-content-end align-items-center mt-auto pt-3">
       <TarBadge v-if="session.isCurrent" pill variant="primary">{{ t("account.sessions.current") }}</TarBadge>
-      <TarButton v-else icon="fas fa-arrow-right-from-bracket" outline type="button" :text="t('account.signOut.title')" variant="secondary" />
+      <TarButton
+        v-else
+        icon="fas fa-arrow-right-from-bracket"
+        outline
+        type="button"
+        :text="t('account.signOut.title')"
+        variant="secondary"
+        @click="executeSignOut"
+      />
     </div>
   </TarCard>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TarBadge from "@/components/tar/TarBadge.vue";
@@ -32,12 +40,20 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { Session } from "@/types/account";
 import { formatRelativeTime } from "@/utils/date";
+import { signOut } from "@/api/account";
 
 const { d, locale, t } = useI18n();
 
 const props = defineProps<{
   session: Session;
 }>();
+
+const emit = defineEmits<{
+  (e: "error", value: unknown): void;
+  (e: "signed-out"): void;
+}>();
+
+const isLoading = ref<boolean>(false);
 
 const classes = computed<string[]>(() => {
   const classes: string[] = ["session-card", "h-100"];
@@ -70,6 +86,20 @@ const deviceText = computed<string>(() => {
   return parts.join(" ");
 });
 const updatedOn = computed<string>(() => formatRelativeTime(props.session.updatedOn, `${locale.value}-CA`, t("account.sessions.now")));
+
+async function executeSignOut(): Promise<void> {
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      await signOut(props.session.id);
+      emit("signed-out");
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
 </script>
 
 <style scoped>

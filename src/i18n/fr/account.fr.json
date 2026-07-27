@@ -158,6 +158,7 @@
     "list": "Sessions",
     "now": "à l’instant",
     "on": "sur",
+    "signedOut": "Cette session a été déconnectée avec succès.",
     "updatedOn": "Dernière activité :"
   },
   "signIn": {
