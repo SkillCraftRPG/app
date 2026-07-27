@@ -49,7 +49,7 @@ function onSignOut(session: Session): void {
 onMounted(async () => {
   try {
     const results: SearchResults<Session> = await listActiveSessions();
-    sessions.value = results.items;
+    sessions.value = [...results.items];
   } catch (e: unknown) {
     emit("error", e);
   }

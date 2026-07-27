@@ -4,6 +4,7 @@
     "cancel": "Annuler",
     "close": "Fermer",
     "complete": "Terminer",
+    "create": "Créer",
     "next": "Suivant",
     "previous": "Précédent",
     "save": "Enregistrer",
@@ -16,6 +17,7 @@
     "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",
     "title": "Accueil"
   },
+  "loading": "Chargement…",
   "notFound": {
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"

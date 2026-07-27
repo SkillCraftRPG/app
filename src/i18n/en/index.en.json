@@ -4,6 +4,7 @@
     "cancel": "Cancel",
     "close": "Close",
     "complete": "Complete",
+    "create": "Create",
     "next": "Next",
     "previous": "Previous",
     "save": "Save",
@@ -16,6 +17,7 @@
     "text": "A multi-tenant game Web application managing world-scoped data, character sheets, and real-time gameplay state for interactive roleplaying experiences.",
     "title": "Home"
   },
+  "loading": "Loading…",
   "notFound": {
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"
