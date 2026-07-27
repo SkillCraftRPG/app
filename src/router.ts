@@ -43,6 +43,11 @@ const router = createRouter({
       path: "/worlds",
       component: () => import("./views/worlds/WorldsView.vue"),
     },
+    {
+      name: "World",
+      path: "/worlds/:id",
+      component: () => import("./views/worlds/WorldView.vue"),
+    },
     // NotFound
     {
       name: "NotFound",

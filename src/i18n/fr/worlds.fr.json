@@ -1,8 +1,14 @@
 {
+  "create": {
+    "help": "Donnez un nom à votre monde et choisissez une clé unique pour l’identifier.",
+    "lead": "Créer un monde"
+  },
   "empty": {
     "help": "Créez votre premier monde pour commencer.",
     "lead": "Aucun monde pour le moment"
   },
+  "go": "Accéder à mes mondes",
+  "key": "Clé unique",
   "help": "Créez vos mondes et accédez à leur portail.",
   "title": "Mes mondes"
 }

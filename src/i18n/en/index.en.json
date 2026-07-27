@@ -5,6 +5,7 @@
     "close": "Close",
     "complete": "Complete",
     "create": "Create",
+    "enter": "Enter",
     "next": "Next",
     "previous": "Previous",
     "save": "Save",
@@ -18,6 +19,7 @@
     "title": "Home"
   },
   "loading": "Loading…",
+  "name": "Name",
   "notFound": {
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"

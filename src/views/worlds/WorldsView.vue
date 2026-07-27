@@ -2,11 +2,11 @@
   <main class="container worlds-page d-flex flex-column flex-grow-1">
     <header class="mb-4">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
-        <h1 class="mb-0">{{ t("worlds.title") }}</h1>
-        <CreateWorld v-if="!isLoading && worlds.length" />
+        <h1 class="mb-0">{{ title }}</h1>
+        <CreateWorld v-if="!isLoading && worlds.length" @created="onCreate" @error="handleError" />
       </div>
       <p class="text-body-secondary mt-2">{{ t("worlds.help") }}</p>
-      <RouterLink :to="{ name: 'CharacterSheets' }">{{ t("sheets.characters.go") }}</RouterLink>
+      <RouterLink :to="{ name: 'CharacterSheets' }"><font-awesome-icon icon="fas fa-id-card" />&nbsp;{{ t("sheets.characters.go") }}</RouterLink>
     </header>
     <LoadingSpinner v-if="isLoading" />
     <div v-else-if="worlds.length" class="row">
@@ -18,14 +18,15 @@
       <font-awesome-icon icon="fas fa-globe" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
       <h2 class="h4 mb-2">{{ t("worlds.empty.lead") }}</h2>
       <p class="text-body-secondary mb-4">{{ t("worlds.empty.help") }}</p>
-      <CreateWorld />
+      <CreateWorld @created="onCreate" @error="handleError" />
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import CreateWorld from "@/components/worlds/CreateWorld.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
@@ -34,12 +35,23 @@ import type { SearchResults } from "@/types/search";
 import type { World } from "@/types/worlds";
 import { handleErrorKey } from "@/inject";
 import { searchWorlds } from "@/api/worlds";
+import { useDocument } from "@/composables/document";
 
+const document = useDocument();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
+const router = useRouter();
 const { t } = useI18n();
 
 const isLoading = ref<boolean>(true);
 const worlds = ref<World[]>([]);
+
+const title = computed<string>(() => t("worlds.title"));
+
+function onCreate(world: World): void {
+  router.push({ name: "World", params: { id: world.id }, query: { status: "created" } });
+}
+
+watchEffect(() => document.setTitle(title.value));
 
 onMounted(async () => {
   try {
