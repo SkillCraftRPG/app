@@ -150,6 +150,16 @@
     "title": "My profile",
     "updated": "Your profile has been updated."
   },
+  "sessions": {
+    "createdOn": "Signed in:",
+    "current": "Current session",
+    "help": "Review the devices currently signed in to your account. Sign out any session you don’t recognize.",
+    "ipAddress": "IP Address:",
+    "list": "Sessions",
+    "now": "just now",
+    "on": "on",
+    "updatedOn": "Last active:"
+  },
   "signIn": {
     "help": "Enter your email address to sign in or create an account.",
     "invalidCredentials": {
@@ -165,6 +175,9 @@
     "welcome": "Welcome"
   },
   "signOut": {
+    "all": {
+      "submit": "Sign out of all sessions"
+    },
     "closed": {
       "help": "Your session was closed successfully.",
       "lead": "You’re signed out."

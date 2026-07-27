@@ -34,7 +34,7 @@ export type CurrentUser = {
   defaultExperience: UserExperience;
 };
 
-export type DeviceType = "Desktop" | "Mobile" | " Tablet";
+export type DeviceType = "Desktop" | "Mobile" | "Tablet";
 
 export type Email = Contact & {
   address: string;

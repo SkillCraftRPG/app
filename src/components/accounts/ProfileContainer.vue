@@ -40,32 +40,7 @@
       <div class="fw-bold">{{ t("account.authenticatedOn") }}</div>
       <div>{{ d(modelValue.authenticatedOn, "medium") }}</div>
     </div>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">created</th>
-          <th scope="col">updated</th>
-          <th scope="col">browser</th>
-          <th scope="col">os</th>
-          <th scope="col">device</th>
-          <th scope="col">ip</th>
-          <th scope="col">current</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="session in sessions.items" :key="session.id">
-          <td>{{ d(session.createdOn, "medium") }}</td>
-          <td>{{ d(session.updatedOn, "medium") }}</td>
-          <td>{{ session.browser }}</td>
-          <td>{{ session.operatingSystem }}</td>
-          <td>{{ session.deviceType }}</td>
-          <td>{{ session.ipAddress }}</td>
-          <td>
-            <template v-if="session.isCurrent">current</template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <SessionList v-if="sessions.length" :sessions="sessions" />
   </div>
 </template>
 
@@ -76,6 +51,7 @@ import { useI18n } from "vue-i18n";
 import EmailDisplay from "./EmailDisplay.vue";
 import MultiFactorAuthenticationDisplay from "./MultiFactorAuthenticationDisplay.vue";
 import ProfileForm from "./ProfileForm.vue";
+import SessionList from "./SessionList.vue";
 import type { Email, Profile, Session } from "@/types/account";
 import type { SearchResults } from "@/types/search";
 import { listSessions } from "@/api/sessions";
@@ -91,13 +67,14 @@ const emit = defineEmits<{
   (e: "update:model-value", value: Profile): void;
 }>();
 
-const sessions = ref<SearchResults<Session>>({ items: [], total: 0 });
+const sessions = ref<Session[]>([]);
 
 const email = computed<Email>(() => ({ address: props.modelValue.emailAddress, isVerified: true }));
 
 onMounted(async () => {
   try {
-    sessions.value = await listSessions();
+    const results: SearchResults<Session> = await listSessions();
+    sessions.value = results.items;
   } catch (e: unknown) {
     emit("error", e);
   }
