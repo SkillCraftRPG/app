@@ -15,7 +15,7 @@ export async function signIn(request: SignInAccountRequest): Promise<SignInAccou
 
 export async function signOut(): Promise<void> {
   const url: string = new urlUtils.UrlBuilder({ path: "/sign/out" }).buildRelative();
-  (await post(url)).data;
+  await post(url);
 }
 
 export async function saveProfile(payload: UpdateProfilePayload): Promise<Profile> {

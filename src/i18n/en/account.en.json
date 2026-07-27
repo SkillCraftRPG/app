@@ -158,6 +158,7 @@
     "list": "Sessions",
     "now": "just now",
     "on": "on",
+    "signedOut": "This session was signed out successfully.",
     "updatedOn": "Last active:"
   },
   "signIn": {
