@@ -4,9 +4,7 @@
     <div v-else-if="world">
       <h1>{{ world.name ?? world.key }}</h1>
       <!-- TODO(fpion): edit button right to the title that opens big modal with key and name inputs, and description textarea -->
-      <!-- TODO(fpion): createdBy and createdOn -->
-      <!-- TODO(fpion): updatedBy and updatedOn -->
-      <!-- TODO(fpion): tiles -->
+      <StatusDetail :subject="world" />
     </div>
   </main>
 </template>
@@ -16,6 +14,7 @@ import { inject, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import StatusDetail from "@/components/shared/StatusDetail.vue";
 import type { World } from "@/types/worlds";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { handleErrorKey } from "@/inject";

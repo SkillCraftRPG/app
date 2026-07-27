@@ -24,6 +24,11 @@
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"
   },
+  "status": {
+    "createdOn": "Created on {date} by",
+    "now": "just now",
+    "updatedOn": "Last updated {date} by"
+  },
   "theme": {
     "title": "Theme",
     "auto": "Auto",

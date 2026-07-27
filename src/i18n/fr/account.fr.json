@@ -156,7 +156,6 @@
     "help": "Consultez les appareils actuellement connectés à votre compte. Déconnectez toute session que vous ne reconnaissez pas.",
     "ipAddress": "Adresse IP :",
     "list": "Sessions",
-    "now": "à l’instant",
     "on": "sur",
     "signedOut": "Cette session a été déconnectée avec succès.",
     "updatedOn": "Dernière activité :"

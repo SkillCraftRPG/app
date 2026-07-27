@@ -24,6 +24,11 @@
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"
   },
+  "status": {
+    "createdOn": "Création le {date} par",
+    "now": "à l’instant",
+    "updatedOn": "Dernière modification {date} par"
+  },
   "theme": {
     "title": "Thème",
     "auto": "Auto",
