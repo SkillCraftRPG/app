@@ -15,8 +15,10 @@ import { useRouter } from "vue-router";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { World } from "@/types/worlds";
+import { useWorldStore } from "@/stores/world";
 
 const router = useRouter();
+const worldStore = useWorldStore();
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -26,6 +28,7 @@ const props = defineProps<{
 const title = computed<string>(() => props.world.name ?? props.world.key);
 
 function enter(): void {
+  worldStore.enter(props.world);
   router.push({ name: "World", params: { id: props.world.id } });
 }
 </script>

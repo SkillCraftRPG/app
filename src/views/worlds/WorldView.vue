@@ -3,6 +3,10 @@
     <LoadingSpinner v-if="isLoading" />
     <div v-else-if="world">
       <h1>{{ world.name ?? world.key }}</h1>
+      <!-- TODO(fpion): edit button right to the title that opens big modal with key and name inputs, and description textarea -->
+      <!-- TODO(fpion): createdBy and createdOn -->
+      <!-- TODO(fpion): updatedBy and updatedOn -->
+      <!-- TODO(fpion): tiles -->
     </div>
   </main>
 </template>

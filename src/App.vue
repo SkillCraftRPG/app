@@ -31,11 +31,13 @@ import { StatusCodes, type ApiFailure } from "./types/api";
 import { handleErrorKey } from "./inject";
 import { useAccountStore } from "./stores/account";
 import { useToastStore } from "./stores/toast";
+import { useWorldStore } from "./stores/world";
 
 const account = useAccountStore();
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const world = useWorldStore();
 
 const footerOverlap = ref<number>(0);
 const showScrollTop = ref<boolean>(false);
@@ -45,6 +47,7 @@ function handleError(e: unknown): void {
     const { status } = e as ApiFailure;
     if (status === StatusCodes.Unauthorized) {
       account.signOut("expired");
+      world.exit();
       router.push({ name: "SignIn", query: { redirect: route.fullPath } });
     } else {
       console.error(e);
