@@ -69,7 +69,9 @@
             </li>
           </template>
           <li v-else class="nav-item">
-            <RouterLink :to="{ name: 'SignIn' }" class="nav-link"><font-awesome-icon icon="fas fa-user" />&nbsp;{{ t("account.signIn.title") }}</RouterLink>
+            <RouterLink :to="{ name: 'SignIn' }" class="nav-link">
+              <font-awesome-icon icon="fas fa-arrow-right-to-bracket" />&nbsp;{{ t("account.signIn.title") }}
+            </RouterLink>
           </li>
         </ul>
       </div>

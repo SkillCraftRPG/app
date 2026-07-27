@@ -150,6 +150,16 @@
     "title": "Mon profil",
     "updated": "Votre profil a été modifié."
   },
+  "sessions": {
+    "createdOn": "Connexion :",
+    "current": "Session actuelle",
+    "help": "Consultez les appareils actuellement connectés à votre compte. Déconnectez toute session que vous ne reconnaissez pas.",
+    "ipAddress": "Adresse IP :",
+    "list": "Sessions",
+    "now": "à l’instant",
+    "on": "sur",
+    "updatedOn": "Dernière activité :"
+  },
   "signIn": {
     "help": "Saisissez votre adresse courriel pour vous connecter ou créer un compte.",
     "invalidCredentials": {
@@ -165,6 +175,9 @@
     "welcome": "Bienvenue"
   },
   "signOut": {
+    "all": {
+      "submit": "Déconnecter toutes les sessions"
+    },
     "closed": {
       "help": "Votre session a été fermée avec succès.",
       "lead": "Vous êtes déconnecté."

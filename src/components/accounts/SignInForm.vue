@@ -13,7 +13,14 @@
           <InvalidCredentials v-model="invalidCredentials" />
           <EmailAddressInput class="mb-3" required v-model="emailAddress" />
           <PasswordInput v-if="isPasswordFlowAllowed" class="mb-3" ref="passwordInput" required v-model="password" />
-          <TarButton :disabled="isLoading" icon="fas fa-user" :loading="isLoading" size="large" :text="t('account.signIn.submit')" type="submit" />
+          <TarButton
+            :disabled="isLoading"
+            icon="fas fa-arrow-right-to-bracket"
+            :loading="isLoading"
+            size="large"
+            :text="t('account.signIn.submit')"
+            type="submit"
+          />
         </form>
       </div>
       <div v-if="isPasswordLessFlowAllowed" class="row justify-content-center">
