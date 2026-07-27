@@ -1,7 +1,7 @@
 import { urlUtils } from "logitar-js";
 
 import type { Profile, SignInAccountRequest, SignInAccountResponse, UpdateProfilePayload } from "@/types/account";
-import { _delete, get, patch, post } from "./index";
+import { get, patch, post } from "./index";
 
 export async function getProfile(): Promise<Profile> {
   const url: string = new urlUtils.UrlBuilder({ path: "/profile" }).buildRelative();
