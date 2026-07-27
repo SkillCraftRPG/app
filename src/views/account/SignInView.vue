@@ -46,7 +46,11 @@ function handleResponse(res: SignInAccountResponse) {
   if (res.currentUser) {
     account.signIn(res.currentUser);
     const redirect: string = (Array.isArray(route.query.redirect) ? route.query.redirect[0] : route.query.redirect) ?? "";
-    router.push(redirect || { name: "Home" });
+    if (redirect) {
+      router.push(redirect);
+    } else {
+      router.push({ name: res.currentUser.defaultExperience === "Gamemaster" ? "Worlds" : "CharacterSheets" });
+    }
   } else if (res.profileCompletionToken) {
     router.push({ name: "Profile", query: { token: res.profileCompletionToken } });
   } else {

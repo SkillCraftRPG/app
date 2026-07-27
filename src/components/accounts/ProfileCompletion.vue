@@ -163,8 +163,8 @@ async function complete(): Promise<void> {
       const response: SignInAccountResponse = await signIn(request);
       if (response.currentUser) {
         account.signIn(response.currentUser);
+        router.push({ name: response.currentUser.defaultExperience === "Gamemaster" ? "Worlds" : "CharacterSheets" });
       }
-      router.push({ name: "Home" });
     } catch (e: unknown) {
       emit("error", e);
     } finally {
