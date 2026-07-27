@@ -24,9 +24,9 @@ import { useI18n } from "vue-i18n";
 import SessionCard from "./SessionCard.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Session } from "@/types/account";
-import type { SearchResults } from "@/types/search.ts";
-import { listSessions } from "@/api/sessions.ts";
-import { useToastStore } from "@/stores/toast.ts";
+import type { SearchResults } from "@/types/search";
+import { listActiveSessions } from "@/api/sessions";
+import { useToastStore } from "@/stores/toast";
 
 const toasts = useToastStore();
 const { t } = useI18n();
@@ -48,7 +48,7 @@ function onSignOut(session: Session): void {
 
 onMounted(async () => {
   try {
-    const results: SearchResults<Session> = await listSessions();
+    const results: SearchResults<Session> = await listActiveSessions();
     sessions.value = results.items;
   } catch (e: unknown) {
     emit("error", e);

@@ -40,7 +40,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { Session } from "@/types/account";
 import { formatRelativeTime } from "@/utils/date";
-import { signOut } from "@/api/account";
+import { signOutById } from "@/api/sessions";
 
 const { d, locale, t } = useI18n();
 
@@ -91,7 +91,7 @@ async function executeSignOut(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      await signOut(props.session.id);
+      await signOutById(props.session.id);
       emit("signed-out");
     } catch (e: unknown) {
       emit("error", e);
