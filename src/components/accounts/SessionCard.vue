@@ -71,6 +71,4 @@ const deviceText = computed<string>(() => {
   return parts.join(" ");
 });
 const updatedOn = computed<string>(() => formatRelativeTime(props.session.updatedOn, `${locale.value}-CA`, t("account.sessions.now")));
-
-// TODO(fpion): current session should be first and should have a badge
 </script>
