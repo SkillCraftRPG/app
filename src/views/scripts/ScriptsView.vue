@@ -11,7 +11,7 @@
         :descending="isDescending"
         :model-value="sort"
         :options="sortOptions"
-        @descending="setQuery('descending', $event.toString())"
+        @descending="setQuery('descending', $event)"
         @update:model-value="setQuery('sort', $event)"
       />
       <CountSelect class="col" :model-value="count" @update:model-value="setQuery('count', $event)" />
@@ -78,8 +78,8 @@ const sortOptions = computed<SelectOption[]>(() =>
   ),
 );
 
-function setQuery(key: string, value: number | string): void {
-  const query = { ...route.query, [key]: value.toString() };
+function setQuery(key: string, value?: boolean | null | number | string): void {
+  const query = { ...route.query, [key]: value?.toString() ?? "" };
   switch (key) {
     case "search":
     case "count":
