@@ -3,7 +3,7 @@
     <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
+        <CreateLanguage class="mb-3" @created="onCreate" @error="handleError" />
       </div>
       <WorldBreadcrumb :current="title" />
       <section class="mb-3">
@@ -37,8 +37,8 @@
       </section>
       <section v-if="total" :class="{ loading: isLoading }">
         <div class="row">
-          <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
-            <ScriptCard class="d-flex flex-column h-100" :script="script" />
+          <div v-for="language in languages" :key="language.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+            <LanguageCard class="d-flex flex-column h-100" :language="language" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -69,19 +69,19 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreateScript from "@/components/scripts/CreateScript.vue";
+import CreateLanguage from "@/components/languages/CreateLanguage.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
-import ScriptCard from "@/components/scripts/ScriptCard.vue";
+import LanguageCard from "@/components/languages/LanguageCard.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
-import type { Script, ScriptSort, SearchScriptsPayload } from "@/types/scripts";
+import type { Language, LanguageSort, SearchLanguagesPayload } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
 import { handleErrorKey } from "@/inject";
-import { searchScripts } from "@/api/scripts";
+import { searchLanguages } from "@/api/languages";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 
@@ -97,7 +97,7 @@ const { rt, t, tm } = useI18n();
 
 const hasLoaded = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
-const scripts = ref<Script[]>([]);
+const languages = ref<Language[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
@@ -106,20 +106,20 @@ const isDescending = computed<boolean>(() => parseBoolean(route.query.descending
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
-const title = computed<string>(() => t("scripts.title"));
+const title = computed<string>(() => t("languages.title"));
 
 const hasFilters = computed<boolean>(() => Boolean(search.value));
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("scripts.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("languages.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
-function onCreate(script: Script): void {
+function onCreate(language: Language): void {
   events.push("created");
-  router.push({ name: "Script", params: { id: script.id } });
+  router.push({ name: "Language", params: { id: language.id } });
 }
 
 function clearFilters(): void {
@@ -139,7 +139,7 @@ function setQuery(key: string, value?: boolean | null | number | string): void {
 }
 
 async function refresh(): Promise<void> {
-  const payload: SearchScriptsPayload = {
+  const payload: SearchLanguagesPayload = {
     ids: [],
     search: {
       terms: search.value
@@ -148,7 +148,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as ScriptSort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as LanguageSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -156,9 +156,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results: SearchResults<Script> = await searchScripts(payload);
+    const results: SearchResults<Language> = await searchLanguages(payload);
     if (now === timestamp.value) {
-      scripts.value = [...results.items];
+      languages.value = [...results.items];
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -174,7 +174,7 @@ async function refresh(): Promise<void> {
 watch(
   () => route,
   (route) => {
-    if (route.name === "Scripts") {
+    if (route.name === "Languages") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({

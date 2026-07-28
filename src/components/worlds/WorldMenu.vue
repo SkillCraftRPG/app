@@ -26,6 +26,11 @@ const tiles = computed<Tile[]>(() => [
     text: t("scripts.title"),
     to: { name: "Scripts" },
   },
+  {
+    icon: "fas fa-language",
+    text: t("languages.title"),
+    to: { name: "Languages" },
+  },
 ]);
 </script>
 

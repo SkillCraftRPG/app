@@ -31,6 +31,17 @@ const router = createRouter({
       component: () => import("./views/account/SignOutView.vue"),
       meta: { isPublic: true },
     },
+    // Languages
+    {
+      name: "Languages",
+      path: "/languages",
+      component: () => import("./views/languages/LanguagesView.vue"),
+    },
+    {
+      name: "Language",
+      path: "/languages/:id",
+      component: () => import("./views/languages/LanguageView.vue"),
+    },
     // Scripts
     {
       name: "Scripts",

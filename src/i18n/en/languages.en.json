@@ -1,8 +1,8 @@
 {
-  "create": "Create a script",
+  "create": "Create a language",
   "created": {
     "help": "You can now complete its details.",
-    "lead": "The script was created."
+    "lead": "The language was created."
   },
   "sort": {
     "options": {
@@ -11,5 +11,5 @@
       "UpdatedOn": "Last updated"
     }
   },
-  "title": "Scripts"
+  "title": "Languages"
 }

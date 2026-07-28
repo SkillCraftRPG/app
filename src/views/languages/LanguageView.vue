@@ -1,12 +1,12 @@
 <template>
   <main class="container page">
-    <div v-if="script">
+    <div v-if="language">
       <h1>{{ title }}</h1>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
-        <strong>{{ t("scripts.created.lead") }}</strong> {{ t("scripts.created.help", { name: title }) }}
+        <strong>{{ t("languages.created.lead") }}</strong> {{ t("languages.created.help", { name: title }) }}
       </TarAlert>
-      <StatusDetail class="mb-4" :subject="script" />
+      <StatusDetail class="mb-4" :subject="language" />
       <form @submit.prevent="handleSubmit(submit)">
         <NameInput class="mb-3" required v-model="name" />
         <SummaryTextarea class="mb-3" v-model="summary" />
@@ -42,10 +42,10 @@ import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { CreateOrReplaceScriptPayload, Script } from "@/types/scripts";
+import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { handleErrorKey } from "@/inject";
-import { readScript, replaceScript } from "@/api/scripts";
+import { readLanguage, replaceLanguage } from "@/api/languages";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 import { useForm } from "@/forms";
@@ -63,29 +63,29 @@ const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
-const script = ref<Script>();
+const language = ref<Language>();
 const summary = ref<string>("");
 
-const breadcrumb = computed<Breadcrumb>(() => ({ text: t("scripts.title"), to: { name: "Scripts" } }));
+const breadcrumb = computed<Breadcrumb>(() => ({ text: t("languages.title"), to: { name: "Languages" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
-    script.value &&
-    (script.value.name !== name.value || (script.value.summary ?? "") !== summary.value || (script.value.htmlContent ?? "") !== htmlContent.value),
+    language.value &&
+    (language.value.name !== name.value || (language.value.summary ?? "") !== summary.value || (language.value.htmlContent ?? "") !== htmlContent.value),
   ),
 );
-const title = computed<string>(() => script.value?.name ?? "");
+const title = computed<string>(() => language.value?.name ?? "");
 
 const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
-  if (!isLoading.value && script.value) {
+  if (!isLoading.value && language.value) {
     isLoading.value = true;
     try {
-      const payload: CreateOrReplaceScriptPayload = {
+      const payload: CreateOrReplaceLanguagePayload = {
         name: name.value,
         summary: summary.value,
         htmlContent: htmlContent.value,
       };
-      script.value = await replaceScript(script.value.id, payload);
+      language.value = await replaceLanguage(language.value.id, payload);
       reinitialize();
       toasts.success("saved");
     } catch (e: unknown) {
@@ -97,11 +97,11 @@ async function submit(): Promise<void> {
 }
 
 watch(
-  script,
-  (script) => {
-    name.value = script?.name ?? "";
-    summary.value = script?.summary ?? "";
-    htmlContent.value = script?.htmlContent ?? "";
+  language,
+  (language) => {
+    name.value = language?.name ?? "";
+    summary.value = language?.summary ?? "";
+    htmlContent.value = language?.htmlContent ?? "";
   },
   { deep: true },
 );
@@ -109,7 +109,7 @@ watch(
 onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
-    script.value = await readScript(id);
+    language.value = await readLanguage(id);
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;
