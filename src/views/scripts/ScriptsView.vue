@@ -34,13 +34,16 @@
         <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
       </div>
     </section>
-    <section class="d-flex flex-column flex-grow-1">
-      <div v-if="total" class="row">
-        <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
-          <ScriptCard class="d-flex flex-column h-100" :script="script" />
-        </div>
-      </div>
-      <div v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
+    <template v-if="!isLoading">
+      <template v-if="total">
+        <section class="row">
+          <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+            <ScriptCard class="d-flex flex-column h-100" :script="script" />
+          </div>
+        </section>
+        <SearchPagination v-if="total > count" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
+      </template>
+      <section v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
         <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
         <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
         <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
@@ -53,11 +56,8 @@
           variant="secondary"
           @click="clearFilters"
         />
-      </div>
-    </section>
-    <section v-if="total">
-      <SearchPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
-    </section>
+      </section>
+    </template>
   </main>
 </template>
 
