@@ -13,7 +13,13 @@
     "lead": "Aucun monde pour le moment"
   },
   "go": "Accéder à mes mondes",
-  "key": "Clé unique",
+  "key": {
+    "alreadyUsed": {
+      "help": "Choisissez une autre clé unique pour ce monde, puis réessayez.",
+      "lead": "Cette clé est déjà utilisée."
+    },
+    "label": "Clé unique"
+  },
   "help": "Créez vos mondes et accédez à leur portail.",
   "title": "Mes mondes"
 }
