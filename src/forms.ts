@@ -156,7 +156,6 @@ export function useForm(): FormContainer {
           if (submitCallback) {
             submitCallback();
           }
-          reinitialize();
         } else {
           const ids: string[] = [...validationResults.value.entries()].filter(([, value]) => !value.isValid).map(([id]) => id);
           if (ids.length) {

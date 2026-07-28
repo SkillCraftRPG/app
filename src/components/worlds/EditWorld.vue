@@ -88,7 +88,7 @@ watch(
   { deep: true, immediate: true },
 );
 
-const { handleSubmit, reset } = useForm();
+const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
@@ -101,6 +101,7 @@ async function submit(): Promise<void> {
       };
       const world: World = await replaceWorld(props.world.id, payload);
       modal.value?.hide();
+      reinitialize();
       emit("updated", world);
     } catch (e: unknown) {
       const failure = e as ApiFailure;

@@ -105,7 +105,7 @@ const hasChanges = computed<boolean>(() => {
   );
 });
 
-const { handleSubmit } = useForm();
+const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
@@ -122,6 +122,7 @@ async function submit(): Promise<void> {
       const profile: Profile = await saveProfile(payload);
       account.saveProfile(profile);
       toasts.success("account.profile.updated");
+      reinitialize();
       emit("update:model-value", profile);
     } catch (e: unknown) {
       emit("error", e);
