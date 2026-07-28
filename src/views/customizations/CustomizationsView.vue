@@ -195,8 +195,8 @@ watch(
             ? {
                 kind: "",
                 search: "",
-                sort: "UpdatedOn",
-                descending: "true",
+                sort: "Name",
+                descending: "false",
                 page: 1,
                 count: 10,
               }
