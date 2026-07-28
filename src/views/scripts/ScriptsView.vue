@@ -1,10 +1,27 @@
 <template>
   <main class="container">
     <h1>{{ title }}</h1>
-    <div class="mb-3">
+    <section class="mb-3">
       <TarButton :disabled="isLoading" icon="fas fa-arrows-rotate" :loading="isLoading" :status="t('loading')" :text="t('actions.refresh')" @click="refresh" />
-    </div>
-    <SearchContainer :sort-options="sortOptions" />
+    </section>
+    <section class="row mb-3">
+      <SearchInput class="col" v-model="search" />
+      <SortSelect class="col" :descending="isDescending" :options="sortOptions" v-model="sort" @descending="isDescending = $event" />
+      <CountSelect class="col" v-model="count" />
+    </section>
+    <section>
+      <template v-if="total">
+        <!-- TODO(fpion): results table -->
+      </template>
+      <div v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
+        <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
+        <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
+        <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
+      </div>
+    </section>
+    <section v-if="total">
+      <SearchPagination :count="count" :total="total" v-model="page" />
+    </section>
   </main>
 </template>
 
@@ -14,7 +31,10 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import SearchContainer from "@/components/shared/SearchContainer.vue";
+import CountSelect from "@/components/shared/CountSelect.vue";
+import SearchInput from "@/components/shared/SearchInput.vue";
+import SearchPagination from "@/components/shared/SearchPagination.vue";
+import SortSelect from "@/components/shared/SortSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Script, ScriptSort, SearchScriptsPayload } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
@@ -114,4 +134,7 @@ watch(
 );
 
 watchEffect(() => document.setTitle(title.value));
+
+// TODO(fpion): we could vertically center the no-result section.
+// TODO(fpion): we could have a clear/reset filters button into the no-result section.
 </script>
