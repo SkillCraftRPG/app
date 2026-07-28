@@ -1,7 +1,6 @@
 <template>
   <main class="container page">
-    <LoadingSpinner v-if="isLoading" />
-    <div v-else-if="script">
+    <div v-if="script">
       <h1>{{ title }}</h1>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
@@ -25,6 +24,7 @@
         </div>
       </form>
     </div>
+    <LoadingSpinner v-else />
   </main>
 </template>
 
@@ -61,7 +61,7 @@ const { t } = useI18n();
 
 const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
-const isLoading = ref<boolean>(true);
+const isLoading = ref<boolean>(false);
 const name = ref<string>("");
 const script = ref<Script>();
 const summary = ref<string>("");
@@ -118,8 +118,6 @@ onMounted(async () => {
     } else {
       handleError(e);
     }
-  } finally {
-    isLoading.value = false;
   }
 });
 </script>

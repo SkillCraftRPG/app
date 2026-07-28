@@ -1,7 +1,6 @@
 <template>
   <main class="container page">
-    <LoadingSpinner v-if="isLoading" />
-    <div v-else-if="world">
+    <div v-if="world">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
         <EditWorld class="mb-3" :world="world" @error="handleError" @updated="onUpdate" />
@@ -13,6 +12,7 @@
       <StatusDetail class="mb-4" :subject="world" />
       <WorldMenu />
     </div>
+    <LoadingSpinner v-else />
   </main>
 </template>
 
@@ -44,7 +44,6 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const isCreated = ref<boolean>(events.shift() === "created");
-const isLoading = ref<boolean>(true);
 const world = ref<World>();
 
 const title = computed<string>(() => (world.value ? (world.value.name ?? world.value.key) : ""));
@@ -66,8 +65,6 @@ onMounted(async () => {
     } else {
       handleError(e);
     }
-  } finally {
-    isLoading.value = false;
   }
 });
 </script>
