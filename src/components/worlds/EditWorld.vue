@@ -12,7 +12,7 @@
             <KeyInput class="mb-3" ref="keyInput" required v-model="key" />
           </div>
         </div>
-        <ContentTextarea class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="htmlContent" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
@@ -33,7 +33,7 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-import ContentTextarea from "@/components/shared/ContentTextarea.vue";
+import ContentField from "@/components/shared/ContentField.vue";
 import KeyAlreadyUsed from "./KeyAlreadyUsed.vue";
 import KeyInput from "./KeyInput.vue";
 import NameInput from "@/components/shared/NameInput.vue";

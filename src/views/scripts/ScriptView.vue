@@ -10,7 +10,7 @@
       <form @submit.prevent="handleSubmit(submit)">
         <NameInput class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
-        <ContentTextarea class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="htmlContent" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -33,7 +33,7 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import ContentTextarea from "@/components/shared/ContentTextarea.vue";
+import ContentField from "@/components/shared/ContentField.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
