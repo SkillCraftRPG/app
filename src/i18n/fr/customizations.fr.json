@@ -1,0 +1,25 @@
+{
+  "create": "Créer une personnalisation",
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "La personnalisation a été créée."
+  },
+  "kind": {
+    "label": "Type",
+    "options": {
+      "Disability": "Handicap",
+      "Gift": "Don"
+    },
+    "placeholder": "Sélectionnez un type"
+  },
+  "label": "Personnalisation",
+  "placeholder": "Sélectionnez une personnalisation",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": "Personnalisations"
+}

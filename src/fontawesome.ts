@@ -37,6 +37,7 @@ import {
   faTablet,
   faUser,
   faVial,
+  faWheelchair,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -75,6 +76,7 @@ library.add(
   faTablet,
   faUser,
   faVial,
+  faWheelchair,
   faXmark,
 );
 

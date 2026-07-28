@@ -1,0 +1,76 @@
+<template>
+  <div>
+    <TarButton icon="fas fa-plus" size="large" :text="t('actions.create')" @click="open" />
+    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('customizations.create')">
+      <form @submit.prevent="handleSubmit(submit)">
+        <CustomizationKindField class="mb-3" required v-model="kind" />
+        <NameField class="mb-3" required v-model="name" />
+      </form>
+      <template #footer>
+        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
+        <TarButton
+          :disabled="isLoading"
+          icon="fas fa-plus"
+          :loading="isLoading"
+          :status="t('loading')"
+          :text="t('actions.create')"
+          @click="handleSubmit(submit)"
+        />
+      </template>
+    </TarModal>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+
+import CustomizationKindField from "./CustomizationKindField.vue";
+import NameField from "@/components/shared/NameField.vue";
+import TarButton from "@/components/tar/TarButton.vue";
+import TarModal from "@/components/tar/TarModal.vue";
+import type { CreateOrReplaceCustomizationPayload, Customization, CustomizationKind } from "@/types/customizations";
+import { createCustomization } from "@/api/customizations";
+import { useForm } from "@/forms";
+
+const { t } = useI18n();
+
+const isLoading = ref<boolean>(false);
+const kind = ref<string>("");
+const modal = ref<InstanceType<typeof TarModal> | null>(null);
+const name = ref<string>("");
+
+const emit = defineEmits<{
+  (e: "created", value: Customization): void;
+  (e: "error", value: unknown): void;
+}>();
+
+function cancel(): void {
+  reset();
+  modal.value?.hide();
+}
+
+function open(): void {
+  modal.value?.show();
+}
+
+const { handleSubmit, reset } = useForm();
+async function submit(): Promise<void> {
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      const payload: CreateOrReplaceCustomizationPayload = {
+        kind: kind.value as CustomizationKind,
+        name: name.value,
+      };
+      const customization: Customization = await createCustomization(payload);
+      modal.value?.hide();
+      emit("created", customization);
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+</script>
