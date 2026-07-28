@@ -9,7 +9,7 @@
       <StatusDetail class="mb-4" :subject="language" />
       <form @submit.prevent="handleSubmit(submit)">
         <NameInput class="mb-3" required v-model="name" />
-        <SummaryTextarea class="mb-3" v-model="summary" />
+        <SummaryField class="mb-3" v-model="summary" />
         <ContentTextarea class="mb-3" v-model="htmlContent" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
@@ -37,7 +37,7 @@ import ContentTextarea from "@/components/shared/ContentTextarea.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameInput from "@/components/shared/NameInput.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
-import SummaryTextarea from "@/components/shared/SummaryTextarea.vue";
+import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
