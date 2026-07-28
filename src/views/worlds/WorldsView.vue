@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-else class="d-flex flex-column justify-content-center align-items-center text-center flex-grow-1 py-5">
-      <font-awesome-icon icon="fas fa-globe" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
+      <font-awesome-icon icon="fas fa-dungeon" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
       <h2 class="h4 mb-2">{{ t("worlds.empty.lead") }}</h2>
       <p class="text-body-secondary mb-4">{{ t("worlds.empty.help") }}</p>
       <CreateWorld @created="onCreate" @error="handleError" />

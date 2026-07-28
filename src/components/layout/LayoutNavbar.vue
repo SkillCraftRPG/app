@@ -20,7 +20,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li v-if="swaggerUrl" class="nav-item">
-            <a class="nav-link" :href="swaggerUrl" target="_blank"><font-awesome-icon icon="fas fa-vial" /> Swagger</a>
+            <a class="nav-link" :href="swaggerUrl" target="_blank"><font-awesome-icon icon="fas fa-vial" />&nbsp;Swagger</a>
+          </li>
+          <li class="nav-item">
+            <RouterLink class="nav-link" :to="{ name: 'Worlds' }"><font-awesome-icon icon="fas fa-dungeon" />&nbsp;{{ t("worlds.title") }}</RouterLink>
+          </li>
+          <li class="nav-item">
+            <RouterLink class="nav-link" :to="{ name: 'CharacterSheets' }"><font-awesome-icon icon="fas fa-id-card" />&nbsp;{{ "Characters" }}</RouterLink>
           </li>
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">
@@ -49,7 +55,7 @@
             </li>
             <li class="nav-item d-block d-lg-none">
               <RouterLink class="nav-link" :to="{ name: 'SignOut' }">
-                <font-awesome-icon icon="fas fa-arrow-right-from-bracket" /> {{ t("account.signOut.title") }}
+                <font-awesome-icon icon="fas fa-arrow-right-from-bracket" />&nbsp;{{ t("account.signOut.title") }}
               </RouterLink>
             </li>
             <li class="nav-item dropdown d-none d-lg-block">
@@ -58,11 +64,11 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <RouterLink class="dropdown-item" :to="{ name: 'Profile' }"><font-awesome-icon icon="fas fa-user" /> {{ user.displayName }}</RouterLink>
+                  <RouterLink class="dropdown-item" :to="{ name: 'Profile' }"><font-awesome-icon icon="fas fa-user" />&nbsp;{{ user.displayName }}</RouterLink>
                 </li>
                 <li>
                   <RouterLink class="dropdown-item" :to="{ name: 'SignOut' }">
-                    <font-awesome-icon icon="fas fa-arrow-right-from-bracket" /> {{ t("account.signOut.title") }}
+                    <font-awesome-icon icon="fas fa-arrow-right-from-bracket" />&nbsp;{{ t("account.signOut.title") }}
                   </RouterLink>
                 </li>
               </ul>

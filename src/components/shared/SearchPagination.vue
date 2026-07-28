@@ -22,7 +22,7 @@
 import { useI18n } from "vue-i18n";
 
 import TarPagination from "@/components/tar/TarPagination.vue";
-import type { PaginationPosition } from "@/types/tar/pagination.ts";
+import type { PaginationPosition } from "@/types/tar/pagination";
 
 const { t } = useI18n();
 

@@ -19,7 +19,7 @@ import { useI18n } from "vue-i18n";
 
 import TarCheckbox from "@/components/tar/TarCheckbox.vue";
 import TarSelect from "@/components/tar/TarSelect.vue";
-import type { SelectOption } from "@/types/tar/select.ts";
+import type { SelectOption } from "@/types/tar/select";
 
 const { t } = useI18n();
 

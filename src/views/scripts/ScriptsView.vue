@@ -4,6 +4,7 @@
       <h1 class="mb-0">{{ title }}</h1>
       <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
     </div>
+    <WorldBreadcrumb :current="title" />
     <section class="mb-3">
       <TarButton
         :disabled="isLoading"
@@ -76,6 +77,7 @@ import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import TarButton from "@/components/tar/TarButton.vue";
+import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Script, ScriptSort, SearchScriptsPayload } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
