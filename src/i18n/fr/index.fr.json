@@ -21,6 +21,9 @@
     "lead": "Aucun résultat"
   },
   "error": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
+  "filters": {
+    "clear": "Effacer les filtres"
+  },
   "home": {
     "go": "Aller à l’accueil",
     "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",

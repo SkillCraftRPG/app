@@ -21,6 +21,9 @@
     "lead": "No results"
   },
   "error": "An unexpected error occurred. Please try again later or contact our support team.",
+  "filters": {
+    "clear": "Clear filters"
+  },
   "home": {
     "go": "Go to Home",
     "text": "A multi-tenant game Web application managing world-scoped data, character sheets, and real-time gameplay state for interactive roleplaying experiences.",

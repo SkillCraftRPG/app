@@ -44,6 +44,15 @@
         <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
         <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
         <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
+        <TarButton
+          v-if="hasFilters"
+          class="mt-3"
+          icon="fas fa-arrow-rotate-left"
+          outline
+          :text="t('filters.clear')"
+          variant="secondary"
+          @click="clearFilters"
+        />
       </div>
     </section>
     <section v-if="total">
@@ -96,6 +105,8 @@ const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 const title = computed<string>(() => t("scripts.title"));
 
+const hasFilters = computed<boolean>(() => Boolean(search.value));
+
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
     Object.entries(tm(rt("scripts.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
@@ -106,6 +117,11 @@ const sortOptions = computed<SelectOption[]>(() =>
 function onCreate(script: Script): void {
   events.push("created");
   router.push({ name: "Script", params: { id: script.id } });
+}
+
+function clearFilters(): void {
+  const query = { ...route.query, search: "", page: 1 };
+  router.replace({ ...route, query });
 }
 
 function setQuery(key: string, value?: boolean | null | number | string): void {
@@ -182,6 +198,4 @@ watch(
 );
 
 watchEffect(() => document.setTitle(title.value));
-
-// TODO(fpion): we could have a clear/reset filters button into the no-result section.
 </script>
