@@ -5,6 +5,7 @@
     "lead": "The script was created."
   },
   "label": "Script",
+  "placeholder": "Select a script",
   "sort": {
     "options": {
       "CreatedOn": "Created on",

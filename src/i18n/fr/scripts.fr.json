@@ -5,6 +5,7 @@
     "lead": "L’alphabet a été créé."
   },
   "label": "Alphabet",
+  "placeholder": "Sélectionnez un alphabet",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
