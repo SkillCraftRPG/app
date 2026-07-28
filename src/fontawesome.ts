@@ -35,8 +35,10 @@ import {
   faScroll,
   faSun,
   faTablet,
+  faTrophy,
   faUser,
   faVial,
+  faWheelchair,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -73,8 +75,10 @@ library.add(
   faScroll,
   faSun,
   faTablet,
+  faTrophy,
   faUser,
   faVial,
+  faWheelchair,
   faXmark,
 );
 

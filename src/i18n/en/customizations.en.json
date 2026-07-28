@@ -1,0 +1,25 @@
+{
+  "create": "Create a customization",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The customization was created."
+  },
+  "kind": {
+    "label": "Type",
+    "options": {
+      "Disability": "Disability",
+      "Gift": "Gift"
+    },
+    "placeholder": "Select a type"
+  },
+  "label": "Customization",
+  "placeholder": "Select a customization",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "title": "Customizations"
+}

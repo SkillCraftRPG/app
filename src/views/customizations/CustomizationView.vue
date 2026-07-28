@@ -1,12 +1,15 @@
 <template>
   <main class="container page">
-    <div v-if="script">
-      <h1>{{ title }}</h1>
+    <div v-if="customization">
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <h1>{{ title }}</h1>
+        <TarBadge class="fs-6" variant="secondary"><CustomizationKindDisplay :kind="customization.kind" /></TarBadge>
+      </div>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
-        <strong>{{ t("scripts.created.lead") }}</strong> {{ t("scripts.created.help", { name: title }) }}
+        <strong>{{ t("customizations.created.lead") }}</strong> {{ t("customizations.created.help", { name: title }) }}
       </TarAlert>
-      <StatusDetail class="mb-3" :subject="script" />
+      <StatusDetail class="mb-3" :subject="customization" />
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
@@ -34,18 +37,20 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import ContentField from "@/components/shared/ContentField.vue";
+import CustomizationKindDisplay from "@/components/customizations/CustomizationKindDisplay.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameField from "@/components/shared/NameField.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
+import TarBadge from "@/components/tar/TarBadge.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { CreateOrReplaceScriptPayload, Script } from "@/types/scripts";
+import type { CreateOrReplaceCustomizationPayload, Customization } from "@/types/customizations";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { handleErrorKey } from "@/inject";
-import { readScript, replaceScript } from "@/api/scripts";
+import { readCustomization, replaceCustomization } from "@/api/customizations";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 import { useForm } from "@/forms";
@@ -59,33 +64,36 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+const customization = ref<Customization>();
 const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
-const script = ref<Script>();
 const summary = ref<string>("");
 
-const breadcrumb = computed<Breadcrumb>(() => ({ text: t("scripts.title"), to: { name: "Scripts" } }));
+const breadcrumb = computed<Breadcrumb>(() => ({ text: t("customizations.title"), to: { name: "Customizations" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
-    script.value &&
-    (script.value.name !== name.value || (script.value.summary ?? "") !== summary.value || (script.value.htmlContent ?? "") !== htmlContent.value),
+    customization.value &&
+    (customization.value.name !== name.value ||
+      (customization.value.summary ?? "") !== summary.value ||
+      (customization.value.htmlContent ?? "") !== htmlContent.value),
   ),
 );
-const title = computed<string>(() => script.value?.name ?? "");
+const title = computed<string>(() => customization.value?.name ?? "");
 
 const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
-  if (!isLoading.value && script.value) {
+  if (!isLoading.value && customization.value) {
     isLoading.value = true;
     try {
-      const payload: CreateOrReplaceScriptPayload = {
+      const payload: CreateOrReplaceCustomizationPayload = {
+        kind: customization.value.kind,
         name: name.value,
         summary: summary.value,
         htmlContent: htmlContent.value,
       };
-      script.value = await replaceScript(script.value.id, payload);
+      customization.value = await replaceCustomization(customization.value.id, payload);
       reinitialize();
       toasts.success("saved");
     } catch (e: unknown) {
@@ -97,11 +105,11 @@ async function submit(): Promise<void> {
 }
 
 watch(
-  script,
-  (script) => {
-    name.value = script?.name ?? "";
-    summary.value = script?.summary ?? "";
-    htmlContent.value = script?.htmlContent ?? "";
+  customization,
+  (customization) => {
+    name.value = customization?.name ?? "";
+    summary.value = customization?.summary ?? "";
+    htmlContent.value = customization?.htmlContent ?? "";
   },
   { deep: true },
 );
@@ -109,7 +117,7 @@ watch(
 onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
-    script.value = await readScript(id);
+    customization.value = await readCustomization(id);
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;

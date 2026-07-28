@@ -3,7 +3,7 @@
     <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
+        <CreateCustomization class="mb-3" @created="onCreate" @error="handleError" />
       </div>
       <WorldBreadcrumb :current="title" />
       <section>
@@ -22,10 +22,13 @@
       </section>
       <section>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6 col-lg-3">
+            <CustomizationKindSelect :model-value="kind" @update:model-value="setQuery('kind', $event)" />
+          </div>
+          <div class="col-md-6 col-lg-3">
             <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 col-lg-3">
             <SortSelect
               class="mb-3"
               :descending="isDescending"
@@ -35,15 +38,15 @@
               @update:model-value="setQuery('sort', $event)"
             />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 col-lg-3">
             <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
           </div>
         </div>
       </section>
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
-          <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
-            <ScriptCard class="d-flex flex-column h-100" :script="script" />
+          <div v-for="customization in customizations" :key="customization.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+            <CustomizationCard class="d-flex flex-column h-100" :customization="customization" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -74,21 +77,22 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
-import CreateScript from "@/components/scripts/CreateScript.vue";
+import CreateCustomization from "@/components/customizations/CreateCustomization.vue";
+import CustomizationCard from "@/components/customizations/CustomizationCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
-import ScriptCard from "@/components/scripts/ScriptCard.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
-import type { Script, ScriptSort, SearchScriptsPayload } from "@/types/scripts";
+import type { Customization, CustomizationKind, CustomizationSort, SearchCustomizationsPayload } from "@/types/customizations";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
 import { handleErrorKey } from "@/inject";
-import { searchScripts } from "@/api/scripts";
+import { searchCustomizations } from "@/api/customizations";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
+import CustomizationKindSelect from "@/components/customizations/CustomizationKindSelect.vue";
 
 const document = useDocument();
 const events = useEventStore();
@@ -102,39 +106,41 @@ const { rt, t, tm } = useI18n();
 
 const hasLoaded = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
-const scripts = ref<Script[]>([]);
+const customizations = ref<Customization[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
+const kind = computed<string>(() => route.query.kind?.toString() ?? "");
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
-const title = computed<string>(() => t("scripts.title"));
+const title = computed<string>(() => t("customizations.title"));
 
-const hasFilters = computed<boolean>(() => Boolean(search.value));
+const hasFilters = computed<boolean>(() => Boolean(kind.value || search.value));
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("scripts.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
+    Object.entries(tm(rt("customizations.sort.options"))).map(([value, text]) => ({ text, value }) as SelectOption),
     "text",
   ),
 );
 
-function onCreate(script: Script): void {
+function onCreate(customization: Customization): void {
   events.push("created");
-  router.push({ name: "Script", params: { id: script.id } });
+  router.push({ name: "Customization", params: { id: customization.id } });
 }
 
 function clearFilters(): void {
-  const query = { ...route.query, search: "", page: 1 };
+  const query = { ...route.query, kind: "", search: "", page: 1 };
   router.replace({ ...route, query });
 }
 
 function setQuery(key: string, value?: boolean | null | number | string): void {
   const query = { ...route.query, [key]: value?.toString() ?? "" };
   switch (key) {
+    case "kind":
     case "search":
     case "count":
       query.page = "1";
@@ -144,8 +150,9 @@ function setQuery(key: string, value?: boolean | null | number | string): void {
 }
 
 async function refresh(): Promise<void> {
-  const payload: SearchScriptsPayload = {
+  const payload: SearchCustomizationsPayload = {
     ids: [],
+    kind: kind.value ? (kind.value as CustomizationKind) : undefined,
     search: {
       terms: search.value
         .split(" ")
@@ -153,7 +160,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    sort: sort.value ? [{ field: sort.value as ScriptSort, isDescending: isDescending.value }] : [],
+    sort: sort.value ? [{ field: sort.value as CustomizationSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
   };
@@ -161,9 +168,9 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    const results: SearchResults<Script> = await searchScripts(payload);
+    const results: SearchResults<Customization> = await searchCustomizations(payload);
     if (now === timestamp.value) {
-      scripts.value = [...results.items];
+      customizations.value = [...results.items];
       total.value = results.total;
     }
   } catch (e: unknown) {
@@ -179,13 +186,14 @@ async function refresh(): Promise<void> {
 watch(
   () => route,
   (route) => {
-    if (route.name === "Scripts") {
+    if (route.name === "Customizations") {
       const { query } = route;
       if (!query.page || !query.count) {
         router.replace({
           ...route,
           query: isEmpty(query)
             ? {
+                kind: "",
                 search: "",
                 sort: "Name",
                 descending: "false",
