@@ -9,11 +9,17 @@
     "enter": "Enter",
     "next": "Next",
     "previous": "Previous",
+    "refresh": "Refresh",
     "save": "Save",
     "verify": "Verify"
   },
   "brand": "SkillCraft",
   "content": "Content",
+  "count": "Count",
+  "empty": {
+    "help": "No items match the current criteria.",
+    "lead": "No results"
+  },
   "error": "An unexpected error occurred. Please try again later or contact our support team.",
   "home": {
     "go": "Go to Home",
@@ -26,7 +32,22 @@
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"
   },
+  "pagination": {
+    "first": "First",
+    "label": "Pagination",
+    "last": "Last",
+    "next": "Next",
+    "previous": "Previous"
+  },
   "saved": "Your changes have been saved.",
+  "search": "Search",
+  "sort": {
+    "isDescending": "Is descending",
+    "select": {
+      "label": "Sort",
+      "placeholder": "Select a sort"
+    }
+  },
   "status": {
     "createdOn": "Created on {date} by",
     "now": "just now",
