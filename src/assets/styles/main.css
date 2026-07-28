@@ -43,6 +43,10 @@ button:disabled {
   background-color: #2a2a2a;
 }
 
+.w-third {
+  width: 33.333333% !important;
+}
+
 @media (min-width: 576px) {
   .jumbotron {
     padding: 4rem 2rem;

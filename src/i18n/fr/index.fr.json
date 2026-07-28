@@ -53,6 +53,7 @@
     "now": "à l’instant",
     "updatedOn": "Dernière modification {date} par"
   },
+  "summary": "Résumé",
   "theme": {
     "title": "Thème",
     "auto": "Auto",

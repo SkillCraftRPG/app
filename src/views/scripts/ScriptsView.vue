@@ -1,8 +1,19 @@
 <template>
   <main class="container page">
-    <h1>{{ title }}</h1>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
+      <h1 class="mb-0">{{ title }}</h1>
+      <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
+    </div>
     <section class="mb-3">
-      <TarButton :disabled="isLoading" icon="fas fa-arrows-rotate" :loading="isLoading" :status="t('loading')" :text="t('actions.refresh')" @click="refresh" />
+      <TarButton
+        :disabled="isLoading"
+        icon="fas fa-arrows-rotate"
+        :loading="isLoading"
+        :status="t('loading')"
+        :text="t('actions.refresh')"
+        variant="secondary"
+        @click="refresh"
+      />
     </section>
     <section class="row mb-3">
       <SearchInput class="col" :model-value="search" @update:model-value="setQuery('search', $event)" />
@@ -17,9 +28,29 @@
       <CountSelect class="col" :model-value="count" @update:model-value="setQuery('count', $event)" />
     </section>
     <section class="d-flex flex-column flex-grow-1">
-      <template v-if="total">
-        <!-- TODO(fpion): results table -->
-      </template>
+      <table v-if="total" class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" class="w-third">{{ t("name") }}</th>
+            <th scope="col" class="w-third">{{ t("summary") }}</th>
+            <th scope="col" class="w-third">{{ t("scripts.sort.options.UpdatedOn") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="script in scripts" :key="script.id">
+            <td>
+              <RouterLink :to="{ name: 'Script', params: { id: script.id } }">{{ script.name }}</RouterLink>
+            </td>
+            <td>
+              <span v-if="script.summary">{{ script.summary }}</span>
+              <span v-else class="text-muted">&mdash;</span>
+            </td>
+            <td>
+              <StatusBlock :actor="script.updatedBy" :date="script.updatedOn" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
         <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
         <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
@@ -39,9 +70,11 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
+import CreateScript from "@/components/scripts/CreateScript.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
+import StatusBlock from "@/components/shared/StatusBlock.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Script, ScriptSort, SearchScriptsPayload } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
@@ -49,8 +82,10 @@ import type { SelectOption } from "@/types/tar/select";
 import { handleErrorKey } from "@/inject";
 import { searchScripts } from "@/api/scripts";
 import { useDocument } from "@/composables/document";
+import { useEventStore } from "@/stores/event";
 
 const document = useDocument();
+const events = useEventStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
@@ -77,6 +112,11 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
+
+function onCreate(script: Script): void {
+  events.push("created");
+  router.push({ name: "Script", params: { id: script.id } });
+}
 
 function setQuery(key: string, value?: boolean | null | number | string): void {
   const query = { ...route.query, [key]: value?.toString() ?? "" };
