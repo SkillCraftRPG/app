@@ -6,7 +6,7 @@
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
         <strong>{{ t("languages.created.lead") }}</strong> {{ t("languages.created.help", { name: title }) }}
       </TarAlert>
-      <StatusDetail class="mb-4" :subject="language" />
+      <StatusDetail class="mb-3" :subject="language" />
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
           <div class="col-md-6">

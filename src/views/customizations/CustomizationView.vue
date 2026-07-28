@@ -1,21 +1,17 @@
 <template>
   <main class="container page">
     <div v-if="customization">
-      <h1>{{ title }}</h1>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <h1>{{ title }}</h1>
+        <TarBadge class="fs-6" variant="secondary"><CustomizationKindDisplay :kind="customization.kind" /></TarBadge>
+      </div>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
         <strong>{{ t("customizations.created.lead") }}</strong> {{ t("customizations.created.help", { name: title }) }}
       </TarAlert>
-      <StatusDetail class="mb-4" :subject="customization" />
+      <StatusDetail class="mb-3" :subject="customization" />
       <form @submit.prevent="handleSubmit(submit)">
-        <div class="row">
-          <div class="col-md-6">
-            <NameField class="mb-3" required v-model="name" />
-          </div>
-          <div class="col-md-6">
-            <CustomizationKindField class="mb-3" disabled :model-value="customization.kind" />
-          </div>
-        </div>
+        <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
         <ContentField class="mb-3" v-model="htmlContent" />
         <div class="d-flex justify-content-end mb-3">
@@ -41,12 +37,13 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import ContentField from "@/components/shared/ContentField.vue";
-import CustomizationKindField from "@/components/customizations/CustomizationKindField.vue";
+import CustomizationKindDisplay from "@/components/customizations/CustomizationKindDisplay.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameField from "@/components/shared/NameField.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
+import TarBadge from "@/components/tar/TarBadge.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";

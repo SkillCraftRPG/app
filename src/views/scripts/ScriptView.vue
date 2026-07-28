@@ -6,7 +6,7 @@
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
         <strong>{{ t("scripts.created.lead") }}</strong> {{ t("scripts.created.help", { name: title }) }}
       </TarAlert>
-      <StatusDetail class="mb-4" :subject="script" />
+      <StatusDetail class="mb-3" :subject="script" />
       <form @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />

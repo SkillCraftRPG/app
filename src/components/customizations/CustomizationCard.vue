@@ -2,7 +2,7 @@
   <LinkCard :title="customization.name" :to="{ name: 'Customization', params: { id: customization.id } }">
     <template #subtitle-override>
       <h6 class="card-subtitle mb-2 text-body-secondary">
-        <template v-if="icon"><font-awesome-icon :icon="icon" />&nbsp;</template>{{ t(`customizations.kind.options.${customization.kind}`) }}
+        <CustomizationKindDisplay :kind="customization.kind" />
       </h6>
     </template>
     <div class="card-text">
@@ -14,25 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
+import CustomizationKindDisplay from "./CustomizationKindDisplay.vue";
 import LinkCard from "@/components/shared/LinkCard.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { Customization } from "@/types/customizations";
-import { computed } from "vue";
 
-const { t } = useI18n();
-
-const props = defineProps<{
+defineProps<{
   customization: Customization;
 }>();
-
-const icon = computed<string | undefined>(() => {
-  switch (props.customization.kind) {
-    case "Disability":
-      return "fas fa-wheelchair";
-    case "Gift":
-      return "fas fa-trophy";
-  }
-});
 </script>
