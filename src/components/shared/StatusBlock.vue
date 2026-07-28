@@ -1,17 +1,21 @@
 <template>
-  <span>
-    {{ t(format, { date: formattedDate }) }}
-    {{ t("by").toLowerCase() }}
-    <TarAvatar
-      :display-name="displayName"
-      :email-address="actor.emailAddress ?? undefined"
-      :icon="icon"
-      :size="24"
-      :url="actor.pictureUrl ?? undefined"
-      :variant="variant"
-    />
-    {{ displayName }}
-  </span>
+  <div>
+    <div>
+      {{ t(format, { date: formattedDate }) }}
+    </div>
+    <div>
+      {{ t("by") }}
+      <TarAvatar
+        :display-name="displayName"
+        :email-address="actor.emailAddress ?? undefined"
+        :icon="icon"
+        :size="24"
+        :url="actor.pictureUrl ?? undefined"
+        :variant="variant"
+      />
+      {{ displayName }}
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -20,19 +24,24 @@ import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import TarAvatar from "@/components/tar/TarAvatar.vue";
+import { formatRelativeTime } from "@/utils/date";
 import type { Actor } from "@/types/api";
 import type { BadgeVariant } from "@/types/tar/badge";
-import { formatRelativeTime } from "@/utils/date";
 
-const { d, locale, t } = useI18n();
 const { parseBoolean } = parsingUtils;
+const { d, locale, t } = useI18n();
 
-const props = defineProps<{
-  actor: Actor;
-  date: string;
-  format: string;
-  relative?: boolean | string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    actor: Actor;
+    format?: string;
+    date: Date | string;
+    relative?: boolean | string;
+  }>(),
+  {
+    format: "status.updatedOn",
+  },
+);
 
 const displayName = computed<string>(() => {
   const { displayName, type } = props.actor;

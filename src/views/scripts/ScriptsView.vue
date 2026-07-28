@@ -1,63 +1,66 @@
 <template>
   <main class="container page">
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
-      <h1 class="mb-0">{{ title }}</h1>
-      <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
-    </div>
-    <WorldBreadcrumb :current="title" />
-    <section class="mb-3">
-      <TarButton
-        :disabled="isLoading"
-        icon="fas fa-arrows-rotate"
-        :loading="isLoading"
-        :status="t('loading')"
-        :text="t('actions.refresh')"
-        variant="secondary"
-        @click="refresh"
-      />
-    </section>
-    <section class="row mb-3">
-      <div class="col-md-4">
-        <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
+    <div v-if="hasLoaded">
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
+        <h1 class="mb-0">{{ title }}</h1>
+        <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
       </div>
-      <div class="col-md-4">
-        <SortSelect
-          class="mb-3"
-          :descending="isDescending"
-          :model-value="sort"
-          :options="sortOptions"
-          @descending="setQuery('descending', $event)"
-          @update:model-value="setQuery('sort', $event)"
-        />
-      </div>
-      <div class="col-md-4">
-        <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
-      </div>
-    </section>
-    <template v-if="!isLoading">
-      <template v-if="total">
-        <section class="row">
-          <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
-            <ScriptCard class="d-flex flex-column h-100" :script="script" />
-          </div>
-        </section>
-        <SearchPagination v-if="total > count" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
-      </template>
-      <section v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
-        <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
-        <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
-        <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
+      <WorldBreadcrumb :current="title" />
+      <section class="mb-3">
         <TarButton
-          v-if="hasFilters"
-          class="mt-3"
-          icon="fas fa-arrow-rotate-left"
-          outline
-          :text="t('filters.clear')"
+          :disabled="isLoading"
+          icon="fas fa-arrows-rotate"
+          :loading="isLoading"
+          :status="t('loading')"
+          :text="t('actions.refresh')"
           variant="secondary"
-          @click="clearFilters"
+          @click="refresh"
         />
       </section>
-    </template>
+      <section class="row mb-3">
+        <div class="col-md-4">
+          <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
+        </div>
+        <div class="col-md-4">
+          <SortSelect
+            class="mb-3"
+            :descending="isDescending"
+            :model-value="sort"
+            :options="sortOptions"
+            @descending="setQuery('descending', $event)"
+            @update:model-value="setQuery('sort', $event)"
+          />
+        </div>
+        <div class="col-md-4">
+          <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
+        </div>
+      </section>
+      <template v-if="!isLoading">
+        <template v-if="total">
+          <section class="row">
+            <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+              <ScriptCard class="d-flex flex-column h-100" :script="script" />
+            </div>
+          </section>
+          <SearchPagination v-if="total > count" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
+        </template>
+        <section v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
+          <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
+          <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
+          <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
+          <TarButton
+            v-if="hasFilters"
+            class="mt-3"
+            icon="fas fa-arrow-rotate-left"
+            outline
+            :text="t('filters.clear')"
+            variant="secondary"
+            @click="clearFilters"
+          />
+        </section>
+      </template>
+    </div>
+    <LoadingSpinner v-else />
   </main>
 </template>
 
@@ -69,6 +72,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateScript from "@/components/scripts/CreateScript.vue";
+import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import ScriptCard from "@/components/scripts/ScriptCard.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
@@ -93,6 +97,7 @@ const { orderBy } = arrayUtils;
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
+const hasLoaded = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const scripts = ref<Script[]>([]);
 const timestamp = ref<number>(0);
@@ -164,6 +169,7 @@ async function refresh(): Promise<void> {
     if (now === timestamp.value) {
       isLoading.value = false;
     }
+    hasLoaded.value = true;
   }
 }
 

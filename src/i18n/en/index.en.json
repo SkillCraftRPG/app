@@ -14,6 +14,7 @@
     "verify": "Verify"
   },
   "brand": "SkillCraft",
+  "by": "By",
   "content": "Content",
   "count": "Count",
   "empty": {
@@ -52,9 +53,9 @@
     }
   },
   "status": {
-    "createdOn": "Created on {date} by",
+    "createdOn": "Created on {date}",
     "now": "just now",
-    "updatedOn": "Last updated {date} by"
+    "updatedOn": "Last updated {date}"
   },
   "summary": "Summary",
   "theme": {

@@ -4,12 +4,13 @@
       <span v-if="script.summary">{{ script.summary }}</span>
       <span class="text-muted" v-else>&mdash;</span>
     </div>
-    <!-- TODO(fpion): updated by & on -->
+    <StatusBlock :actor="script.updatedBy" class="card-text mt-2 small text-secondary" :date="script.updatedOn" relative />
   </LinkCard>
 </template>
 
 <script setup lang="ts">
 import LinkCard from "@/components/shared/LinkCard.vue";
+import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { Script } from "@/types/scripts";
 
 defineProps<{
