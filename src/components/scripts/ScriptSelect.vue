@@ -45,7 +45,7 @@ const emit = defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-const isLoading = ref<boolean>(true);
+const isLoading = ref<boolean>(false);
 const scripts = ref<Script[]>([]);
 const total = ref<number>(0);
 
@@ -63,22 +63,28 @@ function onModelValueUpdate(value: string | undefined): void {
   emit("selected", script);
 }
 
-onMounted(async () => {
-  try {
-    const payload: SearchScriptsPayload = {
-      ids: [],
-      search: { terms: [], operator: "And" },
-      sort: [],
-      skip: 0,
-      limit: 0,
-    };
-    const results: SearchResults<Script> = await searchScripts(payload);
-    scripts.value = [...results.items];
-    total.value = results.total;
-  } catch (e: unknown) {
-    emit("error", e);
-  } finally {
-    isLoading.value = false;
+async function refresh(): Promise<void> {
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      const payload: SearchScriptsPayload = {
+        ids: [],
+        search: { terms: [], operator: "And" },
+        sort: [],
+        skip: 0,
+        limit: 0,
+      };
+      const results: SearchResults<Script> = await searchScripts(payload);
+      scripts.value = [...results.items];
+      total.value = results.total;
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
   }
-});
+}
+defineExpose({ refresh });
+
+onMounted(refresh);
 </script>

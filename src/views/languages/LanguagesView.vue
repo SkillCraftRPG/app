@@ -15,7 +15,7 @@
             :status="t('loading')"
             :text="t('actions.refresh')"
             variant="secondary"
-            @click="refresh"
+            @click="onRefresh"
           />
           <TarButton v-if="hasFilters" icon="fas fa-arrow-rotate-left" outline :text="t('filters.clear')" variant="secondary" @click="clearFilters" />
         </div>
@@ -23,7 +23,7 @@
       <section>
         <div class="row">
           <div class="col-md-6 col-lg-3">
-            <ScriptSelect class="mb-3" :model-value="script" @error="handleError" @update:model-value="setQuery('script', $event)" />
+            <ScriptSelect class="mb-3" :model-value="script" ref="scriptSelect" @error="handleError" @update:model-value="setQuery('script', $event)" />
           </div>
           <div class="col-md-6 col-md-6 col-lg-3">
             <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
@@ -107,6 +107,7 @@ const { rt, t, tm } = useI18n();
 const hasLoaded = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const languages = ref<Language[]>([]);
+const scriptSelect = ref<InstanceType<typeof ScriptSelect> | null>(null);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
@@ -149,6 +150,10 @@ function setQuery(key: string, value?: boolean | null | number | string): void {
   router.replace({ ...route, query });
 }
 
+function onRefresh(): void {
+  scriptSelect.value?.refresh();
+  refresh();
+}
 async function refresh(): Promise<void> {
   const payload: SearchLanguagesPayload = {
     ids: [],
@@ -215,6 +220,4 @@ watch(
 );
 
 watchEffect(() => document.setTitle(title.value));
-
-// TODO(fpion): refresh button should refresh scripts
 </script>
