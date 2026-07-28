@@ -31,6 +31,12 @@ const router = createRouter({
       component: () => import("./views/account/SignOutView.vue"),
       meta: { isPublic: true },
     },
+    // Scripts
+    {
+      name: "Scripts",
+      path: "/scripts",
+      component: () => import("./views/scripts/ScriptsView.vue"),
+    },
     // Sheets
     {
       name: "CharacterSheets",

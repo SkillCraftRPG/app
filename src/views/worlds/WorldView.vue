@@ -9,7 +9,8 @@
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
         <strong>{{ t("worlds.created.lead") }}</strong> {{ t("worlds.created.help", { name: world.name ?? world.key }) }}
       </TarAlert>
-      <StatusDetail :subject="world" />
+      <StatusDetail class="mb-4" :subject="world" />
+      <WorldMenu />
     </div>
   </main>
 </template>
@@ -23,6 +24,7 @@ import EditWorld from "@/components/worlds/EditWorld.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
+import WorldMenu from "@/components/worlds/WorldMenu.vue";
 import type { World } from "@/types/worlds";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { handleErrorKey } from "@/inject";
