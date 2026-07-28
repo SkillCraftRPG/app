@@ -100,8 +100,8 @@ async function submit(): Promise<void> {
         htmlContent: htmlContent.value,
       };
       const world: World = await replaceWorld(props.world.id, payload);
-      modal.value?.hide();
       reinitialize();
+      modal.value?.hide();
       emit("updated", world);
     } catch (e: unknown) {
       const failure = e as ApiFailure;
