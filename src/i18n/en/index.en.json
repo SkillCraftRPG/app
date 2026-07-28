@@ -9,12 +9,22 @@
     "enter": "Enter",
     "next": "Next",
     "previous": "Previous",
+    "refresh": "Refresh",
     "save": "Save",
     "verify": "Verify"
   },
   "brand": "SkillCraft",
+  "by": "By",
   "content": "Content",
+  "count": "Count",
+  "empty": {
+    "help": "No items match the current criteria.",
+    "lead": "No results"
+  },
   "error": "An unexpected error occurred. Please try again later or contact our support team.",
+  "filters": {
+    "clear": "Clear filters"
+  },
   "home": {
     "go": "Go to Home",
     "text": "A multi-tenant game Web application managing world-scoped data, character sheets, and real-time gameplay state for interactive roleplaying experiences.",
@@ -26,12 +36,28 @@
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"
   },
-  "saved": "Your changes have been saved.",
-  "status": {
-    "createdOn": "Created on {date} by",
-    "now": "just now",
-    "updatedOn": "Last updated {date} by"
+  "pagination": {
+    "first": "First",
+    "label": "Pagination",
+    "last": "Last",
+    "next": "Next",
+    "previous": "Previous"
   },
+  "saved": "Your changes have been saved.",
+  "search": "Search",
+  "sort": {
+    "isDescending": "Is descending",
+    "select": {
+      "label": "Sort",
+      "placeholder": "Select a sort"
+    }
+  },
+  "status": {
+    "createdOn": "Created on {date}",
+    "now": "just now",
+    "updatedOn": "Last updated {date}"
+  },
+  "summary": "Summary",
   "theme": {
     "title": "Theme",
     "auto": "Auto",

@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <h1>Characters</h1>
-    <RouterLink :to="{ name: 'Worlds' }"><font-awesome-icon icon="fas fa-globe" />&nbsp;{{ t("worlds.go") }}</RouterLink>
+    <RouterLink :to="{ name: 'Worlds' }"><font-awesome-icon icon="fas fa-dungeon" />&nbsp;{{ t("worlds.go") }}</RouterLink>
   </main>
 </template>
 

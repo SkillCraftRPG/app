@@ -30,6 +30,12 @@ button:disabled {
   border-radius: 0.3rem;
 }
 
+.page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
 .selected {
   background-color: #f0f0f0;
 }

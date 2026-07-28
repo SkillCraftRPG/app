@@ -9,12 +9,22 @@
     "enter": "Entrer",
     "next": "Suivant",
     "previous": "Précédent",
+    "refresh": "Actualiser",
     "save": "Enregistrer",
     "verify": "Vérifier"
   },
   "brand": "SkillCraft",
+  "by": "Par",
   "content": "Contenu",
+  "count": "Nombre de résultats",
+  "empty": {
+    "help": "Aucun élément ne correspond aux critères actuels.",
+    "lead": "Aucun résultat"
+  },
   "error": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
+  "filters": {
+    "clear": "Effacer les filtres"
+  },
   "home": {
     "go": "Aller à l’accueil",
     "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",
@@ -26,12 +36,28 @@
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"
   },
-  "saved": "Vos modifications ont été enregistrées.",
-  "status": {
-    "createdOn": "Création le {date} par",
-    "now": "à l’instant",
-    "updatedOn": "Dernière modification {date} par"
+  "pagination": {
+    "first": "Première page",
+    "label": "Pagination",
+    "last": "Dernière page",
+    "next": "Prochaine page",
+    "previous": "Page précédente"
   },
+  "saved": "Vos modifications ont été enregistrées.",
+  "search": "Recherche",
+  "sort": {
+    "isDescending": "Descendant",
+    "select": {
+      "label": "Tri",
+      "placeholder": "Sélectionnez un tri"
+    }
+  },
+  "status": {
+    "createdOn": "Création le {date}",
+    "now": "à l’instant",
+    "updatedOn": "Dernière modification {date}"
+  },
+  "summary": "Résumé",
   "theme": {
     "title": "Thème",
     "auto": "Auto",
