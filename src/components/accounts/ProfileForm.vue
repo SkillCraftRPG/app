@@ -120,9 +120,9 @@ async function submit(): Promise<void> {
         defaultExperience: defaultExperience.value,
       };
       const profile: Profile = await saveProfile(payload);
+      reinitialize();
       account.saveProfile(profile);
       toasts.success("account.profile.updated");
-      reinitialize();
       emit("update:model-value", profile);
     } catch (e: unknown) {
       emit("error", e);
