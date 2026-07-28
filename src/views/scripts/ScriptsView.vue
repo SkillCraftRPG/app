@@ -7,7 +7,7 @@
       </div>
       <WorldBreadcrumb :current="title" />
       <section>
-        <div class="mb-3">
+        <div class="d-flex gap-2 mb-3">
           <TarButton
             :disabled="isLoading"
             icon="fas fa-arrows-rotate"
@@ -17,6 +17,7 @@
             variant="secondary"
             @click="refresh"
           />
+          <TarButton v-if="hasFilters" icon="fas fa-arrow-rotate-left" outline :text="t('filters.clear')" variant="secondary" @click="clearFilters" />
         </div>
       </section>
       <section>
@@ -206,6 +207,4 @@ watch(
 );
 
 watchEffect(() => document.setTitle(title.value));
-
-// TODO(fpion): clear filters button
 </script>
