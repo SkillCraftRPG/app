@@ -6,10 +6,10 @@
         <KeyAlreadyUsed v-model="keyAlreadyUsed" />
         <div class="row">
           <div class="col-lg-6">
-            <NameInput class="mb-3" required v-model="name" />
+            <NameField class="mb-3" required v-model="name" />
           </div>
           <div class="col-lg-6">
-            <KeyInput class="mb-3" ref="keyInput" required v-model="key" />
+            <KeyField class="mb-3" ref="keyInput" required v-model="key" />
           </div>
         </div>
         <ContentField class="mb-3" v-model="htmlContent" />
@@ -35,14 +35,14 @@ import { useI18n } from "vue-i18n";
 
 import ContentField from "@/components/shared/ContentField.vue";
 import KeyAlreadyUsed from "./KeyAlreadyUsed.vue";
-import KeyInput from "./KeyInput.vue";
-import NameInput from "@/components/shared/NameInput.vue";
+import NameField from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { CreateOrReplaceWorldPayload, World } from "@/types/worlds";
 import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api";
 import { replaceWorld } from "@/api/worlds";
 import { useForm } from "@/forms";
+import KeyField from "./KeyField.vue";
 
 const { t } = useI18n();
 
@@ -59,7 +59,7 @@ const htmlContent = ref<string>("");
 const isLoading = ref<boolean>(false);
 const key = ref<string>("");
 const keyAlreadyUsed = ref<boolean>(false);
-const keyInput = ref<InstanceType<typeof KeyInput> | null>(null);
+const keyField = ref<InstanceType<typeof KeyField> | null>(null);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
 
@@ -109,7 +109,7 @@ async function submit(): Promise<void> {
         const problemDetails = failure.data as ProblemDetails;
         if (problemDetails.error && problemDetails.error.code === ErrorCodes.KeyAlreadyUsed) {
           keyAlreadyUsed.value = true;
-          keyInput.value?.focus();
+          keyField.value?.focus();
           return;
         }
       }

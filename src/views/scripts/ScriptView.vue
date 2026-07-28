@@ -8,7 +8,7 @@
       </TarAlert>
       <StatusDetail class="mb-4" :subject="script" />
       <form @submit.prevent="handleSubmit(submit)">
-        <NameInput class="mb-3" required v-model="name" />
+        <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
         <ContentField class="mb-3" v-model="htmlContent" />
         <div class="d-flex justify-content-end mb-3">
@@ -35,7 +35,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import ContentField from "@/components/shared/ContentField.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
-import NameInput from "@/components/shared/NameInput.vue";
+import NameField from "@/components/shared/NameField.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";

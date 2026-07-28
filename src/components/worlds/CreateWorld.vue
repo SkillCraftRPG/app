@@ -5,8 +5,8 @@
       <p class="text-secondary">{{ t("worlds.create.help") }}</p>
       <KeyAlreadyUsed v-model="keyAlreadyUsed" />
       <form @submit.prevent="handleSubmit(submit)">
-        <NameInput class="mb-3" :model-value="name" required @update:model-value="updateName" />
-        <KeyInput class="mb-3" ref="keyInput" required v-model="key" />
+        <NameField class="mb-3" :model-value="name" required @update:model-value="updateName" />
+        <KeyField class="mb-3" ref="keyInput" required v-model="key" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
@@ -28,8 +28,8 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import KeyAlreadyUsed from "./KeyAlreadyUsed.vue";
-import KeyInput from "./KeyInput.vue";
-import NameInput from "@/components/shared/NameInput.vue";
+import KeyField from "./KeyField.vue";
+import NameField from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { CreateOrReplaceWorldPayload, World } from "@/types/worlds";
@@ -43,7 +43,7 @@ const { t } = useI18n();
 const isLoading = ref<boolean>(false);
 const key = ref<string>("");
 const keyAlreadyUsed = ref<boolean>(false);
-const keyInput = ref<InstanceType<typeof KeyInput> | null>(null);
+const keyField = ref<InstanceType<typeof KeyField> | null>(null);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
 
@@ -86,7 +86,7 @@ async function submit(): Promise<void> {
         const problemDetails = failure.data as ProblemDetails;
         if (problemDetails.error && problemDetails.error.code === ErrorCodes.KeyAlreadyUsed) {
           keyAlreadyUsed.value = true;
-          keyInput.value?.focus();
+          keyField.value?.focus();
           return;
         }
       }

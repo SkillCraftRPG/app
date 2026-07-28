@@ -3,7 +3,7 @@
     <TarButton icon="fas fa-plus" size="large" :text="t('actions.create')" @click="open" />
     <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('languages.create')">
       <form @submit.prevent="handleSubmit(submit)">
-        <NameInput class="mb-3" required v-model="name" />
+        <NameField class="mb-3" required v-model="name" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
@@ -24,7 +24,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import NameInput from "@/components/shared/NameInput.vue";
+import NameField from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
