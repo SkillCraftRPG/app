@@ -1,15 +1,22 @@
 <template>
-  <main class="container">
+  <main class="container page">
     <h1>{{ title }}</h1>
     <section class="mb-3">
       <TarButton :disabled="isLoading" icon="fas fa-arrows-rotate" :loading="isLoading" :status="t('loading')" :text="t('actions.refresh')" @click="refresh" />
     </section>
     <section class="row mb-3">
-      <SearchInput class="col" v-model="search" />
-      <SortSelect class="col" :descending="isDescending" :options="sortOptions" v-model="sort" @descending="isDescending = $event" />
-      <CountSelect class="col" v-model="count" />
+      <SearchInput class="col" :model-value="search" @update:model-value="setQuery('search', $event)" />
+      <SortSelect
+        class="col"
+        :descending="isDescending"
+        :model-value="sort"
+        :options="sortOptions"
+        @descending="setQuery('descending', $event.toString())"
+        @update:model-value="setQuery('sort', $event)"
+      />
+      <CountSelect class="col" :model-value="count" @update:model-value="setQuery('count', $event)" />
     </section>
-    <section>
+    <section class="d-flex flex-column flex-grow-1">
       <template v-if="total">
         <!-- TODO(fpion): results table -->
       </template>
@@ -20,7 +27,7 @@
       </div>
     </section>
     <section v-if="total">
-      <SearchPagination :count="count" :total="total" v-model="page" />
+      <SearchPagination :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
     </section>
   </main>
 </template>
@@ -58,7 +65,7 @@ const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
-const isDescending = computed<boolean>(() => parseBoolean(route.query.isDescending?.toString()) ?? false);
+const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
@@ -70,6 +77,17 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
+
+function setQuery(key: string, value: number | string): void {
+  const query = { ...route.query, [key]: value.toString() };
+  switch (key) {
+    case "search":
+    case "count":
+      query.page = "1";
+      break;
+  }
+  router.replace({ ...route, query });
+}
 
 async function refresh(): Promise<void> {
   const payload: SearchScriptsPayload = {
@@ -115,7 +133,7 @@ watch(
             ? {
                 search: "",
                 sort: "UpdatedOn",
-                isDescending: "true",
+                descending: "true",
                 page: 1,
                 count: 10,
               }
@@ -135,6 +153,5 @@ watch(
 
 watchEffect(() => document.setTitle(title.value));
 
-// TODO(fpion): we could vertically center the no-result section.
 // TODO(fpion): we could have a clear/reset filters button into the no-result section.
 </script>

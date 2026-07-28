@@ -1,5 +1,5 @@
 <template>
-  <main class="container worlds-page d-flex flex-column flex-grow-1">
+  <main class="container page">
     <LoadingSpinner v-if="isLoading" />
     <div v-else-if="world">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">

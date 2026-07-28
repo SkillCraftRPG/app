@@ -1,5 +1,5 @@
 <template>
-  <main class="container worlds-page d-flex flex-column flex-grow-1">
+  <main class="container page">
     <header class="mb-4">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
@@ -74,27 +74,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<style scoped>
-html,
-body,
-#app {
-  min-height: 100%;
-}
-
-#app {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-}
-
-.worlds-page {
-  flex: 1 1 auto;
-}
-</style>
