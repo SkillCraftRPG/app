@@ -156,7 +156,6 @@
     "help": "Review the devices currently signed in to your account. Sign out any session you don’t recognize.",
     "ipAddress": "IP Address:",
     "list": "Sessions",
-    "now": "just now",
     "on": "on",
     "signedOut": "This session was signed out successfully.",
     "updatedOn": "Last active:"

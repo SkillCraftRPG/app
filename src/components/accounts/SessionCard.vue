@@ -24,6 +24,7 @@
         icon="fas fa-arrow-right-from-bracket"
         :loading="isLoading"
         outline
+        :status="t('loading')"
         type="button"
         :text="t('account.signOut.title')"
         variant="secondary"
@@ -87,7 +88,7 @@ const deviceText = computed<string>(() => {
   }
   return parts.join(" ");
 });
-const updatedOn = computed<string>(() => formatRelativeTime(props.session.updatedOn, `${locale.value}-CA`, t("account.sessions.now")));
+const updatedOn = computed<string>(() => formatRelativeTime(props.session.updatedOn, `${locale.value}-CA`, t("status.now")));
 
 async function executeSignOut(): Promise<void> {
   if (!isLoading.value) {

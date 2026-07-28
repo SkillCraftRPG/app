@@ -34,7 +34,14 @@
         <DefaultExperienceRadio v-model="defaultExperience" />
       </div>
       <div class="mb-3">
-        <TarButton :disabled="!hasChanges || isLoading" icon="fas fa-floppy-disk" :loading="isLoading" :text="t('actions.save')" type="submit" />
+        <TarButton
+          :disabled="!hasChanges || isLoading"
+          icon="fas fa-floppy-disk"
+          :loading="isLoading"
+          :status="t('loading')"
+          :text="t('actions.save')"
+          type="submit"
+        />
       </div>
     </form>
   </div>
@@ -98,7 +105,7 @@ const hasChanges = computed<boolean>(() => {
   );
 });
 
-const { handleSubmit } = useForm();
+const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
@@ -113,6 +120,7 @@ async function submit(): Promise<void> {
         defaultExperience: defaultExperience.value,
       };
       const profile: Profile = await saveProfile(payload);
+      reinitialize();
       account.saveProfile(profile);
       toasts.success("account.profile.updated");
       emit("update:model-value", profile);

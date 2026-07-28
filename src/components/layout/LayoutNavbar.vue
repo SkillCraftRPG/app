@@ -25,16 +25,16 @@
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">
           <template v-if="i18n.locale">
-            <li v-if="otherLocales.length > 1" class="nav-item dropdown">
+            <li v-if="otherLocale" class="nav-item">
+              <a class="nav-link" href="#" @click.prevent="i18n.setLocale(otherLocale)">{{ otherLocale.nativeName }}</a>
+            </li>
+            <li v-else-if="otherLocales.length > 1" class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ i18n.locale.nativeName }}</a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li v-for="option in otherLocales" :key="option.code">
                   <a class="dropdown-item" href="#" @click.prevent="i18n.setLocale(option)">{{ option.nativeName }}</a>
                 </li>
               </ul>
-            </li>
-            <li v-else-if="otherLocales.length === 1" class="nav-item">
-              <a class="nav-link" href="#" @click.prevent="i18n.setLocale(otherLocales[0]!)">{{ otherLocales[0]!.nativeName }}</a>
             </li>
           </template>
           <li class="nav-item">
@@ -103,6 +103,7 @@ const { combineURL } = stringUtils;
 const { orderBy } = arrayUtils;
 const { parseBoolean } = parsingUtils;
 
+const otherLocale = computed<Locale | undefined>(() => (otherLocales.value.length === 1 ? otherLocales.value[0] : undefined));
 const otherLocales = computed<Locale[]>(() => {
   const otherLocales = new Set<string>(availableLocales.filter((item) => item !== locale.value));
   return orderBy(

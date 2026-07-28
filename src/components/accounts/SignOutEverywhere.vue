@@ -9,6 +9,7 @@
           :disabled="isLoading"
           icon="fas fa-arrow-right-from-bracket"
           :loading="isLoading"
+          :status="t('loading')"
           :text="t('account.signOut.all.submit')"
           variant="danger"
           @click="signOutEverywhere"
@@ -27,9 +28,11 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import { signOut } from "@/api/account";
 import { useAccountStore } from "@/stores/account";
+import { useWorldStore } from "@/stores/world";
 
 const account = useAccountStore();
 const router = useRouter();
+const world = useWorldStore();
 const { t } = useI18n();
 
 const emit = defineEmits<{
@@ -53,6 +56,7 @@ async function signOutEverywhere(): Promise<void> {
     try {
       await signOut(true);
       account.signOut("closed");
+      world.exit();
       modal.value?.hide();
       router.push({ name: "SignIn" });
     } catch (e: unknown) {

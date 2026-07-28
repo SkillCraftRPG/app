@@ -1,0 +1,25 @@
+{
+  "create": {
+    "help": "Give your world a name and choose a unique key to identify it.",
+    "lead": "Create a world"
+  },
+  "created": {
+    "help": "The world “{name}” was created successfully.",
+    "lead": "Your world is ready."
+  },
+  "edit": "Edit world",
+  "empty": {
+    "help": "Create your first world to get started.",
+    "lead": "No worlds yet"
+  },
+  "go": "Go to my worlds",
+  "key": {
+    "alreadyUsed": {
+      "help": "Choose another unique key for this world, then try again.",
+      "lead": "This key is already in use."
+    },
+    "label": "Unique Key"
+  },
+  "help": "Create your worlds and access their portal.",
+  "title": "My worlds"
+}

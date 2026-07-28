@@ -1,0 +1,25 @@
+{
+  "create": {
+    "help": "Donnez un nom à votre monde et choisissez une clé unique pour l’identifier.",
+    "lead": "Créer un monde"
+  },
+  "created": {
+    "help": "Le monde « {name} » a été créé avec succès.",
+    "lead": "Votre monde est prêt."
+  },
+  "edit": "Modifier le monde",
+  "empty": {
+    "help": "Créez votre premier monde pour commencer.",
+    "lead": "Aucun monde pour le moment"
+  },
+  "go": "Accéder à mes mondes",
+  "key": {
+    "alreadyUsed": {
+      "help": "Choisissez une autre clé unique pour ce monde, puis réessayez.",
+      "lead": "Cette clé est déjà utilisée."
+    },
+    "label": "Clé unique"
+  },
+  "help": "Créez vos mondes et accédez à leur portail.",
+  "title": "Mes mondes"
+}

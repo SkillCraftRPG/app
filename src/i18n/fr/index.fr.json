@@ -4,21 +4,33 @@
     "cancel": "Annuler",
     "close": "Fermer",
     "complete": "Terminer",
+    "create": "Créer",
+    "edit": "Éditer",
+    "enter": "Entrer",
     "next": "Suivant",
     "previous": "Précédent",
     "save": "Enregistrer",
     "verify": "Vérifier"
   },
   "brand": "SkillCraft",
+  "content": "Contenu",
   "error": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
   "home": {
     "go": "Aller à l’accueil",
     "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",
     "title": "Accueil"
   },
+  "loading": "Chargement…",
+  "name": "Nom",
   "notFound": {
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"
+  },
+  "saved": "Vos modifications ont été enregistrées.",
+  "status": {
+    "createdOn": "Création le {date} par",
+    "now": "à l’instant",
+    "updatedOn": "Dernière modification {date} par"
   },
   "theme": {
     "title": "Thème",
