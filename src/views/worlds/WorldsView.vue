@@ -3,14 +3,14 @@
     <header class="mb-4">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateWorld v-if="!isLoading && worlds.length && canCreateWorld" @created="onCreate" @error="handleError" />
+        <CreateWorld class="mb-3" v-if="!isLoading && worlds.length && canCreateWorld" @created="onCreate" @error="handleError" />
       </div>
-      <p class="text-body-secondary mt-2">{{ t("worlds.help") }}</p>
+      <p class="text-body-secondary">{{ t("worlds.help") }}</p>
       <RouterLink :to="{ name: 'CharacterSheets' }"><font-awesome-icon icon="fas fa-id-card" />&nbsp;{{ t("sheets.characters.go") }}</RouterLink>
     </header>
     <LoadingSpinner v-if="isLoading" />
     <div v-else-if="worlds.length" class="row">
-      <div v-for="world in worlds" :key="world.id" class="col-md-6 col-lg-4">
+      <div v-for="world in worlds" :key="world.id" class="col-md-6 col-lg-4 mb-3">
         <WorldCard :world="world" />
       </div>
     </div>

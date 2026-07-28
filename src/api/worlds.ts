@@ -1,8 +1,8 @@
 import { urlUtils } from "logitar-js";
 
-import type { CreateOrReplaceWorldPayload, SearchWorldsPayload, World } from "@/types/worlds";
+import type { CreateOrReplaceWorldPayload, SearchWorldsPayload, UpdateWorldPayload, World } from "@/types/worlds";
 import type { SearchResults } from "@/types/search";
-import { get, post } from ".";
+import { get, patch, post, put } from ".";
 
 export async function createWorld(payload: CreateOrReplaceWorldPayload): Promise<World> {
   const url: string = new urlUtils.UrlBuilder({ path: "/worlds" }).buildRelative();
@@ -12,6 +12,11 @@ export async function createWorld(payload: CreateOrReplaceWorldPayload): Promise
 export async function readWorld(id: string): Promise<World> {
   const url: string = new urlUtils.UrlBuilder({ path: "/worlds/{id}" }).setParameter("id", id).buildRelative();
   return (await get<World>(url)).data;
+}
+
+export async function replaceWorld(id: string, payload: CreateOrReplaceWorldPayload): Promise<World> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/worlds/{id}" }).setParameter("id", id).buildRelative();
+  return (await put<CreateOrReplaceWorldPayload, World>(url, payload)).data;
 }
 
 export async function searchWorlds(payload: SearchWorldsPayload): Promise<SearchResults<World>> {
@@ -30,4 +35,9 @@ export async function searchWorlds(payload: SearchWorldsPayload): Promise<Search
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
   return (await get<SearchResults<World>>(url)).data;
+}
+
+export async function updateWorld(id: string, payload: UpdateWorldPayload): Promise<World> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/worlds/{id}" }).setParameter("id", id).buildRelative();
+  return (await patch<UpdateWorldPayload, World>(url, payload)).data;
 }

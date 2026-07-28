@@ -2,8 +2,10 @@
   <main class="container worlds-page d-flex flex-column flex-grow-1">
     <LoadingSpinner v-if="isLoading" />
     <div v-else-if="world">
-      <h1>{{ world.name ?? world.key }}</h1>
-      <!-- TODO(fpion): edit button right to the title that opens big modal with key and name inputs, and description textarea -->
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
+        <h1 class="mb-0">{{ world.name ?? world.key }}</h1>
+        <EditWorld class="mb-3" :world="world" @error="handleError" @updated="onUpdate" />
+      </div>
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
         <strong>{{ t("worlds.created.lead") }}</strong> {{ t("worlds.created.help", { name: world.name ?? world.key }) }}
       </TarAlert>
@@ -17,6 +19,7 @@ import { inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import EditWorld from "@/components/worlds/EditWorld.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
@@ -26,17 +29,24 @@ import { handleErrorKey } from "@/inject";
 import { readWorld } from "@/api/worlds";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
+import { useToastStore } from "@/stores/toast";
 
 const document = useDocument();
 const events = useEventStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { t } = useI18n();
 
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(true);
 const world = ref<World>();
+
+function onUpdate(value: World): void {
+  world.value = value;
+  toasts.success("saved");
+}
 
 onMounted(async () => {
   try {

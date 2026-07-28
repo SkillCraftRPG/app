@@ -7,6 +7,7 @@
     "help": "The world “{name}” was created successfully.",
     "lead": "Your world is ready."
   },
+  "edit": "Edit world",
   "empty": {
     "help": "Create your first world to get started.",
     "lead": "No worlds yet"

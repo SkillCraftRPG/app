@@ -1,24 +1,24 @@
 <template>
-  <TarSelect
-    :aria-label="ariaLabel"
-    class="mb-3"
-    :described-by="selectDescribedBy"
+  <TarTextarea
+    :cols="cols"
+    :described-by="textareaDescribedBy"
     :disabled="disabled"
     :floating="floating"
     :id="id"
     :label="label"
     :model-value="modelValue"
-    :multiple="multiple"
     :name="name"
-    :options="options"
     :placeholder="placeholder ?? label"
-    ref="selectRef"
-    :required="selectRequired"
+    :plaintext="plaintext"
+    :readonly="readonly"
+    ref="textareaRef"
+    :required="textareaRequired"
+    :rows="rows"
     :size="size"
-    :status="selectStatus"
+    :status="textareaStatus"
     @blur="handleChange"
     @change="handleChange"
-    @input="handleChange($event, selectStatus !== 'invalid')"
+    @input="handleChange($event, textareaStatus === 'invalid')"
   >
     <template #before>
       <slot name="before"></slot>
@@ -41,7 +41,7 @@
       </div>
       <slot name="after"></slot>
     </template>
-  </TarSelect>
+  </TarTextarea>
 </template>
 
 <script setup lang="ts">
@@ -51,16 +51,16 @@ import { nanoid } from "nanoid";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
-import TarSelect from "@/components/tar/TarSelect.vue";
-import type { SelectOptions, SelectStatus } from "@/types/tar/select";
+import TarTextarea from "@/components/tar/TarTextarea.vue";
+import type { TextareaOptions, TextareaStatus } from "@/types/tar/textarea";
 import { useField } from "@/forms";
 
-const { parseBoolean } = parsingUtils;
+const { parseBoolean, parseNumber } = parsingUtils;
 const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<
-    SelectOptions & {
+    TextareaOptions & {
       rules?: ValidationRuleSet;
     }
   >(),
@@ -70,13 +70,13 @@ const props = withDefaults(
   },
 );
 
-const selectRef = ref<InstanceType<typeof TarSelect> | null>(null);
+const textareaRef = ref<InstanceType<typeof TarTextarea> | null>(null);
 
 const error = computed<RuleExecutionResult | undefined>(() => errors.value[0]);
 const feedbackId = computed<string>(() => `${props.id}-feedback`);
-const selectDescribedBy = computed<string>(() => [feedbackId.value, props.describedBy].filter((id) => typeof id === "string").join(" "));
-const selectRequired = computed<boolean | "label">(() => (parseBoolean(props.required) ? "label" : false));
-const selectStatus = computed<SelectStatus | undefined>(() => {
+const textareaDescribedBy = computed<string>(() => [feedbackId.value, props.describedBy].filter((id) => typeof id === "string").join(" "));
+const textareaRequired = computed<boolean | "label">(() => (parseBoolean(props.required) ? "label" : false));
+const textareaStatus = computed<TextareaStatus | undefined>(() => {
   if (props.status) {
     return props.status;
   }
@@ -97,6 +97,8 @@ defineEmits<{
 const rules = computed<ValidationRuleSet>(() => {
   const rules: ValidationRuleSet = {
     required: parseBoolean(props.required),
+    minimumLength: parseNumber(props.min),
+    maximumLength: parseNumber(props.max),
   };
   return { ...rules, ...props.rules };
 });
@@ -113,7 +115,7 @@ watch(
 );
 
 function focus(): void {
-  selectRef.value?.focus();
+  textareaRef.value?.focus();
 }
 defineExpose({ focus });
 

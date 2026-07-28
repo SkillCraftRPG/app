@@ -5,6 +5,7 @@
     "close": "Fermer",
     "complete": "Terminer",
     "create": "Créer",
+    "edit": "Éditer",
     "enter": "Entrer",
     "next": "Suivant",
     "previous": "Précédent",
@@ -12,6 +13,7 @@
     "verify": "Vérifier"
   },
   "brand": "SkillCraft",
+  "content": "Contenu",
   "error": "Une erreur inattendue s’est produite. Veuillez réessayer plus tard ou contacter notre équipe de support.",
   "home": {
     "go": "Aller à l’accueil",
@@ -24,6 +26,7 @@
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"
   },
+  "saved": "Vos modifications ont été enregistrées.",
   "status": {
     "createdOn": "Création le {date} par",
     "now": "à l’instant",

@@ -5,6 +5,7 @@
     "close": "Close",
     "complete": "Complete",
     "create": "Create",
+    "edit": "Edit",
     "enter": "Enter",
     "next": "Next",
     "previous": "Previous",
@@ -12,6 +13,7 @@
     "verify": "Verify"
   },
   "brand": "SkillCraft",
+  "content": "Content",
   "error": "An unexpected error occurred. Please try again later or contact our support team.",
   "home": {
     "go": "Go to Home",
@@ -24,6 +26,7 @@
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"
   },
+  "saved": "Your changes have been saved.",
   "status": {
     "createdOn": "Created on {date} by",
     "now": "just now",

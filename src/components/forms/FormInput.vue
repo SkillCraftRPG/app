@@ -39,8 +39,8 @@
       <slot name="append"></slot>
     </template>
     <template #after>
-      <div v-if="errors.length" class="invalid-feedback" :id="feedbackId">
-        {{ t(`errors.${errors[0]!.key}`, errors[0]!.placeholders) }}
+      <div v-if="error" class="invalid-feedback" :id="feedbackId">
+        {{ t(`errors.${error.key}`, error.placeholders) }}
       </div>
       <slot name="after"></slot>
     </template>
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ValidationResult, ValidationRuleSet } from "logitar-validation";
+import type { RuleExecutionResult, ValidationResult, ValidationRuleSet } from "logitar-validation";
 import { computed, onUnmounted, ref, watch } from "vue";
 import { nanoid } from "nanoid";
 import { parsingUtils } from "logitar-js";
@@ -78,6 +78,7 @@ const props = withDefaults(
 
 const inputRef = ref<InstanceType<typeof TarInput> | null>(null);
 
+const error = computed<RuleExecutionResult | undefined>(() => errors.value[0]);
 const feedbackId = computed<string>(() => `${props.id}-feedback`);
 const inputDescribedBy = computed<string>(() => [feedbackId.value, props.describedBy].filter((id) => typeof id === "string").join(" "));
 const inputMax = computed<number | string | undefined>(() => (isDateTimeInput(props.type) ? props.max : undefined));
@@ -131,6 +132,11 @@ const { errors, isValid, handleChange, setValue, unbindField } = useField(props.
   rules,
 });
 
+watch(
+  () => props.modelValue,
+  (modelValue) => setValue(modelValue ?? ""),
+);
+
 function focus(): void {
   inputRef.value?.focus();
 }
@@ -141,9 +147,4 @@ onUnmounted(() => {
     unbindField(props.id);
   }
 });
-
-watch(
-  () => props.modelValue,
-  (modelValue) => setValue(modelValue ?? ""),
-);
 </script>
