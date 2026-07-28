@@ -29,29 +29,11 @@
       <CountSelect class="col" :model-value="count" @update:model-value="setQuery('count', $event)" />
     </section>
     <section class="d-flex flex-column flex-grow-1">
-      <table v-if="total" class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col" class="w-third">{{ t("name") }}</th>
-            <th scope="col" class="w-third">{{ t("summary") }}</th>
-            <th scope="col" class="w-third">{{ t("scripts.sort.options.UpdatedOn") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="script in scripts" :key="script.id">
-            <td>
-              <RouterLink :to="{ name: 'Script', params: { id: script.id } }">{{ script.name }}</RouterLink>
-            </td>
-            <td>
-              <span v-if="script.summary">{{ script.summary }}</span>
-              <span v-else class="text-muted">&mdash;</span>
-            </td>
-            <td>
-              <StatusBlock :actor="script.updatedBy" :date="script.updatedOn" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-if="total" class="row">
+        <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+          <ScriptCard class="d-flex flex-column h-100" :script="script" />
+        </div>
+      </div>
       <div v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
         <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
         <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
@@ -72,10 +54,10 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateScript from "@/components/scripts/CreateScript.vue";
+import ScriptCard from "@/components/scripts/ScriptCard.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
-import StatusBlock from "@/components/shared/StatusBlock.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Script, ScriptSort, SearchScriptsPayload } from "@/types/scripts";
