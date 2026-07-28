@@ -7,7 +7,7 @@
         <strong>{{ t("languages.created.lead") }}</strong> {{ t("languages.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="language" />
-      <form @submit.prevent="handleSubmit(submit)">
+      <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
         <div class="row">
           <div class="col-md-6">
             <NameField class="mb-3" required v-model="name" />

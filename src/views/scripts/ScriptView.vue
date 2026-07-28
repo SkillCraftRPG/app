@@ -7,7 +7,7 @@
         <strong>{{ t("scripts.created.lead") }}</strong> {{ t("scripts.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="script" />
-      <form @submit.prevent="handleSubmit(submit)">
+      <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
         <ContentField class="mb-3" v-model="htmlContent" />
