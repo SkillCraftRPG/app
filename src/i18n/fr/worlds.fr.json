@@ -3,6 +3,10 @@
     "help": "Donnez un nom à votre monde et choisissez une clé unique pour l’identifier.",
     "lead": "Créer un monde"
   },
+  "created": {
+    "help": "Le monde « {name} » a été créé avec succès.",
+    "lead": "Votre monde est prêt."
+  },
   "empty": {
     "help": "Créez votre premier monde pour commencer.",
     "lead": "Aucun monde pour le moment"

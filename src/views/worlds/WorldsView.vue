@@ -3,7 +3,7 @@
     <header class="mb-4">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateWorld v-if="!isLoading && worlds.length" @created="onCreate" @error="handleError" />
+        <CreateWorld v-if="!isLoading && worlds.length && canCreateWorld" @created="onCreate" @error="handleError" />
       </div>
       <p class="text-body-secondary mt-2">{{ t("worlds.help") }}</p>
       <RouterLink :to="{ name: 'CharacterSheets' }"><font-awesome-icon icon="fas fa-id-card" />&nbsp;{{ t("sheets.characters.go") }}</RouterLink>
@@ -36,8 +36,10 @@ import type { World } from "@/types/worlds";
 import { handleErrorKey } from "@/inject";
 import { searchWorlds } from "@/api/worlds";
 import { useDocument } from "@/composables/document";
+import { useEventStore } from "@/stores/event";
 
 const document = useDocument();
+const events = useEventStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const router = useRouter();
 const { t } = useI18n();
@@ -45,10 +47,12 @@ const { t } = useI18n();
 const isLoading = ref<boolean>(true);
 const worlds = ref<World[]>([]);
 
+const canCreateWorld = computed<boolean>(() => worlds.value.length < 3);
 const title = computed<string>(() => t("worlds.title"));
 
 function onCreate(world: World): void {
-  router.push({ name: "World", params: { id: world.id }, query: { status: "created" } });
+  events.push("created");
+  router.push({ name: "World", params: { id: world.id } });
 }
 
 watchEffect(() => document.setTitle(title.value));
