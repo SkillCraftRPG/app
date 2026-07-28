@@ -1,11 +1,9 @@
 {
-  "create": "Créer un alphabet",
+  "create": "Créer une langue",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",
-    "lead": "L’alphabet a été créé."
+    "lead": "La langue a été créée."
   },
-  "label": "Alphabet",
-  "placeholder": "Sélectionnez un alphabet",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
@@ -13,5 +11,6 @@
       "UpdatedOn": "Dernière modification"
     }
   },
-  "title": "Alphabets"
+  "title": "Langues",
+  "typicalSpeakers": "Locuteurs typiques"
 }

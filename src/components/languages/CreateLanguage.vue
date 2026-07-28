@@ -1,7 +1,7 @@
 <template>
   <div>
     <TarButton icon="fas fa-plus" size="large" :text="t('actions.create')" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('scripts.create')">
+    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('languages.create')">
       <form @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
       </form>
@@ -27,8 +27,8 @@ import { useI18n } from "vue-i18n";
 import NameField from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
-import type { CreateOrReplaceScriptPayload, Script } from "@/types/scripts";
-import { createScript } from "@/api/scripts";
+import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
+import { createLanguage } from "@/api/languages";
 import { useForm } from "@/forms";
 
 const { t } = useI18n();
@@ -38,7 +38,7 @@ const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
 
 const emit = defineEmits<{
-  (e: "created", value: Script): void;
+  (e: "created", value: Language): void;
   (e: "error", value: unknown): void;
 }>();
 
@@ -56,12 +56,12 @@ async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      const payload: CreateOrReplaceScriptPayload = {
+      const payload: CreateOrReplaceLanguagePayload = {
         name: name.value,
       };
-      const script: Script = await createScript(payload);
+      const language: Language = await createLanguage(payload);
       modal.value?.hide();
-      emit("created", script);
+      emit("created", language);
     } catch (e: unknown) {
       emit("error", e);
     } finally {

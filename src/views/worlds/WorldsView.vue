@@ -1,6 +1,6 @@
 <template>
   <main class="container page">
-    <div v-if="hasLoaded">
+    <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <header class="mb-4">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
           <h1 class="mb-0">{{ title }}</h1>

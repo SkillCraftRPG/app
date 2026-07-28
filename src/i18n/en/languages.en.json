@@ -1,11 +1,9 @@
 {
-  "create": "Create a script",
+  "create": "Create a language",
   "created": {
     "help": "You can now complete its details.",
-    "lead": "The script was created."
+    "lead": "The language was created."
   },
-  "label": "Script",
-  "placeholder": "Select a script",
   "sort": {
     "options": {
       "CreatedOn": "Created on",
@@ -13,5 +11,6 @@
       "UpdatedOn": "Last updated"
     }
   },
-  "title": "Scripts"
+  "title": "Languages",
+  "typicalSpeakers": "Typical Speakers"
 }
