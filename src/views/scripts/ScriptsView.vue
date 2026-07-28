@@ -6,36 +6,40 @@
         <CreateScript class="mb-3" @created="onCreate" @error="handleError" />
       </div>
       <WorldBreadcrumb :current="title" />
-      <section class="mb-3">
-        <TarButton
-          :disabled="isLoading"
-          icon="fas fa-arrows-rotate"
-          :loading="isLoading"
-          :status="t('loading')"
-          :text="t('actions.refresh')"
-          variant="secondary"
-          @click="refresh"
-        />
-      </section>
-      <section class="row mb-3">
-        <div class="col-md-4">
-          <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
-        </div>
-        <div class="col-md-4">
-          <SortSelect
-            class="mb-3"
-            :descending="isDescending"
-            :model-value="sort"
-            :options="sortOptions"
-            @descending="setQuery('descending', $event)"
-            @update:model-value="setQuery('sort', $event)"
+      <section>
+        <div class="mb-3">
+          <TarButton
+            :disabled="isLoading"
+            icon="fas fa-arrows-rotate"
+            :loading="isLoading"
+            :status="t('loading')"
+            :text="t('actions.refresh')"
+            variant="secondary"
+            @click="refresh"
           />
         </div>
-        <div class="col-md-4">
-          <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
+      </section>
+      <section>
+        <div class="row">
+          <div class="col-md-4">
+            <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
+          </div>
+          <div class="col-md-4">
+            <SortSelect
+              class="mb-3"
+              :descending="isDescending"
+              :model-value="sort"
+              :options="sortOptions"
+              @descending="setQuery('descending', $event)"
+              @update:model-value="setQuery('sort', $event)"
+            />
+          </div>
+          <div class="col-md-4">
+            <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
+          </div>
         </div>
       </section>
-      <section v-if="total" :class="{ loading: isLoading }">
+      <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="script in scripts" :key="script.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
             <ScriptCard class="d-flex flex-column h-100" :script="script" />
@@ -202,4 +206,6 @@ watch(
 );
 
 watchEffect(() => document.setTitle(title.value));
+
+// TODO(fpion): clear filters button
 </script>

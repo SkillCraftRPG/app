@@ -25,6 +25,7 @@ export type LanguageSortOption = SortOption & {
 };
 
 export type SearchLanguagesPayload = SearchPayload & {
+  scriptId?: string | null;
   sort: LanguageSortOption[];
 };
 

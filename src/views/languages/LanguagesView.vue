@@ -6,36 +6,43 @@
         <CreateLanguage class="mb-3" @created="onCreate" @error="handleError" />
       </div>
       <WorldBreadcrumb :current="title" />
-      <section class="mb-3">
-        <TarButton
-          :disabled="isLoading"
-          icon="fas fa-arrows-rotate"
-          :loading="isLoading"
-          :status="t('loading')"
-          :text="t('actions.refresh')"
-          variant="secondary"
-          @click="refresh"
-        />
-      </section>
-      <section class="row mb-3">
-        <div class="col-md-4">
-          <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
-        </div>
-        <div class="col-md-4">
-          <SortSelect
-            class="mb-3"
-            :descending="isDescending"
-            :model-value="sort"
-            :options="sortOptions"
-            @descending="setQuery('descending', $event)"
-            @update:model-value="setQuery('sort', $event)"
+      <section>
+        <div class="mb-3">
+          <TarButton
+            :disabled="isLoading"
+            icon="fas fa-arrows-rotate"
+            :loading="isLoading"
+            :status="t('loading')"
+            :text="t('actions.refresh')"
+            variant="secondary"
+            @click="refresh"
           />
         </div>
-        <div class="col-md-4">
-          <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
+      </section>
+      <section>
+        <div class="row">
+          <div class="col-md-6 col-lg-3">
+            <ScriptSelect class="mb-3" :model-value="script" @error="handleError" @update:model-value="setQuery('script', $event)" />
+          </div>
+          <div class="col-md-6 col-md-6 col-lg-3">
+            <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
+          </div>
+          <div class="col-md-6 col-md-6 col-lg-3">
+            <SortSelect
+              class="mb-3"
+              :descending="isDescending"
+              :model-value="sort"
+              :options="sortOptions"
+              @descending="setQuery('descending', $event)"
+              @update:model-value="setQuery('sort', $event)"
+            />
+          </div>
+          <div class="col-md-6 col-md-6 col-lg-3">
+            <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
+          </div>
         </div>
       </section>
-      <section v-if="total" :class="{ loading: isLoading }">
+      <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="language in languages" :key="language.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
             <LanguageCard class="d-flex flex-column h-100" :language="language" />
@@ -70,8 +77,9 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLanguage from "@/components/languages/CreateLanguage.vue";
-import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import LanguageCard from "@/components/languages/LanguageCard.vue";
+import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import ScriptSelect from "@/components/scripts/ScriptSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
@@ -104,6 +112,7 @@ const total = ref<number>(0);
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
+const script = computed<string>(() => route.query.script?.toString() ?? "");
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 const title = computed<string>(() => t("languages.title"));
@@ -123,13 +132,14 @@ function onCreate(language: Language): void {
 }
 
 function clearFilters(): void {
-  const query = { ...route.query, search: "", page: 1 };
+  const query = { ...route.query, script: "", search: "", page: 1 };
   router.replace({ ...route, query });
 }
 
 function setQuery(key: string, value?: boolean | null | number | string): void {
   const query = { ...route.query, [key]: value?.toString() ?? "" };
   switch (key) {
+    case "script":
     case "search":
     case "count":
       query.page = "1";
@@ -181,6 +191,7 @@ watch(
           ...route,
           query: isEmpty(query)
             ? {
+                script: "",
                 search: "",
                 sort: "UpdatedOn",
                 descending: "true",
@@ -202,4 +213,7 @@ watch(
 );
 
 watchEffect(() => document.setTitle(title.value));
+
+// TODO(fpion): clear filters button
+// TODO(fpion): refresh button should refresh scripts
 </script>

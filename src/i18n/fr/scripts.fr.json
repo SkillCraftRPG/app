@@ -4,6 +4,7 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "L’alphabet a été créé."
   },
+  "label": "Alphabet",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

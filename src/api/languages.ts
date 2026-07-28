@@ -22,6 +22,7 @@ export async function replaceLanguage(id: string, payload: CreateOrReplaceLangua
 export async function searchLanguages(payload: SearchLanguagesPayload): Promise<SearchResults<Language>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/languages" })
     .setQuery("ids", payload.ids)
+    .setQuery("script", payload.scriptId ?? "")
     .setQuery(
       "search",
       payload.search.terms.map(({ value }) => value),

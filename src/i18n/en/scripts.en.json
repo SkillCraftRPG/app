@@ -4,6 +4,7 @@
     "help": "You can now complete its details.",
     "lead": "The script was created."
   },
+  "label": "Script",
   "sort": {
     "options": {
       "CreatedOn": "Created on",
