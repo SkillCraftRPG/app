@@ -10,6 +10,7 @@
       <form @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
+        <TypicalSpeakersField class="mb-3" v-model="typicalSpeakers" />
         <ContentField class="mb-3" v-model="htmlContent" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
@@ -40,6 +41,7 @@ import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
+import TypicalSpeakersField from "@/components/languages/TypicalSpeakersField.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
 import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
@@ -65,12 +67,16 @@ const isLoading = ref<boolean>(false);
 const name = ref<string>("");
 const language = ref<Language>();
 const summary = ref<string>("");
+const typicalSpeakers = ref<string>("");
 
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("languages.title"), to: { name: "Languages" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
     language.value &&
-    (language.value.name !== name.value || (language.value.summary ?? "") !== summary.value || (language.value.htmlContent ?? "") !== htmlContent.value),
+    (language.value.name !== name.value ||
+      (language.value.summary ?? "") !== summary.value ||
+      (language.value.typicalSpeakers ?? "") !== typicalSpeakers.value ||
+      (language.value.htmlContent ?? "") !== htmlContent.value),
   ),
 );
 const title = computed<string>(() => language.value?.name ?? "");
@@ -84,6 +90,7 @@ async function submit(): Promise<void> {
         name: name.value,
         summary: summary.value,
         htmlContent: htmlContent.value,
+        typicalSpeakers: typicalSpeakers.value,
       };
       language.value = await replaceLanguage(language.value.id, payload);
       reinitialize();
@@ -102,6 +109,7 @@ watch(
     name.value = language?.name ?? "";
     summary.value = language?.summary ?? "";
     htmlContent.value = language?.htmlContent ?? "";
+    typicalSpeakers.value = language?.typicalSpeakers ?? "";
   },
   { deep: true },
 );
