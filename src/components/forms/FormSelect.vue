@@ -1,7 +1,6 @@
 <template>
   <TarSelect
     :aria-label="ariaLabel"
-    class="mb-3"
     :described-by="selectDescribedBy"
     :disabled="disabled"
     :floating="floating"

@@ -29,18 +29,17 @@ const props = withDefaults(
 
 const isRoot = computed<boolean>(() => parseBoolean(props.root) ?? false);
 const breadcrumbs = computed<Breadcrumb[]>(() => {
-  const breadcrumbs: Breadcrumb[] = [];
-  breadcrumbs.push({ text: t("worlds.title"), to: { name: "Worlds" } });
-  if (Array.isArray(props.parent)) {
-    props.parent.forEach((breadcrumb) => breadcrumbs.push(breadcrumb));
-  } else if (props.parent) {
-    breadcrumbs.push(props.parent);
-  }
+  const breadcrumbs: Breadcrumb[] = [{ text: t("worlds.title"), to: { name: "Worlds" } }];
   if (world.current && !isRoot.value) {
     breadcrumbs.push({
       text: world.current.name ?? world.current.key,
       to: { name: "World", params: { id: world.current.id } },
     });
+  }
+  if (Array.isArray(props.parent)) {
+    props.parent.forEach((breadcrumb) => breadcrumbs.push(breadcrumb));
+  } else if (props.parent) {
+    breadcrumbs.push(props.parent);
   }
   if (props.current) {
     breadcrumbs.push({ text: props.current });

@@ -17,16 +17,22 @@
       />
     </section>
     <section class="row mb-3">
-      <SearchInput class="col" :model-value="search" @update:model-value="setQuery('search', $event)" />
-      <SortSelect
-        class="col"
-        :descending="isDescending"
-        :model-value="sort"
-        :options="sortOptions"
-        @descending="setQuery('descending', $event)"
-        @update:model-value="setQuery('sort', $event)"
-      />
-      <CountSelect class="col" :model-value="count" @update:model-value="setQuery('count', $event)" />
+      <div class="col-md-4">
+        <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
+      </div>
+      <div class="col-md-4">
+        <SortSelect
+          class="mb-3"
+          :descending="isDescending"
+          :model-value="sort"
+          :options="sortOptions"
+          @descending="setQuery('descending', $event)"
+          @update:model-value="setQuery('sort', $event)"
+        />
+      </div>
+      <div class="col-md-4">
+        <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
+      </div>
     </section>
     <section class="d-flex flex-column flex-grow-1">
       <div v-if="total" class="row">

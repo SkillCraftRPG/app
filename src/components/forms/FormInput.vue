@@ -1,6 +1,5 @@
 <template>
   <TarInput
-    class="mb-3"
     :described-by="inputDescribedBy"
     :disabled="disabled"
     :floating="floating"
