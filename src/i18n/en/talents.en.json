@@ -1,0 +1,23 @@
+{
+  "allowMultiplePurchases": "Allow multiple purchases",
+  "create": "Create a talent",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The talent was created."
+  },
+  "label": "Talent",
+  "placeholder": "Select a talent",
+  "required": "Required talent",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "tier": {
+    "label": "Tier",
+    "placeholder": "Select a tier"
+  },
+  "title": "Talents"
+}

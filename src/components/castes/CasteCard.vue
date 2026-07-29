@@ -1,25 +1,14 @@
 <template>
   <LinkCard :subtitle="caste.feature?.name" :title="caste.name" :to="{ name: 'Caste', params: { id: caste.id } }">
-    <template #subtitle-override>
-      <h6 class="card-subtitle mb-2 text-body-secondary">
-        <template v-if="caste.feature">{{ caste.feature.name }}</template>
-        <template v-else>&mdash;</template>
-      </h6>
-    </template>
-    <div class="card-text d-flex justify-content-between align-items-center gap-2 mb-2">
+    <div v-if="caste.skill || caste.wealthRoll" class="card-text d-flex justify-content-between align-items-center gap-2 mb-2">
       <div class="text-start">
-        <font-awesome-icon icon="fas fa-kitchen-set" aria-hidden="true" />&nbsp;<span v-if="caste.skill">{{ t(`game.skill.options.${caste.skill}`) }}</span
-        ><span v-else class="text-muted">&mdash;</span>
+        <template v-if="caste.skill">
+          <font-awesome-icon icon="fas fa-kitchen-set" aria-hidden="true" />&nbsp;{{ t(`game.skill.options.${caste.skill}`) }}
+        </template>
       </div>
-      <div class="text-end">
-        <font-awesome-icon icon="fas fa-coins" aria-hidden="true" />&nbsp;<span v-if="caste.wealthRoll">{{ caste.wealthRoll }}</span
-        ><span v-else class="text-muted">&mdash;</span>
-      </div>
+      <div v-if="caste.wealthRoll" class="text-end"><font-awesome-icon icon="fas fa-coins" aria-hidden="true" />&nbsp;{{ caste.wealthRoll }}</div>
     </div>
-    <div class="card-text">
-      <span v-if="caste.summary">{{ caste.summary }}</span>
-      <span class="text-muted" v-else>&mdash;</span>
-    </div>
+    <div v-if="caste.summary" class="card-text">{{ caste.summary }}</div>
     <StatusBlock :actor="caste.updatedBy" class="card-text mt-2 small text-secondary" :date="caste.updatedOn" relative />
   </LinkCard>
 </template>

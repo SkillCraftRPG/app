@@ -1,0 +1,23 @@
+{
+  "allowMultiplePurchases": "Achats multiples",
+  "create": "Créer un talent",
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "Le talent a été créé."
+  },
+  "label": "Talent",
+  "placeholder": "Sélectionnez un talent",
+  "required": "Talent requis",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "tier": {
+    "label": "Tier",
+    "placeholder": "Sélectionnez un tier"
+  },
+  "title": "Talents"
+}
