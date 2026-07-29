@@ -1,0 +1,18 @@
+{
+  "create": "Create an education",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The education was created."
+  },
+  "label": "Education",
+  "placeholder": "Select an education",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "title": "Educations",
+  "wealthMultiplier": "Wealth multiplier"
+}
