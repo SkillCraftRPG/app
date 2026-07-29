@@ -1,23 +1,34 @@
 <template>
   <main class="container page">
-    <div v-if="language">
-      <h1>{{ title }}</h1>
+    <div v-if="talent">
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <h1>{{ title }}</h1>
+        <TalentTierDisplay class="fs-6" :tier="talent.tier" />
+      </div>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
-        <strong>{{ t("languages.created.lead") }}</strong> {{ t("languages.created.help", { name: title }) }}
+        <strong>{{ t("talents.created.lead") }}</strong> {{ t("talents.created.help", { name: title }) }}
       </TarAlert>
-      <StatusDetail class="mb-3" :subject="language" />
+      <StatusDetail class="mb-3" :subject="talent" />
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
+        <NameField class="mb-3" required v-model="name" />
+        <TarCheckbox class="mb-3" :label="t('talents.allowMultiplePurchases')" switch v-model="allowMultiplePurchases" />
         <div class="row">
           <div class="col-md-6">
-            <NameField class="mb-3" required v-model="name" />
+            <SkillField class="mb-3" v-model="skill" />
           </div>
           <div class="col-md-6">
-            <ScriptField class="mb-3" :model-value="script?.id ?? ''" @error="handleError" @selected="script = $event" />
+            <TalentField
+              class="mb-3"
+              id="required-talent"
+              label="talents.required"
+              :model-value="requiredTalent?.id ?? ''"
+              @error="handleError"
+              @selected="requiredTalent = $event"
+            />
           </div>
         </div>
         <SummaryField class="mb-3" v-model="summary" />
-        <TypicalSpeakersField class="mb-3" v-model="typicalSpeakers" />
         <ContentField class="mb-3" v-model="htmlContent" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
@@ -44,19 +55,21 @@ import { useRoute, useRouter } from "vue-router";
 import ContentField from "@/components/shared/ContentField.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameField from "@/components/shared/NameField.vue";
-import ScriptField from "@/components/scripts/ScriptField.vue";
+import SkillField from "@/components/skills/SkillField.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
+import TalentField from "@/components/talents/TalentField.vue";
+import TalentTierDisplay from "@/components/talents/TalentTierDisplay.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import TypicalSpeakersField from "@/components/languages/TypicalSpeakersField.vue";
+import TarCheckbox from "@/components/tar/TarCheckbox.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { CreateOrReplaceLanguagePayload, Language } from "@/types/languages";
-import type { Script } from "@/types/scripts";
+import type { CreateOrReplaceTalentPayload, Talent } from "@/types/talents";
+import type { Skill } from "@/types/game";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { handleErrorKey } from "@/inject";
-import { readLanguage, replaceLanguage } from "@/api/languages";
+import { readTalent, replaceTalent } from "@/api/talents";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 import { useForm } from "@/forms";
@@ -70,41 +83,45 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+const allowMultiplePurchases = ref<boolean>(false);
 const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
-const language = ref<Language>();
-const script = ref<Script>();
+const requiredTalent = ref<Talent>();
+const skill = ref<string>("");
 const summary = ref<string>("");
-const typicalSpeakers = ref<string>("");
+const talent = ref<Talent>();
 
-const breadcrumb = computed<Breadcrumb>(() => ({ text: t("languages.title"), to: { name: "Languages" } }));
+const breadcrumb = computed<Breadcrumb>(() => ({ text: t("talents.title"), to: { name: "Talents" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
-    language.value &&
-    (language.value.name !== name.value ||
-      (language.value.script?.id ?? "") !== (script.value?.id ?? "") ||
-      (language.value.summary ?? "") !== summary.value ||
-      (language.value.typicalSpeakers ?? "") !== typicalSpeakers.value ||
-      (language.value.htmlContent ?? "") !== htmlContent.value),
+    talent.value &&
+    (talent.value.name !== name.value ||
+      talent.value.allowMultiplePurchases !== allowMultiplePurchases.value ||
+      (talent.value.skill ?? "") !== skill.value ||
+      (talent.value.requiredTalent?.id ?? "") !== (requiredTalent.value?.id ?? "") ||
+      (talent.value.summary ?? "") !== summary.value ||
+      (talent.value.htmlContent ?? "") !== htmlContent.value),
   ),
 );
-const title = computed<string>(() => language.value?.name ?? "");
+const title = computed<string>(() => talent.value?.name ?? "");
 
 const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
-  if (!isLoading.value && language.value) {
+  if (!isLoading.value && talent.value) {
     isLoading.value = true;
     try {
-      const payload: CreateOrReplaceLanguagePayload = {
+      const payload: CreateOrReplaceTalentPayload = {
+        tier: talent.value.tier,
         name: name.value,
         summary: summary.value,
         htmlContent: htmlContent.value,
-        scriptId: script.value?.id,
-        typicalSpeakers: typicalSpeakers.value,
+        allowMultiplePurchases: allowMultiplePurchases.value,
+        skill: skill.value ? (skill.value as Skill) : undefined,
+        requiredTalentId: requiredTalent.value?.id,
       };
-      language.value = await replaceLanguage(language.value.id, payload);
+      talent.value = await replaceTalent(talent.value.id, payload);
       reinitialize();
       toasts.success("saved");
     } catch (e: unknown) {
@@ -116,13 +133,14 @@ async function submit(): Promise<void> {
 }
 
 watch(
-  language,
-  (language) => {
-    name.value = language?.name ?? "";
-    script.value = language?.script ? { ...language.script } : undefined;
-    summary.value = language?.summary ?? "";
-    typicalSpeakers.value = language?.typicalSpeakers ?? "";
-    htmlContent.value = language?.htmlContent ?? "";
+  talent,
+  (talent) => {
+    name.value = talent?.name ?? "";
+    allowMultiplePurchases.value = talent?.allowMultiplePurchases ?? false;
+    skill.value = talent?.skill ?? "";
+    requiredTalent.value = talent?.requiredTalent ? { ...talent.requiredTalent } : undefined;
+    summary.value = talent?.summary ?? "";
+    htmlContent.value = talent?.htmlContent ?? "";
   },
   { deep: true },
 );
@@ -130,7 +148,7 @@ watch(
 onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
-    language.value = await readLanguage(id);
+    talent.value = await readTalent(id);
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;

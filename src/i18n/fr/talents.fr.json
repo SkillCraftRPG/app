@@ -5,6 +5,9 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "Le talent a été créé."
   },
+  "label": "Talent",
+  "placeholder": "Sélectionnez un talent",
+  "required": "Talent requis",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
