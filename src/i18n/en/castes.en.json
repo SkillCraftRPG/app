@@ -1,0 +1,18 @@
+{
+  "create": "Create a caste",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The caste was created."
+  },
+  "label": "Caste",
+  "placeholder": "Select a caste",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "title": "Castes",
+  "wealthRoll": "Starting Wealth"
+}

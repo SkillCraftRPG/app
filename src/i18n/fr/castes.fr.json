@@ -1,0 +1,18 @@
+{
+  "create": "Créer une caste",
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "La caste a été créée."
+  },
+  "label": "Caste",
+  "placeholder": "Sélectionnez une caste",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": "Castes",
+  "wealthRoll": "Richesse de départ"
+}

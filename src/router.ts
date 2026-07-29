@@ -31,6 +31,17 @@ const router = createRouter({
       component: () => import("./views/account/SignOutView.vue"),
       meta: { isPublic: true },
     },
+    // Castes
+    {
+      name: "Castes",
+      path: "/castes",
+      component: () => import("./views/castes/CastesView.vue"),
+    },
+    {
+      name: "Caste",
+      path: "/castes/:id",
+      component: () => import("./views/castes/CasteView.vue"),
+    },
     // Customizations
     {
       name: "Customizations",
