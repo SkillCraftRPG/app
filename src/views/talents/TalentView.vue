@@ -20,9 +20,11 @@
           <div class="col-md-6">
             <TalentField
               class="mb-3"
+              :exclude="[talent.id]"
               id="required-talent"
               label="talents.required"
               :model-value="requiredTalent?.id ?? ''"
+              :tiers="[0, 1, 2, 3].filter((tier) => tier <= talent!.tier)"
               @error="handleError"
               @selected="requiredTalent = $event"
             />
@@ -159,4 +161,9 @@ onMounted(async () => {
     }
   }
 });
+
+// TODO(fpion): if (AllowMultiplePurchases && Skill.HasValue)
+// {
+//   throw new InvalidTalentSkillException(this);
+// }
 </script>

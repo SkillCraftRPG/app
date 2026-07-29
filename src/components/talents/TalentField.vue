@@ -24,17 +24,21 @@ import { searchTalents } from "@/api/talents";
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    exclude?: string[];
     id?: string;
     label?: string;
     modelValue: string;
     placeholder?: string;
+    tiers?: number[];
   }>(),
   {
+    exclude: () => [],
     id: "talent",
     label: "talents.label",
     placeholder: "talents.placeholder",
+    tiers: () => [],
   },
 );
 
@@ -50,7 +54,7 @@ const total = ref<number>(0);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    talents.value.map(({ id, name }) => ({ text: name, value: id })),
+    talents.value.filter((talent) => !props.exclude.includes(talent.id)).map(({ id, name }) => ({ text: name, value: id })),
     "text",
   ),
 );
@@ -69,6 +73,7 @@ async function refresh(): Promise<void> {
       const payload: SearchTalentsPayload = {
         ids: [],
         search: { terms: [], operator: "And" },
+        tiers: props.tiers,
         sort: [{ field: "Name", isDescending: false }],
         skip: 0,
         limit: 0,
