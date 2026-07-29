@@ -5,10 +5,7 @@
         <CustomizationKindDisplay :kind="customization.kind" />
       </h6>
     </template>
-    <div class="card-text">
-      <span v-if="customization.summary">{{ customization.summary }}</span>
-      <span class="text-muted" v-else>&mdash;</span>
-    </div>
+    <div v-if="customization.summary" class="card-text">{{ customization.summary }}</div>
     <StatusBlock :actor="customization.updatedBy" class="card-text mt-2 small text-secondary" :date="customization.updatedOn" relative />
   </LinkCard>
 </template>

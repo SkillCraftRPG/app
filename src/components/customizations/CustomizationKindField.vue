@@ -1,6 +1,5 @@
 <template>
   <FormSelect
-    :disabled="disabled"
     floating
     :id="id"
     :label="t(label)"
@@ -23,7 +22,6 @@ const { t } = useI18n();
 
 withDefaults(
   defineProps<{
-    disabled?: boolean | string;
     id?: string;
     label?: string;
     modelValue: string;

@@ -14,6 +14,7 @@ import {
   faBan,
   faCheck,
   faClockRotateLeft,
+  faCodeBranch,
   faCoins,
   faCommentSms,
   faDesktop,
@@ -44,6 +45,7 @@ import {
   faVial,
   faWheelchair,
   faXmark,
+  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -58,6 +60,7 @@ library.add(
   faBan,
   faCheck,
   faClockRotateLeft,
+  faCodeBranch,
   faCoins,
   faCommentSms,
   faDesktop,
@@ -83,6 +86,7 @@ library.add(
   faScrewdriverWrench,
   faSun,
   faTablet,
+  faTag,
   faTrophy,
   faUser,
   faVial,

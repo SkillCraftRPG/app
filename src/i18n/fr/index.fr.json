@@ -33,6 +33,7 @@
   },
   "loading": "Chargement…",
   "name": "Nom",
+  "no": "Non",
   "notFound": {
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"
@@ -69,5 +70,6 @@
     "error": "Erreur !",
     "success": "Succès !",
     "warning": "Attention !"
-  }
+  },
+  "yes": "Oui"
 }

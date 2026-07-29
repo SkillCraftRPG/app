@@ -37,6 +37,11 @@ const tiles = computed<Tile[]>(() => [
     to: { name: "Educations" },
   },
   {
+    icon: "fas fa-code-branch",
+    text: t("talents.title"),
+    to: { name: "Talents" },
+  },
+  {
     icon: "fas fa-scroll",
     text: t("scripts.title"),
     to: { name: "Scripts" },
