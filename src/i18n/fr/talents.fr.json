@@ -1,5 +1,8 @@
 {
-  "allowMultiplePurchases": "Achats multiples",
+  "allowMultiplePurchases": {
+    "help": "Un talent associé à une compétence ne peut pas être acheté plusieurs fois.",
+    "label": "Achats multiples"
+  },
   "create": "Créer un talent",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",

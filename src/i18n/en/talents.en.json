@@ -1,5 +1,8 @@
 {
-  "allowMultiplePurchases": "Allow multiple purchases",
+  "allowMultiplePurchases": {
+    "help": "A talent associated with a skill cannot be purchased multiple times.",
+    "label": "Allow multiple purchases"
+  },
   "create": "Create a talent",
   "created": {
     "help": "You can now complete its details.",

@@ -15,7 +15,9 @@
       <font-awesome-icon icon="fas fa-kitchen-set" aria-hidden="true" />&nbsp;{{ t(`game.skill.options.${talent.skill}`) }}
     </div>
     <div v-else-if="talent.allowMultiplePurchases" class="mb-2">
-      <TarBadge pill variant="secondary"><font-awesome-icon icon="fas fa-tag" aria-hidden="true" />&nbsp;{{ t("talents.allowMultiplePurchases") }}</TarBadge>
+      <TarBadge pill variant="secondary">
+        <font-awesome-icon icon="fas fa-tag" aria-hidden="true" />&nbsp;{{ t("talents.allowMultiplePurchases.label") }}
+      </TarBadge>
     </div>
     <div v-if="talent.summary" class="card-text">{{ talent.summary }}</div>
     <StatusBlock :actor="talent.updatedBy" class="card-text mt-2 small text-secondary" :date="talent.updatedOn" relative />

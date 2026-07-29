@@ -12,10 +12,22 @@
       <StatusDetail class="mb-3" :subject="talent" />
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
-        <TarCheckbox class="mb-3" :label="t('talents.allowMultiplePurchases')" switch v-model="allowMultiplePurchases" />
+        <TarCheckbox
+          class="mb-3"
+          described-by="allow-multiple-purchases-help"
+          :disabled="Boolean(skill)"
+          id="allow-multiple-purchases"
+          :label="t('talents.allowMultiplePurchases.label')"
+          switch
+          v-model="allowMultiplePurchases"
+        >
+          <template #after>
+            <div id="allow-multiple-purchases-help" class="form-text">{{ t("talents.allowMultiplePurchases.help") }}</div>
+          </template>
+        </TarCheckbox>
         <div class="row">
           <div class="col-md-6">
-            <SkillField class="mb-3" v-model="skill" />
+            <SkillField class="mb-3" :disabled="allowMultiplePurchases" v-model="skill" />
           </div>
           <div class="col-md-6">
             <TalentField
@@ -161,9 +173,4 @@ onMounted(async () => {
     }
   }
 });
-
-// TODO(fpion): if (AllowMultiplePurchases && Skill.HasValue)
-// {
-//   throw new InvalidTalentSkillException(this);
-// }
 </script>

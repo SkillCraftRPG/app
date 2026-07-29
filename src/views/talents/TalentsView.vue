@@ -28,7 +28,7 @@
           <div class="col-md-6 col-lg-3">
             <BooleanSelect
               id="allow-multiple-purchases"
-              label="talents.allowMultiplePurchases"
+              label="talents.allowMultiplePurchases.label"
               :model-value="allowMultiplePurchases"
               @update:model-value="setQuery('multiple', $event)"
             />
