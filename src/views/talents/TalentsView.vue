@@ -26,9 +26,16 @@
             <TalentTierSelect class="mb-3" :model-value="tier" @update:model-value="setQuery('tier', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
+            <BooleanSelect
+              id="allow-multiple-purchases"
+              label="talents.allowMultiplePurchases"
+              :model-value="allowMultiplePurchases"
+              @update:model-value="setQuery('multiple', $event)"
+            />
+          </div>
+          <div class="col-md-6 col-lg-3">
             <SkillSelect class="mb-3" :model-value="skill" @update:model-value="setQuery('skill', $event)" />
           </div>
-          <!-- TODO(fpion): allow multiple purchases -->
           <div class="col-md-6 col-lg-3">
             <TalentSelect
               class="mb-3"
@@ -92,6 +99,7 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import BooleanSelect from "@/components/shared/BooleanSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateTalent from "@/components/talents/CreateTalent.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
@@ -141,7 +149,7 @@ const tier = computed<number | undefined>(() => parseNumber(route.query.tier?.to
 const title = computed<string>(() => t("talents.title"));
 
 const hasFilters = computed<boolean>(
-  () => typeof tier.value === "number" || Boolean(skill.value || search.value || allowMultiplePurchases.value || requiredTalentId.value),
+  () => typeof tier.value === "number" || typeof allowMultiplePurchases.value === "boolean" || Boolean(skill.value || search.value || requiredTalentId.value),
 );
 
 const sortOptions = computed<SelectOption[]>(() =>
@@ -157,7 +165,7 @@ function onCreate(talent: Talent): void {
 }
 
 function clearFilters(): void {
-  const query = { ...route.query, multiple: "", required: "", skill: "", search: "", tier: "", page: 1 };
+  const query = { ...route.query, multiple: "", required: "", search: "", skill: "", tier: "", page: 1 };
   router.replace({ ...route, query });
 }
 
@@ -224,8 +232,8 @@ watch(
           query: isEmpty(query)
             ? {
                 tier: "",
-                skill: "",
                 multiple: "",
+                skill: "",
                 required: "",
                 search: "",
                 sort: "Name",
