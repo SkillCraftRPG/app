@@ -119,7 +119,7 @@ const talents = ref<Talent[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
-const allowMultiplePurchases = computed<boolean>(() => parseBoolean(route.query.multiple?.toString()) ?? false);
+const allowMultiplePurchases = computed<boolean | undefined>(() => parseBoolean(route.query.multiple?.toString()));
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
