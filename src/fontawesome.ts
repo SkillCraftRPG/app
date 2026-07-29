@@ -45,6 +45,7 @@ import {
   faVial,
   faWheelchair,
   faXmark,
+  faTag,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -85,6 +86,7 @@ library.add(
   faScrewdriverWrench,
   faSun,
   faTablet,
+  faTag,
   faTrophy,
   faUser,
   faVial,
