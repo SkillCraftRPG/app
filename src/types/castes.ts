@@ -3,7 +3,7 @@ import type { Feature } from "./features";
 import type { SearchPayload, SortOption } from "./search";
 import type { Skill } from "./game";
 
-export type CreateOrReplaceCastePayload = {
+export type Caste = Aggregate & {
   name: string;
   summary?: string | null;
   htmlContent?: string | null;
@@ -12,7 +12,13 @@ export type CreateOrReplaceCastePayload = {
   feature?: Feature | null;
 };
 
-export type Caste = Aggregate & {
+export type CasteSort = "CreatedOn" | "Name" | "UpdatedOn";
+
+export type CasteSortOption = SortOption & {
+  field: CasteSort;
+};
+
+export type CreateOrReplaceCastePayload = {
   name: string;
   summary?: string | null;
   htmlContent?: string | null;
@@ -24,12 +30,6 @@ export type Caste = Aggregate & {
 export type SearchCastesPayload = SearchPayload & {
   skill?: Skill | null;
   sort: CasteSortOption[];
-};
-
-export type CasteSort = "CreatedOn" | "Name" | "UpdatedOn";
-
-export type CasteSortOption = SortOption & {
-  field: CasteSort;
 };
 
 export type UpdateCastePayload = {
