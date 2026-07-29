@@ -29,7 +29,16 @@
             <SkillSelect class="mb-3" :model-value="skill" @update:model-value="setQuery('skill', $event)" />
           </div>
           <!-- TODO(fpion): allow multiple purchases -->
-          <!-- TODO(fpion): required talent -->
+          <div class="col-md-6 col-lg-3">
+            <TalentSelect
+              class="mb-3"
+              id="required-talent"
+              label="talents.required"
+              :model-value="requiredTalentId"
+              @error="handleError"
+              @update:model-value="setQuery('required', $event)"
+            />
+          </div>
         </div>
         <div class="row">
           <div class="col-md-4">
@@ -91,13 +100,14 @@ import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import TalentCard from "@/components/talents/TalentCard.vue";
+import TalentSelect from "@/components/talents/TalentSelect.vue";
 import TalentTierSelect from "@/components/talents/TalentTierSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { SearchResults } from "@/types/search";
+import type { SearchTalentsPayload, Talent, TalentSort } from "@/types/talents";
 import type { SelectOption } from "@/types/tar/select";
 import type { Skill } from "@/types/game";
-import type { SearchTalentsPayload, Talent, TalentSort } from "@/types/talents";
 import { handleErrorKey } from "@/inject";
 import { searchTalents } from "@/api/talents";
 import { useDocument } from "@/composables/document";
