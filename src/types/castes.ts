@@ -1,0 +1,42 @@
+import type { Aggregate, Optional } from "./api";
+import type { Feature } from "./features";
+import type { SearchPayload, SortOption } from "./search";
+import type { Skill } from "./game";
+
+export type CreateOrReplaceCastePayload = {
+  name: string;
+  summary?: string | null;
+  htmlContent?: string | null;
+  skill?: Skill | null;
+  wealthRoll?: string | null;
+  feature?: Feature | null;
+};
+
+export type Caste = Aggregate & {
+  name: string;
+  summary?: string | null;
+  htmlContent?: string | null;
+  skill?: Skill | null;
+  wealthRoll?: string | null;
+  feature?: Feature | null;
+};
+
+export type SearchCastesPayload = SearchPayload & {
+  skill?: Skill | null;
+  sort: CasteSortOption[];
+};
+
+export type CasteSort = "CreatedOn" | "Name" | "UpdatedOn";
+
+export type CasteSortOption = SortOption & {
+  field: CasteSort;
+};
+
+export type UpdateCastePayload = {
+  name?: string | null;
+  summary?: Optional<string> | null;
+  htmlContent?: Optional<string> | null;
+  skill?: Optional<Skill | null> | null;
+  wealthRoll?: Optional<string> | null;
+  feature?: Optional<Feature> | null;
+};

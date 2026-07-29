@@ -1,0 +1,31 @@
+{
+  "feature": {
+    "label": "Particularité"
+  },
+  "skill": {
+    "label": "Compétence",
+    "options": {
+      "Acrobatics": "Acrobaties",
+      "Athletics": "Athlétisme",
+      "Crafting": "Artisanat",
+      "Deception": "Tromperie",
+      "Diplomacy": "Diplomatie",
+      "Discipline": "Discipline",
+      "Insight": "Intuition",
+      "Investigation": "Investigation",
+      "Knowledge": "Connaissance",
+      "Linguistics": "Linguistique",
+      "Medicine": "Médecine",
+      "Melee": "Mêlée",
+      "Occultism": "Occultisme",
+      "Orientation": "Orientation",
+      "Perception": "Perception",
+      "Performance": "Représentation",
+      "Resistance": "Résistance",
+      "Stealth": "Furtivité",
+      "Survival": "Survie",
+      "Thievery": "Roublardise"
+    },
+    "placeholder": "Sélectionnez une compétence"
+  }
+}
