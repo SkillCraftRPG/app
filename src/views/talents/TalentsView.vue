@@ -127,10 +127,12 @@ const requiredTalentId = computed<string>(() => route.query.required?.toString()
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const skill = computed<string>(() => route.query.skill?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
-const tier = computed<string>(() => route.query.tier?.toString() ?? "");
+const tier = computed<number | undefined>(() => parseNumber(route.query.tier?.toString() || undefined));
 const title = computed<string>(() => t("talents.title"));
 
-const hasFilters = computed<boolean>(() => Boolean(tier.value || skill.value || search.value || allowMultiplePurchases.value || requiredTalentId.value));
+const hasFilters = computed<boolean>(
+  () => typeof tier.value === "number" || Boolean(skill.value || search.value || allowMultiplePurchases.value || requiredTalentId.value),
+);
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
@@ -177,7 +179,7 @@ async function refresh(): Promise<void> {
       operator: "And",
     },
     skill: skill.value ? (skill.value as Skill) : undefined,
-    tiers: tier.value ? [Number(tier.value)] : [],
+    tiers: typeof tier.value === "number" ? [tier.value] : undefined,
     sort: sort.value ? [{ field: sort.value as TalentSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
     limit: count.value,
