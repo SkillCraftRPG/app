@@ -53,6 +53,17 @@ const router = createRouter({
       path: "/customizations/:id",
       component: () => import("./views/customizations/CustomizationView.vue"),
     },
+    // Educations
+    {
+      name: "Educations",
+      path: "/educations",
+      component: () => import("./views/educations/EducationsView.vue"),
+    },
+    {
+      name: "Education",
+      path: "/educations/:id",
+      component: () => import("./views/educations/EducationView.vue"),
+    },
     // Languages
     {
       name: "Languages",

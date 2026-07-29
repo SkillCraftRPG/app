@@ -4,7 +4,6 @@
       {{ t(format, { date: formattedDate }) }}
     </div>
     <div>
-      {{ t("by") }}
       <TarAvatar
         :display-name="displayName"
         :email-address="actor.emailAddress ?? undefined"
