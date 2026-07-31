@@ -1,0 +1,21 @@
+{
+  "create": "Créer un objet",
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "L’objet a été créé."
+  },
+  "label": "Objet",
+  "placeholder": "Sélectionnez un objet",
+  "price": "Prix",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "Price": "Prix",
+      "UpdatedOn": "Dernière modification",
+      "Weight": "Poids"
+    }
+  },
+  "title": "Objets",
+  "weight": "Poids"
+}

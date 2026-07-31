@@ -5,6 +5,7 @@ import educations from "./educations.fr.json";
 import errors from "./errors.fr.json";
 import game from "./game.fr.json";
 import index from "./index.fr.json";
+import items from "./items.fr.json";
 import languages from "./languages.fr.json";
 import scripts from "./scripts.fr.json";
 import sheets from "./sheets.fr.json";
@@ -19,6 +20,7 @@ export default {
   educations,
   errors,
   game,
+  items,
   languages,
   scripts,
   sheets,
