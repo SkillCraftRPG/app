@@ -1,0 +1,21 @@
+{
+  "create": "Créer un sort",
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "Le sort a été créé."
+  },
+  "label": "Sort",
+  "placeholder": "Sélectionnez un sort",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "tier": {
+    "label": "Tiers",
+    "placeholder": "Sélectionnez un tiers"
+  },
+  "title": "Sorts"
+}

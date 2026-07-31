@@ -1,0 +1,21 @@
+{
+  "create": "Create a spell",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The spell was created."
+  },
+  "label": "Spell",
+  "placeholder": "Select a spell",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "tier": {
+    "label": "Tier",
+    "placeholder": "Select a tier"
+  },
+  "title": "Spells"
+}
