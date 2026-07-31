@@ -2,6 +2,22 @@
   "feature": {
     "label": "Feature"
   },
+  "size": {
+    "category": {
+      "label": "Size",
+      "options": {
+        "Diminutive": "Diminutive",
+        "Tiny": "Tiny",
+        "Small": "Small",
+        "Medium": "Medium",
+        "Large": "Large",
+        "Huge": "Huge",
+        "Gargantuan": "Gargantuan",
+        "Colossal": "Colossal"
+      },
+      "placeholder": "Select a size"
+    }
+  },
   "skill": {
     "label": "Skill",
     "options": {

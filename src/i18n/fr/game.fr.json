@@ -2,6 +2,22 @@
   "feature": {
     "label": "Particularité"
   },
+  "size": {
+    "category": {
+      "label": "Taille",
+      "options": {
+        "Diminutive": "Infime",
+        "Tiny": "Minuscule",
+        "Small": "Petite",
+        "Medium": "Moyenne",
+        "Large": "Grande",
+        "Huge": "Énorme",
+        "Gargantuan": "Gigantesque",
+        "Colossal": "Colossale"
+      },
+      "placeholder": "Sélectionnez une taille"
+    }
+  },
   "skill": {
     "label": "Compétence",
     "options": {

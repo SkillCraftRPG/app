@@ -22,8 +22,8 @@ type Tile = {
 };
 const tiles = computed<Tile[]>(() => [
   {
-    icon: "fas fa-users",
-    text: t("lineages.title"),
+    icon: "fas fa-paw",
+    text: t("lineages.species.title"),
     to: { name: "Lineages" },
   },
   {
