@@ -12,7 +12,7 @@
             <KeyField class="mb-3" ref="keyInput" required v-model="key" />
           </div>
         </div>
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
@@ -55,7 +55,7 @@ const emit = defineEmits<{
   (e: "updated", value: World): void;
 }>();
 
-const htmlContent = ref<string>("");
+const content = ref<string>("");
 const isLoading = ref<boolean>(false);
 const key = ref<string>("");
 const keyAlreadyUsed = ref<boolean>(false);
@@ -65,7 +65,7 @@ const name = ref<string>("");
 
 const hasChanges = computed<boolean>(() => {
   const world: World = props.world;
-  return (world.name ?? "") !== name.value || world.key !== key.value || (world.htmlContent ?? "") !== htmlContent.value;
+  return (world.name ?? "") !== name.value || world.key !== key.value || (world.content ?? "") !== content.value;
 });
 
 function cancel(): void {
@@ -83,7 +83,7 @@ watch(
   (world) => {
     name.value = world.name ?? "";
     key.value = world.key;
-    htmlContent.value = world.htmlContent ?? "";
+    content.value = world.content ?? "";
   },
   { deep: true, immediate: true },
 );
@@ -97,7 +97,7 @@ async function submit(): Promise<void> {
       const payload: CreateOrReplaceWorldPayload = {
         key: key.value,
         name: name.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
       };
       const world: World = await replaceWorld(props.world.id, payload);
       reinitialize();

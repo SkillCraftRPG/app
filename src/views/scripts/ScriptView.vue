@@ -10,7 +10,7 @@
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -59,7 +59,7 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
-const htmlContent = ref<string>("");
+const content = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
@@ -69,8 +69,7 @@ const summary = ref<string>("");
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("scripts.title"), to: { name: "Scripts" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
-    script.value &&
-    (script.value.name !== name.value || (script.value.summary ?? "") !== summary.value || (script.value.htmlContent ?? "") !== htmlContent.value),
+    script.value && (script.value.name !== name.value || (script.value.summary ?? "") !== summary.value || (script.value.content ?? "") !== content.value),
   ),
 );
 const title = computed<string>(() => script.value?.name ?? "");
@@ -83,7 +82,7 @@ async function submit(): Promise<void> {
       const payload: CreateOrReplaceScriptPayload = {
         name: name.value,
         summary: summary.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
       };
       script.value = await replaceScript(script.value.id, payload);
       reinitialize();
@@ -101,7 +100,7 @@ watch(
   (script) => {
     name.value = script?.name ?? "";
     summary.value = script?.summary ?? "";
-    htmlContent.value = script?.htmlContent ?? "";
+    content.value = script?.content ?? "";
   },
   { deep: true },
 );

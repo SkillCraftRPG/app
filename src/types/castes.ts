@@ -6,7 +6,7 @@ import type { Skill } from "./game";
 export type Caste = Aggregate & {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   skill?: Skill | null;
   wealthRoll?: string | null;
   feature?: Feature | null;
@@ -21,7 +21,7 @@ export type CasteSortOption = SortOption & {
 export type CreateOrReplaceCastePayload = {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   skill?: Skill | null;
   wealthRoll?: string | null;
   feature?: Feature | null;
@@ -35,7 +35,7 @@ export type SearchCastesPayload = SearchPayload & {
 export type UpdateCastePayload = {
   name?: string | null;
   summary?: Optional<string> | null;
-  htmlContent?: Optional<string> | null;
+  content?: Optional<string> | null;
   skill?: Optional<Skill | null> | null;
   wealthRoll?: Optional<string> | null;
   feature?: Optional<Feature> | null;

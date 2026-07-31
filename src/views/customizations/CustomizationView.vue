@@ -13,7 +13,7 @@
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
         <SummaryField class="mb-3" v-model="summary" />
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -64,8 +64,8 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+const content = ref<string>("");
 const customization = ref<Customization>();
-const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
@@ -75,9 +75,7 @@ const breadcrumb = computed<Breadcrumb>(() => ({ text: t("customizations.title")
 const hasChanges = computed<boolean>(() =>
   Boolean(
     customization.value &&
-    (customization.value.name !== name.value ||
-      (customization.value.summary ?? "") !== summary.value ||
-      (customization.value.htmlContent ?? "") !== htmlContent.value),
+    (customization.value.name !== name.value || (customization.value.summary ?? "") !== summary.value || (customization.value.content ?? "") !== content.value),
   ),
 );
 const title = computed<string>(() => customization.value?.name ?? "");
@@ -91,7 +89,7 @@ async function submit(): Promise<void> {
         kind: customization.value.kind,
         name: name.value,
         summary: summary.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
       };
       customization.value = await replaceCustomization(customization.value.id, payload);
       reinitialize();
@@ -109,7 +107,7 @@ watch(
   (customization) => {
     name.value = customization?.name ?? "";
     summary.value = customization?.summary ?? "";
-    htmlContent.value = customization?.htmlContent ?? "";
+    content.value = customization?.content ?? "";
   },
   { deep: true },
 );

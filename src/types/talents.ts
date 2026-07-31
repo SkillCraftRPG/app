@@ -6,7 +6,7 @@ export type CreateOrReplaceTalentPayload = {
   tier: number;
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   allowMultiplePurchases?: boolean;
   skill?: Skill | null;
   requiredTalentId?: string | null;
@@ -24,7 +24,7 @@ export type Talent = Aggregate & {
   tier: number;
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   allowMultiplePurchases: boolean;
   skill?: Skill | null;
   requiredTalent?: Talent | null;
@@ -39,7 +39,7 @@ export type TalentSortOption = SortOption & {
 export type UpdateTalentPayload = {
   name?: string | null;
   summary?: Optional<string> | null;
-  htmlContent?: Optional<string> | null;
+  content?: Optional<string> | null;
   allowMultiplePurchases?: boolean | null;
   skill?: Optional<Skill | null> | null;
   requiredTalentId?: Optional<string | null> | null;

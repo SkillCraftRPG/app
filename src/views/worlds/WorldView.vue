@@ -34,6 +34,7 @@ import { readWorld } from "@/api/worlds";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 import { useToastStore } from "@/stores/toast";
+import { useWorldStore } from "@/stores/world";
 
 const document = useDocument();
 const events = useEventStore();
@@ -41,6 +42,7 @@ const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
 const toasts = useToastStore();
+const worldStore = useWorldStore();
 const { t } = useI18n();
 
 const isCreated = ref<boolean>(events.shift() === "created");
@@ -50,6 +52,7 @@ const title = computed<string>(() => (world.value ? (world.value.name ?? world.v
 
 function onUpdate(value: World): void {
   world.value = value;
+  worldStore.enter(value);
   toasts.success("saved");
 }
 
@@ -57,6 +60,7 @@ onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
     world.value = await readWorld(id);
+    worldStore.enter(world.value);
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;

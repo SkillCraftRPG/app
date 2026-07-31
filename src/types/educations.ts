@@ -6,7 +6,7 @@ import type { Skill } from "./game";
 export type CreateOrReplaceEducationPayload = {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   skill?: Skill | null;
   wealthMultiplier?: number | null;
   feature?: Feature | null;
@@ -15,7 +15,7 @@ export type CreateOrReplaceEducationPayload = {
 export type Education = Aggregate & {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   skill?: Skill | null;
   wealthMultiplier?: number | null;
   feature?: Feature | null;
@@ -35,7 +35,7 @@ export type SearchEducationsPayload = SearchPayload & {
 export type UpdateEducationPayload = {
   name?: string | null;
   summary?: Optional<string> | null;
-  htmlContent?: Optional<string> | null;
+  content?: Optional<string> | null;
   skill?: Optional<Skill | null> | null;
   wealthMultiplier?: Optional<number | null> | null;
   feature?: Optional<Feature> | null;
