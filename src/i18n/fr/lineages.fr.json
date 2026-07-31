@@ -1,0 +1,17 @@
+{
+  "create": "Créer une lignée",
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "La lignée a été créée."
+  },
+  "label": "Lignée",
+  "placeholder": "Sélectionnez une lignée",
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "title": "Lignées"
+}

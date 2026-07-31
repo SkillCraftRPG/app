@@ -1,3 +1,5 @@
+export type SizeCategory = "Diminutive" | "Tiny" | "Small" | "Medium" | "Large" | "Huge" | "Gargantuan" | "Colossal";
+
 export type Skill =
   | "Acrobatics"
   | "Athletics"

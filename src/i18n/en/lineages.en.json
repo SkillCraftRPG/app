@@ -1,0 +1,17 @@
+{
+  "create": "Create a lineage",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The lineage was created."
+  },
+  "label": "Lineage",
+  "placeholder": "Select a lineage",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "title": "Lineages"
+}
