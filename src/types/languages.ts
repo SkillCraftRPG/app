@@ -5,7 +5,7 @@ import type { SearchPayload, SortOption } from "./search";
 export type CreateOrReplaceLanguagePayload = {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   scriptId?: string | null;
   typicalSpeakers?: string | null;
 };
@@ -13,7 +13,7 @@ export type CreateOrReplaceLanguagePayload = {
 export type Language = Aggregate & {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
   script?: Script | null;
   typicalSpeakers?: string | null;
 };
@@ -32,7 +32,7 @@ export type SearchLanguagesPayload = SearchPayload & {
 export type UpdateLanguagePayload = {
   name?: string | null;
   summary?: Optional<string> | null;
-  htmlContent?: Optional<string> | null;
+  content?: Optional<string> | null;
   scriptId?: Optional<string> | null;
   typicalSpeakers?: Optional<string> | null;
 };

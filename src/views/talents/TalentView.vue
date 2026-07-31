@@ -43,7 +43,7 @@
           </div>
         </div>
         <SummaryField class="mb-3" v-model="summary" />
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -98,7 +98,7 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const allowMultiplePurchases = ref<boolean>(false);
-const htmlContent = ref<string>("");
+const content = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
@@ -116,7 +116,7 @@ const hasChanges = computed<boolean>(() =>
       (talent.value.skill ?? "") !== skill.value ||
       (talent.value.requiredTalent?.id ?? "") !== (requiredTalent.value?.id ?? "") ||
       (talent.value.summary ?? "") !== summary.value ||
-      (talent.value.htmlContent ?? "") !== htmlContent.value),
+      (talent.value.content ?? "") !== content.value),
   ),
 );
 const title = computed<string>(() => talent.value?.name ?? "");
@@ -130,7 +130,7 @@ async function submit(): Promise<void> {
         tier: talent.value.tier,
         name: name.value,
         summary: summary.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
         allowMultiplePurchases: allowMultiplePurchases.value,
         skill: skill.value ? (skill.value as Skill) : undefined,
         requiredTalentId: requiredTalent.value?.id,
@@ -154,7 +154,7 @@ watch(
     skill.value = talent?.skill ?? "";
     requiredTalent.value = talent?.requiredTalent ? { ...talent.requiredTalent } : undefined;
     summary.value = talent?.summary ?? "";
-    htmlContent.value = talent?.htmlContent ?? "";
+    content.value = talent?.content ?? "";
   },
   { deep: true },
 );

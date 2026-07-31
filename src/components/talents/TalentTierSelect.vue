@@ -39,7 +39,7 @@ const emit = defineEmits<{
   (e: "update:model-value", value: number | undefined): void;
 }>();
 
-const options = computed<SelectOption[]>(() => [0, 1, 2, 3].map((value) => ({ text: value.toString() })));
+const options = computed<SelectOption[]>(() => [0, 1, 2, 3].map((value) => ({ text: value.toString(), value: value.toString() })));
 
 function onModelValueUpdate(value: string | undefined): void {
   emit("update:model-value", parseNumber(value || undefined));

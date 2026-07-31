@@ -18,11 +18,11 @@
           </div>
         </div>
         <SummaryField class="mb-3" v-model="summary" />
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
         <fieldset class="border-top border-secondary-subtle pt-3 mt-4">
           <legend>{{ t("game.feature.label") }}</legend>
           <NameField class="mb-3" id="feature-name" v-model="feature.name" />
-          <ContentField class="mb-3" id="feature-content" :model-value="feature.htmlContent ?? ''" @update:model-value="feature.htmlContent = $event" />
+          <ContentField class="mb-3" id="feature-content" :model-value="feature.content ?? ''" @update:model-value="feature.content = $event" />
         </fieldset>
         <div class="d-flex justify-content-end mb-3">
           <TarButton
@@ -76,9 +76,9 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+const content = ref<string>("");
 const education = ref<Education>();
 const feature = ref<Feature>({ name: "" });
-const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
@@ -94,9 +94,9 @@ const hasChanges = computed<boolean>(() =>
       (education.value.skill ?? "") !== skill.value ||
       (education.value.wealthMultiplier ?? 0) !== wealthMultiplier.value ||
       (education.value.summary ?? "") !== summary.value ||
-      (education.value.htmlContent ?? "") !== htmlContent.value ||
+      (education.value.content ?? "") !== content.value ||
       (education.value.feature?.name ?? "") !== feature.value.name ||
-      (education.value.feature?.htmlContent ?? "") !== (feature.value.htmlContent ?? "")),
+      (education.value.feature?.content ?? "") !== (feature.value.content ?? "")),
   ),
 );
 const title = computed<string>(() => education.value?.name ?? "");
@@ -109,7 +109,7 @@ async function submit(): Promise<void> {
       const payload: CreateOrReplaceEducationPayload = {
         name: name.value,
         summary: summary.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
         skill: skill.value ? (skill.value as Skill) : undefined,
         wealthMultiplier: wealthMultiplier.value || undefined,
         feature: feature.value.name ? feature.value : undefined,
@@ -132,9 +132,9 @@ watch(
     skill.value = education?.skill ?? "";
     wealthMultiplier.value = education?.wealthMultiplier ?? 0;
     summary.value = education?.summary ?? "";
-    htmlContent.value = education?.htmlContent ?? "";
+    content.value = education?.content ?? "";
     feature.value.name = education?.feature?.name ?? "";
-    feature.value.htmlContent = education?.feature?.htmlContent;
+    feature.value.content = education?.feature?.content;
   },
   { deep: true },
 );

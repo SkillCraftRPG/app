@@ -18,11 +18,11 @@
           </div>
         </div>
         <SummaryField class="mb-3" v-model="summary" />
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
         <fieldset class="border-top border-secondary-subtle pt-3 mt-4">
           <legend>{{ t("game.feature.label") }}</legend>
           <NameField class="mb-3" id="feature-name" v-model="feature.name" />
-          <ContentField class="mb-3" id="feature-content" :model-value="feature.htmlContent ?? ''" @update:model-value="feature.htmlContent = $event" />
+          <ContentField class="mb-3" id="feature-content" :model-value="feature.content ?? ''" @update:model-value="feature.content = $event" />
         </fieldset>
         <div class="d-flex justify-content-end mb-3">
           <TarButton
@@ -77,8 +77,8 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const caste = ref<Caste>();
+const content = ref<string>("");
 const feature = ref<Feature>({ name: "" });
-const htmlContent = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
@@ -94,9 +94,9 @@ const hasChanges = computed<boolean>(() =>
       (caste.value.skill ?? "") !== skill.value ||
       (caste.value.wealthRoll ?? "") !== wealthRoll.value ||
       (caste.value.summary ?? "") !== summary.value ||
-      (caste.value.htmlContent ?? "") !== htmlContent.value ||
+      (caste.value.content ?? "") !== content.value ||
       (caste.value.feature?.name ?? "") !== feature.value.name ||
-      (caste.value.feature?.htmlContent ?? "") !== (feature.value.htmlContent ?? "")),
+      (caste.value.feature?.content ?? "") !== (feature.value.content ?? "")),
   ),
 );
 const title = computed<string>(() => caste.value?.name ?? "");
@@ -109,7 +109,7 @@ async function submit(): Promise<void> {
       const payload: CreateOrReplaceCastePayload = {
         name: name.value,
         summary: summary.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
         skill: skill.value ? (skill.value as Skill) : undefined,
         wealthRoll: wealthRoll.value,
         feature: feature.value.name ? feature.value : undefined,
@@ -132,9 +132,9 @@ watch(
     skill.value = caste?.skill ?? "";
     wealthRoll.value = caste?.wealthRoll ?? "";
     summary.value = caste?.summary ?? "";
-    htmlContent.value = caste?.htmlContent ?? "";
+    content.value = caste?.content ?? "";
     feature.value.name = caste?.feature?.name ?? "";
-    feature.value.htmlContent = caste?.feature?.htmlContent;
+    feature.value.content = caste?.feature?.content;
   },
   { deep: true },
 );

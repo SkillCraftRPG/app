@@ -1,4 +1,4 @@
 export type Feature = {
   name: string;
-  htmlContent?: string | null;
+  content?: string | null;
 };

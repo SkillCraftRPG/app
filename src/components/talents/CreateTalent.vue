@@ -56,7 +56,7 @@ function open(): void {
 
 const { handleSubmit, reset } = useForm();
 async function submit(): Promise<void> {
-  if (!isLoading.value && tier.value) {
+  if (!isLoading.value && typeof tier.value === "number") {
     isLoading.value = true;
     try {
       const payload: CreateOrReplaceTalentPayload = {

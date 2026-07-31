@@ -1,16 +1,16 @@
-import type { Actor, Aggregate, Optional } from "./api";
+import type { Aggregate, Optional } from "./api";
 import type { SearchPayload, SortOption } from "./search";
 
 export type CreateOrReplaceScriptPayload = {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
 };
 
 export type Script = Aggregate & {
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
 };
 
 export type SearchScriptsPayload = SearchPayload & {
@@ -26,5 +26,5 @@ export type ScriptSortOption = SortOption & {
 export type UpdateScriptPayload = {
   name?: string | null;
   summary?: Optional<string> | null;
-  htmlContent?: Optional<string> | null;
+  content?: Optional<string> | null;
 };

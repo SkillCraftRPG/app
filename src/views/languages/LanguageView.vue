@@ -18,7 +18,7 @@
         </div>
         <SummaryField class="mb-3" v-model="summary" />
         <TypicalSpeakersField class="mb-3" v-model="typicalSpeakers" />
-        <ContentField class="mb-3" v-model="htmlContent" />
+        <ContentField class="mb-3" v-model="content" />
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -70,11 +70,11 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
-const htmlContent = ref<string>("");
+const content = ref<string>("");
 const isCreated = ref<boolean>(events.shift() === "created");
 const isLoading = ref<boolean>(false);
-const name = ref<string>("");
 const language = ref<Language>();
+const name = ref<string>("");
 const script = ref<Script>();
 const summary = ref<string>("");
 const typicalSpeakers = ref<string>("");
@@ -87,7 +87,7 @@ const hasChanges = computed<boolean>(() =>
       (language.value.script?.id ?? "") !== (script.value?.id ?? "") ||
       (language.value.summary ?? "") !== summary.value ||
       (language.value.typicalSpeakers ?? "") !== typicalSpeakers.value ||
-      (language.value.htmlContent ?? "") !== htmlContent.value),
+      (language.value.content ?? "") !== content.value),
   ),
 );
 const title = computed<string>(() => language.value?.name ?? "");
@@ -100,7 +100,7 @@ async function submit(): Promise<void> {
       const payload: CreateOrReplaceLanguagePayload = {
         name: name.value,
         summary: summary.value,
-        htmlContent: htmlContent.value,
+        content: content.value,
         scriptId: script.value?.id,
         typicalSpeakers: typicalSpeakers.value,
       };
@@ -122,7 +122,7 @@ watch(
     script.value = language?.script ? { ...language.script } : undefined;
     summary.value = language?.summary ?? "";
     typicalSpeakers.value = language?.typicalSpeakers ?? "";
-    htmlContent.value = language?.htmlContent ?? "";
+    content.value = language?.content ?? "";
   },
   { deep: true },
 );

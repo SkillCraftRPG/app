@@ -5,14 +5,14 @@ export type CreateOrReplaceCustomizationPayload = {
   kind: CustomizationKind;
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
 };
 
 export type Customization = Aggregate & {
   kind: CustomizationKind;
   name: string;
   summary?: string | null;
-  htmlContent?: string | null;
+  content?: string | null;
 };
 
 export type CustomizationKind = "Disability" | "Gift";
@@ -31,5 +31,5 @@ export type SearchCustomizationsPayload = SearchPayload & {
 export type UpdateCustomizationPayload = {
   name?: string | null;
   summary?: Optional<string> | null;
-  htmlContent?: Optional<string> | null;
+  content?: Optional<string> | null;
 };
