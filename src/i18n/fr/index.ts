@@ -9,6 +9,7 @@ import items from "./items.fr.json";
 import languages from "./languages.fr.json";
 import scripts from "./scripts.fr.json";
 import sheets from "./sheets.fr.json";
+import spells from "./spells.fr.json";
 import talents from "./talents.fr.json";
 import worlds from "./worlds.fr.json";
 
@@ -24,6 +25,7 @@ export default {
   languages,
   scripts,
   sheets,
+  spells,
   talents,
   worlds,
 };

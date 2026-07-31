@@ -103,6 +103,17 @@ const router = createRouter({
       path: "/sheets",
       component: () => import("./views/sheets/CharacterSheets.vue"),
     },
+    // Spells
+    {
+      name: "Spells",
+      path: "/spells",
+      component: () => import("./views/spells/SpellsView.vue"),
+    },
+    {
+      name: "Spell",
+      path: "/spells/:id",
+      component: () => import("./views/spells/SpellView.vue"),
+    },
     // Talents
     {
       name: "Talents",
