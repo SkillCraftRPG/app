@@ -1,0 +1,21 @@
+{
+  "create": "Create an item",
+  "created": {
+    "help": "You can now complete its details.",
+    "lead": "The item was created."
+  },
+  "label": "Item",
+  "placeholder": "Select an item",
+  "price": "Price",
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "Price": "Price",
+      "UpdatedOn": "Last updated",
+      "Weight": "Weight"
+    }
+  },
+  "title": "Items",
+  "weight": "Weight"
+}

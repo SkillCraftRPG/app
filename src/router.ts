@@ -64,6 +64,17 @@ const router = createRouter({
       path: "/educations/:id",
       component: () => import("./views/educations/EducationView.vue"),
     },
+    // Items
+    {
+      name: "Items",
+      path: "/items",
+      component: () => import("./views/items/ItemsView.vue"),
+    },
+    {
+      name: "Item",
+      path: "/items/:id",
+      component: () => import("./views/items/ItemView.vue"),
+    },
     // Languages
     {
       name: "Languages",
