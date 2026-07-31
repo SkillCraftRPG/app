@@ -1,7 +1,13 @@
 {
-  "create": "Create a lineage",
-  "label": "Lineage",
-  "placeholder": "Select a lineage",
+  "ethnicities": {
+    "title": "Ethnicities"
+  },
+  "names": {
+    "title": "Names"
+  },
+  "physical": {
+    "title": "Physical"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Created on",
@@ -10,6 +16,7 @@
     }
   },
   "species": {
+    "create": "Create a species",
     "created": {
       "help": "You can now complete its details.",
       "lead": "The species was created."

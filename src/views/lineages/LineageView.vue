@@ -7,9 +7,24 @@
         <strong>{{ t("lineages.species.created.lead") }}</strong> {{ t("lineages.species.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="lineage" />
-      <TarTabs>
+      <TarTabs class="border-top border-secondary-subtle pt-4">
         <TarTab active id="content" :title="t('content')">
           <LineageGeneral :lineage="lineage" @error="handleError" @updated="onUpdate" />
+        </TarTab>
+        <TarTab disabled id="features" :title="t('game.feature.title')">
+          <p>🚧</p>
+        </TarTab>
+        <TarTab id="languages" :title="t('languages.title')">
+          <p>🚧</p>
+        </TarTab>
+        <TarTab id="names" :title="t('lineages.names.title')">
+          <p>🚧</p>
+        </TarTab>
+        <TarTab id="physical" :title="t('lineages.physical.title')">
+          <p>🚧</p>
+        </TarTab>
+        <TarTab id="ethnicities" :title="t('lineages.ethnicities.title')">
+          <p>🚧</p>
         </TarTab>
       </TarTabs>
     </div>

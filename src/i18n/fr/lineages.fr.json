@@ -1,7 +1,13 @@
 {
-  "create": "Créer une lignée",
-  "label": "Lignée",
-  "placeholder": "Sélectionnez une lignée",
+  "ethnicities": {
+    "title": "Ethnicités"
+  },
+  "names": {
+    "title": "Noms"
+  },
+  "physical": {
+    "title": "Physique"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
@@ -10,6 +16,7 @@
     }
   },
   "species": {
+    "create": "Créer une espèce",
     "created": {
       "help": "Vous pouvez maintenant compléter ses informations.",
       "lead": "L’espèce a été créée."
