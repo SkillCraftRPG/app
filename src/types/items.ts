@@ -17,6 +17,20 @@ export type Item = Aggregate & {
   weight?: number | null;
 };
 
+export type ItemCategory =
+  | "Ammunition"
+  | "Armor"
+  | "Clothing"
+  | "Consumable"
+  | "Container"
+  | "Currency"
+  | "Material"
+  | "Miscellaneous"
+  | "Shield"
+  | "Tool"
+  | "Treasure"
+  | "Weapon";
+
 export type ItemSort = "CreatedOn" | "Name" | "Price" | "UpdatedOn" | "Weight";
 
 export type ItemSortOption = SortOption & {
