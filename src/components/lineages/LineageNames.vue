@@ -15,7 +15,9 @@
         </TarInput>
       </div>
     </div>
-    <TagContainer v-for="(category, index) in custom" :key="index" class="mb-3" :id="`custom-${index}`" :label="category.category" v-model="category.values" />
+    <TagContainer v-for="(category, index) in custom" :key="index" class="mb-3" :id="`custom-${index}`" :label="category.category" v-model="category.values">
+      <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(index)" />
+    </TagContainer>
     <h3 class="h5">{{ t("lineages.names.content.lead") }}</h3>
     <p class="text-body-secondary">{{ t("lineages.names.content.help") }}</p>
     <ContentField class="mb-3" v-model="content" />
@@ -82,6 +84,9 @@ function add(): void {
     custom.value.push({ category: value, values: [] });
   }
   category.value = "";
+}
+function remove(index: number): void {
+  custom.value.splice(index, 1);
 }
 
 const { handleSubmit, reinitialize } = useForm();

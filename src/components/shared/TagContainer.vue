@@ -11,6 +11,7 @@
         @updated="onUpdate(index, $event)"
       />
       <TagAddNew :id="id" @added="onAdd" />
+      <slot></slot>
     </div>
   </div>
 </template>
