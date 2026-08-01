@@ -1,7 +1,7 @@
 <template>
   <div>
     <TarButton icon="fas fa-plus" size="large" :text="t('actions.create')" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('lineages.species.create')">
+    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="title">
       <form @submit.prevent="handleSubmit(submit)">
         <NameField class="mb-3" required v-model="name" />
       </form>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import NameField from "@/components/shared/NameField.vue";
@@ -33,9 +33,15 @@ import { useForm } from "@/forms";
 
 const { t } = useI18n();
 
+const props = defineProps<{
+  parent?: Lineage | null;
+}>();
+
 const isLoading = ref<boolean>(false);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
+
+const title = computed<string>(() => t(`lineages.${props.parent ? "ethnicities" : "species"}.create`));
 
 const emit = defineEmits<{
   (e: "created", value: Lineage): void;
@@ -57,6 +63,7 @@ async function submit(): Promise<void> {
     isLoading.value = true;
     try {
       const payload: CreateOrReplaceLineagePayload = {
+        parentId: props.parent?.id,
         name: name.value,
       };
       const lineage: Lineage = await createLineage(payload);

@@ -4,6 +4,7 @@
       <h1>{{ title }}</h1>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
+        <!-- TODO(fpion): species or ethnicity -->
         <strong>{{ t("lineages.species.created.lead") }}</strong> {{ t("lineages.species.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="lineage" />
@@ -23,8 +24,9 @@
         <TarTab id="physical" :title="t('lineages.physical.title')">
           <LineagePhysical :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
-        <TarTab disabled id="ethnicities" :title="t('lineages.ethnicities.title')">
-          <!-- TODO(fpion): Ethnicities -->
+        <TarTab id="ethnicities" :title="t('lineages.ethnicities.title')">
+          <!-- TODO(fpion): hide when it's an ethnicity -->
+          <LineageEthnicities :lineage="lineage" @error="handleError" />
         </TarTab>
       </TarTabs>
     </div>
@@ -37,6 +39,7 @@ import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import LineageEthnicities from "@/components/lineages/LineageEthnicities.vue";
 import LineageGeneral from "@/components/lineages/LineageGeneral.vue";
 import LineageLanguages from "@/components/lineages/LineageLanguages.vue";
 import LineagePhysical from "@/components/lineages/LineagePhysical.vue";
@@ -66,7 +69,12 @@ const { t } = useI18n();
 const isCreated = ref<boolean>(events.shift() === "created");
 const lineage = ref<Lineage>();
 
-const breadcrumb = computed<Breadcrumb>(() => ({ text: t("lineages.species.title"), to: { name: "Lineages" } }));
+const breadcrumb = computed<Breadcrumb[]>(() => {
+  const breadcrumb: Breadcrumb[] = [];
+  // TODO(fpion): parent
+  breadcrumb.push({ text: t("lineages.species.title"), to: { name: "Lineages" } });
+  return breadcrumb;
+});
 const title = computed<string>(() => lineage.value?.name ?? "");
 
 function onUpdate(value: Lineage): void {

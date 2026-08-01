@@ -1,5 +1,7 @@
 {
   "ethnicities": {
+    "create": "Créer une ethnicité",
+    "empty": "?",
     "title": "Ethnicités"
   },
   "languages": {
