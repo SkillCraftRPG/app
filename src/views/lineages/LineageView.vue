@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
@@ -83,7 +83,7 @@ function onUpdate(value: Lineage): void {
   toasts.success("saved");
 }
 
-onMounted(async () => {
+watchEffect(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
     lineage.value = await readLineage(id);
