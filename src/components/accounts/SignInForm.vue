@@ -11,8 +11,8 @@
           <SessionClosed v-model="sessionClosed" />
           <SessionExpired v-model="sessionExpired" />
           <InvalidCredentials v-model="invalidCredentials" />
-          <EmailAddressInput class="mb-3" required v-model="emailAddress" />
-          <PasswordInput v-if="isPasswordFlowAllowed" class="mb-3" ref="passwordInput" required v-model="password" />
+          <EmailAddressField class="mb-3" required v-model="emailAddress" />
+          <PasswordField v-if="isPasswordFlowAllowed" class="mb-3" ref="passwordField" required v-model="password" />
           <TarButton
             :disabled="isLoading"
             icon="fas fa-arrow-right-to-bracket"
@@ -50,9 +50,9 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-import EmailAddressInput from "./EmailAddressInput.vue";
+import EmailAddressField from "./EmailAddressField.vue";
 import InvalidCredentials from "./InvalidCredentials.vue";
-import PasswordInput from "./PasswordInput.vue";
+import PasswordField from "./PasswordField.vue";
 import SessionClosed from "./SessionClosed.vue";
 import SessionExpired from "./SessionExpired.vue";
 import TarButton from "@/components/tar/TarButton.vue";
@@ -78,7 +78,7 @@ const emailAddress = ref<string>("");
 const invalidCredentials = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const password = ref<string>("");
-const passwordInput = ref<InstanceType<typeof PasswordInput> | null>(null);
+const passwordField = ref<InstanceType<typeof PasswordField> | null>(null);
 
 const signOutEvent: SignOutEvent | undefined = account.consumeSignOutEvent();
 const sessionClosed = ref<boolean>(signOutEvent === "closed");
@@ -113,7 +113,7 @@ async function submit(): Promise<void> {
         if (problemDetails.error && problemDetails.error.code === ErrorCodes.InvalidCredentials) {
           invalidCredentials.value = true;
           password.value = "";
-          passwordInput.value?.focus();
+          passwordField.value?.focus();
           return;
         }
       }
@@ -149,7 +149,7 @@ watch(
   isPasswordFlowAllowed,
   (newValue, oldValue) => {
     if (newValue && !oldValue) {
-      passwordInput.value?.focus();
+      passwordField.value?.focus();
     }
   },
   { flush: "post" },

@@ -3,10 +3,10 @@
     <EmailDisplay v-if="email" class="mb-3" :email="email" />
     <div class="row">
       <div class="col-md-6">
-        <FirstNameInput class="mb-3" :model-value="modelValue.firstName" required @update:model-value="updateFirstName($event)" />
+        <FirstNameField class="mb-3" :model-value="modelValue.firstName" required @update:model-value="updateFirstName($event)" />
       </div>
       <div class="col-md-6">
-        <LastNameInput class="mb-3" :model-value="modelValue.lastName" required @update:model-value="updateLastName($event)" />
+        <LastNameField class="mb-3" :model-value="modelValue.lastName" required @update:model-value="updateLastName($event)" />
       </div>
     </div>
   </div>
@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 import EmailDisplay from "./EmailDisplay.vue";
-import FirstNameInput from "./FirstNameInput.vue";
-import LastNameInput from "./LastNameInput.vue";
+import FirstNameField from "./FirstNameField.vue";
+import LastNameField from "./LastNameField.vue";
 import type { Email, PersonalInformation } from "@/types/account";
 
 const props = defineProps<{

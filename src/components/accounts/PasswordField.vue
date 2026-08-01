@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormInput
+    <InputField
       :id="id"
       :label="t(label)"
       :model-value="modelValue"
@@ -28,7 +28,7 @@ import { computed, ref } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
+import InputField from "@/components/forms/InputField.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { ProgressVariant } from "@/types/tar/progress";
 
@@ -55,7 +55,7 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-const inputRef = ref<InstanceType<typeof FormInput> | null>();
+const inputRef = ref<InstanceType<typeof InputField> | null>();
 
 const enforcePolicy = computed<boolean>(() => parseBoolean(props.policy) ?? false);
 const rules = computed<ValidationRuleSet>(() => ({

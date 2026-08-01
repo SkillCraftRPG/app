@@ -1,5 +1,5 @@
 <template>
-  <FormInput
+  <InputField
     :id="id"
     :label="t(label)"
     :max="max"
@@ -15,7 +15,7 @@
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
+import InputField from "@/components/forms/InputField.vue";
 
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();

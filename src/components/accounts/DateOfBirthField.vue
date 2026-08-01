@@ -3,7 +3,7 @@
     <p>{{ t("account.dateOfBirth.label") }}</p>
     <div class="row">
       <div class="col">
-        <FormInput
+        <InputField
           :id="`${id}-day`"
           :label="t('account.dateOfBirth.day')"
           :model-value="day ? day.toString() : ''"
@@ -15,7 +15,7 @@
         />
       </div>
       <div class="col">
-        <FormSelect
+        <SelectField
           :id="`${id}-month`"
           :label="t('account.dateOfBirth.month.label')"
           :model-value="month"
@@ -26,7 +26,7 @@
         />
       </div>
       <div class="col">
-        <FormInput
+        <InputField
           :id="`${id}-year`"
           :label="t('account.dateOfBirth.year')"
           :model-value="year ? year.toString() : ''"
@@ -47,8 +47,8 @@ import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
-import FormSelect from "@/components/forms/FormSelect.vue";
+import InputField from "@/components/forms/InputField.vue";
+import SelectField from "@/components/forms/SelectField.vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
