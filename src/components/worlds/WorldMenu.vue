@@ -67,8 +67,6 @@ const tiles = computed<Tile[]>(() => [
     to: { name: "Spells" },
   },
 ]);
-
-// TODO(fpion): change other link cards to match LanguageCard.
 </script>
 
 <style scoped>
