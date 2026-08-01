@@ -1,13 +1,18 @@
 <template>
-  <FormSelect
+  <TarSelect
     :disabled="!options.length"
+    floating
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
     :options="options"
     :placeholder="t(placeholder)"
     @update:model-value="onModelValueUpdate"
-  />
+  >
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+  </TarSelect>
 </template>
 
 <script setup lang="ts">
@@ -15,41 +20,43 @@ import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormSelect from "@/components/forms/FormSelect.vue";
-import type { Script, SearchScriptsPayload } from "@/types/scripts";
+import TarSelect from "@/components/tar/TarSelect.vue";
+import type { Language, SearchLanguagesPayload } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
-import { searchScripts } from "@/api/scripts";
+import { searchLanguages } from "@/api/languages";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    exclude?: string[];
     id?: string;
     label?: string;
     modelValue: string;
     placeholder?: string;
   }>(),
   {
-    id: "script",
-    label: "scripts.label",
-    placeholder: "scripts.placeholder",
+    exclude: () => [],
+    id: "language",
+    label: "languages.label",
+    placeholder: "all",
   },
 );
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "selected", value: Script | undefined): void;
+  (e: "selected", value: Language | undefined): void;
   (e: "update:model-value", value: string): void;
 }>();
 
 const isLoading = ref<boolean>(false);
-const scripts = ref<Script[]>([]);
+const languages = ref<Language[]>([]);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    scripts.value.map(({ id, name }) => ({ text: name, value: id })),
+    languages.value.filter((language) => !props.exclude.includes(language.id)).map(({ id, name }) => ({ text: name, value: id })),
     "text",
   ),
 );
@@ -57,23 +64,23 @@ const options = computed<SelectOption[]>(() =>
 function onModelValueUpdate(value: string | undefined): void {
   emit("update:model-value", value ?? "");
 
-  const script: Script | undefined = scripts.value.find((script) => script.id === value);
-  emit("selected", script);
+  const language: Language | undefined = languages.value.find((language) => language.id === value);
+  emit("selected", language);
 }
 
 async function refresh(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      const payload: SearchScriptsPayload = {
+      const payload: SearchLanguagesPayload = {
         ids: [],
         search: { terms: [], operator: "And" },
         sort: [],
         skip: 0,
         limit: 0,
       };
-      const results: SearchResults<Script> = await searchScripts(payload);
-      scripts.value = [...results.items];
+      const results: SearchResults<Language> = await searchLanguages(payload);
+      languages.value = [...results.items];
     } catch (e: unknown) {
       emit("error", e);
     } finally {

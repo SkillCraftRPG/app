@@ -1,5 +1,14 @@
 <template>
-  <FormInput :id="id" :label="t(label)" :max="max" :min="min" :model-value="modelValue?.toString() ?? ''" type="number" @update:model-value="onUpdate" />
+  <FormInput
+    :id="id"
+    :label="t(label)"
+    :max="max"
+    :min="min"
+    :model-value="modelValue?.toString() ?? ''"
+    :step="step"
+    type="number"
+    @update:model-value="onUpdate"
+  />
 </template>
 
 <script setup lang="ts">
@@ -17,21 +26,23 @@ withDefaults(
     label?: string;
     max?: number | string;
     min?: number | string;
-    modelValue?: number | null;
+    modelValue: number;
+    step?: number;
   }>(),
   {
-    id: "wealth-multiplier",
-    label: "educations.wealthMultiplier",
-    max: 999,
+    id: "extra-languages",
+    label: "lineages.languages.extra.label",
+    max: 99,
     min: 0,
+    step: 1,
   },
 );
 
 const emit = defineEmits<{
-  (e: "update:model-value", value: number | undefined): void;
+  (e: "update:model-value", value: number): void;
 }>();
 
 function onUpdate(value: string): void {
-  emit("update:model-value", value ? parseNumber(value) : undefined);
+  emit("update:model-value", parseNumber(value) ?? 0);
 }
 </script>

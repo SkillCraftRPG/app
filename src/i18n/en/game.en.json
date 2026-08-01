@@ -1,6 +1,23 @@
 {
   "feature": {
-    "label": "Feature"
+    "label": "Feature",
+    "title": "Features"
+  },
+  "size": {
+    "category": {
+      "label": "Size Category",
+      "options": {
+        "Diminutive": "Diminutive",
+        "Tiny": "Tiny",
+        "Small": "Small",
+        "Medium": "Medium",
+        "Large": "Large",
+        "Huge": "Huge",
+        "Gargantuan": "Gargantuan",
+        "Colossal": "Colossal"
+      },
+      "placeholder": "Select a category"
+    }
   },
   "skill": {
     "label": "Skill",
@@ -27,5 +44,21 @@
       "Thievery": "Thievery"
     },
     "placeholder": "Select a skill"
+  },
+  "speed": {
+    "hover": "Hover",
+    "kind": {
+      "options": {
+        "Burrow": "Burrow",
+        "Climb": "Climb",
+        "Fly": "Fly",
+        "Swim": "Swim",
+        "Walk": "Walk"
+      }
+    },
+    "label": "Speed"
+  },
+  "unit": {
+    "cm": "cm"
   }
 }

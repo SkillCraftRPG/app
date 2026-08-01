@@ -4,6 +4,8 @@
     "help": "You can now complete its details.",
     "lead": "The language was created."
   },
+  "label": "Language",
+  "placeholder": "Select a language",
   "sort": {
     "options": {
       "CreatedOn": "Created on",

@@ -1,0 +1,66 @@
+{
+  "created": "You can now complete its details.",
+  "ethnicities": {
+    "create": "Create an ethnicity",
+    "created": "The ethnicity was created.",
+    "empty": "No ethnicities have been created for this species yet.",
+    "title": "Ethnicities"
+  },
+  "languages": {
+    "content": {
+      "help": "Add details about the languages of this lineage.",
+      "lead": "Additional Content"
+    },
+    "extra": {
+      "help": "Number of additional languages the player can choose.",
+      "label": "Number of Additional Languages",
+      "lead": "Additional Languages"
+    },
+    "granted": {
+      "empty": "No languages are granted by this lineage.",
+      "help": "Languages automatically known by characters of this lineage.",
+      "lead": "Granted Languages"
+    }
+  },
+  "names": {
+    "title": "Names"
+  },
+  "physical": {
+    "age": {
+      "adult": "Adult",
+      "help": "Minimum age at which an individual enters each category.",
+      "label": "Age",
+      "mature": "Mature",
+      "teenager": "Teenager",
+      "venerable": "Venerable"
+    },
+    "height": "Height (roll)",
+    "size": "Size",
+    "speeds": {
+      "help": "Speeds are expressed in squares.",
+      "lead": "Speeds"
+    },
+    "title": "Physical",
+    "weight": {
+      "help": "Formulas used to determine BMI based on body build.",
+      "label": "Weight",
+      "malnutrition": "Malnutrition",
+      "normal": "Normal",
+      "obese": "Obese",
+      "overweight": "Overweight",
+      "skinny": "Skinny"
+    }
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "Name": "Name",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "species": {
+    "create": "Create a species",
+    "created": "The species was created.",
+    "title": "Species"
+  }
+}

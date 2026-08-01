@@ -124,4 +124,6 @@ onUnmounted(() => {
     unbindField(props.id);
   }
 });
+
+// TODO(fpion): rename to TextareaField
 </script>

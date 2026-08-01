@@ -7,6 +7,7 @@ import game from "./game.en.json";
 import index from "./index.en.json";
 import items from "./items.en.json";
 import languages from "./languages.en.json";
+import lineages from "./lineages.en.json";
 import scripts from "./scripts.en.json";
 import sheets from "./sheets.en.json";
 import spells from "./spells.en.json";
@@ -23,6 +24,7 @@ export default {
   game,
   items,
   languages,
+  lineages,
   scripts,
   sheets,
   spells,

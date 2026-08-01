@@ -1,6 +1,23 @@
 {
   "feature": {
-    "label": "Particularité"
+    "label": "Particularité",
+    "title": "Particularités"
+  },
+  "size": {
+    "category": {
+      "label": "Catégorie de taille",
+      "options": {
+        "Diminutive": "Infime",
+        "Tiny": "Minuscule",
+        "Small": "Petite",
+        "Medium": "Moyenne",
+        "Large": "Grande",
+        "Huge": "Énorme",
+        "Gargantuan": "Gigantesque",
+        "Colossal": "Colossale"
+      },
+      "placeholder": "Sélectionnez une catégorie"
+    }
   },
   "skill": {
     "label": "Compétence",
@@ -27,5 +44,21 @@
       "Thievery": "Roublardise"
     },
     "placeholder": "Sélectionnez une compétence"
+  },
+  "speed": {
+    "hover": "Lévitation",
+    "kind": {
+      "options": {
+        "Burrow": "Creusage",
+        "Climb": "Escalade",
+        "Fly": "Vol",
+        "Swim": "Natation",
+        "Walk": "Marche"
+      }
+    },
+    "label": "Vitesse"
+  },
+  "unit": {
+    "cm": "cm"
   }
 }

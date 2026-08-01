@@ -1,0 +1,66 @@
+{
+  "created": "Vous pouvez maintenant compléter ses informations.",
+  "ethnicities": {
+    "create": "Créer une ethnicité",
+    "created": "L’ethnicité a été créée.",
+    "empty": "Aucune ethnicité n’a encore été créée pour cette espèce.",
+    "title": "Ethnicités"
+  },
+  "languages": {
+    "content": {
+      "help": "Ajoutez des précisions sur les langues de cette lignée.",
+      "lead": "Contenu complémentaire"
+    },
+    "extra": {
+      "help": "Nombre de langues supplémentaires que le joueur peut choisir.",
+      "label": "Nombre de langues supplémentaires",
+      "lead": "Langues supplémentaires"
+    },
+    "granted": {
+      "empty": "Aucune langue accordée à cette lignée.",
+      "help": "Langues automatiquement connues par les personnages de cette lignée.",
+      "lead": "Langues accordées"
+    }
+  },
+  "names": {
+    "title": "Noms"
+  },
+  "physical": {
+    "age": {
+      "adult": "Adulte",
+      "help": "Âge minimal à partir duquel un individu appartient à chaque catégorie.",
+      "label": "Âge",
+      "mature": "Mûr",
+      "teenager": "Adolescent",
+      "venerable": "Vénérable"
+    },
+    "height": "Hauteur (jet)",
+    "size": "Taille",
+    "speeds": {
+      "help": "Les vitesses sont exprimées en cases.",
+      "lead": "Vitesses"
+    },
+    "title": "Physique",
+    "weight": {
+      "help": "Formules utilisées pour déterminer l’IMC selon la corpulence.",
+      "label": "Poids",
+      "malnutrition": "Dénutrition",
+      "normal": "Normal",
+      "obese": "Obèse",
+      "overweight": "Surpoids",
+      "skinny": "Maigre"
+    }
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "Name": "Nom",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "species": {
+    "create": "Créer une espèce",
+    "created": "L’espèce a été créée.",
+    "title": "Espèces"
+  }
+}

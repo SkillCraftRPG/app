@@ -1,6 +1,5 @@
 <template>
   <FormSelect
-    :disabled="disabled"
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
@@ -11,28 +10,26 @@
 </template>
 
 <script setup lang="ts">
-import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import FormSelect from "@/components/forms/FormSelect.vue";
 import type { SelectOption } from "@/types/tar/select";
+import type { SizeCategory } from "@/types/game";
 
-const { orderBy } = arrayUtils;
-const { rt, t, tm } = useI18n();
+const { t } = useI18n();
 
 withDefaults(
   defineProps<{
-    disabled?: boolean | string;
     id?: string;
     label?: string;
     modelValue: string;
     placeholder?: string;
   }>(),
   {
-    id: "skill",
-    label: "game.skill.label",
-    placeholder: "game.skill.placeholder",
+    id: "size-category",
+    label: "game.size.category.label",
+    placeholder: "game.size.category.placeholder",
   },
 );
 
@@ -40,12 +37,7 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-const options = computed<SelectOption[]>(() =>
-  orderBy(
-    Object.entries(tm(rt("game.skill.options"))).map(([value, text]) => ({ text, value })),
-    "text",
-  ),
-);
+const categories: SizeCategory[] = ["Diminutive", "Tiny", "Small", "Medium", "Large", "Huge", "Gargantuan", "Colossal"];
 
-// TODO(fpion): move to game directory
+const options = computed<SelectOption[]>(() => categories.map((value) => ({ text: t(`game.size.category.options.${value}`), value })));
 </script>

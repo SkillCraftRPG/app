@@ -22,6 +22,11 @@ type Tile = {
 };
 const tiles = computed<Tile[]>(() => [
   {
+    icon: "fas fa-paw",
+    text: t("lineages.species.title"),
+    to: { name: "Lineages" },
+  },
+  {
     icon: "fas fa-wheelchair",
     text: t("customizations.title"),
     to: { name: "Customizations" },
@@ -62,6 +67,11 @@ const tiles = computed<Tile[]>(() => [
     to: { name: "Spells" },
   },
 ]);
+
+// TODO(fpion): `col-sm-6 col-md-4 col-lg-3` should become `col-md-6 col-lg-4 col-xl-3`.
+// TODO(fpion): change other link cards to match LanguageCard.
+// TODO(fpion): `isCreated.value = false` when an entity was saved.
+// TODO(fpion): `isCreated.value = …` before `document.setTitle(…)` in `onMounted`.
 </script>
 
 <style scoped>

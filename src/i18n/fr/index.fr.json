@@ -1,6 +1,7 @@
 {
   "actions": {
     "abandon": "Abandonner",
+    "add": "Ajouter",
     "cancel": "Annuler",
     "close": "Fermer",
     "complete": "Terminer",
@@ -10,6 +11,7 @@
     "next": "Suivant",
     "previous": "Précédent",
     "refresh": "Actualiser",
+    "remove": "Retirer",
     "save": "Enregistrer",
     "verify": "Vérifier"
   },

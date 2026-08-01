@@ -17,8 +17,8 @@ withDefaults(
     modelValue?: string;
   }>(),
   {
-    id: "wealth-roll",
-    label: "castes.wealthRoll",
+    id: "weight-roll",
+    label: "lineages.physical.weight.label",
     max: 16,
   },
 );

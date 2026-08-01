@@ -121,4 +121,6 @@ onUnmounted(() => {
     unbindField(props.id);
   }
 });
+
+// TODO(fpion): rename to SelectField
 </script>

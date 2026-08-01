@@ -86,6 +86,17 @@ const router = createRouter({
       path: "/languages/:id",
       component: () => import("./views/languages/LanguageView.vue"),
     },
+    // Lineages
+    {
+      name: "Lineages",
+      path: "/lineages",
+      component: () => import("./views/lineages/LineagesView.vue"),
+    },
+    {
+      name: "Lineage",
+      path: "/lineages/:id",
+      component: () => import("./views/lineages/LineageView.vue"),
+    },
     // Scripts
     {
       name: "Scripts",
