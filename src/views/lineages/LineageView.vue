@@ -8,7 +8,7 @@
       </TarAlert>
       <StatusDetail class="mb-3" :subject="lineage" />
       <TarTabs class="border-top border-secondary-subtle pt-4">
-        <TarTab :active="false" id="content" :title="t('content')">
+        <TarTab active id="content" :title="t('content')">
           <LineageGeneral :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab disabled id="features" :title="t('game.feature.title')">
@@ -20,7 +20,7 @@
         <TarTab disabled id="names" :title="t('lineages.names.title')">
           <!-- TODO(fpion): Names -->
         </TarTab>
-        <TarTab :active="true" id="physical" :title="t('lineages.physical.title')">
+        <TarTab id="physical" :title="t('lineages.physical.title')">
           <LineagePhysical :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab disabled id="ethnicities" :title="t('lineages.ethnicities.title')">
