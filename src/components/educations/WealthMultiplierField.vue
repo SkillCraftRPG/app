@@ -1,12 +1,12 @@
 <template>
-  <FormInput :id="id" :label="t(label)" :max="max" :min="min" :model-value="modelValue?.toString() ?? ''" type="number" @update:model-value="onUpdate" />
+  <InputField :id="id" :label="t(label)" :max="max" :min="min" :model-value="modelValue?.toString() ?? ''" type="number" @update:model-value="onUpdate" />
 </template>
 
 <script setup lang="ts">
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
+import InputField from "@/components/forms/InputField.vue";
 
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();

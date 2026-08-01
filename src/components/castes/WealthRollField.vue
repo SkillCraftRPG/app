@@ -1,11 +1,11 @@
 <template>
-  <FormInput :id="id" :label="t(label)" :max="max" :model-value="modelValue" @update:model-value="$emit('update:model-value', $event ?? '')" />
+  <InputField :id="id" :label="t(label)" :max="max" :model-value="modelValue" @update:model-value="$emit('update:model-value', $event ?? '')" />
 </template>
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
+import InputField from "@/components/forms/InputField.vue";
 
 const { t } = useI18n();
 

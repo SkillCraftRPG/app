@@ -1,5 +1,5 @@
 <template>
-  <FormInput
+  <InputField
     :id="id"
     :label="t(label)"
     :max="max"
@@ -16,7 +16,7 @@ import type { ValidationRuleSet } from "logitar-validation";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
+import InputField from "@/components/forms/InputField.vue";
 
 const { t } = useI18n();
 
@@ -39,7 +39,7 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-const inputRef = ref<InstanceType<typeof FormInput> | null>();
+const inputRef = ref<InstanceType<typeof InputField> | null>();
 
 const rules = computed<ValidationRuleSet>(() => ({ slug: true }));
 

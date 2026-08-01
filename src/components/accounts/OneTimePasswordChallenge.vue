@@ -7,7 +7,7 @@
         <form class="col-md-6" @submit.prevent="handleSubmit(submit)">
           <IncorrectOneTimeCode v-model="incorrectCode" />
           <InvalidOneTimeCode v-if="invalidCode" show />
-          <FormInput
+          <InputField
             v-if="!invalidCode"
             class="mb-3"
             floating
@@ -50,7 +50,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormInput from "@/components/forms/FormInput.vue";
+import InputField from "@/components/forms/InputField.vue";
 import IncorrectOneTimeCode from "./IncorrectOneTimeCode.vue";
 import InvalidOneTimeCode from "./InvalidOneTimeCode.vue";
 import TarButton from "@/components/tar/TarButton.vue";
@@ -72,7 +72,7 @@ const emit = defineEmits<{
 }>();
 
 const code = ref<string>("");
-const codeInput = ref<InstanceType<typeof FormInput> | null>(null);
+const codeInput = ref<InstanceType<typeof InputField> | null>(null);
 const failedAttempts = ref<number>(0);
 const incorrectCode = ref<boolean>(false);
 const isLoading = ref<boolean>(false);

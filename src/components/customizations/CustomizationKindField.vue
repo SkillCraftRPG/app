@@ -1,5 +1,5 @@
 <template>
-  <FormSelect
+  <SelectField
     floating
     :id="id"
     :label="t(label)"
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import FormSelect from "@/components/forms/FormSelect.vue";
+import SelectField from "@/components/forms/SelectField.vue";
 import { computed } from "vue";
 import type { SelectOption } from "@/types/tar/select";
 

@@ -1,5 +1,5 @@
 <template>
-  <FormSelect
+  <SelectField
     :disabled="disabled"
     :id="id"
     :label="t(label)"
@@ -15,7 +15,7 @@ import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormSelect from "@/components/forms/FormSelect.vue";
+import SelectField from "@/components/forms/SelectField.vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;

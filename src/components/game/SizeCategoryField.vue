@@ -1,5 +1,5 @@
 <template>
-  <FormSelect
+  <SelectField
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
@@ -13,7 +13,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormSelect from "@/components/forms/FormSelect.vue";
+import SelectField from "@/components/forms/SelectField.vue";
 import type { SelectOption } from "@/types/tar/select";
 import type { SizeCategory } from "@/types/game";
 

@@ -1,5 +1,5 @@
 <template>
-  <FormSelect
+  <SelectField
     :disabled="!options.length"
     :id="id"
     :label="t(label)"
@@ -15,7 +15,7 @@ import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import FormSelect from "@/components/forms/FormSelect.vue";
+import SelectField from "@/components/forms/SelectField.vue";
 import type { Script, SearchScriptsPayload } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
