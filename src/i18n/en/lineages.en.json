@@ -23,7 +23,20 @@
     }
   },
   "names": {
-    "title": "Names"
+    "content": {
+      "help": "Add details about the languages of this lineage.",
+      "lead": "Additional Content"
+    },
+    "custom": {
+      "add": "New category",
+      "help": "Add other name categories specific to this lineage.",
+      "lead": "Custom Categories"
+    },
+    "family": "Family Names",
+    "female": "Female Names",
+    "male": "Male Names",
+    "title": "Names",
+    "unisex": "Unisex Names"
   },
   "physical": {
     "age": {
