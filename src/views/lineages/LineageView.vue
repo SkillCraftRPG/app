@@ -12,19 +12,19 @@
           <LineageGeneral :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab disabled id="features" :title="t('game.feature.title')">
-          <p>🚧</p>
+          <!-- TODO(fpion): Features -->
         </TarTab>
         <TarTab id="languages" :title="t('languages.title')">
           <LineageLanguages :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab id="names" :title="t('lineages.names.title')">
-          <p>🚧</p>
+          <!-- TODO(fpion): Names -->
         </TarTab>
         <TarTab id="physical" :title="t('lineages.physical.title')">
-          <p>🚧</p>
+          <!-- TODO(fpion): Physical -->
         </TarTab>
         <TarTab id="ethnicities" :title="t('lineages.ethnicities.title')">
-          <p>🚧</p>
+          <!-- TODO(fpion): Ethnicities -->
         </TarTab>
       </TarTabs>
     </div>
