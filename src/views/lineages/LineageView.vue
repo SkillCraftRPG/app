@@ -64,7 +64,7 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
-const isCreated = ref<boolean>(events.shift() === "created");
+const isCreated = ref<boolean>(false);
 const lineage = ref<Lineage>();
 
 const breadcrumb = computed<Breadcrumb[]>(() => {
@@ -80,6 +80,7 @@ const title = computed<string>(() => lineage.value?.name ?? "");
 
 function onUpdate(value: Lineage): void {
   lineage.value = value;
+  isCreated.value = false;
   toasts.success("saved");
 }
 
@@ -87,6 +88,7 @@ watchEffect(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
     lineage.value = await readLineage(id);
+    isCreated.value = events.shift() === "created";
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;

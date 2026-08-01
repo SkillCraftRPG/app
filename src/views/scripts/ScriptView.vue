@@ -60,7 +60,7 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const content = ref<string>("");
-const isCreated = ref<boolean>(events.shift() === "created");
+const isCreated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const name = ref<string>("");
 const script = ref<Script>();
@@ -85,6 +85,7 @@ async function submit(): Promise<void> {
         content: content.value,
       };
       script.value = await replaceScript(script.value.id, payload);
+      isCreated.value = false;
       reinitialize();
       toasts.success("saved");
     } catch (e: unknown) {
@@ -109,6 +110,7 @@ onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
     script.value = await readScript(id);
+    isCreated.value = events.shift() === "created";
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;

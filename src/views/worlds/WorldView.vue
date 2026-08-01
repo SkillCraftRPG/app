@@ -45,7 +45,7 @@ const toasts = useToastStore();
 const worldStore = useWorldStore();
 const { t } = useI18n();
 
-const isCreated = ref<boolean>(events.shift() === "created");
+const isCreated = ref<boolean>(false);
 const world = ref<World>();
 
 const title = computed<string>(() => (world.value ? (world.value.name ?? world.value.key) : ""));
@@ -53,6 +53,7 @@ const title = computed<string>(() => (world.value ? (world.value.name ?? world.v
 function onUpdate(value: World): void {
   world.value = value;
   worldStore.enter(value);
+  isCreated.value = false;
   toasts.success("saved");
 }
 
@@ -61,6 +62,7 @@ onMounted(async () => {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
     world.value = await readWorld(id);
     worldStore.enter(world.value);
+    isCreated.value = events.shift() === "created";
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;

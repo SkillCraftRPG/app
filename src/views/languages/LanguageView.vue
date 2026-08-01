@@ -71,7 +71,7 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const content = ref<string>("");
-const isCreated = ref<boolean>(events.shift() === "created");
+const isCreated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const language = ref<Language>();
 const name = ref<string>("");
@@ -105,6 +105,7 @@ async function submit(): Promise<void> {
         typicalSpeakers: typicalSpeakers.value,
       };
       language.value = await replaceLanguage(language.value.id, payload);
+      isCreated.value = false;
       reinitialize();
       toasts.success("saved");
     } catch (e: unknown) {
@@ -131,6 +132,7 @@ onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
     language.value = await readLanguage(id);
+    isCreated.value = events.shift() === "created";
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;
