@@ -31,7 +31,7 @@ withDefaults(
   }>(),
   {
     id: "extra-languages",
-    label: "languages.extra",
+    label: "languages.extra.label",
     max: 99,
     min: 0,
     step: 1,
