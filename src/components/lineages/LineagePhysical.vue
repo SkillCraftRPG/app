@@ -23,7 +23,6 @@
         <SpeedField class="mb-3" id="burrow" label="game.speed.kind.options.Burrow" v-model="burrow" />
       </div>
     </div>
-    <!-- TODO(fpion): 5 number inputs + Hover switch -->
     <h3 class="h5">{{ t("lineages.physical.size") }}</h3>
     <div class="row">
       <div class="col-md-6">
