@@ -17,13 +17,13 @@
         <TarTab id="languages" :title="t('languages.title')">
           <LineageLanguages :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
-        <TarTab id="names" :title="t('lineages.names.title')">
+        <TarTab disabled id="names" :title="t('lineages.names.title')">
           <!-- TODO(fpion): Names -->
         </TarTab>
-        <TarTab id="physical" :title="t('lineages.physical.title')">
+        <TarTab disabled id="physical" :title="t('lineages.physical.title')">
           <!-- TODO(fpion): Physical -->
         </TarTab>
-        <TarTab id="ethnicities" :title="t('lineages.ethnicities.title')">
+        <TarTab disabled id="ethnicities" :title="t('lineages.ethnicities.title')">
           <!-- TODO(fpion): Ethnicities -->
         </TarTab>
       </TarTabs>
