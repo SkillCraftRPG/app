@@ -1,5 +1,9 @@
 <template>
-  <FormInput :id="id" :label="t(label)" :max="max" :model-value="modelValue" @update:model-value="$emit('update:model-value', $event ?? '')" />
+  <FormInput :id="id" :label="t(label)" :max="max" :model-value="modelValue" @update:model-value="$emit('update:model-value', $event ?? '')">
+    <template #append>
+      <span class="input-group-text">{{ t("game.unit.cm") }}</span>
+    </template>
+  </FormInput>
 </template>
 
 <script setup lang="ts">
@@ -17,8 +21,8 @@ withDefaults(
     modelValue?: string;
   }>(),
   {
-    id: "wealth-roll",
-    label: "castes.wealthRoll",
+    id: "height-roll",
+    label: "lineages.physical.height",
     max: 16,
   },
 );

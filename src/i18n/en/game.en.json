@@ -5,7 +5,7 @@
   },
   "size": {
     "category": {
-      "label": "Size",
+      "label": "Size Category",
       "options": {
         "Diminutive": "Diminutive",
         "Tiny": "Tiny",
@@ -16,7 +16,7 @@
         "Gargantuan": "Gargantuan",
         "Colossal": "Colossal"
       },
-      "placeholder": "Select a size"
+      "placeholder": "Select a category"
     }
   },
   "skill": {
@@ -44,5 +44,8 @@
       "Thievery": "Thievery"
     },
     "placeholder": "Select a skill"
+  },
+  "unit": {
+    "cm": "cm"
   }
 }

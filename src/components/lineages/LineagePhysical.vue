@@ -1,8 +1,20 @@
 <template>
   <form @submit.prevent="handleSubmit(submit)">
-    <NameField class="mb-3" required v-model="name" />
-    <SummaryField class="mb-3" v-model="summary" />
-    <ContentField class="mb-3" v-model="content" />
+    <h3 class="h5">{{ t("lineages.physical.speeds") }}</h3>
+    <!-- TODO(fpion): 5 number inputs + Hover switch -->
+    <h3 class="h5">{{ t("lineages.physical.size") }}</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <SizeCategoryField class="mb-3" v-model="sizeCategory" />
+      </div>
+      <div class="col-md-6">
+        <HeightRollField class="mb-3" v-model="height" />
+      </div>
+    </div>
+    <h3 class="h5">{{ t("lineages.physical.weight") }}</h3>
+    <!-- TODO(fpion): 5 roll inputs -->
+    <h3 class="h5">{{ t("lineages.physical.age") }}</h3>
+    <!-- TODO(fpion): 4 number inputs -->
     <div class="d-flex justify-content-end mb-3">
       <TarButton
         :disabled="!hasChanges || isLoading"
@@ -21,11 +33,11 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-import ContentField from "@/components/shared/ContentField.vue";
-import NameField from "@/components/shared/NameField.vue";
-import SummaryField from "@/components/shared/SummaryField.vue";
+import HeightRollField from "@/components/lineages/HeightRollField.vue";
+import SizeCategoryField from "@/components/game/SizeCategoryField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Lineage, UpdateLineagePayload } from "@/types/lineages";
+import type { SizeCategory } from "@/types/game";
 import { updateLineage } from "@/api/lineages";
 import { useForm } from "@/forms";
 
@@ -40,14 +52,11 @@ const emit = defineEmits<{
   (e: "updated", value: Lineage): void;
 }>();
 
-const content = ref<string>("");
+const height = ref<string>("");
 const isLoading = ref<boolean>(false);
-const name = ref<string>("");
-const summary = ref<string>("");
+const sizeCategory = ref<SizeCategory>("Medium");
 
-const hasChanges = computed<boolean>(
-  () => props.lineage.name !== name.value || (props.lineage.summary ?? "") !== summary.value || (props.lineage.content ?? "") !== content.value,
-);
+const hasChanges = computed<boolean>(() => props.lineage.size.category !== sizeCategory.value || (props.lineage.size.height ?? "") !== height.value);
 
 const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
@@ -55,9 +64,10 @@ async function submit(): Promise<void> {
     isLoading.value = true;
     try {
       const payload: UpdateLineagePayload = {
-        name: name.value,
-        summary: { value: summary.value || null },
-        content: { value: content.value || null },
+        size: {
+          category: sizeCategory.value,
+          height: height.value,
+        },
       };
       const lineage: Lineage = await updateLineage(props.lineage.id, payload);
       reinitialize();
@@ -73,9 +83,8 @@ async function submit(): Promise<void> {
 watch(
   () => props.lineage,
   (lineage) => {
-    name.value = lineage?.name ?? "";
-    summary.value = lineage?.summary ?? "";
-    content.value = lineage?.content ?? "";
+    sizeCategory.value = lineage.size.category;
+    height.value = lineage.size.height ?? "";
   },
   { deep: true, immediate: true },
 );

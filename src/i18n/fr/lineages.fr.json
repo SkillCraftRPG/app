@@ -22,7 +22,12 @@
     "title": "Noms"
   },
   "physical": {
-    "title": "Physique"
+    "age": "Âge",
+    "height": "Hauteur",
+    "size": "Taille",
+    "speeds": "Vitesses",
+    "title": "Physique",
+    "weight": "Poids"
   },
   "sort": {
     "options": {

@@ -5,7 +5,7 @@
   },
   "size": {
     "category": {
-      "label": "Taille",
+      "label": "Catégorie de taille",
       "options": {
         "Diminutive": "Infime",
         "Tiny": "Minuscule",
@@ -16,7 +16,7 @@
         "Gargantuan": "Gigantesque",
         "Colossal": "Colossale"
       },
-      "placeholder": "Sélectionnez une taille"
+      "placeholder": "Sélectionnez une catégorie"
     }
   },
   "skill": {
@@ -44,5 +44,8 @@
       "Thievery": "Roublardise"
     },
     "placeholder": "Sélectionnez une compétence"
+  },
+  "unit": {
+    "cm": "cm"
   }
 }

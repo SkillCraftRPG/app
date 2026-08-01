@@ -20,8 +20,8 @@
         <TarTab disabled id="names" :title="t('lineages.names.title')">
           <!-- TODO(fpion): Names -->
         </TarTab>
-        <TarTab disabled id="physical" :title="t('lineages.physical.title')">
-          <!-- TODO(fpion): Physical -->
+        <TarTab id="physical" :title="t('lineages.physical.title')">
+          <LineagePhysical :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab disabled id="ethnicities" :title="t('lineages.ethnicities.title')">
           <!-- TODO(fpion): Ethnicities -->
@@ -39,6 +39,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import LineageGeneral from "@/components/lineages/LineageGeneral.vue";
 import LineageLanguages from "@/components/lineages/LineageLanguages.vue";
+import LineagePhysical from "@/components/lineages/LineagePhysical.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";

@@ -68,7 +68,7 @@ export type LineageNames = {
 };
 
 export type LineageSize = {
-  category?: SizeCategory;
+  category: SizeCategory;
   height?: string | null;
 };
 
