@@ -1,12 +1,26 @@
 import { urlUtils } from "logitar-js";
 
 import type { CreateOrReplaceLineagePayload, Lineage, SearchLineagesPayload, UpdateLineagePayload } from "@/types/lineages";
+import type { Feature } from "@/types/features";
 import type { SearchResults } from "@/types/search";
-import { get, patch, post, put } from ".";
+import { _delete, get, patch, post, put } from ".";
 
 export async function createLineage(payload: CreateOrReplaceLineagePayload): Promise<Lineage> {
   const url: string = new urlUtils.UrlBuilder({ path: "/lineages" }).buildRelative();
   return (await post<CreateOrReplaceLineagePayload, Lineage>(url, payload)).data;
+}
+
+export async function createLineageFeature(lineageId: string, payload: Feature): Promise<Lineage> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/lineages/{lineageId}/features" }).setParameter("lineageId", lineageId).buildRelative();
+  return (await post<Feature, Lineage>(url, payload)).data;
+}
+
+export async function deleteLineageFeature(lineageId: string, featureId: string): Promise<Lineage> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/lineages/{lineageId}/features/{featureId}" })
+    .setParameter("lineageId", lineageId)
+    .setParameter("featureId", featureId)
+    .buildRelative();
+  return (await _delete<Lineage>(url)).data;
 }
 
 export async function readLineage(id: string): Promise<Lineage> {
@@ -17,6 +31,14 @@ export async function readLineage(id: string): Promise<Lineage> {
 export async function replaceLineage(id: string, payload: CreateOrReplaceLineagePayload): Promise<Lineage> {
   const url: string = new urlUtils.UrlBuilder({ path: "/lineages/{id}" }).setParameter("id", id).buildRelative();
   return (await put<CreateOrReplaceLineagePayload, Lineage>(url, payload)).data;
+}
+
+export async function replaceLineageFeature(lineageId: string, featureId: string, payload: Feature): Promise<Lineage> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/lineages/{lineageId}/features/{featureId}" })
+    .setParameter("lineageId", lineageId)
+    .setParameter("featureId", featureId)
+    .buildRelative();
+  return (await put<Feature, Lineage>(url, payload)).data;
 }
 
 export async function searchLineages(payload: SearchLineagesPayload): Promise<SearchResults<Lineage>> {

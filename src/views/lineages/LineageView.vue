@@ -11,8 +11,8 @@
         <TarTab active id="content" :title="t('content')">
           <LineageGeneral :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
-        <TarTab disabled id="features" :title="t('game.feature.title')">
-          <!-- <LineageFeatures :lineage="lineage" @error="handleError" @updated="onUpdate" /> -->
+        <TarTab id="features" :title="t('game.feature.title')">
+          <LineageFeatures :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab id="languages" :title="t('languages.title')">
           <LineageLanguages :lineage="lineage" @error="handleError" @updated="onUpdate" />
@@ -38,6 +38,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import LineageEthnicities from "@/components/lineages/LineageEthnicities.vue";
+import LineageFeatures from "@/components/lineages/LineageFeatures.vue";
 import LineageGeneral from "@/components/lineages/LineageGeneral.vue";
 import LineageLanguages from "@/components/lineages/LineageLanguages.vue";
 import LineageNames from "@/components/lineages/LineageNames.vue";

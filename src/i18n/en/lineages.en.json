@@ -6,6 +6,15 @@
     "empty": "No ethnicities have been created for this species yet.",
     "title": "Ethnicities"
   },
+  "features": {
+    "create": "Create a feature",
+    "edit": "Edit a feature",
+    "empty": "No features have been created for this lineage yet.",
+    "remove": {
+      "help": "The <strong>{name}</strong> feature will be removed from this lineage.",
+      "lead": "Remove this feature?"
+    }
+  },
   "languages": {
     "content": {
       "help": "Add details about the languages of this lineage.",

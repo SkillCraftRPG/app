@@ -2,6 +2,7 @@ import type { Actor, Aggregate, Optional } from "./api";
 import type { Language } from "./languages";
 import type { SearchPayload, SortOption } from "./search";
 import type { SizeCategory } from "./game";
+import type { Feature } from "./features";
 
 export type CreateOrReplaceLineagePayload = {
   parentId?: string | null;
@@ -38,10 +39,8 @@ export type LineageAge = {
   venerable?: number | null;
 };
 
-export type LineageFeature = {
+export type LineageFeature = Feature & {
   id: string;
-  name: string;
-  content?: string | null;
   createdBy: Actor;
   createdOn: string;
   updatedBy: Actor;
