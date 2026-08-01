@@ -1,5 +1,5 @@
 <template>
-  <LinkCard :to="{ name: 'Talent', params: { id: talent.id } }">
+  <LinkableCard :to="{ name: 'Talent', params: { id: talent.id } }">
     <template #title-override>
       <div class="d-flex flex-wrap align-items-center gap-2">
         <h5 class="card-title">{{ talent.name }}</h5>
@@ -21,13 +21,13 @@
     </div>
     <div v-if="talent.summary" class="card-text">{{ talent.summary }}</div>
     <StatusBlock :actor="talent.updatedBy" class="card-text mt-2 small text-secondary" :date="talent.updatedOn" relative />
-  </LinkCard>
+  </LinkableCard>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import LinkCard from "@/components/shared/LinkCard.vue";
+import LinkableCard from "@/components/shared/LinkableCard.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import TalentTierDisplay from "./TalentTierDisplay.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";

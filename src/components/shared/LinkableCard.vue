@@ -1,5 +1,5 @@
 <template>
-  <RouterLink class="card clickable" :to="to">
+  <RouterLink v-if="to" class="card clickable" :to="to">
     <slot name="header"></slot>
     <slot name="image-top">
       <TarImage v-if="topImage" class="card-img-top" v-bind="topImage" />
@@ -20,17 +20,21 @@
     </slot>
     <slot name="footer"></slot>
   </RouterLink>
+  <TarCard v-else v-bind="props">
+    <slot></slot>
+  </TarCard>
 </template>
 
 <script setup lang="ts">
-import TarImage from "@/components/tar/TarImage.vue";
-
-import type { CardOptions } from "@/types/tar/card";
 import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from "vue-router";
 
-defineProps<
+import TarCard from "@/components/tar/TarCard.vue";
+import TarImage from "@/components/tar/TarImage.vue";
+import type { CardOptions } from "@/types/tar/card";
+
+const props = defineProps<
   CardOptions & {
-    to: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
+    to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
   }
 >();
 </script>
