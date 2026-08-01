@@ -45,7 +45,7 @@
       </section>
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
-          <div v-for="language in languages" :key="language.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+          <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LanguageCard class="d-flex flex-column h-100" :language="language" :to="{ name: 'Language', params: { id: language.id } }" />
           </div>
         </div>
