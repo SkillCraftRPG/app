@@ -10,13 +10,9 @@ export type Actor = {
 
 export type ActorType = "ApiKey" | "System" | "User";
 
-export type Aggregate = {
+export type Aggregate = Auditable & {
   id: string;
   version: number;
-  createdBy: Actor;
-  createdOn: string;
-  updatedBy: Actor;
-  updatedOn: string;
 };
 
 export type ApiError = {
@@ -38,6 +34,13 @@ export type ApiResult<T> = {
 export type ApiVersion = {
   title: string;
   version: string;
+};
+
+export type Auditable = {
+  createdBy: Actor;
+  createdOn: string;
+  updatedBy: Actor;
+  updatedOn: string;
 };
 
 export enum ErrorCodes {

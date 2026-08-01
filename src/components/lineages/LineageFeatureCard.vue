@@ -1,7 +1,9 @@
 <template>
   <TarCard :title="feature.name">
     <div v-if="summary" class="card-text">{{ summary }}</div>
-    <slot></slot>
+    <slot>
+      <StatusBlock :actor="feature.updatedBy" class="card-text mt-2 small text-secondary" :date="feature.updatedOn" relative />
+    </slot>
   </TarCard>
 </template>
 
@@ -9,6 +11,7 @@
 import { computed } from "vue";
 import { stringUtils } from "logitar-js";
 
+import StatusBlock from "@/components/shared/StatusBlock.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { LineageFeature } from "@/types/lineages";
 

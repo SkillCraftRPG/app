@@ -9,9 +9,9 @@
 
 <script setup lang="ts">
 import StatusInfo from "./StatusInfo.vue";
-import type { Aggregate } from "@/types/api";
+import type { Auditable } from "@/types/api";
 
 defineProps<{
-  subject: Aggregate;
+  subject: Auditable;
 }>();
 </script>

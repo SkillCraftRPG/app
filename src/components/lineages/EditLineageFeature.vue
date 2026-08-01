@@ -23,6 +23,7 @@
           @click="handleSubmit(submit)"
         />
       </template>
+      <StatusDetail v-if="feature" :subject="feature" />
     </TarModal>
   </div>
 </template>
@@ -33,6 +34,7 @@ import { useI18n } from "vue-i18n";
 
 import ContentField from "@/components/shared/ContentField.vue";
 import NameField from "@/components/shared/NameField.vue";
+import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Feature } from "@/types/features";
