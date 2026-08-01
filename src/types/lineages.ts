@@ -27,6 +27,8 @@ export type Lineage = Aggregate & {
   size: LineageSize;
   weight: LineageWeight;
   age: LineageAge;
+  parent?: Lineage | null;
+  children: Lineage[];
 };
 
 export type LineageAge = {

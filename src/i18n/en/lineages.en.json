@@ -1,7 +1,9 @@
 {
+  "created": "You can now complete its details.",
   "ethnicities": {
     "create": "Create an ethnicity",
-    "empty": "?",
+    "created": "The ethnicity was created.",
+    "empty": "No ethnicities have been created for this species yet.",
     "title": "Ethnicities"
   },
   "languages": {
@@ -58,10 +60,7 @@
   },
   "species": {
     "create": "Create a species",
-    "created": {
-      "help": "You can now complete its details.",
-      "lead": "The species was created."
-    },
+    "created": "The species was created.",
     "title": "Species"
   }
 }

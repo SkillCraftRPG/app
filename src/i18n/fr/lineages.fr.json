@@ -1,7 +1,9 @@
 {
+  "created": "Vous pouvez maintenant compléter ses informations.",
   "ethnicities": {
     "create": "Créer une ethnicité",
-    "empty": "?",
+    "created": "L’ethnicité a été créée.",
+    "empty": "Aucune ethnicité n’a encore été créée pour cette espèce.",
     "title": "Ethnicités"
   },
   "languages": {
@@ -58,10 +60,7 @@
   },
   "species": {
     "create": "Créer une espèce",
-    "created": {
-      "help": "Vous pouvez maintenant compléter ses informations.",
-      "lead": "L’espèce a été créée."
-    },
+    "created": "L’espèce a été créée.",
     "title": "Espèces"
   }
 }

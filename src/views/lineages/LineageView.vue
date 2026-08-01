@@ -4,8 +4,7 @@
       <h1>{{ title }}</h1>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
-        <!-- TODO(fpion): species or ethnicity -->
-        <strong>{{ t("lineages.species.created.lead") }}</strong> {{ t("lineages.species.created.help", { name: title }) }}
+        <strong>{{ t(`lineages.${isEthnicity ? "ethnicities" : "species"}.created`) }}</strong> {{ t("lineages.created", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="lineage" />
       <TarTabs class="border-top border-secondary-subtle pt-4">
@@ -24,8 +23,7 @@
         <TarTab id="physical" :title="t('lineages.physical.title')">
           <LineagePhysical :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
-        <TarTab id="ethnicities" :title="t('lineages.ethnicities.title')">
-          <!-- TODO(fpion): hide when it's an ethnicity -->
+        <TarTab v-if="!isEthnicity" id="ethnicities" :title="t('lineages.ethnicities.title')">
           <LineageEthnicities :lineage="lineage" @error="handleError" />
         </TarTab>
       </TarTabs>
@@ -70,11 +68,14 @@ const isCreated = ref<boolean>(events.shift() === "created");
 const lineage = ref<Lineage>();
 
 const breadcrumb = computed<Breadcrumb[]>(() => {
-  const breadcrumb: Breadcrumb[] = [];
-  // TODO(fpion): parent
-  breadcrumb.push({ text: t("lineages.species.title"), to: { name: "Lineages" } });
+  const breadcrumb: Breadcrumb[] = [{ text: t("lineages.species.title"), to: { name: "Lineages" } }];
+  const parent: Lineage | null | undefined = lineage.value?.parent;
+  if (parent) {
+    breadcrumb.push({ text: parent.name, to: { name: "Lineage", params: { id: parent.id } } });
+  }
   return breadcrumb;
 });
+const isEthnicity = computed<boolean>(() => Boolean(lineage.value?.parent));
 const title = computed<string>(() => lineage.value?.name ?? "");
 
 function onUpdate(value: Lineage): void {
