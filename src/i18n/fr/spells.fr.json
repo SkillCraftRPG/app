@@ -1,11 +1,11 @@
 {
-  "create": "Créer un sort",
+  "create": "Créer un pouvoir",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "Le sort a été créé."
   },
-  "label": "Sort",
-  "placeholder": "Sélectionnez un sort",
+  "label": "Pouvoir",
+  "placeholder": "Sélectionnez un pouvoir",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
@@ -17,5 +17,5 @@
     "label": "Tiers",
     "placeholder": "Sélectionnez un tiers"
   },
-  "title": "Sorts"
+  "title": "Pouvoirs"
 }

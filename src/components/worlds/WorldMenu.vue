@@ -57,12 +57,12 @@ const tiles = computed<Tile[]>(() => [
     to: { name: "Languages" },
   },
   {
-    icon: "fas fa-box",
+    icon: "fas fa-cart-shopping",
     text: t("items.title"),
     to: { name: "Items" },
   },
   {
-    icon: "fas fa-hat-wizard",
+    icon: "fas fa-wand-sparkles",
     text: t("spells.title"),
     to: { name: "Spells" },
   },

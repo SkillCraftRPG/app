@@ -1,8 +1,9 @@
 {
   "create": "Créer une personnalisation",
   "created": {
-    "help": "Vous pouvez maintenant compléter ses informations.",
-    "lead": "La personnalisation a été créée."
+    "disability": "Le handicap a été créé.",
+    "gift": "Le don a été créé.",
+    "help": "Vous pouvez maintenant compléter ses informations."
   },
   "kind": {
     "label": "Type",
@@ -21,5 +22,5 @@
       "UpdatedOn": "Dernière modification"
     }
   },
-  "title": "Personnalisations"
+  "title": "Dons & Handicaps"
 }
