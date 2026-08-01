@@ -1,5 +1,5 @@
 <template>
-  <LinkCard :subtitle="caste.feature?.name" :title="caste.name" :to="{ name: 'Caste', params: { id: caste.id } }">
+  <LinkableCard :subtitle="caste.feature?.name" :title="caste.name" :to="{ name: 'Caste', params: { id: caste.id } }">
     <div v-if="caste.skill || caste.wealthRoll" class="card-text d-flex justify-content-between align-items-center gap-2 mb-2">
       <div class="text-start">
         <template v-if="caste.skill">
@@ -10,13 +10,13 @@
     </div>
     <div v-if="caste.summary" class="card-text">{{ caste.summary }}</div>
     <StatusBlock :actor="caste.updatedBy" class="card-text mt-2 small text-secondary" :date="caste.updatedOn" relative />
-  </LinkCard>
+  </LinkableCard>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import LinkCard from "@/components/shared/LinkCard.vue";
+import LinkableCard from "@/components/shared/LinkableCard.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { Caste } from "@/types/castes";
 
