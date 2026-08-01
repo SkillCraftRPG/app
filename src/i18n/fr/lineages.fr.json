@@ -6,6 +6,15 @@
     "empty": "Aucune ethnicité n’a encore été créée pour cette espèce.",
     "title": "Ethnicités"
   },
+  "features": {
+    "create": "Créer une particularité",
+    "edit": "Modifier une particularité",
+    "empty": "Aucune particularité n’a encore été créée pour cette lignée.",
+    "remove": {
+      "help": "La particularité <strong>{name}</strong> sera retirée de cette lignée.",
+      "lead": "Retirer cette particularité ?"
+    }
+  },
   "languages": {
     "content": {
       "help": "Ajoutez des précisions sur les langues de cette lignée.",
