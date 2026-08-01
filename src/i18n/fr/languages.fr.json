@@ -1,22 +1,8 @@
 {
-  "content": {
-    "help": "Ajoutez des précisions sur les langues de cette lignée.",
-    "lead": "Contenu complémentaire"
-  },
   "create": "Créer une langue",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "La langue a été créée."
-  },
-  "extra": {
-    "help": "Nombre de langues supplémentaires que le joueur peut choisir.",
-    "label": "Nombre de langues supplémentaires",
-    "lead": "Langues supplémentaires"
-  },
-  "granted": {
-    "empty": "Aucune langue accordée à cette lignée.",
-    "help": "Langues automatiquement connues par les personnages de cette lignée.",
-    "lead": "Langues accordées"
   },
   "label": "Langue",
   "placeholder": "Sélectionnez une langue",

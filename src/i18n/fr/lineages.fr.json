@@ -2,6 +2,22 @@
   "ethnicities": {
     "title": "Ethnicités"
   },
+  "languages": {
+    "content": {
+      "help": "Ajoutez des précisions sur les langues de cette lignée.",
+      "lead": "Contenu complémentaire"
+    },
+    "extra": {
+      "help": "Nombre de langues supplémentaires que le joueur peut choisir.",
+      "label": "Nombre de langues supplémentaires",
+      "lead": "Langues supplémentaires"
+    },
+    "granted": {
+      "empty": "Aucune langue accordée à cette lignée.",
+      "help": "Langues automatiquement connues par les personnages de cette lignée.",
+      "lead": "Langues accordées"
+    }
+  },
   "names": {
     "title": "Noms"
   },

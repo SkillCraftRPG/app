@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit(submit)">
-    <h3 class="h5">{{ t("languages.granted.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("languages.granted.help") }}</p>
+    <h3 class="h5">{{ t("lineages.languages.granted.lead") }}</h3>
+    <p class="text-body-secondary">{{ t("lineages.languages.granted.help") }}</p>
     <div class="row">
       <div class="col-md-6">
         <LanguageSelect
@@ -30,12 +30,16 @@
         </LanguageCard>
       </div>
     </div>
-    <p>{{ t("languages.granted.empty") }}</p>
-    <h3 class="h5">{{ t("languages.extra.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("languages.extra.help") }}</p>
-    <ExtraLanguagesField class="mb-3" v-model="extra" />
-    <h3 class="h5">{{ t("languages.content.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("languages.content.help") }}</p>
+    <p>{{ t("lineages.languages.granted.empty") }}</p>
+    <h3 class="h5">{{ t("lineages.languages.extra.lead") }}</h3>
+    <p class="text-body-secondary">{{ t("lineages.languages.extra.help") }}</p>
+    <div class="row">
+      <div class="col-md-6">
+        <ExtraLanguagesField class="mb-3" v-model="extra" />
+      </div>
+    </div>
+    <h3 class="h5">{{ t("lineages.languages.content.lead") }}</h3>
+    <p class="text-body-secondary">{{ t("lineages.languages.content.help") }}</p>
     <ContentField class="mb-3" v-model="content" />
     <div class="d-flex justify-content-end mb-3">
       <TarButton

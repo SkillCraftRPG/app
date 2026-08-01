@@ -2,6 +2,22 @@
   "ethnicities": {
     "title": "Ethnicities"
   },
+  "languages": {
+    "content": {
+      "help": "Add details about the languages of this lineage.",
+      "lead": "Additional Content"
+    },
+    "extra": {
+      "help": "Number of additional languages the player can choose.",
+      "label": "Number of Additional Languages",
+      "lead": "Additional Languages"
+    },
+    "granted": {
+      "empty": "No languages are granted by this lineage.",
+      "help": "Languages automatically known by characters of this lineage.",
+      "lead": "Granted Languages"
+    }
+  },
   "names": {
     "title": "Names"
   },
