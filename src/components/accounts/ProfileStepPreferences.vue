@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-md-6">
-        <DateOfBirthInput class="mb-3" :model-value="modelValue.dateOfBirth ?? undefined" @update:model-value="updateDateOfBirth" />
+        <DateOfBirthField class="mb-3" :model-value="modelValue.dateOfBirth ?? undefined" @update:model-value="updateDateOfBirth" />
       </div>
       <div class="col-md-6">
         <GenderRadio class="mb-3" :model-value="modelValue.gender" @update:model-value="updateGender" />
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import DateOfBirthInput from "./DateOfBirthInput.vue";
+import DateOfBirthField from "./DateOfBirthField.vue";
 import GenderRadio from "./GenderRadio.vue";
 import LocaleRadio from "./LocaleRadio.vue";
 import TimeZoneSelect from "./TimeZoneSelect.vue";

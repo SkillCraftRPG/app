@@ -17,7 +17,7 @@
         <div v-if="option.note" class="text-body-secondary mt-1">{{ t(option.note) }}</div>
       </label>
     </div>
-    <PasswordInput v-if="isPasswordRequired" class="mb-3" :model-value="modelValue.password" policy required @update:model-value="updatePassword" />
+    <PasswordField v-if="isPasswordRequired" class="mb-3" :model-value="modelValue.password" policy required @update:model-value="updatePassword" />
   </div>
 </template>
 
@@ -25,7 +25,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import PasswordInput from "./PasswordInput.vue";
+import PasswordField from "./PasswordField.vue";
 import type { SecurityInformation, SecurityMode } from "@/types/account";
 
 const { t } = useI18n();

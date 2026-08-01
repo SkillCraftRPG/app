@@ -4,15 +4,15 @@
     <form @submit.prevent="handleSubmit(submit)">
       <div class="row">
         <div class="col-md-6">
-          <FirstNameInput class="mb-3" required v-model="firstName" />
+          <FirstNameField class="mb-3" required v-model="firstName" />
         </div>
         <div class="col-md-6">
-          <LastNameInput class="mb-3" required v-model="lastName" />
+          <LastNameField class="mb-3" required v-model="lastName" />
         </div>
       </div>
       <div class="row">
         <div class="col-md-6">
-          <DateOfBirthInput class="mb-3" v-model="dateOfBirth" />
+          <DateOfBirthField class="mb-3" v-model="dateOfBirth" />
         </div>
         <div class="col-md-6">
           <GenderRadio class="mb-3" v-model="gender" />
@@ -51,11 +51,11 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-import DateOfBirthInput from "./DateOfBirthInput.vue";
+import DateOfBirthField from "./DateOfBirthField.vue";
 import DefaultExperienceRadio from "./DefaultExperienceRadio.vue";
-import FirstNameInput from "./FirstNameInput.vue";
+import FirstNameField from "./FirstNameField.vue";
 import GenderRadio from "./GenderRadio.vue";
-import LastNameInput from "./LastNameInput.vue";
+import LastNameField from "./LastNameField.vue";
 import LocaleRadio from "./LocaleRadio.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TimeZoneSelect from "./TimeZoneSelect.vue";
