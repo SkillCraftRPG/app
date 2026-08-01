@@ -71,6 +71,7 @@ const tiles = computed<Tile[]>(() => [
 // TODO(fpion): `col-sm-6 col-md-4 col-lg-3` should become `col-md-6 col-lg-4 col-xl-3`.
 // TODO(fpion): change other link cards to match LanguageCard.
 // TODO(fpion): `isCreated.value = false` when an entity was saved.
+// TODO(fpion): `isCreated.value = …` before `document.setTitle(…)` in `onMounted`.
 </script>
 
 <style scoped>
