@@ -46,6 +46,4 @@ const options = computed<SelectOption[]>(() =>
     "text",
   ),
 );
-
-// TODO(fpion): move to game directory
 </script>

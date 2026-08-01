@@ -45,7 +45,7 @@
       </section>
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
-          <div v-for="lineage in lineages" :key="lineage.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+          <div v-for="lineage in lineages" :key="lineage.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LineageCard class="d-flex flex-column h-100" :lineage="lineage" />
           </div>
         </div>

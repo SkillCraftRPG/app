@@ -49,7 +49,7 @@ import { useRoute, useRouter } from "vue-router";
 import ContentField from "@/components/shared/ContentField.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameField from "@/components/shared/NameField.vue";
-import SkillField from "@/components/skills/SkillField.vue";
+import SkillField from "@/components/game/SkillField.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
