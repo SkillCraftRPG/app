@@ -1,8 +1,9 @@
 {
   "create": "Create a customization",
   "created": {
-    "help": "You can now complete its details.",
-    "lead": "The customization was created."
+    "disability": "The disability was created.",
+    "gift": "The gift was created.",
+    "help": "You can now complete its details."
   },
   "kind": {
     "label": "Type",
@@ -21,5 +22,5 @@
       "UpdatedOn": "Last updated"
     }
   },
-  "title": "Customizations"
+  "title": "Gifts & Disabilities"
 }

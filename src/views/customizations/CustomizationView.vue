@@ -7,7 +7,7 @@
       </div>
       <WorldBreadcrumb :current="title" :parent="breadcrumb" />
       <TarAlert :close="t('actions.close')" dismissible variant="success" v-model="isCreated">
-        <strong>{{ t("customizations.created.lead") }}</strong> {{ t("customizations.created.help", { name: title }) }}
+        <strong>{{ t(`customizations.created.${customization.kind.toLowerCase()}`) }}</strong> {{ t("customizations.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="customization" />
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
