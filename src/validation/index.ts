@@ -1,6 +1,7 @@
 import { Validator, rules, type RuleExecutionResult } from "logitar-validation";
 
 import phone from "./phone";
+import roll from "./roll";
 
 const validator = new Validator({ treatWarningsAsErrors: true });
 
@@ -19,6 +20,7 @@ validator.setRule("minimumValue", rules.minimumValue);
 validator.setRule("pattern", rules.pattern);
 validator.setRule("phone", phone);
 validator.setRule("required", rules.required);
+validator.setRule("roll", roll);
 validator.setRule("slug", rules.slug);
 validator.setRule("uniqueCharacters", rules.uniqueCharacters);
 validator.setRule("url", rules.url);
