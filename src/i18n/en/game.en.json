@@ -45,6 +45,19 @@
     },
     "placeholder": "Select a skill"
   },
+  "speed": {
+    "hover": "Hover",
+    "kind": {
+      "options": {
+        "Burrow": "Burrow",
+        "Climb": "Climb",
+        "Fly": "Fly",
+        "Swim": "Swim",
+        "Walk": "Walk"
+      }
+    },
+    "label": "Speed"
+  },
   "unit": {
     "cm": "cm"
   }

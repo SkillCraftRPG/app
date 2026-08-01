@@ -45,6 +45,19 @@
     },
     "placeholder": "Sélectionnez une compétence"
   },
+  "speed": {
+    "hover": "Lévitation",
+    "kind": {
+      "options": {
+        "Burrow": "Creusage",
+        "Climb": "Escalade",
+        "Fly": "Vol",
+        "Swim": "Natation",
+        "Walk": "Marche"
+      }
+    },
+    "label": "Vitesse"
+  },
   "unit": {
     "cm": "cm"
   }

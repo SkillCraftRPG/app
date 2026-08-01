@@ -22,12 +22,30 @@
     "title": "Noms"
   },
   "physical": {
-    "age": "Âge",
-    "height": "Hauteur",
+    "age": {
+      "adult": "Adulte",
+      "help": "Âge minimal à partir duquel un individu appartient à chaque catégorie.",
+      "label": "Âge",
+      "mature": "Mûr",
+      "teenager": "Adolescent",
+      "venerable": "Vénérable"
+    },
+    "height": "Hauteur (jet)",
     "size": "Taille",
-    "speeds": "Vitesses",
+    "speeds": {
+      "help": "Les vitesses sont exprimées en cases.",
+      "lead": "Vitesses"
+    },
     "title": "Physique",
-    "weight": "Poids"
+    "weight": {
+      "help": "Formules utilisées pour déterminer l’IMC selon la corpulence.",
+      "label": "Poids",
+      "malnutrition": "Dénutrition",
+      "normal": "Normal",
+      "obese": "Obèse",
+      "overweight": "Surpoids",
+      "skinny": "Maigre"
+    }
   },
   "sort": {
     "options": {

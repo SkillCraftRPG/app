@@ -53,3 +53,10 @@ button:disabled {
     padding: 4rem 2rem;
   }
 }
+
+@media (min-width: 1200px) {
+  .col-xl-fifth {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+}

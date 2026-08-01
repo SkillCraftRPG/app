@@ -83,7 +83,7 @@ export type LineageSpeeds = {
   climb?: number | null;
   swim?: number | null;
   fly?: number | null;
-  hover?: boolean;
+  hover: boolean;
   burrow?: number | null;
 };
 
