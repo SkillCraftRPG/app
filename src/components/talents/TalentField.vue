@@ -1,6 +1,6 @@
 <template>
   <FormSelect
-    :disabled="!total"
+    :disabled="!options.length"
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
@@ -50,7 +50,6 @@ const emit = defineEmits<{
 
 const isLoading = ref<boolean>(false);
 const talents = ref<Talent[]>([]);
-const total = ref<number>(0);
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
@@ -80,7 +79,6 @@ async function refresh(): Promise<void> {
       };
       const results: SearchResults<Talent> = await searchTalents(payload);
       talents.value = [...results.items];
-      total.value = results.total;
     } catch (e: unknown) {
       emit("error", e);
     } finally {

@@ -15,7 +15,7 @@
           <p>🚧</p>
         </TarTab>
         <TarTab id="languages" :title="t('languages.title')">
-          <p>🚧</p>
+          <LineageLanguages :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab id="names" :title="t('lineages.names.title')">
           <p>🚧</p>
@@ -38,6 +38,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import LineageGeneral from "@/components/lineages/LineageGeneral.vue";
+import LineageLanguages from "@/components/lineages/LineageLanguages.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";

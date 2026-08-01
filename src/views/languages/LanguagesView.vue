@@ -46,7 +46,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="language in languages" :key="language.id" class="col-sm-6 col-md-4 col-lg-3 mb-3">
-            <LanguageCard class="d-flex flex-column h-100" :language="language" />
+            <LanguageCard class="d-flex flex-column h-100" :language="language" :to="{ name: 'Language', params: { id: language.id } }" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
