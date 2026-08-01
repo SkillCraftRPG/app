@@ -12,13 +12,13 @@
           <LineageGeneral :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab disabled id="features" :title="t('game.feature.title')">
-          <!-- TODO(fpion): Features -->
+          <!-- <LineageFeatures :lineage="lineage" @error="handleError" @updated="onUpdate" /> -->
         </TarTab>
         <TarTab id="languages" :title="t('languages.title')">
           <LineageLanguages :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
-        <TarTab disabled id="names" :title="t('lineages.names.title')">
-          <!-- TODO(fpion): Names -->
+        <TarTab id="names" :title="t('lineages.names.title')">
+          <LineageNames :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
         <TarTab id="physical" :title="t('lineages.physical.title')">
           <LineagePhysical :lineage="lineage" @error="handleError" @updated="onUpdate" />
@@ -40,6 +40,7 @@ import { useRoute, useRouter } from "vue-router";
 import LineageEthnicities from "@/components/lineages/LineageEthnicities.vue";
 import LineageGeneral from "@/components/lineages/LineageGeneral.vue";
 import LineageLanguages from "@/components/lineages/LineageLanguages.vue";
+import LineageNames from "@/components/lineages/LineageNames.vue";
 import LineagePhysical from "@/components/lineages/LineagePhysical.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";

@@ -23,7 +23,20 @@
     }
   },
   "names": {
-    "title": "Noms"
+    "content": {
+      "help": "Ajoutez des précisions sur les langues de cette lignée.",
+      "lead": "Contenu complémentaire"
+    },
+    "custom": {
+      "add": "Nouvelle catégorie",
+      "help": "Ajoutez d’autres catégories de noms propres à cette ethnie.",
+      "lead": "Catégories personnalisées"
+    },
+    "family": "Noms de famille",
+    "female": "Prénoms féminins",
+    "male": "Prénoms masculins",
+    "title": "Noms",
+    "unisex": "Prénoms unisexes"
   },
   "physical": {
     "age": {

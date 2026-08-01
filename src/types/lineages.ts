@@ -61,11 +61,11 @@ export type LineageLanguagesPayload = {
 };
 
 export type LineageNames = {
-  family?: string[];
-  female?: string[];
-  male?: string[];
-  unisex?: string[];
-  custom?: NameCategory[];
+  family: string[];
+  female: string[];
+  male: string[];
+  unisex: string[];
+  custom: NameCategory[];
   content?: string | null;
 };
 
