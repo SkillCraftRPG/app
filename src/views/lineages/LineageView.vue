@@ -7,7 +7,7 @@
         <strong>{{ t(`lineages.${isEthnicity ? "ethnicities" : "species"}.created`) }}</strong> {{ t("lineages.created", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="lineage" />
-      <TarTabs class="border-top border-secondary-subtle pt-4">
+      <TarTabs :key="lineage.id" class="border-top border-secondary-subtle pt-4">
         <TarTab active id="content" :title="t('content')">
           <LineageGeneral :lineage="lineage" @error="handleError" @updated="onUpdate" />
         </TarTab>
