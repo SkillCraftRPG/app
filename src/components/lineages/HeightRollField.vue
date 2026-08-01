@@ -1,5 +1,5 @@
 <template>
-  <InputField :id="id" :label="t(label)" :max="max" :model-value="modelValue" @update:model-value="$emit('update:model-value', $event ?? '')">
+  <InputField :id="id" :label="t(label)" :max="max" :model-value="modelValue" :rules="rules" @update:model-value="$emit('update:model-value', $event ?? '')">
     <template #append>
       <span class="input-group-text">{{ t("game.unit.cm") }}</span>
     </template>
@@ -7,6 +7,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ValidationRuleSet } from "logitar-validation";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import InputField from "@/components/forms/InputField.vue";
@@ -31,5 +33,5 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-// TODO(fpion): pattern or validation rule
+const rules = computed<ValidationRuleSet>(() => ({ roll: true }));
 </script>

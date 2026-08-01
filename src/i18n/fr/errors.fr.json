@@ -14,6 +14,7 @@
   "pattern": "Le champ « {name} » doit correspondre au modèle suivant : {pattern}",
   "phone": "Veuillez entrer un numéro de téléphone valide.",
   "required": "Le champ « {name} » est requis.",
+  "roll": "Le champ « {name} » doit être un jet de dés valide.",
   "slug": "Le champ « {name} » doit être composé de mots alphanumériques non vides séparés par un tiret (-).",
   "uniqueCharacters": "Le champ « {name} » doit contenir au moins {uniqueCharacters} caractères uniques.",
   "url": "Le champ « {name} » n’est pas un lien valide. Un lien valide débute par http:// ou https://."
