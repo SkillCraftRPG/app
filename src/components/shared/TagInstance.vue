@@ -1,16 +1,16 @@
 <template>
   <div>
     <div v-if="isEditing" @keydown.enter.prevent="onConfirm" @keydown.esc.prevent="onCancel">
-      <TarInput :id="id" ref="inputRef" validation="server" v-model="tag">
+      <TarInput :id="id" ref="inputRef" size="small" validation="server" v-model="tag">
         <template #append>
-          <TarButton icon="fas fa-ban" variant="secondary" @click="onCancel" />
-          <TarButton :disabled="!tag" icon="fas fa-save" />
+          <TarButton icon="fas fa-ban" size="small" variant="secondary" @click="onCancel" />
+          <TarButton :disabled="!tag" icon="fas fa-save" size="small" @click="onConfirm" />
         </template>
       </TarInput>
     </div>
     <div v-else class="btn-group" role="group" aria-label="Tag Actions">
-      <TarButton :text="value" @click="onEdit" />
-      <TarButton icon="fas fa-times" @click="$emit('removed')" />
+      <TarButton outline size="small" :text="value" @click="onEdit" />
+      <TarButton icon="fas fa-times" outline size="small" @click="$emit('removed')" />
     </div>
   </div>
 </template>

@@ -1,8 +1,8 @@
 <template>
   <div @keydown.enter.prevent="onConfirm" @keydown.esc.prevent="onCancel">
-    <TarInput :id="id" v-model="tag">
+    <TarInput :id="id" size="small" v-model="tag">
       <template #append>
-        <TarButton :disabled="!tag" icon="fas fa-plus" type="submit" variant="success" />
+        <TarButton :disabled="!tag" icon="fas fa-plus" outline size="small" @click="onConfirm" />
       </template>
     </TarInput>
   </div>
