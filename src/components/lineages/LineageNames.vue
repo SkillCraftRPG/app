@@ -1,26 +1,32 @@
 <template>
   <form @submit.prevent="handleSubmit(submit)">
-    <TagContainer class="mb-3" id="family" :label="t('lineages.names.family')" v-model="family" />
-    <TagContainer class="mb-3" id="female" :label="t('lineages.names.female')" v-model="female" />
-    <TagContainer class="mb-3" id="male" :label="t('lineages.names.male')" v-model="male" />
-    <TagContainer class="mb-3" id="unisex" :label="t('lineages.names.unisex')" v-model="unisex" />
-    <h3 class="h5">{{ t("lineages.names.custom.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.names.custom.help") }}</p>
-    <div class="row">
-      <div class="col-md-6" @keydown.enter.prevent="add" @keydown.esc.prevent="category = ''">
-        <TarInput class="mb-3" floating id="category" :label="addLabel" max="100" :placeholder="addLabel" v-model="category">
-          <template #append>
-            <TarButton :disabled="!category" icon="fas fa-plus" :text="t('actions.add')" @click="add" />
-          </template>
-        </TarInput>
+    <section>
+      <TagContainer class="mb-3" id="family" :label="t('lineages.names.family')" v-model="family" />
+      <TagContainer class="mb-3" id="female" :label="t('lineages.names.female')" v-model="female" />
+      <TagContainer class="mb-3" id="male" :label="t('lineages.names.male')" v-model="male" />
+      <TagContainer class="mb-3" id="unisex" :label="t('lineages.names.unisex')" v-model="unisex" />
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.names.custom.lead") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.names.custom.help") }}</p>
+      <div class="row">
+        <div class="col-md-6" @keydown.enter.prevent="add" @keydown.esc.prevent="category = ''">
+          <TarInput class="mb-3" floating id="category" :label="addLabel" max="100" :placeholder="addLabel" v-model="category">
+            <template #append>
+              <TarButton :disabled="!category" icon="fas fa-plus" :text="t('actions.add')" @click="add" />
+            </template>
+          </TarInput>
+        </div>
       </div>
-    </div>
-    <TagContainer v-for="(category, index) in custom" :key="index" class="mb-3" :id="`custom-${index}`" :label="category.category" v-model="category.values">
-      <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(index)" />
-    </TagContainer>
-    <h3 class="h5">{{ t("lineages.names.content.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.names.content.help") }}</p>
-    <ContentField class="mb-3" v-model="content" />
+      <TagContainer v-for="(category, index) in custom" :key="index" class="mb-3" :id="`custom-${index}`" :label="category.category" v-model="category.values">
+        <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(index)" />
+      </TagContainer>
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.names.content.lead") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.names.content.help") }}</p>
+      <ContentField class="mb-3" v-model="content" />
+    </section>
     <div class="d-flex justify-content-end mb-3">
       <TarButton
         :disabled="!hasChanges || isLoading"

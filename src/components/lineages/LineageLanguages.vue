@@ -1,46 +1,52 @@
 <template>
   <form @submit.prevent="handleSubmit(submit)">
-    <h3 class="h5">{{ t("lineages.languages.granted.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.languages.granted.help") }}</p>
-    <div class="row">
-      <div class="col-md-6">
-        <LanguageSelect
-          class="mb-3"
-          :exclude="exclude"
-          :model-value="language?.id ?? ''"
-          placeholder="languages.placeholder"
-          @error="$emit('error', $event)"
-          @selected="language = $event"
-        >
-          <template #append>
-            <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" @click="add" />
-          </template>
-        </LanguageSelect>
+    <section>
+      <h3 class="h5">{{ t("lineages.languages.granted.lead") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.languages.granted.help") }}</p>
+      <div class="row">
+        <div class="col-md-6">
+          <LanguageSelect
+            class="mb-3"
+            :exclude="exclude"
+            :model-value="language?.id ?? ''"
+            placeholder="languages.placeholder"
+            @error="$emit('error', $event)"
+            @selected="language = $event"
+          >
+            <template #append>
+              <TarButton :disabled="!language" icon="fas fa-plus" :text="t('actions.add')" @click="add" />
+            </template>
+          </LanguageSelect>
+        </div>
       </div>
-    </div>
-    <div v-if="languages.length" class="row">
-      <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-        <LanguageCard class="d-flex flex-column h-100" :language="language">
-          <div class="d-flex justify-content-end mt-2 gap-2">
-            <RouterLink class="btn btn-outline-primary" target="_blank" :to="{ name: 'Language', params: { id: language.id } }">
-              <font-awesome-icon icon="fas fa-edit" />&nbsp;{{ t("actions.edit") }}
-            </RouterLink>
-            <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(language)" />
-          </div>
-        </LanguageCard>
+      <div v-if="languages.length" class="row">
+        <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+          <LanguageCard class="d-flex flex-column h-100" :language="language">
+            <div class="d-flex justify-content-end mt-2 gap-2">
+              <RouterLink class="btn btn-outline-primary" target="_blank" :to="{ name: 'Language', params: { id: language.id } }">
+                <font-awesome-icon icon="fas fa-edit" />&nbsp;{{ t("actions.edit") }}
+              </RouterLink>
+              <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(language)" />
+            </div>
+          </LanguageCard>
+        </div>
       </div>
-    </div>
-    <p>{{ t("lineages.languages.granted.empty") }}</p>
-    <h3 class="h5">{{ t("lineages.languages.extra.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.languages.extra.help") }}</p>
-    <div class="row">
-      <div class="col-md-6">
-        <ExtraLanguagesField class="mb-3" v-model="extra" />
+      <p>{{ t("lineages.languages.granted.empty") }}</p>
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.languages.extra.lead") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.languages.extra.help") }}</p>
+      <div class="row">
+        <div class="col-md-6">
+          <ExtraLanguagesField class="mb-3" v-model="extra" />
+        </div>
       </div>
-    </div>
-    <h3 class="h5">{{ t("lineages.languages.content.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.languages.content.help") }}</p>
-    <ContentField class="mb-3" v-model="content" />
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.languages.content.lead") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.languages.content.help") }}</p>
+      <ContentField class="mb-3" v-model="content" />
+    </section>
     <div class="d-flex justify-content-end mb-3">
       <TarButton
         :disabled="!hasChanges || isLoading"

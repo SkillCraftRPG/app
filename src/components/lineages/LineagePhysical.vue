@@ -1,72 +1,80 @@
 <template>
   <form @submit.prevent="handleSubmit(submit)">
-    <h3 class="h5">{{ t("lineages.physical.speeds.lead") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.physical.speeds.help") }}</p>
-    <div class="row">
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <SpeedField class="mb-3" id="walk" label="game.speed.kind.options.Walk" v-model="walk" />
+    <section>
+      <h3 class="h5">{{ t("lineages.physical.speeds.lead") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.physical.speeds.help") }}</p>
+      <div class="row">
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <SpeedField class="mb-3" id="walk" label="game.speed.kind.options.Walk" v-model="walk" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <SpeedField class="mb-3" id="climb" label="game.speed.kind.options.Climb" v-model="climb" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <SpeedField class="mb-3" id="swim" label="game.speed.kind.options.Swim" v-model="swim" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <SpeedField class="mb-3" id="fly" label="game.speed.kind.options.Fly" :min="hover ? 1 : 0" v-model="fly">
+            <template #after>
+              <TarCheckbox id="hover" :label="t('game.speed.hover')" switch v-model="hover" />
+            </template>
+          </SpeedField>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <SpeedField class="mb-3" id="burrow" label="game.speed.kind.options.Burrow" v-model="burrow" />
+        </div>
       </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <SpeedField class="mb-3" id="climb" label="game.speed.kind.options.Climb" v-model="climb" />
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.physical.size") }}</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <SizeCategoryField class="mb-3" v-model="sizeCategory" />
+        </div>
+        <div class="col-md-6">
+          <HeightRollField class="mb-3" v-model="height" />
+        </div>
       </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <SpeedField class="mb-3" id="swim" label="game.speed.kind.options.Swim" v-model="swim" />
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.physical.weight.label") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.physical.weight.help") }}</p>
+      <div class="row">
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <WeightRollField class="mb-3" id="malnutrition" label="lineages.physical.weight.malnutrition" v-model="malnutrition" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <WeightRollField class="mb-3" id="skinny" label="lineages.physical.weight.skinny" v-model="skinny" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <WeightRollField class="mb-3" id="normal" label="lineages.physical.weight.normal" v-model="normal" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <WeightRollField class="mb-3" id="overweight" label="lineages.physical.weight.overweight" v-model="overweight" />
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-fifth">
+          <WeightRollField class="mb-3" id="obese" label="lineages.physical.weight.obese" v-model="obese" />
+        </div>
       </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <SpeedField class="mb-3" id="fly" label="game.speed.kind.options.Fly" :min="hover ? 1 : 0" v-model="fly">
-          <template #after>
-            <TarCheckbox id="hover" :label="t('game.speed.hover')" switch v-model="hover" />
-          </template>
-        </SpeedField>
+    </section>
+    <section>
+      <h3 class="h5">{{ t("lineages.physical.age.label") }}</h3>
+      <p class="text-body-secondary">{{ t("lineages.physical.age.help") }}</p>
+      <div class="row">
+        <div class="col-md-6 col-lg-3">
+          <AgeField class="mb-3" id="teenager" label="lineages.physical.age.teenager" :min="isAgeRequired ? 1 : 0" v-model="teenager" />
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <AgeField class="mb-3" id="adult" label="lineages.physical.age.adult" :min="isAgeRequired ? teenager + 1 : 0" v-model="adult" />
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <AgeField class="mb-3" id="mature" label="lineages.physical.age.mature" :min="isAgeRequired ? adult + 1 : 0" v-model="mature" />
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <AgeField class="mb-3" id="venerable" label="lineages.physical.age.venerable" :min="isAgeRequired ? mature + 1 : 0" v-model="venerable" />
+        </div>
       </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <SpeedField class="mb-3" id="burrow" label="game.speed.kind.options.Burrow" v-model="burrow" />
-      </div>
-    </div>
-    <h3 class="h5">{{ t("lineages.physical.size") }}</h3>
-    <div class="row">
-      <div class="col-md-6">
-        <SizeCategoryField class="mb-3" v-model="sizeCategory" />
-      </div>
-      <div class="col-md-6">
-        <HeightRollField class="mb-3" v-model="height" />
-      </div>
-    </div>
-    <h3 class="h5">{{ t("lineages.physical.weight.label") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.physical.weight.help") }}</p>
-    <div class="row">
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <WeightRollField class="mb-3" id="malnutrition" label="lineages.physical.weight.malnutrition" v-model="malnutrition" />
-      </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <WeightRollField class="mb-3" id="skinny" label="lineages.physical.weight.skinny" v-model="skinny" />
-      </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <WeightRollField class="mb-3" id="normal" label="lineages.physical.weight.normal" v-model="normal" />
-      </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <WeightRollField class="mb-3" id="overweight" label="lineages.physical.weight.overweight" v-model="overweight" />
-      </div>
-      <div class="col-md-6 col-lg-4 col-xl-fifth">
-        <WeightRollField class="mb-3" id="obese" label="lineages.physical.weight.obese" v-model="obese" />
-      </div>
-    </div>
-    <h3 class="h5">{{ t("lineages.physical.age.label") }}</h3>
-    <p class="text-body-secondary">{{ t("lineages.physical.age.help") }}</p>
-    <div class="row">
-      <div class="col-md-6 col-lg-3">
-        <AgeField class="mb-3" id="teenager" label="lineages.physical.age.teenager" :min="isAgeRequired ? 1 : 0" v-model="teenager" />
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <AgeField class="mb-3" id="adult" label="lineages.physical.age.adult" :min="isAgeRequired ? teenager + 1 : 0" v-model="adult" />
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <AgeField class="mb-3" id="mature" label="lineages.physical.age.mature" :min="isAgeRequired ? adult + 1 : 0" v-model="mature" />
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <AgeField class="mb-3" id="venerable" label="lineages.physical.age.venerable" :min="isAgeRequired ? mature + 1 : 0" v-model="venerable" />
-      </div>
-    </div>
+    </section>
     <div class="d-flex justify-content-end mb-3">
       <TarButton
         :disabled="!hasChanges || isLoading"

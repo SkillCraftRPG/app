@@ -65,6 +65,13 @@ async function submit(): Promise<void> {
       const payload: CreateOrReplaceLineagePayload = {
         parentId: props.parent?.id,
         name: name.value,
+        features: [],
+        languages: { ids: [], extra: 0 },
+        names: { family: [], female: [], male: [], unisex: [], custom: [] },
+        speeds: { hover: false },
+        size: { category: "Medium" },
+        weight: {},
+        age: {},
       };
       const lineage: Lineage = await createLineage(payload);
       modal.value?.hide();
