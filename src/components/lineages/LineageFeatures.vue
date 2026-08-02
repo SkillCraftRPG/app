@@ -4,21 +4,16 @@
       <TarButton icon="fas fa-plus" size="large" :text="t('actions.add')" @click="add" />
     </div>
     <template v-if="features.length">
-      <TarCard v-for="(feature, index) in features" :key="index" class="mb-3">
-        <div class="card-text">
-          <NameField class="mb-3" :id="`feature-${index}-name`" :model-value="feature.name" required @update:model-value="setName(index, $event)" />
-          <ContentField
-            class="mb-3"
-            :id="`feature-${index}-content`"
-            :model-value="feature.content ?? ''"
-            rows="7"
-            @update:model-value="setContent(index, $event)"
-          />
-        </div>
-        <div class="d-flex justify-content-end">
-          <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(index)" />
-        </div>
-      </TarCard>
+      <EditLineageFeature
+        v-for="(feature, index) in features"
+        :key="index"
+        class="mb-3"
+        :id="`feature-${index}`"
+        :model-value="feature"
+        @removed="remove(index)"
+        @update:model-value="update(index, $event)"
+      >
+      </EditLineageFeature>
       <div class="d-flex justify-content-end mb-3">
         <TarButton
           :disabled="!hasChanges || isLoading"
@@ -39,10 +34,8 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-import ContentField from "@/components/shared/ContentField.vue";
-import NameField from "@/components/shared/NameField.vue";
+import EditLineageFeature from "./EditLineageFeature.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import TarCard from "@/components/tar/TarCard.vue";
 import type { Feature } from "@/types/features";
 import type { Lineage, UpdateLineagePayload } from "@/types/lineages";
 import { useForm } from "@/forms";
@@ -67,22 +60,11 @@ const hasChanges = computed<boolean>(() => JSON.stringify(props.lineage.features
 function add(): void {
   features.value.push({ name: "" });
 }
-
 function remove(index: number): void {
   features.value.splice(index, 1);
 }
-
-function setContent(index: number, content: string): void {
-  const feature: Feature | undefined = features.value[index];
-  if (feature) {
-    features.value.splice(index, 1, { ...feature, content });
-  }
-}
-function setName(index: number, name: string): void {
-  const feature: Feature | undefined = features.value[index];
-  if (feature) {
-    features.value.splice(index, 1, { ...feature, name });
-  }
+function update(index: number, value: Feature): void {
+  features.value.splice(index, 1, value);
 }
 
 const { handleSubmit, reinitialize } = useForm();
