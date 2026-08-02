@@ -26,8 +26,8 @@ withDefaults(
   }>(),
   {
     id: "name",
-    max: 100,
     label: "name",
+    max: 100,
   },
 );
 

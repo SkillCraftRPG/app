@@ -1,49 +1,94 @@
 <template>
-  <div>
-    <EditLineageFeature class="mb-3" :lineage="lineage" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-    <div v-if="features.length" class="row">
-      <div v-for="feature in features" :key="feature.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-        <LineageFeatureCard class="feature-card h-100" :feature="feature">
-          <div class="d-flex justify-content-end align-items-center mt-auto pt-2 gap-2">
-            <EditLineageFeature :feature="feature" :lineage="lineage" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-            <RemoveLineageFeature :feature="feature" :lineage="lineage" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-          </div>
-        </LineageFeatureCard>
-      </div>
+  <form @submit.prevent="handleSubmit(submit)">
+    <div class="mb-3">
+      <TarButton icon="fas fa-plus" size="large" :text="t('actions.add')" @click="add" />
     </div>
+    <template v-if="features.length">
+      <EditLineageFeature
+        v-for="(feature, index) in features"
+        :key="index"
+        class="mb-3"
+        :id="`feature-${index}`"
+        :model-value="feature"
+        @removed="remove(index)"
+        @update:model-value="update(index, $event)"
+      >
+      </EditLineageFeature>
+      <div class="d-flex justify-content-end mb-3">
+        <TarButton
+          :disabled="!hasChanges || isLoading"
+          icon="fas fa-floppy-disk"
+          :loading="isLoading"
+          size="large"
+          :status="t('loading')"
+          :text="t('actions.save')"
+          type="submit"
+        />
+      </div>
+    </template>
     <p v-else>{{ t("lineages.features.empty") }}</p>
-  </div>
+  </form>
 </template>
 
 <script setup lang="ts">
-import { arrayUtils } from "logitar-js";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EditLineageFeature from "./EditLineageFeature.vue";
-import LineageFeatureCard from "./LineageFeatureCard.vue";
-import RemoveLineageFeature from "./RemoveLineageFeature.vue";
-import type { Lineage, LineageFeature } from "@/types/lineages";
+import TarButton from "@/components/tar/TarButton.vue";
+import type { Feature } from "@/types/features";
+import type { Lineage, UpdateLineagePayload } from "@/types/lineages";
+import { useForm } from "@/forms";
+import { updateLineage } from "@/api/lineages";
 
-const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
 const props = defineProps<{
   lineage: Lineage;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "error", value: unknown): void;
   (e: "updated", value: Lineage): void;
 }>();
 
-const features = computed<LineageFeature[]>(() => orderBy(props.lineage.features, "name"));
-</script>
+const features = ref<Feature[]>([]);
+const isLoading = ref<boolean>(false);
 
-<style scoped>
-.feature-card :deep(.card-body) {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+const hasChanges = computed<boolean>(() => JSON.stringify(props.lineage.features) !== JSON.stringify(features.value));
+
+function add(): void {
+  features.value.push({ name: "" });
 }
-</style>
+function remove(index: number): void {
+  features.value.splice(index, 1);
+}
+function update(index: number, value: Feature): void {
+  features.value.splice(index, 1, value);
+}
+
+const { handleSubmit, reinitialize } = useForm();
+async function submit(): Promise<void> {
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      const payload: UpdateLineagePayload = {
+        features: features.value,
+      };
+      const lineage: Lineage = await updateLineage(props.lineage.id, payload);
+      reinitialize();
+      emit("updated", lineage);
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+
+watch(
+  () => props.lineage,
+  (lineage) => (features.value = lineage.features.map((feature) => ({ ...feature }))),
+  { deep: true, immediate: true },
+);
+</script>

@@ -9,19 +9,20 @@ export type CreateOrReplaceLineagePayload = {
   name: string;
   summary?: string | null;
   content?: string | null;
-  languages?: LineageLanguagesPayload;
-  names?: LineageNames;
-  speeds?: LineageSpeeds;
-  size?: LineageSize;
-  weight?: LineageWeight;
-  age?: LineageAge;
+  features: Feature[];
+  languages: LineageLanguagesPayload;
+  names: LineageNames;
+  speeds: LineageSpeeds;
+  size: LineageSize;
+  weight: LineageWeight;
+  age: LineageAge;
 };
 
 export type Lineage = Aggregate & {
   name: string;
   summary?: string | null;
   content?: string | null;
-  features: LineageFeature[];
+  features: Feature[];
   languages: LineageLanguages;
   names: LineageNames;
   speeds: LineageSpeeds;
@@ -39,14 +40,6 @@ export type LineageAge = {
   venerable?: number | null;
 };
 
-export type LineageFeature = Feature & {
-  id: string;
-  createdBy: Actor;
-  createdOn: string;
-  updatedBy: Actor;
-  updatedOn: string;
-};
-
 export type LineageLanguages = {
   granted: Language[];
   extra: number;
@@ -54,8 +47,8 @@ export type LineageLanguages = {
 };
 
 export type LineageLanguagesPayload = {
-  ids?: string[];
-  extra?: number;
+  ids: string[];
+  extra: number;
   content?: string | null;
 };
 
@@ -111,6 +104,7 @@ export type UpdateLineagePayload = {
   name?: string | null;
   summary?: Optional<string> | null;
   content?: Optional<string> | null;
+  features?: Feature[] | null;
   languages?: LineageLanguagesPayload | null;
   names?: LineageNames | null;
   speeds?: LineageSpeeds | null;
