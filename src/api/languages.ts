@@ -9,6 +9,17 @@ export async function createLanguage(payload: CreateOrReplaceLanguagePayload): P
   return (await post<CreateOrReplaceLanguagePayload, Language>(url, payload)).data;
 }
 
+export async function listLanguages(): Promise<SearchResults<Language>> {
+  const payload: SearchLanguagesPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  return await searchLanguages(payload);
+}
+
 export async function readLanguage(id: string): Promise<Language> {
   const url: string = new urlUtils.UrlBuilder({ path: "/languages/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Language>(url)).data;
@@ -17,6 +28,17 @@ export async function readLanguage(id: string): Promise<Language> {
 export async function replaceLanguage(id: string, payload: CreateOrReplaceLanguagePayload): Promise<Language> {
   const url: string = new urlUtils.UrlBuilder({ path: "/languages/{id}" }).setParameter("id", id).buildRelative();
   return (await put<CreateOrReplaceLanguagePayload, Language>(url, payload)).data;
+}
+
+export async function saveLanguage(language: Language): Promise<Language> {
+  const payload: CreateOrReplaceLanguagePayload = {
+    name: language.name,
+    summary: language.summary,
+    content: language.content,
+    scriptId: language.script?.id,
+    typicalSpeakers: language.typicalSpeakers,
+  };
+  return await replaceLanguage(language.id, payload);
 }
 
 export async function searchLanguages(payload: SearchLanguagesPayload): Promise<SearchResults<Language>> {

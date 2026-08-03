@@ -9,6 +9,17 @@ export async function createCustomization(payload: CreateOrReplaceCustomizationP
   return (await post<CreateOrReplaceCustomizationPayload, Customization>(url, payload)).data;
 }
 
+export async function listCustomizations(): Promise<SearchResults<Customization>> {
+  const payload: SearchCustomizationsPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  return await searchCustomizations(payload);
+}
+
 export async function readCustomization(id: string): Promise<Customization> {
   const url: string = new urlUtils.UrlBuilder({ path: "/customizations/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Customization>(url)).data;
@@ -17,6 +28,16 @@ export async function readCustomization(id: string): Promise<Customization> {
 export async function replaceCustomization(id: string, payload: CreateOrReplaceCustomizationPayload): Promise<Customization> {
   const url: string = new urlUtils.UrlBuilder({ path: "/customizations/{id}" }).setParameter("id", id).buildRelative();
   return (await put<CreateOrReplaceCustomizationPayload, Customization>(url, payload)).data;
+}
+
+export async function saveCustomization(customization: Customization): Promise<Customization> {
+  const payload: CreateOrReplaceCustomizationPayload = {
+    kind: customization.kind,
+    name: customization.name,
+    summary: customization.summary,
+    content: customization.content,
+  };
+  return await replaceCustomization(customization.id, payload);
 }
 
 export async function searchCustomizations(payload: SearchCustomizationsPayload): Promise<SearchResults<Customization>> {

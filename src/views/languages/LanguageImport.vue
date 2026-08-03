@@ -10,9 +10,9 @@
         </div>
         <div class="row">
           <div v-for="item in data" :key="item.reference.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CustomizationImportCard
+            <LanguageImportCard
               class="d-flex flex-column h-100"
-              :customization="item.reference"
+              :language="item.reference"
               :selected="item.selected"
               :status="item.status"
               @click="toggle(item)"
@@ -27,7 +27,7 @@
       <div v-else>
         <h1>{{ title }}</h1>
         <WorldBreadcrumb :current="t('import.label')" :parent="breadcrumb" />
-        <p>{{ t("customizations.import.empty") }}</p>
+        <p>{{ t("languages.import.empty") }}</p>
       </div>
     </div>
     <LoadingSpinner v-else />
@@ -39,18 +39,20 @@ import { arrayUtils } from "logitar-js";
 import { computed, inject, onMounted, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 
-import CustomizationImportCard from "@/components/customizations/CustomizationImportCard.vue";
 import ImportProgress from "@/components/import/ImportProgress.vue";
+import LanguageImportCard from "@/components/languages/LanguageImportCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { Customization } from "@/types/customizations";
 import type { ImportData, ImportStatus } from "@/types/import";
-import { compareCustomizations } from "@/utils/compare";
-import { getCompendiumCustomizations } from "@/api/compendium";
+import type { Language } from "@/types/languages";
+import type { Script } from "@/types/scripts";
+import { compareLanguages } from "@/utils/compare";
+import { getCompendiumLanguages } from "@/api/compendium";
 import { handleErrorKey } from "@/inject";
-import { listCustomizations, saveCustomization } from "@/api/customizations";
+import { listLanguages, saveLanguage } from "@/api/languages";
+import { listScripts, saveScript } from "@/api/scripts";
 import { useDocument } from "@/composables/document";
 import { useToastStore } from "@/stores/toast";
 
@@ -61,15 +63,16 @@ const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
 const count = ref<number>(0);
-const data = ref<ImportData<Customization>[]>([]);
+const data = ref<ImportData<Language>[]>([]);
 const hasLoaded = ref<boolean>(false);
 const index = ref<number>(0);
+const scripts = ref<Map<string, Script>>(new Map());
 
-const breadcrumb = computed<Breadcrumb>(() => ({ text: t("customizations.title"), to: { name: "Customizations" } }));
+const breadcrumb = computed<Breadcrumb>(() => ({ text: t("languages.title"), to: { name: "Languages" } }));
 const canImport = computed<boolean>(() => data.value.some(({ status }) => status !== "UpToDate"));
-const help = computed<string>(() => t(canImport.value ? "customizations.import.help" : "import.upToDate"));
+const help = computed<string>(() => t(canImport.value ? "languages.import.help" : "import.upToDate"));
 const isImporting = computed<boolean>(() => Boolean(count.value));
-const title = computed<string>(() => t("customizations.import.title"));
+const title = computed<string>(() => t("languages.import.title"));
 
 const allSelected = computed<boolean>(() => data.value.every(({ selected, status }) => selected || status === "UpToDate"));
 const anySelected = computed<boolean>(() => data.value.some(({ selected }) => selected));
@@ -87,7 +90,7 @@ function selectAll(): void {
 function unselectAll(): void {
   data.value.forEach((item) => (item.selected = false));
 }
-function toggle(item: ImportData<Customization>): void {
+function toggle(item: ImportData<Language>): void {
   if (item.selected) {
     item.selected = false;
   } else if (item.status !== "UpToDate") {
@@ -101,7 +104,11 @@ async function onImport(): Promise<void> {
       count.value = selectedCount.value;
       for (const item of data.value) {
         if (item.selected) {
-          await saveCustomization(item.reference);
+          if (item.reference.script && !scripts.value.has(item.reference.script.id)) {
+            const script: Script = await saveScript(item.reference.script);
+            scripts.value.set(script.id, script);
+          }
+          await saveLanguage(item.reference);
           index.value++;
         }
       }
@@ -120,17 +127,20 @@ watchEffect(() => document.setTitle(title.value));
 
 async function refresh(): Promise<void> {
   try {
-    const [compendium, existing] = await Promise.all([getCompendiumCustomizations(), listCustomizations()]);
+    const [compendium, existing, existingScripts] = await Promise.all([getCompendiumLanguages(), listLanguages(), listScripts()]);
 
-    const customizations: Map<string, Customization> = new Map();
-    existing.items.forEach((customization) => customizations.set(customization.id, customization));
+    const languages: Map<string, Language> = new Map();
+    existing.items.forEach((language) => languages.set(language.id, language));
 
     data.value = [];
     orderBy(compendium.items, "name").forEach((reference) => {
-      const existing: Customization | undefined = customizations.get(reference.id);
-      const status: ImportStatus = existing ? (compareCustomizations(existing, reference) ? "UpToDate" : "Outdated") : "NotImported";
+      const existing: Language | undefined = languages.get(reference.id);
+      const status: ImportStatus = existing ? (compareLanguages(existing, reference) ? "UpToDate" : "Outdated") : "NotImported";
       data.value.push({ existing, reference, selected: false, status });
     });
+
+    scripts.value.clear();
+    existingScripts.items.forEach((script) => scripts.value.set(script.id, script));
   } catch (e: unknown) {
     handleError(e);
   } finally {

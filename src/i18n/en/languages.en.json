@@ -7,7 +7,7 @@
   "import": {
     "empty": "No languages are available for import.",
     "help": "Select the languages to import.",
-    "lead": "Import languages"
+    "title": "Import languages"
   },
   "label": "Language",
   "placeholder": "Select a language",
