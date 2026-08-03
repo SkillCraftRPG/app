@@ -8,10 +8,16 @@
           <p class="text-body-secondary">{{ t("languages.import.help") }}</p>
           <div class="row">
             <div v-for="language in compendium" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-              <LanguageCard class="d-flex flex-column h-100" clickable :language="language" :selected="selected.has(language.id)" @click="toggle(language)">
+              <LanguageCard
+                class="d-flex flex-column h-100"
+                :clickable="getStatus(language) !== 'UpToDate'"
+                :language="language"
+                :selected="selected.has(language.id)"
+                @click="toggle(language)"
+              >
                 <div class="d-flex justify-content-between mt-2">
                   <div>
-                    <font-awesome-icon :icon="selected.has(language.id) ? 'fas fa-square-xmark' : 'far fa-square'" />
+                    <font-awesome-icon v-if="getStatus(language) !== 'UpToDate'" :icon="selected.has(language.id) ? 'fas fa-square-xmark' : 'far fa-square'" />
                   </div>
                   <div>
                     <ImportStatusDisplay :status="getStatus(language)" />
@@ -86,10 +92,12 @@ function compare(left: Language, right: Language): boolean {
 }
 
 function toggle(language: Language): void {
-  if (selected.value.has(language.id)) {
-    selected.value.delete(language.id);
-  } else {
-    selected.value.set(language.id, language);
+  if (getStatus(language) !== "UpToDate") {
+    if (selected.value.has(language.id)) {
+      selected.value.delete(language.id);
+    } else {
+      selected.value.set(language.id, language);
+    }
   }
 }
 
@@ -175,7 +183,6 @@ async function onImport(): Promise<void> {
   }
 }
 
-// TODO(fpion): could we only select Languages that are not up-to-date?
 // TODO(fpion): success toast
 // TODO(fpion): progress bar instead of LoadingSpinner when importing
 // TODO(fpion): (un)select all buttons
