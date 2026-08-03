@@ -3,6 +3,7 @@ import type { Customization } from "@/types/customizations";
 import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
 import type { Script } from "@/types/scripts";
+import type { Talent } from "@/types/talents";
 
 export function compareCastes(left: Caste, right: Caste): boolean {
   return (
@@ -44,4 +45,16 @@ export function compareLanguages(left: Language, right: Language): boolean {
 
 export function compareScripts(left: Script, right: Script): boolean {
   return left.name === right.name && (left.summary ?? "") === (right.summary ?? "") && (left.content ?? "") === (right.content ?? "");
+}
+
+export function compareTalents(left: Talent, right: Talent): boolean {
+  return (
+    left.tier === right.tier &&
+    left.name === right.name &&
+    (left.summary ?? "") === (right.summary ?? "") &&
+    (left.content ?? "") === (right.content ?? "") &&
+    left.allowMultiplePurchases === right.allowMultiplePurchases &&
+    (left.skill ?? "") === (right.skill ?? "") &&
+    (left.requiredTalent?.id ?? "") === (right.requiredTalent?.id ?? "")
+  );
 }

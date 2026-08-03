@@ -157,6 +157,11 @@ const router = createRouter({
       component: () => import("./views/talents/TalentsView.vue"),
     },
     {
+      name: "TalentImport",
+      path: "/talents/import",
+      component: () => import("./views/talents/TalentImport.vue"),
+    },
+    {
       name: "Talent",
       path: "/talents/:id",
       component: () => import("./views/talents/TalentView.vue"),

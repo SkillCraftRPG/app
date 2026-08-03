@@ -9,6 +9,17 @@ export async function createTalent(payload: CreateOrReplaceTalentPayload): Promi
   return (await post<CreateOrReplaceTalentPayload, Talent>(url, payload)).data;
 }
 
+export async function listTalents(): Promise<SearchResults<Talent>> {
+  const payload: SearchTalentsPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  return await searchTalents(payload);
+}
+
 export async function readTalent(id: string): Promise<Talent> {
   const url: string = new urlUtils.UrlBuilder({ path: "/talents/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Talent>(url)).data;
@@ -17,6 +28,19 @@ export async function readTalent(id: string): Promise<Talent> {
 export async function replaceTalent(id: string, payload: CreateOrReplaceTalentPayload): Promise<Talent> {
   const url: string = new urlUtils.UrlBuilder({ path: "/talents/{id}" }).setParameter("id", id).buildRelative();
   return (await put<CreateOrReplaceTalentPayload, Talent>(url, payload)).data;
+}
+
+export async function saveTalent(talent: Talent): Promise<Talent> {
+  const payload: CreateOrReplaceTalentPayload = {
+    tier: talent.tier,
+    name: talent.name,
+    summary: talent.summary,
+    content: talent.content,
+    allowMultiplePurchases: talent.allowMultiplePurchases,
+    skill: talent.skill,
+    requiredTalentId: talent.requiredTalent?.id,
+  };
+  return await replaceTalent(talent.id, payload);
 }
 
 export async function searchTalents(payload: SearchTalentsPayload): Promise<SearchResults<Talent>> {

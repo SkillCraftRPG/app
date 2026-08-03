@@ -6,6 +6,7 @@ import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
 import type { Script } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
+import type { Talent } from "@/types/talents";
 import { get } from ".";
 
 export async function getCompendiumCastes(): Promise<SearchResults<Caste>> {
@@ -31,4 +32,9 @@ export async function getCompendiumLanguages(): Promise<SearchResults<Language>>
 export async function getCompendiumScripts(): Promise<SearchResults<Script>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/compendium/scripts" }).buildRelative();
   return (await get<SearchResults<Script>>(url)).data;
+}
+
+export async function getCompendiumTalents(): Promise<SearchResults<Talent>> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/compendium/talents" }).buildRelative();
+  return (await get<SearchResults<Talent>>(url)).data;
 }

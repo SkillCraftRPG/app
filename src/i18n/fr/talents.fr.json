@@ -8,6 +8,11 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "Le talent a été créé."
   },
+  "import": {
+    "empty": "Aucun talent disponible pour l’importation.",
+    "help": "Sélectionnez les talents à importer.",
+    "title": "Importer des talents"
+  },
   "label": "Talent",
   "placeholder": "Sélectionnez un talent",
   "required": "Talent requis",
