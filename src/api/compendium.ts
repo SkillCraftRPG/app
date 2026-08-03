@@ -2,6 +2,7 @@ import { urlUtils } from "logitar-js";
 
 import type { Customization } from "@/types/customizations";
 import type { Language } from "@/types/languages";
+import type { Script } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
 import { get } from ".";
 
@@ -13,4 +14,9 @@ export async function getCompendiumCustomizations(): Promise<SearchResults<Custo
 export async function getCompendiumLanguages(): Promise<SearchResults<Language>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/compendium/languages" }).buildRelative();
   return (await get<SearchResults<Language>>(url)).data;
+}
+
+export async function getCompendiumScripts(): Promise<SearchResults<Script>> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/compendium/scripts" }).buildRelative();
+  return (await get<SearchResults<Script>>(url)).data;
 }

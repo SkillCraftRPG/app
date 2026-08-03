@@ -4,6 +4,11 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "L’alphabet a été créé."
   },
+  "import": {
+    "empty": "Aucun alphabet disponible pour l’importation.",
+    "help": "Sélectionnez les alphabets à importer.",
+    "title": "Importer des alphabets"
+  },
   "label": "Alphabet",
   "placeholder": "Sélectionnez un alphabet",
   "sort": {
