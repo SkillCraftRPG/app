@@ -10,6 +10,17 @@ export async function createLineage(payload: CreateOrReplaceLineagePayload): Pro
   return (await post<CreateOrReplaceLineagePayload, Lineage>(url, payload)).data;
 }
 
+export async function listSpecies(): Promise<SearchResults<Lineage>> {
+  const payload: SearchLineagesPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  return await searchLineages(payload);
+}
+
 export async function readLineage(id: string): Promise<Lineage> {
   const url: string = new urlUtils.UrlBuilder({ path: "/lineages/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Lineage>(url)).data;

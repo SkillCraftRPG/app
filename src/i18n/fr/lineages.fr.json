@@ -83,6 +83,7 @@
   "species": {
     "create": "Créer une espèce",
     "created": "L’espèce a été créée.",
+    "label": "Espèce",
     "title": "Espèces"
   }
 }
