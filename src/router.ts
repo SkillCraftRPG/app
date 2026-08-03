@@ -114,6 +114,11 @@ const router = createRouter({
       component: () => import("./views/scripts/ScriptsView.vue"),
     },
     {
+      name: "ScriptImport",
+      path: "/scripts/import",
+      component: () => import("./views/scripts/ScriptImport.vue"),
+    },
+    {
       name: "Script",
       path: "/scripts/:id",
       component: () => import("./views/scripts/ScriptView.vue"),
