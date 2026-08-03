@@ -20,21 +20,38 @@
     </slot>
     <slot name="footer"></slot>
   </RouterLink>
-  <TarCard v-else v-bind="props">
+  <TarCard v-else v-bind="props" :class="classes">
     <slot></slot>
   </TarCard>
 </template>
 
 <script setup lang="ts">
 import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from "vue-router";
+import { computed } from "vue";
+import { parsingUtils } from "logitar-js";
 
 import TarCard from "@/components/tar/TarCard.vue";
 import TarImage from "@/components/tar/TarImage.vue";
 import type { CardOptions } from "@/types/tar/card";
 
+const { parseBoolean } = parsingUtils;
+
 const props = defineProps<
   CardOptions & {
+    clickable?: boolean | string;
+    selected?: boolean | string;
     to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
   }
 >();
+
+const classes = computed<string[]>(() => {
+  const classes: string[] = [];
+  if (parseBoolean(props.clickable)) {
+    classes.push("clickable");
+  }
+  if (parseBoolean(props.selected)) {
+    classes.push("selected");
+  }
+  return classes;
+});
 </script>
