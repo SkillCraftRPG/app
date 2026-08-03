@@ -38,6 +38,11 @@ const router = createRouter({
       component: () => import("./views/castes/CastesView.vue"),
     },
     {
+      name: "CasteImport",
+      path: "/castes/import",
+      component: () => import("./views/castes/CasteImport.vue"),
+    },
+    {
       name: "Caste",
       path: "/castes/:id",
       component: () => import("./views/castes/CasteView.vue"),
