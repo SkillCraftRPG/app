@@ -91,6 +91,11 @@ const router = createRouter({
       path: "/languages/:id",
       component: () => import("./views/languages/LanguageView.vue"),
     },
+    {
+      name: "LanguageImport",
+      path: "/languages/import",
+      component: () => import("./views/languages/LanguageImport.vue"),
+    },
     // Lineages
     {
       name: "Lineages",

@@ -5,7 +5,9 @@
         <h1 class="mb-0">{{ title }}</h1>
         <div class="d-flex gap-2">
           <CreateLanguage class="mb-3" @created="onCreate" @error="handleError" />
-          <ImportLanguages class="mb-3" @error="handleError" @imported="refresh" />
+          <RouterLink class="btn btn-outline-primary btn-lg mb-3" :to="{ name: 'LanguageImport' }">
+            <font-awesome-icon aria-hidden="true" icon="fas fa-download" />&nbsp;{{ t("actions.import") }}
+          </RouterLink>
         </div>
       </div>
       <WorldBreadcrumb :current="title" />
@@ -81,7 +83,6 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLanguage from "@/components/languages/CreateLanguage.vue";
-import ImportLanguages from "@/components/languages/ImportLanguages.vue";
 import LanguageCard from "@/components/languages/LanguageCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import ScriptSelect from "@/components/scripts/ScriptSelect.vue";
