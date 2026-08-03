@@ -14,6 +14,8 @@
     "refresh": "Refresh",
     "remove": "Remove",
     "save": "Save",
+    "selectAll": "Select all",
+    "unselectAll": "Unselect all",
     "verify": "Verify"
   },
   "all": "All",
@@ -35,11 +37,21 @@
     "title": "Home"
   },
   "import": {
+    "label": "Import",
+    "progress": {
+      "count": "Importing {index} of {count}",
+      "help": "The selected data is being imported.",
+      "label": "Import progress",
+      "lead": "Import in Progress"
+    },
+    "selected": "No items selected | 1 item selected | {count} items selected",
     "status": {
       "NotImported": "Not Imported",
       "Outdated": "Update Available",
       "UpToDate": "Up to Date"
-    }
+    },
+    "success": "Your data has been imported successfully.",
+    "upToDate": "All data is up to date."
   },
   "loading": "Loading…",
   "name": "Name",

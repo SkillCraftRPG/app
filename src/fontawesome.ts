@@ -45,7 +45,6 @@ import {
   faRulerVertical,
   faScrewdriverWrench,
   faScroll,
-  faSquareXmark,
   faSun,
   faTablet,
   faTag,
@@ -57,7 +56,9 @@ import {
   faWheelchair,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { faSquare } from "@fortawesome/free-regular-svg-icons/faSquare";
+import { faSquareCheck } from "@fortawesome/free-regular-svg-icons/faSquareCheck";
 
 library.add(
   faAdjust,
@@ -103,7 +104,7 @@ library.add(
   faScrewdriverWrench,
   faScroll,
   faSquare,
-  faSquareXmark,
+  faSquareCheck,
   faSun,
   faTablet,
   faTag,

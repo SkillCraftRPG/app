@@ -15,7 +15,7 @@
 import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 
-import ImportStatusDisplay from "@/components/shared/ImportStatusDisplay.vue";
+import ImportStatusDisplay from "@/components/import/ImportStatusDisplay.vue";
 import LanguageCard from "./LanguageCard.vue";
 import type { ImportStatus } from "@/types/import";
 import type { Language } from "@/types/languages";
@@ -51,7 +51,7 @@ const status = computed<ImportStatus>(() => {
 const isClickable = computed<boolean>(() => status.value !== "UpToDate");
 const icon = computed<string | undefined>(() => {
   if (isClickable.value) {
-    return parseBoolean(props.selected) ? "fas fa-square-xmark" : "far fa-square";
+    return parseBoolean(props.selected) ? "far fa-square-check" : "far fa-square";
   }
 });
 
