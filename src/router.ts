@@ -53,6 +53,11 @@ const router = createRouter({
       path: "/customizations/:id",
       component: () => import("./views/customizations/CustomizationView.vue"),
     },
+    {
+      name: "CustomizationImport",
+      path: "/customizations/import",
+      component: () => import("./views/customizations/CustomizationImport.vue"),
+    },
     // Educations
     {
       name: "Educations",

@@ -14,6 +14,8 @@
     "refresh": "Actualiser",
     "remove": "Retirer",
     "save": "Enregistrer",
+    "selectAll": "Tout sélectionner",
+    "unselectAll": "Tout désélectionner",
     "verify": "Vérifier"
   },
   "all": "Tous",
@@ -35,11 +37,21 @@
     "title": "Accueil"
   },
   "import": {
+    "label": "Importation",
+    "progress": {
+      "count": "Importation de {index} sur {count}",
+      "help": "Les données sélectionnées sont en cours d’importation.",
+      "label": "Progression de l’importation",
+      "lead": "Importation en cours"
+    },
+    "selected": "Aucun élément sélectionné | 1 élément sélectionné | {count} éléments sélectionnés",
     "status": {
       "NotImported": "Non importé",
       "Outdated": "Mise à jour disponible",
       "UpToDate": "À jour"
-    }
+    },
+    "success": "Vos données ont été importées avec succès.",
+    "upToDate": "Toutes les données sont à jour."
   },
   "loading": "Chargement…",
   "name": "Nom",

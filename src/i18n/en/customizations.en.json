@@ -5,6 +5,11 @@
     "gift": "The gift was created.",
     "help": "You can now complete its details."
   },
+  "import": {
+    "empty": "No customizations are available for import.",
+    "help": "Select the customizations to import.",
+    "title": "Import customizations"
+  },
   "kind": {
     "label": "Type",
     "options": {
