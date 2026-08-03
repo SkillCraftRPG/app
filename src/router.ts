@@ -70,6 +70,11 @@ const router = createRouter({
       component: () => import("./views/educations/EducationsView.vue"),
     },
     {
+      name: "EducationImport",
+      path: "/educations/import",
+      component: () => import("./views/educations/EducationImport.vue"),
+    },
+    {
       name: "Education",
       path: "/educations/:id",
       component: () => import("./views/educations/EducationView.vue"),
