@@ -1,6 +1,19 @@
+import type { Caste } from "@/types/castes";
 import type { Customization } from "@/types/customizations";
 import type { Language } from "@/types/languages";
 import type { Script } from "@/types/scripts";
+
+export function compareCastes(left: Caste, right: Caste): boolean {
+  return (
+    left.name === right.name &&
+    (left.summary ?? "") === (right.summary ?? "") &&
+    (left.content ?? "") === (right.content ?? "") &&
+    (left.skill ?? "") === (right.skill ?? "") &&
+    (left.wealthRoll ?? "") === (right.wealthRoll ?? "") &&
+    (left.feature?.name ?? "") === (right.feature?.name ?? "") &&
+    (left.feature?.content ?? "") === (right.feature?.content ?? "")
+  );
+}
 
 export function compareCustomizations(left: Customization, right: Customization): boolean {
   return left.name === right.name && (left.summary ?? "") === (right.summary ?? "") && (left.content ?? "") === (right.content ?? "");

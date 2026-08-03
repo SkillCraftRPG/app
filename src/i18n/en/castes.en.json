@@ -4,6 +4,11 @@
     "help": "You can now complete its details.",
     "lead": "The caste was created."
   },
+  "import": {
+    "empty": "No castes are available for import.",
+    "help": "Select the castes to import.",
+    "title": "Import castes"
+  },
   "label": "Caste",
   "placeholder": "Select a caste",
   "sort": {

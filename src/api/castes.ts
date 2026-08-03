@@ -9,6 +9,17 @@ export async function createCaste(payload: CreateOrReplaceCastePayload): Promise
   return (await post<CreateOrReplaceCastePayload, Caste>(url, payload)).data;
 }
 
+export async function listCastes(): Promise<SearchResults<Caste>> {
+  const payload: SearchCastesPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  return await searchCastes(payload);
+}
+
 export async function readCaste(id: string): Promise<Caste> {
   const url: string = new urlUtils.UrlBuilder({ path: "/castes/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Caste>(url)).data;
@@ -17,6 +28,18 @@ export async function readCaste(id: string): Promise<Caste> {
 export async function replaceCaste(id: string, payload: CreateOrReplaceCastePayload): Promise<Caste> {
   const url: string = new urlUtils.UrlBuilder({ path: "/castes/{id}" }).setParameter("id", id).buildRelative();
   return (await put<CreateOrReplaceCastePayload, Caste>(url, payload)).data;
+}
+
+export async function saveCaste(caste: Caste): Promise<Caste> {
+  const payload: CreateOrReplaceCastePayload = {
+    name: caste.name,
+    summary: caste.summary,
+    content: caste.content,
+    skill: caste.skill,
+    wealthRoll: caste.wealthRoll,
+    feature: caste.feature,
+  };
+  return await replaceCaste(caste.id, payload);
 }
 
 export async function searchCastes(payload: SearchCastesPayload): Promise<SearchResults<Caste>> {
