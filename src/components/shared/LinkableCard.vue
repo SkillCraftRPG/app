@@ -21,7 +21,28 @@
     <slot name="footer"></slot>
   </RouterLink>
   <TarCard v-else v-bind="props" :class="classes">
+    <template #header>
+      <slot name="header"></slot>
+    </template>
+    <template #image-top>
+      <slot name="image-top"></slot>
+    </template>
+    <template #contents>
+      <slot name="contents"></slot>
+    </template>
+    <template #title-override>
+      <slot name="title-override"></slot>
+    </template>
+    <template #subtitle-override>
+      <slot name="subtitle-override"></slot>
+    </template>
     <slot></slot>
+    <template #image-bottom>
+      <slot name="image-bottom"></slot>
+    </template>
+    <template #footer>
+      <slot name="footer"></slot>
+    </template>
   </TarCard>
 </template>
 
