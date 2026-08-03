@@ -21,10 +21,10 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TarSelect from "@/components/tar/TarSelect.vue";
-import type { Language, SearchLanguagesPayload } from "@/types/languages";
+import type { Language } from "@/types/languages";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
-import { searchLanguages } from "@/api/languages";
+import { listLanguages } from "@/api/languages";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
@@ -72,14 +72,7 @@ async function refresh(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      const payload: SearchLanguagesPayload = {
-        ids: [],
-        search: { terms: [], operator: "And" },
-        sort: [],
-        skip: 0,
-        limit: 0,
-      };
-      const results: SearchResults<Language> = await searchLanguages(payload);
+      const results: SearchResults<Language> = await listLanguages();
       languages.value = [...results.items];
     } catch (e: unknown) {
       emit("error", e);

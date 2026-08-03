@@ -16,10 +16,10 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import SelectField from "@/components/forms/SelectField.vue";
-import type { Script, SearchScriptsPayload } from "@/types/scripts";
+import type { Script } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
-import { searchScripts } from "@/api/scripts";
+import { listScripts } from "@/api/scripts";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
@@ -65,14 +65,7 @@ async function refresh(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      const payload: SearchScriptsPayload = {
-        ids: [],
-        search: { terms: [], operator: "And" },
-        sort: [],
-        skip: 0,
-        limit: 0,
-      };
-      const results: SearchResults<Script> = await searchScripts(payload);
+      const results: SearchResults<Script> = await listScripts();
       scripts.value = [...results.items];
     } catch (e: unknown) {
       emit("error", e);
