@@ -8,22 +8,13 @@
           <p class="text-body-secondary">{{ t("languages.import.help") }}</p>
           <div class="row">
             <div v-for="language in compendium" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-              <LanguageCard
+              <ImportLanguage
                 class="d-flex flex-column h-100"
-                :clickable="getStatus(language) !== 'UpToDate'"
+                :existing="languages.get(language.id)"
                 :language="language"
                 :selected="selected.has(language.id)"
-                @click="toggle(language)"
-              >
-                <div class="d-flex justify-content-between mt-2">
-                  <div>
-                    <font-awesome-icon v-if="getStatus(language) !== 'UpToDate'" :icon="selected.has(language.id) ? 'fas fa-square-xmark' : 'far fa-square'" />
-                  </div>
-                  <div>
-                    <ImportStatusDisplay :status="getStatus(language)" />
-                  </div>
-                </div>
-              </LanguageCard>
+                @toggle="toggle(language)"
+              />
             </div>
           </div>
         </template>
@@ -48,14 +39,12 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import ImportStatusDisplay from "@/components/shared/ImportStatusDisplay.vue";
-import LanguageCard from "./LanguageCard.vue";
+import ImportLanguage from "./ImportLanguage.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { CreateOrReplaceLanguagePayload, Language, SearchLanguagesPayload } from "@/types/languages";
 import type { CreateOrReplaceScriptPayload, Script } from "@/types/scripts";
-import type { ImportStatus } from "@/types/import";
 import type { SearchResults } from "@/types/search";
 import { getCompendiumLanguages } from "@/api/compendium";
 import { replaceLanguage, searchLanguages } from "@/api/languages";
@@ -74,30 +63,11 @@ const languages = ref<Map<string, Language>>(new Map());
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const selected = ref<Map<string, Language>>(new Map());
 
-function getStatus(language: Language): ImportStatus {
-  const existing: Language | undefined = languages.value.get(language.id);
-  if (!existing) {
-    return "NotImported";
-  }
-  return compare(language, existing) ? "UpToDate" : "Outdated";
-}
-function compare(left: Language, right: Language): boolean {
-  return (
-    left.name === right.name &&
-    (left.summary ?? "") === (right.summary ?? "") &&
-    (left.content ?? "") === (right.content ?? "") &&
-    (left.script?.id ?? "") === (right.script?.id ?? "") &&
-    (left.typicalSpeakers ?? "") === (right.typicalSpeakers ?? "")
-  );
-}
-
 function toggle(language: Language): void {
-  if (getStatus(language) !== "UpToDate") {
-    if (selected.value.has(language.id)) {
-      selected.value.delete(language.id);
-    } else {
-      selected.value.set(language.id, language);
-    }
+  if (selected.value.has(language.id)) {
+    selected.value.delete(language.id);
+  } else {
+    selected.value.set(language.id, language);
   }
 }
 
