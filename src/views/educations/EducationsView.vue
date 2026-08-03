@@ -3,7 +3,12 @@
     <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateEducation class="mb-3" @created="onCreate" @error="handleError" />
+        <div class="d-flex gap-2">
+          <CreateEducation class="mb-3" @created="onCreate" @error="handleError" />
+          <RouterLink class="btn btn-outline-primary btn-lg mb-3" :to="{ name: 'EducationImport' }">
+            <font-awesome-icon aria-hidden="true" icon="fas fa-download" />&nbsp;{{ t("actions.import") }}
+          </RouterLink>
+        </div>
       </div>
       <WorldBreadcrumb :current="title" />
       <section>
@@ -46,7 +51,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="education in educations" :key="education.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <EducationCard class="d-flex flex-column h-100" :education="education" />
+            <EducationCard class="d-flex flex-column h-100" :education="education" :to="{ name: 'Education', params: { id: education.id } }" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />

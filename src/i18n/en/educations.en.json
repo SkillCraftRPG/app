@@ -4,6 +4,11 @@
     "help": "You can now complete its details.",
     "lead": "The education was created."
   },
+  "import": {
+    "empty": "No educations are available for import.",
+    "help": "Select the educations to import.",
+    "title": "Import educations"
+  },
   "label": "Education",
   "placeholder": "Select an education",
   "sort": {
