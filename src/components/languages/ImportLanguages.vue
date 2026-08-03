@@ -59,7 +59,7 @@ const { t } = useI18n();
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "imported"): void;
+  (e: "imported", value: Language[]): void;
 }>();
 
 const compendium = ref<Language[]>([]);
@@ -139,7 +139,7 @@ async function importScript(script: Script): Promise<void> {
   await replaceScript(script.id, payload);
 }
 
-async function importLanguage(language: Language): Promise<void> {
+async function importLanguage(language: Language): Promise<Language> {
   if (language.script) {
     // TODO(fpion): only import if not exist, even if outdated
     await importScript(language.script);
@@ -152,18 +152,20 @@ async function importLanguage(language: Language): Promise<void> {
     scriptId: language.script?.id,
     typicalSpeakers: language.typicalSpeakers,
   };
-  await replaceLanguage(language.id, payload);
+  return await replaceLanguage(language.id, payload);
 }
 
 async function onImport(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
+      const importedLanguages: Language[] = [];
       for (const [id, language] of [...selected.value]) {
-        await importLanguage(language);
+        const imported: Language = await importLanguage(language);
+        importedLanguages.push(imported);
         selected.value.delete(id);
       }
-      emit("imported");
+      emit("imported", importedLanguages);
       await refresh();
     } catch (e: unknown) {
       emit("error", e);
