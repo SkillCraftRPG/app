@@ -40,6 +40,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
 import type { ImportData, ImportStatus } from "@/types/import";
+import type { SearchResults } from "@/types/search";
 import type { Talent } from "@/types/talents";
 import { compareTalents } from "@/utils/compare";
 import { getCompendiumTalents } from "@/api/compendium";
@@ -89,13 +90,19 @@ function toggle(item: ImportData<Talent>): void {
   }
 }
 
+async function importTalent(talent: Talent): Promise<void> {
+  if (talent.requiredTalent) {
+    await importTalent(talent.requiredTalent);
+  }
+  await saveTalent(talent);
+}
 async function onImport(): Promise<void> {
   if (!isImporting.value) {
     try {
       count.value = selectedCount.value;
       for (const item of data.value) {
         if (item.selected) {
-          await saveTalent(item.reference);
+          await importTalent(item.reference);
           index.value++;
         }
       }
@@ -112,9 +119,22 @@ async function onImport(): Promise<void> {
 
 watchEffect(() => document.setTitle(title.value));
 
+async function getCompendiumTalentTree(): Promise<SearchResults<Talent>> {
+  const talents: Map<string, Talent> = new Map();
+
+  const results: SearchResults<Talent> = await getCompendiumTalents();
+  results.items.forEach((talent) => talents.set(talent.id, talent));
+  for (const talent of talents.values()) {
+    if (talent.requiredTalent?.id) {
+      talent.requiredTalent = talents.get(talent.requiredTalent.id);
+    }
+  }
+
+  return { items: [...talents.values()], total: results.total };
+}
 async function refresh(): Promise<void> {
   try {
-    const [compendium, existing] = await Promise.all([getCompendiumTalents(), listTalents()]);
+    const [compendium, existing] = await Promise.all([getCompendiumTalentTree(), listTalents()]);
 
     const talents: Map<string, Talent> = new Map();
     existing.items.forEach((talent) => talents.set(talent.id, talent));

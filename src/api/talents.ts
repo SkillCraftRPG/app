@@ -38,7 +38,7 @@ export async function saveTalent(talent: Talent): Promise<Talent> {
     content: talent.content,
     allowMultiplePurchases: talent.allowMultiplePurchases,
     skill: talent.skill,
-    requiredTalentId: null, // TODO(fpion): implement
+    requiredTalentId: talent.requiredTalent?.id,
   };
   return await replaceTalent(talent.id, payload);
 }
