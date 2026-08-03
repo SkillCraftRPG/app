@@ -111,7 +111,7 @@ const lineages = ref<Lineage[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
-const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
+const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 12);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const search = computed<string>(() => route.query.search?.toString() ?? "");
@@ -199,11 +199,11 @@ watch(
                 sort: "Name",
                 descending: "false",
                 page: 1,
-                count: 10,
+                count: 12,
               }
             : {
                 page: 1,
-                count: 10,
+                count: 12,
                 ...query,
               },
         });

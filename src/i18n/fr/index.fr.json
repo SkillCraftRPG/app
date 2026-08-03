@@ -8,6 +8,7 @@
     "create": "Créer",
     "edit": "Éditer",
     "enter": "Entrer",
+    "import": "Importer",
     "next": "Suivant",
     "previous": "Précédent",
     "refresh": "Actualiser",
@@ -32,6 +33,13 @@
     "go": "Aller à l’accueil",
     "text": "Une application Web de jeu multi-locataire gérant des données par monde, des fiches de personnages et l’état de jeu en temps réel pour des expériences de jeu de rôle interactives.",
     "title": "Accueil"
+  },
+  "import": {
+    "status": {
+      "NotImported": "Non importé",
+      "Outdated": "Mise à jour disponible",
+      "UpToDate": "À jour"
+    }
   },
   "loading": "Chargement…",
   "name": "Nom",

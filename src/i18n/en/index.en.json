@@ -8,6 +8,7 @@
     "create": "Create",
     "edit": "Edit",
     "enter": "Enter",
+    "import": "Import",
     "next": "Next",
     "previous": "Previous",
     "refresh": "Refresh",
@@ -32,6 +33,13 @@
     "go": "Go to Home",
     "text": "A multi-tenant game Web application managing world-scoped data, character sheets, and real-time gameplay state for interactive roleplaying experiences.",
     "title": "Home"
+  },
+  "import": {
+    "status": {
+      "NotImported": "Not Imported",
+      "Outdated": "Update Available",
+      "UpToDate": "Up to Date"
+    }
   },
   "loading": "Loading…",
   "name": "Name",

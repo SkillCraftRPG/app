@@ -3,7 +3,10 @@
     <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateLanguage class="mb-3" @created="onCreate" @error="handleError" />
+        <div class="d-flex gap-2">
+          <CreateLanguage class="mb-3" @created="onCreate" @error="handleError" />
+          <ImportLanguages class="mb-3" @error="handleError" @imported="refresh" />
+        </div>
       </div>
       <WorldBreadcrumb :current="title" />
       <section>
@@ -78,6 +81,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLanguage from "@/components/languages/CreateLanguage.vue";
+import ImportLanguages from "@/components/languages/ImportLanguages.vue";
 import LanguageCard from "@/components/languages/LanguageCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import ScriptSelect from "@/components/scripts/ScriptSelect.vue";
@@ -111,7 +115,7 @@ const scriptSelect = ref<InstanceType<typeof ScriptSelect> | null>(null);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
-const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 10);
+const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 12);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const script = computed<string>(() => route.query.script?.toString() ?? "");
@@ -203,11 +207,11 @@ watch(
                 sort: "Name",
                 descending: "false",
                 page: 1,
-                count: 10,
+                count: 12,
               }
             : {
                 page: 1,
-                count: 10,
+                count: 12,
                 ...query,
               },
         });

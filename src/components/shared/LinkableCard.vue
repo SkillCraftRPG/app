@@ -20,21 +20,59 @@
     </slot>
     <slot name="footer"></slot>
   </RouterLink>
-  <TarCard v-else v-bind="props">
+  <TarCard v-else v-bind="props" :class="classes">
+    <template #header>
+      <slot name="header"></slot>
+    </template>
+    <template #image-top>
+      <slot name="image-top"></slot>
+    </template>
+    <template #contents>
+      <slot name="contents"></slot>
+    </template>
+    <template #title-override>
+      <slot name="title-override"></slot>
+    </template>
+    <template #subtitle-override>
+      <slot name="subtitle-override"></slot>
+    </template>
     <slot></slot>
+    <template #image-bottom>
+      <slot name="image-bottom"></slot>
+    </template>
+    <template #footer>
+      <slot name="footer"></slot>
+    </template>
   </TarCard>
 </template>
 
 <script setup lang="ts">
 import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from "vue-router";
+import { computed } from "vue";
+import { parsingUtils } from "logitar-js";
 
 import TarCard from "@/components/tar/TarCard.vue";
 import TarImage from "@/components/tar/TarImage.vue";
 import type { CardOptions } from "@/types/tar/card";
 
+const { parseBoolean } = parsingUtils;
+
 const props = defineProps<
   CardOptions & {
+    clickable?: boolean | string;
+    selected?: boolean | string;
     to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
   }
 >();
+
+const classes = computed<string[]>(() => {
+  const classes: string[] = [];
+  if (parseBoolean(props.clickable)) {
+    classes.push("clickable");
+  }
+  if (parseBoolean(props.selected)) {
+    classes.push("selected");
+  }
+  return classes;
+});
 </script>

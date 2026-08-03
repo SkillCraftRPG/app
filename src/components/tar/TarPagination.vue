@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<PaginationOptions>(), {
   ariaLast: "Last",
   ariaNext: "Next",
   ariaPrevious: "Previous",
-  count: 10,
+  count: 12,
   first: "«",
   last: "»",
   modelValue: 1,

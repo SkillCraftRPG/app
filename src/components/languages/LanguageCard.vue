@@ -1,5 +1,5 @@
 <template>
-  <LinkableCard :title="language.name" :to="to">
+  <LinkableCard :clickable="clickable" :selected="selected" :title="language.name" :to="to">
     <template v-if="language.script" #subtitle-override>
       <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-scroll" />&nbsp;{{ language.script.name }}</h6>
     </template>
@@ -18,7 +18,9 @@ import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { Language } from "@/types/languages";
 
 defineProps<{
+  clickable?: boolean | string;
   language: Language;
+  selected?: boolean | string;
   to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
 }>();
 </script>

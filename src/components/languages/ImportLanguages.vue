@@ -1,0 +1,159 @@
+<template>
+  <div>
+    <TarButton icon="fas fa-download" outline size="large" :text="t('actions.import')" @click="open" />
+    <TarModal centered :close="t('actions.close')" fade fullscreen ref="modal" :title="t('languages.import.lead')">
+      <LoadingSpinner v-if="isLoading" />
+      <template v-else>
+        <template v-if="compendium.length">
+          <p class="text-body-secondary">{{ t("languages.import.help") }}</p>
+          <div class="row">
+            <div v-for="language in compendium" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+              <ImportLanguage
+                class="d-flex flex-column h-100"
+                :existing="languages.get(language.id)"
+                :language="language"
+                :selected="selected.has(language.id)"
+                @toggle="toggle(language)"
+              />
+            </div>
+          </div>
+        </template>
+        <p v-else>{{ t("languages.import.empty") }}</p>
+      </template>
+      <template #footer>
+        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="onCancel" />
+        <TarButton
+          :disabled="!selected.size || isLoading"
+          icon="fas fa-download"
+          :loading="isLoading"
+          :status="t('loading')"
+          :text="t('actions.import')"
+          @click="onImport"
+        />
+      </template>
+    </TarModal>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+
+import ImportLanguage from "./ImportLanguage.vue";
+import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import TarButton from "@/components/tar/TarButton.vue";
+import TarModal from "@/components/tar/TarModal.vue";
+import type { CreateOrReplaceLanguagePayload, Language, SearchLanguagesPayload } from "@/types/languages";
+import type { CreateOrReplaceScriptPayload, Script } from "@/types/scripts";
+import type { SearchResults } from "@/types/search";
+import { getCompendiumLanguages } from "@/api/compendium";
+import { replaceLanguage, searchLanguages } from "@/api/languages";
+import { replaceScript } from "@/api/scripts";
+
+const { t } = useI18n();
+
+const emit = defineEmits<{
+  (e: "error", value: unknown): void;
+  (e: "imported", value: Language[]): void;
+}>();
+
+const compendium = ref<Language[]>([]);
+const isLoading = ref<boolean>(false);
+const languages = ref<Map<string, Language>>(new Map());
+const modal = ref<InstanceType<typeof TarModal> | null>(null);
+const selected = ref<Map<string, Language>>(new Map());
+
+function toggle(language: Language): void {
+  if (selected.value.has(language.id)) {
+    selected.value.delete(language.id);
+  } else {
+    selected.value.set(language.id, language);
+  }
+}
+
+async function refresh(): Promise<void> {
+  compendium.value = [];
+  languages.value.clear();
+  selected.value.clear();
+
+  let results: SearchResults<Language> = await getCompendiumLanguages();
+  compendium.value = [...results.items];
+
+  const payload: SearchLanguagesPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  results = await searchLanguages(payload);
+  results.items.forEach((language) => languages.value.set(language.id, language));
+}
+
+async function open(): Promise<void> {
+  modal.value?.show();
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      await refresh();
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+
+function onCancel(): void {
+  modal.value?.hide();
+}
+
+async function importScript(script: Script): Promise<void> {
+  const payload: CreateOrReplaceScriptPayload = {
+    name: script.name,
+    summary: script.summary,
+    content: script.content,
+  };
+  await replaceScript(script.id, payload);
+}
+
+async function importLanguage(language: Language): Promise<Language> {
+  if (language.script) {
+    // TODO(fpion): only import if not exist, even if outdated
+    await importScript(language.script);
+  }
+
+  const payload: CreateOrReplaceLanguagePayload = {
+    name: language.name,
+    summary: language.summary,
+    content: language.content,
+    scriptId: language.script?.id,
+    typicalSpeakers: language.typicalSpeakers,
+  };
+  return await replaceLanguage(language.id, payload);
+}
+
+async function onImport(): Promise<void> {
+  if (!isLoading.value) {
+    isLoading.value = true;
+    try {
+      const importedLanguages: Language[] = [];
+      for (const [id, language] of [...selected.value]) {
+        const imported: Language = await importLanguage(language);
+        importedLanguages.push(imported);
+        selected.value.delete(id);
+      }
+      emit("imported", importedLanguages);
+      await refresh();
+    } catch (e: unknown) {
+      emit("error", e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+}
+
+// TODO(fpion): success toast
+// TODO(fpion): progress bar instead of LoadingSpinner when importing
+// TODO(fpion): (un)select all buttons
+</script>
