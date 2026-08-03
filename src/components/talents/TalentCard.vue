@@ -1,5 +1,5 @@
 <template>
-  <LinkableCard :to="{ name: 'Talent', params: { id: talent.id } }">
+  <LinkableCard :clickable="clickable" :selected="selected" :to="to">
     <template #title-override>
       <div class="d-flex flex-wrap align-items-center gap-2">
         <h5 class="card-title">{{ talent.name }}</h5>
@@ -20,11 +20,14 @@
       </TarBadge>
     </div>
     <div v-if="talent.summary" class="card-text">{{ talent.summary }}</div>
-    <StatusBlock :actor="talent.updatedBy" class="card-text mt-2 small text-secondary" :date="talent.updatedOn" relative />
+    <slot>
+      <StatusBlock :actor="talent.updatedBy" class="card-text mt-2 small text-secondary" :date="talent.updatedOn" relative />
+    </slot>
   </LinkableCard>
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from "vue-router";
 import { useI18n } from "vue-i18n";
 
 import LinkableCard from "@/components/shared/LinkableCard.vue";
@@ -37,5 +40,8 @@ const { t } = useI18n();
 
 defineProps<{
   talent: Talent;
+  clickable?: boolean | string;
+  selected?: boolean | string;
+  to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
 }>();
 </script>

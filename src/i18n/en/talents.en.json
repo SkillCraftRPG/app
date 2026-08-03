@@ -8,6 +8,11 @@
     "help": "You can now complete its details.",
     "lead": "The talent was created."
   },
+  "import": {
+    "empty": "No talents are available for import.",
+    "help": "Select the talents to import.",
+    "title": "Import talents"
+  },
   "label": "Talent",
   "placeholder": "Select a talent",
   "required": "Required Talent",
