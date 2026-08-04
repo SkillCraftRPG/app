@@ -1,28 +1,30 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
+import type { Caste } from "@/types/castes";
+import type { CharacterCreation, DominantHand } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
+import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
 import type { Lineage } from "@/types/lineages";
-import { CharacterCreationStep, type CreateCharacterPayload, type DominantHand } from "@/types/characters";
+import { CharacterCreationStep } from "@/types/characters";
+
+function defaultCreation(): CharacterCreation {
+  return {
+    languages: [],
+    name: "",
+    customizations: [],
+  };
+}
 
 export const useCharacterStore = defineStore(
   "character",
   () => {
-    const payload = ref<CreateCharacterPayload>({
-      lineageId: "",
-      languageIds: [],
-      name: "",
-      customizationIds: [],
-    });
+    const creation = ref<CharacterCreation>(defaultCreation());
     const step = ref<CharacterCreationStep>(CharacterCreationStep.Ascendancy);
 
     function abandon(): void {
-      payload.value.lineageId = "";
-      payload.value.languageIds = [];
-      payload.value.name = "";
-      payload.value.dominantHand = null;
-      payload.value.customizationIds = [];
+      creation.value = defaultCreation();
       step.value = CharacterCreationStep.Ascendancy;
     }
 
@@ -32,20 +34,27 @@ export const useCharacterStore = defineStore(
       }
     }
 
-    function saveAscendancy(lineage: Lineage, languages: Language[]): void {
-      payload.value.lineageId = lineage.id;
-      payload.value.languageIds = languages.map((language) => language.id);
+    function saveAscendancy(species: Lineage, languages: Language[], ethnicity?: Lineage): void {
+      creation.value.species = species;
+      creation.value.ethnicity = ethnicity;
+      creation.value.languages = [...languages];
       step.value++;
     }
 
-    function saveCustomization(name: string, dominantHand: DominantHand | null, customizations: Customization[]): void {
-      payload.value.name = name;
-      payload.value.dominantHand = dominantHand;
-      payload.value.customizationIds = customizations.map((customization) => customization.id);
+    function saveContext(caste: Caste, education: Education): void {
+      creation.value.caste = caste;
+      creation.value.education = education;
       step.value++;
     }
 
-    return { payload, step, abandon, goBack, saveAscendancy, saveCustomization };
+    function saveCustomization(name: string, customizations: Customization[], dominantHand?: DominantHand | null): void {
+      creation.value.name = name;
+      creation.value.dominantHand = dominantHand;
+      creation.value.customizations = [...customizations];
+      step.value++;
+    }
+
+    return { creation, step, abandon, goBack, saveAscendancy, saveContext, saveCustomization };
   },
   { persist: true },
 );

@@ -15,6 +15,23 @@
       },
       "title": "Ascendancy"
     },
+    "context": {
+      "caste": {
+        "empty": {
+          "help": "Create the first caste in this world before continuing character creation.",
+          "lead": "No castes available."
+        },
+        "help": "Choose your character’s caste."
+      },
+      "education": {
+        "empty": {
+          "help": "Create the first education in this world before continuing character creation.",
+          "lead": "No educations available."
+        },
+        "help": "Choose your character’s education."
+      },
+      "title": "Context"
+    },
     "customization": {
       "identity": {
         "help": "Set your character’s name and dominant hand.",

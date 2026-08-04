@@ -126,21 +126,21 @@ function submit(): void {
   if (canSubmit.value) {
     character.saveCustomization(
       name.value,
-      dominantHand.value,
       customizationList.value.filter((customization) => customizations.value.has(customization.id)),
+      dominantHand.value,
     );
   }
 }
 
 onMounted(async () => {
   try {
+    name.value = character.creation.name;
+    dominantHand.value = character.creation.dominantHand ?? null;
+
     const customizationResults: SearchResults<Customization> = await listCustomizations();
     customizationList.value = orderBy(customizationResults.items, "name");
 
-    name.value = character.payload.name;
-    dominantHand.value = character.payload.dominantHand ?? null;
-
-    const customizationIds: Set<string> = new Set(character.payload.customizationIds);
+    const customizationIds: Set<string> = new Set(character.creation.customizations.map((customization) => customization.id));
     customizationList.value.forEach((customization) => {
       if (customizationIds.has(customization.id)) {
         customizations.value.add(customization.id);
