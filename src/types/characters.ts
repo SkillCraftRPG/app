@@ -10,7 +10,7 @@ export type SearchCharactersPayload = SearchPayload & {
   sort: CharacterSortOption[];
 };
 
-export type CharacterSort = "CreatedOn" | "Name" | "UpdatedOn";
+export type CharacterSort = "CreatedOn" | "UpdatedOn";
 
 export type CharacterSortOption = SortOption & {
   field: CharacterSort;
