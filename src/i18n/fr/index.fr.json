@@ -82,6 +82,7 @@
     "updatedOn": "Dernière modification {date}"
   },
   "summary": "Résumé",
+  "system": "Système",
   "theme": {
     "title": "Thème",
     "auto": "Auto",

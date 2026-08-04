@@ -1,6 +1,18 @@
 {
   "creation": {
     "ascendancy": {
+      "ethnicity": "Choose your character’s ethnicity.",
+      "languages": {
+        "extra": "No extra languages to choose. | Choose {count} extra language. | Choose {count} extra languages.",
+        "none": "Your character only knows the languages granted by their ancestry."
+      },
+      "species": {
+        "empty": {
+          "help": "Create the first species in this world before continuing character creation.",
+          "lead": "No species available."
+        },
+        "help": "Choose your character’s species."
+      },
       "title": "Ascendancy"
     },
     "label": "Create",

@@ -1,10 +1,22 @@
 {
   "creation": {
     "ascendancy": {
+      "ethnicity": "Choisissez l’ethnicité de votre personnage.",
+      "languages": {
+        "extra": "Aucune langue supplémentaire à choisir. | Choisissez {count} langue supplémentaire. | Choisissez {count} langues supplémentaires.",
+        "none": "Votre personnage connaît uniquement les langues conférées par son ascendance."
+      },
+      "species": {
+        "empty": {
+          "help": "Créez la première espèce de ce monde avant de poursuivre la création du personnage.",
+          "lead": "Aucune espèce disponible."
+        },
+        "help": "Choisissez l’espèce de votre personnage."
+      },
       "title": "Ascendance"
     },
     "label": "Création",
-    "title": "Créer une personnage"
+    "title": "Créer un personnage"
   },
   "title": "Personnages"
 }
