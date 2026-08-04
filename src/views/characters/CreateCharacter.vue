@@ -3,7 +3,6 @@
     <h1>{{ title }}</h1>
     <WorldBreadcrumb :current="t('characters.creation.label')" :parent="breadcrumb" />
     <TarProgress class="mb-3" :value="progress" />
-    <!-- TODO(fpion): progress bar -->
     <CharacterCreationAscendancy v-if="step === Step.Ascendancy" @error="handleError" />
   </main>
 </template>
