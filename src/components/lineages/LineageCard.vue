@@ -29,5 +29,5 @@ defineProps<{
   to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
 }>();
 
-// TODO(fpion): refactor this
+// TODO(fpion): refactor
 </script>

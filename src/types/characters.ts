@@ -50,3 +50,17 @@ export type CharacterSort = "CreatedOn" | "UpdatedOn";
 export type CharacterSortOption = SortOption & {
   field: CharacterSort;
 };
+
+/* TODO(fpion): languages can be granted by:
+ * lineage.languages.extra (species+ethnicity)
+ * a customization (e.g. Polyglotte grants 2+Tier languages)
+ * talents (e.g. Langue supplémentaire, Linguistique, Philologie, Synergie alphabétique, Interprète all grant 1 language)
+ * custom
+ */
+
+/* TODO(fpion): talent rebates/gratuity can be granted by:
+ * lineage (species+ethnicity)
+ * customization (e.g.: Talentueux)
+ * specializations
+ * custom
+ */

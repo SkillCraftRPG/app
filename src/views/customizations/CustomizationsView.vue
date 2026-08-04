@@ -51,11 +51,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="customization in customizations" :key="customization.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CustomizationCard
-              class="d-flex flex-column h-100"
-              :customization="customization"
-              :to="{ name: 'Customization', params: { id: customization.id } }"
-            />
+            <CustomizationLinkCard class="d-flex flex-column h-100" :customization="customization" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -87,7 +83,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateCustomization from "@/components/customizations/CreateCustomization.vue";
-import CustomizationCard from "@/components/customizations/CustomizationCard.vue";
+import CustomizationLinkCard from "@/components/customizations/CustomizationLinkCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
