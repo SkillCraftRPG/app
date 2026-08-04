@@ -15,8 +15,30 @@
       },
       "title": "Ascendance"
     },
+    "customization": {
+      "identity": {
+        "help": "Définissez le nom et la main dominante de votre personnage.",
+        "lead": "Identité"
+      },
+      "options": {
+        "disabilities": "— | Choisissez encore {count} handicap pour équilibrer votre sélection. | Choisissez encore {count} handicaps pour équilibrer votre sélection.",
+        "gifts": "— | Choisissez encore {count} don pour équilibrer votre sélection. | Choisissez encore {count} dons pour équilibrer votre sélection.",
+        "help": "Choisissez autant de dons que de handicaps, ou n’en choisissez aucun.",
+        "none": "Aucun don ni handicap sélectionné.",
+        "selected": "— | {count} don et {count} handicap sélectionnés. | {count} dons et {count} handicaps sélectionnés."
+      },
+      "title": "Personnalisation"
+    },
     "label": "Création",
     "title": "Créer un personnage"
+  },
+  "dominantHand": {
+    "label": "Main principale",
+    "options": {
+      "Left": "Gaucher",
+      "Right": "Droitier",
+      "Unspecified": "Non précisée"
+    }
   },
   "title": "Personnages"
 }

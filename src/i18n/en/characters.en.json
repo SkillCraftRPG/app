@@ -15,8 +15,30 @@
       },
       "title": "Ascendancy"
     },
+    "customization": {
+      "identity": {
+        "help": "Set your character’s name and dominant hand.",
+        "lead": "Identity"
+      },
+      "options": {
+        "disabilities": "— | Choose {count} more disability to balance your selection. | Choose {count} more disabilities to balance your selection.",
+        "gifts": "— | Choose {count} more gift to balance your selection. | Choose {count} more gifts to balance your selection.",
+        "help": "Choose as many gifts as disabilities, or choose none.",
+        "none": "No gifts or disabilities selected.",
+        "selected": "— | {count} gift and {count} disability selected. | {count} gifts and {count} disabilities selected."
+      },
+      "title": "Customization"
+    },
     "label": "Create",
     "title": "Create a character"
+  },
+  "dominantHand": {
+    "label": "Dominant hand",
+    "options": {
+      "Left": "Left-handed",
+      "Right": "Right-handed",
+      "Unspecified": "Unspecified"
+    }
   },
   "title": "Characters"
 }

@@ -178,12 +178,14 @@ async function toggleSpecies(value: Lineage): Promise<void> {
 }
 
 function submit(): void {
-  const lineage: Lineage | undefined = ethnicity.value ?? species.value;
-  if (lineage) {
-    character.saveAscendancy(
-      lineage,
-      languageList.value.filter((language) => languages.value.has(language.id)),
-    );
+  if (isValid.value) {
+    const lineage: Lineage | undefined = ethnicity.value ?? species.value;
+    if (lineage) {
+      character.saveAscendancy(
+        lineage,
+        languageList.value.filter((language) => languages.value.has(language.id)),
+      );
+    }
   }
 }
 
