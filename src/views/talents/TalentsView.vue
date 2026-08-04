@@ -74,7 +74,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="talent in talents" :key="talent.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <TalentCard class="d-flex flex-column h-100" :talent="talent" :to="{ name: 'Talent', params: { id: talent.id } }" />
+            <TalentLinkCard class="d-flex flex-column h-100" :talent="talent" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -112,7 +112,7 @@ import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
-import TalentCard from "@/components/talents/TalentCard.vue";
+import TalentLinkCard from "@/components/talents/TalentLinkCard.vue";
 import TalentSelect from "@/components/talents/TalentSelect.vue";
 import TalentTierSelect from "@/components/talents/TalentTierSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
