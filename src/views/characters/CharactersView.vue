@@ -3,7 +3,6 @@
     <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <!-- <CreateCharacter class="mb-3" @created="onCreate" @error="handleError" /> -->
         <RouterLink class="btn btn-lg btn-primary" :to="{ name: 'CreateCharacter' }">
           <font-awesome-icon aria-hidden="true" icon="fas fa-plus" />&nbsp;{{ t("actions.create") }}
         </RouterLink>
@@ -87,10 +86,8 @@ import type { Character, CharacterSort, SearchCharactersPayload } from "@/types/
 import type { SelectOption } from "@/types/tar/select";
 import { handleErrorKey } from "@/inject";
 import { useDocument } from "@/composables/document";
-import { useEventStore } from "@/stores/event";
 
 const document = useDocument();
-const events = useEventStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
@@ -120,11 +117,6 @@ const sortOptions = computed<SelectOption[]>(() =>
     "text",
   ),
 );
-
-function onCreate(character: Character): void {
-  events.push("created");
-  router.push({ name: "Character", params: { id: character.id } });
-}
 
 function clearFilters(): void {
   const query = { ...route.query, search: "", page: 1 };
