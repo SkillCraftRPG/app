@@ -15,6 +15,23 @@
       },
       "title": "Ascendance"
     },
+    "context": {
+      "caste": {
+        "empty": {
+          "help": "Créez la première caste de ce monde avant de poursuivre la création du personnage.",
+          "lead": "Aucune caste disponible."
+        },
+        "help": "Choisissez la caste de votre personnage."
+      },
+      "education": {
+        "empty": {
+          "help": "Créez la première éducation de ce monde avant de poursuivre la création du personnage.",
+          "lead": "Aucune éducation disponible."
+        },
+        "help": "Choisissez l’éducation de votre personnage."
+      },
+      "title": "Contexte"
+    },
     "customization": {
       "identity": {
         "help": "Définissez le nom et la main dominante de votre personnage.",

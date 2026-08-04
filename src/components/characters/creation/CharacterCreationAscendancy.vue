@@ -3,13 +3,19 @@
     <h2 class="h3">{{ t("characters.creation.ascendancy.title") }}</h2>
     <section v-if="isLoading !== true">
       <h3 class="h5">{{ t("lineages.species.label") }}</h3>
-      <template v-if="speciesList.length">
+      <template v-if="species.length">
         <p class="text-body-secondary">{{ t("characters.creation.ascendancy.species.help") }}</p>
         <div class="row">
-          <div v-for="lineage in speciesList" :key="lineage.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <LineageCard class="d-flex flex-column h-100" clickable :lineage="lineage" :selected="lineage.id === species?.id" @click="toggleSpecies(lineage)">
+          <div v-for="lineage in species" :key="lineage.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+            <LineageCard
+              class="d-flex flex-column h-100"
+              clickable
+              :lineage="lineage"
+              :selected="lineage.id === selectedSpecies?.id"
+              @click="toggleSpecies(lineage)"
+            >
               <div class="d-flex justify-content-end mt-2">
-                <font-awesome-icon :icon="lineage.id === species?.id ? 'far fa-square-check' : 'far fa-square'" />
+                <font-awesome-icon :icon="lineage.id === selectedSpecies?.id ? 'far fa-square-check' : 'far fa-square'" />
               </div>
             </LineageCard>
           </div>
@@ -35,11 +41,11 @@
               class="d-flex flex-column h-100"
               clickable
               :lineage="lineage"
-              :selected="lineage.id === ethnicity?.id"
+              :selected="lineage.id === selectedEthnicity?.id"
               @click="toggleEthnicity(lineage)"
             >
               <div class="d-flex justify-content-end mt-2">
-                <font-awesome-icon :icon="lineage.id === ethnicity?.id ? 'far fa-square-check' : 'far fa-square'" />
+                <font-awesome-icon :icon="lineage.id === selectedEthnicity?.id ? 'far fa-square-check' : 'far fa-square'" />
               </div>
             </LineageCard>
           </div>
@@ -49,19 +55,19 @@
         <h3 class="h5">{{ t("languages.title") }}</h3>
         <p class="text-body-secondary">{{ languagesHelp }}</p>
         <div class="row">
-          <div v-for="language in languageList" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+          <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LanguageCard
               class="d-flex flex-column h-100"
               :clickable="isClickable(language)"
               :language="language"
-              :selected="languages.has(language.id)"
+              :selected="selectedLanguages.has(language.id)"
               @click="toggleLanguage(language)"
             >
               <div class="d-flex justify-content-end mt-2">
                 <TarBadge v-if="grantedLanguages.has(language.id)" pill variant="secondary">
                   <font-awesome-icon aria-hidden="true" icon="fas fa-paw" />&nbsp;{{ grantedLanguages.get(language.id) }}
                 </TarBadge>
-                <font-awesome-icon v-else :icon="languages.has(language.id) ? 'far fa-square-check' : 'far fa-square'" />
+                <font-awesome-icon v-else :icon="selectedLanguages.has(language.id) ? 'far fa-square-check' : 'far fa-square'" />
               </div>
             </LanguageCard>
           </div>
@@ -89,7 +95,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import type { Language } from "@/types/languages";
 import type { Lineage } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
-import { listEthnicities, listSpecies, readLineage } from "@/api/lineages";
+import { listEthnicities, listSpecies } from "@/api/lineages";
 import { listLanguages } from "@/api/languages";
 import { useCharacterStore } from "@/stores/character";
 
@@ -103,26 +109,30 @@ const emit = defineEmits<{
 }>();
 
 const ethnicities = ref<Lineage[]>([]);
-const ethnicity = ref<Lineage>();
 const isLoading = ref<boolean | "ethnicities">(true);
-const languageList = ref<Language[]>([]);
-const languages = ref<Set<string>>(new Set());
-const species = ref<Lineage>();
-const speciesList = ref<Lineage[]>([]);
+const languages = ref<Language[]>([]);
+const selectedEthnicity = ref<Lineage>();
+const selectedLanguages = ref<Set<string>>(new Set());
+const selectedSpecies = ref<Lineage>();
+const species = ref<Lineage[]>([]);
 
-const showLanguages = computed<boolean>(() => Boolean(languageList.value.length && species.value && (!ethnicities.value.length || ethnicity.value)));
-const extraLanguages = computed<number>(() => (species.value?.languages.extra ?? 0) + (ethnicity.value?.languages.extra ?? 0));
+const showLanguages = computed<boolean>(() =>
+  Boolean(languages.value.length && selectedSpecies.value && (!ethnicities.value.length || selectedEthnicity.value)),
+);
+const extraLanguages = computed<number>(() => (selectedSpecies.value?.languages.extra ?? 0) + (selectedEthnicity.value?.languages.extra ?? 0));
 const grantedLanguages = computed<Map<string, string>>(() => {
   const grantedLanguages: Map<string, string> = new Map();
-  if (species.value) {
-    species.value.languages.granted.forEach((language) => grantedLanguages.set(language.id, t("lineages.species.label")));
+  if (selectedSpecies.value) {
+    selectedSpecies.value.languages.granted.forEach((language) => grantedLanguages.set(language.id, t("lineages.species.label")));
   }
-  if (ethnicity.value) {
-    ethnicity.value.languages.granted.forEach((language) => grantedLanguages.set(language.id, t("lineages.ethnicities.label")));
+  if (selectedEthnicity.value) {
+    selectedEthnicity.value.languages.granted.forEach((language) => grantedLanguages.set(language.id, t("lineages.ethnicities.label")));
   }
   return grantedLanguages;
 });
-const remainingLanguages = computed<number>(() => (extraLanguages.value <= languages.value.size ? 0 : extraLanguages.value - languages.value.size));
+const remainingLanguages = computed<number>(() =>
+  extraLanguages.value <= selectedLanguages.value.size ? 0 : extraLanguages.value - selectedLanguages.value.size,
+);
 const languagesHelp = computed<string>(() => {
   if (extraLanguages.value) {
     return t("characters.creation.ascendancy.languages.extra", remainingLanguages.value);
@@ -130,26 +140,26 @@ const languagesHelp = computed<string>(() => {
   return t("characters.creation.ascendancy.languages.none");
 });
 
-const isValid = computed<boolean>(() => Boolean(species.value && (!ethnicities.value.length || ethnicity.value) && !remainingLanguages.value));
+const isValid = computed<boolean>(() => Boolean(selectedSpecies.value && (!ethnicities.value.length || selectedEthnicity.value) && !remainingLanguages.value));
 
 function isClickable(language: Language): boolean {
-  return Boolean(!grantedLanguages.value.has(language.id) && (languages.value.has(language.id) || remainingLanguages.value));
+  return Boolean(!grantedLanguages.value.has(language.id) && (selectedLanguages.value.has(language.id) || remainingLanguages.value));
 }
 
 function toggleEthnicity(value: Lineage): void {
-  if (ethnicity.value?.id === value.id) {
-    ethnicity.value = undefined;
+  if (selectedEthnicity.value?.id === value.id) {
+    selectedEthnicity.value = undefined;
   } else {
-    ethnicity.value = value;
+    selectedEthnicity.value = value;
   }
-  languages.value.clear();
+  selectedLanguages.value.clear();
 }
 
 function toggleLanguage(value: Language): void {
-  if (languages.value.has(value.id)) {
-    languages.value.delete(value.id);
+  if (selectedLanguages.value.has(value.id)) {
+    selectedLanguages.value.delete(value.id);
   } else if (isClickable(value)) {
-    languages.value.add(value.id);
+    selectedLanguages.value.add(value.id);
   }
 }
 
@@ -166,51 +176,47 @@ async function loadEthnicities(species: Lineage): Promise<void> {
 }
 
 async function toggleSpecies(value: Lineage): Promise<void> {
-  if (species.value?.id === value.id) {
-    species.value = undefined;
+  if (selectedSpecies.value?.id === value.id) {
+    selectedSpecies.value = undefined;
     ethnicities.value = [];
   } else {
-    species.value = value;
-    await loadEthnicities(species.value);
+    selectedSpecies.value = value;
+    await loadEthnicities(selectedSpecies.value);
   }
-  ethnicity.value = undefined;
-  languages.value.clear();
+  selectedEthnicity.value = undefined;
+  selectedLanguages.value.clear();
 }
 
 function submit(): void {
-  if (isValid.value) {
-    const lineage: Lineage | undefined = ethnicity.value ?? species.value;
-    if (lineage) {
-      character.saveAscendancy(
-        lineage,
-        languageList.value.filter((language) => languages.value.has(language.id)),
-      );
-    }
+  if (isValid.value && selectedSpecies.value) {
+    character.saveAscendancy(
+      selectedSpecies.value,
+      languages.value.filter((language) => selectedLanguages.value.has(language.id)),
+      selectedEthnicity.value,
+    );
   }
 }
 
 onMounted(async () => {
   try {
     const speciesResults: SearchResults<Lineage> = await listSpecies();
-    speciesList.value = orderBy(speciesResults.items, "name");
+    species.value = orderBy(speciesResults.items, "name");
+    selectedSpecies.value = species.value.find((species) => species.id === character.creation.species?.id);
+
+    if (selectedSpecies.value) {
+      await loadEthnicities(selectedSpecies.value);
+      selectedEthnicity.value = ethnicities.value.find((ethnicity) => ethnicity.id === character.creation.ethnicity?.id);
+    }
 
     const languageResults: SearchResults<Language> = await listLanguages();
-    languageList.value = orderBy(languageResults.items, "name");
+    languages.value = orderBy(languageResults.items, "name");
 
-    if (character.payload.lineageId) {
-      const lineage: Lineage = await readLineage(character.payload.lineageId);
-      species.value = lineage.parent ?? lineage;
-
-      await loadEthnicities(species.value);
-      ethnicity.value = lineage.parent ? lineage : undefined;
-
-      const languageIds: Set<string> = new Set(character.payload.languageIds);
-      languageList.value.forEach((language) => {
-        if (languageIds.has(language.id)) {
-          languages.value.add(language.id);
-        }
-      });
-    }
+    const languageIds: Set<string> = new Set(character.creation.languages.map((language) => language.id));
+    languages.value.forEach((language) => {
+      if (languageIds.has(language.id)) {
+        selectedLanguages.value.add(language.id);
+      }
+    });
   } catch (e: unknown) {
     emit("error", e);
   } finally {
