@@ -5,6 +5,11 @@ export type Character = Aggregate & {
   // TODO(fpion): complete
 };
 
+export type CreateCharacterPayload = {
+  lineageId: string;
+  languageIds: string[];
+};
+
 export type SearchCharactersPayload = SearchPayload & {
   // TODO(fpion): complete
   sort: CharacterSortOption[];

@@ -83,8 +83,10 @@ import SortSelect from "@/components/shared/SortSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Character, CharacterSort, SearchCharactersPayload } from "@/types/characters";
+import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
 import { handleErrorKey } from "@/inject";
+import { searchCharacters } from "@/api/characters";
 import { useDocument } from "@/composables/document";
 
 const document = useDocument();
@@ -96,9 +98,9 @@ const { orderBy } = arrayUtils;
 const { parseBoolean, parseNumber } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
+const characters = ref<Character[]>([]);
 const hasLoaded = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
-const characters = ref<Character[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
@@ -152,11 +154,11 @@ async function refresh(): Promise<void> {
   const now = Date.now();
   timestamp.value = now;
   try {
-    // TODO(fpion): const results: SearchResults<Character> = await searchCharacters(payload);
-    // if (now === timestamp.value) {
-    //   characters.value = [...results.items];
-    //   total.value = results.total;
-    // }
+    const results: SearchResults<Character> = await searchCharacters(payload);
+    if (now === timestamp.value) {
+      characters.value = [...results.items];
+      total.value = results.total;
+    }
   } catch (e: unknown) {
     handleError(e);
   } finally {
