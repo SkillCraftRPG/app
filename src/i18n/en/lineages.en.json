@@ -4,6 +4,7 @@
     "create": "Create an ethnicity",
     "created": "The ethnicity was created.",
     "empty": "No ethnicities have been created for this species yet.",
+    "label": "Ethnicity",
     "title": "Ethnicities"
   },
   "features": {
@@ -83,6 +84,7 @@
   "species": {
     "create": "Create a species",
     "created": "The species was created.",
+    "label": "Species",
     "title": "Species"
   }
 }

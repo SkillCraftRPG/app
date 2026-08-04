@@ -47,6 +47,17 @@ const router = createRouter({
       path: "/castes/:id",
       component: () => import("./views/castes/CasteView.vue"),
     },
+    // Characters
+    {
+      name: "Characters",
+      path: "/characters",
+      component: () => import("./views/characters/CharactersView.vue"),
+    },
+    {
+      name: "CreateCharacter",
+      path: "/characters/create",
+      component: () => import("./views/characters/CreateCharacter.vue"),
+    },
     // Customizations
     {
       name: "Customizations",

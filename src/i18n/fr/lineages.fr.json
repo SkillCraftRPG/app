@@ -4,6 +4,7 @@
     "create": "Créer une ethnicité",
     "created": "L’ethnicité a été créée.",
     "empty": "Aucune ethnicité n’a encore été créée pour cette espèce.",
+    "label": "Ethnicité",
     "title": "Ethnicités"
   },
   "features": {
@@ -38,7 +39,7 @@
     },
     "custom": {
       "add": "Nouvelle catégorie",
-      "help": "Ajoutez d’autres catégories de noms propres à cette ethnie.",
+      "help": "Ajoutez d’autres catégories de noms propres à cette lignée.",
       "lead": "Catégories personnalisées"
     },
     "family": "Noms de famille",
@@ -83,6 +84,7 @@
   "species": {
     "create": "Créer une espèce",
     "created": "L’espèce a été créée.",
+    "label": "Espèce",
     "title": "Espèces"
   }
 }

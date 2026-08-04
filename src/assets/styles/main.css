@@ -41,13 +41,6 @@ button:disabled {
   flex-direction: column;
 }
 
-.selected {
-  background-color: #f0f0f0;
-}
-[data-bs-theme="dark"] .selected {
-  background-color: #2a2a2a;
-}
-
 @media (min-width: 576px) {
   .jumbotron {
     padding: 4rem 2rem;

@@ -1,0 +1,40 @@
+<template>
+  <main class="container page">
+    <h1>{{ title }}</h1>
+    <WorldBreadcrumb :current="t('characters.creation.label')" :parent="breadcrumb" />
+    <TarProgress class="mb-3" :value="progress" />
+    <CharacterCreationAscendancy v-if="character.step === CharacterCreationStep.Ascendancy" @abandon="abandon" @error="handleError" />
+  </main>
+</template>
+
+<script setup lang="ts">
+import { computed, inject, watchEffect } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+
+import CharacterCreationAscendancy from "@/components/characters/creation/CharacterCreationAscendancy.vue";
+import TarProgress from "@/components/tar/TarProgress.vue";
+import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
+import type { Breadcrumb } from "@/types/tar/breadcrumb";
+import { CharacterCreationStep } from "@/types/characters";
+import { handleErrorKey } from "@/inject";
+import { useCharacterStore } from "@/stores/character";
+import { useDocument } from "@/composables/document";
+
+const character = useCharacterStore();
+const document = useDocument();
+const handleError = inject(handleErrorKey) as (e: unknown) => void;
+const router = useRouter();
+const { t } = useI18n();
+
+const breadcrumb = computed<Breadcrumb>(() => ({ text: t("characters.title"), to: { name: "Characters" } }));
+const progress = computed<number>(() => Math.floor(character.step * 100) / 9);
+const title = computed<string>(() => t("characters.creation.title"));
+
+function abandon(): void {
+  character.abandon();
+  router.push({ name: "Characters" });
+}
+
+watchEffect(() => document.setTitle(title.value));
+</script>

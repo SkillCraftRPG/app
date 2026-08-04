@@ -1,5 +1,6 @@
 import account from "./account.fr.json";
 import castes from "./castes.fr.json";
+import characters from "./characters.fr.json";
 import customizations from "./customizations.fr.json";
 import educations from "./educations.fr.json";
 import errors from "./errors.fr.json";
@@ -18,6 +19,7 @@ export default {
   ...index,
   account,
   castes,
+  characters,
   customizations,
   educations,
   errors,

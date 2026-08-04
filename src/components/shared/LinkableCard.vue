@@ -71,7 +71,7 @@ const classes = computed<string[]>(() => {
     classes.push("clickable");
   }
   if (parseBoolean(props.selected)) {
-    classes.push("selected");
+    classes.push("border-primary", "bg-primary-subtle");
   }
   return classes;
 });
