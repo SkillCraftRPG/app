@@ -1,6 +1,5 @@
 <template>
   <section>
-    <!-- TODO(fpion): offcanvas -->
     <h2 class="h3">{{ t("characters.creation.ascendancy.title") }}</h2>
     <section v-if="isLoading !== true">
       <h3 class="h5">{{ t("lineages.species.label") }}</h3>
@@ -69,8 +68,10 @@
         </div>
       </section>
     </template>
-    <!-- TODO(fpion): cancel & next buttons -->
-    <p :class="{ 'text-danger': !isValid, 'text-success': isValid }">{{ isValid ? "valid" : "invalid" }}</p>
+    <div class="d-flex justify-content-between">
+      <TarButton icon="fas fa-xmark" outline :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
+      <TarButton :disabled="!isValid" icon="fas fa-arrow-right" :text="t('actions.next')" @click="submit" />
+    </div>
   </section>
 </template>
 
@@ -84,16 +85,20 @@ import LineageCard from "@/components/lineages/LineageCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";
+import TarButton from "@/components/tar/TarButton.vue";
 import type { Language } from "@/types/languages";
 import type { Lineage } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
-import { listEthnicities, listSpecies } from "@/api/lineages";
+import { listEthnicities, listSpecies, readLineage } from "@/api/lineages";
 import { listLanguages } from "@/api/languages";
+import { useCharacterStore } from "@/stores/character";
 
+const character = useCharacterStore();
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
 const emit = defineEmits<{
+  (e: "abandon"): void;
   (e: "error", value: unknown): void;
 }>();
 
@@ -148,34 +153,62 @@ function toggleLanguage(value: Language): void {
   }
 }
 
+async function loadEthnicities(species: Lineage): Promise<void> {
+  isLoading.value = "ethnicities";
+  try {
+    const results: SearchResults<Lineage> = await listEthnicities(species.id);
+    ethnicities.value = orderBy(results.items, "name");
+  } catch (e: unknown) {
+    emit("error", e);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 async function toggleSpecies(value: Lineage): Promise<void> {
   if (species.value?.id === value.id) {
     species.value = undefined;
     ethnicities.value = [];
   } else {
     species.value = value;
-
-    isLoading.value = "ethnicities";
-    try {
-      const results: SearchResults<Lineage> = await listEthnicities(species.value.id);
-      ethnicities.value = orderBy(results.items, "name");
-    } catch (e: unknown) {
-      emit("error", e);
-    } finally {
-      isLoading.value = false;
-    }
+    await loadEthnicities(species.value);
   }
   ethnicity.value = undefined;
   languages.value.clear();
 }
 
+function submit(): void {
+  const lineage: Lineage | undefined = ethnicity.value ?? species.value;
+  if (lineage) {
+    character.saveAscendancy(
+      lineage,
+      languageList.value.filter((language) => languages.value.has(language.id)),
+    );
+  }
+}
+
 onMounted(async () => {
   try {
-    const species: SearchResults<Lineage> = await listSpecies();
-    speciesList.value = orderBy(species.items, "name");
+    const speciesResults: SearchResults<Lineage> = await listSpecies();
+    speciesList.value = orderBy(speciesResults.items, "name");
 
-    const languages: SearchResults<Language> = await listLanguages();
-    languageList.value = orderBy(languages.items, "name");
+    const languageResults: SearchResults<Language> = await listLanguages();
+    languageList.value = orderBy(languageResults.items, "name");
+
+    if (character.payload.lineageId) {
+      const lineage: Lineage = await readLineage(character.payload.lineageId);
+      species.value = lineage.parent ?? lineage;
+
+      await loadEthnicities(species.value);
+      ethnicity.value = lineage.parent ? lineage : undefined;
+
+      const languageIds: Set<string> = new Set(character.payload.languageIds);
+      languageList.value.forEach((language) => {
+        if (languageIds.has(language.id)) {
+          languages.value.add(language.id);
+        }
+      });
+    }
   } catch (e: unknown) {
     emit("error", e);
   } finally {

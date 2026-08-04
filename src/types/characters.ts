@@ -5,6 +5,11 @@ export type Character = Aggregate & {
   // TODO(fpion): complete
 };
 
+export enum CharacterCreationStep {
+  Ascendancy = 0,
+  Customization = 1,
+}
+
 export type CreateCharacterPayload = {
   lineageId: string;
   languageIds: string[];
