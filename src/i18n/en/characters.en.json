@@ -47,6 +47,12 @@
       "title": "Customization"
     },
     "label": "Create",
+    "talents": {
+      "empty": {
+        "help": "Create the first tier 0 talent in this world before continuing character creation.",
+        "lead": "No talents available."
+      }
+    },
     "title": "Create a character"
   },
   "dominantHand": {

@@ -47,6 +47,12 @@
       "title": "Personnalisation"
     },
     "label": "Création",
+    "talents": {
+      "empty": {
+        "help": "Créez le premier talent de tiers 0 de ce monde avant de poursuivre la création du personnage.",
+        "lead": "Aucun talent disponible."
+      }
+    },
     "title": "Créer un personnage"
   },
   "dominantHand": {
