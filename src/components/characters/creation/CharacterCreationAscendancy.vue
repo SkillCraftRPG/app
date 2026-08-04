@@ -1,5 +1,6 @@
 <template>
   <section>
+    <!-- TODO(fpion): offcanvas -->
     <h2 class="h3">{{ t("characters.creation.ascendancy.title") }}</h2>
     <section v-if="isLoading !== true">
       <h3 class="h5">{{ t("lineages.species.label") }}</h3>
@@ -68,6 +69,7 @@
         </div>
       </section>
     </template>
+    <!-- TODO(fpion): cancel & next buttons -->
     <p :class="{ 'text-danger': !isValid, 'text-success': isValid }">{{ isValid ? "valid" : "invalid" }}</p>
   </section>
 </template>
