@@ -68,6 +68,7 @@
         </div>
       </section>
     </template>
+    <p :class="{ 'text-danger': !isValid, 'text-success': isValid }">{{ isValid ? "valid" : "invalid" }}</p>
   </section>
 </template>
 
@@ -121,6 +122,8 @@ const languagesHelp = computed<string>(() => {
   }
   return t("characters.creation.ascendancy.languages.none");
 });
+
+const isValid = computed<boolean>(() => Boolean(species.value && (!ethnicities.value.length || ethnicity.value) && !remainingLanguages.value));
 
 function isClickable(language: Language): boolean {
   return Boolean(!grantedLanguages.value.has(language.id) && (languages.value.has(language.id) || remainingLanguages.value));
