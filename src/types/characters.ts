@@ -8,12 +8,18 @@ export type Character = Aggregate & {
 export enum CharacterCreationStep {
   Ascendancy = 0,
   Customization = 1,
+  Context = 2,
 }
 
 export type CreateCharacterPayload = {
   lineageId: string;
   languageIds: string[];
+  name: string;
+  dominantHand?: DominantHand | null;
+  customizationIds: string[];
 };
+
+export type DominantHand = "Left" | "Right";
 
 export type SearchCharactersPayload = SearchPayload & {
   // TODO(fpion): complete

@@ -4,6 +4,8 @@
     <WorldBreadcrumb :current="t('characters.creation.label')" :parent="breadcrumb" />
     <TarProgress class="mb-3" :value="progress" />
     <CharacterCreationAscendancy v-if="character.step === CharacterCreationStep.Ascendancy" @abandon="abandon" @error="handleError" />
+    <CharacterCreationCustomization v-else-if="character.step === CharacterCreationStep.Customization" @abandon="abandon" @error="handleError" />
+    <CharacterCreationContext v-else-if="character.step === CharacterCreationStep.Context" @abandon="abandon" @error="handleError" />
   </main>
 </template>
 
@@ -13,6 +15,8 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import CharacterCreationAscendancy from "@/components/characters/creation/CharacterCreationAscendancy.vue";
+import CharacterCreationContext from "@/components/characters/creation/CharacterCreationContext.vue";
+import CharacterCreationCustomization from "@/components/characters/creation/CharacterCreationCustomization.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
