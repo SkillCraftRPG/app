@@ -31,12 +31,7 @@
             <TalentTierSelect class="mb-3" :model-value="tier" @update:model-value="setQuery('tier', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
-            <BooleanSelect
-              id="allow-multiple-purchases"
-              label="talents.allowMultiplePurchases.label"
-              :model-value="allowMultiplePurchases"
-              @update:model-value="setQuery('multiple', $event)"
-            />
+            <MultiplePurchasesSelect :model-value="allowMultiplePurchases" @update:model-value="setQuery('multiple', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
             <SkillSelect class="mb-3" extended :model-value="skill" @update:model-value="setQuery('skill', $event)" />
@@ -104,10 +99,10 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import BooleanSelect from "@/components/shared/BooleanSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateTalent from "@/components/talents/CreateTalent.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import MultiplePurchasesSelect from "@/components/talents/MultiplePurchasesSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
