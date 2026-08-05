@@ -4,7 +4,11 @@
     <template v-if="!isLoading">
       <section v-if="talents.length">
         <p class="text-body-secondary">{{ t("characters.talents.help") }}</p>
-        <!-- TODO(fpion): rules somewhere (spent 10-12 points, 6 total skills, caste & education skills) -->
+        <ul class="list-unstyled mt-2 mb-3 small">
+          <li v-for="rule in evaluation" :key="rule.key" :class="getClasses(rule)">
+            <font-awesome-icon :icon="rule.success ? 'fas fa-check' : 'fas fa-xmark'" />&nbsp;{{ rule.text }}
+          </li>
+        </ul>
         <AddCharacterTalent v-if="context" class="mb-3" :context="context" :talents="talents" @added="add" />
         <template v-if="acquisitions.length">
           <div class="row">
@@ -47,13 +51,20 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import RemoveCharacterTalentModal from "@/components/characters/talents/RemoveCharacterTalentModal.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
+import type { Caste } from "@/types/castes";
 import type { CharacterTalent, CharacterTalentContext } from "@/types/characters";
+import type { Education } from "@/types/educations";
 import type { Lineage } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
 import type { SearchTalentsPayload, Talent } from "@/types/talents";
+import type { Skill } from "@/types/game";
+import { calculateCost } from "@/utils/talent";
 import { searchTalents } from "@/api/talents";
 import { useCharacterStore } from "@/stores/character";
 
+const MAX_POINTS: number = 12;
+const MIN_POINTS: number = 10;
+const REQUIRED_SKILLS: number = 6;
 const character = useCharacterStore();
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
@@ -68,9 +79,19 @@ const index = ref<number>(0);
 const isLoading = ref<boolean>(true);
 const removeModal = ref<InstanceType<typeof RemoveCharacterTalentModal> | null>(null);
 const talents = ref<Talent[]>([]);
+const touched = ref<boolean>(false);
 
 const acquisition = computed<CharacterTalent | undefined>(() => acquisitions.value[index.value]);
-const canSubmit = computed<boolean>(() => false);
+const spent = computed<number>(() => acquisitions.value.reduce((sum, acquisition) => sum + calculateCost(acquisition.talent, acquisition.discounts), 0));
+const trained = computed<Set<Skill>>(() => {
+  const trained: Set<Skill> = new Set();
+  acquisitions.value.forEach(({ talent }) => {
+    if (talent.skill) {
+      trained.add(talent.skill);
+    }
+  });
+  return trained;
+});
 
 const lineage = computed<Lineage | undefined>(() =>
   character.creation.ethnicity ? { ...character.creation.ethnicity, parent: character.creation.species } : character.creation.species,
@@ -86,8 +107,65 @@ const context = computed<CharacterTalentContext | undefined>(() =>
     : undefined,
 );
 
+type Rule = {
+  key: string;
+  success: boolean;
+  text: string;
+};
+const evaluation = computed<Rule[]>(() => {
+  const rules: Rule[] = [
+    {
+      key: "min",
+      success: spent.value >= MIN_POINTS,
+      text: t("characters.talents.rules.min", { spent: spent.value, min: MIN_POINTS }),
+    },
+    {
+      key: "max",
+      success: spent.value <= MAX_POINTS,
+      text: t("characters.talents.rules.max", { spent: spent.value, max: MAX_POINTS }),
+    },
+    {
+      key: "skills",
+      success: trained.value.size >= REQUIRED_SKILLS,
+      text: t("characters.talents.rules.skills", { trained: trained.value.size, required: REQUIRED_SKILLS }),
+    },
+  ];
+  const caste: Caste | undefined = character.creation.caste;
+  if (caste?.skill) {
+    rules.push({
+      key: "caste",
+      success: trained.value.has(caste.skill),
+      text: t("characters.talents.rules.caste", {
+        skill: t(`game.skill.options.${caste.skill}`),
+        caste: caste.name,
+      }),
+    });
+  }
+  const education: Education | undefined = character.creation.education;
+  if (education?.skill) {
+    rules.push({
+      key: "education",
+      success: trained.value.has(education.skill),
+      text: t("characters.talents.rules.education", {
+        skill: t(`game.skill.options.${education.skill}`),
+        education: education.name,
+      }),
+    });
+  }
+  return rules;
+});
+const canSubmit = computed<boolean>(() => evaluation.value.every((rule) => rule.success));
+
+function getClasses(rule: Rule): string[] {
+  if (!touched.value) {
+    return ["text-secondary"];
+  }
+  return [rule.success ? "text-success" : "text-danger"];
+}
+
 function add(acquisition: CharacterTalent): void {
   acquisitions.value.push(acquisition);
+  touched.value = true;
 }
 function remove(index: number): void {
   acquisitions.value.splice(index, 1);
@@ -104,7 +182,7 @@ function openRemove(targetIndex: number): void {
 
 function submit(): void {
   if (canSubmit.value) {
-    console.log("Submitting…"); // TODO(fpion): implement
+    character.saveTalents(acquisitions.value);
   }
 }
 
@@ -120,6 +198,16 @@ onMounted(async () => {
     };
     const results: SearchResults<Talent> = await searchTalents(payload);
     talents.value = orderBy(results.items, "name");
+
+    const talentsById: Map<string, Talent> = new Map();
+    talents.value.forEach((talent) => talentsById.set(talent.id, talent));
+    character.creation.talents.forEach((acquisition) => {
+      const talent: Talent | undefined = talentsById.get(acquisition.talent.id);
+      if (talent) {
+        acquisitions.value.push({ ...acquisition, talent });
+      }
+    });
+    touched.value = acquisitions.value.length > 0;
   } catch (e: unknown) {
     emit("error", e);
   } finally {

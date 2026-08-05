@@ -20,6 +20,7 @@ export type CharacterCreation = {
   customizations: Customization[];
   caste?: Caste;
   education?: Education;
+  talents: CharacterTalent[];
 };
 
 export enum CharacterCreationStep {
@@ -27,6 +28,7 @@ export enum CharacterCreationStep {
   Customization = 1,
   Context = 2,
   Talents = 3,
+  Attributes = 4,
 }
 
 export type CreateCharacterPayload = {

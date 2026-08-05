@@ -97,6 +97,13 @@
       "help": "Voulez-vous retirer le talent <strong>{name}</strong> du personnage? Les points de talent et les rabais appliqués seront recalculés. Sa précision et ses notes seront également supprimées.",
       "lead": "Retirer ce talent ?"
     },
+    "rules": {
+      "caste": "Être formé en {skill}, la compétence de la caste {caste}",
+      "education": "Être formé en {skill}, la compétence de l’éducation {education}",
+      "max": "Dépenser au plus {max} points ({spent} / {max})",
+      "min": "Dépenser au moins {min} points ({spent} / {min})",
+      "skills": "Être formé dans au moins {required} compétences ({trained} / {required})"
+    },
     "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
   "title": "Personnages"
