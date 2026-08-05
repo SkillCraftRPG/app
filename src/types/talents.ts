@@ -15,7 +15,7 @@ export type CreateOrReplaceTalentPayload = {
 export type SearchTalentsPayload = SearchPayload & {
   tiers?: number[];
   allowMultiplePurchases?: boolean | null;
-  skill?: Skill | null;
+  skill?: string | null;
   requiredTalentId?: string | null;
   sort: TalentSortOption[];
 };

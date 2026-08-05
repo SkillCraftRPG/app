@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { arrayUtils } from "logitar-js";
+import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -19,10 +19,12 @@ import TarSelect from "@/components/tar/TarSelect.vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
+const { parseBoolean } = parsingUtils;
 const { rt, t, tm } = useI18n();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    extended?: boolean | string;
     id?: string;
     label?: string;
     modelValue: string;
@@ -39,12 +41,14 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-const options = computed<SelectOption[]>(() =>
-  orderBy(
+const options = computed<SelectOption[]>(() => {
+  const options: SelectOption[] = orderBy(
     Object.entries(tm(rt("game.skill.options"))).map(([value, text]) => ({ text, value })),
     "text",
-  ),
-);
-
-// TODO(fpion): extended
+  );
+  if (parseBoolean(props.extended)) {
+    options.splice(0, 0, { value: "any", text: t("game.skill.any") }, { value: "none", text: t("game.skill.none") });
+  }
+  return options;
+});
 </script>

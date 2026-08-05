@@ -20,7 +20,9 @@
     }
   },
   "skill": {
+    "any": "Any",
     "label": "Skill",
+    "none": "None",
     "options": {
       "Acrobatics": "Acrobatics",
       "Athletics": "Athletics",

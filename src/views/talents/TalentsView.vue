@@ -39,7 +39,7 @@
             />
           </div>
           <div class="col-md-6 col-lg-3">
-            <SkillSelect class="mb-3" :model-value="skill" @update:model-value="setQuery('skill', $event)" />
+            <SkillSelect class="mb-3" extended :model-value="skill" @update:model-value="setQuery('skill', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
             <TalentSelect
@@ -120,7 +120,6 @@ import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { SearchResults } from "@/types/search";
 import type { SearchTalentsPayload, Talent, TalentSort } from "@/types/talents";
 import type { SelectOption } from "@/types/tar/select";
-import type { Skill } from "@/types/game";
 import { handleErrorKey } from "@/inject";
 import { searchTalents } from "@/api/talents";
 import { useDocument } from "@/composables/document";
@@ -201,7 +200,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    skill: skill.value ? (skill.value as Skill) : undefined,
+    skill: skill.value,
     tiers: typeof tier.value === "number" ? [tier.value] : undefined,
     sort: sort.value ? [{ field: sort.value as TalentSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,
