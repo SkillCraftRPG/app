@@ -65,7 +65,7 @@
   },
   "talents": {
     "add": "Ajouter un talent",
-    "help": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
+    "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
   "title": "Personnages"
 }
