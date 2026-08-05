@@ -7,6 +7,7 @@
     <CharacterCreationCustomization v-else-if="character.step === CharacterCreationStep.Customization" @abandon="abandon" @error="handleError" />
     <CharacterCreationContext v-else-if="character.step === CharacterCreationStep.Context" @abandon="abandon" @error="handleError" />
     <CharacterCreationTalents v-else-if="character.step === CharacterCreationStep.Talents" @abandon="abandon" @error="handleError" />
+    <CharacterCreationAttributes v-else-if="character.step === CharacterCreationStep.Attributes" @abandon="abandon" />
   </main>
 </template>
 
@@ -16,6 +17,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import CharacterCreationAscendancy from "@/components/characters/creation/CharacterCreationAscendancy.vue";
+import CharacterCreationAttributes from "@/components/characters/creation/CharacterCreationAttributes.vue";
 import CharacterCreationContext from "@/components/characters/creation/CharacterCreationContext.vue";
 import CharacterCreationCustomization from "@/components/characters/creation/CharacterCreationCustomization.vue";
 import CharacterCreationTalents from "@/components/characters/creation/CharacterCreationTalents.vue";
