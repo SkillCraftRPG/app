@@ -5,6 +5,7 @@ import type { Education } from "./educations";
 import type { Language } from "./languages";
 import type { Lineage } from "./lineages";
 import type { SearchPayload, SortOption } from "./search";
+import type { Talent } from "./talents";
 
 export type Character = Aggregate & {
   // TODO(fpion): complete
@@ -49,6 +50,14 @@ export type CharacterSort = "CreatedOn" | "UpdatedOn";
 
 export type CharacterSortOption = SortOption & {
   field: CharacterSort;
+};
+
+export type CharacterTalent = {
+  id: string;
+  talent: Talent;
+  qualifier?: string | null;
+  notes?: string | null;
+  discounts: CharacterTalentDiscount[];
 };
 
 export type CharacterTalentDiscount = {

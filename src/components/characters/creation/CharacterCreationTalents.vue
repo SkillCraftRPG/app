@@ -43,7 +43,7 @@ import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import AddCharacterTalent from "@/components/characters/AddCharacterTalent.vue";
+import AddCharacterTalent from "@/components/characters/talents/AddCharacterTalent.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
