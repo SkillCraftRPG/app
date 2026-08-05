@@ -25,9 +25,8 @@
           v-for="(discount, index) in discounts"
           :key="index"
           class="mb-3"
-          :customizations="customizations"
+          :context="context"
           :id="`discount-${index}`"
-          :lineage="lineage"
           :max="baseCost"
           :model-value="discount"
           @update:model-value="update(index, $event)"
@@ -47,25 +46,17 @@ import NameField from "@/components/shared/NameField.vue";
 import NotesField from "@/components/shared/NotesField.vue";
 import TalentCard from "@/components/talents/TalentCard.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { CharacterTalentDetail, CharacterTalentDiscount } from "@/types/characters";
-import type { Customization } from "@/types/customizations";
-import type { Lineage } from "@/types/lineages";
+import type { CharacterTalentContext, CharacterTalentDetail, CharacterTalentDiscount } from "@/types/characters";
 import type { Talent } from "@/types/talents";
 import { calculateCost } from "@/utils/talent";
 import { useForm } from "@/forms";
 
 const { t } = useI18n();
 
-const props = withDefaults(
-  defineProps<{
-    customizations?: Customization[];
-    lineage: Lineage;
-    talent: Talent;
-  }>(),
-  {
-    customizations: () => [],
-  },
-);
+const props = defineProps<{
+  context: CharacterTalentContext;
+  talent: Talent;
+}>();
 
 const emit = defineEmits<{
   (e: "saved", value: CharacterTalentDetail): void;

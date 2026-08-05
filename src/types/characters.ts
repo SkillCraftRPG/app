@@ -60,6 +60,13 @@ export type CharacterTalent = {
   discounts: CharacterTalentDiscount[];
 };
 
+export type CharacterTalentContext = {
+  tier: number;
+  lineage: Lineage;
+  customizations: Customization[];
+  talents: CharacterTalent[];
+};
+
 export type CharacterTalentDetail = {
   qualifier: string;
   notes: string;

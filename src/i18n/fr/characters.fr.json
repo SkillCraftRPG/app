@@ -90,6 +90,8 @@
       "target": "Précisez",
       "title": "Rabais"
     },
+    "empty": "Ce personnage ne possède aucun talent.",
+    "help": "Choisissez les talents du personnage en respectant les critères suivants.",
     "qualifier": "Précision",
     "remove": {
       "help": "Voulez-vous retirer le talent <strong>{name}</strong> du personnage? Les points de talent et les rabais appliqués seront recalculés. Sa précision et ses notes seront également supprimées.",

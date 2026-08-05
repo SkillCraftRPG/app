@@ -90,6 +90,7 @@
       "target": "Specify",
       "title": "Discounts"
     },
+    "empty": "This character does not have any talents.",
     "qualifier": "Qualifier",
     "remove": {
       "help": "Do you want to remove the <strong>{name}</strong> talent from the character? Talent points and applied discounts will be recalculated. Its qualifier and notes will also be deleted.",

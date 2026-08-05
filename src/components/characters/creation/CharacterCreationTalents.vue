@@ -3,17 +3,9 @@
     <h2 class="h3">{{ t("talents.title") }}</h2>
     <template v-if="!isLoading">
       <section v-if="talents.length">
-        <p class="text-body-secondary">TODO(fpion): help</p>
-        <AddCharacterTalent
-          v-if="lineage"
-          :acquired="acquired"
-          class="mb-3"
-          :customizations="character.creation.customizations"
-          :lineage="lineage"
-          :talents="talents"
-          tier="0"
-          @added="add"
-        />
+        <p class="text-body-secondary">{{ t("characters.talents.help") }}</p>
+        <!-- TODO(fpion): rules somewhere (spent 10-12 points, 6 total skills, caste & education skills) -->
+        <AddCharacterTalent v-if="context" class="mb-3" :context="context" :talents="talents" @added="add" />
         <template v-if="acquisitions.length">
           <div class="row">
             <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
@@ -22,8 +14,7 @@
           </div>
           <RemoveCharacterTalentModal v-if="acquisition" :acquisition="acquisition" ref="removeModal" @confirm="remove(index)" />
         </template>
-        <p v-else>TODO(fpion): empty</p>
-        <!-- TODO(fpion): rules somewhere (spent 10-12 points, 6 total skills, caste & education skills) -->
+        <p v-else>{{ t("characters.talents.empty") }}</p>
       </section>
       <TarAlert v-else class="d-flex justify-content-between" show variant="warning">
         <div>
@@ -56,7 +47,7 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import RemoveCharacterTalentModal from "@/components/characters/talents/RemoveCharacterTalentModal.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { CharacterTalent } from "@/types/characters";
+import type { CharacterTalent, CharacterTalentContext } from "@/types/characters";
 import type { Lineage } from "@/types/lineages";
 import type { SearchResults } from "@/types/search";
 import type { SearchTalentsPayload, Talent } from "@/types/talents";
@@ -78,15 +69,21 @@ const isLoading = ref<boolean>(true);
 const removeModal = ref<InstanceType<typeof RemoveCharacterTalentModal> | null>(null);
 const talents = ref<Talent[]>([]);
 
-const acquired = computed<Talent[]>(() => {
-  const acquired: Map<string, Talent> = new Map();
-  acquisitions.value.forEach((acquisition) => acquired.set(acquisition.talent.id, acquisition.talent));
-  return [...acquired.values()];
-});
 const acquisition = computed<CharacterTalent | undefined>(() => acquisitions.value[index.value]);
 const canSubmit = computed<boolean>(() => false);
+
 const lineage = computed<Lineage | undefined>(() =>
   character.creation.ethnicity ? { ...character.creation.ethnicity, parent: character.creation.species } : character.creation.species,
+);
+const context = computed<CharacterTalentContext | undefined>(() =>
+  lineage.value
+    ? {
+        tier: 0,
+        lineage: lineage.value,
+        customizations: character.creation.customizations,
+        talents: acquisitions.value,
+      }
+    : undefined,
 );
 
 function add(acquisition: CharacterTalent): void {

@@ -47,26 +47,19 @@ import CharacterTalentDiscountSourceField from "./CharacterTalentDiscountSourceF
 import CharacterTalentDiscountTargetField from "./CharacterTalentDiscountTargetField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
-import type { CharacterTalentDiscount, CharacterTalentDiscountSource } from "@/types/characters";
-import type { Customization } from "@/types/customizations";
+import type { CharacterTalentContext, CharacterTalentDiscount, CharacterTalentDiscountSource } from "@/types/characters";
 import type { Lineage } from "@/types/lineages";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
-const props = withDefaults(
-  defineProps<{
-    customizations?: Customization[];
-    id: string;
-    lineage: Lineage;
-    max?: number | string;
-    modelValue: CharacterTalentDiscount;
-  }>(),
-  {
-    customizations: () => [],
-  },
-);
+const props = defineProps<{
+  context: CharacterTalentContext;
+  id: string;
+  max?: number | string;
+  modelValue: CharacterTalentDiscount;
+}>();
 
 const emit = defineEmits<{
   (e: "removed"): void;
@@ -85,13 +78,13 @@ const options = computed<SelectOption[] | undefined>(() => {
   switch (props.modelValue.source) {
     case "Customization":
       return orderBy(
-        props.customizations.map(({ id, name }) => ({ text: name, value: id })),
+        props.context.customizations.map(({ id, name }) => ({ text: name, value: id })),
         "text",
       );
     case "Lineage":
-      const lineages: Lineage[] = [props.lineage];
-      if (props.lineage.parent) {
-        lineages.push(props.lineage.parent);
+      const lineages: Lineage[] = [props.context.lineage];
+      if (props.context.lineage.parent) {
+        lineages.push(props.context.lineage.parent);
       }
       return orderBy(
         lineages.map(({ id, name }) => ({ text: name, value: id })),

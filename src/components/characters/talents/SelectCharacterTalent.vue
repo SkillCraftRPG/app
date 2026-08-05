@@ -3,7 +3,7 @@
     <p class="text-body-secondary">{{ t("characters.talents.select") }}</p>
     <section class="row">
       <div class="col-lg-6 col-xl-4">
-        <TalentTierSelect class="mb-3" :disabled="parsedTier === 0" :max="parsedTier" v-model="selectedTier" />
+        <TalentTierSelect class="mb-3" :disabled="!context.tier" :max="context.tier" v-model="selectedTier" />
       </div>
       <div class="col-lg-6 col-xl-4">
         <MultiplePurchasesSelect class="mb-3" v-model="allowMultiplePurchases" />
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { arrayUtils, parsingUtils } from "logitar-js";
+import { arrayUtils } from "logitar-js";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -64,19 +64,18 @@ import TalentCard from "@/components/talents/TalentCard.vue";
 import TalentTierSelect from "@/components/talents/TalentTierSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarSelect from "@/components/tar/TarSelect.vue";
+import type { CharacterTalentContext } from "@/types/characters";
 import type { SelectOption } from "@/types/tar/select";
 import type { Talent } from "@/types/talents";
 
 const LIMIT: number = 12;
 const { orderBy } = arrayUtils;
-const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
 const props = defineProps<{
-  acquired: Talent[];
+  context: CharacterTalentContext;
   selected?: Talent;
   talents: Talent[];
-  tier: number | string;
 }>();
 
 defineEmits<{
@@ -90,7 +89,7 @@ const search = ref<string>("");
 const selectedTier = ref<number>();
 const skill = ref<string>("");
 
-const acquiredTalentIds = computed<Set<string>>(() => new Set(props.acquired.map((talent) => talent.id)));
+const acquiredTalentIds = computed<Set<string>>(() => new Set(props.context.talents.map((acquired) => acquired.talent.id)));
 const filtered = computed<Talent[]>(() =>
   props.talents.filter((talent) => {
     if (acquiredTalentIds.value.has(talent.id) && !talent.allowMultiplePurchases) {
@@ -140,10 +139,9 @@ const options = computed<Talent[]>(() => {
   return limit.value ? ordered.slice(0, limit.value) : ordered;
 });
 
-const parsedTier = computed<number>(() => parseNumber(props.tier) ?? 0);
 const requiredTalents = computed<SelectOption[]>(() =>
   orderBy(
-    props.acquired.map(({ id, name }) => ({ text: name, value: id })),
+    props.context.talents.map(({ talent }) => ({ text: talent.name, value: talent.id })),
     "value",
   ),
 );
@@ -156,13 +154,13 @@ function clearFilters(): void {
   search.value = "";
   skill.value = "";
 
-  if (parsedTier.value) {
+  if (props.context.tier) {
     selectedTier.value = undefined;
   }
 }
 
 function selectRequiredTalent(id?: string): void {
-  requiredTalent.value = props.acquired.find((talent) => talent.id === id);
+  requiredTalent.value = props.context.talents.find(({ talent }) => talent.id === id)?.talent;
 }
 
 function toggleLimit(): void {
@@ -170,13 +168,13 @@ function toggleLimit(): void {
 }
 
 watch(
-  parsedTier,
-  (parsedTier) => {
-    if (parsedTier === 0) {
+  () => props.context,
+  (context) => {
+    if (!context.tier) {
       selectedTier.value = 0;
     }
   },
-  { immediate: true },
+  { deep: true, immediate: true },
 );
 
 defineExpose({ clearFilters });

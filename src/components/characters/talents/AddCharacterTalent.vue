@@ -2,8 +2,8 @@
   <div>
     <TarButton icon="fas fa-plus" size="large" :text="t('actions.add')" @click="open" />
     <TarModal centered :close="t('actions.close')" fade ref="modal" scrollable size="x-large" :title="t('characters.talents.add')">
-      <SelectCharacterTalent v-if="step === 'select'" :acquired="acquired" ref="select" :selected="talent" :talents="talents" :tier="tier" @toggle="toggle" />
-      <CharacterTalentForm v-else-if="talent" :customizations="customizations" :lineage="lineage" ref="form" :talent="talent" @saved="submit" />
+      <SelectCharacterTalent v-if="step === 'select'" :context="context" ref="select" :selected="talent" :talents="talents" @toggle="toggle" />
+      <CharacterTalentForm v-else-if="talent" :context="context" ref="form" :talent="talent" @saved="submit" />
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
         <TarButton v-if="step === 'select'" :disabled="!talent" icon="fas fa-arrow-right" :text="t('actions.next')" @click="next" />
@@ -24,28 +24,17 @@ import CharacterTalentForm from "./CharacterTalentForm.vue";
 import SelectCharacterTalent from "./SelectCharacterTalent.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
-import type { CharacterTalent, CharacterTalentDetail } from "@/types/characters";
-import type { Customization } from "@/types/customizations";
-import type { Lineage } from "@/types/lineages";
+import type { CharacterTalent, CharacterTalentContext, CharacterTalentDetail } from "@/types/characters";
 import type { Talent } from "@/types/talents";
 
 type Step = "select" | "form";
 
 const { t } = useI18n();
 
-withDefaults(
-  defineProps<{
-    acquired?: Talent[];
-    customizations?: Customization[];
-    lineage: Lineage;
-    talents: Talent[];
-    tier: number | string;
-  }>(),
-  {
-    acquired: () => [],
-    customizations: () => [],
-  },
-);
+defineProps<{
+  context: CharacterTalentContext;
+  talents: Talent[];
+}>();
 
 const emit = defineEmits<{
   (e: "added", value: CharacterTalent): void;
