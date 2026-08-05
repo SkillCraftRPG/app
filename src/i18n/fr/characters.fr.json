@@ -63,8 +63,33 @@
       "Unspecified": "Non précisée"
     }
   },
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
   "talents": {
     "add": "Ajouter un talent",
+    "cost": {
+      "base": "Coût de base",
+      "effective": "Coût effectif"
+    },
+    "discount": {
+      "amount": "Points",
+      "source": {
+        "label": "Source",
+        "options": {
+          "Custom": "Autre",
+          "Customization": "Don / Handicap",
+          "Lineage": "Lignée"
+        },
+        "placeholder": "Sélectionnez une source"
+      },
+      "target": "Précisez",
+      "title": "Rabais"
+    },
+    "qualifier": "Précision",
     "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
   "title": "Personnages"

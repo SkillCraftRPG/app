@@ -16,6 +16,7 @@
       "lead": "Retirer cette particularité ?"
     }
   },
+  "label": "Lignée",
   "languages": {
     "content": {
       "help": "Ajoutez des précisions sur les langues de cette lignée.",
@@ -74,6 +75,7 @@
       "skinny": "Maigre"
     }
   },
+  "placeholder": "Sélectionnez une lignée",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

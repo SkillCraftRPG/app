@@ -62,6 +62,7 @@
     "help": "La page demandée est introuvable.",
     "lead": "Page introuvable"
   },
+  "notes": "Notes",
   "pagination": {
     "first": "Première page",
     "label": "Pagination",

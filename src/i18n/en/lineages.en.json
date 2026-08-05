@@ -16,6 +16,7 @@
       "lead": "Remove this feature?"
     }
   },
+  "label": "Lineage",
   "languages": {
     "content": {
       "help": "Add details about the languages of this lineage.",
@@ -74,6 +75,7 @@
       "skinny": "Skinny"
     }
   },
+  "placeholder": "Select a lineage",
   "sort": {
     "options": {
       "CreatedOn": "Created on",

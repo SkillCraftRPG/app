@@ -62,6 +62,7 @@
     "help": "The requested page could not be found.",
     "lead": "Page Not Found"
   },
+  "notes": "Notes",
   "pagination": {
     "first": "First",
     "label": "Pagination",

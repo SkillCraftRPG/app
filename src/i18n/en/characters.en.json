@@ -63,8 +63,33 @@
       "Unspecified": "Unspecified"
     }
   },
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "UpdatedOn": "Last updated"
+    }
+  },
   "talents": {
     "add": "Add talent",
+    "cost": {
+      "base": "Base Cost",
+      "effective": "Effective Cost"
+    },
+    "discount": {
+      "amount": "Points",
+      "source": {
+        "label": "Source",
+        "options": {
+          "Custom": "Other",
+          "Customization": "Gift / Disability",
+          "Lineage": "Lineage"
+        },
+        "placeholder": "Select a source"
+      },
+      "target": "Specify",
+      "title": "Discounts"
+    },
+    "qualifier": "Qualifier",
     "select": "Select the talent to add to the character. Use the filters to narrow the results."
   },
   "title": "Characters"

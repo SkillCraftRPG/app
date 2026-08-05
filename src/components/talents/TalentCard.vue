@@ -33,7 +33,7 @@ import { useI18n } from "vue-i18n";
 import TalentTierDisplay from "./TalentTierDisplay.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";
 import TarCard from "@/components/tar/TarCard.vue";
-import type { SelectionKind } from "@/types/shared.ts";
+import type { SelectionKind } from "@/types/shared";
 import type { Talent } from "@/types/talents";
 
 const { parseBoolean } = parsingUtils;
