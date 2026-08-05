@@ -4,10 +4,6 @@ import type { Character, CreateCharacterPayload, SearchCharactersPayload } from 
 import type { SearchResults } from "@/types/search";
 import { get, post } from ".";
 
-function sleep(milliseconds: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
-
 export async function createCharacter(payload: CreateCharacterPayload): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters" }).buildRelative();
   return (await post<CreateCharacterPayload, Character>(url, payload)).data;
@@ -19,21 +15,19 @@ export async function readCharacter(id: string): Promise<Character> {
 }
 
 export async function searchCharacters(payload: SearchCharactersPayload): Promise<SearchResults<Character>> {
-  // const url: string = new urlUtils.UrlBuilder({ path: "/characters" })
-  //   .setQuery("ids", payload.ids)
-  //   .setQuery(
-  //     "search",
-  //     payload.search.terms.map(({ value }) => value),
-  //   )
-  //   .setQuery("search_operator", payload.search.operator)
-  //   .setQuery(
-  //     "sort",
-  //     payload.sort.map(({ field, isDescending }) => (isDescending ? `DESC.${field}` : field)),
-  //   )
-  //   .setQuery("skip", payload.skip.toString())
-  //   .setQuery("limit", payload.limit.toString())
-  //   .buildRelative();
-  // return (await get<SearchResults<Character>>(url)).data;
-  await sleep(1000);
-  return { items: [], total: 0 }; // TODO(fpion): complete
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters" })
+    .setQuery("ids", payload.ids)
+    .setQuery(
+      "search",
+      payload.search.terms.map(({ value }) => value),
+    )
+    .setQuery("search_operator", payload.search.operator)
+    .setQuery(
+      "sort",
+      payload.sort.map(({ field, isDescending }) => (isDescending ? `DESC.${field}` : field)),
+    )
+    .setQuery("skip", payload.skip.toString())
+    .setQuery("limit", payload.limit.toString())
+    .buildRelative();
+  return (await get<SearchResults<Character>>(url)).data;
 }
