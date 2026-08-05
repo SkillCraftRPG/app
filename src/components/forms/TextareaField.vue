@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import type { RuleExecutionResult, ValidationResult, ValidationRuleSet } from "logitar-validation";
-import { computed, onUnmounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { nanoid } from "nanoid";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
@@ -119,7 +119,7 @@ function focus(): void {
 }
 defineExpose({ focus });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   if (unbindField) {
     unbindField(props.id);
   }
