@@ -9,7 +9,7 @@
         <MultiplePurchasesSelect class="mb-3" v-model="allowMultiplePurchases" />
       </div>
       <div class="col-lg-6 col-xl-4">
-        <SkillSelect class="mb-3" v-model="skill" />
+        <SkillSelect class="mb-3" extended v-model="skill" />
       </div>
       <div class="col-lg-6">
         <SearchInput class="mb-3" v-model="search" />
@@ -105,8 +105,22 @@ const filtered = computed<Talent[]>(() =>
     if (typeof allowMultiplePurchases.value === "boolean" && talent.allowMultiplePurchases !== allowMultiplePurchases.value) {
       return false;
     }
-    if ((skill.value === "any" && !talent.skill) || (skill.value === "none" && talent.skill) || (skill.value && talent.skill !== skill.value)) {
-      return false;
+    switch (skill.value) {
+      case "any":
+        if (!talent.skill) {
+          return false;
+        }
+        break;
+      case "none":
+        if (talent.skill) {
+          return false;
+        }
+        break;
+      default:
+        if (skill.value && skill.value !== talent.skill) {
+          return false;
+        }
+        break;
     }
     const searchText: string = search.value.trim().toLocaleLowerCase();
     if (searchText && !talent.name.toLocaleLowerCase().includes(searchText) && talent.summary?.toLowerCase().includes(searchText) !== true) {

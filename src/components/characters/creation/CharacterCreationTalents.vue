@@ -84,7 +84,6 @@ const lineage = computed<Lineage | undefined>(() =>
 
 function add(acquisition: CharacterTalent): void {
   acquisitions.value.push(acquisition);
-  // TODO(fpion): acquisitions are not sorted
 }
 
 function submit(): void {
