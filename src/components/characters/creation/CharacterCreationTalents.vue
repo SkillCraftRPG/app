@@ -16,7 +16,7 @@
         />
         <div v-if="acquisitions.length" class="row">
           <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" />
+            <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" @removed="remove(index)" />
           </div>
         </div>
         <p v-else>TODO(fpion): empty</p>
@@ -84,6 +84,9 @@ const lineage = computed<Lineage | undefined>(() =>
 
 function add(acquisition: CharacterTalent): void {
   acquisitions.value.push(acquisition);
+}
+function remove(index: number): void {
+  acquisitions.value.splice(index, 1);
 }
 
 function submit(): void {

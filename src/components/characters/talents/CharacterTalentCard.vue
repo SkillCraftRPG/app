@@ -13,9 +13,15 @@
       </TarBadge>
     </div>
     <div v-if="talent.summary" class="card-text">{{ talent.summary }}</div>
-    <!-- TODO(fpion): effective cost -->
-    <!-- TODO(fpion): edit button -->
-    <!-- TODO(fpion): remove button -->
+    <div class="d-flex justify-content-between mt-2">
+      <div>
+        <!-- TODO(fpion): effective cost -->
+      </div>
+      <div class="d-flex gap-2">
+        <!-- TODO(fpion): edit button -->
+        <RemoveCharacterTalent :acquisition="acquisition" @removed="$emit('removed')" />
+      </div>
+    </div>
   </TarCard>
 </template>
 
@@ -23,6 +29,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
+import RemoveCharacterTalent from "./RemoveCharacterTalent.vue";
 import TalentTierDisplay from "@/components/talents/TalentTierDisplay.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";
 import TarCard from "@/components/tar/TarCard.vue";
@@ -33,6 +40,10 @@ const { t } = useI18n();
 
 const props = defineProps<{
   acquisition: CharacterTalent;
+}>();
+
+defineEmits<{
+  (e: "removed"): void;
 }>();
 
 const talent = computed<Talent>(() => props.acquisition.talent);

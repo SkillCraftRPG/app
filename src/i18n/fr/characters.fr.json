@@ -90,6 +90,10 @@
       "title": "Rabais"
     },
     "qualifier": "Précision",
+    "remove": {
+      "help": "Voulez-vous retirer le talent <strong>{name}</strong> du personnage? Les points de talent et les rabais appliqués seront recalculés. Sa précision et ses notes seront également supprimées.",
+      "lead": "Retirer ce talent ?"
+    },
     "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
   "title": "Personnages"

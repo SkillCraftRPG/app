@@ -90,6 +90,10 @@
       "title": "Discounts"
     },
     "qualifier": "Qualifier",
+    "remove": {
+      "help": "Do you want to remove the <strong>{name}</strong> talent from the character? Talent points and applied discounts will be recalculated. Its qualifier and notes will also be deleted.",
+      "lead": "Remove this talent?"
+    },
     "select": "Select the talent to add to the character. Use the filters to narrow the results."
   },
   "title": "Characters"
