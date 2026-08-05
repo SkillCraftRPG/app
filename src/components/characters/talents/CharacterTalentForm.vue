@@ -51,6 +51,7 @@ import type { CharacterTalentDetail, CharacterTalentDiscount } from "@/types/cha
 import type { Customization } from "@/types/customizations";
 import type { Lineage } from "@/types/lineages";
 import type { Talent } from "@/types/talents";
+import { calculateCost } from "@/utils/talent";
 import { useForm } from "@/forms";
 
 const { t } = useI18n();
@@ -75,7 +76,7 @@ const notes = ref<string>("");
 const qualifier = ref<string>("");
 
 const baseCost = computed<number>(() => 2 + props.talent.tier);
-const effectiveCost = computed<number>(() => Math.max(baseCost.value - discounts.value.reduce((sum, discount) => sum + discount.amount, 0), 0));
+const effectiveCost = computed<number>(() => calculateCost(props.talent, discounts.value));
 
 function add(): void {
   discounts.value.push({ source: "Lineage", target: "", amount: 1 });

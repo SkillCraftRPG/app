@@ -73,7 +73,8 @@
     "add": "Ajouter un talent",
     "cost": {
       "base": "Coût de base",
-      "effective": "Coût effectif"
+      "effective": "Coût effectif",
+      "points": "{count} point | {count} point | {count} points"
     },
     "discount": {
       "amount": "Points",

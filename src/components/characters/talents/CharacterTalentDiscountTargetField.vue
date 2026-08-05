@@ -50,6 +50,4 @@ withDefaults(
 defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
-
-// TODO(fpion): required does not seem to work?
 </script>

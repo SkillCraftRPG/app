@@ -1,14 +1,11 @@
 <template>
-  <div>
-    <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('characters.talents.remove.lead')">
-      <p v-html="help"></p>
-      <template #footer>
-        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
-        <TarButton icon="fas fa-xmark" :text="t('actions.remove')" variant="danger" @click="confirm" />
-      </template>
-    </TarModal>
-  </div>
+  <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('characters.talents.remove.lead')">
+    <p v-html="help"></p>
+    <template #footer>
+      <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
+      <TarButton icon="fas fa-xmark" :text="t('actions.remove')" variant="danger" @click="confirm" />
+    </template>
+  </TarModal>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +23,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "removed"): void;
+  (e: "confirm"): void;
 }>();
 
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
@@ -38,11 +35,12 @@ function cancel(): void {
 }
 
 function confirm(): void {
-  emit("removed");
+  emit("confirm");
   modal.value?.hide();
 }
 
 function open(): void {
   modal.value?.show();
 }
+defineExpose({ open });
 </script>

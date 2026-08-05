@@ -14,11 +14,14 @@
           tier="0"
           @added="add"
         />
-        <div v-if="acquisitions.length" class="row">
-          <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" @removed="remove(index)" />
+        <template v-if="acquisitions.length">
+          <div class="row">
+            <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+              <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" @edit="openEdit(index)" @remove="openRemove(index)" />
+            </div>
           </div>
-        </div>
+          <RemoveCharacterTalentModal v-if="acquisition" :acquisition="acquisition" ref="removeModal" @confirm="remove(index)" />
+        </template>
         <p v-else>TODO(fpion): empty</p>
         <!-- TODO(fpion): rules somewhere (spent 10-12 points, 6 total skills, caste & education skills) -->
       </section>
@@ -44,12 +47,13 @@
 
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AddCharacterTalent from "@/components/characters/talents/AddCharacterTalent.vue";
 import CharacterTalentCard from "@/components/characters/talents/CharacterTalentCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import RemoveCharacterTalentModal from "@/components/characters/talents/RemoveCharacterTalentModal.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { CharacterTalent } from "@/types/characters";
@@ -69,7 +73,9 @@ const emit = defineEmits<{
 }>();
 
 const acquisitions = ref<CharacterTalent[]>([]);
+const index = ref<number>(0);
 const isLoading = ref<boolean>(true);
+const removeModal = ref<InstanceType<typeof RemoveCharacterTalentModal> | null>(null);
 const talents = ref<Talent[]>([]);
 
 const acquired = computed<Talent[]>(() => {
@@ -77,6 +83,7 @@ const acquired = computed<Talent[]>(() => {
   acquisitions.value.forEach((acquisition) => acquired.set(acquisition.talent.id, acquisition.talent));
   return [...acquired.values()];
 });
+const acquisition = computed<CharacterTalent | undefined>(() => acquisitions.value[index.value]);
 const canSubmit = computed<boolean>(() => false);
 const lineage = computed<Lineage | undefined>(() =>
   character.creation.ethnicity ? { ...character.creation.ethnicity, parent: character.creation.species } : character.creation.species,
@@ -87,6 +94,15 @@ function add(acquisition: CharacterTalent): void {
 }
 function remove(index: number): void {
   acquisitions.value.splice(index, 1);
+}
+
+function openEdit(targetIndex: number): void {
+  index.value = targetIndex;
+  // TODO(fpion): nextTick(() => editModal.value?.open());
+}
+function openRemove(targetIndex: number): void {
+  index.value = targetIndex;
+  nextTick(() => removeModal.value?.open());
 }
 
 function submit(): void {

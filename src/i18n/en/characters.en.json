@@ -73,7 +73,8 @@
     "add": "Add talent",
     "cost": {
       "base": "Base Cost",
-      "effective": "Effective Cost"
+      "effective": "Effective Cost",
+      "points": "{count} point | {count} point | {count} points"
     },
     "discount": {
       "amount": "Points",

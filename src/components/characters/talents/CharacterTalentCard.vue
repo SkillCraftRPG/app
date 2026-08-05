@@ -15,11 +15,11 @@
     <div v-if="talent.summary" class="card-text">{{ talent.summary }}</div>
     <div class="d-flex justify-content-between mt-2">
       <div>
-        <!-- TODO(fpion): effective cost -->
+        <TarBadge pill variant="secondary">{{ t("characters.talents.cost.points", cost) }}</TarBadge>
       </div>
       <div class="d-flex gap-2">
-        <!-- TODO(fpion): edit button -->
-        <RemoveCharacterTalent :acquisition="acquisition" @removed="$emit('removed')" />
+        <TarButton icon="fas fa-edit" outline :text="t('actions.edit')" @click="$emit('edit')" />
+        <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="$emit('remove')" />
       </div>
     </div>
   </TarCard>
@@ -29,12 +29,13 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import RemoveCharacterTalent from "./RemoveCharacterTalent.vue";
 import TalentTierDisplay from "@/components/talents/TalentTierDisplay.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";
+import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { CharacterTalent } from "@/types/characters";
 import type { Talent } from "@/types/talents";
+import { calculateCost } from "@/utils/talent";
 
 const { t } = useI18n();
 
@@ -43,9 +44,11 @@ const props = defineProps<{
 }>();
 
 defineEmits<{
-  (e: "removed"): void;
+  (e: "edit"): void;
+  (e: "remove"): void;
 }>();
 
 const talent = computed<Talent>(() => props.acquisition.talent);
+const cost = computed<number>(() => calculateCost(talent.value, props.acquisition.discounts));
 const skill = computed<string>(() => (talent.value.skill ? t(`game.skill.options.${talent.value.skill}`) : ""));
 </script>
