@@ -28,6 +28,7 @@
           :customizations="customizations"
           :id="`discount-${index}`"
           :lineage="lineage"
+          :max="baseCost"
           :model-value="discount"
           @update:model-value="update(index, $event)"
           @removed="remove(index)"
@@ -38,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EditCharacterTalentDiscount from "./EditCharacterTalentDiscount.vue";
@@ -46,7 +47,7 @@ import NameField from "@/components/shared/NameField.vue";
 import NotesField from "@/components/shared/NotesField.vue";
 import TalentCard from "@/components/talents/TalentCard.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { CharacterTalentDiscount } from "@/types/characters";
+import type { CharacterTalentDetail, CharacterTalentDiscount } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
 import type { Lineage } from "@/types/lineages";
 import type { Talent } from "@/types/talents";
@@ -65,6 +66,10 @@ const props = withDefaults(
   },
 );
 
+const emit = defineEmits<{
+  (e: "saved", value: CharacterTalentDetail): void;
+}>();
+
 const discounts = ref<CharacterTalentDiscount[]>([]);
 const notes = ref<string>("");
 const qualifier = ref<string>("");
@@ -82,13 +87,24 @@ function update(index: number, value: CharacterTalentDiscount): void {
   discounts.value.splice(index, 1, value);
 }
 
-const { handleSubmit } = useForm();
+const { handleSubmit, reset: resetForm } = useForm();
+function reset(): void {
+  qualifier.value = "";
+  notes.value = "";
+  discounts.value = [];
+  nextTick(resetForm);
+}
 function onSubmit(): void {
-  console.log("Submitting…"); // TODO(fpion): implement
+  emit("saved", {
+    qualifier: qualifier.value,
+    notes: notes.value,
+    discounts: discounts.value,
+  });
+  reset();
 }
 
 function submit(): void {
   handleSubmit(onSubmit);
 }
-defineExpose({ submit });
+defineExpose({ reset, submit });
 </script>

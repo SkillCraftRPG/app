@@ -60,6 +60,12 @@ export type CharacterTalent = {
   discounts: CharacterTalentDiscount[];
 };
 
+export type CharacterTalentDetail = {
+  qualifier: string;
+  notes: string;
+  discounts: CharacterTalentDiscount[];
+};
+
 export type CharacterTalentDiscount = {
   source: CharacterTalentDiscountSource;
   target: string;

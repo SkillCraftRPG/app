@@ -20,7 +20,14 @@
           </div>
         </div>
         <div class="col-lg-4">
-          <CharacterTalentDiscountAmountField class="mb-3" :id="`${id}-amount`" :model-value="modelValue.amount" required @update:model-value="updateAmount" />
+          <CharacterTalentDiscountAmountField
+            class="mb-3"
+            :id="`${id}-amount`"
+            :max="max"
+            :model-value="modelValue.amount"
+            required
+            @update:model-value="updateAmount"
+          />
         </div>
       </div>
     </div>
@@ -53,6 +60,7 @@ const props = withDefaults(
     customizations?: Customization[];
     id: string;
     lineage: Lineage;
+    max?: number | string;
     modelValue: CharacterTalentDiscount;
   }>(),
   {
