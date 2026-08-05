@@ -9,15 +9,16 @@
             <font-awesome-icon :icon="rule.success ? 'fas fa-check' : 'fas fa-xmark'" />&nbsp;{{ rule.text }}
           </li>
         </ul>
-        <AddCharacterTalent v-if="context" class="mb-3" :context="context" :talents="talents" @added="add" />
-        <template v-if="acquisitions.length">
-          <div class="row">
-            <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-              <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" @edit="openEdit(index)" @remove="openRemove(index)" />
-            </div>
+        <EditCharacterTalentModal v-if="context" :acquisition="acquisition" :context="context" ref="editModal" :talents="talents" @confirm="acquire" />
+        <RemoveCharacterTalentModal v-if="acquisition" :acquisition="acquisition" ref="removeModal" @confirm="forget" />
+        <div class="mb-3">
+          <TarButton icon="fas fa-plus" size="large" :text="t('actions.add')" @click="add" />
+        </div>
+        <div v-if="acquisitions.length" class="row">
+          <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+            <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" @edit="edit(index)" @remove="remove(index)" />
           </div>
-          <RemoveCharacterTalentModal v-if="acquisition" :acquisition="acquisition" ref="removeModal" @confirm="remove(index)" />
-        </template>
+        </div>
         <p v-else>{{ t("characters.talents.empty") }}</p>
       </section>
       <TarAlert v-else class="d-flex justify-content-between" show variant="warning">
@@ -45,8 +46,8 @@ import { arrayUtils } from "logitar-js";
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import AddCharacterTalent from "@/components/characters/talents/AddCharacterTalent.vue";
 import CharacterTalentCard from "@/components/characters/talents/CharacterTalentCard.vue";
+import EditCharacterTalentModal from "../talents/EditCharacterTalentModal.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import RemoveCharacterTalentModal from "@/components/characters/talents/RemoveCharacterTalentModal.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
@@ -75,8 +76,9 @@ const emit = defineEmits<{
 }>();
 
 const acquisitions = ref<CharacterTalent[]>([]);
-const index = ref<number>(0);
+const index = ref<number>(-1);
 const isLoading = ref<boolean>(true);
+const editModal = ref<InstanceType<typeof EditCharacterTalentModal> | null>(null);
 const removeModal = ref<InstanceType<typeof RemoveCharacterTalentModal> | null>(null);
 const talents = ref<Talent[]>([]);
 const touched = ref<boolean>(false);
@@ -163,20 +165,30 @@ function getClasses(rule: Rule): string[] {
   return [rule.success ? "text-success" : "text-danger"];
 }
 
-function add(acquisition: CharacterTalent): void {
-  acquisitions.value.push(acquisition);
-  touched.value = true;
-}
-function remove(index: number): void {
-  acquisitions.value.splice(index, 1);
+function acquire(acquisition: CharacterTalent): void {
+  if (index.value < 0) {
+    acquisitions.value.push(acquisition);
+  } else {
+    acquisitions.value.splice(index.value, 1, acquisition);
+  }
 }
 
-function openEdit(targetIndex: number): void {
-  index.value = targetIndex;
-  // TODO(fpion): nextTick(() => editModal.value?.open());
+function add(): void {
+  index.value = -1;
+  editModal.value?.open();
 }
-function openRemove(targetIndex: number): void {
-  index.value = targetIndex;
+
+function edit(value: number): void {
+  index.value = value;
+  editModal.value?.open();
+}
+
+function forget(): void {
+  acquisitions.value.splice(index.value, 1);
+}
+
+function remove(value: number): void {
+  index.value = value;
   nextTick(() => removeModal.value?.open());
 }
 

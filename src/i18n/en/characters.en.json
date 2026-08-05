@@ -90,6 +90,7 @@
       "target": "Specify",
       "title": "Discounts"
     },
+    "edit": "Edit talent",
     "empty": "This character does not have any talents.",
     "help": "Choose the character’s talents while meeting the following criteria.",
     "qualifier": "Qualifier",

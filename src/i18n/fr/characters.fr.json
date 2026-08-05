@@ -90,6 +90,7 @@
       "target": "Précisez",
       "title": "Rabais"
     },
+    "edit": "Modifier un talent",
     "empty": "Ce personnage ne possède aucun talent.",
     "help": "Choisissez les talents du personnage en respectant les critères suivants.",
     "qualifier": "Précision",

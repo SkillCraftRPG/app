@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-end">
-      <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="$emit('removed')" />
+      <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="$emit('remove')" />
     </div>
   </TarCard>
 </template>
@@ -62,7 +62,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "removed"): void;
+  (e: "remove"): void;
   (e: "update:model-value", value: CharacterTalentDiscount): void;
 }>();
 
