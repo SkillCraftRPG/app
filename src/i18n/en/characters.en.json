@@ -63,5 +63,9 @@
       "Unspecified": "Unspecified"
     }
   },
+  "talents": {
+    "add": "Add talent",
+    "help": "Select the talent to add to the character. Use the filters to narrow the results."
+  },
   "title": "Characters"
 }

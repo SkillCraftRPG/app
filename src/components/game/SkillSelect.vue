@@ -45,4 +45,6 @@ const options = computed<SelectOption[]>(() =>
     "text",
   ),
 );
+
+// TODO(fpion): extended
 </script>

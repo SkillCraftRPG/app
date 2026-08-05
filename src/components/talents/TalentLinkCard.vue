@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import LinkCard from "@/components/shared/LinkCard.vue";
@@ -30,7 +31,6 @@ import StatusBlock from "@/components/shared/StatusBlock.vue";
 import TalentTierDisplay from "./TalentTierDisplay.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";
 import type { Talent } from "@/types/talents";
-import { computed } from "vue";
 
 const { t } = useI18n();
 

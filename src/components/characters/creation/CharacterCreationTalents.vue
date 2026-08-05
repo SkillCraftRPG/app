@@ -3,7 +3,11 @@
     <h2 class="h3">{{ t("talents.title") }}</h2>
     <template v-if="!isLoading">
       <section v-if="talents.length">
-        <p>TODO(fpion): implement</p>
+        <p class="text-body-secondary">help…</p>
+        <AddCharacterTalent :acquired="[]" class="mb-3" :talents="talents" tier="0" />
+        <!-- TODO(fpion): talent cards with point cost, edit & delete buttons -->
+        <p>empty…</p>
+        <!-- TODO(fpion): rules somewhere (spent 10-12 points, 6 total skills, caste & education skills) -->
       </section>
       <TarAlert v-else class="d-flex justify-content-between" show variant="warning">
         <div>
@@ -30,6 +34,7 @@ import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import AddCharacterTalent from "@/components/characters/AddCharacterTalent.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
