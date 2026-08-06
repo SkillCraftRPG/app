@@ -1,4 +1,8 @@
 {
+  "appearance": {
+    "help": "?",
+    "title": "Apparence physique"
+  },
   "attributes": {
     "help": "Répartissez les points d’attribut de façon à ce que leur somme soit égale à 0.",
     "invalid": "La somme des attributs doit être égale à 0. Somme actuelle : {total}.",

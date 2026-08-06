@@ -61,6 +61,7 @@ import TarBadge from "@/components/tar/TarBadge.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { Skill } from "@/types/game";
+import type { SkillRankPayload } from "@/types/characters";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
@@ -166,12 +167,25 @@ function updateRank(skill: Skill, rank: number): void {
 const { handleSubmit } = useForm();
 function submit(): void {
   if (canSubmit.value) {
-    console.log("Submitting!"); // TODO(fpion): implement
+    const skillRanks: SkillRankPayload[] = [];
+    for (const [skill, rank] of ranks.value) {
+      const skillRank: SkillRankPayload = {
+        skill,
+        rank: rank - (talents.value.get(skill) ?? 0),
+      };
+      if (skillRank.rank) {
+        skillRanks.push(skillRank);
+      }
+    }
+    character.saveSkills(skillRanks);
   }
 }
 
 onMounted(() => {
-  for (const [skill, rank] of talents.value) {
+  character.creation.skills.forEach((item) => ranks.value.set(item.skill, item.rank));
+  for (const [skill, count] of talents.value) {
+    let rank: number = ranks.value.get(skill) ?? 0;
+    rank += count;
     ranks.value.set(skill, rank);
   }
 });
