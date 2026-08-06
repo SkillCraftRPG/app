@@ -166,7 +166,7 @@ function updateRank(skill: Skill, rank: number): void {
 const { handleSubmit } = useForm();
 function submit(): void {
   if (canSubmit.value) {
-    console.log("Submitting!");
+    console.log("Submitting!"); // TODO(fpion): implement
   }
 }
 
@@ -175,6 +175,4 @@ onMounted(() => {
     ranks.value.set(skill, rank);
   }
 });
-
-// TODO(fpion): right-align attribute score, with + when >0, no parentheses
 </script>
