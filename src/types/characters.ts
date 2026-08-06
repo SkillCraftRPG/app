@@ -7,6 +7,10 @@ import type { Lineage } from "./lineages";
 import type { SearchPayload, SortOption } from "./search";
 import type { Talent } from "./talents";
 
+export type AddCharacterTalentPayload = CharacterTalentPayload & {
+  talentId: string;
+};
+
 export type Character = Aggregate & {
   // TODO(fpion): complete
 };
@@ -30,23 +34,6 @@ export enum CharacterCreationStep {
   Talents = 3,
   Attributes = 4,
 }
-
-export type CreateCharacterPayload = {
-  lineageId: string;
-  languageIds: string[];
-  name: string;
-  dominantHand?: DominantHand | null;
-  customizationIds: string[];
-  casteId: string;
-  educationId: string;
-};
-
-export type DominantHand = "Left" | "Right";
-
-export type SearchCharactersPayload = SearchPayload & {
-  // TODO(fpion): complete
-  sort: CharacterSortOption[];
-};
 
 export type CharacterSort = "CreatedOn" | "UpdatedOn";
 
@@ -82,6 +69,30 @@ export type CharacterTalentDiscount = {
 };
 
 export type CharacterTalentDiscountSource = "Custom" | "Customization" | "Lineage"; // TODO(fpion): Specialization
+
+export type CharacterTalentPayload = {
+  qualifier?: string | null;
+  notes?: string | null;
+  discounts: CharacterTalentDiscount[];
+};
+
+export type CreateCharacterPayload = {
+  lineageId: string;
+  languageIds: string[];
+  name: string;
+  dominantHand?: DominantHand | null;
+  customizationIds: string[];
+  casteId: string;
+  educationId: string;
+  talents: AddCharacterTalentPayload[];
+};
+
+export type DominantHand = "Left" | "Right";
+
+export type SearchCharactersPayload = SearchPayload & {
+  // TODO(fpion): complete
+  sort: CharacterSortOption[];
+};
 
 /* TODO(fpion): languages can be granted by:
  * lineage.languages.extra (species+ethnicity)
