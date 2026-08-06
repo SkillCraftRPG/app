@@ -31,15 +31,10 @@
             <TalentTierSelect class="mb-3" :model-value="tier" @update:model-value="setQuery('tier', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
-            <BooleanSelect
-              id="allow-multiple-purchases"
-              label="talents.allowMultiplePurchases.label"
-              :model-value="allowMultiplePurchases"
-              @update:model-value="setQuery('multiple', $event)"
-            />
+            <MultiplePurchasesSelect :model-value="allowMultiplePurchases" @update:model-value="setQuery('multiple', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
-            <SkillSelect class="mb-3" :model-value="skill" @update:model-value="setQuery('skill', $event)" />
+            <SkillSelect class="mb-3" extended :model-value="skill" @update:model-value="setQuery('skill', $event)" />
           </div>
           <div class="col-md-6 col-lg-3">
             <TalentSelect
@@ -74,7 +69,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="talent in talents" :key="talent.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <TalentCard class="d-flex flex-column h-100" :talent="talent" :to="{ name: 'Talent', params: { id: talent.id } }" />
+            <TalentLinkCard class="d-flex flex-column h-100" :talent="talent" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -104,15 +99,15 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import BooleanSelect from "@/components/shared/BooleanSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateTalent from "@/components/talents/CreateTalent.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import MultiplePurchasesSelect from "@/components/talents/MultiplePurchasesSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SkillSelect from "@/components/game/SkillSelect.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
-import TalentCard from "@/components/talents/TalentCard.vue";
+import TalentLinkCard from "@/components/talents/TalentLinkCard.vue";
 import TalentSelect from "@/components/talents/TalentSelect.vue";
 import TalentTierSelect from "@/components/talents/TalentTierSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
@@ -120,7 +115,6 @@ import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { SearchResults } from "@/types/search";
 import type { SearchTalentsPayload, Talent, TalentSort } from "@/types/talents";
 import type { SelectOption } from "@/types/tar/select";
-import type { Skill } from "@/types/game";
 import { handleErrorKey } from "@/inject";
 import { searchTalents } from "@/api/talents";
 import { useDocument } from "@/composables/document";
@@ -201,7 +195,7 @@ async function refresh(): Promise<void> {
         .map((term) => ({ value: `%${term}%` })),
       operator: "And",
     },
-    skill: skill.value ? (skill.value as Skill) : undefined,
+    skill: skill.value,
     tiers: typeof tier.value === "number" ? [tier.value] : undefined,
     sort: sort.value ? [{ field: sort.value as TalentSort, isDescending: isDescending.value }] : [],
     skip: (page.value - 1) * count.value,

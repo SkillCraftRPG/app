@@ -75,4 +75,6 @@ const classes = computed<string[]>(() => {
   }
   return classes;
 });
+
+// TODO(fpion): remove this
 </script>

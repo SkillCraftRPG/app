@@ -47,6 +47,12 @@
       "title": "Customization"
     },
     "label": "Create",
+    "talents": {
+      "empty": {
+        "help": "Create the first tier 0 talent in this world before continuing character creation.",
+        "lead": "No talents available."
+      }
+    },
     "title": "Create a character"
   },
   "dominantHand": {
@@ -56,6 +62,50 @@
       "Right": "Right-handed",
       "Unspecified": "Unspecified"
     }
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Created on",
+      "UpdatedOn": "Last updated"
+    }
+  },
+  "talents": {
+    "add": "Add talent",
+    "cost": {
+      "base": "Base Cost",
+      "effective": "Effective Cost",
+      "points": "{count} point | {count} point | {count} points"
+    },
+    "discount": {
+      "amount": "Points",
+      "source": {
+        "label": "Source",
+        "options": {
+          "Custom": "Other",
+          "Customization": "Gift / Disability",
+          "Lineage": "Lineage"
+        },
+        "placeholder": "Select a source"
+      },
+      "target": "Specify",
+      "title": "Discounts"
+    },
+    "edit": "Edit talent",
+    "empty": "This character does not have any talents.",
+    "help": "Choose the character’s talents while meeting the following criteria.",
+    "qualifier": "Qualifier",
+    "remove": {
+      "help": "Do you want to remove the <strong>{name}</strong> talent from the character? Talent points and applied discounts will be recalculated. Its qualifier and notes will also be deleted.",
+      "lead": "Remove this talent?"
+    },
+    "rules": {
+      "caste": "Be trained in {skill}, the skill of the {caste} caste",
+      "education": "Be trained in {skill}, the skill of the {education} education",
+      "max": "Spend at most {max} points ({spent} / {max})",
+      "min": "Spend at least {min} points ({spent} / {min})",
+      "skills": "Be trained in at least {required} skills ({trained} / {required})"
+    },
+    "select": "Select the talent to add to the character. Use the filters to narrow the results."
   },
   "title": "Characters"
 }

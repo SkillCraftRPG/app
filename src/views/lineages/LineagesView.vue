@@ -46,7 +46,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="lineage in lineages" :key="lineage.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <LineageCard class="d-flex flex-column h-100" :lineage="lineage" :to="{ name: 'Lineage', params: { id: lineage.id } }" />
+            <LineageLinkCard class="d-flex flex-column h-100" :lineage="lineage" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -78,7 +78,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLineage from "@/components/lineages/CreateLineage.vue";
-import LineageCard from "@/components/lineages/LineageCard.vue";
+import LineageLinkCard from "@/components/lineages/LineageLinkCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";

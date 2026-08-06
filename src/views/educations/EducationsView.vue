@@ -51,7 +51,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="education in educations" :key="education.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <EducationCard class="d-flex flex-column h-100" :education="education" :to="{ name: 'Education', params: { id: education.id } }" />
+            <EducationLinkCard class="d-flex flex-column h-100" :education="education" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -83,7 +83,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateEducation from "@/components/educations/CreateEducation.vue";
-import EducationCard from "@/components/educations/EducationCard.vue";
+import EducationLinkCard from "@/components/educations/EducationLinkCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";

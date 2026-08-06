@@ -26,4 +26,6 @@ defineProps<{
   selected?: boolean | string;
   to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
 }>();
+
+// TODO(fpion): refactor
 </script>

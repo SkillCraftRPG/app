@@ -15,7 +15,6 @@ import {
   faCartShopping,
   faCheck,
   faCircleArrowUp,
-  faCircleCheck,
   faCirclePlus,
   faClockRotateLeft,
   faCodeBranch,
@@ -41,6 +40,7 @@ import {
   faNetworkWired,
   faPaw,
   faPlus,
+  faQuestion,
   faRobot,
   faRulerVertical,
   faScrewdriverWrench,
@@ -57,8 +57,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { faSquare } from "@fortawesome/free-regular-svg-icons/faSquare";
-import { faSquareCheck } from "@fortawesome/free-regular-svg-icons/faSquareCheck";
+import { faCircle, faCircleCheck, faSquare, faSquareCheck } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
   faAdjust,
@@ -72,7 +71,9 @@ library.add(
   faBan,
   faCartShopping,
   faCheck,
+  faCircle,
   faCircleArrowUp,
+  faCircleCheck,
   faCircleCheck,
   faCirclePlus,
   faClockRotateLeft,
@@ -99,6 +100,7 @@ library.add(
   faNetworkWired,
   faPaw,
   faPlus,
+  faQuestion,
   faRobot,
   faRulerVertical,
   faScrewdriverWrench,

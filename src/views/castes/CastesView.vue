@@ -51,7 +51,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="caste in castes" :key="caste.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CasteCard class="d-flex flex-column h-100" :caste="caste" :to="{ name: 'Caste', params: { id: caste.id } }" />
+            <CasteLinkCard class="d-flex flex-column h-100" :caste="caste" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -81,7 +81,7 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
-import CasteCard from "@/components/castes/CasteCard.vue";
+import CasteLinkCard from "@/components/castes/CasteLinkCard.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateCaste from "@/components/castes/CreateCaste.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";

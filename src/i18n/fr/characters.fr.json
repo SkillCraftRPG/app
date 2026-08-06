@@ -47,6 +47,12 @@
       "title": "Personnalisation"
     },
     "label": "Création",
+    "talents": {
+      "empty": {
+        "help": "Créez le premier talent de tiers 0 de ce monde avant de poursuivre la création du personnage.",
+        "lead": "Aucun talent disponible."
+      }
+    },
     "title": "Créer un personnage"
   },
   "dominantHand": {
@@ -56,6 +62,50 @@
       "Right": "Droitier",
       "Unspecified": "Non précisée"
     }
+  },
+  "sort": {
+    "options": {
+      "CreatedOn": "Date de création",
+      "UpdatedOn": "Dernière modification"
+    }
+  },
+  "talents": {
+    "add": "Ajouter un talent",
+    "cost": {
+      "base": "Coût de base",
+      "effective": "Coût effectif",
+      "points": "{count} point | {count} point | {count} points"
+    },
+    "discount": {
+      "amount": "Points",
+      "source": {
+        "label": "Source",
+        "options": {
+          "Custom": "Autre",
+          "Customization": "Don / Handicap",
+          "Lineage": "Lignée"
+        },
+        "placeholder": "Sélectionnez une source"
+      },
+      "target": "Précisez",
+      "title": "Rabais"
+    },
+    "edit": "Modifier un talent",
+    "empty": "Ce personnage ne possède aucun talent.",
+    "help": "Choisissez les talents du personnage en respectant les critères suivants.",
+    "qualifier": "Précision",
+    "remove": {
+      "help": "Voulez-vous retirer le talent <strong>{name}</strong> du personnage? Les points de talent et les rabais appliqués seront recalculés. Sa précision et ses notes seront également supprimées.",
+      "lead": "Retirer ce talent ?"
+    },
+    "rules": {
+      "caste": "Être formé en {skill}, la compétence de la caste {caste}",
+      "education": "Être formé en {skill}, la compétence de l’éducation {education}",
+      "max": "Dépenser au plus {max} points ({spent} / {max})",
+      "min": "Dépenser au moins {min} points ({spent} / {min})",
+      "skills": "Être formé dans au moins {required} compétences ({trained} / {required})"
+    },
+    "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
   "title": "Personnages"
 }

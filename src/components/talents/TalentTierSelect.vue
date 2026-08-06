@@ -21,10 +21,11 @@ import type { SelectOption } from "@/types/tar/select";
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     id?: string;
     label?: string;
+    max?: number | string;
     modelValue?: number;
     placeholder?: string;
   }>(),
@@ -39,7 +40,12 @@ const emit = defineEmits<{
   (e: "update:model-value", value: number | undefined): void;
 }>();
 
-const options = computed<SelectOption[]>(() => [0, 1, 2, 3].map((value) => ({ text: value.toString(), value: value.toString() })));
+const maxTier = computed<number | undefined>(() => parseNumber(props.max));
+const options = computed<SelectOption[]>(() =>
+  [0, 1, 2, 3]
+    .filter((tier) => typeof maxTier.value !== "number" || tier <= maxTier.value)
+    .map((value) => ({ text: value.toString(), value: value.toString() })),
+);
 
 function onModelValueUpdate(value: string | undefined): void {
   emit("update:model-value", parseNumber(value || undefined));

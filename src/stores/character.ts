@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import type { Caste } from "@/types/castes";
-import type { CharacterCreation, DominantHand } from "@/types/characters";
+import type { CharacterCreation, CharacterTalent, DominantHand } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
 import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
@@ -14,6 +14,7 @@ function defaultCreation(): CharacterCreation {
     languages: [],
     name: "",
     customizations: [],
+    talents: [],
   };
 }
 
@@ -54,7 +55,12 @@ export const useCharacterStore = defineStore(
       step.value++;
     }
 
-    return { creation, step, abandon, goBack, saveAscendancy, saveContext, saveCustomization };
+    function saveTalents(talents: CharacterTalent[]): void {
+      creation.value.talents = [...talents];
+      step.value++;
+    }
+
+    return { creation, step, abandon, goBack, saveAscendancy, saveContext, saveCustomization, saveTalents };
   },
   { persist: true },
 );
