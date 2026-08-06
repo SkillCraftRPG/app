@@ -8,6 +8,7 @@
     <CharacterCreationContext v-else-if="character.step === CharacterCreationStep.Context" @abandon="abandon" @error="handleError" />
     <CharacterCreationTalents v-else-if="character.step === CharacterCreationStep.Talents" @abandon="abandon" @error="handleError" />
     <CharacterCreationAttributes v-else-if="character.step === CharacterCreationStep.Attributes" @abandon="abandon" />
+    <CharacterCreationSkills v-else-if="character.step === CharacterCreationStep.Skills" @abandon="abandon" />
   </main>
 </template>
 
@@ -20,6 +21,7 @@ import CharacterCreationAscendancy from "@/components/characters/creation/Charac
 import CharacterCreationAttributes from "@/components/characters/creation/CharacterCreationAttributes.vue";
 import CharacterCreationContext from "@/components/characters/creation/CharacterCreationContext.vue";
 import CharacterCreationCustomization from "@/components/characters/creation/CharacterCreationCustomization.vue";
+import CharacterCreationSkills from "@/components/characters/creation/CharacterCreationSkills.vue";
 import CharacterCreationTalents from "@/components/characters/creation/CharacterCreationTalents.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";

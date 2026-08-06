@@ -1,4 +1,13 @@
 {
+  "attribute": {
+    "options": {
+      "Dexterity": "Dexterity",
+      "Health": "Health",
+      "Intellect": "Intellect",
+      "Senses": "Senses",
+      "Vigor": "Vigor"
+    }
+  },
   "feature": {
     "label": "Feature",
     "title": "Features"
@@ -59,6 +68,20 @@
       }
     },
     "label": "Speed"
+  },
+  "statistic": {
+    "options": {
+      "Dodge": "Dodge",
+      "Initiative": "Initiative",
+      "Learning": "Learning",
+      "Load": "Load",
+      "Power": "Power",
+      "Precision": "Precision",
+      "Stamina": "Stamina",
+      "Stratagem": "Stratagem",
+      "Strength": "Strength",
+      "Vitality": "Vitality"
+    }
   },
   "unit": {
     "cm": "cm"
