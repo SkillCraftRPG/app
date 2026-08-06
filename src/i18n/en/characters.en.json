@@ -1,4 +1,9 @@
 {
+  "attributes": {
+    "help": "Distribute the attribute points so that their total equals 0.",
+    "invalid": "The sum of the attributes must equal 0. Current total: {total}.",
+    "title": "Attributes"
+  },
   "creation": {
     "ascendancy": {
       "ethnicity": "Choose your character’s ethnicity.",

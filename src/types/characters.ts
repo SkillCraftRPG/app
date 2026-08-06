@@ -25,6 +25,7 @@ export type CharacterCreation = {
   caste?: Caste;
   education?: Education;
   talents: CharacterTalent[];
+  attributes: StartingAttributes;
 };
 
 export enum CharacterCreationStep {
@@ -33,6 +34,7 @@ export enum CharacterCreationStep {
   Context = 2,
   Talents = 3,
   Attributes = 4,
+  Skills = 5,
 }
 
 export type CharacterSort = "CreatedOn" | "UpdatedOn";
@@ -85,6 +87,7 @@ export type CreateCharacterPayload = {
   casteId: string;
   educationId: string;
   talents: AddCharacterTalentPayload[];
+  attributes: StartingAttributes;
 };
 
 export type DominantHand = "Left" | "Right";
@@ -92,6 +95,14 @@ export type DominantHand = "Left" | "Right";
 export type SearchCharactersPayload = SearchPayload & {
   // TODO(fpion): complete
   sort: CharacterSortOption[];
+};
+
+export type StartingAttributes = {
+  dexterity: number;
+  health: number;
+  intellect: number;
+  senses: number;
+  vigor: number;
 };
 
 /* TODO(fpion): languages can be granted by:

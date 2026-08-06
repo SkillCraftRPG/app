@@ -1,4 +1,13 @@
 {
+  "attribute": {
+    "options": {
+      "Dexterity": "Adresse",
+      "Health": "Santé",
+      "Intellect": "Intellect",
+      "Senses": "Sens",
+      "Vigor": "Vigueur"
+    }
+  },
   "feature": {
     "label": "Particularité",
     "title": "Particularités"
@@ -59,6 +68,20 @@
       }
     },
     "label": "Vitesse"
+  },
+  "statistic": {
+    "options": {
+      "Dodge": "Esquive",
+      "Initiative": "Initiative",
+      "Learning": "Apprentissage",
+      "Load": "Charge",
+      "Power": "Puissance",
+      "Precision": "Précision",
+      "Stamina": "Énergie",
+      "Stratagem": "Stratagème",
+      "Strength": "Force",
+      "Vitality": "Vitalité"
+    }
   },
   "unit": {
     "cm": "cm"
