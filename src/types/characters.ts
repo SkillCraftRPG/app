@@ -2,6 +2,7 @@ import type { Aggregate } from "./api";
 import type { Caste } from "./castes";
 import type { Customization } from "./customizations";
 import type { Education } from "./educations";
+import type { Skill } from "./game";
 import type { Language } from "./languages";
 import type { Lineage } from "./lineages";
 import type { SearchPayload, SortOption } from "./search";
@@ -26,6 +27,7 @@ export type CharacterCreation = {
   education?: Education;
   talents: CharacterTalent[];
   attributes: StartingAttributes;
+  skills: SkillRankPayload[];
 };
 
 export enum CharacterCreationStep {
@@ -35,6 +37,7 @@ export enum CharacterCreationStep {
   Talents = 3,
   Attributes = 4,
   Skills = 5,
+  Appearance = 6,
 }
 
 export type CharacterSort = "CreatedOn" | "UpdatedOn";
@@ -88,6 +91,7 @@ export type CreateCharacterPayload = {
   educationId: string;
   talents: AddCharacterTalentPayload[];
   attributes: StartingAttributes;
+  skills: SkillRankPayload[];
 };
 
 export type DominantHand = "Left" | "Right";
@@ -95,6 +99,11 @@ export type DominantHand = "Left" | "Right";
 export type SearchCharactersPayload = SearchPayload & {
   // TODO(fpion): complete
   sort: CharacterSortOption[];
+};
+
+export type SkillRankPayload = {
+  skill: Skill;
+  rank: number;
 };
 
 export type StartingAttributes = {

@@ -1,4 +1,8 @@
 {
+  "appearance": {
+    "help": "?",
+    "title": "Apparence physique"
+  },
   "attributes": {
     "help": "Répartissez les points d’attribut de façon à ce que leur somme soit égale à 0.",
     "invalid": "La somme des attributs doit être égale à 0. Somme actuelle : {total}.",
@@ -68,6 +72,14 @@
       "Unspecified": "Non précisée"
     }
   },
+  "skills": {
+    "help": "Répartissez vos points d’Apprentissage entre les compétences. Chaque talent associé à une compétence réduit de 1 le coût de ses rangs.",
+    "invalid": "Le nombre de points dépensés doit être inférieur ou égal à votre Apprentissage ({learning}). Total actuel : {spent}.",
+    "remaining": "Points restants",
+    "spent": "Points dépensés",
+    "title": "Compétences"
+  },
+  "social": "Social",
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

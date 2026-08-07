@@ -9,6 +9,7 @@
     <CharacterCreationTalents v-else-if="character.step === CharacterCreationStep.Talents" @abandon="abandon" @error="handleError" />
     <CharacterCreationAttributes v-else-if="character.step === CharacterCreationStep.Attributes" @abandon="abandon" />
     <CharacterCreationSkills v-else-if="character.step === CharacterCreationStep.Skills" @abandon="abandon" />
+    <CharacterCreationAppearance v-else-if="character.step === CharacterCreationStep.Appearance" @abandon="abandon" />
   </main>
 </template>
 
@@ -17,6 +18,7 @@ import { computed, inject, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import CharacterCreationAppearance from "@/components/characters/creation/CharacterCreationAppearance.vue";
 import CharacterCreationAscendancy from "@/components/characters/creation/CharacterCreationAscendancy.vue";
 import CharacterCreationAttributes from "@/components/characters/creation/CharacterCreationAttributes.vue";
 import CharacterCreationContext from "@/components/characters/creation/CharacterCreationContext.vue";
