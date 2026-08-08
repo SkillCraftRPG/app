@@ -73,6 +73,10 @@
       "Unspecified": "Unspecified"
     }
   },
+  "personality": {
+    "help": "?",
+    "title": "Personality"
+  },
   "physical": {
     "bodyMassIndex": "BMI (body mass index)",
     "eyes": "Eye Color",

@@ -121,13 +121,13 @@ import InputField from "@/components/forms/InputField.vue";
 import NameInput from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarSelect from "@/components/tar/TarSelect.vue";
+import type { CharacterAppearance } from "@/types/characters";
 import type { LineageAge } from "@/types/lineages";
 import type { SelectOption } from "@/types/tar/select";
 import type { SizeCategory } from "@/types/game";
 import { roll } from "@/utils/random";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
-import type { CharacterAppearance } from "@/types/characters";
 
 const character = useCharacterStore();
 const { parseNumber } = parsingUtils;
@@ -303,7 +303,15 @@ onMounted(() => {
   }
 
   if (appearance.age) {
-    // TODO(fpion): age category
+    for (let i = 0; i < ageThresholds.value.length; i++) {
+      if (appearance.age < (ageThresholds.value[i] ?? 0)) {
+        ageCategory.value = ageOptions.value[i]?.value ?? "";
+        break;
+      }
+    }
+    if (!ageCategory.value) {
+      ageCategory.value = "venerable";
+    }
     age.value = appearance.age;
   } else if (ageOptions.value.some((option) => option.value === "adult")) {
     updateAgeCategory("adult");

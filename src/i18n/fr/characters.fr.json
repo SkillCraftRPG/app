@@ -73,6 +73,10 @@
       "Unspecified": "Non précisée"
     }
   },
+  "personality": {
+    "help": "?",
+    "title": "Personnalité"
+  },
   "physical": {
     "bodyMassIndex": "IMC (indice de masse corporelle)",
     "eyes": "Couleur des yeux",
