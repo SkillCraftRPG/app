@@ -90,13 +90,13 @@
       <h3 class="h5">{{ t("characters.appearance.colors") }}</h3>
       <div class="row">
         <div class="col-md-4">
-          <NameInput class="mb-3" id="skin" label="characters.physical.skin" v-model="skin" />
+          <SkinField class="mb-3" v-model="skin" />
         </div>
         <div class="col-md-4">
-          <NameInput class="mb-3" id="eyes" label="characters.physical.eyes" v-model="eyes" />
+          <EyesField class="mb-3" v-model="eyes" />
         </div>
         <div class="col-md-4">
-          <NameInput class="mb-3" id="hair" label="characters.physical.hair" v-model="hair" />
+          <HairField class="mb-3" v-model="hair" />
         </div>
       </div>
     </section>
@@ -116,9 +116,11 @@ import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import AgeField from "@/components/lineages/AgeField.vue";
+import EyesField from "@/components/characters/EyesField.vue";
+import HairField from "@/components/characters/HairField.vue";
 import HeightField from "@/components/characters/HeightField.vue";
 import InputField from "@/components/forms/InputField.vue";
-import NameInput from "@/components/shared/NameField.vue";
+import SkinField from "@/components/characters/SkinField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarSelect from "@/components/tar/TarSelect.vue";
 import type { CharacterAppearanceDetail } from "@/types/characters";
