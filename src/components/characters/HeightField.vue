@@ -35,7 +35,7 @@ withDefaults(
   }>(),
   {
     id: "height",
-    max: 999,
+    max: 9999,
     min: 0,
     step: 1,
   },
