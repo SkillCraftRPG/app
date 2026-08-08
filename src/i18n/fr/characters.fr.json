@@ -1,6 +1,7 @@
 {
   "appearance": {
-    "help": "?",
+    "colors": "Couleurs",
+    "help": "Définissez la taille, le poids, l’âge et les traits distinctifs de votre personnage.",
     "title": "Apparence physique"
   },
   "attributes": {
@@ -74,7 +75,10 @@
   },
   "physical": {
     "bodyMassIndex": "IMC (indice de masse corporelle)",
+    "eyes": "Couleur des yeux",
+    "hair": "Couleur des cheveux",
     "height": "Taille",
+    "skin": "Couleur de peau",
     "weight": "Poids calculé"
   },
   "skills": {

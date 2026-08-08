@@ -8,7 +8,11 @@
     :step="step"
     type="number"
     @update:model-value="onUpdate"
-  />
+  >
+    <template #append>
+      <slot name="append"></slot>
+    </template>
+  </InputField>
 </template>
 
 <script setup lang="ts">

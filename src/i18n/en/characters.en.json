@@ -1,6 +1,7 @@
 {
   "appearance": {
-    "help": "?",
+    "colors": "Colors",
+    "help": "Set your character’s size, weight, age, and distinctive features.",
     "title": "Physical Appearance"
   },
   "attributes": {
@@ -74,7 +75,10 @@
   },
   "physical": {
     "bodyMassIndex": "BMI (body mass index)",
+    "eyes": "Eye Color",
+    "hair": "Hair Color",
     "height": "Size",
+    "skin": "Skin Color",
     "weight": "Calculated Weight"
   },
   "skills": {

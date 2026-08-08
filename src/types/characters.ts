@@ -16,6 +16,16 @@ export type Character = Aggregate & {
   // TODO(fpion): complete
 };
 
+export type CharacterAppearance = {
+  height: number;
+  weightCategory: string;
+  bodyMassIndex: number;
+  age: number;
+  skin: string;
+  eyes: string;
+  hair: string;
+};
+
 export type CharacterCreation = {
   species?: Lineage;
   ethnicity?: Lineage;
@@ -28,6 +38,7 @@ export type CharacterCreation = {
   talents: CharacterTalent[];
   attributes: StartingAttributes;
   skills: SkillRankPayload[];
+  appearance: CharacterAppearance;
 };
 
 export enum CharacterCreationStep {
@@ -38,6 +49,7 @@ export enum CharacterCreationStep {
   Attributes = 4,
   Skills = 5,
   Appearance = 6,
+  Personality = 7,
 }
 
 export type CharacterSort = "CreatedOn" | "UpdatedOn";
