@@ -58,7 +58,7 @@
       </div>
     </section>
     <section>
-      <h3 class="h5">{{ t("lineages.physical.age.label") }}</h3>
+      <h3 class="h5">{{ t("lineages.physical.age.title") }}</h3>
       <p class="text-body-secondary">{{ t("lineages.physical.age.help") }}</p>
       <div class="row">
         <div class="col-md-6 col-lg-3">

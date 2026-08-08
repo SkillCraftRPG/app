@@ -1,13 +1,13 @@
 <template>
   <InputField
     :id="id"
-    :label="t(label)"
-    :max="max"
+    :label="label"
     :min="min"
-    :model-value="modelValue?.toString() ?? ''"
+    :max="max"
+    :model-value="modelValue.toString()"
     :step="step"
     type="number"
-    @update:model-value="onUpdate"
+    @update:model-value="$emit('update:model-value', parseNumber($event) ?? 0)"
   >
     <template #append>
       <slot name="append"></slot>
@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
@@ -27,26 +28,22 @@ const { t } = useI18n();
 withDefaults(
   defineProps<{
     id?: string;
-    label?: string;
     max?: number | string;
     min?: number | string;
     modelValue: number;
-    step?: number;
+    step?: number | string;
   }>(),
   {
-    id: "age",
-    label: "lineages.physical.age.label",
+    id: "height",
     max: 9999,
     min: 0,
     step: 1,
   },
 );
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
 
-function onUpdate(value: string): void {
-  emit("update:model-value", parseNumber(value) ?? 0);
-}
+const label = computed<string>(() => `${t("characters.physical.height")} (${t("game.unit.cm")})`);
 </script>

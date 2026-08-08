@@ -1,6 +1,7 @@
 {
   "appearance": {
-    "help": "?",
+    "colors": "Colors",
+    "help": "Set your character’s size, weight, age, and distinctive features.",
     "title": "Physical Appearance"
   },
   "attributes": {
@@ -71,6 +72,18 @@
       "Right": "Right-handed",
       "Unspecified": "Unspecified"
     }
+  },
+  "personality": {
+    "help": "?",
+    "title": "Personality"
+  },
+  "physical": {
+    "bodyMassIndex": "BMI (body mass index)",
+    "eyes": "Eye Color",
+    "hair": "Hair Color",
+    "height": "Size",
+    "skin": "Skin Color",
+    "weight": "Calculated Weight"
   },
   "skills": {
     "help": "Distribute your Learning points among the skills. Each talent associated with a skill reduces the cost of its ranks by 1.",

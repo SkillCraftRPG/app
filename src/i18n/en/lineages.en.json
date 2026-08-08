@@ -52,10 +52,20 @@
   "physical": {
     "age": {
       "adult": "Adult",
+      "between": "{min} to {max} years",
+      "category": {
+        "label": "Age Category",
+        "placeholder": "Select a category"
+      },
+      "child": "Child",
+      "format": "{count} year | {count} year | {count} years",
       "help": "Minimum age at which an individual enters each category.",
-      "label": "Age",
+      "label": "Age (years)",
+      "less": "under {age}",
       "mature": "Mature",
+      "more": "{age} years and older",
       "teenager": "Teenager",
+      "title": "Age",
       "venerable": "Venerable"
     },
     "height": "Height (roll)",
@@ -66,6 +76,10 @@
     },
     "title": "Physical",
     "weight": {
+      "category": {
+        "label": "Weight Category",
+        "placeholder": "Select a category"
+      },
       "help": "Formulas used to determine BMI based on body build.",
       "label": "Weight",
       "malnutrition": "Malnutrition",

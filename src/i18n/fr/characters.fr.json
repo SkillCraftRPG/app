@@ -1,6 +1,7 @@
 {
   "appearance": {
-    "help": "?",
+    "colors": "Couleurs",
+    "help": "Définissez la taille, le poids, l’âge et les traits distinctifs de votre personnage.",
     "title": "Apparence physique"
   },
   "attributes": {
@@ -71,6 +72,18 @@
       "Right": "Droitier",
       "Unspecified": "Non précisée"
     }
+  },
+  "personality": {
+    "help": "?",
+    "title": "Personnalité"
+  },
+  "physical": {
+    "bodyMassIndex": "IMC (indice de masse corporelle)",
+    "eyes": "Couleur des yeux",
+    "hair": "Couleur des cheveux",
+    "height": "Taille",
+    "skin": "Couleur de peau",
+    "weight": "Poids calculé"
   },
   "skills": {
     "help": "Répartissez vos points d’Apprentissage entre les compétences. Chaque talent associé à une compétence réduit de 1 le coût de ses rangs.",

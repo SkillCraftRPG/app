@@ -52,10 +52,20 @@
   "physical": {
     "age": {
       "adult": "Adulte",
+      "between": "{min} à {max} ans",
+      "category": {
+        "label": "Catégorie d’âge",
+        "placeholder": "Sélectionnez une catégorie"
+      },
+      "child": "Enfant",
+      "format": "{count} an | {count} an | {count} ans",
       "help": "Âge minimal à partir duquel un individu appartient à chaque catégorie.",
-      "label": "Âge",
+      "label": "Âge (ans)",
+      "less": "moins de {age}",
       "mature": "Mûr",
+      "more": "{age} ans et plus",
       "teenager": "Adolescent",
+      "title": "Âge",
       "venerable": "Vénérable"
     },
     "height": "Hauteur (jet)",
@@ -66,6 +76,10 @@
     },
     "title": "Physique",
     "weight": {
+      "category": {
+        "label": "Catégorie de poids",
+        "placeholder": "Sélectionnez une catégorie"
+      },
       "help": "Formules utilisées pour déterminer l’IMC selon la corpulence.",
       "label": "Poids",
       "malnutrition": "Dénutrition",

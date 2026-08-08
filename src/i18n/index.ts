@@ -32,4 +32,30 @@ export default createI18n<[MessageSchema], "en" | "fr">({
       },
     },
   },
+  numberFormats: {
+    en: {
+      characterWeight: {
+        style: "decimal",
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      },
+      itemWeight: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    },
+    fr: {
+      characterWeight: {
+        style: "decimal",
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      },
+      itemWeight: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    },
+  },
 });
