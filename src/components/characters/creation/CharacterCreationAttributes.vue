@@ -11,7 +11,7 @@
           :max="4"
           :model-value="attribute.score.toString()"
           required
-          :step="1"
+          step="1"
           type="number"
           @update:model-value="updateScore(attribute.key, parseNumber($event) ?? 0)"
         />

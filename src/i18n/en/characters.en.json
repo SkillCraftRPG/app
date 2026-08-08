@@ -72,6 +72,9 @@
       "Unspecified": "Unspecified"
     }
   },
+  "physical": {
+    "height": "Size"
+  },
   "skills": {
     "help": "Distribute your Learning points among the skills. Each talent associated with a skill reduces the cost of its ranks by 1.",
     "invalid": "The number of points spent must equal your Learning ({learning}). Current total: {spent}.",
