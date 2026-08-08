@@ -22,11 +22,12 @@ import { useI18n } from "vue-i18n";
 
 import InputField from "@/components/forms/InputField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
+import { roll as rollFn } from "@/utils/random";
 
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     id?: string;
     max?: number | string;
@@ -43,13 +44,15 @@ withDefaults(
   },
 );
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
 
 const label = computed<string>(() => `${t("characters.physical.height")} (${t("game.unit.cm")})`);
 
 function randomize(): void {
-  console.log("Randomizing!"); // TODO(fpion): implement
+  if (props.roll) {
+    emit("update:model-value", rollFn(props.roll));
+  }
 }
 </script>

@@ -33,6 +33,7 @@ import { useI18n } from "vue-i18n";
 import HeightField from "@/components/characters/HeightField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { SizeCategory } from "@/types/game";
+import { roll } from "@/utils/random";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
@@ -58,5 +59,9 @@ function submit(): void {
 
 onMounted(() => {
   // TODO(fpion): implement
+
+  if (heightRoll.value) {
+    height.value = roll(heightRoll.value);
+  }
 });
 </script>
