@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import type { Caste } from "@/types/castes";
-import type { CharacterAppearance, CharacterCreation, CharacterTalent, DominantHand, SkillRankPayload, StartingAttributes } from "@/types/characters";
+import type { CharacterAppearanceDetail, CharacterCreation, CharacterTalent, DominantHand, SkillRankPayload, StartingAttributes } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
 import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
@@ -38,7 +38,7 @@ export const useCharacterStore = defineStore(
       }
     }
 
-    function saveAppearance(appearance: CharacterAppearance): void {
+    function saveAppearance(appearance: CharacterAppearanceDetail): void {
       creation.value.appearance = appearance;
       step.value++;
     }

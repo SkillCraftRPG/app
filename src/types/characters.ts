@@ -17,6 +17,15 @@ export type Character = Aggregate & {
 };
 
 export type CharacterAppearance = {
+  height?: number | null;
+  weight?: number | null;
+  age?: number | null;
+  skin?: string | null;
+  eyes?: string | null;
+  hair?: string | null;
+};
+
+export type CharacterAppearanceDetail = {
   height: number;
   weightCategory: string;
   bodyMassIndex: number;
@@ -38,7 +47,7 @@ export type CharacterCreation = {
   talents: CharacterTalent[];
   attributes: StartingAttributes;
   skills: SkillRankPayload[];
-  appearance: CharacterAppearance;
+  appearance: CharacterAppearanceDetail;
 };
 
 export enum CharacterCreationStep {
@@ -104,6 +113,7 @@ export type CreateCharacterPayload = {
   talents: AddCharacterTalentPayload[];
   attributes: StartingAttributes;
   skills: SkillRankPayload[];
+  appearance: CharacterAppearance;
 };
 
 export type DominantHand = "Left" | "Right";

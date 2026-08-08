@@ -121,7 +121,7 @@ import InputField from "@/components/forms/InputField.vue";
 import NameInput from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarSelect from "@/components/tar/TarSelect.vue";
-import type { CharacterAppearance } from "@/types/characters";
+import type { CharacterAppearanceDetail } from "@/types/characters";
 import type { LineageAge } from "@/types/lineages";
 import type { SelectOption } from "@/types/tar/select";
 import type { SizeCategory } from "@/types/game";
@@ -272,7 +272,7 @@ function updateWeightCategory(category: string | undefined): void {
 
 const { handleSubmit } = useForm();
 function submit(): void {
-  const appearance: CharacterAppearance = {
+  const appearance: CharacterAppearanceDetail = {
     height: height.value,
     weightCategory: weightCategory.value,
     bodyMassIndex: bodyMassIndex.value,
@@ -285,7 +285,7 @@ function submit(): void {
 }
 
 onMounted(() => {
-  const appearance: CharacterAppearance = character.creation.appearance;
+  const appearance: CharacterAppearanceDetail = character.creation.appearance;
 
   if (appearance.height) {
     height.value = appearance.height;
