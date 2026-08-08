@@ -66,6 +66,10 @@
     },
     "title": "Physical",
     "weight": {
+      "category": {
+        "label": "Weight Category",
+        "placeholder": "Select a category"
+      },
       "help": "Formulas used to determine BMI based on body build.",
       "label": "Weight",
       "malnutrition": "Malnutrition",

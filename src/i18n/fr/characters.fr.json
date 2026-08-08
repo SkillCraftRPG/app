@@ -73,7 +73,9 @@
     }
   },
   "physical": {
-    "height": "Taille"
+    "bodyMassIndex": "IMC (indice de masse corporelle)",
+    "height": "Taille",
+    "weight": "Poids calculé"
   },
   "skills": {
     "help": "Répartissez vos points d’Apprentissage entre les compétences. Chaque talent associé à une compétence réduit de 1 le coût de ses rangs.",

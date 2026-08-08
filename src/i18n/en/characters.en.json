@@ -73,7 +73,9 @@
     }
   },
   "physical": {
-    "height": "Size"
+    "bodyMassIndex": "BMI (body mass index)",
+    "height": "Size",
+    "weight": "Calculated Weight"
   },
   "skills": {
     "help": "Distribute your Learning points among the skills. Each talent associated with a skill reduces the cost of its ranks by 1.",

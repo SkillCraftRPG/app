@@ -66,6 +66,10 @@
     },
     "title": "Physique",
     "weight": {
+      "category": {
+        "label": "Catégorie de poids",
+        "placeholder": "Sélectionnez une catégorie"
+      },
       "help": "Formules utilisées pour déterminer l’IMC selon la corpulence.",
       "label": "Poids",
       "malnutrition": "Dénutrition",
