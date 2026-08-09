@@ -37,6 +37,10 @@
     "invalid": "La somme des attributs doit être égale à 0. Somme actuelle : {total}.",
     "title": "Attributs"
   },
+  "background": {
+    "help": "?",
+    "title": "Historique"
+  },
   "creation": {
     "ascendancy": {
       "ethnicity": "Choisissez l’ethnicité de votre personnage.",

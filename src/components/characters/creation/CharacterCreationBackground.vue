@@ -2,6 +2,7 @@
   <form @submit.prevent="handleSubmit(submit)">
     <h2 class="h3">{{ t("characters.background.title") }}</h2>
     <p class="text-body-secondary">{{ t("characters.background.help") }}</p>
+    <BackgroundField v-model="background" />
     <div class="d-flex justify-content-between">
       <div class="d-flex gap-2">
         <TarButton icon="fas fa-xmark" outline :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
@@ -13,9 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import BackgroundField from "@/components/characters/BackgroundField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
@@ -27,12 +29,12 @@ defineEmits<{
   (e: "abandon"): void;
 }>();
 
+const background = ref<string>("");
+
 const { handleSubmit } = useForm();
 function submit(): void {
-  // TODO(fpion): implement
+  character.saveBackground(background.value);
 }
 
-onMounted(() => {
-  // TODO(fpion): implement
-});
+onMounted(() => (background.value = character.creation.background));
 </script>

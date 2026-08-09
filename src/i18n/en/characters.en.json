@@ -37,6 +37,10 @@
     "invalid": "The sum of the attributes must equal 0. Current total: {total}.",
     "title": "Attributes"
   },
+  "background": {
+    "help": "?",
+    "label": "Background"
+  },
   "creation": {
     "ascendancy": {
       "ethnicity": "Choose your character’s ethnicity.",
