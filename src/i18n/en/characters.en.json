@@ -1,4 +1,32 @@
 {
+  "alignment": {
+    "help": "Choose your character's alignment, or select Unaligned.",
+    "label": "Alignment",
+    "options": {
+      "ChaoticEvil": "Chaotic Evil",
+      "ChaoticGood": "Chaotic Good",
+      "ChaoticNeutral": "Chaotic Neutral",
+      "LawfulEvil": "Lawful Evil",
+      "LawfulGood": "Lawful Good",
+      "LawfulNeutral": "Lawful Neutral",
+      "NeutralEvil": "Neutral Evil",
+      "NeutralGood": "Neutral Good",
+      "TrueNeutral": "Neutral",
+      "Unaligned": "Unaligned"
+    },
+    "tendencies": {
+      "ChaoticEvil": "Rejects constraints and pursues their desires with little concern for the consequences to others. When opposed, they often favor intimidation, violence, or destruction over compromise.",
+      "ChaoticGood": "Follows their conscience and values individual freedom over authority or convention. They are willing to break rules when those rules stand in the way of doing what they believe is right.",
+      "ChaoticNeutral": "Values freedom and independence above all. They act according to their desires, current convictions, or circumstances, and strongly resist rules and restrictions they consider unnecessary.",
+      "LawfulEvil": "Seeks to achieve their goals through order, hierarchy, and rules they can use to their advantage. They willingly honor commitments when doing so strengthens their power, position, or interests.",
+      "LawfulGood": "Tries to do what is right while respecting laws, traditions, and commitments. When faced with conflict, they favor solutions that protect others without compromising their principles.",
+      "LawfulNeutral": "Places great importance on order, rules, traditions, or a personal code. They generally strive to fulfill their duty consistently, even when their decisions are neither especially compassionate nor cruel.",
+      "NeutralEvil": "Generally puts their own interests ahead of those of others and chooses whatever method benefits them most. They may follow or break the rules depending on which choice produces the best outcome for them.",
+      "NeutralGood": "Above all, seeks to help others and reduce suffering. They respect rules when those rules serve the common good, but will disregard them when they become unjust or harmful.",
+      "TrueNeutral": "Generally avoids moral or ideological extremes and judges each situation according to its context. They often favor balance, pragmatism, or simply the course of action that seems most reasonable.",
+      "Unaligned": "Does not particularly follow the axes of good, evil, law, or chaos. Their decisions are driven mainly by personality, needs, relationships, and circumstances rather than by a broad moral outlook."
+    }
+  },
   "appearance": {
     "colors": "Colors",
     "help": "Set your character’s size, weight, age, and distinctive features.",
@@ -74,7 +102,14 @@
     }
   },
   "personality": {
-    "help": "?",
+    "detail": {
+      "flaws": "Flaws",
+      "help": "Define your character's alignment and main personality traits.",
+      "ideals": "Ideals",
+      "title": "Persona",
+      "traits": "Personality Traits"
+    },
+    "help": "Describe your character's personality traits, ideals, and flaws.",
     "title": "Personality"
   },
   "physical": {
