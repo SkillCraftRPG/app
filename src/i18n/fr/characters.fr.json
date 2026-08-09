@@ -38,7 +38,8 @@
     "title": "Attributs"
   },
   "background": {
-    "help": "?",
+    "help": "Décrivez le passé de votre personnage, les événements marquants de sa vie et les expériences qui ont façonné la personne qu’il est aujourd’hui.",
+    "label": "Historique",
     "title": "Historique"
   },
   "creation": {

@@ -38,7 +38,8 @@
     "title": "Attributes"
   },
   "background": {
-    "help": "?",
+    "help": "Describe your character's past, the major events of their life, and the experiences that shaped who they are today.",
+    "label": "Background",
     "title": "Background"
   },
   "creation": {

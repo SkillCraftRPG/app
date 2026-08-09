@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit(submit)">
     <h2 class="h3">{{ t("characters.background.title") }}</h2>
     <p class="text-body-secondary">{{ t("characters.background.help") }}</p>
-    <BackgroundField v-model="background" />
+    <BackgroundField class="mb-3" v-model="background" />
     <div class="d-flex justify-content-between">
       <div class="d-flex gap-2">
         <TarButton icon="fas fa-xmark" outline :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />

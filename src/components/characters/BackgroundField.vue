@@ -19,7 +19,7 @@ withDefaults(
   {
     id: "background",
     label: "characters.background.label",
-    rows: 999, // TODO(fpion): implement
+    rows: 20,
   },
 );
 
