@@ -89,6 +89,10 @@
       },
       "title": "Personnalisation"
     },
+    "equipment": {
+      "help": "?",
+      "title": "Équipement"
+    },
     "label": "Création",
     "talents": {
       "empty": {
