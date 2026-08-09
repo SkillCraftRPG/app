@@ -11,6 +11,7 @@
     <CharacterCreationSkills v-else-if="character.step === CharacterCreationStep.Skills" @abandon="abandon" />
     <CharacterCreationAppearance v-else-if="character.step === CharacterCreationStep.Appearance" @abandon="abandon" />
     <CharacterCreationPersonality v-else-if="character.step === CharacterCreationStep.Personality" @abandon="abandon" />
+    <CharacterCreationBackground v-else-if="character.step === CharacterCreationStep.Background" @abandon="abandon" />
   </main>
 </template>
 
@@ -22,6 +23,7 @@ import { useRouter } from "vue-router";
 import CharacterCreationAppearance from "@/components/characters/creation/CharacterCreationAppearance.vue";
 import CharacterCreationAscendancy from "@/components/characters/creation/CharacterCreationAscendancy.vue";
 import CharacterCreationAttributes from "@/components/characters/creation/CharacterCreationAttributes.vue";
+import CharacterCreationBackground from "@/components/characters/creation/CharacterCreationBackground.vue";
 import CharacterCreationContext from "@/components/characters/creation/CharacterCreationContext.vue";
 import CharacterCreationCustomization from "@/components/characters/creation/CharacterCreationCustomization.vue";
 import CharacterCreationPersonality from "@/components/characters/creation/CharacterCreationPersonality.vue";

@@ -2,7 +2,16 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import type { Caste } from "@/types/castes";
-import type { CharacterAppearanceDetail, CharacterCreation, CharacterTalent, DominantHand, SkillRankPayload, StartingAttributes } from "@/types/characters";
+import type {
+  Alignment,
+  CharacterAppearanceDetail,
+  CharacterCreation,
+  CharacterPersonality,
+  CharacterTalent,
+  DominantHand,
+  SkillRankPayload,
+  StartingAttributes,
+} from "@/types/characters";
 import type { Customization } from "@/types/customizations";
 import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
@@ -18,6 +27,7 @@ function defaultCreation(): CharacterCreation {
     attributes: { dexterity: 0, health: 0, intellect: 0, senses: 0, vigor: 0 },
     skills: [],
     appearance: { height: 0, weightCategory: "", bodyMassIndex: 0, age: 0, skin: "", eyes: "", hair: "" },
+    personality: {},
   };
 }
 
@@ -68,6 +78,12 @@ export const useCharacterStore = defineStore(
       step.value++;
     }
 
+    function savePersonality(alignment: Alignment | null, personality: CharacterPersonality): void {
+      creation.value.alignment = alignment;
+      creation.value.personality = personality;
+      step.value++;
+    }
+
     function saveSkills(skills: SkillRankPayload[]): void {
       creation.value.skills = [...skills];
       step.value++;
@@ -78,7 +94,20 @@ export const useCharacterStore = defineStore(
       step.value++;
     }
 
-    return { creation, step, abandon, goBack, saveAppearance, saveAscendancy, saveAttributes, saveContext, saveCustomization, saveSkills, saveTalents };
+    return {
+      creation,
+      step,
+      abandon,
+      goBack,
+      saveAppearance,
+      saveAscendancy,
+      saveAttributes,
+      saveContext,
+      saveCustomization,
+      savePersonality,
+      saveSkills,
+      saveTalents,
+    };
   },
   { persist: true },
 );

@@ -12,6 +12,17 @@ export type AddCharacterTalentPayload = CharacterTalentPayload & {
   talentId: string;
 };
 
+export type Alignment =
+  | "TrueNeutral"
+  | "ChaoticEvil"
+  | "ChaoticGood"
+  | "ChaoticNeutral"
+  | "LawfulEvil"
+  | "LawfulGood"
+  | "LawfulNeutral"
+  | "NeutralEvil"
+  | "NeutralGood";
+
 export type Character = Aggregate & {
   // TODO(fpion): complete
 };
@@ -48,6 +59,8 @@ export type CharacterCreation = {
   attributes: StartingAttributes;
   skills: SkillRankPayload[];
   appearance: CharacterAppearanceDetail;
+  alignment?: Alignment | null;
+  personality: CharacterPersonality;
 };
 
 export enum CharacterCreationStep {
@@ -59,7 +72,15 @@ export enum CharacterCreationStep {
   Skills = 5,
   Appearance = 6,
   Personality = 7,
+  Background = 8,
+  Equipment = 9,
 }
+
+export type CharacterPersonality = {
+  traits?: string | null;
+  ideals?: string | null;
+  flaws?: string | null;
+};
 
 export type CharacterSort = "CreatedOn" | "UpdatedOn";
 
@@ -114,6 +135,8 @@ export type CreateCharacterPayload = {
   attributes: StartingAttributes;
   skills: SkillRankPayload[];
   appearance: CharacterAppearance;
+  alignment?: Alignment | null;
+  personality: CharacterPersonality;
 };
 
 export type DominantHand = "Left" | "Right";

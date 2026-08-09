@@ -1,4 +1,32 @@
 {
+  "alignment": {
+    "help": "Choisissez l’alignement de votre personnage, ou sélectionnez Non-aligné.",
+    "label": "Alignement",
+    "options": {
+      "ChaoticEvil": "Chaotique Mauvais",
+      "ChaoticGood": "Chaotique Bon",
+      "ChaoticNeutral": "Chaotique Neutre",
+      "LawfulEvil": "Loyal Mauvais",
+      "LawfulGood": "Loyal Bon",
+      "LawfulNeutral": "Loyal Neutre",
+      "NeutralEvil": "Neutre Mauvais",
+      "NeutralGood": "Neutre Bon",
+      "TrueNeutral": "Neutre",
+      "Unaligned": "Non-aligné"
+    },
+    "tendencies": {
+      "ChaoticEvil": "Rejette les contraintes et poursuit ses désirs sans grand souci des conséquences pour les autres. Face à l’opposition, il privilégie souvent l’intimidation, la violence ou la destruction plutôt que le compromis.",
+      "ChaoticGood": "Suit sa conscience et défend la liberté individuelle plutôt que l’autorité ou les conventions. Il agit volontiers contre les règles lorsqu’elles empêchent de faire ce qu’il considère juste.",
+      "ChaoticNeutral": "Valorise avant tout sa liberté et son indépendance. Il agit selon ses envies, ses convictions du moment ou les circonstances, et supporte difficilement les règles et les contraintes qu’il juge inutiles.",
+      "LawfulEvil": "Cherche à atteindre ses objectifs par l’ordre, la hiérarchie et des règles qu’il peut exploiter à son avantage. Il respecte volontiers ses engagements lorsque ceux-ci renforcent son pouvoir, sa position ou ses intérêts.",
+      "LawfulGood": "Cherche à faire ce qui est juste tout en respectant les lois, les traditions et ses engagements. Face à un conflit, il privilégie les solutions qui protègent les autres sans compromettre ses principes.",
+      "LawfulNeutral": "Accorde une grande importance à l’ordre, aux règles, aux traditions ou à un code personnel. Il cherche généralement à accomplir son devoir avec constance, même lorsque ses décisions ne sont ni particulièrement généreuses ni cruelles.",
+      "NeutralEvil": "Place généralement ses propres intérêts avant ceux des autres et choisit la méthode la plus avantageuse pour lui. Il peut respecter ou enfreindre les règles selon ce qui lui procure le meilleur résultat.",
+      "NeutralGood": "Cherche avant tout à aider les autres et à limiter la souffrance. Il respecte les règles lorsqu’elles servent le bien commun, mais n’hésite pas à les contourner lorsqu’elles deviennent injustes ou nuisibles.",
+      "TrueNeutral": "Évite généralement les positions morales ou idéologiques extrêmes et juge chaque situation selon son contexte. Il recherche souvent l’équilibre, le pragmatisme ou simplement la solution qui lui paraît la plus raisonnable.",
+      "Unaligned": "Ne suit pas particulièrement les axes du bien, du mal, de l’ordre ou du chaos. Ses décisions découlent surtout de sa personnalité, de ses besoins, de ses relations et des circonstances plutôt que d’une orientation morale générale."
+    }
+  },
   "appearance": {
     "colors": "Couleurs",
     "help": "Définissez la taille, le poids, l’âge et les traits distinctifs de votre personnage.",
@@ -74,7 +102,14 @@
     }
   },
   "personality": {
-    "help": "?",
+    "detail": {
+      "flaws": "Défauts",
+      "help": "Décrivez les traits de personnalité, les idéaux et les défauts de votre personnage.",
+      "ideals": "Idéaux",
+      "title": "Caractère",
+      "traits": "Traits de personnalité"
+    },
+    "help": "Définissez l’alignement et les principaux traits de personnalité de votre personnage",
     "title": "Personnalité"
   },
   "physical": {
