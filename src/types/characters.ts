@@ -61,6 +61,7 @@ export type CharacterCreation = {
   appearance: CharacterAppearanceDetail;
   alignment?: Alignment | null;
   personality: CharacterPersonality;
+  background: string;
 };
 
 export enum CharacterCreationStep {
@@ -137,6 +138,7 @@ export type CreateCharacterPayload = {
   appearance: CharacterAppearance;
   alignment?: Alignment | null;
   personality: CharacterPersonality;
+  background?: string | null;
 };
 
 export type DominantHand = "Left" | "Right";

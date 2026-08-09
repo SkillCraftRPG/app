@@ -37,6 +37,11 @@
     "invalid": "The sum of the attributes must equal 0. Current total: {total}.",
     "title": "Attributes"
   },
+  "background": {
+    "help": "Describe your character's past, the major events of their life, and the experiences that shaped who they are today.",
+    "label": "Background",
+    "title": "Background"
+  },
   "creation": {
     "ascendancy": {
       "ethnicity": "Choose your character’s ethnicity.",
@@ -83,6 +88,10 @@
         "selected": "— | {count} gift and {count} disability selected. | {count} gifts and {count} disabilities selected."
       },
       "title": "Customization"
+    },
+    "equipment": {
+      "help": "?",
+      "title": "Equipment"
     },
     "label": "Create",
     "talents": {

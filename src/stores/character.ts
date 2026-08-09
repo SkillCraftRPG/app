@@ -28,6 +28,7 @@ function defaultCreation(): CharacterCreation {
     skills: [],
     appearance: { height: 0, weightCategory: "", bodyMassIndex: 0, age: 0, skin: "", eyes: "", hair: "" },
     personality: {},
+    background: "",
   };
 }
 
@@ -62,6 +63,11 @@ export const useCharacterStore = defineStore(
 
     function saveAttributes(attributes: StartingAttributes): void {
       creation.value.attributes = { ...attributes };
+      step.value++;
+    }
+
+    function saveBackground(background: string): void {
+      creation.value.background = background;
       step.value++;
     }
 
@@ -102,6 +108,7 @@ export const useCharacterStore = defineStore(
       saveAppearance,
       saveAscendancy,
       saveAttributes,
+      saveBackground,
       saveContext,
       saveCustomization,
       savePersonality,

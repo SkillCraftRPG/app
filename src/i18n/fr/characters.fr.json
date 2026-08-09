@@ -37,6 +37,11 @@
     "invalid": "La somme des attributs doit être égale à 0. Somme actuelle : {total}.",
     "title": "Attributs"
   },
+  "background": {
+    "help": "Décrivez le passé de votre personnage, les événements marquants de sa vie et les expériences qui ont façonné la personne qu’il est aujourd’hui.",
+    "label": "Historique",
+    "title": "Historique"
+  },
   "creation": {
     "ascendancy": {
       "ethnicity": "Choisissez l’ethnicité de votre personnage.",
@@ -83,6 +88,10 @@
         "selected": "— | {count} don et {count} handicap sélectionnés. | {count} dons et {count} handicaps sélectionnés."
       },
       "title": "Personnalisation"
+    },
+    "equipment": {
+      "help": "?",
+      "title": "Équipement"
     },
     "label": "Création",
     "talents": {
