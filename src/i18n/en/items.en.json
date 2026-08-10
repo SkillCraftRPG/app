@@ -1,4 +1,22 @@
 {
+  "category": {
+    "label": "Category",
+    "options": {
+      "Ammunition": "Ammunition",
+      "Armor": "Armor",
+      "Clothing": "Clothing",
+      "Consumable": "Consumable",
+      "Container": "Container",
+      "Currency": "Currency",
+      "Material": "Material",
+      "Miscellaneous": "Miscellaneous",
+      "Shield": "Shield",
+      "Tool": "Tool",
+      "Treasure": "Treasure",
+      "Weapon": "Weapon"
+    },
+    "placeholder": "Select a category"
+  },
   "create": "Create an item",
   "created": {
     "help": "You can now complete its details.",

@@ -54,6 +54,7 @@ import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
 import type { CreateOrReplaceItemPayload, Item } from "@/types/items";
 import { StatusCodes, type ApiFailure } from "@/types/api";
+import { fromHundredths, toHundredths } from "@/utils/number";
 import { handleErrorKey } from "@/inject";
 import { readItem, replaceItem } from "@/api/items";
 import { useDocument } from "@/composables/document";
@@ -85,8 +86,8 @@ const hasChanges = computed<boolean>(() =>
     (item.value.name !== name.value ||
       (item.value.summary ?? "") !== summary.value ||
       (item.value.content ?? "") !== content.value ||
-      (item.value.price ?? undefined) !== price.value ||
-      (item.value.weight ?? undefined) !== weight.value),
+      fromHundredths(item.value.price) !== price.value ||
+      fromHundredths(item.value.weight) !== weight.value),
   ),
 );
 const title = computed<string>(() => item.value?.name ?? "");
@@ -97,11 +98,12 @@ async function submit(): Promise<void> {
     isLoading.value = true;
     try {
       const payload: CreateOrReplaceItemPayload = {
+        category: item.value.category,
         name: name.value,
         summary: summary.value,
         content: content.value,
-        price: price.value || undefined,
-        weight: weight.value || undefined,
+        price: toHundredths(price.value),
+        weight: toHundredths(weight.value),
       };
       item.value = await replaceItem(item.value.id, payload);
       isCreated.value = false;
@@ -121,8 +123,8 @@ watch(
     name.value = item?.name ?? "";
     summary.value = item?.summary ?? "";
     content.value = item?.content ?? "";
-    price.value = item?.price ?? undefined;
-    weight.value = item?.weight ?? undefined;
+    price.value = fromHundredths(item?.price);
+    weight.value = fromHundredths(item?.weight);
   },
   { deep: true },
 );

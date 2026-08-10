@@ -1,4 +1,22 @@
 {
+  "category": {
+    "label": "Catégorie",
+    "options": {
+      "Ammunition": "Munitions",
+      "Armor": "Armure",
+      "Clothing": "Vêtements",
+      "Consumable": "Consommable",
+      "Container": "Contenant",
+      "Currency": "Monnaie",
+      "Material": "Matériau",
+      "Miscellaneous": "Divers",
+      "Shield": "Bouclier",
+      "Tool": "Outil",
+      "Treasure": "Trésor",
+      "Weapon": "Arme"
+    },
+    "placeholder": "Sélectionnez une catégorie"
+  },
   "create": "Créer un objet",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",
