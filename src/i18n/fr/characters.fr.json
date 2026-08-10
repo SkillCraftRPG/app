@@ -90,8 +90,16 @@
       "title": "Personnalisation"
     },
     "equipment": {
+      "currency": "Choisissez la monnaie dans laquelle la richesse de départ de votre personnage sera versée.",
       "help": "Choisissez l’équipement de départ de votre personnage.",
-      "title": "Équipement"
+      "invalid": {
+        "caste": "La caste sélectionnée ne définit aucune richesse de départ.",
+        "education": "L’éducation sélectionnée ne définit aucun multiplicateur de richesse.",
+        "item": "Aucune monnaie d’une valeur de 1,00 n’est configurée dans ce monde.",
+        "lead": "La richesse de départ ne peut pas être déterminée automatiquement."
+      },
+      "title": "Équipement",
+      "wealth": "Richesse de départ"
     },
     "label": "Création",
     "talents": {

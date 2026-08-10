@@ -90,8 +90,16 @@
       "title": "Customization"
     },
     "equipment": {
+      "currency": "Choose the currency in which your character's starting wealth will be granted.",
       "help": "Choose your character’s starting equipment.",
-      "title": "Equipment"
+      "invalid": {
+        "caste": "The selected caste does not define a starting wealth.",
+        "education": "The selected education does not define a wealth multiplier.",
+        "item": "No currency with a value of 1.00 is configured in this world.",
+        "lead": "Starting wealth cannot be determined automatically."
+      },
+      "title": "Equipment",
+      "wealth": "Starting Wealth"
     },
     "label": "Create",
     "talents": {

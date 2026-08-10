@@ -14,6 +14,7 @@ import type {
 } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
 import type { Education } from "@/types/educations";
+import type { Item } from "@/types/items";
 import type { Language } from "@/types/languages";
 import type { Lineage } from "@/types/lineages";
 import { CharacterCreationStep } from "@/types/characters";
@@ -29,6 +30,7 @@ function defaultCreation(): CharacterCreation {
     appearance: { height: 0, weightCategory: "", bodyMassIndex: 0, age: 0, skin: "", eyes: "", hair: "" },
     personality: {},
     background: "",
+    quantity: 0,
   };
 }
 
@@ -84,6 +86,11 @@ export const useCharacterStore = defineStore(
       step.value++;
     }
 
+    function saveEquipment(quantity: number, currency?: Item): void {
+      creation.value.currency = currency;
+      creation.value.quantity = quantity;
+    }
+
     function savePersonality(alignment: Alignment | null, personality: CharacterPersonality): void {
       creation.value.alignment = alignment;
       creation.value.personality = personality;
@@ -111,6 +118,7 @@ export const useCharacterStore = defineStore(
       saveBackground,
       saveContext,
       saveCustomization,
+      saveEquipment,
       savePersonality,
       saveSkills,
       saveTalents,

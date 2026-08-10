@@ -12,7 +12,7 @@
     <CharacterCreationAppearance v-else-if="character.step === CharacterCreationStep.Appearance" @abandon="abandon" />
     <CharacterCreationPersonality v-else-if="character.step === CharacterCreationStep.Personality" @abandon="abandon" />
     <CharacterCreationBackground v-else-if="character.step === CharacterCreationStep.Background" @abandon="abandon" />
-    <CharacterCreationEquipment v-else-if="character.step === CharacterCreationStep.Equipment" @abandon="abandon" />
+    <CharacterCreationEquipment v-else-if="character.step === CharacterCreationStep.Equipment" @abandon="abandon" @error="handleError" @complete="complete" />
   </main>
 </template>
 
@@ -52,6 +52,10 @@ const title = computed<string>(() => t("characters.creation.title"));
 function abandon(): void {
   character.abandon();
   router.push({ name: "Characters" });
+}
+
+function complete(): void {
+  console.log("Creating!"); // TODO(fpion): implement
 }
 
 watchEffect(() => document.setTitle(title.value));
