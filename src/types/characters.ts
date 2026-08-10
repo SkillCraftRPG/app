@@ -2,11 +2,12 @@ import type { Aggregate } from "./api";
 import type { Caste } from "./castes";
 import type { Customization } from "./customizations";
 import type { Education } from "./educations";
-import type { Skill } from "./game";
 import type { Language } from "./languages";
 import type { Lineage } from "./lineages";
 import type { SearchPayload, SortOption } from "./search";
+import type { Skill } from "./game";
 import type { Talent } from "./talents";
+import type { Item } from "./items";
 
 export type AddCharacterTalentPayload = CharacterTalentPayload & {
   talentId: string;
@@ -62,6 +63,8 @@ export type CharacterCreation = {
   alignment?: Alignment | null;
   personality: CharacterPersonality;
   background: string;
+  currency?: Item;
+  quantity: number;
 };
 
 export enum CharacterCreationStep {
@@ -139,6 +142,7 @@ export type CreateCharacterPayload = {
   alignment?: Alignment | null;
   personality: CharacterPersonality;
   background?: string | null;
+  startingWealth?: StartingWealth | null;
 };
 
 export type DominantHand = "Left" | "Right";
@@ -159,6 +163,11 @@ export type StartingAttributes = {
   intellect: number;
   senses: number;
   vigor: number;
+};
+
+export type StartingWealth = {
+  itemId: string;
+  quantity: number;
 };
 
 /* TODO(fpion): languages can be granted by:
