@@ -22,10 +22,13 @@
       </section>
       <section>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-6 col-lg-3">
+            <ItemCategorySelect class="mb-3" :model-value="category" @update:model-value="setQuery('category', $event)" />
+          </div>
+          <div class="col-md-6 col-lg-3">
             <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 col-lg-3">
             <SortSelect
               class="mb-3"
               :descending="isDescending"
@@ -35,7 +38,7 @@
               @update:model-value="setQuery('sort', $event)"
             />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6 col-lg-3">
             <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
           </div>
         </div>
@@ -43,7 +46,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="item in items" :key="item.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <ItemCard class="d-flex flex-column h-100" :item="item" />
+            <ItemLinkCard class="d-flex flex-column h-100" :item="item" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -75,14 +78,15 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateItem from "@/components/items/CreateItem.vue";
-import ItemCard from "@/components/items/ItemCard.vue";
+import ItemCategorySelect from "@/components/items/ItemCategorySelect.vue";
+import ItemLinkCard from "@/components/items/ItemLinkCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
-import type { Item, ItemSort, SearchItemsPayload } from "@/types/items";
+import type { Item, ItemCategory, ItemSort, SearchItemsPayload } from "@/types/items";
 import type { SearchResults } from "@/types/search";
 import type { SelectOption } from "@/types/tar/select";
 import { handleErrorKey } from "@/inject";
@@ -106,6 +110,7 @@ const items = ref<Item[]>([]);
 const timestamp = ref<number>(0);
 const total = ref<number>(0);
 
+const category = computed<string>(() => route.query.category?.toString() ?? "");
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 12);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
@@ -113,7 +118,7 @@ const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 const title = computed<string>(() => t("items.title"));
 
-const hasFilters = computed<boolean>(() => Boolean(search.value));
+const hasFilters = computed<boolean>(() => Boolean(category.value || search.value));
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
@@ -128,13 +133,14 @@ function onCreate(item: Item): void {
 }
 
 function clearFilters(): void {
-  const query = { ...route.query, search: "", page: 1 };
+  const query = { ...route.query, category: "", search: "", page: 1 };
   router.replace({ ...route, query });
 }
 
 function setQuery(key: string, value?: boolean | null | number | string): void {
   const query = { ...route.query, [key]: value?.toString() ?? "" };
   switch (key) {
+    case "category":
     case "search":
     case "count":
       query.page = "1";
@@ -145,6 +151,7 @@ function setQuery(key: string, value?: boolean | null | number | string): void {
 
 async function refresh(): Promise<void> {
   const payload: SearchItemsPayload = {
+    category: category.value ? (category.value as ItemCategory) : undefined,
     ids: [],
     search: {
       terms: search.value
@@ -186,6 +193,7 @@ watch(
           ...route,
           query: isEmpty(query)
             ? {
+                category: "",
                 search: "",
                 sort: "Name",
                 descending: "false",

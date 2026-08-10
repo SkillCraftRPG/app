@@ -21,6 +21,7 @@ export async function replaceItem(id: string, payload: CreateOrReplaceItemPayloa
 
 export async function searchItems(payload: SearchItemsPayload): Promise<SearchResults<Item>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/items" })
+    .setQuery("category", payload.category ?? "")
     .setQuery("ids", payload.ids)
     .setQuery(
       "search",

@@ -34,10 +34,20 @@ export default createI18n<[MessageSchema], "en" | "fr">({
   },
   numberFormats: {
     en: {
+      characterHeight: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
       characterWeight: {
         style: "decimal",
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
+      },
+      itemPrice: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
       },
       itemWeight: {
         style: "decimal",
@@ -46,10 +56,20 @@ export default createI18n<[MessageSchema], "en" | "fr">({
       },
     },
     fr: {
+      characterHeight: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
       characterWeight: {
         style: "decimal",
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
+      },
+      itemPrice: {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
       },
       itemWeight: {
         style: "decimal",

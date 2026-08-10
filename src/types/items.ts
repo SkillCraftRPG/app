@@ -2,6 +2,7 @@ import type { Aggregate, Optional } from "./api";
 import type { SearchPayload, SortOption } from "./search";
 
 export type CreateOrReplaceItemPayload = {
+  category: ItemCategory;
   name: string;
   summary?: string | null;
   content?: string | null;
@@ -10,6 +11,7 @@ export type CreateOrReplaceItemPayload = {
 };
 
 export type Item = Aggregate & {
+  category: ItemCategory;
   name: string;
   summary?: string | null;
   content?: string | null;
@@ -38,6 +40,7 @@ export type ItemSortOption = SortOption & {
 };
 
 export type SearchItemsPayload = SearchPayload & {
+  category?: ItemCategory | null;
   sort: ItemSortOption[];
 };
 
