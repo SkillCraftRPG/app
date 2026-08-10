@@ -166,7 +166,7 @@ export type StartingAttributes = {
 };
 
 export type StartingWealth = {
-  itemId: string;
+  currencyId: string;
   quantity: number;
 };
 
