@@ -2,12 +2,12 @@ import type { Aggregate } from "./api";
 import type { Caste } from "./castes";
 import type { Customization } from "./customizations";
 import type { Education } from "./educations";
+import type { Item } from "./items";
 import type { Language } from "./languages";
 import type { Lineage } from "./lineages";
 import type { SearchPayload, SortOption } from "./search";
 import type { Skill } from "./game";
 import type { Talent } from "./talents";
-import type { Item } from "./items";
 
 export type AddCharacterTalentPayload = CharacterTalentPayload & {
   talentId: string;
