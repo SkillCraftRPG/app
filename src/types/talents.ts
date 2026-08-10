@@ -22,6 +22,7 @@ export type SearchTalentsPayload = SearchPayload & {
 
 export type Talent = Aggregate & {
   tier: number;
+  cost: number;
   name: string;
   summary?: string | null;
   content?: string | null;

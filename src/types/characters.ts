@@ -1,4 +1,4 @@
-import type { Aggregate } from "./api";
+import type { Actor, Aggregate } from "./api";
 import type { Caste } from "./castes";
 import type { Customization } from "./customizations";
 import type { Education } from "./educations";
@@ -25,7 +25,42 @@ export type Alignment =
   | "NeutralGood";
 
 export type Character = Aggregate & {
-  // TODO(fpion): complete
+  name: string;
+  dominantHand?: DominantHand | null;
+  tier: number;
+  level: number;
+  experience: number;
+  lineage: Lineage;
+  caste: Caste;
+  education: Education;
+  appearance: CharacterAppearance;
+  alignment?: Alignment | null;
+  personality: CharacterPersonality;
+  background?: string | null;
+  attributes: CharacterAttributes;
+  statistics: CharacterStatistics;
+  skills: CharacterSkills;
+  speeds: CharacterSpeeds;
+  vitality: number;
+  stamina: number;
+  bloodAlcoholContent: number;
+  intoxication: number;
+  hope: number;
+  customizations: Customization[];
+  languages: CharacterLanguage[];
+  talents: CharacterTalent[];
+  points: CharacterPoints;
+  /* TODO(fpion): complete this
+   * Player
+   * Picture
+   * Bonuses
+   * Inventory & Load
+   * Attacks & Defense
+   * Notes
+   * Conditions
+   * Specializations
+   * Spells
+   */
 };
 
 export type CharacterAppearance = {
@@ -45,6 +80,21 @@ export type CharacterAppearanceDetail = {
   skin: string;
   eyes: string;
   hair: string;
+};
+
+export type CharacterAttribute = {
+  starting: number;
+  progression: number;
+  bonus: number;
+  total: number;
+};
+
+export type CharacterAttributes = {
+  dexterity: CharacterAttribute;
+  health: CharacterAttribute;
+  intellect: CharacterAttribute;
+  senses: CharacterAttribute;
+  vigor: CharacterAttribute;
 };
 
 export type CharacterCreation = {
@@ -80,10 +130,59 @@ export enum CharacterCreationStep {
   Equipment = 9,
 }
 
+export type CharacterLanguage = {
+  language: Language;
+  source: CharacterLanguageSource;
+  target?: string | null;
+  notes?: string | null;
+  createdBy: Actor;
+  createdOn: string;
+  updatedBy: Actor;
+  updatedOn: string;
+};
+
+export type CharacterLanguageSource = "Custom" | "Extra" | "Customization" | "Talent";
+
 export type CharacterPersonality = {
   traits?: string | null;
   ideals?: string | null;
   flaws?: string | null;
+};
+
+export type CharacterPoints = {
+  attributes: number;
+  skills: number;
+  talents: number;
+};
+
+export type CharacterSkill = {
+  rank: number;
+  talents: number;
+  attribute: number;
+  bonus: number;
+};
+
+export type CharacterSkills = {
+  acrobatics: CharacterSkill;
+  athletics: CharacterSkill;
+  crafting: CharacterSkill;
+  deception: CharacterSkill;
+  diplomacy: CharacterSkill;
+  discipline: CharacterSkill;
+  insight: CharacterSkill;
+  investigation: CharacterSkill;
+  knowledge: CharacterSkill;
+  linguistics: CharacterSkill;
+  medicine: CharacterSkill;
+  melee: CharacterSkill;
+  occultism: CharacterSkill;
+  orientation: CharacterSkill;
+  perception: CharacterSkill;
+  performance: CharacterSkill;
+  resistance: CharacterSkill;
+  stealth: CharacterSkill;
+  survival: CharacterSkill;
+  thievery: CharacterSkill;
 };
 
 export type CharacterSort = "CreatedOn" | "UpdatedOn";
@@ -92,12 +191,52 @@ export type CharacterSortOption = SortOption & {
   field: CharacterSort;
 };
 
+export type CharacterSpeed = {
+  lineage: number;
+  bonus: number;
+  encumbrance: number;
+  total: number;
+};
+
+export type CharacterSpeeds = {
+  walk: CharacterSpeed;
+  climb: CharacterSpeed;
+  swim: CharacterSpeed;
+  fly: CharacterSpeed;
+  hover: boolean;
+  burrow: CharacterSpeed;
+};
+
+export type CharacterStatistic = {
+  base: number;
+  bonus: number;
+  total: number;
+};
+
+export type CharacterStatistics = {
+  dodge: CharacterStatistic;
+  initiative: CharacterStatistic;
+  learning: CharacterStatistic;
+  load: CharacterStatistic;
+  power: CharacterStatistic;
+  precision: CharacterStatistic;
+  stamina: CharacterStatistic;
+  stratagem: CharacterStatistic;
+  strength: CharacterStatistic;
+  vitality: CharacterStatistic;
+};
+
 export type CharacterTalent = {
   id: string;
   talent: Talent;
   qualifier?: string | null;
   notes?: string | null;
   discounts: CharacterTalentDiscount[];
+  cost: number;
+  createdBy: Actor;
+  createdOn: string;
+  updatedBy: Actor;
+  updatedOn: string;
 };
 
 export type CharacterTalentContext = {
@@ -169,10 +308,3 @@ export type StartingWealth = {
   currencyId: string;
   quantity: number;
 };
-
-/* TODO(fpion): languages can be granted by:
- * lineage.languages.extra (species+ethnicity)
- * a customization (e.g. Polyglotte grants 2+Tier languages)
- * talents (e.g. Langue supplémentaire, Linguistique, Philologie, Synergie alphabétique, Interprète all grant 1 language)
- * custom
- */
