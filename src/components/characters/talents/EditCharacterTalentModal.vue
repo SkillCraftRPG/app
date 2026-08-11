@@ -22,6 +22,8 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { CharacterTalent, CharacterTalentContext, CharacterTalentDetail } from "@/types/characters";
 import type { Talent } from "@/types/talents";
+import { SYSTEM } from "@/types/api";
+import { calculateCost } from "@/utils/talent";
 import { useForm } from "@/forms";
 
 type Step = "select" | "detail";
@@ -103,6 +105,11 @@ function submit(): void {
             qualifier: detail.value.qualifier,
             notes: detail.value.notes,
             discounts: detail.value.discounts,
+            cost: calculateCost(talent.value, detail.value.discounts),
+            createdBy: props.acquisition?.createdBy ?? SYSTEM,
+            createdOn: props.acquisition?.createdOn ?? "",
+            updatedBy: props.acquisition?.updatedBy ?? SYSTEM,
+            updatedOn: props.acquisition?.updatedOn ?? "",
           };
           emit("confirm", acquisition);
           clear();

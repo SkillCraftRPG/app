@@ -67,3 +67,10 @@ export enum StatusCodes {
   NotFound = 404,
   Conflict = 409,
 }
+
+export const SYSTEM: Actor = {
+  type: "System",
+  id: "00000000-0000-0000-0000-000000000000",
+  isDeleted: false,
+  displayName: "System",
+};

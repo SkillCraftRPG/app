@@ -8,7 +8,7 @@
     <section class="row mb-3 text-center">
       <div class="col">
         <div class="fw-bold">{{ t("characters.talents.cost.base") }}</div>
-        <div>{{ baseCost }}</div>
+        <div>{{ talent.cost }}</div>
       </div>
       <div class="col">
         <div class="fw-bold">{{ t("characters.talents.cost.effective") }}</div>
@@ -26,7 +26,7 @@
         class="mb-3"
         :context="context"
         :id="`discount-${index}`"
-        :max="baseCost"
+        :max="talent.cost"
         :model-value="discount"
         @remove="removeDiscount(index)"
         @update:model-value="updateDiscount(index, $event)"
@@ -60,7 +60,6 @@ const emit = defineEmits<{
   (e: "update:model-value", value: CharacterTalentDetail): void;
 }>();
 
-const baseCost = computed<number>(() => 2 + props.talent.tier);
 const effectiveCost = computed<number>(() => calculateCost(props.talent, props.modelValue.discounts));
 
 function updateNotes(notes: string): void {
