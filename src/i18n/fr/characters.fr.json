@@ -42,6 +42,10 @@
     "label": "Historique",
     "title": "Historique"
   },
+  "created": {
+    "help": "Vous pouvez maintenant compléter ses informations.",
+    "lead": "Le personnage a été créé."
+  },
   "creation": {
     "ascendancy": {
       "ethnicity": "Choisissez l’ethnicité de votre personnage.",

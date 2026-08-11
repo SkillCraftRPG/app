@@ -56,7 +56,7 @@
         <div class="col-md-4">
           <div class="mb-3">
             <div class="fw-bold">{{ t("characters.physical.weight") }}</div>
-            <div>{{ n(weight, "characterWeight") }}&nbsp;{{ t("game.unit.kg") }}</div>
+            <div>{{ n(calculateWeight(height, bodyMassIndex), "characterWeight") }}&nbsp;{{ t("game.unit.kg") }}</div>
           </div>
         </div>
       </div>
@@ -127,6 +127,7 @@ import type { CharacterAppearanceDetail } from "@/types/characters";
 import type { LineageAge } from "@/types/lineages";
 import type { SelectOption } from "@/types/tar/select";
 import type { SizeCategory } from "@/types/game";
+import { calculateWeight } from "@/utils/character";
 import { roll } from "@/utils/random";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
@@ -154,7 +155,6 @@ const sizeCategory = computed<string>(() => {
   return t(`game.size.category.options.${category}`);
 });
 
-const weight = computed<number>(() => (height.value / 100) * (height.value / 100) * bodyMassIndex.value);
 const weightOptions = computed<SelectOption[]>(() => {
   const categories: string[] = [];
   if (character.creation.ethnicity?.weight.malnutrition ?? character.creation.species?.weight.malnutrition) {

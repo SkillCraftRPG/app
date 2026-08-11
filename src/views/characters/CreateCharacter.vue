@@ -40,13 +40,17 @@ import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
 import type { Character, CreateCharacterPayload } from "@/types/characters";
 import { CharacterCreationStep } from "@/types/characters";
+import { calculateWeight } from "@/utils/character";
 import { createCharacter } from "@/api/characters";
 import { handleErrorKey } from "@/inject";
 import { useCharacterStore } from "@/stores/character";
 import { useDocument } from "@/composables/document";
+import { useEventStore } from "@/stores/event";
+import { toTenths } from "@/utils/number";
 
 const character = useCharacterStore();
 const document = useDocument();
+const events = useEventStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const router = useRouter();
 const { t } = useI18n();
@@ -82,7 +86,14 @@ async function complete(): Promise<void> {
         })),
         attributes: character.creation.attributes,
         skills: character.creation.skills,
-        appearance: character.creation.appearance,
+        appearance: {
+          height: character.creation.appearance.height || undefined,
+          weight: toTenths(calculateWeight(character.creation.appearance.height, character.creation.appearance.bodyMassIndex)) || undefined,
+          age: character.creation.appearance.age || undefined,
+          skin: character.creation.appearance.skin,
+          eyes: character.creation.appearance.eyes,
+          hair: character.creation.appearance.hair,
+        },
         alignment: character.creation.alignment,
         personality: character.creation.personality,
         background: character.creation.background,
@@ -91,12 +102,13 @@ async function complete(): Promise<void> {
             ? { currencyId: character.creation.currency.id, quantity: character.creation.quantity }
             : undefined,
       };
-      // TODO(fpion): const result: Character = await createCharacter(payload);
-      // TODO(fpion): console.log(result);
+      const result: Character = await createCharacter(payload);
+      events.push("created");
+      router.push({ name: "Character", params: { id: result.id } });
     } catch (e: unknown) {
       handleError(e);
     } finally {
-      // TODO(fpion): isLoading.value = false;
+      isLoading.value = false;
     }
   }
 }
