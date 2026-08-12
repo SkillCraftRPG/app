@@ -17,6 +17,20 @@
     },
     "placeholder": "Select a category"
   },
+  "charges": {
+    "depletionBehavior": {
+      "label": "Depletion Behavior",
+      "options": {
+        "Keep": "Keep",
+        "Remove": "Remove",
+        "Replace": "Replace"
+      },
+      "placeholder": "Select a behavior"
+    },
+    "label": "Charges",
+    "maximum": "Maximum number",
+    "replacement": "Replacement"
+  },
   "create": "Create an item",
   "created": {
     "help": "You can now complete its details.",

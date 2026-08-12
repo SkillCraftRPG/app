@@ -36,7 +36,7 @@ export type UpdateCastePayload = {
   name?: string | null;
   summary?: Optional<string> | null;
   content?: Optional<string> | null;
-  skill?: Optional<Skill | null> | null;
+  skill?: Optional<Skill> | null;
   wealthRoll?: Optional<string> | null;
   feature?: Optional<Feature> | null;
 };

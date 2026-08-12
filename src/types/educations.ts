@@ -36,7 +36,7 @@ export type UpdateEducationPayload = {
   name?: string | null;
   summary?: Optional<string> | null;
   content?: Optional<string> | null;
-  skill?: Optional<Skill | null> | null;
-  wealthMultiplier?: Optional<number | null> | null;
+  skill?: Optional<Skill> | null;
+  wealthMultiplier?: Optional<number> | null;
   feature?: Optional<Feature> | null;
 };
