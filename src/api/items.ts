@@ -9,6 +9,17 @@ export async function createItem(payload: CreateOrReplaceItemPayload): Promise<I
   return (await post<CreateOrReplaceItemPayload, Item>(url, payload)).data;
 }
 
+export async function listItems(): Promise<SearchResults<Item>> {
+  const payload: SearchItemsPayload = {
+    ids: [],
+    search: { terms: [], operator: "And" },
+    sort: [],
+    skip: 0,
+    limit: 0,
+  };
+  return await searchItems(payload);
+}
+
 export async function readItem(id: string): Promise<Item> {
   const url: string = new urlUtils.UrlBuilder({ path: "/items/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Item>(url)).data;

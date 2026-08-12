@@ -17,6 +17,20 @@
     },
     "placeholder": "Sélectionnez une catégorie"
   },
+  "charges": {
+    "depletionBehavior": {
+      "label": "Comportement à l’épuisement",
+      "options": {
+        "Keep": "Conserver",
+        "Remove": "Retirer",
+        "Replace": "Remplacer"
+      },
+      "placeholder": "Sélectionnez un comportement"
+    },
+    "label": "Charges",
+    "maximum": "Nombre maximal",
+    "replacement": "Remplaçant"
+  },
   "create": "Créer un objet",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",

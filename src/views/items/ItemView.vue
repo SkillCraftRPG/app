@@ -19,6 +19,32 @@
         </div>
         <SummaryField class="mb-3" v-model="summary" />
         <ContentField class="mb-3" v-model="content" />
+        <fieldset class="border-top border-secondary-subtle pt-3 mt-4">
+          <legend>{{ t("items.charges.label") }}</legend>
+          <div class="row">
+            <div class="col-md-6">
+              <MaximumChargesField class="mb-3" :required="areChargesRequired" v-model="maximumCharges" />
+            </div>
+            <div class="col-md-6">
+              <DepletionBehaviorField
+                class="mb-3"
+                :model-value="depletionBehavior"
+                :required="areChargesRequired"
+                @update:model-value="updateDepletionBehavior"
+              />
+            </div>
+          </div>
+          <ItemField
+            v-if="depletionBehavior === 'Replace'"
+            class="mb-3"
+            id="replacement"
+            label="items.charges.replacement"
+            :model-value="replacement?.id ?? ''"
+            required
+            @error="handleError"
+            @selected="replacement = $event"
+          />
+        </fieldset>
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -42,7 +68,10 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import ContentField from "@/components/shared/ContentField.vue";
+import DepletionBehaviorField from "@/components/items/DepletionBehaviorField.vue";
+import ItemField from "@/components/items/ItemField.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import MaximumChargesField from "@/components/items/MaximumChargesField.vue";
 import NameField from "@/components/shared/NameField.vue";
 import PriceField from "@/components/items/PriceField.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
@@ -52,7 +81,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import WeightField from "@/components/items/WeightField.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { CreateOrReplaceItemPayload, Item } from "@/types/items";
+import type { CreateOrReplaceItemPayload, DepletionBehavior, Item } from "@/types/items";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { fromHundredths, toHundredths } from "@/utils/number";
 import { handleErrorKey } from "@/inject";
@@ -71,14 +100,18 @@ const toasts = useToastStore();
 const { t } = useI18n();
 
 const content = ref<string>("");
+const depletionBehavior = ref<string>("");
 const isCreated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
 const item = ref<Item>();
+const maximumCharges = ref<number>(0);
 const name = ref<string>("");
 const price = ref<number>();
+const replacement = ref<Item>();
 const summary = ref<string>("");
 const weight = ref<number>();
 
+const areChargesRequired = computed<boolean>(() => Boolean(maximumCharges.value || depletionBehavior.value || replacement.value));
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("items.title"), to: { name: "Items" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
@@ -87,10 +120,18 @@ const hasChanges = computed<boolean>(() =>
       (item.value.summary ?? "") !== summary.value ||
       (item.value.content ?? "") !== content.value ||
       fromHundredths(item.value.price) !== price.value ||
-      fromHundredths(item.value.weight) !== weight.value),
+      fromHundredths(item.value.weight) !== weight.value ||
+      (item.value.charges?.maximum ?? 0) !== maximumCharges.value ||
+      (item.value.charges?.depletionBehavior ?? "") !== depletionBehavior.value ||
+      (item.value.charges?.replacement?.id ?? "") !== (replacement.value?.id ?? "")),
   ),
 );
 const title = computed<string>(() => item.value?.name ?? "");
+
+function updateDepletionBehavior(value: string): void {
+  depletionBehavior.value = value;
+  replacement.value = undefined;
+}
 
 const { handleSubmit, reinitialize } = useForm();
 async function submit(): Promise<void> {
@@ -104,6 +145,13 @@ async function submit(): Promise<void> {
         content: content.value,
         price: toHundredths(price.value),
         weight: toHundredths(weight.value),
+        charges: maximumCharges.value
+          ? {
+              maximum: maximumCharges.value,
+              depletionBehavior: depletionBehavior.value as DepletionBehavior,
+              replacementId: replacement.value?.id,
+            }
+          : undefined,
       };
       item.value = await replaceItem(item.value.id, payload);
       isCreated.value = false;
@@ -125,6 +173,9 @@ watch(
     content.value = item?.content ?? "";
     price.value = fromHundredths(item?.price);
     weight.value = fromHundredths(item?.weight);
+    maximumCharges.value = item?.charges?.maximum ?? 0;
+    depletionBehavior.value = item?.charges?.depletionBehavior ?? "";
+    replacement.value = item?.charges?.replacement ?? undefined;
   },
   { deep: true },
 );
