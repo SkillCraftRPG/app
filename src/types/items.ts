@@ -8,7 +8,10 @@ export type CreateOrReplaceItemPayload = {
   content?: string | null;
   price?: number | null;
   weight?: number | null;
+  charges?: ItemChargesPayload | null;
 };
+
+export type DepletionBehavior = "Keep" | "Remove" | "Replace";
 
 export type Item = Aggregate & {
   category: ItemCategory;
@@ -17,6 +20,7 @@ export type Item = Aggregate & {
   content?: string | null;
   price?: number | null;
   weight?: number | null;
+  charges?: ItemCharges | null;
 };
 
 export type ItemCategory =
@@ -33,6 +37,18 @@ export type ItemCategory =
   | "Treasure"
   | "Weapon";
 
+export type ItemCharges = {
+  maximum: number;
+  depletionBehavior: DepletionBehavior;
+  replacement?: Item | null;
+};
+
+export type ItemChargesPayload = {
+  maximum: number;
+  depletionBehavior: DepletionBehavior;
+  replacementId?: string | null;
+};
+
 export type ItemSort = "CreatedOn" | "Name" | "Price" | "UpdatedOn" | "Weight";
 
 export type ItemSortOption = SortOption & {
@@ -48,6 +64,7 @@ export type UpdateItemPayload = {
   name?: string | null;
   summary?: Optional<string> | null;
   content?: Optional<string> | null;
-  price?: Optional<number | null> | null;
-  weight?: Optional<number | null> | null;
+  price?: Optional<number> | null;
+  weight?: Optional<number> | null;
+  charges?: Optional<ItemChargesPayload> | null;
 };

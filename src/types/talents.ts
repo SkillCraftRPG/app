@@ -42,6 +42,6 @@ export type UpdateTalentPayload = {
   summary?: Optional<string> | null;
   content?: Optional<string> | null;
   allowMultiplePurchases?: boolean | null;
-  skill?: Optional<Skill | null> | null;
-  requiredTalentId?: Optional<string | null> | null;
+  skill?: Optional<Skill> | null;
+  requiredTalentId?: Optional<string> | null;
 };
