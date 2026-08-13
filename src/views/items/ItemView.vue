@@ -8,7 +8,14 @@
       </TarAlert>
       <StatusDetail class="mb-3" :subject="item" />
       <form class="border-top border-secondary-subtle pt-4" @submit.prevent="handleSubmit(submit)">
-        <NameField class="mb-3" required v-model="name" />
+        <div class="row">
+          <div class="col-md-6">
+            <NameField class="mb-3" required v-model="name" />
+          </div>
+          <div class="col-md-6">
+            <ItemRarityField class="mb-3" v-model="rarity" />
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-6">
             <PriceField class="mb-3" v-model="price" />
@@ -70,6 +77,7 @@ import { useRoute, useRouter } from "vue-router";
 import ContentField from "@/components/shared/ContentField.vue";
 import DepletionBehaviorField from "@/components/items/DepletionBehaviorField.vue";
 import ItemField from "@/components/items/ItemField.vue";
+import ItemRarityField from "@/components/items/ItemRarityField.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import MaximumChargesField from "@/components/items/MaximumChargesField.vue";
 import NameField from "@/components/shared/NameField.vue";
@@ -81,7 +89,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import WeightField from "@/components/items/WeightField.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { CreateOrReplaceItemPayload, DepletionBehavior, Item } from "@/types/items";
+import type { CreateOrReplaceItemPayload, DepletionBehavior, Item, ItemRarity } from "@/types/items";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { fromHundredths, toHundredths } from "@/utils/number";
 import { handleErrorKey } from "@/inject";
@@ -107,6 +115,7 @@ const item = ref<Item>();
 const maximumCharges = ref<number>(0);
 const name = ref<string>("");
 const price = ref<number>();
+const rarity = ref<string>("");
 const replacement = ref<Item>();
 const summary = ref<string>("");
 const weight = ref<number>();
@@ -117,6 +126,7 @@ const hasChanges = computed<boolean>(() =>
   Boolean(
     item.value &&
     (item.value.name !== name.value ||
+      (item.value.rarity ?? "") !== rarity.value ||
       (item.value.summary ?? "") !== summary.value ||
       (item.value.content ?? "") !== content.value ||
       fromHundredths(item.value.price) !== price.value ||
@@ -145,6 +155,7 @@ async function submit(): Promise<void> {
         content: content.value,
         price: toHundredths(price.value),
         weight: toHundredths(weight.value),
+        rarity: rarity.value ? (rarity.value as ItemRarity) : undefined,
         charges: maximumCharges.value
           ? {
               maximum: maximumCharges.value,
@@ -169,6 +180,7 @@ watch(
   item,
   (item) => {
     name.value = item?.name ?? "";
+    rarity.value = item?.rarity ?? "";
     summary.value = item?.summary ?? "";
     content.value = item?.content ?? "";
     price.value = fromHundredths(item?.price);
