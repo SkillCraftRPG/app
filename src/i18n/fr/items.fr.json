@@ -39,6 +39,18 @@
   "label": "Objet",
   "placeholder": "Sélectionnez un objet",
   "price": "Prix",
+  "rarity": {
+    "label": "Rareté",
+    "options": {
+      "Artifact": "Artefact",
+      "Common": "Commun",
+      "Legendary": "Légendaire",
+      "Rare": "Rare",
+      "Uncommon": "Peu commun",
+      "VeryRare": "Très rare"
+    },
+    "placeholder": "Sélectionnez une rareté"
+  },
   "sort": {
     "options": {
       "CreatedOn": "Date de création",

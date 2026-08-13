@@ -8,6 +8,7 @@ export type CreateOrReplaceItemPayload = {
   content?: string | null;
   price?: number | null;
   weight?: number | null;
+  rarity?: ItemRarity | null;
   charges?: ItemChargesPayload | null;
 };
 
@@ -20,6 +21,7 @@ export type Item = Aggregate & {
   content?: string | null;
   price?: number | null;
   weight?: number | null;
+  rarity?: ItemRarity | null;
   charges?: ItemCharges | null;
 };
 
@@ -49,6 +51,8 @@ export type ItemChargesPayload = {
   replacementId?: string | null;
 };
 
+export type ItemRarity = "Common" | "Uncommon" | "Rare" | "VeryRare" | "Legendary" | "Artifact";
+
 export type ItemSort = "CreatedOn" | "Name" | "Price" | "UpdatedOn" | "Weight";
 
 export type ItemSortOption = SortOption & {
@@ -57,6 +61,7 @@ export type ItemSortOption = SortOption & {
 
 export type SearchItemsPayload = SearchPayload & {
   category?: ItemCategory | null;
+  rarity?: ItemRarity | null;
   sort: ItemSortOption[];
 };
 
@@ -66,5 +71,6 @@ export type UpdateItemPayload = {
   content?: Optional<string> | null;
   price?: Optional<number> | null;
   weight?: Optional<number> | null;
+  rarity?: Optional<ItemRarity> | null;
   charges?: Optional<ItemChargesPayload> | null;
 };

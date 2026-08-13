@@ -1,10 +1,16 @@
 <template>
-  <TarCard :class="classes" :subtitle="subtitle">
+  <TarCard :class="classes">
     <template #title-override>
       <div class="d-flex justify-content-between align-items-start gap-3 w-100">
         <h5 class="card-title">{{ item.name }}</h5>
         <font-awesome-icon v-if="icon" :icon="icon" />
       </div>
+    </template>
+    <template #subtitle-override>
+      <h6 class="card-subtitle mb-2 text-body-secondary">
+        {{ category }}
+        <span v-if="rarity" class="small">{{ rarity }}</span>
+      </h6>
     </template>
     <div v-if="price || weight" class="card-text d-flex justify-content-between align-items-center gap-2 mb-2">
       <div class="text-start">
@@ -37,8 +43,9 @@ const props = defineProps<{
   selection?: SelectionKind;
 }>();
 
+const category = computed<string>(() => t(`items.category.options.${props.item.category}`));
 const price = computed<number>(() => fromHundredths(props.item.price) ?? 0);
-const subtitle = computed<string>(() => t(`items.category.options.${props.item.category}`));
+const rarity = computed<string>(() => (props.item.rarity ? t(`items.rarity.options.${props.item.rarity}`) : ""));
 const weight = computed<number>(() => fromHundredths(props.item.weight) ?? 0);
 
 const isSelected = computed<boolean>(() => parseBoolean(props.selected) ?? false);
