@@ -1,6 +1,13 @@
 import type { Aggregate, Optional } from "./api";
 import type { SearchPayload, SortOption } from "./search";
 
+export type Attunement = {
+  isRequired: boolean;
+  requirements?: string | null;
+};
+
+export type AttunementOption = "none" | "optional" | "required";
+
 export type CreateOrReplaceItemPayload = {
   category: ItemCategory;
   name: string;
@@ -10,6 +17,7 @@ export type CreateOrReplaceItemPayload = {
   weight?: number | null;
   rarity?: ItemRarity | null;
   charges?: ItemChargesPayload | null;
+  magic?: MagicItem | null;
 };
 
 export type DepletionBehavior = "Keep" | "Remove" | "Replace";
@@ -23,6 +31,7 @@ export type Item = Aggregate & {
   weight?: number | null;
   rarity?: ItemRarity | null;
   charges?: ItemCharges | null;
+  magic?: MagicItem | null;
 };
 
 export type ItemCategory =
@@ -59,9 +68,14 @@ export type ItemSortOption = SortOption & {
   field: ItemSort;
 };
 
+export type MagicItem = {
+  attunement?: Attunement | null;
+};
+
 export type SearchItemsPayload = SearchPayload & {
   category?: ItemCategory | null;
   rarity?: ItemRarity | null;
+  isMagic?: boolean | null;
   sort: ItemSortOption[];
 };
 
@@ -73,4 +87,5 @@ export type UpdateItemPayload = {
   weight?: Optional<number> | null;
   rarity?: Optional<ItemRarity> | null;
   charges?: Optional<ItemChargesPayload> | null;
+  magic?: Optional<MagicItem> | null;
 };

@@ -1,5 +1,11 @@
 <template>
-  <LinkCard :title="item.name" :to="{ name: 'Item', params: { id: item.id } }">
+  <LinkCard :to="{ name: 'Item', params: { id: item.id } }">
+    <template #title-override>
+      <h5 class="card-title d-flex gap-2">
+        {{ item.name }}
+        <font-awesome-icon v-if="item.magic" icon="fas fa-ring" />
+      </h5>
+    </template>
     <template #subtitle-override>
       <h6 class="card-subtitle mb-2 text-body-secondary">
         {{ category }}

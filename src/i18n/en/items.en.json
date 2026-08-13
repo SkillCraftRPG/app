@@ -37,6 +37,19 @@
     "lead": "The item was created."
   },
   "label": "Item",
+  "magic": {
+    "attunement": {
+      "label": "Attunement",
+      "options": {
+        "none": "Impossible",
+        "optional": "Optional",
+        "required": "Required"
+      },
+      "requirements": "Attunement Requirements"
+    },
+    "label": "Magical Item",
+    "magical": "Magical"
+  },
   "placeholder": "Select an item",
   "price": "Price",
   "rarity": {

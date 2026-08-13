@@ -52,6 +52,19 @@
             @selected="replacement = $event"
           />
         </fieldset>
+        <fieldset class="border-top border-secondary-subtle pt-3 mt-4">
+          <legend>
+            <TarCheckbox id="magic" :label="t('items.magic.label')" switch v-model="isMagical" />
+          </legend>
+          <div v-if="isMagical" class="row">
+            <div class="col-md-6">
+              <AttunementRadio class="mb-3" :model-value="attunement" @update:model-value="updateAttunement" />
+            </div>
+            <div v-if="attunement === 'optional' || attunement === 'required'" class="col-md-6">
+              <AttunementRequirementsField class="mb-3" v-model="requirements" />
+            </div>
+          </div>
+        </fieldset>
         <div class="d-flex justify-content-end mb-3">
           <TarButton
             :disabled="!hasChanges || isLoading"
@@ -74,6 +87,8 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import AttunementRadio from "@/components/items/AttunementRadio.vue";
+import AttunementRequirementsField from "@/components/items/AttunementRequirementsField.vue";
 import ContentField from "@/components/shared/ContentField.vue";
 import DepletionBehaviorField from "@/components/items/DepletionBehaviorField.vue";
 import ItemField from "@/components/items/ItemField.vue";
@@ -86,12 +101,14 @@ import StatusDetail from "@/components/shared/StatusDetail.vue";
 import SummaryField from "@/components/shared/SummaryField.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
+import TarCheckbox from "@/components/tar/TarCheckbox.vue";
 import WeightField from "@/components/items/WeightField.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
+import type { AttunementOption, CreateOrReplaceItemPayload, DepletionBehavior, Item, ItemRarity } from "@/types/items";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
-import type { CreateOrReplaceItemPayload, DepletionBehavior, Item, ItemRarity } from "@/types/items";
 import { StatusCodes, type ApiFailure } from "@/types/api";
 import { fromHundredths, toHundredths } from "@/utils/number";
+import { getAttunementOption } from "@/utils/item";
 import { handleErrorKey } from "@/inject";
 import { readItem, replaceItem } from "@/api/items";
 import { useDocument } from "@/composables/document";
@@ -107,16 +124,19 @@ const router = useRouter();
 const toasts = useToastStore();
 const { t } = useI18n();
 
+const attunement = ref<AttunementOption>();
 const content = ref<string>("");
 const depletionBehavior = ref<string>("");
 const isCreated = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
+const isMagical = ref<boolean>(false);
 const item = ref<Item>();
 const maximumCharges = ref<number>(0);
 const name = ref<string>("");
 const price = ref<number>();
 const rarity = ref<string>("");
 const replacement = ref<Item>();
+const requirements = ref<string>("");
 const summary = ref<string>("");
 const weight = ref<number>();
 
@@ -124,19 +144,29 @@ const areChargesRequired = computed<boolean>(() => Boolean(maximumCharges.value 
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("items.title"), to: { name: "Items" } }));
 const hasChanges = computed<boolean>(() =>
   Boolean(
-    item.value &&
-    (item.value.name !== name.value ||
-      (item.value.rarity ?? "") !== rarity.value ||
-      (item.value.summary ?? "") !== summary.value ||
-      (item.value.content ?? "") !== content.value ||
-      fromHundredths(item.value.price) !== price.value ||
-      fromHundredths(item.value.weight) !== weight.value ||
-      (item.value.charges?.maximum ?? 0) !== maximumCharges.value ||
-      (item.value.charges?.depletionBehavior ?? "") !== depletionBehavior.value ||
-      (item.value.charges?.replacement?.id ?? "") !== (replacement.value?.id ?? "")),
+    (item.value &&
+      (item.value.name !== name.value ||
+        (item.value.rarity ?? "") !== rarity.value ||
+        (item.value.summary ?? "") !== summary.value ||
+        (item.value.content ?? "") !== content.value ||
+        (fromHundredths(item.value.price) ?? 0) !== price.value ||
+        (fromHundredths(item.value.weight) ?? 0) !== weight.value ||
+        (item.value.charges?.maximum ?? 0) !== maximumCharges.value ||
+        (item.value.charges?.depletionBehavior ?? "") !== depletionBehavior.value ||
+        (item.value.charges?.replacement?.id ?? "") !== (replacement.value?.id ?? "") ||
+        Boolean(item.value.magic) !== isMagical.value ||
+        getAttunementOption(item.value) !== attunement.value)) ||
+    (item.value?.magic?.attunement?.requirements ?? "") !== requirements.value,
   ),
 );
 const title = computed<string>(() => item.value?.name ?? "");
+
+function updateAttunement(value: AttunementOption): void {
+  attunement.value = value;
+  if (value !== "optional" && value !== "required") {
+    requirements.value = "";
+  }
+}
 
 function updateDepletionBehavior(value: string): void {
   depletionBehavior.value = value;
@@ -153,14 +183,25 @@ async function submit(): Promise<void> {
         name: name.value,
         summary: summary.value,
         content: content.value,
-        price: toHundredths(price.value),
-        weight: toHundredths(weight.value),
+        price: toHundredths(price.value) || undefined,
+        weight: toHundredths(weight.value) || undefined,
         rarity: rarity.value ? (rarity.value as ItemRarity) : undefined,
         charges: maximumCharges.value
           ? {
               maximum: maximumCharges.value,
               depletionBehavior: depletionBehavior.value as DepletionBehavior,
               replacementId: replacement.value?.id,
+            }
+          : undefined,
+        magic: isMagical.value
+          ? {
+              attunement:
+                attunement.value === "optional" || attunement.value === "required"
+                  ? {
+                      isRequired: attunement.value === "required",
+                      requirements: requirements.value,
+                    }
+                  : undefined,
             }
           : undefined,
       };
@@ -183,11 +224,14 @@ watch(
     rarity.value = item?.rarity ?? "";
     summary.value = item?.summary ?? "";
     content.value = item?.content ?? "";
-    price.value = fromHundredths(item?.price);
-    weight.value = fromHundredths(item?.weight);
+    price.value = fromHundredths(item?.price) ?? 0;
+    weight.value = fromHundredths(item?.weight) ?? 0;
     maximumCharges.value = item?.charges?.maximum ?? 0;
     depletionBehavior.value = item?.charges?.depletionBehavior ?? "";
     replacement.value = item?.charges?.replacement ?? undefined;
+    isMagical.value = Boolean(item?.magic);
+    attunement.value = item ? getAttunementOption(item) : undefined;
+    requirements.value = item?.magic?.attunement?.requirements ?? "";
   },
   { deep: true },
 );

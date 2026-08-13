@@ -2,7 +2,10 @@
   <TarCard :class="classes">
     <template #title-override>
       <div class="d-flex justify-content-between align-items-start gap-3 w-100">
-        <h5 class="card-title">{{ item.name }}</h5>
+        <h5 class="card-title d-flex gap-2">
+          {{ item.name }}
+          <font-awesome-icon v-if="item.magic" icon="fas fa-ring" />
+        </h5>
         <font-awesome-icon v-if="icon" :icon="icon" />
       </div>
     </template>
