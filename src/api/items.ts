@@ -34,6 +34,7 @@ export async function searchItems(payload: SearchItemsPayload): Promise<SearchRe
   const url: string = new urlUtils.UrlBuilder({ path: "/items" })
     .setQuery("category", payload.category ?? "")
     .setQuery("ids", payload.ids)
+    .setQuery("magic", payload.isMagic?.toString() ?? "")
     .setQuery("rarity", payload.rarity ?? "")
     .setQuery(
       "search",

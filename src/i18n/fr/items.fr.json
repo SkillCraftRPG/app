@@ -37,6 +37,19 @@
     "lead": "L’objet a été créé."
   },
   "label": "Objet",
+  "magic": {
+    "attunement": {
+      "label": "Harmonisation",
+      "options": {
+        "none": "Impossible",
+        "optional": "Optionnelle",
+        "required": "Requise"
+      },
+      "requirements": "Exigences d’harmonisation"
+    },
+    "label": "Objet magique",
+    "magical": "Magique"
+  },
   "placeholder": "Sélectionnez un objet",
   "price": "Prix",
   "rarity": {

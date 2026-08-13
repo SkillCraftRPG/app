@@ -22,11 +22,14 @@
       </section>
       <section>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <ItemCategorySelect class="mb-3" :model-value="category" @update:model-value="setQuery('category', $event)" />
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <ItemRaritySelect class="mb-3" :model-value="rarity" @update:model-value="setQuery('rarity', $event)" />
+          </div>
+          <div class="col-md-4">
+            <BooleanSelect class="mb-3" id="magic" label="items.magic.label" :model-value="isMagic" @update:model-value="setQuery('magic', $event)" />
           </div>
         </div>
         <div class="row">
@@ -81,6 +84,7 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import BooleanSelect from "@/components/shared/BooleanSelect.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateItem from "@/components/items/CreateItem.vue";
 import ItemCategorySelect from "@/components/items/ItemCategorySelect.vue";
@@ -119,13 +123,14 @@ const total = ref<number>(0);
 const category = computed<string>(() => route.query.category?.toString() ?? "");
 const count = computed<number>(() => parseNumber(route.query.count?.toString()) || 12);
 const isDescending = computed<boolean>(() => parseBoolean(route.query.descending?.toString()) ?? false);
+const isMagic = computed<boolean | undefined>(() => parseBoolean(route.query.magic?.toString()));
 const page = computed<number>(() => parseNumber(route.query.page?.toString()) || 1);
 const rarity = computed<string>(() => route.query.rarity?.toString() ?? "");
 const search = computed<string>(() => route.query.search?.toString() ?? "");
 const sort = computed<string>(() => route.query.sort?.toString() ?? "");
 const title = computed<string>(() => t("items.title"));
 
-const hasFilters = computed<boolean>(() => Boolean(category.value || rarity.value || search.value));
+const hasFilters = computed<boolean>(() => Boolean(category.value || isMagic.value || rarity.value || search.value));
 
 const sortOptions = computed<SelectOption[]>(() =>
   orderBy(
@@ -140,7 +145,7 @@ function onCreate(item: Item): void {
 }
 
 function clearFilters(): void {
-  const query = { ...route.query, category: "", rarity: "", search: "", page: 1 };
+  const query = { ...route.query, category: "", magic: "", rarity: "", search: "", page: 1 };
   router.replace({ ...route, query });
 }
 
@@ -148,6 +153,7 @@ function setQuery(key: string, value?: boolean | null | number | string): void {
   const query = { ...route.query, [key]: value?.toString() ?? "" };
   switch (key) {
     case "category":
+    case "magic":
     case "rarity":
     case "search":
     case "count":
@@ -161,6 +167,7 @@ async function refresh(): Promise<void> {
   const payload: SearchItemsPayload = {
     category: category.value ? (category.value as ItemCategory) : undefined,
     ids: [],
+    isMagic: isMagic.value,
     rarity: rarity.value ? (rarity.value as ItemRarity) : undefined,
     search: {
       terms: search.value
@@ -203,6 +210,7 @@ watch(
           query: isEmpty(query)
             ? {
                 category: "",
+                magic: "",
                 rarity: "",
                 search: "",
                 sort: "Name",
