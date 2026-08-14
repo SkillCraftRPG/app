@@ -7,7 +7,9 @@
         <strong>{{ t("characters.created.lead") }}</strong> {{ t("characters.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="character" />
-      <pre>{{ JSON.stringify(character, null, 2) }}</pre>
+      <CharacterHeader :character="character" />
+      <CharacterForm :character="character" @error="handleError" @updated="update" />
+      <!-- <pre>{{ JSON.stringify(character, null, 2) }}</pre> -->
     </div>
     <LoadingSpinner v-else />
   </main>
@@ -18,6 +20,8 @@ import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import CharacterForm from "@/components/characters/CharacterForm.vue";
+import CharacterHeader from "@/components/characters/header/CharacterHeader.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
@@ -29,12 +33,14 @@ import { handleErrorKey } from "@/inject";
 import { readCharacter } from "@/api/characters";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
+import { useToastStore } from "@/stores/toast";
 
 const document = useDocument();
 const events = useEventStore();
 const handleError = inject(handleErrorKey) as (e: unknown) => void;
 const route = useRoute();
 const router = useRouter();
+const toasts = useToastStore();
 const { t } = useI18n();
 
 const character = ref<Character>();
@@ -43,11 +49,18 @@ const isCreated = ref<boolean>(false);
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("characters.title"), to: { name: "Characters" } }));
 const title = computed<string>(() => character.value?.name ?? "");
 
+function update(value: Character): void {
+  isCreated.value = false;
+  character.value = value;
+  toasts.success("saved");
+}
+
 onMounted(async () => {
   try {
     const id: string = (Array.isArray(route.params.id) ? route.params.id[0] : route.params.id) ?? "";
-    character.value = await readCharacter(id);
+    const found: Character = await readCharacter(id);
     isCreated.value = events.shift() === "created";
+    character.value = found;
     document.setTitle(title.value);
   } catch (e: unknown) {
     const failure = e as ApiFailure;
@@ -58,4 +71,27 @@ onMounted(async () => {
     }
   }
 });
+
+// TODO(fpion): Player
+// TODO(fpion): Height, Weight & Age
+// TODO(fpion): Skin, Eyes & Hair
+// TODO(fpion): Hope (current & maximum)
+// TODO(fpion): Tier, Level & Experience
+// TODO(fpion): Vitality & Stamina
+// TODO(fpion): Blood Alcohol Content & Intoxication
+// TODO(fpion): Specializations
+// TODO(fpion): Customizations
+// TODO(fpion): Picture
+// TODO(fpion): Attributes
+// TODO(fpion): Statistics
+// TODO(fpion): Skills
+// TODO(fpion): Languages
+// TODO(fpion): Conditions
+// TODO(fpion): Speeds
+// TODO(fpion): Critical
+// TODO(fpion): Talents
+// TODO(fpion): Spells
+// TODO(fpion): Inventory
+// TODO(fpion): Attacks & Defense
+// TODO(fpion): Notes
 </script>

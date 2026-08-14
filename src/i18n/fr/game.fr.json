@@ -9,6 +9,7 @@
     }
   },
   "feature": {
+    "format": "Particularité : {name}",
     "label": "Particularité",
     "title": "Particularités"
   },

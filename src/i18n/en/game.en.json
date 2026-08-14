@@ -9,6 +9,7 @@
     }
   },
   "feature": {
+    "format": "Feature: {name}",
     "label": "Feature",
     "title": "Features"
   },

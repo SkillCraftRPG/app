@@ -1,4 +1,4 @@
-import type { Actor, Aggregate } from "./api";
+import type { Actor, Aggregate, Optional } from "./api";
 import type { Caste } from "./castes";
 import type { Customization } from "./customizations";
 import type { Education } from "./educations";
@@ -307,4 +307,9 @@ export type StartingAttributes = {
 export type StartingWealth = {
   currencyId: string;
   quantity: number;
+};
+
+export type UpdateCharacterPayload = {
+  name?: string;
+  dominantHand?: Optional<DominantHand>;
 };

@@ -4,6 +4,7 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "L’éducation a été créée."
   },
+  "format": "Éducation : {name}",
   "import": {
     "empty": "Aucune éducation disponible pour l’importation.",
     "help": "Sélectionnez les éducations à importer.",

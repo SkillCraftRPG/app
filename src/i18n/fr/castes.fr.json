@@ -4,6 +4,7 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "La caste a été créée."
   },
+  "format": "Caste : {name}",
   "import": {
     "empty": "Aucune caste disponible pour l’importation.",
     "help": "Sélectionnez les castes à importer.",

@@ -1,8 +1,8 @@
 import { urlUtils } from "logitar-js";
 
-import type { Character, CreateCharacterPayload, SearchCharactersPayload } from "@/types/characters";
+import type { Character, CreateCharacterPayload, SearchCharactersPayload, UpdateCharacterPayload } from "@/types/characters";
 import type { SearchResults } from "@/types/search";
-import { get, post } from ".";
+import { get, patch, post } from ".";
 
 export async function createCharacter(payload: CreateCharacterPayload): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters" }).buildRelative();
@@ -30,4 +30,9 @@ export async function searchCharacters(payload: SearchCharactersPayload): Promis
     .setQuery("limit", payload.limit.toString())
     .buildRelative();
   return (await get<SearchResults<Character>>(url)).data;
+}
+
+export async function updateCharacter(id: string, payload: UpdateCharacterPayload): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id).buildRelative();
+  return (await patch<UpdateCharacterPayload, Character>(url, payload)).data;
 }

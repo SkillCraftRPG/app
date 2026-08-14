@@ -4,6 +4,7 @@
     "help": "You can now complete its details.",
     "lead": "The education was created."
   },
+  "format": "Education: {name}",
   "import": {
     "empty": "No educations are available for import.",
     "help": "Select the educations to import.",
