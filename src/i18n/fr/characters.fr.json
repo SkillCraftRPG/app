@@ -152,6 +152,7 @@
   "sort": {
     "options": {
       "CreatedOn": "Date de création",
+      "Name": "Nom",
       "UpdatedOn": "Dernière modification"
     }
   },
