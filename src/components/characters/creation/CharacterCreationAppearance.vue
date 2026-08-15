@@ -55,7 +55,7 @@
         </div>
         <div class="col-md-4">
           <div class="mb-3">
-            <div class="fw-bold">{{ t("characters.physical.weight") }}</div>
+            <div class="fw-bold">{{ t("characters.physical.weight.calculated") }}</div>
             <div>{{ n(calculateWeight(height, bodyMassIndex), "characterWeight") }}&nbsp;{{ t("game.unit.kg") }}</div>
           </div>
         </div>

@@ -21,7 +21,7 @@
       <div v-if="caste.summary" class="fst-italic text-body-secondary mb-3">{{ caste.summary }}</div>
       <MarkdownContent v-if="caste.content" class="mb-3" :text="caste.content"></MarkdownContent>
       <template v-if="caste.feature">
-        <p class="fw-bold">{{ t("game.feature.format", { name: caste.feature.name }) }}</p>
+        <div class="fs-5 mb-1">{{ t("game.feature.format", { name: caste.feature.name }) }}</div>
         <MarkdownContent v-if="caste.feature.content" class="mb-3" :text="caste.feature.content"></MarkdownContent>
       </template>
       <template #footer>

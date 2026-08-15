@@ -134,12 +134,16 @@
     "title": "Personnalité"
   },
   "physical": {
+    "age": "Âge",
     "bodyMassIndex": "IMC (indice de masse corporelle)",
     "eyes": "Couleur des yeux",
     "hair": "Couleur des cheveux",
     "height": "Taille",
     "skin": "Couleur de peau",
-    "weight": "Poids calculé"
+    "weight": {
+      "calculated": "Poids calculé",
+      "label": "Poids"
+    }
   },
   "skills": {
     "help": "Répartissez vos points d’Apprentissage entre les compétences. Chaque talent associé à une compétence réduit de 1 le coût de ses rangs.",

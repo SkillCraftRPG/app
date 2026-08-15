@@ -311,5 +311,9 @@ export type StartingWealth = {
 
 export type UpdateCharacterPayload = {
   name?: string;
-  dominantHand?: Optional<DominantHand>;
+  dominantHand?: Optional<DominantHand> | null;
+  appearance?: CharacterAppearance | null;
+  alignment?: Optional<Alignment> | null;
+  personality?: CharacterPersonality | null;
+  background?: Optional<string> | null;
 };

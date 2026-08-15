@@ -7,8 +7,14 @@
         <strong>{{ t("characters.created.lead") }}</strong> {{ t("characters.created.help", { name: title }) }}
       </TarAlert>
       <StatusDetail class="mb-3" :subject="character" />
-      <CharacterHeader :character="character" />
-      <CharacterForm :character="character" @error="handleError" @updated="update" />
+      <TarTabs>
+        <TarTab active id="tab-1" title="Tab #1">
+          <CharacterHeader :character="character" />
+        </TarTab>
+        <TarTab id="tab-2" title="Tab #2">
+          <CharacterForm :character="character" @error="handleError" @updated="update" />
+        </TarTab>
+      </TarTabs>
       <!-- <pre>{{ JSON.stringify(character, null, 2) }}</pre> -->
     </div>
     <LoadingSpinner v-else />
@@ -25,6 +31,8 @@ import CharacterHeader from "@/components/characters/header/CharacterHeader.vue"
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
+import TarTab from "@/components/tar/TarTab.vue";
+import TarTabs from "@/components/tar/TarTabs.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
 import type { Breadcrumb } from "@/types/tar/breadcrumb";
 import type { Character } from "@/types/characters";
