@@ -5,6 +5,10 @@
     "gift": "Le don a été créé.",
     "help": "Vous pouvez maintenant compléter ses informations."
   },
+  "format": {
+    "disability": "Handicap : {name}",
+    "gift": "Don : {name}"
+  },
   "import": {
     "empty": "Aucune personnalisation disponible pour l’importation.",
     "help": "Sélectionnez les personnalisations à importer.",

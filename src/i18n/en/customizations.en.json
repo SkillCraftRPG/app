@@ -5,6 +5,10 @@
     "gift": "The gift was created.",
     "help": "You can now complete its details."
   },
+  "format": {
+    "disability": "Disability: {name}",
+    "gift": "Gift: {name}"
+  },
   "import": {
     "empty": "No customizations are available for import.",
     "help": "Select the customizations to import.",
