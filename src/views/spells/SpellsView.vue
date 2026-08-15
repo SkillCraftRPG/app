@@ -22,13 +22,13 @@
       </section>
       <section>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-6 col-lg-3">
             <SpellTierSelect class="mb-3" :model-value="tier" @update:model-value="setQuery('tier', $event)" />
           </div>
-          <div class="col-md-3">
+          <div class="col-md-6 col-lg-3">
             <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
           </div>
-          <div class="col-md-3">
+          <div class="col-md-6 col-lg-3">
             <SortSelect
               class="mb-3"
               :descending="isDescending"
@@ -38,7 +38,7 @@
               @update:model-value="setQuery('sort', $event)"
             />
           </div>
-          <div class="col-md-3">
+          <div class="col-md-6 col-lg-3">
             <CountSelect class="mb-3" :model-value="count" @update:model-value="setQuery('count', $event)" />
           </div>
         </div>
