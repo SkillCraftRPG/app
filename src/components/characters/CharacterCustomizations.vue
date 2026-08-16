@@ -1,10 +1,10 @@
 <template>
   <div class="row">
     <div v-for="gift in gifts" :key="gift.id" :class="classes">
-      <CharacterCustomization :customization="gift" />
+      <CharacterCustomization class="mb-3" :customization="gift" />
     </div>
     <div v-for="disability in disabilities" :key="disability.id" :class="classes">
-      <CharacterCustomization :customization="disability" />
+      <CharacterCustomization class="mb-3" :customization="disability" />
     </div>
   </div>
 </template>

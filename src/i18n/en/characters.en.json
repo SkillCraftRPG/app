@@ -160,6 +160,9 @@
       "UpdatedOn": "Last updated"
     }
   },
+  "statistics": {
+    "title": "Statistics"
+  },
   "talents": {
     "add": "Add talent",
     "cost": {

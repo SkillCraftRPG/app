@@ -10,9 +10,17 @@
       <TarTabs>
         <TarTab active id="tab-1" title="Tab #1">
           <CharacterHeader :character="character" />
+          <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
+          <CharacterAttributes :attributes="character.attributes" />
+          <div class="fs-5 mb-1">{{ t("characters.statistics.title") }}</div>
+          <CharacterStatistics :statistics="character.statistics" />
           <template v-if="character.customizations.length">
             <div class="fs-5 mb-1">{{ t("customizations.title") }}</div>
             <CharacterCustomizations :customizations="character.customizations" />
+          </template>
+          <template v-if="hasLanguages">
+            <div class="fs-5 mb-1">{{ t("languages.title") }}</div>
+            <CharacterLanguages :languages="character.languages" :lineage="character.lineage" />
           </template>
         </TarTab>
         <TarTab id="tab-2" title="Tab #2">
@@ -30,9 +38,12 @@ import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import CharacterAttributes from "@/components/characters/CharacterAttributes.vue";
 import CharacterCustomizations from "@/components/characters/CharacterCustomizations.vue";
 import CharacterForm from "@/components/characters/CharacterForm.vue";
 import CharacterHeader from "@/components/characters/header/CharacterHeader.vue";
+import CharacterLanguages from "@/components/characters/CharacterLanguages.vue";
+import CharacterStatistics from "@/components/characters/CharacterStatistics.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
@@ -60,6 +71,12 @@ const character = ref<Character>();
 const isCreated = ref<boolean>(false);
 
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("characters.title"), to: { name: "Characters" } }));
+const hasLanguages = computed<boolean>(() =>
+  Boolean(
+    character.value &&
+    (character.value.languages.length || character.value.lineage.languages.granted.length || character.value.lineage.parent?.languages.granted.length),
+  ),
+);
 const title = computed<string>(() => character.value?.name ?? "");
 
 function update(value: Character): void {

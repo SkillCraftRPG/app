@@ -54,6 +54,13 @@ button:disabled {
   }
 }
 
+@media (min-width: 992px) {
+  .col-lg-fifth {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+}
+
 @media (min-width: 1200px) {
   .col-xl-fifth {
     flex: 0 0 auto;
