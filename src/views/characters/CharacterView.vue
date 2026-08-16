@@ -11,9 +11,15 @@
         <TarTab active id="tab-1" title="Tab #1">
           <CharacterHeader :character="character" />
           <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
+          <!-- TODO(fpion): Level, Tier & Experience -->
+          <!-- TODO(fpion): Vitality & Stamina -->
+          <!-- TODO(fpion): Hope, Blood Alcohol Content & Intoxication -->
           <CharacterAttributes :attributes="character.attributes" />
           <div class="fs-5 mb-1">{{ t("characters.statistics.title") }}</div>
           <CharacterStatistics :statistics="character.statistics" />
+          <div class="fs-5 mb-1">{{ t("characters.skills.title") }}</div>
+          <CharacterSkills :skills="character.skills" />
+          <!-- TODO(fpion): Speeds -->
           <template v-if="character.customizations.length">
             <div class="fs-5 mb-1">{{ t("customizations.title") }}</div>
             <CharacterCustomizations :customizations="character.customizations" />
@@ -22,6 +28,7 @@
             <div class="fs-5 mb-1">{{ t("languages.title") }}</div>
             <CharacterLanguages :languages="character.languages" :lineage="character.lineage" />
           </template>
+          <!-- TODO(fpion): Specializations -->
         </TarTab>
         <TarTab id="tab-2" title="Tab #2">
           <CharacterForm :character="character" @error="handleError" @updated="update" />
@@ -43,6 +50,7 @@ import CharacterCustomizations from "@/components/characters/CharacterCustomizat
 import CharacterForm from "@/components/characters/CharacterForm.vue";
 import CharacterHeader from "@/components/characters/header/CharacterHeader.vue";
 import CharacterLanguages from "@/components/characters/CharacterLanguages.vue";
+import CharacterSkills from "@/components/characters/CharacterSkills.vue";
 import CharacterStatistics from "@/components/characters/CharacterStatistics.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
@@ -103,19 +111,13 @@ onMounted(async () => {
 });
 
 // TODO(fpion): Player
-// TODO(fpion): Height, Weight & Age
-// TODO(fpion): Skin, Eyes & Hair
 // TODO(fpion): Hope (current & maximum)
 // TODO(fpion): Tier, Level & Experience
 // TODO(fpion): Vitality & Stamina
 // TODO(fpion): Blood Alcohol Content & Intoxication
 // TODO(fpion): Specializations
-// TODO(fpion): Customizations
 // TODO(fpion): Picture
-// TODO(fpion): Attributes
-// TODO(fpion): Statistics
 // TODO(fpion): Skills
-// TODO(fpion): Languages
 // TODO(fpion): Conditions
 // TODO(fpion): Speeds
 // TODO(fpion): Critical

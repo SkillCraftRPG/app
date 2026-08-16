@@ -160,6 +160,7 @@ export type CharacterSkill = {
   talents: number;
   attribute: number;
   bonus: number;
+  total: number;
 };
 
 export type CharacterSkills = {
