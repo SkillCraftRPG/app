@@ -80,6 +80,7 @@ import SkinField from "./SkinField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WeightField from "./WeightField.vue";
 import type { Alignment, Character, DominantHand, UpdateCharacterPayload } from "@/types/characters";
+import { fromTenths, toTenths } from "@/utils/number";
 import { updateCharacter } from "@/api/characters";
 import { useForm } from "@/forms";
 
@@ -114,7 +115,7 @@ const hasChanges = computed<boolean>(
     props.character.name !== name.value ||
     (props.character.dominantHand ?? null) !== dominantHand.value ||
     (props.character.appearance.height ?? 0) !== height.value ||
-    (props.character.appearance.weight ?? 0) !== weight.value ||
+    (fromTenths(props.character.appearance.weight) ?? 0) !== weight.value ||
     (props.character.appearance.age ?? 0) !== age.value ||
     (props.character.appearance.skin ?? "") !== skin.value ||
     (props.character.appearance.eyes ?? "") !== eyes.value ||
@@ -137,6 +138,21 @@ async function submit(): Promise<void> {
       const payload: UpdateCharacterPayload = {
         name: name.value,
         dominantHand: { value: dominantHand.value },
+        appearance: {
+          height: height.value || undefined,
+          weight: toTenths(weight.value) || undefined,
+          age: age.value || undefined,
+          skin: skin.value,
+          eyes: eyes.value,
+          hair: hair.value,
+        },
+        alignment: { value: alignment.value },
+        personality: {
+          traits: traits.value,
+          ideals: ideals.value,
+          flaws: flaws.value,
+        },
+        background: { value: background.value },
       };
       const character: Character = await updateCharacter(props.character.id, payload);
       emit("updated", character);
@@ -155,7 +171,7 @@ watch(
     name.value = character.name;
     dominantHand.value = character.dominantHand ?? null;
     height.value = character.appearance.height ?? 0;
-    weight.value = character.appearance.weight ?? 0;
+    weight.value = fromTenths(character.appearance.weight) ?? 0;
     age.value = character.appearance.age ?? 0;
     skin.value = character.appearance.skin ?? "";
     eyes.value = character.appearance.eyes ?? "";
@@ -170,5 +186,4 @@ watch(
 );
 
 // TODO(fpion): height should be in meters
-// TODO(fpion): weight should be in kg
 </script>
