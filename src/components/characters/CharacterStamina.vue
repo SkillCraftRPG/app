@@ -5,7 +5,7 @@
       <div class="text-primary">{{ n(character.stamina, "integer") }} / {{ n(total, "integer") }}</div>
     </div>
     <div class="card-text d-flex justify-content-between align-items-center gap-2">
-      <div class="fw-semibold">{{ t("game.rest.short") }}</div>
+      <div>{{ t("game.rest.short") }}</div>
       <div>+{{ n(regeneration, "integer") }}</div>
     </div>
     <TarProgress :aria-label="label" class="mt-1" :value="value" variant="primary" />

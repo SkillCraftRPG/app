@@ -5,7 +5,7 @@
       <div class="text-danger">{{ n(character.vitality, "integer") }} / {{ n(total, "integer") }}</div>
     </div>
     <div class="card-text d-flex justify-content-between align-items-center gap-2">
-      <div class="fw-semibold">{{ t("game.rest.long") }}</div>
+      <div>{{ t("game.rest.long") }}</div>
       <div>+{{ n(regeneration, "integer") }}</div>
     </div>
     <TarProgress :aria-label="label" class="mt-1" :value="value" variant="danger" />
