@@ -168,6 +168,10 @@
   "statistics": {
     "title": "Statistiques"
   },
+  "tabs": {
+    "overview": "Aperçu",
+    "profile": "Profil"
+  },
   "talents": {
     "add": "Ajouter un talent",
     "cost": {
