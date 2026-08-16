@@ -288,7 +288,9 @@ export type CreateCharacterPayload = {
 export type DominantHand = "Left" | "Right";
 
 export type SearchCharactersPayload = SearchPayload & {
-  // TODO(fpion): complete
+  lineageId?: string | null;
+  casteId?: string | null;
+  educationId?: string | null;
   sort: CharacterSortOption[];
 };
 

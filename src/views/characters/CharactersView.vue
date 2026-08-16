@@ -24,6 +24,7 @@
       </section>
       <section>
         <div class="row">
+          <!-- TODO(fpion): more filters -->
           <div class="col-md-4">
             <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
           </div>

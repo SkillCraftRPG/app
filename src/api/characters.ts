@@ -16,7 +16,10 @@ export async function readCharacter(id: string): Promise<Character> {
 
 export async function searchCharacters(payload: SearchCharactersPayload): Promise<SearchResults<Character>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters" })
+    .setQuery("caste", payload.casteId ?? "")
+    .setQuery("education", payload.educationId ?? "")
     .setQuery("ids", payload.ids)
+    .setQuery("lineage", payload.lineageId ?? "")
     .setQuery(
       "search",
       payload.search.terms.map(({ value }) => value),

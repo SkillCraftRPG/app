@@ -1,5 +1,6 @@
 <template>
   <LinkCard :title="character.name" :to="{ name: 'Character', params: { id: character.id } }">
+    <!-- TODO(fpion): detail -->
     <StatusBlock :actor="character.updatedBy" class="card-text mt-2 small text-secondary" :date="character.updatedOn" relative />
   </LinkCard>
 </template>
