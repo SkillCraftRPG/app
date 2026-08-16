@@ -1,10 +1,7 @@
 <template>
   <div class="row">
     <div v-for="language in allLanguages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3">
-      <TarCard class="clickable text-center mb-3">
-        <div class="fw-semibold">{{ language.name }}</div>
-        <div class="text-body-secondary">{{ language.script?.name ?? "—" }}</div>
-      </TarCard>
+      <CharacterLanguage class="mb-3" :language="language" />
     </div>
   </div>
 </template>
@@ -13,15 +10,15 @@
 import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 
-import TarCard from "@/components/tar/TarCard.vue";
-import type { CharacterLanguage } from "@/types/characters";
+import CharacterLanguage from "./CharacterLanguage.vue";
+import type { CharacterLanguage as CharacterLanguageT } from "@/types/characters";
 import type { Language } from "@/types/languages";
 import type { Lineage } from "@/types/lineages";
 
 const { orderBy } = arrayUtils;
 
 const props = defineProps<{
-  languages: CharacterLanguage[];
+  languages: CharacterLanguageT[];
   lineage: Lineage;
 }>();
 

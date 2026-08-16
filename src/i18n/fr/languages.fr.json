@@ -4,6 +4,7 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "La langue a été créée."
   },
+  "format": "Langue : {name}",
   "import": {
     "empty": "Aucune langue disponible pour l’importation.",
     "help": "Sélectionnez les langues à importer.",
