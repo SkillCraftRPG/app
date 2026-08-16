@@ -139,7 +139,7 @@
     "title": "Personnalité"
   },
   "physical": {
-    "age": "Âge",
+    "age": "Âge (ans)",
     "bodyMassIndex": "IMC (indice de masse corporelle)",
     "eyes": "Couleur des yeux",
     "hair": "Couleur des cheveux",

@@ -139,7 +139,7 @@
     "title": "Personality"
   },
   "physical": {
-    "age": "Age",
+    "age": "Age (years)",
     "bodyMassIndex": "BMI (body mass index)",
     "eyes": "Eye Color",
     "hair": "Hair Color",

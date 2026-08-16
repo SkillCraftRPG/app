@@ -171,5 +171,4 @@ watch(
 
 // TODO(fpion): height should be in meters
 // TODO(fpion): weight should be in kg
-// TODO(fpion): year unit
 </script>

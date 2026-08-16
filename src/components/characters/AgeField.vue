@@ -1,7 +1,7 @@
 <template>
   <InputField
     :id="id"
-    :label="label"
+    :label="t('characters.physical.age')"
     :min="min"
     :max="max"
     :model-value="modelValue.toString()"
@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
@@ -44,6 +43,4 @@ withDefaults(
 defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
-
-const label = computed<string>(() => `${t("characters.physical.age")} (${t("game.unit.year")})`);
 </script>
