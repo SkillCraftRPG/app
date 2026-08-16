@@ -42,6 +42,7 @@
     "label": "Background",
     "title": "Background"
   },
+  "conditions": "Conditions",
   "created": {
     "help": "You can now complete its details.",
     "lead": "The character was created."
@@ -122,6 +123,8 @@
       "Unspecified": "Unspecified"
     }
   },
+  "experience": "Experience",
+  "level": "Level",
   "personality": {
     "detail": {
       "flaws": "Flaws",
@@ -201,5 +204,6 @@
     },
     "select": "Select the talent to add to the character. Use the filters to narrow the results."
   },
+  "tier": "Tier",
   "title": "Characters"
 }

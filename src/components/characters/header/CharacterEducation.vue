@@ -15,7 +15,7 @@
         </div>
         <div v-if="education.wealthMultiplier" class="col">
           <div class="small text-body-secondary">{{ t("educations.wealthMultiplier") }}</div>
-          <div><font-awesome-icon icon="fas fa-coins" aria-hidden="true" />&nbsp;×{{ education.wealthMultiplier }}</div>
+          <div><font-awesome-icon icon="fas fa-coins" aria-hidden="true" />&nbsp;×{{ n(education.wealthMultiplier, "integer") }}</div>
         </div>
       </div>
       <div v-if="education.summary" class="fst-italic text-body-secondary mb-3">{{ education.summary }}</div>
@@ -41,7 +41,7 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Education } from "@/types/educations";
 
-const { t } = useI18n();
+const { n, t } = useI18n();
 
 defineProps<{
   education: Education;

@@ -7,7 +7,7 @@
         </template>
       </div>
       <div v-if="education.wealthMultiplier" class="text-end">
-        <font-awesome-icon icon="fas fa-coins" aria-hidden="true" />&nbsp;×{{ education.wealthMultiplier }}
+        <font-awesome-icon icon="fas fa-coins" aria-hidden="true" />&nbsp;×{{ n(education.wealthMultiplier, "integer") }}
       </div>
     </div>
     <div v-if="education.summary" class="card-text">{{ education.summary }}</div>
@@ -25,7 +25,7 @@ import LinkableCard from "@/components/shared/LinkableCard.vue";
 import StatusBlock from "@/components/shared/StatusBlock.vue";
 import type { Education } from "@/types/educations";
 
-const { t } = useI18n();
+const { n, t } = useI18n();
 
 defineProps<{
   clickable?: boolean | string;

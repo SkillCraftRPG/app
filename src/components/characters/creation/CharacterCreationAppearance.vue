@@ -80,7 +80,7 @@
         <div class="col-md-6">
           <AgeField class="mb-3" v-model="age">
             <template #append>
-              <TarButton v-if="ageLimits.length" icon="fas fa-dice" :text="ageLimits.join('–')" @click="randomizeAge" />
+              <TarButton v-if="ageLimits.length" icon="fas fa-dice" :text="ageLimits.map((limit) => n(limit, 'integer')).join('–')" @click="randomizeAge" />
             </template>
           </AgeField>
         </div>
@@ -133,8 +133,8 @@ import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
 const character = useCharacterStore();
-const { parseNumber } = parsingUtils;
 const { n, t } = useI18n();
+const { parseNumber } = parsingUtils;
 
 defineEmits<{
   (e: "abandon"): void;

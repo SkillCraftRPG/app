@@ -67,9 +67,9 @@ import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
 const character = useCharacterStore();
+const { n, t } = useI18n();
 const { orderBy } = arrayUtils;
 const { parseNumber } = parsingUtils;
-const { t } = useI18n();
 
 const emit = defineEmits<{
   (e: "abandon"): void;
@@ -98,7 +98,7 @@ const errors = computed<string[]>(() => {
 const canSubmit = computed<boolean>(() => Boolean(errors.value.length || !quantity.value || currency.value));
 const startingWealth = computed<string>(() =>
   character.creation.caste?.wealthRoll && character.creation.education?.wealthMultiplier
-    ? `${character.creation.caste.wealthRoll} × ${character.creation.education.wealthMultiplier}`
+    ? `${character.creation.caste.wealthRoll} × ${n(character.creation.education.wealthMultiplier, "integer")}`
     : "",
 );
 

@@ -10,16 +10,27 @@
       <TarTabs>
         <TarTab active id="tab-1" title="Tab #1">
           <CharacterHeader :character="character" />
-          <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
-          <!-- TODO(fpion): Level, Tier & Experience -->
-          <!-- TODO(fpion): Vitality & Stamina -->
+          <div class="row">
+            <div class="col-md-4">
+              <CharacterExperience class="mb-3" :character="character" />
+            </div>
+            <div class="col-md-4">
+              <CharacterVitality class="mb-3" :character="character" />
+            </div>
+            <div class="col-md-4">
+              <CharacterStamina class="mb-3" :character="character" />
+            </div>
+          </div>
           <!-- TODO(fpion): Hope, Blood Alcohol Content & Intoxication -->
+          <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
+          <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
           <CharacterAttributes :attributes="character.attributes" />
           <div class="fs-5 mb-1">{{ t("characters.statistics.title") }}</div>
           <CharacterStatistics :statistics="character.statistics" />
           <div class="fs-5 mb-1">{{ t("characters.skills.title") }}</div>
           <CharacterSkills :skills="character.skills" />
-          <!-- TODO(fpion): Speeds -->
+          <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
+          <CharacterSpeeds :speeds="character.speeds" />
           <template v-if="character.customizations.length">
             <div class="fs-5 mb-1">{{ t("customizations.title") }}</div>
             <CharacterCustomizations :customizations="character.customizations" />
@@ -46,12 +57,16 @@ import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 import CharacterAttributes from "@/components/characters/CharacterAttributes.vue";
+import CharacterConditions from "@/components/characters/CharacterConditions.vue";
 import CharacterCustomizations from "@/components/characters/CharacterCustomizations.vue";
+import CharacterExperience from "@/components/characters/CharacterExperience.vue";
 import CharacterForm from "@/components/characters/CharacterForm.vue";
 import CharacterHeader from "@/components/characters/header/CharacterHeader.vue";
 import CharacterLanguages from "@/components/characters/CharacterLanguages.vue";
 import CharacterSkills from "@/components/characters/CharacterSkills.vue";
+import CharacterStamina from "@/components/characters/CharacterStamina.vue";
 import CharacterStatistics from "@/components/characters/CharacterStatistics.vue";
+import CharacterVitality from "@/components/characters/CharacterVitality.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
@@ -66,6 +81,7 @@ import { readCharacter } from "@/api/characters";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 import { useToastStore } from "@/stores/toast";
+import CharacterSpeeds from "@/components/characters/CharacterSpeeds.vue";
 
 const document = useDocument();
 const events = useEventStore();
@@ -79,6 +95,7 @@ const character = ref<Character>();
 const isCreated = ref<boolean>(false);
 
 const breadcrumb = computed<Breadcrumb>(() => ({ text: t("characters.title"), to: { name: "Characters" } }));
+const hasConditions = computed<boolean>(() => false); // TODO(fpion): implement
 const hasLanguages = computed<boolean>(() =>
   Boolean(
     character.value &&
@@ -111,15 +128,7 @@ onMounted(async () => {
 });
 
 // TODO(fpion): Player
-// TODO(fpion): Hope (current & maximum)
-// TODO(fpion): Tier, Level & Experience
-// TODO(fpion): Vitality & Stamina
-// TODO(fpion): Blood Alcohol Content & Intoxication
-// TODO(fpion): Specializations
 // TODO(fpion): Picture
-// TODO(fpion): Skills
-// TODO(fpion): Conditions
-// TODO(fpion): Speeds
 // TODO(fpion): Critical
 // TODO(fpion): Talents
 // TODO(fpion): Spells

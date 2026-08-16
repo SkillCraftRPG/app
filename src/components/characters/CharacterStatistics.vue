@@ -1,7 +1,7 @@
 <template>
-  <div class="row text-center">
+  <div class="row">
     <div v-for="score in scores" :key="score.key" class="col-6 col-md-4 col-lg-fifth">
-      <CharacterStatistic :attribute="score.attribute" :statistic="score.statistic" :value="score.value" />
+      <CharacterStatistic :attribute="score.attribute" class="mb-3" :statistic="score.statistic" :value="score.value" />
     </div>
   </div>
 </template>

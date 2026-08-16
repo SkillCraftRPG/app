@@ -2,8 +2,7 @@
   <TarCard>
     <div class="card-text d-flex justify-content-between align-items-center gap-2">
       <div>
-        <div class="fw-semibold">{{ skill }}</div>
-        <div class="small text-body-secondary">{{ attribute }}</div>
+        <div class="fw-semibold">{{ speed }}</div>
       </div>
       <div class="fs-4">{{ n(value, "integer") }}</div>
     </div>
@@ -18,8 +17,7 @@ import TarCard from "@/components/tar/TarCard.vue";
 const { n } = useI18n();
 
 defineProps<{
-  attribute: string;
-  skill: string;
+  speed: string;
   value: number;
 }>();
 </script>

@@ -42,6 +42,7 @@
     "label": "Historique",
     "title": "Historique"
   },
+  "conditions": "Conditions",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "Le personnage a été créé."
@@ -122,6 +123,8 @@
       "Unspecified": "Non précisée"
     }
   },
+  "experience": "Expérience",
+  "level": "Niveau",
   "personality": {
     "detail": {
       "flaws": "Défauts",
@@ -201,5 +204,6 @@
     },
     "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
+  "tier": "Tiers",
   "title": "Personnages"
 }

@@ -25,23 +25,23 @@
         <div class="row text-center">
           <div v-if="target.speeds.walk" class="col-4 col-md-fifth mb-3">
             <div class="fw-bold">{{ t("game.speed.kind.options.Walk") }}</div>
-            <div>{{ target.speeds.walk }}</div>
+            <div>{{ n(target.speeds.walk, "integer") }}</div>
           </div>
           <div v-if="target.speeds.climb" class="col-4 col-md-fifth mb-3">
             <div class="fw-bold">{{ t("game.speed.kind.options.Climb") }}</div>
-            <div>{{ target.speeds.climb }}</div>
+            <div>{{ n(target.speeds.climb, "integer") }}</div>
           </div>
           <div v-if="target.speeds.swim" class="col-4 col-md-fifth mb-3">
             <div class="fw-bold">{{ t("game.speed.kind.options.Swim") }}</div>
-            <div>{{ target.speeds.swim }}</div>
+            <div>{{ n(target.speeds.swim, "integer") }}</div>
           </div>
           <div v-if="target.speeds.fly" class="col-4 col-md-fifth mb-3">
             <div class="fw-bold">{{ t(`game.speed.${target.speeds.hover ? "hover" : "kind.options.Fly"}`) }}</div>
-            <div>{{ target.speeds.fly }}</div>
+            <div>{{ n(target.speeds.fly, "integer") }}</div>
           </div>
           <div v-if="target.speeds.burrow" class="col-4 col-md-fifth mb-3">
             <div class="fw-bold">{{ t("game.speed.kind.options.Burrow") }}</div>
-            <div>{{ target.speeds.burrow }}</div>
+            <div>{{ n(target.speeds.burrow, "integer") }}</div>
           </div>
         </div>
       </template>
@@ -71,7 +71,7 @@ import type { Lineage } from "@/types/lineages";
 import type { Feature } from "@/types/features";
 
 const { orderBy } = arrayUtils;
-const { t } = useI18n();
+const { n, t } = useI18n();
 
 const props = defineProps<{
   lineage: Lineage;
