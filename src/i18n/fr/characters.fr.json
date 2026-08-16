@@ -42,6 +42,7 @@
     "label": "Historique",
     "title": "Historique"
   },
+  "bloodAlcoholContent": "Alcoolémie",
   "conditions": "Conditions",
   "created": {
     "help": "Vous pouvez maintenant compléter ses informations.",
@@ -124,6 +125,7 @@
     }
   },
   "experience": "Expérience",
+  "intoxication": "Intoxication",
   "level": "Niveau",
   "personality": {
     "detail": {

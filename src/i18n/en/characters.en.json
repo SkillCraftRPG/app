@@ -42,6 +42,7 @@
     "label": "Background",
     "title": "Background"
   },
+  "bloodAlcoholContent": "Blood Alcohol Content",
   "conditions": "Conditions",
   "created": {
     "help": "You can now complete its details.",
@@ -124,6 +125,7 @@
     }
   },
   "experience": "Experience",
+  "intoxication": "Intoxication",
   "level": "Level",
   "personality": {
     "detail": {

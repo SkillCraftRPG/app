@@ -20,8 +20,16 @@
             <div class="col-md-4">
               <CharacterStamina class="mb-3" :character="character" />
             </div>
+            <div class="col-md-4">
+              <CharacterHope class="mb-3" :character="character" />
+            </div>
+            <div class="col-md-4">
+              <CharacterAlcohol class="mb-3" :character="character" />
+            </div>
+            <div class="col-md-4">
+              <CharacterIntoxication class="mb-3" :character="character" />
+            </div>
           </div>
-          <!-- TODO(fpion): Hope, Blood Alcohol Content & Intoxication -->
           <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
           <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
           <CharacterAttributes :attributes="character.attributes" />
@@ -56,14 +64,18 @@ import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import CharacterAlcohol from "@/components/characters/CharacterAlcohol.vue";
 import CharacterAttributes from "@/components/characters/CharacterAttributes.vue";
 import CharacterConditions from "@/components/characters/CharacterConditions.vue";
 import CharacterCustomizations from "@/components/characters/CharacterCustomizations.vue";
 import CharacterExperience from "@/components/characters/CharacterExperience.vue";
 import CharacterForm from "@/components/characters/CharacterForm.vue";
 import CharacterHeader from "@/components/characters/header/CharacterHeader.vue";
+import CharacterHope from "@/components/characters/CharacterHope.vue";
+import CharacterIntoxication from "@/components/characters/CharacterIntoxication.vue";
 import CharacterLanguages from "@/components/characters/CharacterLanguages.vue";
 import CharacterSkills from "@/components/characters/CharacterSkills.vue";
+import CharacterSpeeds from "@/components/characters/CharacterSpeeds.vue";
 import CharacterStamina from "@/components/characters/CharacterStamina.vue";
 import CharacterStatistics from "@/components/characters/CharacterStatistics.vue";
 import CharacterVitality from "@/components/characters/CharacterVitality.vue";
@@ -81,7 +93,6 @@ import { readCharacter } from "@/api/characters";
 import { useDocument } from "@/composables/document";
 import { useEventStore } from "@/stores/event";
 import { useToastStore } from "@/stores/toast";
-import CharacterSpeeds from "@/components/characters/CharacterSpeeds.vue";
 
 const document = useDocument();
 const events = useEventStore();
