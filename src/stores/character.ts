@@ -43,7 +43,7 @@ export const useCharacterStore = defineStore(
     function abandon(): void {
       creation.value = defaultCreation();
       step.value = CharacterCreationStep.Ascendancy;
-    }
+    } // TODO(fpion): rename this
 
     function goBack(): void {
       if (step.value !== CharacterCreationStep.Ascendancy) {

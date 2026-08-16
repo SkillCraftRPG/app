@@ -103,6 +103,7 @@ async function complete(): Promise<void> {
             : undefined,
       };
       const result: Character = await createCharacter(payload);
+      character.abandon();
       events.push("created");
       router.push({ name: "Character", params: { id: result.id } });
     } catch (e: unknown) {
