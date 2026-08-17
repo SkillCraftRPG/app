@@ -8,13 +8,13 @@
       </TarAlert>
       <StatusDetail class="mb-3" :subject="character" />
       <TarTabs>
-        <TarTab id="overview" :title="t('characters.overview')">
+        <TarTab active id="overview" :title="t('characters.overview')">
           <CharacterOverview :character="character" />
         </TarTab>
         <TarTab id="profile" :title="t('characters.profile')">
           <CharacterProfile :character="character" @error="handleError" @updated="update" />
         </TarTab>
-        <TarTab active id="modifiers" :title="t('characters.modifiers.title')">
+        <TarTab id="modifiers" :title="t('characters.modifiers.title')">
           <CharacterModifiers :character="character" @error="handleError" @updated="update" />
         </TarTab>
       </TarTabs>
