@@ -25,19 +25,18 @@ import InputField from "@/components/forms/InputField.vue";
 const { parseNumber } = parsingUtils;
 const { t } = useI18n();
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     id?: string;
-    max?: number | string;
     min?: number | string;
     modelValue: number;
     step?: number | string;
+    unit?: "cm" | "m";
   }>(),
   {
     id: "height",
-    max: 9999,
     min: 0,
-    step: 1,
+    unit: "m",
   },
 );
 
@@ -45,5 +44,21 @@ defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
 
-const label = computed<string>(() => `${t("characters.physical.height")} (${t("game.unit.cm")})`);
+const label = computed<string>(() => `${t("characters.physical.height")} (${t(`game.unit.${props.unit}`)})`);
+const max = computed<number | undefined>(() => {
+  switch (props.unit) {
+    case "cm":
+      return 9999;
+    case "m":
+      return 99.99;
+  }
+});
+const step = computed<number | undefined>(() => {
+  switch (props.unit) {
+    case "cm":
+      return 1;
+    case "m":
+      return 0.01;
+  }
+});
 </script>

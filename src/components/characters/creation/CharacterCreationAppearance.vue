@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="col-md-6">
-          <HeightField class="mb-3" :roll="heightRoll" v-model="height">
+          <HeightField class="mb-3" :roll="heightRoll" unit="cm" v-model="height">
             <template #append>
               <TarButton v-if="heightRoll" icon="fas fa-dice" :text="heightRoll" @click="randomizeHeight" />
             </template>
