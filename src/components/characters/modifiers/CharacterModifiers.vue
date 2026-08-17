@@ -2,32 +2,54 @@
   <div>
     <div class="d-flex gap-2 mb-3">
       <TarButton icon="fas fa-plus" size="large" :text="t('actions.add')" @click="add" />
-      <TarButton v-if="hasFilters" icon="fas fa-arrow-rotate-left" outline :text="t('filters.clear')" variant="secondary" @click="clearFilters" />
+      <TarButton
+        v-if="hasModifiers && hasFilters"
+        icon="fas fa-arrow-rotate-left"
+        outline
+        :text="t('filters.clear')"
+        variant="secondary"
+        @click="clearFilters"
+      />
     </div>
-    <div class="row">
-      <div class="col-md-6 col-lg-3">
-        <SearchInput class="mb-3" v-model="search" />
+    <template v-if="hasModifiers">
+      <div class="row">
+        <div class="col-md-6 col-lg-3">
+          <SearchInput class="mb-3" v-model="search" />
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <CharacterModifierKindSelect class="mb-3" :model-value="kind" @update:model-value="updateKind" />
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <SkillSelect v-if="kind === 'Skill'" class="mb-3" v-model="target" />
+          <StatisticSelect v-else-if="kind === 'Statistic'" class="mb-3" v-model="target" />
+          <SpeedKindSelect v-else-if="kind === 'Speed'" class="mb-3" v-model="target" />
+          <AttributeSelect v-else class="mb-3" :disabled="kind !== 'Attribute'" v-model="target" />
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <CharacterModifierTypeSelect class="mb-3" v-model="type" />
+        </div>
       </div>
-      <div class="col-md-6 col-lg-3">
-        <CharacterModifierKindSelect class="mb-3" :model-value="kind" @update:model-value="updateKind" />
+      <div v-if="modifiers.length" class="row">
+        <div v-for="modifier in modifiers" :key="modifier.id" class="col-md-6 col-lg-4 col-xl-3">
+          <CharacterModifier class="mb-3" :modifier="modifier" @edit="edit(modifier)" @remove="remove(modifier)" />
+        </div>
       </div>
-      <div class="col-md-6 col-lg-3">
-        <SkillSelect v-if="kind === 'Skill'" class="mb-3" v-model="target" />
-        <StatisticSelect v-else-if="kind === 'Statistic'" class="mb-3" v-model="target" />
-        <SpeedKindSelect v-else-if="kind === 'Speed'" class="mb-3" v-model="target" />
-        <AttributeSelect v-else class="mb-3" :disabled="kind !== 'Attribute'" v-model="target" />
-      </div>
-      <div class="col-md-6 col-lg-3">
-        <CharacterModifierTypeSelect class="mb-3" v-model="type" />
-      </div>
-    </div>
-    <div v-if="modifiers.length" class="row">
-      <div v-for="modifier in modifiers" :key="modifier.id" class="col-md-6 col-lg-4 col-xl-3">
-        <CharacterModifier class="mb-3" :modifier="modifier" @edit="edit(modifier)" @remove="remove(modifier)" />
-      </div>
-    </div>
+      <section v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
+        <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
+        <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
+        <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
+        <TarButton
+          v-if="hasFilters"
+          class="mt-3"
+          icon="fas fa-arrow-rotate-left"
+          outline
+          :text="t('filters.clear')"
+          variant="secondary"
+          @click="clearFilters"
+        />
+      </section>
+    </template>
     <p v-else>{{ t("characters.modifiers.empty") }}</p>
-    <!-- TODO(fpion): clear filters if any -->
     <EditCharacterModifierModal
       :character="character"
       :modifier="modifier"
@@ -86,6 +108,7 @@ const target = ref<string>("");
 const type = ref<string>("");
 
 const hasFilters = computed<boolean>(() => Boolean(search.value || kind.value || target.value || type.value));
+const hasModifiers = computed<boolean>(() => props.character.modifiers.length > 0);
 
 type IndexedCharacterModifier = CharacterModifierT & {
   search: string;
