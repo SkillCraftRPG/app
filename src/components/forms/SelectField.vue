@@ -69,6 +69,11 @@ const props = withDefaults(
   },
 );
 
+defineEmits<{
+  (e: "update:model-value", value: string): void;
+  (e: "validated", value: ValidationResult): void;
+}>();
+
 const selectRef = ref<InstanceType<typeof TarSelect> | null>(null);
 
 const error = computed<RuleExecutionResult | undefined>(() => errors.value[0]);
@@ -87,11 +92,6 @@ const selectStatus = computed<SelectStatus | undefined>(() => {
   }
   return undefined;
 });
-
-defineEmits<{
-  (e: "update:model-value", value: string): void;
-  (e: "validated", value: ValidationResult): void;
-}>();
 
 const rules = computed<ValidationRuleSet>(() => {
   const rules: ValidationRuleSet = {

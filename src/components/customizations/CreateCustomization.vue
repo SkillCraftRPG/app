@@ -35,15 +35,15 @@ import { useForm } from "@/forms";
 
 const { t } = useI18n();
 
-const isLoading = ref<boolean>(false);
-const kind = ref<string>("");
-const modal = ref<InstanceType<typeof TarModal> | null>(null);
-const name = ref<string>("");
-
 const emit = defineEmits<{
   (e: "created", value: Customization): void;
   (e: "error", value: unknown): void;
 }>();
+
+const isLoading = ref<boolean>(false);
+const kind = ref<string>("");
+const modal = ref<InstanceType<typeof TarModal> | null>(null);
+const name = ref<string>("");
 
 function cancel(): void {
   reset();

@@ -10,7 +10,7 @@
         class="mb-3"
         :id="`feature-${index}`"
         :model-value="feature"
-        @removed="remove(index)"
+        @remove="remove(index)"
         @update:model-value="update(index, $event)"
       >
       </EditLineageFeature>

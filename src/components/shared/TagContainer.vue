@@ -7,10 +7,10 @@
         :key="index"
         :id="`${id}-${index}`"
         :value="tag"
-        @removed="onRemove(index)"
-        @updated="onUpdate(index, $event)"
+        @remove="onRemove(index)"
+        @update="onUpdate(index, $event)"
       />
-      <TagAddNew :id="id" @added="onAdd" />
+      <TagAddNew :id="id" @add="onAdd" />
       <slot></slot>
     </div>
   </div>

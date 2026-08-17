@@ -37,16 +37,16 @@ const props = defineProps<{
   parent?: Lineage | null;
 }>();
 
+const emit = defineEmits<{
+  (e: "created", value: Lineage): void;
+  (e: "error", value: unknown): void;
+}>();
+
 const isLoading = ref<boolean>(false);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
 
 const title = computed<string>(() => t(`lineages.${props.parent ? "ethnicities" : "species"}.create`));
-
-const emit = defineEmits<{
-  (e: "created", value: Lineage): void;
-  (e: "error", value: unknown): void;
-}>();
 
 function cancel(): void {
   reset();

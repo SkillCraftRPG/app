@@ -70,6 +70,11 @@ const props = withDefaults(
   },
 );
 
+defineEmits<{
+  (e: "update:model-value", value: string): void;
+  (e: "validated", value: ValidationResult): void;
+}>();
+
 const textareaRef = ref<InstanceType<typeof TarTextarea> | null>(null);
 
 const error = computed<RuleExecutionResult | undefined>(() => errors.value[0]);
@@ -88,11 +93,6 @@ const textareaStatus = computed<TextareaStatus | undefined>(() => {
   }
   return undefined;
 });
-
-defineEmits<{
-  (e: "update:model-value", value: string): void;
-  (e: "validated", value: ValidationResult): void;
-}>();
 
 const rules = computed<ValidationRuleSet>(() => {
   const rules: ValidationRuleSet = {

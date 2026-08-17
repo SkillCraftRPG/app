@@ -33,7 +33,6 @@ const { t } = useI18n();
 
 const emit = defineEmits<{
   (e: "error", value: unknown): void;
-  (e: "signed-out", value: Session): void;
 }>();
 
 const sessions = ref<Session[]>([]);

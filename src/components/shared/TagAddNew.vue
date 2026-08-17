@@ -19,7 +19,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "added", value: string): void;
+  (e: "add", value: string): void;
 }>();
 
 const tag = ref<string>("");
@@ -29,7 +29,7 @@ function onCancel(): void {
 }
 function onConfirm(): void {
   if (tag.value) {
-    emit("added", tag.value);
+    emit("add", tag.value);
     tag.value = "";
   }
 }
