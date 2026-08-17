@@ -40,17 +40,17 @@ import { useForm } from "@/forms";
 
 const { t } = useI18n();
 
+const emit = defineEmits<{
+  (e: "created", value: World): void;
+  (e: "error", value: unknown): void;
+}>();
+
 const isLoading = ref<boolean>(false);
 const key = ref<string>("");
 const keyAlreadyUsed = ref<boolean>(false);
 const keyField = ref<InstanceType<typeof KeyField> | null>(null);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const name = ref<string>("");
-
-const emit = defineEmits<{
-  (e: "created", value: World): void;
-  (e: "error", value: unknown): void;
-}>();
 
 function cancel(): void {
   reset();

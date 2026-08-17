@@ -89,6 +89,5 @@ onBeforeUnmount(() => {
   window.removeEventListener("scroll", update);
 });
 
-// TODO(fpion): revisit emitted events (present tense ⇒ command that needs to happen, past tense ⇒ event that already happened)
 // TODO(fpion): modals should have mb-0 on their unique paragraph
 </script>

@@ -10,7 +10,7 @@
     </div>
     <div v-else class="btn-group" role="group" aria-label="Tag Actions">
       <TarButton outline size="small" :text="value" @click="onEdit" />
-      <TarButton icon="fas fa-times" outline size="small" @click="$emit('removed')" />
+      <TarButton icon="fas fa-times" outline size="small" @click="$emit('remove')" />
     </div>
   </div>
 </template>
@@ -27,8 +27,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "removed"): void;
-  (e: "updated", value: string): void;
+  (e: "remove"): void;
+  (e: "update", value: string): void;
 }>();
 
 const isEditing = ref<boolean>(false);
@@ -41,7 +41,7 @@ function onCancel(): void {
 }
 function onConfirm(): void {
   if (tag.value) {
-    emit("updated", tag.value);
+    emit("update", tag.value);
     isEditing.value = false;
   }
 }

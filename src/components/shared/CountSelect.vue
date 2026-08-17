@@ -32,9 +32,9 @@ withDefaults(
   },
 );
 
-const options = ref<SelectOption[]>([{ text: "12" }, { text: "24" }, { text: "48" }, { text: "96" }]);
-
 defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
+
+const options = ref<SelectOption[]>([{ text: "12" }, { text: "24" }, { text: "48" }, { text: "96" }]);
 </script>
