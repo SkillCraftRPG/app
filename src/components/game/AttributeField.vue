@@ -32,9 +32,9 @@ withDefaults(
     required?: boolean | string;
   }>(),
   {
-    id: "skill",
-    label: "game.skill.label",
-    placeholder: "game.skill.placeholder",
+    id: "attribute",
+    label: "game.attribute.label",
+    placeholder: "game.attribute.placeholder",
   },
 );
 
@@ -44,7 +44,7 @@ defineEmits<{
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.skill.options"))).map(([value, text]) => ({ text, value })),
+    Object.entries(tm(rt("game.attribute.options"))).map(([value, text]) => ({ text, value })),
     "text",
   ),
 );

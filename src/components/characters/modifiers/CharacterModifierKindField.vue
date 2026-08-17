@@ -1,13 +1,13 @@
 <template>
   <SelectField
-    :disabled="disabled"
+    floating
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
     :options="options"
     :placeholder="t(placeholder)"
     :required="required"
-    @update:model-value="$emit('update:model-value', $event ?? '')"
+    @update:model-value="$emit('update:model-value', $event)"
   />
 </template>
 
@@ -20,11 +20,10 @@ import SelectField from "@/components/forms/SelectField.vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
-const { rt, t, tm } = useI18n();
+const { t } = useI18n();
 
 withDefaults(
   defineProps<{
-    disabled?: boolean | string;
     id?: string;
     label?: string;
     modelValue: string;
@@ -32,9 +31,9 @@ withDefaults(
     required?: boolean | string;
   }>(),
   {
-    id: "skill",
-    label: "game.skill.label",
-    placeholder: "game.skill.placeholder",
+    id: "kind",
+    label: "characters.modifiers.kind.label",
+    placeholder: "characters.modifiers.kind.placeholder",
   },
 );
 
@@ -44,7 +43,12 @@ defineEmits<{
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("game.skill.options"))).map(([value, text]) => ({ text, value })),
+    [
+      { value: "Attribute", text: t("game.attribute.label") },
+      { value: "Skill", text: t("game.skill.label") },
+      { value: "Speed", text: t("game.speed.label") },
+      { value: "Statistic", text: t("game.statistic.label") },
+    ],
     "text",
   ),
 );

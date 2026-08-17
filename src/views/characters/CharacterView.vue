@@ -8,11 +8,14 @@
       </TarAlert>
       <StatusDetail class="mb-3" :subject="character" />
       <TarTabs>
-        <TarTab active id="overview" :title="t('characters.tabs.overview')">
+        <TarTab id="overview" :title="t('characters.overview')">
           <CharacterOverview :character="character" />
         </TarTab>
-        <TarTab id="profile" :title="t('characters.tabs.profile')">
+        <TarTab id="profile" :title="t('characters.profile')">
           <CharacterProfile :character="character" @error="handleError" @updated="update" />
+        </TarTab>
+        <TarTab active id="modifiers" :title="t('characters.modifiers.title')">
+          <CharacterModifiers :character="character" @error="handleError" @updated="update" />
         </TarTab>
       </TarTabs>
     </div>
@@ -25,6 +28,7 @@ import { computed, inject, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import CharacterModifiers from "@/components/characters/modifiers/CharacterModifiers.vue";
 import CharacterOverview from "@/components/characters/CharacterOverview.vue";
 import CharacterProfile from "@/components/characters/CharacterProfile.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";

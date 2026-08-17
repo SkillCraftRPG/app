@@ -300,6 +300,14 @@ export type CreateCharacterPayload = {
   startingWealth?: StartingWealth | null;
 };
 
+export type CreateOrReplaceCharacterModifierPayload = {
+  kind: CharacterModifierKind;
+  target: string;
+  value: number;
+  name?: string | null;
+  notes?: string | null;
+};
+
 export type DominantHand = "Left" | "Right";
 
 export type SearchCharactersPayload = SearchPayload & {

@@ -1,5 +1,6 @@
 {
   "attribute": {
+    "label": "Attribute",
     "mental": "Mental",
     "options": {
       "Dexterity": "Dexterity",
@@ -9,6 +10,7 @@
       "Vigor": "Vigor"
     },
     "physical": "Physical",
+    "placeholder": "Select an attribute",
     "universal": "Universal"
   },
   "feature": {
@@ -76,9 +78,11 @@
         "Walk": "Walk"
       }
     },
-    "label": "Speed"
+    "label": "Speed",
+    "placeholder": "Select a speed"
   },
   "statistic": {
+    "label": "Statistic",
     "options": {
       "Dodge": "Dodge",
       "Initiative": "Initiative",
@@ -90,7 +94,8 @@
       "Stratagem": "Stratagem",
       "Strength": "Strength",
       "Vitality": "Vitality"
-    }
+    },
+    "placeholder": "Select a statistic"
   },
   "unit": {
     "cm": "cm",

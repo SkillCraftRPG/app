@@ -62,6 +62,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { Skill } from "@/types/game";
 import type { SkillRankPayload } from "@/types/characters";
+import { formatSignedInteger } from "@/utils/format";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
@@ -134,8 +135,7 @@ function getScore(key: string): string {
     return "";
   }
   const score: number = scores.value.get(key) ?? 0;
-  const formatted: string = n(score, "integer");
-  return score > 0 ? `+${formatted}` : formatted.replace("-", "−");
+  return formatSignedInteger(score, (value) => n(value, "integer"));
 }
 
 type AttributeData = {
