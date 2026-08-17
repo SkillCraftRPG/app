@@ -34,11 +34,14 @@
 
 <script setup lang="ts">
 import { arrayUtils, parsingUtils } from "logitar-js";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import { useI18n } from "vue-i18n";
 
 import InputField from "@/components/forms/InputField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
+import type { Attribute, Statistic } from "@/types/game";
+import type { StartingAttributes } from "@/types/characters";
+import { ATTRIBUTES, STATISTICS_BY_ATTRIBUTE, camelCase } from "@/utils/game";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
@@ -51,182 +54,77 @@ defineEmits<{
   (e: "abandon"): void;
 }>();
 
-const dexterity = ref<number>(0);
-const health = ref<number>(0);
-const intellect = ref<number>(0);
-const senses = ref<number>(0);
-const vigor = ref<number>(0);
+const scores = reactive<StartingAttributes>(Object.fromEntries(ATTRIBUTES.map((key) => [camelCase(key), 0])) as StartingAttributes);
 
-const dodge = computed<number>(() => 10 + dexterity.value);
-const initiative = computed<number>(() => 2 * senses.value);
-const learning = computed<number>(() => Math.max(5 + intellect.value, 5));
-const load = computed<number>(() => 10 * (5 + vigor.value));
-const power = computed<number>(() => 5 + senses.value * 2);
-const precision = computed<number>(() => 5 + dexterity.value * 2);
-const stamina = computed<number>(() => 25 + health.value * 5);
-const stratagem = computed<number>(() => 5 + intellect.value * 2);
-const strength = computed<number>(() => 5 + vigor.value * 2);
-const vitality = computed<number>(() => 25 + health.value * 5);
+function computeStatistic(statistic: Statistic): number {
+  switch (statistic) {
+    case "Dodge":
+      return 10 + scores.dexterity;
+    case "Initiative":
+      return 2 * scores.senses;
+    case "Learning":
+      return Math.max(5 + scores.intellect, 5);
+    case "Load":
+      return 10 * (5 + scores.vigor);
+    case "Power":
+      return 5 + scores.senses * 2;
+    case "Precision":
+      return 5 + scores.dexterity * 2;
+    case "Stamina":
+      return 25 + scores.health * 5;
+    case "Stratagem":
+      return 5 + scores.intellect * 2;
+    case "Strength":
+      return 5 + scores.vigor * 2;
+    case "Vitality":
+      return 25 + scores.health * 5;
+  }
+}
 
-type Statistic = {
-  key: string;
+type StatisticData = {
+  key: Statistic;
   name: string;
   value: number;
 };
-type Attribute = {
-  key: string;
+type AttributeData = {
+  key: Attribute;
   name: string;
   score: number;
-  statistics: Statistic[];
+  statistics: StatisticData[];
 };
-const attributes = computed<Attribute[]>(() =>
+const attributes = computed<AttributeData[]>(() =>
   orderBy(
-    [
-      {
-        key: "dexterity",
-        name: t("game.attribute.options.Dexterity"),
-        score: dexterity.value,
-        statistics: orderBy(
-          [
-            {
-              key: "dodge",
-              name: t("game.statistic.options.Dodge"),
-              value: dodge.value,
-            },
-            {
-              key: "precision",
-              name: t("game.statistic.options.Precision"),
-              value: precision.value,
-            },
-          ],
-          "name",
-        ),
-      },
-      {
-        key: "health",
-        name: t("game.attribute.options.Health"),
-        score: health.value,
-        statistics: orderBy(
-          [
-            {
-              key: "stamina",
-              name: t("game.statistic.options.Stamina"),
-              value: stamina.value,
-            },
-            {
-              key: "vitality",
-              name: t("game.statistic.options.Vitality"),
-              value: vitality.value,
-            },
-          ],
-          "name",
-        ),
-      },
-      {
-        key: "intellect",
-        name: t("game.attribute.options.Intellect"),
-        score: intellect.value,
-        statistics: orderBy(
-          [
-            {
-              key: "learning",
-              name: t("game.statistic.options.Learning"),
-              value: learning.value,
-            },
-            {
-              key: "stratagem",
-              name: t("game.statistic.options.Stratagem"),
-              value: stratagem.value,
-            },
-          ],
-          "name",
-        ),
-      },
-      {
-        key: "senses",
-        name: t("game.attribute.options.Senses"),
-        score: senses.value,
-        statistics: orderBy(
-          [
-            {
-              key: "initiative",
-              name: t("game.statistic.options.Initiative"),
-              value: initiative.value,
-            },
-            {
-              key: "power",
-              name: t("game.statistic.options.Power"),
-              value: power.value,
-            },
-          ],
-          "name",
-        ),
-      },
-      {
-        key: "vigor",
-        name: t("game.attribute.options.Vigor"),
-        score: vigor.value,
-        statistics: orderBy(
-          [
-            {
-              key: "load",
-              name: t("game.statistic.options.Load"),
-              value: load.value,
-            },
-            {
-              key: "strength",
-              name: t("game.statistic.options.Strength"),
-              value: strength.value,
-            },
-          ],
-          "name",
-        ),
-      },
-    ],
+    ATTRIBUTES.map((key) => ({
+      key,
+      name: t(`game.attribute.options.${key}`),
+      score: scores[camelCase(key)],
+      statistics: orderBy(
+        STATISTICS_BY_ATTRIBUTE[key].map((statistic) => ({
+          key: statistic,
+          name: t(`game.statistic.options.${statistic}`),
+          value: computeStatistic(statistic),
+        })),
+        "name",
+      ),
+    })),
     "name",
   ),
 );
 const total = computed<number>(() => attributes.value.reduce((sum, attribute) => sum + attribute.score, 0));
 const canSubmit = computed<boolean>(() => !total.value);
 
-function updateScore(attribute: string, value: number): void {
-  switch (attribute) {
-    case "dexterity":
-      dexterity.value = value;
-      break;
-    case "health":
-      health.value = value;
-      break;
-    case "intellect":
-      intellect.value = value;
-      break;
-    case "senses":
-      senses.value = value;
-      break;
-    case "vigor":
-      vigor.value = value;
-      break;
-  }
+function updateScore(attribute: Attribute, value: number): void {
+  scores[camelCase(attribute)] = value;
 }
 
 const { handleSubmit } = useForm();
 function submit(): void {
   if (canSubmit.value) {
-    character.saveAttributes({
-      dexterity: dexterity.value,
-      health: health.value,
-      intellect: intellect.value,
-      senses: senses.value,
-      vigor: vigor.value,
-    });
+    character.saveAttributes({ ...scores });
   }
 }
 
 onMounted(() => {
-  dexterity.value = character.creation.attributes.dexterity;
-  health.value = character.creation.attributes.health;
-  intellect.value = character.creation.attributes.intellect;
-  senses.value = character.creation.attributes.senses;
-  vigor.value = character.creation.attributes.vigor;
+  Object.assign(scores, character.creation.attributes);
 });
 </script>

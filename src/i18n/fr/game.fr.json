@@ -44,6 +44,7 @@
   },
   "skill": {
     "any": "N’importe laquelle",
+    "format": "Compétence : {name}",
     "label": "Compétence",
     "none": "Aucune",
     "options": {
@@ -68,9 +69,13 @@
       "Survival": "Survie",
       "Thievery": "Roublardise"
     },
-    "placeholder": "Sélectionnez une compétence"
+    "placeholder": "Sélectionnez une compétence",
+    "rank": "Rang",
+    "talents": "Talents"
   },
   "speed": {
+    "encumbrance": "Encombrement",
+    "format": "Vitesse : {name}",
     "hover": "Lévitation",
     "kind": {
       "options": {
@@ -82,9 +87,12 @@
       }
     },
     "label": "Vitesse",
+    "lineage": "Lignée",
     "placeholder": "Sélectionnez une vitesse"
   },
   "statistic": {
+    "base": "Base",
+    "format": "Statistique : {name}",
     "label": "Statistique",
     "options": {
       "Dodge": "Esquive",

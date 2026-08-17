@@ -45,7 +45,8 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Attribute } from "@/types/game";
-import type { Character, CharacterAttribute, CharacterModifier } from "@/types/characters";
+import type { Character, CharacterModifier } from "@/types/characters";
+import { ATTRIBUTE_CATEGORIES, camelCase } from "@/utils/game";
 import { formatSignedInteger } from "@/utils/format";
 
 const { n, t } = useI18n();
@@ -59,33 +60,8 @@ const props = defineProps<{
 
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
 
-const category = computed<string>(() => {
-  switch (props.attribute) {
-    case "Dexterity":
-    case "Vigor":
-      return t("game.attribute.physical");
-    case "Intellect":
-    case "Senses":
-      return t("game.attribute.mental");
-    default:
-      return t("game.attribute.universal");
-  }
-});
-
-const values = computed<CharacterAttribute>(() => {
-  switch (props.attribute) {
-    case "Dexterity":
-      return props.character.attributes.dexterity;
-    case "Health":
-      return props.character.attributes.health;
-    case "Intellect":
-      return props.character.attributes.intellect;
-    case "Senses":
-      return props.character.attributes.senses;
-    case "Vigor":
-      return props.character.attributes.vigor;
-  }
-});
+const category = computed<string>(() => t(`game.attribute.${ATTRIBUTE_CATEGORIES[props.attribute]}`));
+const values = computed(() => props.character.attributes[camelCase(props.attribute)]);
 const starting = computed<string>(() => formatSignedInteger(values.value.starting, (value) => n(value, "integer")));
 const progression = computed<string>(() => formatSignedInteger(values.value.progression, (value) => n(value, "integer")));
 const total = computed<string>(() => formatSignedInteger(values.value.total, (value) => n(value, "integer")));

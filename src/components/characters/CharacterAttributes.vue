@@ -12,8 +12,9 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterAttribute from "./CharacterAttribute.vue";
-import type { Character } from "@/types/characters";
 import type { Attribute } from "@/types/game";
+import type { Character } from "@/types/characters";
+import { ATTRIBUTES } from "@/utils/game";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
@@ -28,28 +29,7 @@ type AttributeData = {
 };
 const attributes = computed<AttributeData[]>(() =>
   orderBy(
-    [
-      {
-        key: "Dexterity",
-        name: t("game.attribute.options.Dexterity"),
-      },
-      {
-        key: "Health",
-        name: t("game.attribute.options.Health"),
-      },
-      {
-        key: "Intellect",
-        name: t("game.attribute.options.Intellect"),
-      },
-      {
-        key: "Senses",
-        name: t("game.attribute.options.Senses"),
-      },
-      {
-        key: "Vigor",
-        name: t("game.attribute.options.Vigor"),
-      },
-    ],
+    ATTRIBUTES.map((key) => ({ key, name: t(`game.attribute.options.${key}`) })),
     "name",
   ),
 );

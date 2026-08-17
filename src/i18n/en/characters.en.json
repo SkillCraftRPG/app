@@ -135,6 +135,7 @@
       "label": "Target",
       "placeholder": "Select a target"
     },
+    "label": "Modifier",
     "remove": {
       "help": "Do you want to remove the <strong>{name}</strong> modifier from the character? This action will remove its effect.",
       "lead": "Remove this modifier?"

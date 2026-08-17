@@ -25,3 +25,5 @@ export type Skill =
   | "Thievery";
 
 export type SpeedKind = "Burrow" | "Climb" | "Fly" | "Swim" | "Walk";
+
+export type Statistic = "Dodge" | "Initiative" | "Learning" | "Load" | "Power" | "Precision" | "Stamina" | "Stratagem" | "Strength" | "Vitality";
