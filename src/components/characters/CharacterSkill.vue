@@ -15,9 +15,9 @@
           <div>{{ t("game.skill.rank") }}</div>
           <div>{{ rank }}</div>
         </div>
-        <div class="d-flex justify-content-between gap-2">
-          <div>{{ t("game.skill.talents") }}</div>
-          <div>{{ talents }}</div>
+        <div v-for="talent in talents" :key="talent.id" class="d-flex justify-content-between gap-2">
+          <div>{{ talent.name }}</div>
+          <div>{{ formatSignedInteger(1, (value) => n(value, "integer")) }}</div>
         </div>
         <div class="d-flex justify-content-between gap-2">
           <div>{{ attribute }}</div>
@@ -34,7 +34,7 @@
         </div>
       </div>
       <template #footer>
-        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="close" />
+        <TarButton icon="fas fa-xmark" :text="t('actions.close')" variant="secondary" @click="close" />
       </template>
     </TarModal>
   </div>
@@ -50,8 +50,9 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Character, CharacterModifier } from "@/types/characters";
 import type { Skill } from "@/types/game";
-import { SKILL_ATTRIBUTES, camelCase } from "@/utils/game";
 import { formatSignedInteger } from "@/utils/format";
+import { SKILL_ATTRIBUTES, camelCase } from "@/utils/game";
+import { formatTalentName } from "@/utils/talent";
 
 const { n, t } = useI18n();
 const { orderBy } = arrayUtils;
@@ -70,9 +71,29 @@ const attribute = computed<string>(() => {
 });
 const values = computed(() => props.character.skills[camelCase(props.skill)]);
 const rank = computed<string>(() => formatSignedInteger(values.value.rank, (value) => n(value, "integer")));
-const talents = computed<string>(() => formatSignedInteger(values.value.talents, (value) => n(value, "integer")));
 const attributeScore = computed<string>(() => formatSignedInteger(values.value.attribute, (value) => n(value, "integer")));
 const total = computed<string>(() => formatSignedInteger(values.value.total, (value) => n(value, "integer")));
+
+type SkillTalent = {
+  id: string;
+  name: string;
+  tier: number;
+};
+const talents = computed<SkillTalent[]>(() =>
+  orderBy(
+    orderBy(
+      props.character.talents
+        .filter((acquisition) => acquisition.talent.skill === props.skill)
+        .map((acquisition) => ({
+          id: acquisition.id,
+          name: formatTalentName(acquisition.talent, acquisition.qualifier),
+          tier: acquisition.talent.tier,
+        })),
+      "name",
+    ),
+    "tier",
+  ),
+);
 
 type LabelledCharacterModifier = CharacterModifier & {
   label: string;

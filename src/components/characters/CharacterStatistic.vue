@@ -26,7 +26,7 @@
         </div>
       </div>
       <template #footer>
-        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="close" />
+        <TarButton icon="fas fa-xmark" :text="t('actions.close')" variant="secondary" @click="close" />
       </template>
     </TarModal>
   </div>
