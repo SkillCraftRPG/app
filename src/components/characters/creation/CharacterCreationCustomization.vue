@@ -27,12 +27,9 @@
             clickable
             :customization="customization"
             :selected="customizations.has(customization.id)"
+            selection="multiple"
             @click="toggle(customization)"
-          >
-            <div class="d-flex justify-content-end mt-2">
-              <font-awesome-icon :icon="customizations.has(customization.id) ? 'far fa-square-check' : 'far fa-square'" />
-            </div>
-          </CustomizationCard>
+          />
         </div>
       </div>
     </section>

@@ -1,0 +1,19 @@
+<template>
+  <LinkCard :title="language.name" :to="{ name: 'Language', params: { id: language.id } }">
+    <template v-if="language.script" #subtitle-override>
+      <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-scroll" />&nbsp;{{ language.script.name }}</h6>
+    </template>
+    <div v-if="language.summary" class="card-text">{{ language.summary }}</div>
+    <StatusBlock :actor="language.updatedBy" class="card-text mt-2 small text-secondary" :date="language.updatedOn" relative />
+  </LinkCard>
+</template>
+
+<script setup lang="ts">
+import LinkCard from "@/components/shared/LinkCard.vue";
+import StatusBlock from "@/components/shared/StatusBlock.vue";
+import type { Language } from "@/types/languages";
+
+defineProps<{
+  language: Language;
+}>();
+</script>

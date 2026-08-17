@@ -51,7 +51,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <LanguageCard class="d-flex flex-column h-100" :language="language" :to="{ name: 'Language', params: { id: language.id } }" />
+            <LanguageLinkCard class="d-flex flex-column h-100" :language="language" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -83,7 +83,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CountSelect from "@/components/shared/CountSelect.vue";
 import CreateLanguage from "@/components/languages/CreateLanguage.vue";
-import LanguageCard from "@/components/languages/LanguageCard.vue";
+import LanguageLinkCard from "@/components/languages/LanguageLinkCard.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import ScriptSelect from "@/components/scripts/ScriptSelect.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";

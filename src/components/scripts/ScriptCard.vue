@@ -1,23 +1,52 @@
 <template>
-  <LinkableCard :clickable="clickable" :selected="selected" :title="script.name" :to="to">
+  <TarCard :class="classes">
+    <template #title-override>
+      <div class="d-flex justify-content-between align-items-start gap-3 w-100">
+        <h5 class="card-title">{{ script.name }}</h5>
+        <font-awesome-icon v-if="icon" :icon="icon" />
+      </div>
+    </template>
     <div v-if="script.summary" class="card-text">{{ script.summary }}</div>
-    <slot>
-      <StatusBlock :actor="script.updatedBy" class="card-text mt-2 small text-secondary" :date="script.updatedOn" relative />
-    </slot>
-  </LinkableCard>
+    <slot></slot>
+  </TarCard>
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from "vue-router";
+import { computed } from "vue";
+import { parsingUtils } from "logitar-js";
 
-import LinkableCard from "@/components/shared/LinkableCard.vue";
-import StatusBlock from "@/components/shared/StatusBlock.vue";
+import TarCard from "@/components/tar/TarCard.vue";
 import type { Script } from "@/types/scripts";
+import type { SelectionKind } from "@/types/shared";
 
-defineProps<{
+const { parseBoolean } = parsingUtils;
+
+const props = defineProps<{
   clickable?: boolean | string;
   script: Script;
   selected?: boolean | string;
-  to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric;
+  selection?: SelectionKind;
 }>();
+
+const isSelected = computed<boolean>(() => parseBoolean(props.selected) ?? false);
+const classes = computed<string[]>(() => {
+  const classes: string[] = [];
+  if (parseBoolean(props.clickable)) {
+    classes.push("clickable");
+  }
+  if (isSelected.value) {
+    classes.push("border-primary", "bg-primary-subtle");
+  }
+  return classes;
+});
+const icon = computed<string>(() => {
+  switch (props.selection) {
+    case "single":
+      return isSelected.value ? "far fa-circle-check" : "far fa-circle";
+    case "multiple":
+      return isSelected.value ? "far fa-square-check" : "far fa-square";
+    default:
+      return "";
+  }
+});
 </script>

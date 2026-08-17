@@ -7,11 +7,14 @@
         <p class="text-body-secondary">{{ t("characters.creation.context.caste.help") }}</p>
         <div class="row">
           <div v-for="caste in castes" :key="caste.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CasteCard :caste="caste" class="d-flex flex-column h-100" clickable :selected="caste.id === selectedCaste?.id" @click="toggleCaste(caste)">
-              <div class="d-flex justify-content-end mt-2">
-                <font-awesome-icon :icon="caste.id === selectedCaste?.id ? 'far fa-square-check' : 'far fa-square'" />
-              </div>
-            </CasteCard>
+            <CasteCard
+              :caste="caste"
+              class="d-flex flex-column h-100"
+              clickable
+              :selected="caste.id === selectedCaste?.id"
+              selection="single"
+              @click="toggleCaste(caste)"
+            />
           </div>
         </div>
       </template>
@@ -35,12 +38,9 @@
               clickable
               :education="education"
               :selected="education.id === selectedEducation?.id"
+              selection="single"
               @click="toggleEducation(education)"
-            >
-              <div class="d-flex justify-content-end mt-2">
-                <font-awesome-icon :icon="education.id === selectedEducation?.id ? 'far fa-square-check' : 'far fa-square'" />
-              </div>
-            </EducationCard>
+            />
           </div>
         </div>
       </template>

@@ -46,7 +46,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="spell in spells" :key="spell.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <SpellCard class="d-flex flex-column h-100" :spell="spell" />
+            <SpellLinkCard class="d-flex flex-column h-100" :spell="spell" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -82,7 +82,7 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";
 import SearchPagination from "@/components/shared/SearchPagination.vue";
 import SortSelect from "@/components/shared/SortSelect.vue";
-import SpellCard from "@/components/spells/SpellCard.vue";
+import SpellLinkCard from "@/components/spells/SpellLinkCard.vue";
 import SpellTierSelect from "@/components/spells/SpellTierSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import WorldBreadcrumb from "@/components/shared/WorldBreadcrumb.vue";
