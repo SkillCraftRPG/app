@@ -140,6 +140,11 @@
       "lead": "Retirer ce modificateur ?"
     },
     "title": "Modificateurs",
+    "type": {
+      "bonus": "Bonus",
+      "label": "Type",
+      "penalty": "Pénalité"
+    },
     "value": "Valeur"
   },
   "overview": "Aperçu",

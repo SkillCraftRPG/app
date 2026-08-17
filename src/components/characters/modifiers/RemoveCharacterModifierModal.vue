@@ -25,6 +25,7 @@ import TarModal from "@/components/tar/TarModal.vue";
 import type { Character, CharacterModifier } from "@/types/characters";
 import { formatSignedInteger } from "@/utils/format";
 import { removeCharacterModifier } from "@/api/characters";
+import { translateKind, translateTarget } from "@/utils/modifier";
 
 const { n, t } = useI18n();
 
@@ -46,24 +47,8 @@ const name = computed<string>(() => {
     return props.modifier.name;
   }
   const values: string[] = [];
-  switch (props.modifier.kind) {
-    case "Attribute":
-      values.push(t("game.attribute.label"));
-      values.push(`(${t(`game.attribute.options.${props.modifier.target}`)})`);
-      break;
-    case "Skill":
-      values.push(t("game.skill.label"));
-      values.push(`(${t(`game.skill.options.${props.modifier.target}`)})`);
-      break;
-    case "Speed":
-      values.push(t("game.speed.label"));
-      values.push(`(${t(`game.speed.kind.options.${props.modifier.target}`)})`);
-      break;
-    case "Statistic":
-      values.push(t("game.statistic.label"));
-      values.push(`(${t(`game.statistic.options.${props.modifier.target}`)})`);
-      break;
-  }
+  values.push(translateKind(props.modifier, t));
+  values.push(`(${translateTarget(props.modifier, t)})`);
   values.push(formatSignedInteger(props.modifier.value, n));
   return values.join(" ");
 });

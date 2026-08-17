@@ -13,10 +13,10 @@
 
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import SelectField from "@/components/forms/SelectField.vue";
-import { computed } from "vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;

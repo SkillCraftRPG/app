@@ -24,6 +24,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { CharacterModifier } from "@/types/characters";
 import { formatSignedInteger } from "@/utils/format";
+import { translateKind, translateTarget } from "@/utils/modifier";
 
 const { n, t } = useI18n();
 
@@ -48,29 +49,7 @@ const icon = computed<string>(() => {
       return "fas fa-magnifying-glass-chart";
   }
 });
-const kind = computed<string>(() => {
-  switch (props.modifier.kind) {
-    case "Attribute":
-      return t("game.attribute.label");
-    case "Skill":
-      return t("game.skill.label");
-    case "Speed":
-      return t("game.speed.label");
-    case "Statistic":
-      return t("game.statistic.label");
-  }
-});
-const target = computed<string>(() => {
-  switch (props.modifier.kind) {
-    case "Attribute":
-      return t(`game.attribute.options.${props.modifier.target}`);
-    case "Skill":
-      return t(`game.skill.options.${props.modifier.target}`);
-    case "Speed":
-      return t(`game.speed.kind.options.${props.modifier.target}`);
-    case "Statistic":
-      return t(`game.statistic.options.${props.modifier.target}`);
-  }
-});
+const kind = computed<string>(() => translateKind(props.modifier, t));
+const target = computed<string>(() => translateTarget(props.modifier, t));
 const value = computed<string>(() => formatSignedInteger(props.modifier.value, (value) => n(value, "integer")));
 </script>

@@ -14,10 +14,10 @@
             <div class="small text-body-secondary">{{ kindText }}</div>
             <div class="fw-semibold">{{ targetText }}</div>
           </div>
-          <AttributeField v-else-if="kind === 'Attribute'" class="mb-3" required v-model="target" />
-          <SkillField v-else-if="kind === 'Skill'" class="mb-3" required v-model="target" />
+          <SkillField v-if="kind === 'Skill'" class="mb-3" required v-model="target" />
           <SpeedKindField v-else-if="kind === 'Speed'" class="mb-3" required v-model="target" />
           <StatisticField v-else-if="kind === 'Statistic'" class="mb-3" required v-model="target" />
+          <AttributeField v-else :disabled="kind !== 'Attribute'" class="mb-3" required v-model="target" />
         </div>
         <div class="col-md-6">
           <NameField class="mb-3" v-model="name" />
@@ -51,6 +51,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Character, CharacterModifier, CharacterModifierKind, CreateOrReplaceCharacterModifierPayload } from "@/types/characters";
 import { createCharacterModifier, replaceCharacterModifier } from "@/api/characters";
+import { translateKind, translateTarget } from "@/utils/modifier";
 import { useForm } from "@/forms";
 
 const { t } = useI18n();
@@ -77,34 +78,8 @@ const submitIcon = computed<string>(() => (props.modifier ? "fas fa-floppy-disk"
 const submitText = computed<string>(() => t(props.modifier ? "actions.save" : "actions.add"));
 const title = computed<string>(() => t(props.modifier ? "characters.modifiers.edit" : "characters.modifiers.create"));
 
-const kindText = computed<string | undefined>(() => {
-  if (props.modifier) {
-    switch (props.modifier.kind) {
-      case "Attribute":
-        return t("game.attribute.label");
-      case "Skill":
-        return t("game.skill.label");
-      case "Speed":
-        return t("game.speed.label");
-      case "Statistic":
-        return t("game.statistic.label");
-    }
-  }
-});
-const targetText = computed<string | undefined>(() => {
-  if (props.modifier) {
-    switch (props.modifier.kind) {
-      case "Attribute":
-        return t(`game.attribute.options.${props.modifier.target}`);
-      case "Skill":
-        return t(`game.skill.options.${props.modifier.target}`);
-      case "Speed":
-        return t(`game.speed.kind.options.${props.modifier.target}`);
-      case "Statistic":
-        return t(`game.statistic.options.${props.modifier.target}`);
-    }
-  }
-});
+const kindText = computed<string | undefined>(() => (props.modifier ? translateKind(props.modifier, t) : undefined));
+const targetText = computed<string | undefined>(() => (props.modifier ? translateTarget(props.modifier, t) : undefined));
 
 const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
