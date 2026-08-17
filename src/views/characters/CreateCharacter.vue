@@ -62,7 +62,7 @@ const progress = computed<number>(() => Math.floor(character.step * 100) / 9);
 const title = computed<string>(() => t("characters.creation.title"));
 
 function abandon(): void {
-  character.abandon();
+  character.reset();
   router.push({ name: "Characters" });
 }
 
@@ -103,7 +103,7 @@ async function complete(): Promise<void> {
             : undefined,
       };
       const result: Character = await createCharacter(payload);
-      character.abandon();
+      character.reset();
       events.push("created");
       router.push({ name: "Character", params: { id: result.id } });
     } catch (e: unknown) {
