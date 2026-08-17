@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AttributeField from "@/components/game/AttributeField.vue";
@@ -106,7 +106,7 @@ const targetText = computed<string | undefined>(() => {
   }
 });
 
-const { handleSubmit } = useForm();
+const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
@@ -122,7 +122,7 @@ async function submit(): Promise<void> {
         ? await replaceCharacterModifier(props.character.id, props.modifier.id, payload)
         : await createCharacterModifier(props.character.id, payload);
       emit("updated", character);
-      cancel();
+      modal.value?.hide();
     } catch (e: unknown) {
       emit("error", e);
     } finally {
@@ -131,17 +131,8 @@ async function submit(): Promise<void> {
   }
 }
 
-function setModel(modifier: CharacterModifier | undefined): void {
-  kind.value = modifier?.kind ?? "";
-  target.value = modifier?.target ?? "";
-  value.value = modifier?.value ?? 0;
-  name.value = modifier?.name ?? "";
-  notes.value = modifier?.notes ?? "";
-}
-
 function cancel(): void {
-  setModel(props.modifier);
-  // TODO(fpion): reset or reinitialize
+  reset();
   modal.value?.hide();
 }
 
@@ -150,7 +141,18 @@ function updateKind(value: string): void {
   target.value = "";
 }
 
-watch(() => props.modifier, setModel, { deep: true, immediate: true });
+watch(
+  () => props.modifier,
+  (modifier) => {
+    kind.value = modifier?.kind ?? "";
+    target.value = modifier?.target ?? "";
+    value.value = modifier?.value ?? 0;
+    name.value = modifier?.name ?? "";
+    notes.value = modifier?.notes ?? "";
+    nextTick(reinitialize);
+  },
+  { deep: true, immediate: true },
+);
 
 function open(): void {
   modal.value?.show();
