@@ -1,5 +1,6 @@
 {
   "attribute": {
+    "format": "Attribut : {name}",
     "label": "Attribut",
     "mental": "Mental",
     "options": {
@@ -11,6 +12,8 @@
     },
     "physical": "Physique",
     "placeholder": "Sélectionnez un attribut",
+    "progression": "Progression",
+    "starting": "Création",
     "universal": "Universel"
   },
   "feature": {

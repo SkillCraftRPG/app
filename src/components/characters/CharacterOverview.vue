@@ -31,7 +31,7 @@
     </div>
     <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
     <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
-    <CharacterAttributes :attributes="character.attributes" />
+    <CharacterAttributes :character="character" />
     <div class="fs-5 mb-1">{{ t("characters.statistics.title") }}</div>
     <CharacterStatistics :statistics="character.statistics" />
     <div class="fs-5 mb-1">{{ t("characters.skills.title") }}</div>

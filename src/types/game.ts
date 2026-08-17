@@ -1,3 +1,5 @@
+export type Attribute = "Dexterity" | "Health" | "Intellect" | "Senses" | "Vigor";
+
 export type SizeCategory = "Diminutive" | "Tiny" | "Small" | "Medium" | "Large" | "Huge" | "Gargantuan" | "Colossal";
 
 export type Skill =
