@@ -73,6 +73,31 @@ export const STATISTIC_ATTRIBUTES: Record<Statistic, Attribute> = {
   Vitality: "Health",
 };
 
+export function calculateStatistic(statistic: Statistic, attributes: Record<Uncapitalize<Attribute>, number>): number {
+  switch (statistic) {
+    case "Dodge":
+      return 10 + attributes.dexterity;
+    case "Initiative":
+      return 2 * attributes.senses;
+    case "Learning":
+      return Math.max(5 + attributes.intellect, 5);
+    case "Load":
+      return 10 * (5 + attributes.vigor);
+    case "Power":
+      return 5 + attributes.senses * 2;
+    case "Precision":
+      return 5 + attributes.dexterity * 2;
+    case "Stamina":
+      return 25 + attributes.health * 5;
+    case "Stratagem":
+      return 5 + attributes.intellect * 2;
+    case "Strength":
+      return 5 + attributes.vigor * 2;
+    case "Vitality":
+      return 25 + attributes.health * 5;
+  }
+}
+
 export function camelCase<T extends string>(value: T): Uncapitalize<T> {
   return `${value.charAt(0).toLowerCase()}${value.slice(1)}` as Uncapitalize<T>;
 }

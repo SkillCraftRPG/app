@@ -20,15 +20,13 @@
       </div>
       <div v-if="target.summary" class="fst-italic text-body-secondary mb-3">{{ target.summary }}</div>
       <MarkdownContent v-if="target.content" class="mb-3" :text="target.content"></MarkdownContent>
-      <template v-if="hasSpeeds">
+      <template v-if="speeds.length">
         <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
         <div class="row text-center">
-          <template v-for="kind in SPEED_KINDS" :key="kind">
-            <div v-if="target.speeds[camelCase(kind)]" class="col-4 col-md-fifth mb-3">
-              <div class="fw-bold">{{ t(kind === "Fly" && target.speeds.hover ? "game.speed.hover" : `game.speed.kind.options.${kind}`) }}</div>
-              <div>{{ n(target.speeds[camelCase(kind)], "integer") }}</div>
-            </div>
-          </template>
+          <div v-for="speed in speeds" :key="speed.kind" class="col-4 col-md-fifth mb-3">
+            <div class="fw-bold">{{ speed.name }}</div>
+            <div>{{ n(speed.value, "integer") }}</div>
+          </div>
         </div>
       </template>
       <template v-if="features.length">
@@ -55,6 +53,7 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Feature } from "@/types/features";
 import type { Lineage } from "@/types/lineages";
+import type { SpeedKind } from "@/types/game";
 import { SPEED_KINDS, camelCase } from "@/utils/game";
 
 const { orderBy } = arrayUtils;
@@ -71,7 +70,27 @@ const ethnicity = computed<Lineage | undefined>(() => (props.lineage.parent ? pr
 const species = computed<Lineage>(() => props.lineage.parent ?? props.lineage);
 const target = computed<Lineage>(() => (selected.value === "ethnicity" && ethnicity.value ? ethnicity.value : species.value));
 const features = computed<Feature[]>(() => orderBy(target.value.features, "name"));
-const hasSpeeds = computed<boolean>(() => SPEED_KINDS.some((kind) => Boolean(target.value.speeds[camelCase(kind)])));
+
+type SpeedData = {
+  kind: SpeedKind;
+  name: string;
+  value: number;
+};
+const speeds = computed<SpeedData[]>(() =>
+  SPEED_KINDS.flatMap((kind) => {
+    const value = target.value.speeds[camelCase(kind)];
+    if (!value) {
+      return [];
+    }
+    return [
+      {
+        kind,
+        name: t(kind === "Fly" && target.value.speeds.hover ? "game.speed.hover" : `game.speed.kind.options.${kind}`),
+        value,
+      },
+    ];
+  }),
+);
 
 function close(): void {
   modal.value?.hide();

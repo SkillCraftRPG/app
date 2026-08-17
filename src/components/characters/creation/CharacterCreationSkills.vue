@@ -62,7 +62,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import type { Attribute, Skill } from "@/types/game";
 import type { SkillRankPayload } from "@/types/characters";
-import { ATTRIBUTES, SKILLS_BY_ATTRIBUTE, camelCase } from "@/utils/game";
+import { ATTRIBUTES, SKILLS_BY_ATTRIBUTE, calculateStatistic, camelCase } from "@/utils/game";
 import { formatSignedInteger } from "@/utils/format";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
@@ -93,7 +93,7 @@ const talents = computed<Map<Skill, number>>(() => {
   return talents;
 });
 
-const learning = computed<number>(() => Math.max(5 + character.creation.attributes.intellect, 5));
+const learning = computed<number>(() => calculateStatistic("Learning", character.creation.attributes));
 const spent = computed<number>(
   () => [...ranks.value.values()].reduce((sum, rank) => sum + rank, 0) - [...talents.value.values()].reduce((sum, count) => sum + count, 0),
 );

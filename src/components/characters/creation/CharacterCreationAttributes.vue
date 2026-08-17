@@ -41,7 +41,7 @@ import InputField from "@/components/forms/InputField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Attribute, Statistic } from "@/types/game";
 import type { StartingAttributes } from "@/types/characters";
-import { ATTRIBUTES, STATISTICS_BY_ATTRIBUTE, camelCase } from "@/utils/game";
+import { ATTRIBUTES, STATISTICS_BY_ATTRIBUTE, calculateStatistic, camelCase } from "@/utils/game";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
@@ -55,31 +55,6 @@ defineEmits<{
 }>();
 
 const scores = reactive<StartingAttributes>(Object.fromEntries(ATTRIBUTES.map((key) => [camelCase(key), 0])) as StartingAttributes);
-
-function computeStatistic(statistic: Statistic): number {
-  switch (statistic) {
-    case "Dodge":
-      return 10 + scores.dexterity;
-    case "Initiative":
-      return 2 * scores.senses;
-    case "Learning":
-      return Math.max(5 + scores.intellect, 5);
-    case "Load":
-      return 10 * (5 + scores.vigor);
-    case "Power":
-      return 5 + scores.senses * 2;
-    case "Precision":
-      return 5 + scores.dexterity * 2;
-    case "Stamina":
-      return 25 + scores.health * 5;
-    case "Stratagem":
-      return 5 + scores.intellect * 2;
-    case "Strength":
-      return 5 + scores.vigor * 2;
-    case "Vitality":
-      return 25 + scores.health * 5;
-  }
-}
 
 type StatisticData = {
   key: Statistic;
@@ -102,7 +77,7 @@ const attributes = computed<AttributeData[]>(() =>
         STATISTICS_BY_ATTRIBUTE[key].map((statistic) => ({
           key: statistic,
           name: t(`game.statistic.options.${statistic}`),
-          value: computeStatistic(statistic),
+          value: calculateStatistic(statistic, scores),
         })),
         "name",
       ),
