@@ -9,7 +9,7 @@
       </div>
       <div class="fs-4">{{ value }}</div>
     </div>
-    <div class="d-flex justify-content-end gap-2">
+    <div class="d-flex justify-content-end gap-2 mt-2">
       <TarButton icon="fas fa-edit" outline :text="t('actions.edit')" @click="$emit('edit')" />
       <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="$emit('remove')" />
     </div>
