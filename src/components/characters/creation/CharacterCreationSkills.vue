@@ -5,15 +5,15 @@
     <div class="row text-center mb-3">
       <div class="col">
         <div class="fw-bold">{{ t("game.statistic.options.Learning") }}</div>
-        <div>{{ learning }}</div>
+        <div>{{ n(learning, "integer") }}</div>
       </div>
       <div class="col">
         <div class="fw-bold">{{ t("characters.skills.spent") }}</div>
-        <div>{{ spent }}</div>
+        <div>{{ n(spent, "integer") }}</div>
       </div>
       <div class="col">
         <div class="fw-bold">{{ t("characters.skills.remaining") }}</div>
-        <div>{{ remaining }}</div>
+        <div>{{ n(remaining, "integer") }}</div>
       </div>
     </div>
     <TarCard v-for="attribute in attributes" :key="attribute.key" class="mb-3">
@@ -68,7 +68,7 @@ import { useForm } from "@/forms";
 const character = useCharacterStore();
 const { orderBy } = arrayUtils;
 const { parseNumber } = parsingUtils;
-const { t } = useI18n();
+const { n, t } = useI18n();
 
 defineEmits<{
   (e: "abandon"): void;
@@ -134,7 +134,8 @@ function getScore(key: string): string {
     return "";
   }
   const score: number = scores.value.get(key) ?? 0;
-  return score > 0 ? `+${score}` : score.toString().replace("-", "−");
+  const formatted: string = n(score, "integer");
+  return score > 0 ? `+${formatted}` : formatted.replace("-", "−");
 }
 
 type AttributeData = {

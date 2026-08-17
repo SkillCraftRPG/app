@@ -44,6 +44,11 @@ export default createI18n<[MessageSchema], "en" | "fr">({
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
       },
+      integer: {
+        style: "decimal",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      },
       itemPrice: {
         style: "decimal",
         minimumFractionDigits: 2,
@@ -65,6 +70,11 @@ export default createI18n<[MessageSchema], "en" | "fr">({
         style: "decimal",
         minimumFractionDigits: 1,
         maximumFractionDigits: 1,
+      },
+      integer: {
+        style: "decimal",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       },
       itemPrice: {
         style: "decimal",

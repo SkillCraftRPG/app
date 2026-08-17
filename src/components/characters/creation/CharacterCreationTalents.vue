@@ -171,6 +171,7 @@ function acquire(acquisition: CharacterTalent): void {
   } else {
     acquisitions.value.splice(index.value, 1, acquisition);
   }
+  touched.value = true;
 }
 
 function add(): void {
@@ -185,6 +186,7 @@ function edit(value: number): void {
 
 function forget(): void {
   acquisitions.value.splice(index.value, 1);
+  touched.value = true;
 }
 
 function remove(value: number): void {

@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="col-md-6">
-          <HeightField class="mb-3" :roll="heightRoll" v-model="height">
+          <HeightField class="mb-3" :roll="heightRoll" unit="cm" v-model="height">
             <template #append>
               <TarButton v-if="heightRoll" icon="fas fa-dice" :text="heightRoll" @click="randomizeHeight" />
             </template>
@@ -55,7 +55,7 @@
         </div>
         <div class="col-md-4">
           <div class="mb-3">
-            <div class="fw-bold">{{ t("characters.physical.weight") }}</div>
+            <div class="fw-bold">{{ t("characters.physical.weight.calculated") }}</div>
             <div>{{ n(calculateWeight(height, bodyMassIndex), "characterWeight") }}&nbsp;{{ t("game.unit.kg") }}</div>
           </div>
         </div>
@@ -80,7 +80,7 @@
         <div class="col-md-6">
           <AgeField class="mb-3" v-model="age">
             <template #append>
-              <TarButton v-if="ageLimits.length" icon="fas fa-dice" :text="ageLimits.join('–')" @click="randomizeAge" />
+              <TarButton v-if="ageLimits.length" icon="fas fa-dice" :text="ageLimits.map((limit) => n(limit, 'integer')).join('–')" @click="randomizeAge" />
             </template>
           </AgeField>
         </div>
@@ -133,8 +133,8 @@ import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
 const character = useCharacterStore();
-const { parseNumber } = parsingUtils;
 const { n, t } = useI18n();
+const { parseNumber } = parsingUtils;
 
 defineEmits<{
   (e: "abandon"): void;

@@ -1,16 +1,25 @@
 {
   "attribute": {
+    "mental": "Mental",
     "options": {
       "Dexterity": "Adresse",
       "Health": "Santé",
       "Intellect": "Intellect",
       "Senses": "Sens",
       "Vigor": "Vigueur"
-    }
+    },
+    "physical": "Physique",
+    "universal": "Universel"
   },
   "feature": {
+    "format": "Particularité : {name}",
     "label": "Particularité",
     "title": "Particularités"
+  },
+  "hope": "Espérance",
+  "rest": {
+    "long": "Sommeil",
+    "short": "Halte"
   },
   "size": {
     "category": {
@@ -85,6 +94,7 @@
   },
   "unit": {
     "cm": "cm",
-    "kg": "kg"
+    "kg": "kg",
+    "m": "m"
   }
 }

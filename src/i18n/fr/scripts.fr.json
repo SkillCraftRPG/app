@@ -4,6 +4,7 @@
     "help": "Vous pouvez maintenant compléter ses informations.",
     "lead": "L’alphabet a été créé."
   },
+  "format": "Alphabet : {name}",
   "import": {
     "empty": "Aucun alphabet disponible pour l’importation.",
     "help": "Sélectionnez les alphabets à importer.",

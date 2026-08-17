@@ -24,6 +24,7 @@
       </section>
       <section>
         <div class="row">
+          <!-- TODO(fpion): more filters -->
           <div class="col-md-4">
             <SearchInput class="mb-3" :model-value="search" @update:model-value="setQuery('search', $event)" />
           </div>
@@ -45,7 +46,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="character in characters" :key="character.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <!-- <CharacterCard class="d-flex flex-column h-100" :character="character" :to="{ name: 'Character', params: { id: character.id } }" /> -->
+            <CharacterLinkCard class="d-flex flex-column h-100" :character="character" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />
@@ -75,6 +76,7 @@ import { computed, inject, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
+import CharacterLinkCard from "@/components/characters/CharacterLinkCard.vue";
 import CountSelect from "@/components/shared/CountSelect.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import SearchInput from "@/components/shared/SearchInput.vue";

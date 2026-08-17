@@ -1,16 +1,25 @@
 {
   "attribute": {
+    "mental": "Mental",
     "options": {
       "Dexterity": "Dexterity",
       "Health": "Health",
       "Intellect": "Intellect",
       "Senses": "Senses",
       "Vigor": "Vigor"
-    }
+    },
+    "physical": "Physical",
+    "universal": "Universal"
   },
   "feature": {
+    "format": "Feature: {name}",
     "label": "Feature",
     "title": "Features"
+  },
+  "hope": "Hope",
+  "rest": {
+    "long": "Sleep",
+    "short": "Break"
   },
   "size": {
     "category": {
@@ -85,6 +94,7 @@
   },
   "unit": {
     "cm": "cm",
-    "kg": "kg"
+    "kg": "kg",
+    "m": "m"
   }
 }

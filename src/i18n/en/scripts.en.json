@@ -4,6 +4,7 @@
     "help": "You can now complete its details.",
     "lead": "The script was created."
   },
+  "format": "Script: {name}",
   "import": {
     "empty": "No scripts are available for import.",
     "help": "Select the scripts to import.",

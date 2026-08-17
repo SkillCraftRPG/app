@@ -18,7 +18,7 @@
       </div>
       <div v-for="statistic in attribute.statistics" :key="statistic.key" class="col">
         <div class="fw-bold">{{ statistic.name }}</div>
-        <div>{{ statistic.value }}</div>
+        <div>{{ n(statistic.value, "integer") }}</div>
       </div>
     </div>
     <p v-if="!canSubmit" class="text-danger">{{ t("characters.attributes.invalid", { total }) }}</p>
@@ -43,9 +43,9 @@ import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
 const character = useCharacterStore();
+const { n, t } = useI18n();
 const { orderBy } = arrayUtils;
 const { parseNumber } = parsingUtils;
-const { t } = useI18n();
 
 defineEmits<{
   (e: "abandon"): void;

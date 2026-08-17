@@ -40,15 +40,15 @@ export const useCharacterStore = defineStore(
     const creation = ref<CharacterCreation>(defaultCreation());
     const step = ref<CharacterCreationStep>(CharacterCreationStep.Ascendancy);
 
-    function abandon(): void {
-      creation.value = defaultCreation();
-      step.value = CharacterCreationStep.Ascendancy;
-    }
-
     function goBack(): void {
       if (step.value !== CharacterCreationStep.Ascendancy) {
         step.value--;
       }
+    }
+
+    function reset(): void {
+      creation.value = defaultCreation();
+      step.value = CharacterCreationStep.Ascendancy;
     }
 
     function saveAppearance(appearance: CharacterAppearanceDetail): void {
@@ -110,8 +110,8 @@ export const useCharacterStore = defineStore(
     return {
       creation,
       step,
-      abandon,
       goBack,
+      reset,
       saveAppearance,
       saveAscendancy,
       saveAttributes,

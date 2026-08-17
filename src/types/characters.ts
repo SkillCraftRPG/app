@@ -1,4 +1,4 @@
-import type { Actor, Aggregate } from "./api";
+import type { Actor, Aggregate, Optional } from "./api";
 import type { Caste } from "./castes";
 import type { Customization } from "./customizations";
 import type { Education } from "./educations";
@@ -160,6 +160,7 @@ export type CharacterSkill = {
   talents: number;
   attribute: number;
   bonus: number;
+  total: number;
 };
 
 export type CharacterSkills = {
@@ -287,7 +288,9 @@ export type CreateCharacterPayload = {
 export type DominantHand = "Left" | "Right";
 
 export type SearchCharactersPayload = SearchPayload & {
-  // TODO(fpion): complete
+  lineageId?: string | null;
+  casteId?: string | null;
+  educationId?: string | null;
   sort: CharacterSortOption[];
 };
 
@@ -307,4 +310,13 @@ export type StartingAttributes = {
 export type StartingWealth = {
   currencyId: string;
   quantity: number;
+};
+
+export type UpdateCharacterPayload = {
+  name?: string;
+  dominantHand?: Optional<DominantHand> | null;
+  appearance?: CharacterAppearance | null;
+  alignment?: Optional<Alignment> | null;
+  personality?: CharacterPersonality | null;
+  background?: Optional<string> | null;
 };

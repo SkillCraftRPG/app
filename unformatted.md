@@ -1,0 +1,11 @@
+| Fichier                                       | Ligne |
+| --------------------------------------------- | ----: |
+| `src/components/spells/SpellTierField.vue`    |    43 |
+| `src/components/spells/SpellTierSelect.vue`   |    42 |
+| `src/components/talents/TalentTierField.vue`  |    43 |
+| `src/components/talents/TalentTierSelect.vue` |    47 |
+| `src/components/shared/CountSelect.vue`       |    35 |
+| `src/components/tar/TarPagination.vue`        |    31 |
+| `src/components/tar/TarPagination.vue`        |    32 |
+| `src/components/import/ImportProgress.vue`    |    12 |
+| `src/components/layout/LayoutFooter.vue`      |     5 |

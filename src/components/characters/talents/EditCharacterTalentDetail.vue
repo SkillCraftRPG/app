@@ -8,11 +8,11 @@
     <section class="row mb-3 text-center">
       <div class="col">
         <div class="fw-bold">{{ t("characters.talents.cost.base") }}</div>
-        <div>{{ talent.cost }}</div>
+        <div>{{ n(talent.cost, "integer") }}</div>
       </div>
       <div class="col">
         <div class="fw-bold">{{ t("characters.talents.cost.effective") }}</div>
-        <div>{{ effectiveCost }}</div>
+        <div>{{ n(effectiveCost, "integer") }}</div>
       </div>
     </section>
     <section>
@@ -48,7 +48,7 @@ import type { CharacterTalentContext, CharacterTalentDetail, CharacterTalentDisc
 import type { Talent } from "@/types/talents";
 import { calculateCost } from "@/utils/talent";
 
-const { t } = useI18n();
+const { n, t } = useI18n();
 
 const props = defineProps<{
   context: CharacterTalentContext;
