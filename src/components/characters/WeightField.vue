@@ -35,9 +35,9 @@ withDefaults(
   }>(),
   {
     id: "weight",
-    max: 9999,
+    max: 999.9,
     min: 0,
-    step: 1,
+    step: 0.1,
   },
 );
 
