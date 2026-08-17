@@ -2,7 +2,7 @@
   <div>
     <TarButton icon="fas fa-arrow-right-from-bracket" :text="t('account.signOut.all.submit')" variant="danger" @click="open" />
     <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('account.signOut.all.lead')">
-      <p>{{ t("account.signOut.all.help") }}</p>
+      <p class="mb-0">{{ t("account.signOut.all.help") }}</p>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
         <TarButton

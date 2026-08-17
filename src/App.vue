@@ -88,6 +88,4 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", update);
   window.removeEventListener("scroll", update);
 });
-
-// TODO(fpion): modals should have mb-0 on their unique paragraph
 </script>
