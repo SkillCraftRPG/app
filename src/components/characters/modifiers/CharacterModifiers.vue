@@ -19,7 +19,7 @@
     </div>
     <div v-if="modifiers.length" class="row">
       <div v-for="modifier in modifiers" :key="modifier.id" class="col-md-6 col-lg-4 col-xl-3">
-        <CharacterModifier class="mb-3" :modifier="modifier" @edit="edit(modifier)" />
+        <CharacterModifier class="mb-3" :modifier="modifier" @edit="edit(modifier)" @remove="remove(modifier)" />
       </div>
     </div>
     <p v-else>{{ t("characters.modifiers.empty") }}</p>
@@ -31,16 +31,25 @@
       @error="$emit('error', $event)"
       @updated="$emit('updated', $event)"
     />
+    <RemoveCharacterModifierModal
+      v-if="modifier"
+      :character="character"
+      :modifier="modifier"
+      ref="removeModal"
+      @error="$emit('error', $event)"
+      @updated="$emit('updated', $event)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterModifier from "./CharacterModifier.vue";
 import EditCharacterModifierModal from "./EditCharacterModifierModal.vue";
+import RemoveCharacterModifierModal from "./RemoveCharacterModifierModal.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Character, CharacterModifier as CharacterModifierT } from "@/types/characters";
 
@@ -57,6 +66,7 @@ defineEmits<{
 }>();
 
 const editModal = ref<InstanceType<typeof EditCharacterModifierModal> | null>(null);
+const removeModal = ref<InstanceType<typeof RemoveCharacterModifierModal> | null>(null);
 const modifier = ref<CharacterModifierT>();
 
 const modifiers = computed<CharacterModifierT[]>(() => orderBy(props.character.modifiers, "name")); // TODO(fpion): sort key
@@ -68,5 +78,9 @@ function add(): void {
 function edit(value: CharacterModifierT): void {
   modifier.value = value;
   editModal.value?.open();
+}
+function remove(value: CharacterModifierT): void {
+  modifier.value = value;
+  nextTick(() => removeModal.value?.open());
 }
 </script>

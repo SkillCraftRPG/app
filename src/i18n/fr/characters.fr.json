@@ -135,6 +135,10 @@
       "label": "Cible",
       "placeholder": "Sélectionnez une cible"
     },
+    "remove": {
+      "help": "Voulez-vous retirer le modificateur <strong>{name}</strong> du personnage ? Cette action supprimera son effet.",
+      "lead": "Retirer ce modificateur ?"
+    },
     "title": "Modificateurs",
     "value": "Valeur"
   },

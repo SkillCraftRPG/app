@@ -1,6 +1,6 @@
 <template>
   <TarCard>
-    <div class="card-text d-flex justify-content-between align-items-center gap-2 mb-3">
+    <div class="card-text d-flex justify-content-between align-items-center gap-2">
       <div>
         <div class="fw-semibold">{{ modifier.name ?? target }}</div>
         <div class="text-body-secondary">
@@ -9,8 +9,9 @@
       </div>
       <div class="fs-4">{{ value }}</div>
     </div>
-    <div class="text-end">
+    <div class="d-flex justify-content-end gap-2">
       <TarButton icon="fas fa-edit" outline :text="t('actions.edit')" @click="$emit('edit')" />
+      <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="$emit('remove')" />
     </div>
   </TarCard>
 </template>
@@ -32,6 +33,7 @@ const props = defineProps<{
 
 defineEmits<{
   (e: "edit"): void;
+  (e: "remove"): void;
 }>();
 
 const icon = computed<string>(() => {
