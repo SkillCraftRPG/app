@@ -1,6 +1,6 @@
 <template>
   <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('account.profile.complete.lead')">
-    <p v-html="t('account.profile.complete.help')"></p>
+    <p class="mb-0" v-html="t('account.profile.complete.help')"></p>
     <template #footer>
       <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
       <TarButton icon="fas fa-check" :text="t('actions.complete')" @click="complete" />
