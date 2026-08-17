@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <div v-for="score in scores" :key="score.key" class="col-6 col-md-4 col-lg-fifth">
-      <CharacterAttribute :attribute="score.attribute" :category="score.category" class="mb-3" :value="score.value" />
+    <div v-for="attribute in attributes" :key="attribute.key" class="col-6 col-md-4 col-lg-fifth">
+      <CharacterAttribute class="mb-3" :attribute="attribute.key" :character="character" :name="attribute.name" />
     </div>
   </div>
 </template>
@@ -12,56 +12,25 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterAttribute from "./CharacterAttribute.vue";
-import type { CharacterAttributes } from "@/types/characters";
+import type { Attribute } from "@/types/game";
+import type { Character } from "@/types/characters";
+import { ATTRIBUTES } from "@/utils/game";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
 
-const props = defineProps<{
-  attributes: CharacterAttributes;
+defineProps<{
+  character: Character;
 }>();
 
-type AttributeScore = {
-  key: string;
-  attribute: string;
-  category: string;
-  value: number;
+type AttributeData = {
+  key: Attribute;
+  name: string;
 };
-const scores = computed<AttributeScore[]>(() =>
+const attributes = computed<AttributeData[]>(() =>
   orderBy(
-    [
-      {
-        key: "dexterity",
-        attribute: t("game.attribute.options.Dexterity"),
-        category: t("game.attribute.physical"),
-        value: props.attributes.dexterity.total,
-      },
-      {
-        key: "health",
-        attribute: t("game.attribute.options.Health"),
-        category: t("game.attribute.universal"),
-        value: props.attributes.health.total,
-      },
-      {
-        key: "intellect",
-        attribute: t("game.attribute.options.Intellect"),
-        category: t("game.attribute.mental"),
-        value: props.attributes.intellect.total,
-      },
-      {
-        key: "senses",
-        attribute: t("game.attribute.options.Senses"),
-        category: t("game.attribute.mental"),
-        value: props.attributes.senses.total,
-      },
-      {
-        key: "vigor",
-        attribute: t("game.attribute.options.Vigor"),
-        category: t("game.attribute.physical"),
-        value: props.attributes.vigor.total,
-      },
-    ],
-    "attribute",
+    ATTRIBUTES.map((key) => ({ key, name: t(`game.attribute.options.${key}`) })),
+    "name",
   ),
 );
 </script>

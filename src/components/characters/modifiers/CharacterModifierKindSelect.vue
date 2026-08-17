@@ -19,7 +19,7 @@ import TarSelect from "@/components/tar/TarSelect.vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
-const { rt, t, tm } = useI18n();
+const { t } = useI18n();
 
 withDefaults(
   defineProps<{
@@ -29,8 +29,8 @@ withDefaults(
     placeholder?: string;
   }>(),
   {
-    id: "category",
-    label: "items.category.label",
+    id: "kind",
+    label: "characters.modifiers.kind.label",
     placeholder: "all",
   },
 );
@@ -41,7 +41,12 @@ defineEmits<{
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value })),
+    [
+      { value: "Attribute", text: t("game.attribute.label") },
+      { value: "Skill", text: t("game.skill.label") },
+      { value: "Speed", text: t("game.speed.label") },
+      { value: "Statistic", text: t("game.statistic.label") },
+    ],
     "text",
   ),
 );

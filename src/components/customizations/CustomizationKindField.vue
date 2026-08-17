@@ -12,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import SelectField from "@/components/forms/SelectField.vue";
-import { computed } from "vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { t } = useI18n();

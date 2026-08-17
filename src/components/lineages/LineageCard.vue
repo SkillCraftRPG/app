@@ -7,9 +7,7 @@
       </div>
     </template>
     <template #subtitle-override>
-      <h6 class="card-subtitle mb-2 text-body-secondary">
-        <font-awesome-icon icon="fas fa-ruler-vertical" aria-hidden="true" />&nbsp;{{ sizeText }}
-      </h6>
+      <h6 class="card-subtitle mb-2 text-body-secondary"><font-awesome-icon icon="fas fa-ruler-vertical" aria-hidden="true" />&nbsp;{{ sizeText }}</h6>
     </template>
     <div v-if="lineage.summary" class="card-text">{{ lineage.summary }}</div>
     <slot></slot>

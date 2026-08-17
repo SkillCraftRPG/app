@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TarSelect from "@/components/tar/TarSelect.vue";
-import { computed } from "vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { t } = useI18n();

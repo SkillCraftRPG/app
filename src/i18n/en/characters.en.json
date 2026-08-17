@@ -127,6 +127,28 @@
   "experience": "Experience",
   "intoxication": "Intoxication",
   "level": "Level",
+  "modifiers": {
+    "create": "Create a modifier",
+    "edit": "Edit a modifier",
+    "empty": "This character does not have any modifiers.",
+    "kind": {
+      "label": "Target",
+      "placeholder": "Select a target"
+    },
+    "label": "Modifier",
+    "remove": {
+      "help": "Do you want to remove the <strong>{name}</strong> modifier from the character? This action will remove its effect.",
+      "lead": "Remove this modifier?"
+    },
+    "title": "Modifiers",
+    "type": {
+      "bonus": "Bonus",
+      "label": "Type",
+      "penalty": "Penalty"
+    },
+    "value": "Value"
+  },
+  "overview": "Overview",
   "personality": {
     "detail": {
       "flaws": "Flaws",
@@ -150,6 +172,7 @@
       "label": "Weight"
     }
   },
+  "profile": "Profile",
   "skills": {
     "help": "Distribute your Learning points among the skills. Each talent associated with a skill reduces the cost of its ranks by 1.",
     "invalid": "The number of points spent must equal your Learning ({learning}). Current total: {spent}.",
@@ -167,10 +190,6 @@
   },
   "statistics": {
     "title": "Statistics"
-  },
-  "tabs": {
-    "overview": "Overview",
-    "profile": "Profile"
   },
   "talents": {
     "add": "Add talent",

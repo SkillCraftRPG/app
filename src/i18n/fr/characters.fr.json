@@ -127,6 +127,28 @@
   "experience": "Expérience",
   "intoxication": "Intoxication",
   "level": "Niveau",
+  "modifiers": {
+    "create": "Créer un modificateur",
+    "edit": "Modifier un modificateur",
+    "empty": "Ce personnage ne possède aucun modificateur.",
+    "kind": {
+      "label": "Cible",
+      "placeholder": "Sélectionnez une cible"
+    },
+    "label": "Modificateur",
+    "remove": {
+      "help": "Voulez-vous retirer le modificateur <strong>{name}</strong> du personnage ? Cette action supprimera son effet.",
+      "lead": "Retirer ce modificateur ?"
+    },
+    "title": "Modificateurs",
+    "type": {
+      "bonus": "Bonus",
+      "label": "Type",
+      "penalty": "Pénalité"
+    },
+    "value": "Valeur"
+  },
+  "overview": "Aperçu",
   "personality": {
     "detail": {
       "flaws": "Défauts",
@@ -150,6 +172,7 @@
       "label": "Poids"
     }
   },
+  "profile": "Profil",
   "skills": {
     "help": "Répartissez vos points d’Apprentissage entre les compétences. Chaque talent associé à une compétence réduit de 1 le coût de ses rangs.",
     "invalid": "Le nombre de points dépensés doit être inférieur ou égal à votre Apprentissage ({learning}). Total actuel : {spent}.",
@@ -167,10 +190,6 @@
   },
   "statistics": {
     "title": "Statistiques"
-  },
-  "tabs": {
-    "overview": "Aperçu",
-    "profile": "Profil"
   },
   "talents": {
     "add": "Ajouter un talent",

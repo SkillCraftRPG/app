@@ -1,5 +1,7 @@
 {
   "attribute": {
+    "format": "Attribute: {name}",
+    "label": "Attribute",
     "mental": "Mental",
     "options": {
       "Dexterity": "Dexterity",
@@ -9,6 +11,9 @@
       "Vigor": "Vigor"
     },
     "physical": "Physical",
+    "placeholder": "Select an attribute",
+    "progression": "Progression",
+    "starting": "Creation",
     "universal": "Universal"
   },
   "feature": {
@@ -39,6 +44,7 @@
   },
   "skill": {
     "any": "Any",
+    "format": "Skill: {name}",
     "label": "Skill",
     "none": "None",
     "options": {
@@ -63,9 +69,13 @@
       "Survival": "Survival",
       "Thievery": "Thievery"
     },
-    "placeholder": "Select a skill"
+    "placeholder": "Select a skill",
+    "rank": "Rank",
+    "talents": "Talents"
   },
   "speed": {
+    "encumbrance": "Encumbrance",
+    "format": "Speed: {name}",
     "hover": "Hover",
     "kind": {
       "options": {
@@ -76,9 +86,14 @@
         "Walk": "Walk"
       }
     },
-    "label": "Speed"
+    "label": "Speed",
+    "lineage": "Lineage",
+    "placeholder": "Select a speed"
   },
   "statistic": {
+    "base": "Base",
+    "format": "Statistic: {name}",
+    "label": "Statistic",
     "options": {
       "Dodge": "Dodge",
       "Initiative": "Initiative",
@@ -90,7 +105,8 @@
       "Stratagem": "Stratagem",
       "Strength": "Strength",
       "Vitality": "Vitality"
-    }
+    },
+    "placeholder": "Select a statistic"
   },
   "unit": {
     "cm": "cm",

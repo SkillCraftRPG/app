@@ -48,12 +48,12 @@ export type Character = Aggregate & {
   hope: number;
   customizations: Customization[];
   languages: CharacterLanguage[];
+  modifiers: CharacterModifier[];
   talents: CharacterTalent[];
   points: CharacterPoints;
   /* TODO(fpion): complete this
    * Player
    * Picture
-   * Bonuses
    * Inventory & Load
    * Attacks & Defense
    * Notes
@@ -85,7 +85,7 @@ export type CharacterAppearanceDetail = {
 export type CharacterAttribute = {
   starting: number;
   progression: number;
-  bonus: number;
+  modifiers: number;
   total: number;
 };
 
@@ -143,6 +143,21 @@ export type CharacterLanguage = {
 
 export type CharacterLanguageSource = "Custom" | "Extra" | "Customization" | "Talent";
 
+export type CharacterModifier = {
+  id: string;
+  kind: CharacterModifierKind;
+  target: string;
+  value: number;
+  name?: string | null;
+  notes?: string | null;
+  createdBy: Actor;
+  createdOn: string;
+  updatedBy: Actor;
+  UpdatedOn: string;
+};
+
+export type CharacterModifierKind = "Attribute" | "Skill" | "Speed" | "Statistic";
+
 export type CharacterPersonality = {
   traits?: string | null;
   ideals?: string | null;
@@ -159,7 +174,7 @@ export type CharacterSkill = {
   rank: number;
   talents: number;
   attribute: number;
-  bonus: number;
+  modifiers: number;
   total: number;
 };
 
@@ -194,7 +209,7 @@ export type CharacterSortOption = SortOption & {
 
 export type CharacterSpeed = {
   lineage: number;
-  bonus: number;
+  modifiers: number;
   encumbrance: number;
   total: number;
 };
@@ -210,7 +225,7 @@ export type CharacterSpeeds = {
 
 export type CharacterStatistic = {
   base: number;
-  bonus: number;
+  modifiers: number;
   total: number;
 };
 
@@ -283,6 +298,14 @@ export type CreateCharacterPayload = {
   personality: CharacterPersonality;
   background?: string | null;
   startingWealth?: StartingWealth | null;
+};
+
+export type CreateOrReplaceCharacterModifierPayload = {
+  kind: CharacterModifierKind;
+  target: string;
+  value: number;
+  name?: string | null;
+  notes?: string | null;
 };
 
 export type DominantHand = "Left" | "Right";

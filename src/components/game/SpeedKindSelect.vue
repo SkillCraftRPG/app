@@ -29,8 +29,8 @@ withDefaults(
     placeholder?: string;
   }>(),
   {
-    id: "category",
-    label: "items.category.label",
+    id: "speed-kind",
+    label: "game.speed.label",
     placeholder: "all",
   },
 );
@@ -41,7 +41,7 @@ defineEmits<{
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value })),
+    Object.entries(tm(rt("game.speed.kind.options"))).map(([value, text]) => ({ text, value })),
     "text",
   ),
 );

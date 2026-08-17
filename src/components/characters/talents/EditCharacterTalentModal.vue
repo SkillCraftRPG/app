@@ -141,4 +141,6 @@ function open(): void {
   modal.value?.show();
 }
 defineExpose({ open });
+
+// TODO(fpion): see EditCharacterModifierModal for fix(es)
 </script>

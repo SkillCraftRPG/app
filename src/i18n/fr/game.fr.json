@@ -1,5 +1,7 @@
 {
   "attribute": {
+    "format": "Attribut : {name}",
+    "label": "Attribut",
     "mental": "Mental",
     "options": {
       "Dexterity": "Adresse",
@@ -9,6 +11,9 @@
       "Vigor": "Vigueur"
     },
     "physical": "Physique",
+    "placeholder": "Sélectionnez un attribut",
+    "progression": "Progression",
+    "starting": "Création",
     "universal": "Universel"
   },
   "feature": {
@@ -39,6 +44,7 @@
   },
   "skill": {
     "any": "N’importe laquelle",
+    "format": "Compétence : {name}",
     "label": "Compétence",
     "none": "Aucune",
     "options": {
@@ -63,9 +69,13 @@
       "Survival": "Survie",
       "Thievery": "Roublardise"
     },
-    "placeholder": "Sélectionnez une compétence"
+    "placeholder": "Sélectionnez une compétence",
+    "rank": "Rang",
+    "talents": "Talents"
   },
   "speed": {
+    "encumbrance": "Encombrement",
+    "format": "Vitesse : {name}",
     "hover": "Lévitation",
     "kind": {
       "options": {
@@ -76,9 +86,14 @@
         "Walk": "Marche"
       }
     },
-    "label": "Vitesse"
+    "label": "Vitesse",
+    "lineage": "Lignée",
+    "placeholder": "Sélectionnez une vitesse"
   },
   "statistic": {
+    "base": "Base",
+    "format": "Statistique : {name}",
+    "label": "Statistique",
     "options": {
       "Dodge": "Esquive",
       "Initiative": "Initiative",
@@ -90,7 +105,8 @@
       "Stratagem": "Stratagème",
       "Strength": "Force",
       "Vitality": "Vitalité"
-    }
+    },
+    "placeholder": "Sélectionnez une statistique"
   },
   "unit": {
     "cm": "cm",

@@ -4,24 +4,18 @@
       <h3 class="h5">{{ t("lineages.physical.speeds.lead") }}</h3>
       <p class="text-body-secondary">{{ t("lineages.physical.speeds.help") }}</p>
       <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-fifth">
-          <SpeedField class="mb-3" id="walk" label="game.speed.kind.options.Walk" v-model="walk" />
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-fifth">
-          <SpeedField class="mb-3" id="climb" label="game.speed.kind.options.Climb" v-model="climb" />
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-fifth">
-          <SpeedField class="mb-3" id="swim" label="game.speed.kind.options.Swim" v-model="swim" />
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-fifth">
-          <SpeedField class="mb-3" id="fly" label="game.speed.kind.options.Fly" :min="hover ? 1 : 0" v-model="fly">
-            <template #after>
+        <div v-for="kind in SPEED_KINDS" :key="kind" class="col-md-6 col-lg-4 col-xl-fifth">
+          <SpeedField
+            class="mb-3"
+            :id="camelCase(kind)"
+            :label="`game.speed.kind.options.${kind}`"
+            :min="kind === 'Fly' && hover ? 1 : 0"
+            v-model="speeds[camelCase(kind)]"
+          >
+            <template v-if="kind === 'Fly'" #after>
               <TarCheckbox id="hover" :label="t('game.speed.hover')" switch v-model="hover" />
             </template>
           </SpeedField>
-        </div>
-        <div class="col-md-6 col-lg-4 col-xl-fifth">
-          <SpeedField class="mb-3" id="burrow" label="game.speed.kind.options.Burrow" v-model="burrow" />
         </div>
       </div>
     </section>
@@ -90,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AgeField from "./AgeField.vue";
@@ -101,7 +95,8 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarCheckbox from "@/components/tar/TarCheckbox.vue";
 import WeightRollField from "./WeightRollField.vue";
 import type { Lineage, UpdateLineagePayload } from "@/types/lineages";
-import type { SizeCategory } from "@/types/game";
+import type { SizeCategory, SpeedKind } from "@/types/game";
+import { SPEED_KINDS, camelCase } from "@/utils/game";
 import { updateLineage } from "@/api/lineages";
 import { useForm } from "@/forms";
 
@@ -117,9 +112,6 @@ const emit = defineEmits<{
 }>();
 
 const adult = ref<number>(0);
-const burrow = ref<number>(0);
-const climb = ref<number>(0);
-const fly = ref<number>(0);
 const height = ref<string>("");
 const hover = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
@@ -130,19 +122,16 @@ const obese = ref<string>("");
 const overweight = ref<string>("");
 const sizeCategory = ref<SizeCategory>("Medium");
 const skinny = ref<string>("");
-const swim = ref<number>(0);
+const speeds = reactive<Record<Uncapitalize<SpeedKind>, number>>(
+  Object.fromEntries(SPEED_KINDS.map((kind) => [camelCase(kind), 0])) as Record<Uncapitalize<SpeedKind>, number>,
+);
 const teenager = ref<number>(0);
 const venerable = ref<number>(0);
-const walk = ref<number>(0);
 
 const hasChanges = computed<boolean>(
   () =>
-    (props.lineage.speeds.walk ?? 0) !== walk.value ||
-    (props.lineage.speeds.climb ?? 0) !== climb.value ||
-    (props.lineage.speeds.swim ?? 0) !== swim.value ||
-    (props.lineage.speeds.fly ?? 0) !== fly.value ||
+    SPEED_KINDS.some((kind) => (props.lineage.speeds[camelCase(kind)] ?? 0) !== speeds[camelCase(kind)]) ||
     props.lineage.speeds.hover !== hover.value ||
-    (props.lineage.speeds.burrow ?? 0) !== burrow.value ||
     props.lineage.size.category !== sizeCategory.value ||
     (props.lineage.size.height ?? "") !== height.value ||
     (props.lineage.weight.malnutrition ?? "") !== malnutrition.value ||
@@ -164,12 +153,8 @@ async function submit(): Promise<void> {
     try {
       const payload: UpdateLineagePayload = {
         speeds: {
-          walk: walk.value || undefined,
-          climb: climb.value || undefined,
-          swim: swim.value || undefined,
-          fly: fly.value || undefined,
+          ...Object.fromEntries(SPEED_KINDS.map((kind) => [camelCase(kind), speeds[camelCase(kind)] || undefined])),
           hover: hover.value,
-          burrow: burrow.value || undefined,
         },
         size: {
           category: sizeCategory.value,
@@ -203,12 +188,10 @@ async function submit(): Promise<void> {
 watch(
   () => props.lineage,
   (lineage) => {
-    walk.value = lineage.speeds.walk ?? 0;
-    climb.value = lineage.speeds.climb ?? 0;
-    swim.value = lineage.speeds.swim ?? 0;
-    fly.value = lineage.speeds.fly ?? 0;
+    for (const kind of SPEED_KINDS) {
+      speeds[camelCase(kind)] = lineage.speeds[camelCase(kind)] ?? 0;
+    }
     hover.value = lineage.speeds.hover;
-    burrow.value = lineage.speeds.burrow ?? 0;
     sizeCategory.value = lineage.size.category;
     height.value = lineage.size.height ?? "";
     malnutrition.value = lineage.weight.malnutrition ?? "";

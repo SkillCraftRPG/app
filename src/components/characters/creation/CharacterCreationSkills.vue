@@ -60,8 +60,10 @@ import InputField from "@/components/forms/InputField.vue";
 import TarBadge from "@/components/tar/TarBadge.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
-import type { Skill } from "@/types/game";
+import type { Attribute, Skill } from "@/types/game";
 import type { SkillRankPayload } from "@/types/characters";
+import { ATTRIBUTES, SKILLS_BY_ATTRIBUTE, calculateStatistic, camelCase } from "@/utils/game";
+import { formatSignedInteger } from "@/utils/format";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
@@ -74,28 +76,11 @@ defineEmits<{
   (e: "abandon"): void;
 }>();
 
-const ranks = ref<Map<Skill, number>>(new Map());
+type AttributeKey = Attribute | "social";
 
-const skills = computed<Map<string, Skill[]>>(
-  () =>
-    new Map([
-      ["Dexterity", ["Acrobatics", "Crafting", "Orientation", "Stealth", "Thievery"]],
-      ["Health", ["Discipline", "Resistance"]],
-      ["Intellect", ["Investigation", "Knowledge", "Linguistics", "Medicine"]],
-      ["Senses", ["Insight", "Occultism", "Perception", "Survival"]],
-      ["Vigor", ["Athletics", "Melee"]],
-      ["social", ["Deception", "Diplomacy", "Performance"]],
-    ]),
-);
-const scores = computed<Map<string, number>>(
-  () =>
-    new Map([
-      ["Dexterity", character.creation.attributes.dexterity],
-      ["Health", character.creation.attributes.health],
-      ["Intellect", character.creation.attributes.intellect],
-      ["Senses", character.creation.attributes.senses],
-      ["Vigor", character.creation.attributes.vigor],
-    ]),
+const ranks = ref<Map<Skill, number>>(new Map());
+const scores = computed<Record<Attribute, number>>(
+  () => Object.fromEntries(ATTRIBUTES.map((key) => [key, character.creation.attributes[camelCase(key)]])) as Record<Attribute, number>,
 );
 const talents = computed<Map<Skill, number>>(() => {
   const talents: Map<Skill, number> = new Map();
@@ -108,7 +93,7 @@ const talents = computed<Map<Skill, number>>(() => {
   return talents;
 });
 
-const learning = computed<number>(() => Math.max(5 + character.creation.attributes.intellect, 5));
+const learning = computed<number>(() => calculateStatistic("Learning", character.creation.attributes));
 const spent = computed<number>(
   () => [...ranks.value.values()].reduce((sum, rank) => sum + rank, 0) - [...talents.value.values()].reduce((sum, count) => sum + count, 0),
 );
@@ -129,33 +114,30 @@ function composeSkill(key: Skill): SkillData {
   };
 }
 
-function getScore(key: string): string {
+function getScore(key: AttributeKey): string {
   if (key === "social") {
     return "";
   }
-  const score: number = scores.value.get(key) ?? 0;
-  const formatted: string = n(score, "integer");
-  return score > 0 ? `+${formatted}` : formatted.replace("-", "−");
+  return formatSignedInteger(scores.value[key], (value) => n(value, "integer"));
 }
 
 type AttributeData = {
-  key: string;
+  key: AttributeKey;
   name: string;
   score: string;
   skills: SkillData[];
 };
-function composeAttribute(key: string): AttributeData {
-  const score: string = getScore(key);
+function composeAttribute(key: AttributeKey): AttributeData {
   return {
     key,
     name: key === "social" ? t("characters.social") : t(`game.attribute.options.${key}`),
-    score,
-    skills: orderBy((skills.value.get(key) ?? []).map(composeSkill), "name"),
+    score: getScore(key),
+    skills: orderBy(SKILLS_BY_ATTRIBUTE[key].map(composeSkill), "name"),
   };
 }
 
 const attributes = computed<AttributeData[]>(() => {
-  const attributes: AttributeData[] = orderBy(["Dexterity", "Health", "Intellect", "Senses", "Vigor"].map(composeAttribute), "name");
+  const attributes: AttributeData[] = orderBy(ATTRIBUTES.map(composeAttribute), "name");
   attributes.push(composeAttribute("social"));
   return attributes;
 });

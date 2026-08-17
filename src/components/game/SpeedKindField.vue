@@ -1,11 +1,11 @@
 <template>
-  <TarSelect
-    floating
+  <SelectField
     :id="id"
     :label="t(label)"
     :model-value="modelValue"
     :options="options"
     :placeholder="t(placeholder)"
+    :required="required"
     @update:model-value="$emit('update:model-value', $event ?? '')"
   />
 </template>
@@ -15,7 +15,7 @@ import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import TarSelect from "@/components/tar/TarSelect.vue";
+import SelectField from "@/components/forms/SelectField.vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
@@ -27,11 +27,12 @@ withDefaults(
     label?: string;
     modelValue: string;
     placeholder?: string;
+    required?: boolean | string;
   }>(),
   {
-    id: "category",
-    label: "items.category.label",
-    placeholder: "all",
+    id: "speed-kind",
+    label: "game.speed.label",
+    placeholder: "game.speed.placeholder",
   },
 );
 
@@ -41,7 +42,7 @@ defineEmits<{
 
 const options = computed<SelectOption[]>(() =>
   orderBy(
-    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value })),
+    Object.entries(tm(rt("game.speed.kind.options"))).map(([value, text]) => ({ text, value })),
     "text",
   ),
 );

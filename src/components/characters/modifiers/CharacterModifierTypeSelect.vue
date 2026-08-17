@@ -11,15 +11,13 @@
 </template>
 
 <script setup lang="ts">
-import { arrayUtils } from "logitar-js";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TarSelect from "@/components/tar/TarSelect.vue";
 import type { SelectOption } from "@/types/tar/select";
 
-const { orderBy } = arrayUtils;
-const { rt, t, tm } = useI18n();
+const { t } = useI18n();
 
 withDefaults(
   defineProps<{
@@ -29,8 +27,8 @@ withDefaults(
     placeholder?: string;
   }>(),
   {
-    id: "category",
-    label: "items.category.label",
+    id: "type",
+    label: "characters.modifiers.type.label",
     placeholder: "all",
   },
 );
@@ -39,10 +37,8 @@ defineEmits<{
   (e: "update:model-value", value: string): void;
 }>();
 
-const options = computed<SelectOption[]>(() =>
-  orderBy(
-    Object.entries(tm(rt("items.category.options"))).map(([value, text]) => ({ text, value })),
-    "text",
-  ),
-);
+const options = computed<SelectOption[]>(() => [
+  { value: "bonus", text: t("characters.modifiers.type.bonus") },
+  { value: "penalty", text: t("characters.modifiers.type.penalty") },
+]);
 </script>

@@ -12,10 +12,10 @@
 
 <script setup lang="ts">
 import { arrayUtils } from "logitar-js";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TarSelect from "@/components/tar/TarSelect.vue";
-import { computed } from "vue";
 import type { SelectOption } from "@/types/tar/select";
 
 const { orderBy } = arrayUtils;
