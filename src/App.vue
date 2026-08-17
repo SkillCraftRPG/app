@@ -88,4 +88,6 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", update);
   window.removeEventListener("scroll", update);
 });
+
+// TODO(fpion): reinitialize should be called in a nextTick when refs are synchronized via a watch
 </script>
