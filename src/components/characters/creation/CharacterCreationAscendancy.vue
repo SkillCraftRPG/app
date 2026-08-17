@@ -12,12 +12,9 @@
               clickable
               :lineage="lineage"
               :selected="lineage.id === selectedSpecies?.id"
+              selection="single"
               @click="toggleSpecies(lineage)"
-            >
-              <div class="d-flex justify-content-end mt-2">
-                <font-awesome-icon :icon="lineage.id === selectedSpecies?.id ? 'far fa-square-check' : 'far fa-square'" />
-              </div>
-            </LineageCard>
+            />
           </div>
         </div>
       </template>
@@ -42,12 +39,9 @@
               clickable
               :lineage="lineage"
               :selected="lineage.id === selectedEthnicity?.id"
+              selection="single"
               @click="toggleEthnicity(lineage)"
-            >
-              <div class="d-flex justify-content-end mt-2">
-                <font-awesome-icon :icon="lineage.id === selectedEthnicity?.id ? 'far fa-square-check' : 'far fa-square'" />
-              </div>
-            </LineageCard>
+            />
           </div>
         </div>
       </section>
@@ -61,13 +55,13 @@
               :clickable="isClickable(language)"
               :language="language"
               :selected="selectedLanguages.has(language.id)"
+              :selection="grantedLanguages.has(language.id) ? undefined : 'multiple'"
               @click="toggleLanguage(language)"
             >
-              <div class="d-flex justify-content-end mt-2">
-                <TarBadge v-if="grantedLanguages.has(language.id)" pill variant="secondary">
+              <div v-if="grantedLanguages.has(language.id)" class="d-flex justify-content-end mt-2">
+                <TarBadge pill variant="secondary">
                   <font-awesome-icon aria-hidden="true" icon="fas fa-paw" />&nbsp;{{ grantedLanguages.get(language.id) }}
                 </TarBadge>
-                <font-awesome-icon v-else :icon="selectedLanguages.has(language.id) ? 'far fa-square-check' : 'far fa-square'" />
               </div>
             </LanguageCard>
           </div>
