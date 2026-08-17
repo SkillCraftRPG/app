@@ -4,6 +4,7 @@
     :label="t('characters.modifiers.value')"
     :model-value="modelValue.toString()"
     :required="required"
+    :rules="rules"
     :step="step"
     type="number"
     @update:model-value="$emit('update:model-value', parseNumber($event) ?? 0)"
@@ -11,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ValidationRuleSet } from "logitar-validation";
+import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
@@ -36,5 +39,7 @@ defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
 
-// TODO(fpion): neq 0
+const rules = computed<ValidationRuleSet>(() => ({
+  notEqual: "0",
+}));
 </script>

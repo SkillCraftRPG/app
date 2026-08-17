@@ -11,6 +11,7 @@
   "maximumValue": "Le champ « {name} » doit être inférieur ou égal à {maximumValue}.",
   "minimumLength": "Le champ « {name} » doit contenir au moins {minimumLength} caractères.",
   "minimumValue": "Le champ « {name} » doit être supérieur ou égal à {minimumValue}.",
+  "notEqual": "Le champ « {name} » doit être différent de {notEqual}.",
   "pattern": "Le champ « {name} » doit correspondre au modèle suivant : {pattern}",
   "phone": "Veuillez entrer un numéro de téléphone valide.",
   "required": "Le champ « {name} » est requis.",

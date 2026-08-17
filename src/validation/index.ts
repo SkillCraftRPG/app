@@ -1,5 +1,6 @@
 import { Validator, rules, type RuleExecutionResult } from "logitar-validation";
 
+import notEqual from "./notEqual";
 import phone from "./phone";
 import roll from "./roll";
 
@@ -17,6 +18,7 @@ validator.setRule("maximumLength", rules.maximumLength);
 validator.setRule("maximumValue", rules.maximumValue);
 validator.setRule("minimumLength", rules.minimumLength);
 validator.setRule("minimumValue", rules.minimumValue);
+validator.setRule("notEqual", notEqual);
 validator.setRule("pattern", rules.pattern);
 validator.setRule("phone", phone);
 validator.setRule("required", rules.required);
