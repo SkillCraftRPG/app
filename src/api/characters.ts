@@ -41,6 +41,14 @@ export async function removeCharacterCustomization(characterId: string, customiz
   return (await _delete<Character>(url)).data;
 }
 
+export async function removeCharacterLanguage(characterId: string, languageId: string): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/languages/{languageId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("languageId", languageId)
+    .buildRelative();
+  return (await _delete<Character>(url)).data;
+}
+
 export async function removeCharacterModifier(characterId: string, modifierId: string): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/modifiers/{modifierId}" })
     .setParameter("characterId", characterId)

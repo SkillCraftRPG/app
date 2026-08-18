@@ -141,7 +141,7 @@ export type CharacterLanguage = {
   updatedOn: string;
 };
 
-export type CharacterLanguageSource = "Custom" | "Extra" | "Customization" | "Talent";
+export type CharacterLanguageSource = "Custom" | "Extra" | "Customization" | "Talent"; // TODO(fpion): extra should be named Lineage
 
 export type CharacterModifier = {
   id: string;

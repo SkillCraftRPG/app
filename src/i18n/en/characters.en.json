@@ -144,6 +144,14 @@
   },
   "experience": "Experience",
   "intoxication": "Intoxication",
+  "languages": {
+    "empty": "This character does not know any languages.",
+    "extra": "Extra language",
+    "remove": {
+      "help": "Do you want to remove the <strong>{name}</strong> language from the character?",
+      "lead": "Remove this language?"
+    }
+  },
   "level": "Level",
   "modifiers": {
     "create": "Create a modifier",
