@@ -48,9 +48,7 @@ import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Character } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
-import type { SearchResults } from "@/types/search";
 import { addCharacterCustomization } from "@/api/characters";
-import { listCustomizations } from "@/api/customizations";
 
 const LIMIT: number = 12;
 const { orderBy } = arrayUtils;
@@ -58,6 +56,7 @@ const { t } = useI18n();
 
 const props = defineProps<{
   character: Character;
+  customizations: Customization[];
 }>();
 
 const emit = defineEmits<{
@@ -65,7 +64,6 @@ const emit = defineEmits<{
   (e: "updated", value: Character): void;
 }>();
 
-const customizations = ref<Customization[]>([]);
 const isLoading = ref<boolean>(false);
 const kind = ref<string>("");
 const limit = ref<number>(LIMIT);
@@ -75,11 +73,8 @@ const selected = ref<Customization>();
 
 const exclude = computed<Set<string>>(() => new Set(props.character.customizations.map((customization) => customization.id)));
 const filtered = computed<Customization[]>(() =>
-  customizations.value.filter((customization) => {
+  props.customizations.filter((customization) => {
     if (exclude.value.has(customization.id)) {
-      return false;
-    }
-    if (kind.value && customization.kind !== kind.value) {
       return false;
     }
     const searchText: string = search.value.trim().toLocaleLowerCase();
@@ -90,10 +85,13 @@ const filtered = computed<Customization[]>(() =>
     ) {
       return false;
     }
+    if (kind.value && customization.kind !== kind.value) {
+      return false;
+    }
     return true;
   }),
 );
-const hasFilters = computed<boolean>(() => Boolean(kind.value || search.value));
+const hasFilters = computed<boolean>(() => Boolean(search.value || kind.value));
 const options = computed<Customization[]>(() => {
   const ordered: Customization[] = orderBy(filtered.value, "name");
   return limit.value ? ordered.slice(0, limit.value) : ordered;
@@ -140,19 +138,8 @@ async function confirm(): Promise<void> {
   }
 }
 
-async function open(): Promise<void> {
+function open(): void {
   modal.value?.show();
-  if (!isLoading.value) {
-    isLoading.value = true;
-    try {
-      const results: SearchResults<Customization> = await listCustomizations();
-      customizations.value = [...results.items];
-    } catch (e: unknown) {
-      emit("error", e);
-    } finally {
-      isLoading.value = false;
-    }
-  }
 }
 defineExpose({ open });
 </script>
