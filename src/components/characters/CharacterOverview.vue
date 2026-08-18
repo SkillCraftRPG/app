@@ -38,10 +38,7 @@
     <CharacterSkills :character="character" />
     <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
     <CharacterSpeeds :character="character" />
-    <template v-if="character.customizations.length">
-      <div class="fs-5 mb-1">{{ t("customizations.title") }}</div>
-      <CharacterCustomizations :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-    </template>
+    <CharacterCustomizations :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     <template v-if="hasLanguages">
       <div class="fs-5 mb-1">{{ t("languages.title") }}</div>
       <CharacterLanguages :languages="character.languages" :lineage="character.lineage" />

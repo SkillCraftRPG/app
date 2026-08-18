@@ -117,6 +117,12 @@
     "title": "Créer un personnage"
   },
   "customizations": {
+    "add": "Ajouter un don ou handicap",
+    "empty": "Ce personnage ne possède aucun don ni handicap.",
+    "invalid": {
+      "help": "Ajoutez ou retirez des dons et des handicaps afin d’obtenir le même nombre de chaque.",
+      "lead": "Le nombre de dons et de handicaps doit être égal."
+    },
     "remove": {
       "disability": {
         "help": "Voulez-vous retirer le handicap <strong>{name}</strong> du personnage ?",
