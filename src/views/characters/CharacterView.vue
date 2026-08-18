@@ -9,7 +9,7 @@
       <StatusDetail class="mb-3" :subject="character" />
       <TarTabs>
         <TarTab active id="overview" :title="t('characters.overview')">
-          <CharacterOverview :character="character" />
+          <CharacterOverview :character="character" @error="handleError" @updated="update" />
         </TarTab>
         <TarTab id="profile" :title="t('characters.profile')">
           <CharacterProfile :character="character" @error="handleError" @updated="update" />
@@ -82,6 +82,8 @@ onMounted(async () => {
     }
   }
 });
+
+// TODO(fpion): reorganize components `characters` directory
 
 // TODO(fpion): Player
 // TODO(fpion): Picture

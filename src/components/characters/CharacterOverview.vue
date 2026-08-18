@@ -38,10 +38,7 @@
     <CharacterSkills :character="character" />
     <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
     <CharacterSpeeds :character="character" />
-    <template v-if="character.customizations.length">
-      <div class="fs-5 mb-1">{{ t("customizations.title") }}</div>
-      <CharacterCustomizations :customizations="character.customizations" />
-    </template>
+    <CharacterCustomizations :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     <template v-if="hasLanguages">
       <div class="fs-5 mb-1">{{ t("languages.title") }}</div>
       <CharacterLanguages :languages="character.languages" :lineage="character.lineage" />
@@ -58,7 +55,7 @@ import CharacterAlcohol from "./CharacterAlcohol.vue";
 import CharacterAttributes from "./CharacterAttributes.vue";
 import CharacterCaste from "./CharacterCaste.vue";
 import CharacterConditions from "./CharacterConditions.vue";
-import CharacterCustomizations from "./CharacterCustomizations.vue";
+import CharacterCustomizations from "@/components/characters/customizations/CharacterCustomizations.vue";
 import CharacterEducation from "./CharacterEducation.vue";
 import CharacterExperience from "./CharacterExperience.vue";
 import CharacterHope from "./CharacterHope.vue";
@@ -76,6 +73,11 @@ const { t } = useI18n();
 
 const props = defineProps<{
   character: Character;
+}>();
+
+defineEmits<{
+  (e: "error", value: unknown): void;
+  (e: "updated", value: Character): void;
 }>();
 
 const hasConditions = computed<boolean>(() => false); // TODO(fpion): implement

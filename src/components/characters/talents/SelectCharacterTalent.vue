@@ -122,7 +122,7 @@ const filtered = computed<Talent[]>(() =>
         break;
     }
     const searchText: string = search.value.trim().toLocaleLowerCase();
-    if (searchText && !talent.name.toLocaleLowerCase().includes(searchText) && talent.summary?.toLowerCase().includes(searchText) !== true) {
+    if (searchText && !talent.name.toLocaleLowerCase().includes(searchText) && talent.summary?.toLocaleLowerCase().includes(searchText) !== true) {
       return false;
     }
     if (requiredTalent.value && talent.requiredTalent?.id !== requiredTalent.value.id) {
