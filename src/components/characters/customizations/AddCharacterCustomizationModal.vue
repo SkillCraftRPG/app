@@ -1,57 +1,39 @@
 <template>
-  <div>
-    <TarButton icon="fas fa-plus" size="small" :text="t('actions.add')" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="x-large" :title="t('characters.customizations.add')">
-      <section v-if="customizations.length" class="row">
-        <div class="col-md-6">
-          <SearchInput class="mb-3" v-model="search" />
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="x-large" :title="t('characters.customizations.add')">
+    <section v-if="customizations.length" class="row">
+      <div class="col-md-6">
+        <SearchInput class="mb-3" v-model="search" />
+      </div>
+      <div class="col-md-6">
+        <CustomizationKindSelect class="mb-3" v-model="kind" />
+      </div>
+    </section>
+    <section v-if="options.length" class="border-top border-secondary-subtle pt-3">
+      <div class="row">
+        <div v-for="customization in options" :key="customization.id" class="col-lg-6 col-xl-4 mb-3">
+          <CustomizationCard
+            class="d-flex flex-column h-100"
+            clickable
+            :customization="customization"
+            :selected="customization.id === selected?.id"
+            selection="single"
+            @click="toggle(customization)"
+          />
         </div>
-        <div class="col-md-6">
-          <CustomizationKindSelect class="mb-3" v-model="kind" />
-        </div>
-      </section>
-      <section v-if="options.length" class="border-top border-secondary-subtle pt-3">
-        <div class="row">
-          <div v-for="customization in options" :key="customization.id" class="col-lg-6 col-xl-4 mb-3">
-            <CustomizationCard
-              class="d-flex flex-column h-100"
-              clickable
-              :customization="customization"
-              :selected="customization.id === selected?.id"
-              selection="single"
-              @click="toggle(customization)"
-            />
-          </div>
-        </div>
-        <a v-if="showLimit" href="#" @click="toggleLimit">{{ t(limit ? "actions.showMore" : "actions.showLess") }}</a>
-      </section>
-      <section v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
-        <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
-        <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
-        <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
-        <TarButton
-          v-if="hasFilters"
-          class="mt-3"
-          icon="fas fa-arrow-rotate-left"
-          outline
-          :text="t('filters.clear')"
-          variant="secondary"
-          @click="clearFilters"
-        />
-      </section>
-      <template #footer>
-        <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
-        <TarButton
-          :disabled="isLoading || !selected"
-          icon="fas fa-plus"
-          :loading="isLoading"
-          :status="t('loading')"
-          :text="t('actions.add')"
-          @click="confirm"
-        />
-      </template>
-    </TarModal>
-  </div>
+      </div>
+      <a v-if="showLimit" href="#" @click="toggleLimit">{{ t(limit ? "actions.showMore" : "actions.showLess") }}</a>
+    </section>
+    <section v-else class="d-flex flex-column align-items-center justify-content-center text-center flex-grow-1 py-5">
+      <font-awesome-icon icon="fas fa-magnifying-glass" class="display-4 text-body-secondary mb-3" aria-hidden="true" />
+      <h2 class="h4 mb-2">{{ t("empty.lead") }}</h2>
+      <p class="text-body-secondary mb-0">{{ t("empty.help") }}</p>
+      <TarButton v-if="hasFilters" class="mt-3" icon="fas fa-arrow-rotate-left" outline :text="t('filters.clear')" variant="secondary" @click="clearFilters" />
+    </section>
+    <template #footer>
+      <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
+      <TarButton :disabled="isLoading || !selected" icon="fas fa-plus" :loading="isLoading" :status="t('loading')" :text="t('actions.add')" @click="confirm" />
+    </template>
+  </TarModal>
 </template>
 
 <script setup lang="ts">
@@ -172,4 +154,5 @@ async function open(): Promise<void> {
     }
   }
 }
+defineExpose({ open });
 </script>

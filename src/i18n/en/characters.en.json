@@ -147,6 +147,10 @@
   "languages": {
     "empty": "This character does not know any languages.",
     "extra": "Extra language",
+    "invalid": {
+      "help": "Add or remove additional languages until exactly {extra} are selected.",
+      "lead": "The number of additional languages must match the expected number."
+    },
     "remove": {
       "help": "Do you want to remove the <strong>{name}</strong> language from the character?",
       "lead": "Remove this language?"

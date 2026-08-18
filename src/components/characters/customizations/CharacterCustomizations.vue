@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="fs-5">{{ t("customizations.title") }}</div>
-      <AddCharacterCustomization v-if="!isReadOnly" :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
+      <TarButton v-if="!isReadOnly" icon="fas fa-plus" size="small" :text="t('actions.add')" @click="add" />
     </div>
     <TarAlert v-if="gifts.length !== disabilities.length" show variant="warning">
       <strong>{{ t("characters.customizations.invalid.lead") }}</strong> {{ t("characters.customizations.invalid.help") }}
@@ -29,14 +29,17 @@
     </div>
     <p v-else>{{ t("characters.customizations.empty") }}</p>
     <CustomizationDetailModal v-if="customization" :customization="customization" ref="detailModal" />
-    <RemoveCharacterCustomizationModal
-      v-if="customization"
-      :character="character"
-      :customization="customization"
-      ref="removeModal"
-      @error="$emit('error', $event)"
-      @updated="$emit('updated', $event)"
-    />
+    <template v-if="!isReadOnly">
+      <AddCharacterCustomizationModal :character="character" ref="addModal" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
+      <RemoveCharacterCustomizationModal
+        v-if="customization"
+        :character="character"
+        :customization="customization"
+        ref="removeModal"
+        @error="$emit('error', $event)"
+        @updated="$emit('updated', $event)"
+      />
+    </template>
   </div>
 </template>
 
@@ -45,11 +48,12 @@ import { arrayUtils, parsingUtils } from "logitar-js";
 import { computed, nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import AddCharacterCustomization from "./AddCharacterCustomization.vue";
+import AddCharacterCustomizationModal from "./AddCharacterCustomizationModal.vue";
 import CharacterCustomizationCard from "./CharacterCustomizationCard.vue";
 import CustomizationDetailModal from "@/components/customizations/CustomizationDetailModal.vue";
 import RemoveCharacterCustomizationModal from "./RemoveCharacterCustomizationModal.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
+import TarButton from "@/components/tar/TarButton.vue";
 import type { Character } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
 
@@ -67,6 +71,7 @@ defineEmits<{
   (e: "updated", value: Character): void;
 }>();
 
+const addModal = ref<InstanceType<typeof AddCharacterCustomizationModal> | null>(null);
 const customization = ref<Customization>();
 const detailModal = ref<InstanceType<typeof CustomizationDetailModal> | null>(null);
 const removeModal = ref<InstanceType<typeof RemoveCharacterCustomizationModal> | null>(null);
@@ -97,6 +102,9 @@ const gifts = computed<Customization[]>(() =>
 );
 const isReadOnly = computed<boolean>(() => parseBoolean(props.readonly) ?? false);
 
+function add(): void {
+  addModal.value?.open();
+}
 function detail(value: Customization): void {
   customization.value = value;
   nextTick(() => detailModal.value?.open());

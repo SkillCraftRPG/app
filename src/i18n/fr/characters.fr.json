@@ -147,6 +147,10 @@
   "languages": {
     "empty": "Ce personnage ne connaît aucune langue.",
     "extra": "Langue supplémentaire",
+    "invalid": {
+      "help": "Ajoutez ou retirez des langues supplémentaires afin d’en sélectionner exactement {extra}.",
+      "lead": "Le nombre de langues supplémentaires doit correspondre au nombre prévu."
+    },
     "remove": {
       "help": "Voulez-vous retirer la langue <strong>{name}</strong> du personnage ?",
       "lead": "Retirer cette langue ?"

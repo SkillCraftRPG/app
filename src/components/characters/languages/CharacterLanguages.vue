@@ -2,9 +2,11 @@
   <div>
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="fs-5">{{ t("languages.title") }}</div>
-      <!-- add -->
+      <TarButton v-if="!isReadOnly" icon="fas fa-plus" size="small" :text="t('actions.add')" @click="add" />
     </div>
-    <!-- alert -->
+    <TarAlert v-if="!isValid" show variant="warning">
+      <strong>{{ t("characters.languages.invalid.lead") }}</strong> {{ t("characters.languages.invalid.help", { extra }) }}
+    </TarAlert>
     <div v-if="languages.length" class="row">
       <div v-for="language in languages" :key="language.language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
         <CharacterLanguageCard
@@ -40,6 +42,8 @@ import { useI18n } from "vue-i18n";
 import CharacterLanguageCard from "./CharacterLanguageCard.vue";
 import RemoveCharacterLanguageModal from "./RemoveCharacterLanguageModal.vue";
 import LanguageDetailModal from "@/components/languages/LanguageDetailModal.vue";
+import TarAlert from "@/components/tar/TarAlert.vue";
+import TarButton from "@/components/tar/TarButton.vue";
 import type { Character, CharacterLanguage } from "@/types/characters";
 
 const { orderBy } = arrayUtils;
@@ -61,6 +65,12 @@ const language = ref<CharacterLanguage>();
 const removeModal = ref<InstanceType<typeof RemoveCharacterLanguageModal> | null>(null);
 
 const isReadOnly = computed<boolean>(() => parseBoolean(props.readonly) ?? false);
+
+const extra = computed<number>(() => {
+  const extra: number = props.character.lineage.languages.extra;
+  return props.character.lineage.parent ? extra + props.character.lineage.parent.languages.extra : extra;
+});
+const isValid = computed<boolean>(() => props.character.languages.filter((language) => language.source === "Extra").length === extra.value);
 
 type SortableCharacterLanguage = CharacterLanguage & {
   sort: string;
@@ -97,12 +107,17 @@ const languages = computed<SortableCharacterLanguage[]>(() => {
   );
 });
 
+function add(): void {
+  language.value = undefined;
+  // TODO(fpion): modal
+}
 function detail(value: CharacterLanguage): void {
   language.value = value;
   nextTick(() => detailModal.value?.open());
 }
 function edit(value: CharacterLanguage): void {
   language.value = value;
+  // TODO(fpion): modal
 }
 function remove(value: CharacterLanguage): void {
   language.value = value;
