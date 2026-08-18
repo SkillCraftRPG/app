@@ -116,6 +116,18 @@
     },
     "title": "Create a character"
   },
+  "customizations": {
+    "remove": {
+      "disability": {
+        "help": "Do you want to remove the <strong>{name}</strong> disability from the character?",
+        "lead": "Remove this disability?"
+      },
+      "gift": {
+        "help": "Do you want to remove the <strong>{name}</strong> gift from the character?",
+        "lead": "Remove this gift?"
+      }
+    }
+  },
   "dominantHand": {
     "label": "Dominant hand",
     "options": {

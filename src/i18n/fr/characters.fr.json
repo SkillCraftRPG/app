@@ -116,6 +116,18 @@
     },
     "title": "Créer un personnage"
   },
+  "customizations": {
+    "remove": {
+      "disability": {
+        "help": "Voulez-vous retirer le handicap <strong>{name}</strong> du personnage ?",
+        "lead": "Retirer ce handicap ?"
+      },
+      "gift": {
+        "help": "Voulez-vous retirer le don <strong>{name}</strong> du personnage ?",
+        "lead": "Retirer ce don ?"
+      }
+    }
+  },
   "dominantHand": {
     "label": "Main principale",
     "options": {

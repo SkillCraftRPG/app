@@ -10,6 +10,14 @@ import type {
 import type { SearchResults } from "@/types/search";
 import { _delete, get, patch, post, put } from ".";
 
+export async function addCharacterCustomization(characterId: string, customizationId: string): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/customizations/{customizationId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("customizationId", customizationId)
+    .buildRelative();
+  return (await put<void, Character>(url)).data;
+}
+
 export async function createCharacter(payload: CreateCharacterPayload): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters" }).buildRelative();
   return (await post<CreateCharacterPayload, Character>(url, payload)).data;
@@ -23,6 +31,14 @@ export async function createCharacterModifier(characterId: string, payload: Crea
 export async function readCharacter(id: string): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Character>(url)).data;
+}
+
+export async function removeCharacterCustomization(characterId: string, customizationId: string): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/customizations/{customizationId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("customizationId", customizationId)
+    .buildRelative();
+  return (await _delete<Character>(url)).data;
 }
 
 export async function removeCharacterModifier(characterId: string, modifierId: string): Promise<Character> {
