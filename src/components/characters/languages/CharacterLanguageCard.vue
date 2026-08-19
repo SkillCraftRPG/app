@@ -71,7 +71,7 @@ const source = computed<string>(() => {
       return "";
     case "Talent":
       const talent: CharacterTalent | undefined = props.character.talents.find((talent) => talent.id === props.language.target);
-      return talent?.talent.name ?? "";
+      return talent?.talent.name ?? ""; // TODO(fpion): qualifier
     default:
       return props.language.target ?? "";
   }

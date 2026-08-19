@@ -3,6 +3,7 @@ import { urlUtils } from "logitar-js";
 import type {
   Character,
   CreateCharacterPayload,
+  CreateOrReplaceCharacterLanguagePayload,
   CreateOrReplaceCharacterModifierPayload,
   SearchCharactersPayload,
   UpdateCharacterPayload,
@@ -26,6 +27,18 @@ export async function createCharacter(payload: CreateCharacterPayload): Promise<
 export async function createCharacterModifier(characterId: string, payload: CreateOrReplaceCharacterModifierPayload): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/modifiers" }).setParameter("characterId", characterId).buildRelative();
   return (await post<CreateOrReplaceCharacterModifierPayload, Character>(url, payload)).data;
+}
+
+export async function createOrReplaceCharacterLanguage(
+  characterId: string,
+  languageId: string,
+  payload: CreateOrReplaceCharacterLanguagePayload,
+): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/languages/{languageId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("languageId", languageId)
+    .buildRelative();
+  return (await put<CreateOrReplaceCharacterLanguagePayload, Character>(url, payload)).data;
 }
 
 export async function readCharacter(id: string): Promise<Character> {

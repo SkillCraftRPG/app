@@ -7,8 +7,8 @@
     <TarAlert v-if="!isValid" show variant="warning">
       <strong>{{ t("characters.languages.invalid.lead") }}</strong> {{ t("characters.languages.invalid.help", { extra }) }}
     </TarAlert>
-    <div v-if="languages.length" class="row">
-      <div v-for="language in languages" :key="language.language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
+    <div v-if="knownLanguages.length" class="row">
+      <div v-for="language in knownLanguages" :key="language.language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
         <CharacterLanguageCard
           :character="character"
           class="d-flex flex-column h-100"
@@ -22,29 +22,42 @@
     </div>
     <p v-else>{{ t("characters.languages.empty") }}</p>
     <LanguageDetailModal v-if="language" :language="language.language" ref="detailModal" />
-    <!-- edit modal -->
-    <RemoveCharacterLanguageModal
-      v-if="language"
-      :character="character"
-      :language="language"
-      ref="removeModal"
-      @error="$emit('error', $event)"
-      @updated="$emit('updated', $event)"
-    />
+    <template v-if="!isReadOnly">
+      <EditCharacterLanguageModal
+        :character="character"
+        :language="language"
+        :languages="languages"
+        ref="editModal"
+        @error="$emit('error', $event)"
+        @updated="$emit('updated', $event)"
+      />
+      <RemoveCharacterLanguageModal
+        v-if="language"
+        :character="character"
+        :language="language"
+        ref="removeModal"
+        @error="$emit('error', $event)"
+        @updated="$emit('updated', $event)"
+      />
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { arrayUtils, parsingUtils } from "logitar-js";
-import { computed, nextTick, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterLanguageCard from "./CharacterLanguageCard.vue";
-import RemoveCharacterLanguageModal from "./RemoveCharacterLanguageModal.vue";
+import EditCharacterLanguageModal from "./EditCharacterLanguageModal.vue";
 import LanguageDetailModal from "@/components/languages/LanguageDetailModal.vue";
+import RemoveCharacterLanguageModal from "./RemoveCharacterLanguageModal.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Character, CharacterLanguage } from "@/types/characters";
+import type { Language } from "@/types/languages";
+import type { SearchResults } from "@/types/search";
+import { listLanguages } from "@/api/languages";
 
 const { orderBy } = arrayUtils;
 const { parseBoolean } = parsingUtils;
@@ -55,13 +68,15 @@ const props = defineProps<{
   readonly?: boolean | string;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "error", value: unknown): void;
   (e: "updated", value: Character): void;
 }>();
 
 const detailModal = ref<InstanceType<typeof LanguageDetailModal> | null>(null);
+const editModal = ref<InstanceType<typeof EditCharacterLanguageModal> | null>(null);
 const language = ref<CharacterLanguage>();
+const languages = ref<Language[]>([]);
 const removeModal = ref<InstanceType<typeof RemoveCharacterLanguageModal> | null>(null);
 
 const isReadOnly = computed<boolean>(() => parseBoolean(props.readonly) ?? false);
@@ -75,7 +90,7 @@ const isValid = computed<boolean>(() => props.character.languages.filter((langua
 type SortableCharacterLanguage = CharacterLanguage & {
   sort: string;
 };
-const languages = computed<SortableCharacterLanguage[]>(() => {
+const knownLanguages = computed<SortableCharacterLanguage[]>(() => {
   const languages: CharacterLanguage[] = [...props.character.languages];
   props.character.lineage.languages.granted.forEach((language) =>
     languages.push({
@@ -109,7 +124,7 @@ const languages = computed<SortableCharacterLanguage[]>(() => {
 
 function add(): void {
   language.value = undefined;
-  // TODO(fpion): modal
+  editModal.value?.open();
 }
 function detail(value: CharacterLanguage): void {
   language.value = value;
@@ -117,10 +132,19 @@ function detail(value: CharacterLanguage): void {
 }
 function edit(value: CharacterLanguage): void {
   language.value = value;
-  // TODO(fpion): modal
+  editModal.value?.open();
 }
 function remove(value: CharacterLanguage): void {
   language.value = value;
   nextTick(() => removeModal.value?.open());
 }
+
+onMounted(async () => {
+  try {
+    const results: SearchResults<Language> = await listLanguages();
+    languages.value = [...results.items];
+  } catch (e: unknown) {
+    emit("error", e);
+  }
+});
 </script>

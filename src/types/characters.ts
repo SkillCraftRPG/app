@@ -141,6 +141,14 @@ export type CharacterLanguage = {
   updatedOn: string;
 };
 
+export type CharacterLanguageAcquisition = {
+  source: string;
+  target: string;
+  notes: string;
+};
+
+export type CharacterLanguageMode = "add" | "edit";
+
 export type CharacterLanguageSource = "Custom" | "Extra" | "Customization" | "Talent"; // TODO(fpion): extra should be named Lineage
 
 export type CharacterModifier = {
@@ -298,6 +306,12 @@ export type CreateCharacterPayload = {
   personality: CharacterPersonality;
   background?: string | null;
   startingWealth?: StartingWealth | null;
+};
+
+export type CreateOrReplaceCharacterLanguagePayload = {
+  source: CharacterLanguageSource;
+  target?: string | null;
+  notes?: string | null;
 };
 
 export type CreateOrReplaceCharacterModifierPayload = {
