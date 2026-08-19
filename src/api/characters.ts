@@ -3,6 +3,7 @@ import { urlUtils } from "logitar-js";
 import type {
   Character,
   CreateCharacterPayload,
+  CreateOrReplaceCharacterLanguagePayload,
   CreateOrReplaceCharacterModifierPayload,
   SearchCharactersPayload,
   UpdateCharacterPayload,
@@ -28,6 +29,18 @@ export async function createCharacterModifier(characterId: string, payload: Crea
   return (await post<CreateOrReplaceCharacterModifierPayload, Character>(url, payload)).data;
 }
 
+export async function createOrReplaceCharacterLanguage(
+  characterId: string,
+  languageId: string,
+  payload: CreateOrReplaceCharacterLanguagePayload,
+): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/languages/{languageId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("languageId", languageId)
+    .buildRelative();
+  return (await put<CreateOrReplaceCharacterLanguagePayload, Character>(url, payload)).data;
+}
+
 export async function readCharacter(id: string): Promise<Character> {
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}" }).setParameter("id", id).buildRelative();
   return (await get<Character>(url)).data;
@@ -37,6 +50,14 @@ export async function removeCharacterCustomization(characterId: string, customiz
   const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/customizations/{customizationId}" })
     .setParameter("characterId", characterId)
     .setParameter("customizationId", customizationId)
+    .buildRelative();
+  return (await _delete<Character>(url)).data;
+}
+
+export async function removeCharacterLanguage(characterId: string, languageId: string): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{characterId}/languages/{languageId}" })
+    .setParameter("characterId", characterId)
+    .setParameter("languageId", languageId)
     .buildRelative();
   return (await _delete<Character>(url)).data;
 }

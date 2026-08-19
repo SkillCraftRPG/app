@@ -144,6 +144,31 @@
   },
   "experience": "Experience",
   "intoxication": "Intoxication",
+  "languages": {
+    "add": "Add a language",
+    "edit": "Edit a language",
+    "empty": "This character does not know any languages.",
+    "extra": "Extra language",
+    "invalid": {
+      "help": "Add or remove additional languages until exactly {extra} are selected.",
+      "lead": "The number of additional languages must match the expected number."
+    },
+    "remove": {
+      "help": "Do you want to remove the <strong>{name}</strong> language from the character?",
+      "lead": "Remove this language?"
+    },
+    "source": {
+      "label": "Source",
+      "options": {
+        "Custom": "Other",
+        "Customization": "Gift / Disability",
+        "Extra": "Lineage",
+        "Talent": "Talent"
+      },
+      "placeholder": "Select a source"
+    },
+    "target": "Specify"
+  },
   "level": "Level",
   "modifiers": {
     "create": "Create a modifier",

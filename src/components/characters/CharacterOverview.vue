@@ -39,10 +39,7 @@
     <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
     <CharacterSpeeds :character="character" />
     <CharacterCustomizations :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
-    <template v-if="hasLanguages">
-      <div class="fs-5 mb-1">{{ t("languages.title") }}</div>
-      <CharacterLanguages :languages="character.languages" :lineage="character.lineage" />
-    </template>
+    <CharacterLanguages :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     <!-- TODO(fpion): Specializations -->
   </div>
 </template>
@@ -55,12 +52,12 @@ import CharacterAlcohol from "./CharacterAlcohol.vue";
 import CharacterAttributes from "./CharacterAttributes.vue";
 import CharacterCaste from "./CharacterCaste.vue";
 import CharacterConditions from "./CharacterConditions.vue";
-import CharacterCustomizations from "@/components/characters/customizations/CharacterCustomizations.vue";
+import CharacterCustomizations from "./customizations/CharacterCustomizations.vue";
 import CharacterEducation from "./CharacterEducation.vue";
 import CharacterExperience from "./CharacterExperience.vue";
 import CharacterHope from "./CharacterHope.vue";
 import CharacterIntoxication from "./CharacterIntoxication.vue";
-import CharacterLanguages from "./CharacterLanguages.vue";
+import CharacterLanguages from "./languages/CharacterLanguages.vue";
 import CharacterLineage from "./CharacterLineage.vue";
 import CharacterSkills from "./CharacterSkills.vue";
 import CharacterSpeeds from "./CharacterSpeeds.vue";
@@ -71,7 +68,7 @@ import type { Character } from "@/types/characters";
 
 const { t } = useI18n();
 
-const props = defineProps<{
+defineProps<{
   character: Character;
 }>();
 
@@ -81,7 +78,4 @@ defineEmits<{
 }>();
 
 const hasConditions = computed<boolean>(() => false); // TODO(fpion): implement
-const hasLanguages = computed<boolean>(() =>
-  Boolean(props.character.languages.length || props.character.lineage.languages.granted.length || props.character.lineage.parent?.languages.granted.length),
-);
 </script>

@@ -85,4 +85,6 @@ function updateDiscount(index: number, discount: CharacterTalentDiscount): void 
   discounts.splice(index, 1, { ...discount });
   emit("update:model-value", { ...props.modelValue, discounts });
 }
+
+// TODO(fpion): rename `detail` to `acquisition`
 </script>
