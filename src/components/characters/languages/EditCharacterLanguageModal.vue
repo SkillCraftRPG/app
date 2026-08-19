@@ -36,8 +36,8 @@ import type {
   CreateOrReplaceCharacterLanguagePayload,
 } from "@/types/characters";
 import type { Language } from "@/types/languages";
+import { createOrReplaceCharacterLanguage } from "@/api/characters";
 import { useForm } from "@/forms";
-import { createOrReplaceCharacterLanguage } from "@/api/characters.ts";
 
 type Step = "select" | "acquisition";
 
@@ -54,7 +54,7 @@ const emit = defineEmits<{
   (e: "updated", value: Character): void;
 }>();
 
-const data = ref<CharacterLanguageAcquisition>({ source: "", target: "", notes: "" }); // TODO(fpion): rename
+const data = ref<CharacterLanguageAcquisition>({ source: "", target: "", notes: "" });
 const isLoading = ref<boolean>(false);
 const language = ref<Language>();
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
@@ -123,7 +123,6 @@ async function submit(): Promise<void> {
             };
             const character: Character = await createOrReplaceCharacterLanguage(props.character.id, language.value.id, payload);
             emit("updated", character);
-            clear();
             modal.value?.hide();
           } catch (e: unknown) {
             emit("error", e);

@@ -11,10 +11,20 @@
       </div>
       <div class="text-body-secondary"><font-awesome-icon :icon="icon" aria-hidden="true" />&nbsp;{{ source }}</div>
     </button>
-    <div v-if="!isReadOnly" class="position-absolute top-0 end-0 m-2" @click.stop>
-      <button type="button" class="btn btn-sm" @click="$emit('remove')">
-        <font-awesome-icon icon="fas fa-xmark" aria-hidden="true" />
+    <div v-if="!isReadOnly" class="dropdown position-absolute top-0 end-0 m-2" @click.stop>
+      <button type="button" class="btn btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+        <font-awesome-icon icon="fas fa-ellipsis-vertical" aria-hidden="true" />
       </button>
+      <ul class="dropdown-menu">
+        <li>
+          <button class="dropdown-item" @click="$emit('edit')"><font-awesome-icon icon="fas fa-edit" aria-hidden="true" />&nbsp;{{ t("actions.edit") }}</button>
+        </li>
+        <li>
+          <button class="dropdown-item" @click="$emit('remove')">
+            <font-awesome-icon icon="fas fa-xmark" aria-hidden="true" />&nbsp;{{ t("actions.remove") }}
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -26,6 +36,7 @@ import { useI18n } from "vue-i18n";
 
 import type { Character, CharacterLanguage, CharacterTalent } from "@/types/characters";
 import type { Customization } from "@/types/customizations";
+import { formatCharacterTalent } from "@/utils/talent";
 
 const { parseBoolean } = parsingUtils;
 const { t } = useI18n();
@@ -71,7 +82,7 @@ const source = computed<string>(() => {
       return "";
     case "Talent":
       const talent: CharacterTalent | undefined = props.character.talents.find((talent) => talent.id === props.language.target);
-      return talent?.talent.name ?? ""; // TODO(fpion): qualifier
+      return talent ? formatCharacterTalent(talent) : "";
     default:
       return props.language.target ?? "";
   }

@@ -12,10 +12,10 @@
             required
             @update:model-value="updateSource"
           />
-          <div v-else>
-            <div class="fw-semibold">{{ t("characters.languages.source.label") }}</div>
-            <div>{{ t(`characters.languages.source.options.${modelValue.source}`) }}</div>
-          </div>
+          <TarCard v-else class="mb-3">
+            <div class="text-body-secondary">{{ t("characters.languages.source.label") }}</div>
+            <div>{{ source }}</div>
+          </TarCard>
         </div>
         <div v-if="showTarget" class="col-md-6">
           <CharacterLanguageTargetField
@@ -27,13 +27,13 @@
             required
             @update:model-value="updateTarget"
           />
-          <div v-else>
-            <div class="fw-semibold">{{ t("characters.languages.target") }}</div>
+          <TarCard v-else class="mb-3">
+            <div class="text-body-secondary">{{ source }}</div>
             <div>{{ target }}</div>
-          </div>
+          </TarCard>
         </div>
       </div>
-      <NotesField />
+      <NotesField :model-value="modelValue.notes" @update:model-value="updateNotes" />
     </section>
   </div>
 </template>
@@ -47,9 +47,12 @@ import CharacterLanguageSourceField from "./CharacterLanguageSourceField.vue";
 import CharacterLanguageTargetField from "./CharacterLanguageTargetField.vue";
 import LanguageCard from "@/components/languages/LanguageCard.vue";
 import NotesField from "@/components/shared/NotesField.vue";
-import type { Character, CharacterLanguageAcquisition, CharacterLanguageMode } from "@/types/characters";
+import TarCard from "@/components/tar/TarCard.vue";
+import type { Character, CharacterLanguageAcquisition, CharacterLanguageMode, CharacterTalent } from "@/types/characters";
+import type { Customization } from "@/types/customizations";
 import type { Language } from "@/types/languages";
 import type { SelectOption } from "@/types/tar/select";
+import { formatCharacterTalent } from "@/utils/talent";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
@@ -74,7 +77,7 @@ const options = computed<SelectOption[] | undefined>(() => {
       );
     case "Talent":
       return orderBy(
-        props.character.talents.map((talent) => ({ text: talent.talent.name, value: talent.talent.id })), // TODO(fpion): qualifier
+        props.character.talents.map((talent) => ({ text: formatCharacterTalent(talent), value: talent.id })),
         "text",
       );
   }
@@ -88,8 +91,23 @@ const placeholder = computed<string | undefined>(() => {
   }
 });
 const showTarget = computed<boolean>(() => Boolean(props.modelValue.source && props.modelValue.source !== "Extra"));
-const target = computed<string>(() => ""); // TODO(fpion): implement
+const source = computed<string>(() => t(`characters.languages.source.options.${props.modelValue.source}`));
+const target = computed<string | undefined>(() => {
+  switch (props.modelValue.source) {
+    case "Custom":
+      return props.modelValue.target;
+    case "Customization":
+      const customization: Customization | undefined = props.character.customizations.find((customization) => customization.id === props.modelValue.target);
+      return customization?.name;
+    case "Talent":
+      const talent: CharacterTalent | undefined = props.character.talents.find((talent) => talent.id === props.modelValue.target);
+      return talent ? formatCharacterTalent(talent) : undefined;
+  }
+});
 
+function updateNotes(notes: string): void {
+  emit("update:model-value", { ...props.modelValue, notes });
+}
 function updateSource(source: string): void {
   emit("update:model-value", { ...props.modelValue, source, target: "" });
 }

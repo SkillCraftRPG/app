@@ -1,4 +1,4 @@
-import type { CharacterTalentDiscount } from "@/types/characters";
+import type { CharacterTalent, CharacterTalentDiscount } from "@/types/characters";
 import type { Talent } from "@/types/talents";
 
 export function calculateCost(talent: Talent, discounts?: CharacterTalentDiscount[]): number {
@@ -7,6 +7,6 @@ export function calculateCost(talent: Talent, discounts?: CharacterTalentDiscoun
   return Math.max(cost, 0);
 }
 
-export function formatTalentName(talent: Talent, qualifier?: string | null): string {
-  return qualifier ? `${talent.name} (${qualifier})` : talent.name;
+export function formatCharacterTalent(talent: CharacterTalent): string {
+  return talent.qualifier ? `${talent.talent.name} (${talent.qualifier})` : talent.talent.name;
 }

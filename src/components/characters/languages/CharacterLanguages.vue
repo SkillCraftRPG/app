@@ -24,8 +24,8 @@
     <LanguageDetailModal v-if="language" :language="language.language" ref="detailModal" />
     <template v-if="!isReadOnly">
       <EditCharacterLanguageModal
+        :acquisition="language"
         :character="character"
-        :language="language"
         :languages="languages"
         ref="editModal"
         @error="$emit('error', $event)"
@@ -124,7 +124,7 @@ const knownLanguages = computed<SortableCharacterLanguage[]>(() => {
 
 function add(): void {
   language.value = undefined;
-  editModal.value?.open();
+  nextTick(() => editModal.value?.open());
 }
 function detail(value: CharacterLanguage): void {
   language.value = value;
@@ -132,7 +132,8 @@ function detail(value: CharacterLanguage): void {
 }
 function edit(value: CharacterLanguage): void {
   language.value = value;
-  editModal.value?.open();
+  console.log(language.value);
+  nextTick(() => editModal.value?.open());
 }
 function remove(value: CharacterLanguage): void {
   language.value = value;

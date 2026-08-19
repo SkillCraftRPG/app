@@ -50,9 +50,9 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import type { Character, CharacterModifier } from "@/types/characters";
 import type { Skill } from "@/types/game";
-import { formatSignedInteger } from "@/utils/format";
 import { SKILL_ATTRIBUTES, camelCase } from "@/utils/game";
-import { formatTalentName } from "@/utils/talent";
+import { formatCharacterTalent } from "@/utils/talent";
+import { formatSignedInteger } from "@/utils/format";
 
 const { n, t } = useI18n();
 const { orderBy } = arrayUtils;
@@ -86,7 +86,7 @@ const talents = computed<SkillTalent[]>(() =>
         .filter((acquisition) => acquisition.talent.skill === props.skill)
         .map((acquisition) => ({
           id: acquisition.id,
-          name: formatTalentName(acquisition.talent, acquisition.qualifier),
+          name: formatCharacterTalent(acquisition),
           tier: acquisition.talent.tier,
         })),
       "name",
