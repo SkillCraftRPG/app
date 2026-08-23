@@ -13,8 +13,8 @@
       <div class="col-md-4">
         <CharacterExperience class="mb-3" :character="character" />
       </div>
-      <div class="col-md-4">
-        <CharacterVitality class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterVitality :character="character" />
       </div>
       <div class="col-md-4">
         <CharacterStamina class="mb-3" :character="character" />
@@ -63,7 +63,7 @@ import CharacterSkills from "./CharacterSkills.vue";
 import CharacterSpeeds from "./CharacterSpeeds.vue";
 import CharacterStamina from "./CharacterStamina.vue";
 import CharacterStatistics from "./CharacterStatistics.vue";
-import CharacterVitality from "./CharacterVitality.vue";
+import CharacterVitality from "./status/CharacterVitality.vue";
 import type { Character } from "@/types/characters";
 
 const { t } = useI18n();
