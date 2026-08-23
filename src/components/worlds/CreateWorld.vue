@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { stringUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import KeyAlreadyUsed from "./KeyAlreadyUsed.vue";
@@ -35,9 +36,9 @@ import TarModal from "@/components/tar/TarModal.vue";
 import type { CreateOrReplaceWorldPayload, World } from "@/types/worlds";
 import { ErrorCodes, StatusCodes, type ApiFailure, type ProblemDetails } from "@/types/api";
 import { createWorld } from "@/api/worlds";
-import { slugify } from "@/utils/string";
 import { useForm } from "@/forms";
 
+const { slugify } = stringUtils;
 const { t } = useI18n();
 
 const emit = defineEmits<{
