@@ -48,7 +48,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="script in scripts" :key="script.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <ScriptLinkCard class="d-flex flex-column h-100" :script="script" />
+            <ScriptLinkCard class="h-100" :script="script" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />

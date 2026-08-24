@@ -16,7 +16,7 @@
         </div>
         <div v-if="acquisitions.length" class="row">
           <div v-for="(acquisition, index) in acquisitions" :key="index" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CharacterTalentCard class="d-flex flex-column h-100" :acquisition="acquisition" @edit="edit(index)" @remove="remove(index)" />
+            <CharacterTalentCard class="h-100" :acquisition="acquisition" @edit="edit(index)" @remove="remove(index)" />
           </div>
         </div>
         <p v-else>{{ t("characters.talents.empty") }}</p>

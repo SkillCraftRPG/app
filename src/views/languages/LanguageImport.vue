@@ -11,7 +11,7 @@
         <div class="row">
           <div v-for="item in data" :key="item.reference.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LanguageImportCard
-              class="d-flex flex-column h-100"
+              class="h-100"
               :language="item.reference"
               :selected="item.selected"
               :status="item.status"

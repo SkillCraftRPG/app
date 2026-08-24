@@ -9,7 +9,7 @@
           <div v-for="caste in castes" :key="caste.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <CasteCard
               :caste="caste"
-              class="d-flex flex-column h-100"
+              class="h-100"
               clickable
               :selected="caste.id === selectedCaste?.id"
               selection="single"
@@ -34,7 +34,7 @@
         <div class="row">
           <div v-for="education in educations" :key="education.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <EducationCard
-              class="d-flex flex-column h-100"
+              class="h-100"
               clickable
               :education="education"
               :selected="education.id === selectedEducation?.id"

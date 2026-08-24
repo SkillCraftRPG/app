@@ -91,5 +91,4 @@ onBeforeUnmount(() => {
 
 // TODO(fpion): reinitialize should be called in a nextTick when refs are synchronized via a watch
 // TODO(fpion): all modals should probably be scrollable
-// TODO(fpion): all cards should probably have d-flex flex-column h-100
 </script>

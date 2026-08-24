@@ -32,7 +32,7 @@
       <div class="row">
         <div v-for="talent in options" :key="talent.id" class="col-lg-6 col-xl-4 mb-3">
           <TalentCard
-            class="d-flex flex-column h-100"
+            class="h-100"
             clickable
             :selected="talent.id === selected?.id"
             selection="single"

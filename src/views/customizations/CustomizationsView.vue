@@ -51,7 +51,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="customization in customizations" :key="customization.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CustomizationLinkCard class="d-flex flex-column h-100" :customization="customization" />
+            <CustomizationLinkCard class="h-100" :customization="customization" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />

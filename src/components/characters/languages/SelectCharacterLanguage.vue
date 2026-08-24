@@ -12,7 +12,7 @@
       <div class="row">
         <div v-for="language in options" :key="language.id" class="col-lg-6 col-xl-4 mb-3">
           <LanguageCard
-            class="d-flex flex-column h-100"
+            class="h-100"
             clickable
             :language="language"
             :selected="language.id === selected?.id"

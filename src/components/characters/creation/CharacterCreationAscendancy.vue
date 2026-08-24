@@ -8,7 +8,7 @@
         <div class="row">
           <div v-for="lineage in species" :key="lineage.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LineageCard
-              class="d-flex flex-column h-100"
+              class="h-100"
               clickable
               :lineage="lineage"
               :selected="lineage.id === selectedSpecies?.id"
@@ -35,7 +35,7 @@
         <div class="row">
           <div v-for="lineage in ethnicities" :key="lineage.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LineageCard
-              class="d-flex flex-column h-100"
+              class="h-100"
               clickable
               :lineage="lineage"
               :selected="lineage.id === selectedEthnicity?.id"
@@ -51,7 +51,7 @@
         <div class="row">
           <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
             <LanguageCard
-              class="d-flex flex-column h-100"
+              class="h-100"
               :clickable="isClickable(language)"
               :language="language"
               :selected="selectedLanguages.has(language.id)"

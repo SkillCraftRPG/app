@@ -35,7 +35,7 @@
       <p class="text-body-secondary">{{ t("characters.creation.equipment.currency") }}</p>
       <div class="row">
         <div v-for="item in items" :key="item.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-          <ItemCard class="d-flex flex-column h-100" clickable :item="item" :selected="item.id === currency?.id" selection="single" @click="toggle(item)" />
+          <ItemCard class="h-100" clickable :item="item" :selected="item.id === currency?.id" selection="single" @click="toggle(item)" />
         </div>
       </div>
     </template>
