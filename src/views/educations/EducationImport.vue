@@ -10,13 +10,7 @@
         </div>
         <div class="row">
           <div v-for="item in data" :key="item.reference.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <EducationImportCard
-              class="h-100"
-              :education="item.reference"
-              :selected="item.selected"
-              :status="item.status"
-              @click="toggle(item)"
-            />
+            <EducationImportCard class="h-100" :education="item.reference" :selected="item.selected" :status="item.status" @click="toggle(item)" />
           </div>
         </div>
         <div v-if="canImport" class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
