@@ -1,7 +1,7 @@
 <template>
   <div>
     <TarButton icon="fas fa-plus" size="large" :text="t('actions.create')" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('spells.create')">
+    <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" :title="t('spells.create')">
       <form @submit.prevent="handleSubmit(submit)">
         <SpellTierField class="mb-3" required v-model="tier" />
         <NameField class="mb-3" required v-model="name" />

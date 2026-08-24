@@ -1,7 +1,7 @@
 <template>
   <div>
     <TarButton icon="fas fa-plus" size="large" :text="t('actions.create')" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('worlds.create.lead')">
+    <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" :title="t('worlds.create.lead')">
       <p class="text-secondary">{{ t("worlds.create.help") }}</p>
       <KeyAlreadyUsed v-model="keyAlreadyUsed" />
       <form @submit.prevent="handleSubmit(submit)">

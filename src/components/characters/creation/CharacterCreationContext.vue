@@ -7,14 +7,7 @@
         <p class="text-body-secondary">{{ t("characters.creation.context.caste.help") }}</p>
         <div class="row">
           <div v-for="caste in castes" :key="caste.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <CasteCard
-              :caste="caste"
-              class="h-100"
-              clickable
-              :selected="caste.id === selectedCaste?.id"
-              selection="single"
-              @click="toggleCaste(caste)"
-            />
+            <CasteCard :caste="caste" class="h-100" clickable :selected="caste.id === selectedCaste?.id" selection="single" @click="toggleCaste(caste)" />
           </div>
         </div>
       </template>

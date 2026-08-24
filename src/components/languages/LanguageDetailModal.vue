@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="title">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="title">
     <div v-if="script" class="row text-center mb-3">
       <div class="col">
         <TarCard class="clickable" :class="{ 'border-primary bg-primary-subtle': selected === 'language' }" @click="selected = 'language'">

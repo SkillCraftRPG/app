@@ -31,14 +31,7 @@
     <section v-if="options.length" class="border-top border-secondary-subtle pt-3">
       <div class="row">
         <div v-for="talent in options" :key="talent.id" class="col-lg-6 col-xl-4 mb-3">
-          <TalentCard
-            class="h-100"
-            clickable
-            :selected="talent.id === selected?.id"
-            selection="single"
-            :talent="talent"
-            @click="$emit('toggle', talent)"
-          />
+          <TalentCard class="h-100" clickable :selected="talent.id === selected?.id" selection="single" :talent="talent" @click="$emit('toggle', talent)" />
         </div>
       </div>
       <a v-if="showLimit" href="#" @click="toggleLimit">{{ t(limit ? "actions.showMore" : "actions.showLess") }}</a>

@@ -7,7 +7,7 @@
       </div>
       <TarProgress :aria-label="label" class="mt-1" :label="progress.card.label" :value="progress.card.value" variant="success" />
     </TarCard>
-    <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="label">
+    <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="label">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
           <div class="col-md-6">

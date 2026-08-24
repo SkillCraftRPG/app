@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="title">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="title">
     <div v-if="caste.skill || caste.wealthRoll" class="row text-center mb-3">
       <div class="col">
         <template v-if="caste.skill">
