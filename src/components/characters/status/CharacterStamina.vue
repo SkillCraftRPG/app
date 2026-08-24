@@ -19,11 +19,11 @@
           </div>
           <div class="col-md-6">
             <div class="d-flex justify-content-between align-items-center gap-2">
-              <div>{{ t("characters.stamina.total") }}</div>
+              <div class="small text-body-secondary">{{ t("characters.stamina.total") }}</div>
               <div>{{ n(total, "integer") }}</div>
             </div>
             <div class="d-flex justify-content-between align-items-center gap-2">
-              <div>{{ t("game.rest.short") }}</div>
+              <div class="small text-body-secondary">{{ t("game.rest.short") }}</div>
               <div>+{{ n(regeneration, "integer") }}</div>
             </div>
           </div>

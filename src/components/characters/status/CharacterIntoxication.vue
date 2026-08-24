@@ -14,10 +14,8 @@
             <IntoxicationField id="current" label="characters.intoxication.current" :max="total" v-model="current" />
           </div>
           <div class="col-md-6">
-            <div class="d-flex justify-content-between align-items-center gap-2">
-              <div>{{ t("characters.intoxication.total") }}</div>
-              <div>{{ n(total, "integer") }}</div>
-            </div>
+            <div class="small text-body-secondary">{{ t("characters.intoxication.total") }}</div>
+            <div>{{ n(total, "integer") }}</div>
           </div>
         </div>
         <TarProgress :aria-label="label" class="mb-3 mt-1 progress-intoxication" :label="progress.form.label" :value="progress.form.value" />

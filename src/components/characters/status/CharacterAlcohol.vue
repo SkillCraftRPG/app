@@ -14,10 +14,8 @@
             <AlcoholField id="current" label="characters.bloodAlcoholContent.current" :max="total" v-model="current" />
           </div>
           <div class="col-md-6">
-            <div class="d-flex justify-content-between align-items-center gap-2">
-              <div>{{ t("characters.bloodAlcoholContent.total") }}</div>
-              <div>{{ n(total, "integer") }}</div>
-            </div>
+            <div class="small text-body-secondary">{{ t("characters.bloodAlcoholContent.total") }}</div>
+            <div>{{ n(total, "integer") }}</div>
           </div>
         </div>
         <TarProgress :aria-label="label" class="mb-3 mt-1 progress-alcohol" :label="progress.form.label" :value="progress.form.value" />
