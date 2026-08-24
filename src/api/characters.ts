@@ -5,6 +5,7 @@ import type {
   CreateCharacterPayload,
   CreateOrReplaceCharacterLanguagePayload,
   CreateOrReplaceCharacterModifierPayload,
+  GainCharacterExperiencePayload,
   SearchCharactersPayload,
   UpdateCharacterPayload,
 } from "@/types/characters";
@@ -39,6 +40,11 @@ export async function createOrReplaceCharacterLanguage(
     .setParameter("languageId", languageId)
     .buildRelative();
   return (await put<CreateOrReplaceCharacterLanguagePayload, Character>(url, payload)).data;
+}
+
+export async function gainCharacterExperience(id: string, payload: GainCharacterExperiencePayload): Promise<Character> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/characters/{id}/experience" }).setParameter("id", id).buildRelative();
+  return (await post<GainCharacterExperiencePayload, Character>(url, payload)).data;
 }
 
 export async function readCharacter(id: string): Promise<Character> {

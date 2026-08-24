@@ -11,7 +11,7 @@
         <CharacterEducation :education="character.education" />
       </div>
       <div class="col-md-4 mb-3">
-        <CharacterExperience :character="character" />
+        <CharacterExperience :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
       <div class="col-md-4 mb-3">
         <CharacterVitality :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
@@ -49,20 +49,20 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterAlcohol from "./status/CharacterAlcohol.vue";
-import CharacterAttributes from "./CharacterAttributes.vue";
-import CharacterCaste from "./CharacterCaste.vue";
-import CharacterConditions from "./CharacterConditions.vue";
+import CharacterAttributes from "./CharacterAttributes.vue"; // TODO(fpion): move to ./overview/
+import CharacterCaste from "./overview/CharacterCaste.vue";
+import CharacterConditions from "./CharacterConditions.vue"; // TODO(fpion): move to ./status/
 import CharacterCustomizations from "./customizations/CharacterCustomizations.vue";
-import CharacterEducation from "./CharacterEducation.vue";
-import CharacterExperience from "./CharacterExperience.vue";
+import CharacterEducation from "./overview/CharacterEducation.vue";
+import CharacterExperience from "./status/CharacterExperience.vue";
 import CharacterHope from "./status/CharacterHope.vue";
 import CharacterIntoxication from "./status/CharacterIntoxication.vue";
-import CharacterLanguages from "./languages/CharacterLanguages.vue";
-import CharacterLineage from "./CharacterLineage.vue";
-import CharacterSkills from "./CharacterSkills.vue";
-import CharacterSpeeds from "./CharacterSpeeds.vue";
+import CharacterLanguages from "./languages/CharacterLanguages.vue"; // TODO(fpion): move to ./overview/
+import CharacterLineage from "./overview/CharacterLineage.vue";
+import CharacterSkills from "./CharacterSkills.vue"; // TODO(fpion): move to ./overview/
+import CharacterSpeeds from "./CharacterSpeeds.vue"; // TODO(fpion): move to ./overview/
 import CharacterStamina from "./status/CharacterStamina.vue";
-import CharacterStatistics from "./CharacterStatistics.vue";
+import CharacterStatistics from "./CharacterStatistics.vue"; // TODO(fpion): move to ./overview/
 import CharacterVitality from "./status/CharacterVitality.vue";
 import type { Character } from "@/types/characters";
 

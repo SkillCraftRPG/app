@@ -146,7 +146,11 @@
       "Unspecified": "Non précisée"
     }
   },
-  "experience": "Expérience",
+  "experience": {
+    "gain": "Gain d’expérience",
+    "label": "Expérience",
+    "toNextLevel": "Prochain niveau :"
+  },
   "intoxication": {
     "current": "Actuelle",
     "label": "Intoxication",
@@ -177,7 +181,10 @@
     },
     "target": "Précisez"
   },
-  "level": "Niveau",
+  "level": {
+    "label": "Niveau",
+    "up": "Niveau +1"
+  },
   "modifiers": {
     "create": "Créer un modificateur",
     "edit": "Modifier un modificateur",

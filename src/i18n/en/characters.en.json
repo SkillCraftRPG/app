@@ -146,7 +146,11 @@
       "Unspecified": "Unspecified"
     }
   },
-  "experience": "Experience",
+  "experience": {
+    "gain": "Experience Gain",
+    "label": "Experience",
+    "toNextLevel": "Next Level:"
+  },
   "intoxication": {
     "current": "Current",
     "label": "Intoxication",
@@ -177,7 +181,10 @@
     },
     "target": "Specify"
   },
-  "level": "Level",
+  "level": {
+    "label": "Level",
+    "up": "Level Up"
+  },
   "modifiers": {
     "create": "Create a modifier",
     "edit": "Edit a modifier",
