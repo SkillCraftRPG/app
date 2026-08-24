@@ -116,11 +116,11 @@ import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
 import AgeField from "@/components/lineages/AgeField.vue";
-import EyesField from "@/components/characters/EyesField.vue";
-import HairField from "@/components/characters/HairField.vue";
-import HeightField from "@/components/characters/HeightField.vue";
+import EyesField from "@/components/characters/profile/EyesField.vue";
+import HairField from "@/components/characters/profile/HairField.vue";
+import HeightField from "@/components/characters/profile/HeightField.vue";
 import InputField from "@/components/forms/InputField.vue";
-import SkinField from "@/components/characters/SkinField.vue";
+import SkinField from "@/components/characters/profile/SkinField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarSelect from "@/components/tar/TarSelect.vue";
 import type { CharacterAppearanceDetail } from "@/types/characters";

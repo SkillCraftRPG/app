@@ -17,7 +17,7 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import BackgroundField from "@/components/characters/BackgroundField.vue";
+import BackgroundField from "@/components/characters/profile/BackgroundField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
