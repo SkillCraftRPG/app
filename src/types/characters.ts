@@ -335,6 +335,10 @@ export type CreateOrReplaceCharacterModifierPayload = {
 
 export type DominantHand = "Left" | "Right";
 
+export type GainCharacterExperiencePayload = {
+  experience: number;
+};
+
 export type SearchCharactersPayload = SearchPayload & {
   lineageId?: string | null;
   casteId?: string | null;
