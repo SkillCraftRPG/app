@@ -59,6 +59,11 @@ export default createI18n<[MessageSchema], "en" | "fr">({
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       },
+      percentage: {
+        style: "percent",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      },
     },
     fr: {
       characterHeight: {
@@ -85,6 +90,11 @@ export default createI18n<[MessageSchema], "en" | "fr">({
         style: "decimal",
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
+      },
+      percentage: {
+        style: "percent",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       },
     },
   },

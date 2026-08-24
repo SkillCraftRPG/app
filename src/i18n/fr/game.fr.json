@@ -21,7 +21,11 @@
     "label": "Particularité",
     "title": "Particularités"
   },
-  "hope": "Espérance",
+  "hope": {
+    "current": "Actuelle",
+    "label": "Espérance",
+    "maximum": "Maximale"
+  },
   "rest": {
     "long": "Sommeil",
     "short": "Halte"

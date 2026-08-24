@@ -21,7 +21,11 @@
     "label": "Feature",
     "title": "Features"
   },
-  "hope": "Hope",
+  "hope": {
+    "current": "Current",
+    "label": "Hope",
+    "maximum": "Maximum"
+  },
   "rest": {
     "long": "Sleep",
     "short": "Break"

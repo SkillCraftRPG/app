@@ -20,7 +20,7 @@
         <CharacterStamina :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
       <div class="col-md-4 mb-3">
-        <CharacterHope :character="character" />
+        <CharacterHope :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
       <div class="col-md-4 mb-3">
         <CharacterAlcohol :character="character" />
@@ -55,7 +55,7 @@ import CharacterConditions from "./CharacterConditions.vue";
 import CharacterCustomizations from "./customizations/CharacterCustomizations.vue";
 import CharacterEducation from "./CharacterEducation.vue";
 import CharacterExperience from "./CharacterExperience.vue";
-import CharacterHope from "./CharacterHope.vue";
+import CharacterHope from "./status/CharacterHope.vue";
 import CharacterIntoxication from "./CharacterIntoxication.vue";
 import CharacterLanguages from "./languages/CharacterLanguages.vue";
 import CharacterLineage from "./CharacterLineage.vue";

@@ -34,8 +34,8 @@ withDefaults(
     step?: number | string;
   }>(),
   {
-    id: "stamina",
-    label: "game.statistic.options.Stamina",
+    id: "hope",
+    label: "game.hope.label",
     max: 3,
     min: 0,
     step: 1,

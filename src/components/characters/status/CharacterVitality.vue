@@ -9,9 +9,9 @@
         <div>{{ t("game.rest.long") }}</div>
         <div>+{{ n(regeneration, "integer") }}</div>
       </div>
-      <TarProgress :aria-label="label" class="mt-1" :value="value" variant="danger" />
+      <TarProgress :aria-label="label" class="mt-1" :label="progress.card.label" :value="progress.card.value" variant="danger" />
     </TarCard>
-    <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="t('game.statistic.options.Vitality')">
+    <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="label">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
           <div class="col-md-6">
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <TarProgress :aria-label="label" class="mb-3 mt-1" :value="value" variant="danger" />
+        <TarProgress :aria-label="label" class="mb-3 mt-1" :label="progress.form.label" :value="progress.form.value" variant="danger" />
         <div class="row">
           <div class="col-md-6">
             <VitalityField class="mb-3" id="temporary" label="characters.vitality.temporary" v-model="temporary" />
@@ -92,7 +92,14 @@ const hasChanges = computed<boolean>(
 const label = computed<string>(() => t("game.statistic.options.Vitality"));
 const total = computed<number>(() => props.character.statistics.vitality.total);
 const regeneration = computed<number>(() => Math.round(total.value / 7));
-const value = computed<number>(() => Math.floor((props.character.vitality.current * 100) / total.value));
+const progress = computed(() => {
+  const card: number = Math.floor((props.character.vitality.current * 100) / total.value);
+  const form: number = Math.floor((current.value * 100) / total.value);
+  return {
+    card: { label: n(card / 100, "percentage"), value: card },
+    form: { label: n(form / 100, "percentage"), value: form },
+  };
+});
 
 const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
@@ -136,4 +143,6 @@ watch(
   },
   { deep: true, immediate: true },
 );
+
+// TODO(fpion): show temporary HP and stun damage in card
 </script>
