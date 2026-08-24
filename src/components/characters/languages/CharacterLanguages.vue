@@ -11,7 +11,6 @@
       <div v-for="language in knownLanguages" :key="language.language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
         <CharacterLanguageCard
           :character="character"
-          class="d-flex flex-column h-100"
           :language="language"
           :readonly="isReadOnly || (language.source === 'Extra' && Boolean(language.target))"
           @click="detail(language)"

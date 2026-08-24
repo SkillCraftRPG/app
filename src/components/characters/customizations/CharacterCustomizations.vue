@@ -9,22 +9,10 @@
     </TarAlert>
     <div v-if="character.customizations.length" class="row">
       <div v-for="gift in gifts" :key="gift.id" class="mb-3" :class="classes">
-        <CharacterCustomizationCard
-          class="d-flex flex-column h-100"
-          :customization="gift"
-          :readonly="isReadOnly"
-          @click="detail(gift)"
-          @remove="remove(gift)"
-        />
+        <CharacterCustomizationCard :customization="gift" :readonly="isReadOnly" @click="detail(gift)" @remove="remove(gift)" />
       </div>
       <div v-for="disability in disabilities" :key="disability.id" class="mb-3" :class="classes">
-        <CharacterCustomizationCard
-          class="d-flex flex-column h-100"
-          :customization="disability"
-          :readonly="isReadOnly"
-          @click="detail(disability)"
-          @remove="remove(disability)"
-        />
+        <CharacterCustomizationCard :customization="disability" :readonly="isReadOnly" @click="detail(disability)" @remove="remove(disability)" />
       </div>
     </div>
     <p v-else>{{ t("characters.customizations.empty") }}</p>

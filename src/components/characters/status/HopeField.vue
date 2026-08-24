@@ -1,7 +1,7 @@
 <template>
   <InputField
     :id="id"
-    :label="label"
+    :label="t(label)"
     :min="min"
     :max="max"
     :model-value="modelValue.toString()"
@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { parsingUtils } from "logitar-js";
 import { useI18n } from "vue-i18n";
 
@@ -24,22 +23,22 @@ const { t } = useI18n();
 withDefaults(
   defineProps<{
     id?: string;
+    label?: string;
     max?: number | string;
     min?: number | string;
-    modelValue: number;
+    modelValue: number | string;
     step?: number | string;
   }>(),
   {
-    id: "weight",
-    max: 999.9,
+    id: "hope",
+    label: "game.hope.label",
+    max: 3,
     min: 0,
-    step: 0.1,
+    step: 1,
   },
 );
 
 defineEmits<{
   (e: "update:model-value", value: number): void;
 }>();
-
-const label = computed<string>(() => `${t("characters.physical.weight.label")} (${t("game.unit.kg")})`);
 </script>

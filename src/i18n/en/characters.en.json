@@ -42,7 +42,11 @@
     "label": "Background",
     "title": "Background"
   },
-  "bloodAlcoholContent": "Blood Alcohol Content",
+  "bloodAlcoholContent": {
+    "current": "Current",
+    "label": "Blood Alcohol Content",
+    "total": "Maximum"
+  },
   "conditions": "Conditions",
   "created": {
     "help": "You can now complete its details.",
@@ -143,7 +147,11 @@
     }
   },
   "experience": "Experience",
-  "intoxication": "Intoxication",
+  "intoxication": {
+    "current": "Current",
+    "label": "Intoxication",
+    "total": "Maximum"
+  },
   "languages": {
     "add": "Add a language",
     "edit": "Edit a language",
@@ -231,6 +239,10 @@
       "UpdatedOn": "Last updated"
     }
   },
+  "stamina": {
+    "current": "Current",
+    "total": "Maximum"
+  },
   "statistics": {
     "title": "Statistics"
   },
@@ -273,5 +285,11 @@
     "select": "Select the talent to add to the character. Use the filters to narrow the results."
   },
   "tier": "Tier",
-  "title": "Characters"
+  "title": "Characters",
+  "vitality": {
+    "current": "Current",
+    "stun": "Non-Lethal",
+    "temporary": "Temporary",
+    "total": "Maximum"
+  }
 }

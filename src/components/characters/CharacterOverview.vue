@@ -10,23 +10,23 @@
       <div class="col-md-4 mb-3">
         <CharacterEducation :education="character.education" />
       </div>
-      <div class="col-md-4">
-        <CharacterExperience class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterExperience :character="character" />
       </div>
-      <div class="col-md-4">
-        <CharacterVitality class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterVitality :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
-      <div class="col-md-4">
-        <CharacterStamina class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterStamina :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
-      <div class="col-md-4">
-        <CharacterHope class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterHope :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
-      <div class="col-md-4">
-        <CharacterAlcohol class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterAlcohol :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
-      <div class="col-md-4">
-        <CharacterIntoxication class="mb-3" :character="character" />
+      <div class="col-md-4 mb-3">
+        <CharacterIntoxication :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
     </div>
     <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
@@ -48,22 +48,22 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import CharacterAlcohol from "./CharacterAlcohol.vue";
+import CharacterAlcohol from "./status/CharacterAlcohol.vue";
 import CharacterAttributes from "./CharacterAttributes.vue";
 import CharacterCaste from "./CharacterCaste.vue";
 import CharacterConditions from "./CharacterConditions.vue";
 import CharacterCustomizations from "./customizations/CharacterCustomizations.vue";
 import CharacterEducation from "./CharacterEducation.vue";
 import CharacterExperience from "./CharacterExperience.vue";
-import CharacterHope from "./CharacterHope.vue";
-import CharacterIntoxication from "./CharacterIntoxication.vue";
+import CharacterHope from "./status/CharacterHope.vue";
+import CharacterIntoxication from "./status/CharacterIntoxication.vue";
 import CharacterLanguages from "./languages/CharacterLanguages.vue";
 import CharacterLineage from "./CharacterLineage.vue";
 import CharacterSkills from "./CharacterSkills.vue";
 import CharacterSpeeds from "./CharacterSpeeds.vue";
-import CharacterStamina from "./CharacterStamina.vue";
+import CharacterStamina from "./status/CharacterStamina.vue";
 import CharacterStatistics from "./CharacterStatistics.vue";
-import CharacterVitality from "./CharacterVitality.vue";
+import CharacterVitality from "./status/CharacterVitality.vue";
 import type { Character } from "@/types/characters";
 
 const { t } = useI18n();
