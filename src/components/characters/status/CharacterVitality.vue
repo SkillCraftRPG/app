@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import TarButton from "@/components/tar/TarButton.vue";
@@ -139,7 +139,7 @@ watch(
     current.value = character.vitality.current;
     temporary.value = character.vitality.temporary;
     stun.value = character.vitality.stun;
-    reinitialize();
+    nextTick(reinitialize);
   },
   { deep: true, immediate: true },
 );

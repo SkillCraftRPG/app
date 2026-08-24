@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import HopeField from "./HopeField.vue";
@@ -110,7 +110,7 @@ watch(
   (character) => {
     current.value = character.hope.current;
     maximum.value = character.hope.maximum;
-    reinitialize();
+    nextTick(reinitialize);
   },
   { deep: true, immediate: true },
 );
