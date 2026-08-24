@@ -8,11 +8,7 @@
     :step="step"
     type="number"
     @update:model-value="$emit('update:model-value', parseNumber($event) ?? 0)"
-  >
-    <template #append>
-      <slot name="append"></slot>
-    </template>
-  </InputField>
+  />
 </template>
 
 <script setup lang="ts">

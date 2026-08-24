@@ -42,7 +42,11 @@
     "label": "Background",
     "title": "Background"
   },
-  "bloodAlcoholContent": "Blood Alcohol Content",
+  "bloodAlcoholContent": {
+    "current": "Current",
+    "label": "Blood Alcohol Content",
+    "total": "Maximum"
+  },
   "conditions": "Conditions",
   "created": {
     "help": "You can now complete its details.",
@@ -143,7 +147,11 @@
     }
   },
   "experience": "Experience",
-  "intoxication": "Intoxication",
+  "intoxication": {
+    "current": "Current",
+    "label": "Intoxication",
+    "total": "Maximum"
+  },
   "languages": {
     "add": "Add a language",
     "edit": "Edit a language",

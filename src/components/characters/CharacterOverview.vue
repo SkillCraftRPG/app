@@ -23,10 +23,10 @@
         <CharacterHope :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
       <div class="col-md-4 mb-3">
-        <CharacterAlcohol :character="character" />
+        <CharacterAlcohol :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
       <div class="col-md-4 mb-3">
-        <CharacterIntoxication :character="character" />
+        <CharacterIntoxication :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
       </div>
     </div>
     <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
@@ -48,7 +48,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import CharacterAlcohol from "./CharacterAlcohol.vue";
+import CharacterAlcohol from "./status/CharacterAlcohol.vue";
 import CharacterAttributes from "./CharacterAttributes.vue";
 import CharacterCaste from "./CharacterCaste.vue";
 import CharacterConditions from "./CharacterConditions.vue";
@@ -56,7 +56,7 @@ import CharacterCustomizations from "./customizations/CharacterCustomizations.vu
 import CharacterEducation from "./CharacterEducation.vue";
 import CharacterExperience from "./CharacterExperience.vue";
 import CharacterHope from "./status/CharacterHope.vue";
-import CharacterIntoxication from "./CharacterIntoxication.vue";
+import CharacterIntoxication from "./status/CharacterIntoxication.vue";
 import CharacterLanguages from "./languages/CharacterLanguages.vue";
 import CharacterLineage from "./CharacterLineage.vue";
 import CharacterSkills from "./CharacterSkills.vue";
