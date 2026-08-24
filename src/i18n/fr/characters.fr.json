@@ -231,6 +231,10 @@
       "UpdatedOn": "Dernière modification"
     }
   },
+  "stamina": {
+    "current": "Actuelle",
+    "total": "Maximale"
+  },
   "statistics": {
     "title": "Statistiques"
   },
@@ -273,5 +277,11 @@
     "select": "Sélectionnez le talent à ajouter au personnage. Utilisez les filtres pour affiner les résultats."
   },
   "tier": "Tiers",
-  "title": "Personnages"
+  "title": "Personnages",
+  "vitality": {
+    "current": "Actuelle",
+    "stun": "Non-létal",
+    "temporary": "Temporaire",
+    "total": "Maximale"
+  }
 }

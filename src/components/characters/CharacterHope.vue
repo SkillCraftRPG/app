@@ -2,7 +2,7 @@
   <TarCard class="text-center">
     <div class="card-text d-flex justify-content-between align-items-center gap-2">
       <div class="fw-semibold">{{ label }}</div>
-      <div class="text-success">{{ n(character.hope, "integer") }} / {{ n(total, "integer") }}</div>
+      <div class="text-success">{{ n(character.hope.current, "integer") }} / {{ n(maximum, "integer") }}</div>
     </div>
     <TarProgress :aria-label="label" class="mt-1" :value="value" variant="success" />
   </TarCard>
@@ -23,6 +23,6 @@ const props = defineProps<{
 }>();
 
 const label = computed<string>(() => t("game.hope"));
-const total = computed<number>(() => 3); // TODO(fpion): implement
-const value = computed<number>(() => Math.floor((props.character.hope * 100) / total.value));
+const maximum = computed<number>(() => props.character.hope.maximum);
+const value = computed<number>(() => Math.floor((props.character.hope.current * 100) / maximum.value));
 </script>

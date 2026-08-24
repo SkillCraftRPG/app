@@ -25,11 +25,11 @@ export type Alignment =
   | "NeutralGood";
 
 export type Character = Aggregate & {
-  name: string;
-  dominantHand?: DominantHand | null;
   tier: number;
   level: number;
   experience: number;
+  name: string;
+  dominantHand?: DominantHand | null;
   lineage: Lineage;
   caste: Caste;
   education: Education;
@@ -41,16 +41,16 @@ export type Character = Aggregate & {
   statistics: CharacterStatistics;
   skills: CharacterSkills;
   speeds: CharacterSpeeds;
-  vitality: number;
-  stamina: number;
-  bloodAlcoholContent: number;
-  intoxication: number;
-  hope: number;
   customizations: Customization[];
   languages: CharacterLanguage[];
   modifiers: CharacterModifier[];
   talents: CharacterTalent[];
   points: CharacterPoints;
+  vitality: CharacterVitality;
+  stamina: number;
+  hope: CharacterHope;
+  bloodAlcoholContent: number;
+  intoxication: number;
   /* TODO(fpion): complete this
    * Player
    * Picture
@@ -129,6 +129,11 @@ export enum CharacterCreationStep {
   Background = 8,
   Equipment = 9,
 }
+
+export type CharacterHope = {
+  current: number;
+  maximum: number;
+};
 
 export type CharacterLanguage = {
   language: Language;
@@ -290,6 +295,12 @@ export type CharacterTalentPayload = {
   discounts: CharacterTalentDiscount[];
 };
 
+export type CharacterVitality = {
+  current: number;
+  temporary: number;
+  stun: number;
+};
+
 export type CreateCharacterPayload = {
   lineageId: string;
   languageIds: string[];
@@ -356,4 +367,9 @@ export type UpdateCharacterPayload = {
   alignment?: Optional<Alignment> | null;
   personality?: CharacterPersonality | null;
   background?: Optional<string> | null;
+  vitality?: CharacterVitality | null;
+  stamina?: number | null;
+  hope?: CharacterHope | null;
+  bloodAlcoholContent?: number | null;
+  intoxication?: number | null;
 };

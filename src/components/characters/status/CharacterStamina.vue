@@ -3,40 +3,32 @@
     <TarCard class="clickable h-100" @click="open">
       <div class="card-text d-flex justify-content-between align-items-center gap-2">
         <div class="fw-semibold">{{ label }}</div>
-        <div class="text-danger">{{ n(character.vitality.current, "integer") }} / {{ n(total, "integer") }}</div>
+        <div class="text-primary">{{ n(character.stamina, "integer") }} / {{ n(total, "integer") }}</div>
       </div>
       <div class="card-text d-flex justify-content-between align-items-center gap-2">
-        <div>{{ t("game.rest.long") }}</div>
+        <div>{{ t("game.rest.short") }}</div>
         <div>+{{ n(regeneration, "integer") }}</div>
       </div>
-      <TarProgress :aria-label="label" class="mt-1" :value="value" variant="danger" />
+      <TarProgress :aria-label="label" class="mt-1" :value="value" variant="primary" />
     </TarCard>
-    <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="t('game.statistic.options.Vitality')">
+    <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="t('game.statistic.options.Stamina')">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
           <div class="col-md-6">
-            <VitalityField id="current" label="characters.vitality.current" :max="total" v-model="current" />
+            <StaminaField id="current" label="characters.stamina.current" :max="total" v-model="current" />
           </div>
           <div class="col-md-6">
             <div class="d-flex justify-content-between align-items-center gap-2">
-              <div>{{ t("characters.vitality.total") }}</div>
+              <div>{{ t("characters.stamina.total") }}</div>
               <div>{{ n(total, "integer") }}</div>
             </div>
             <div class="d-flex justify-content-between align-items-center gap-2">
-              <div>{{ t("game.rest.long") }}</div>
+              <div>{{ t("game.rest.short") }}</div>
               <div>+{{ n(regeneration, "integer") }}</div>
             </div>
           </div>
         </div>
-        <TarProgress :aria-label="label" class="mb-3 mt-1" :value="value" variant="danger" />
-        <div class="row">
-          <div class="col-md-6">
-            <VitalityField class="mb-3" id="temporary" label="characters.vitality.temporary" v-model="temporary" />
-          </div>
-          <div class="col-md-6">
-            <VitalityField class="mb-3" id="stun" label="characters.vitality.stun" v-model="stun" />
-          </div>
-        </div>
+        <TarProgress :aria-label="label" class="mb-3 mt-1" :value="value" variant="primary" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
@@ -57,13 +49,13 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
+import StaminaField from "./StaminaField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
-import VitalityField from "./VitalityField.vue";
 import type { Character, UpdateCharacterPayload } from "@/types/characters";
-import { updateCharacter } from "@/api/characters";
+import { updateCharacter } from "@/api/characters.ts";
 import { useForm } from "@/forms";
 
 const { n, t } = useI18n();
@@ -80,19 +72,12 @@ const emit = defineEmits<{
 const current = ref<number>(0);
 const isLoading = ref<boolean>(false);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
-const stun = ref<number>(0);
-const temporary = ref<number>(0);
 
-const hasChanges = computed<boolean>(
-  () =>
-    current.value !== props.character.vitality.current ||
-    temporary.value !== props.character.vitality.temporary ||
-    stun.value !== props.character.vitality.stun,
-);
-const label = computed<string>(() => t("game.statistic.options.Vitality"));
-const total = computed<number>(() => props.character.statistics.vitality.total);
-const regeneration = computed<number>(() => Math.round(total.value / 7));
-const value = computed<number>(() => Math.floor((props.character.vitality.current * 100) / total.value));
+const hasChanges = computed<boolean>(() => current.value !== props.character.stamina);
+const label = computed<string>(() => t("game.statistic.options.Stamina"));
+const total = computed<number>(() => props.character.statistics.stamina.total);
+const regeneration = computed<number>(() => Math.round(total.value / 10));
+const value = computed<number>(() => Math.floor((props.character.stamina * 100) / total.value));
 
 const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
@@ -100,11 +85,7 @@ async function submit(): Promise<void> {
     isLoading.value = true;
     try {
       const payload: UpdateCharacterPayload = {
-        vitality: {
-          current: current.value,
-          temporary: temporary.value,
-          stun: stun.value,
-        },
+        stamina: current.value,
       };
       const character: Character = await updateCharacter(props.character.id, payload);
       emit("updated", character);
@@ -129,9 +110,7 @@ function open(): void {
 watch(
   () => props.character,
   (character) => {
-    current.value = character.vitality.current;
-    temporary.value = character.vitality.temporary;
-    stun.value = character.vitality.stun;
+    current.value = character.stamina;
     reinitialize();
   },
   { deep: true, immediate: true },
