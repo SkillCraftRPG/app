@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="title">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="title">
     <div v-if="customization.summary" class="fst-italic text-body-secondary mb-3">{{ customization.summary }}</div>
     <MarkdownContent v-if="customization.content" class="mb-3" :text="customization.content"></MarkdownContent>
     <template #footer>

@@ -9,7 +9,7 @@
         <div class="fs-4">{{ total }}</div>
       </div>
     </TarCard>
-    <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('game.skill.format', { name })">
+    <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" :title="t('game.skill.format', { name })">
       <div class="card-text">
         <div class="d-flex justify-content-between gap-2">
           <div>{{ t("game.skill.rank") }}</div>

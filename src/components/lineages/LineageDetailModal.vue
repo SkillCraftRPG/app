@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="t('lineages.label')">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="t('lineages.label')">
     <div v-if="ethnicity" class="row text-center mb-3">
       <div class="col">
         <TarCard class="clickable" :class="{ 'border-primary bg-primary-subtle': selected === 'species' }" @click="selected = 'species'">

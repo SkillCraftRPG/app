@@ -88,6 +88,4 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", update);
   window.removeEventListener("scroll", update);
 });
-
-// TODO(fpion): all modals should probably be scrollable
 </script>

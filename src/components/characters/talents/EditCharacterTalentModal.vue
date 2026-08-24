@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" scrollable size="x-large" :title="title">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="x-large" :title="title">
     <form @submit.prevent="handleSubmit(submit)">
       <SelectCharacterTalent v-if="step === 'select'" :context="context" ref="select" :selected="talent" :talents="talents" @toggle="toggle" />
       <EditCharacterTalentDetail v-else-if="step === 'detail' && talent" :context="context" :talent="talent" v-model="detail" />

@@ -1,7 +1,7 @@
 <template>
   <div>
     <TarButton icon="fas fa-edit" size="large" :text="t('actions.edit')" @click="open" />
-    <TarModal centered :close="t('actions.close')" fade ref="modal" size="large" :title="t('worlds.edit')">
+    <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="t('worlds.edit')">
       <form @submit.prevent="handleSubmit(submit)">
         <KeyAlreadyUsed v-model="keyAlreadyUsed" />
         <div class="row">

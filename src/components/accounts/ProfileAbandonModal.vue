@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" :title="t('account.profile.abandon.lead')">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" :title="t('account.profile.abandon.lead')">
     <p class="mb-0">{{ t("account.profile.abandon.help") }}</p>
     <template #footer>
       <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />

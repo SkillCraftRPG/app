@@ -1,5 +1,5 @@
 <template>
-  <TarModal centered :close="t('actions.close')" fade ref="modal" :title="title">
+  <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" :title="title">
     <p class="mb-0" v-html="help"></p>
     <template #footer>
       <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
