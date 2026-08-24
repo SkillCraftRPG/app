@@ -12,7 +12,7 @@
       <div class="row">
         <div v-for="customization in options" :key="customization.id" class="col-lg-6 col-xl-4 mb-3">
           <CustomizationCard
-            class="d-flex flex-column h-100"
+            class="h-100"
             clickable
             :customization="customization"
             :selected="customization.id === selected?.id"

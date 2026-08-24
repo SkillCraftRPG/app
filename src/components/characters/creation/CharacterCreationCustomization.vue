@@ -23,7 +23,7 @@
       <div class="row">
         <div v-for="customization in customizationList" :key="customization.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
           <CustomizationCard
-            class="d-flex flex-column h-100"
+            class="h-100"
             clickable
             :customization="customization"
             :selected="customizations.has(customization.id)"

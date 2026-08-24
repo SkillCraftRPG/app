@@ -54,7 +54,7 @@
       <section v-if="total" class="border-top border-secondary-subtle pt-4" :class="{ loading: isLoading }">
         <div class="row">
           <div v-for="item in items" :key="item.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-            <ItemLinkCard class="d-flex flex-column h-100" :item="item" />
+            <ItemLinkCard class="h-100" :item="item" />
           </div>
         </div>
         <SearchPagination v-if="total > count" class="mt-3" :count="count" :model-value="page" :total="total" @update:model-value="setQuery('page', $event)" />

@@ -21,7 +21,7 @@
       </div>
       <div v-if="languages.length" class="row">
         <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-          <LanguageCard class="d-flex flex-column h-100" :language="language">
+          <LanguageCard class="h-100" :language="language">
             <div class="d-flex justify-content-end mt-2 gap-2">
               <RouterLink class="btn btn-outline-primary" target="_blank" :to="{ name: 'Language', params: { id: language.id } }">
                 <font-awesome-icon icon="fas fa-edit" />&nbsp;{{ t("actions.edit") }}

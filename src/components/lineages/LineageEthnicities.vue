@@ -3,7 +3,7 @@
     <CreateLineage class="mb-3" :parent="lineage" @created="onCreate" @error="$emit('error', $event)" />
     <div v-if="ethnicities.length" class="row">
       <div v-for="ethnicity in ethnicities" :key="ethnicity.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-        <LineageLinkCard class="d-flex flex-column h-100" :lineage="ethnicity" />
+        <LineageLinkCard class="h-100" :lineage="ethnicity" />
       </div>
     </div>
     <p v-else>{{ t("lineages.ethnicities.empty") }}</p>
