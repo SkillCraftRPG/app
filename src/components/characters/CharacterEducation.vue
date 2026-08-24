@@ -1,9 +1,13 @@
 <template>
   <div class="h-100">
-    <TarCard class="clickable text-center h-100" @click="open">
-      <div class="small text-body-secondary">{{ t("educations.label") }}</div>
-      <div class="fw-semibold">{{ education.name }}</div>
-      <div v-if="education.feature" class="text-body-secondary">{{ education.feature.name }}</div>
+    <TarCard class="clickable d-flex flex-column h-100" @click="open">
+      <template #contents>
+        <div class="card-body text-center d-flex flex-column flex-grow-1 justify-content-center">
+          <div class="small text-body-secondary">{{ t("educations.label") }}</div>
+          <div class="fw-semibold">{{ education.name }}</div>
+          <div v-if="education.feature" class="text-body-secondary">{{ education.feature.name }}</div>
+        </div>
+      </template>
     </TarCard>
     <EducationDetailModal :education="education" ref="modal" />
   </div>

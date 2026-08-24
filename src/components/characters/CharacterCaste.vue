@@ -1,9 +1,13 @@
 <template>
   <div class="h-100">
-    <TarCard class="clickable text-center h-100" @click="open">
-      <div class="small text-body-secondary">{{ t("castes.label") }}</div>
-      <div class="fw-semibold">{{ caste.name }}</div>
-      <div v-if="caste.feature" class="text-body-secondary">{{ caste.feature.name }}</div>
+    <TarCard class="clickable d-flex flex-column h-100" @click="open">
+      <template #contents>
+        <div class="card-body text-center d-flex flex-column flex-grow-1 justify-content-center">
+          <div class="small text-body-secondary">{{ t("castes.label") }}</div>
+          <div class="fw-semibold">{{ caste.name }}</div>
+          <div v-if="caste.feature" class="text-body-secondary">{{ caste.feature.name }}</div>
+        </div>
+      </template>
     </TarCard>
     <CasteDetailModal :caste="caste" ref="modal" />
   </div>
