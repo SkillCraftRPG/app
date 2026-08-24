@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import AlcoholField from "./AlcoholField.vue";
@@ -107,7 +107,7 @@ watch(
   () => props.character,
   (character) => {
     current.value = character.bloodAlcoholContent;
-    reinitialize();
+    nextTick(reinitialize);
   },
   { deep: true, immediate: true },
 );
