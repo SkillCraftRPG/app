@@ -83,8 +83,6 @@ onMounted(async () => {
   }
 });
 
-// TODO(fpion): reorganize components `characters` directory
-
 // TODO(fpion): Player
 // TODO(fpion): Picture
 // TODO(fpion): Critical
