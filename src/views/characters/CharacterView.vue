@@ -30,7 +30,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import CharacterModifiers from "@/components/characters/modifiers/CharacterModifiers.vue";
 import CharacterOverview from "@/components/characters/CharacterOverview.vue";
-import CharacterProfile from "@/components/characters/CharacterProfile.vue";
+import CharacterProfile from "@/components/characters/profile/CharacterProfile.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import StatusDetail from "@/components/shared/StatusDetail.vue";
 import TarAlert from "@/components/tar/TarAlert.vue";
@@ -82,8 +82,6 @@ onMounted(async () => {
     }
   }
 });
-
-// TODO(fpion): reorganize components `characters` directory
 
 // TODO(fpion): Player
 // TODO(fpion): Picture

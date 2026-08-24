@@ -37,10 +37,10 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import AlignmentRadio from "@/components/characters/AlignmentRadio.vue";
-import FlawsField from "@/components/characters/FlawsField.vue";
-import IdealsField from "@/components/characters/IdealsField.vue";
-import PersonalityField from "@/components/characters/PersonalityField.vue";
+import AlignmentRadio from "@/components/characters/profile/AlignmentRadio.vue";
+import FlawsField from "@/components/characters/profile/FlawsField.vue";
+import IdealsField from "@/components/characters/profile/IdealsField.vue";
+import PersonalityField from "@/components/characters/profile/PersonalityField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Alignment, CharacterPersonality } from "@/types/characters";
 import { useCharacterStore } from "@/stores/character";

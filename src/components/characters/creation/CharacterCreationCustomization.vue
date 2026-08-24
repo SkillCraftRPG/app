@@ -49,7 +49,7 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CustomizationCard from "@/components/customizations/CustomizationCard.vue";
-import DominantHandRadio from "@/components/characters/DominantHandRadio.vue";
+import DominantHandRadio from "@/components/characters/profile/DominantHandRadio.vue";
 import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
 import NameField from "@/components/shared/NameField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
