@@ -49,20 +49,20 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CharacterAlcohol from "./status/CharacterAlcohol.vue";
-import CharacterAttributes from "./CharacterAttributes.vue"; // TODO(fpion): move to ./overview/
+import CharacterAttributes from "./overview/CharacterAttributes.vue";
 import CharacterCaste from "./overview/CharacterCaste.vue";
-import CharacterConditions from "./CharacterConditions.vue"; // TODO(fpion): move to ./status/
+import CharacterConditions from "./status/CharacterConditions.vue";
 import CharacterCustomizations from "./customizations/CharacterCustomizations.vue";
 import CharacterEducation from "./overview/CharacterEducation.vue";
 import CharacterExperience from "./status/CharacterExperience.vue";
 import CharacterHope from "./status/CharacterHope.vue";
 import CharacterIntoxication from "./status/CharacterIntoxication.vue";
-import CharacterLanguages from "./languages/CharacterLanguages.vue"; // TODO(fpion): move to ./overview/
+import CharacterLanguages from "./languages/CharacterLanguages.vue";
 import CharacterLineage from "./overview/CharacterLineage.vue";
-import CharacterSkills from "./CharacterSkills.vue"; // TODO(fpion): move to ./overview/
-import CharacterSpeeds from "./CharacterSpeeds.vue"; // TODO(fpion): move to ./overview/
+import CharacterSkills from "./overview/CharacterSkills.vue";
+import CharacterSpeeds from "./overview/CharacterSpeeds.vue";
 import CharacterStamina from "./status/CharacterStamina.vue";
-import CharacterStatistics from "./CharacterStatistics.vue"; // TODO(fpion): move to ./overview/
+import CharacterStatistics from "./overview/CharacterStatistics.vue";
 import CharacterVitality from "./status/CharacterVitality.vue";
 import type { Character } from "@/types/characters";
 
