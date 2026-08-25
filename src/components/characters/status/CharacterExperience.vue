@@ -34,33 +34,41 @@
         <div class="row">
           <div class="col">{{ t("characters.level.label") }}</div>
           <div class="col text-center">{{ n(character.level, "integer") }}</div>
-          <div class="col d-flex justify-content-between align-items-center gap-2">
-            <div>→</div>
-            <div class="fw-semibold" :class="{ 'text-primary': isLevelUp }">{{ n(expected.level, "integer") }}</div>
+          <div class="col d-flex justify-content-between gap-2" :class="{ 'text-primary': expected.level > character.level }">
+            <div>+{{ n(expected.level - character.level, "integer") }}</div>
+            <div class="fw-semibold">{{ n(expected.level, "integer") }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">{{ t("characters.attributes.title") }}</div>
+          <div class="col text-center">{{ n(character.points.attributes, "integer") }}</div>
+          <div class="col d-flex justify-content-between gap-2" :class="{ 'text-primary': expected.attributes > 0 }">
+            <div>+{{ n(expected.attributes, "integer") }}</div>
+            <div class="fw-semibold">{{ n(character.points.attributes + expected.attributes, "integer") }}</div>
           </div>
         </div>
         <div class="row">
           <div class="col">{{ t("game.statistic.options.Vitality") }}</div>
           <div class="col text-center">{{ n(character.statistics.vitality.total, "integer") }}</div>
-          <div class="col d-flex justify-content-between align-items-center gap-2">
-            <div>→</div>
-            <div class="fw-semibold" :class="{ 'text-primary': isLevelUp }">{{ n(expected.vitality, "integer") }}</div>
+          <div class="col d-flex justify-content-between gap-2" :class="{ 'text-primary': expected.vitality > character.statistics.vitality.total }">
+            <div>+{{ n(expected.vitality - character.statistics.vitality.total, "integer") }}</div>
+            <div class="fw-semibold">{{ n(expected.vitality, "integer") }}</div>
           </div>
         </div>
         <div class="row">
           <div class="col">{{ t("game.statistic.options.Stamina") }}</div>
           <div class="col text-center">{{ n(character.statistics.stamina.total, "integer") }}</div>
-          <div class="col d-flex justify-content-between align-items-center gap-2">
-            <div>→</div>
-            <div class="fw-semibold" :class="{ 'text-primary': isLevelUp }">{{ n(expected.stamina, "integer") }}</div>
+          <div class="col d-flex justify-content-between gap-2" :class="{ 'text-primary': expected.stamina > character.statistics.stamina.total }">
+            <div>+{{ n(expected.stamina - character.statistics.stamina.total, "integer") }}</div>
+            <div class="fw-semibold">{{ n(expected.stamina, "integer") }}</div>
           </div>
         </div>
         <div class="row">
           <div class="col">{{ t("game.statistic.options.Learning") }}</div>
           <div class="col text-center">{{ n(character.statistics.learning.total, "integer") }}</div>
-          <div class="col d-flex justify-content-between align-items-center gap-2">
-            <div>→</div>
-            <div class="fw-semibold" :class="{ 'text-primary': isLevelUp }">{{ n(expected.learning, "integer") }}</div>
+          <div class="col d-flex justify-content-between gap-2" :class="{ 'text-primary': expected.learning > character.statistics.learning.total }">
+            <div>+{{ n(expected.learning - character.statistics.learning.total, "integer") }}</div>
+            <div class="fw-semibold">{{ n(expected.learning, "integer") }}</div>
           </div>
         </div>
       </section>
@@ -92,6 +100,7 @@ import type { Character, GainCharacterExperiencePayload } from "@/types/characte
 import { MAXIMUM_LEVEL, getLevel, getThreshold } from "@/utils/experience";
 import { gainCharacterExperience } from "@/api/characters";
 import { useForm } from "@/forms";
+import { calculateAttributePoints } from "@/utils/character.ts";
 
 const { n, t } = useI18n();
 
@@ -118,6 +127,7 @@ const progress = computed(() => {
 });
 const expected = computed(() => {
   const level: number = getLevel(props.character.experience + experience.value);
+  const attributes: number = calculateAttributePoints(level) - calculateAttributePoints(props.character.level);
   const constitution: number = Math.floor(((25 + level) * (5 + props.character.attributes.health.total)) / 5);
   let vitality: number = constitution;
   let stamina: number = constitution;
@@ -140,9 +150,8 @@ const expected = computed(() => {
       }
     }
   });
-  return { level, vitality, stamina, learning };
+  return { level, attributes, vitality, stamina, learning };
 });
-const isLevelUp = computed<boolean>(() => props.character.level < expected.value.level);
 
 function levelUp(): void {
   if (expected.value.level < MAXIMUM_LEVEL) {
