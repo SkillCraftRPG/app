@@ -1,7 +1,10 @@
 <template>
-  <div class="row">
-    <div v-for="statistic in statistics" :key="statistic.key" class="col-6 col-md-4 col-lg-fifth">
-      <CharacterStatistic class="mb-3" :character="character" :name="statistic.name" :statistic="statistic.key" />
+  <div>
+    <div class="fs-5 mb-1">{{ t("characters.statistics.title") }}</div>
+    <div class="row">
+      <div v-for="statistic in statistics" :key="statistic.key" class="col-6 col-md-4 col-lg-fifth">
+        <CharacterStatistic class="mb-3" :character="character" :name="statistic.name" :statistic="statistic.key" />
+      </div>
     </div>
   </div>
 </template>

@@ -30,13 +30,9 @@
       </div>
     </div>
     <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
-    <div class="fs-5 mb-1">{{ t("characters.attributes.title") }}</div>
     <CharacterAttributes :character="character" />
-    <div class="fs-5 mb-1">{{ t("characters.statistics.title") }}</div>
     <CharacterStatistics :character="character" />
-    <div class="fs-5 mb-1">{{ t("characters.skills.title") }}</div>
     <CharacterSkills :character="character" />
-    <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
     <CharacterSpeeds :character="character" />
     <CharacterCustomizations :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     <CharacterLanguages :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
@@ -46,7 +42,6 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 
 import CharacterAlcohol from "./status/CharacterAlcohol.vue";
 import CharacterAttributes from "./overview/CharacterAttributes.vue";
@@ -65,8 +60,6 @@ import CharacterStamina from "./status/CharacterStamina.vue";
 import CharacterStatistics from "./overview/CharacterStatistics.vue";
 import CharacterVitality from "./status/CharacterVitality.vue";
 import type { Character } from "@/types/characters";
-
-const { t } = useI18n();
 
 defineProps<{
   character: Character;
