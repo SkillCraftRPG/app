@@ -19,7 +19,7 @@
     <TarCard v-for="attribute in attributes" :key="attribute.key" class="mb-3">
       <div class="d-flex justify-content-between gap-2 mb-2">
         <div class="fs-5">{{ attribute.name }}</div>
-        <div class="fs-5">{{ formatSignedInteger(attribute.score, n) }}</div>
+        <div v-if="typeof attribute.score === 'number'" class="fs-5">{{ formatSignedInteger(attribute.score, n) }}</div>
       </div>
       <div class="row g-2">
         <div v-for="skill in attribute.skills" :key="skill.key" class="col-sm-6 col-md-4 col-lg-3 col-xl-fifth">
@@ -120,15 +120,15 @@ type SkillData = {
 type AttributeData = {
   key: Attribute | "Social";
   name: string;
-  score: number;
+  score?: number;
   skills: SkillData[];
 };
-const attributes = computed<AttributeData[]>(() =>
-  orderBy(
+const attributes = computed<AttributeData[]>(() => {
+  const attributes: AttributeData[] = orderBy(
     ATTRIBUTES.map((attribute) => ({
       key: attribute,
       name: t(`game.attribute.options.${attribute}`),
-      score: attributeScores.value.get(attribute) ?? 0,
+      score: attributeScores.value.get(attribute),
       skills: orderBy(
         getAttributeSkills(attribute).map((skill) => {
           const talentCount: number = talents.value.get(skill) ?? 0;
@@ -147,8 +147,28 @@ const attributes = computed<AttributeData[]>(() =>
       ),
     })),
     "name",
-  ),
-);
+  );
+  attributes.push({
+    key: "Social",
+    name: t("characters.social"),
+    skills: orderBy(
+      getAttributeSkills("Social").map((skill) => {
+        const talentCount: number = talents.value.get(skill) ?? 0;
+        const rank: number = ranks.value.get(skill) ?? 0;
+        return {
+          key: skill,
+          name: t(`game.skill.options.${skill}`),
+          talents: talentCount,
+          rank,
+          total: calculateSkill(skill, attributeScores.value, character.creation.talents, rank),
+          canDecrease: rank > 0,
+          canIncrease: talentCount + rank < MAXIMUM_VALUE,
+        };
+      }),
+    ),
+  });
+  return attributes;
+});
 
 function decrease(skill: Skill): void {
   const rank: number = ranks.value.get(skill) ?? 0;

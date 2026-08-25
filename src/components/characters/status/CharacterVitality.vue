@@ -14,10 +14,10 @@
     <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="label">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <VitalityField id="current" label="characters.vitality.current" :max="total" v-model="current" />
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <div class="d-flex justify-content-between align-items-center gap-2">
               <div class="small text-body-secondary">{{ t("characters.vitality.total") }}</div>
               <div>{{ n(total, "integer") }}</div>
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <TarProgress :aria-label="label" class="mb-3 mt-1" :label="progress.form.label" :value="progress.form.value" variant="danger" />
+        <TarProgress :aria-label="label" class="mb-3" :label="progress.form.label" :value="progress.form.value" variant="danger" />
         <div class="row">
           <div class="col-md-6">
             <VitalityField class="mb-3" id="temporary" label="characters.vitality.temporary" v-model="temporary" />

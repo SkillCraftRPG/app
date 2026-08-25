@@ -10,15 +10,15 @@
     <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="label">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <IntoxicationField id="current" label="characters.intoxication.current" :max="total" v-model="current" />
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <div class="small text-body-secondary">{{ t("characters.intoxication.total") }}</div>
             <div>{{ n(total, "integer") }}</div>
           </div>
         </div>
-        <TarProgress :aria-label="label" class="mb-3 mt-1 progress-intoxication" :label="progress.form.label" :value="progress.form.value" />
+        <TarProgress :aria-label="label" class="progress-intoxication" :label="progress.form.label" :value="progress.form.value" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
