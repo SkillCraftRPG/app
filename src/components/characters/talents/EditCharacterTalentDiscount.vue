@@ -110,4 +110,6 @@ function updateSource(source: string): void {
 function updateTarget(target: string): void {
   emit("update:model-value", { ...props.modelValue, target });
 }
+
+// TODO(fpion): should select the first target
 </script>

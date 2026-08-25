@@ -77,7 +77,7 @@ const attributes = computed<AttributeData[]>(() =>
         STATISTICS_BY_ATTRIBUTE[key].map((statistic) => ({
           key: statistic,
           name: t(`game.statistic.options.${statistic}`),
-          value: calculateStatistic(statistic, scores),
+          value: calculateStatistic(statistic, 0, scores),
         })),
         "name",
       ),

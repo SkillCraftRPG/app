@@ -339,6 +339,14 @@ export type GainCharacterExperiencePayload = {
   experience: number;
 };
 
+export type IncreaseCharacterAttributesPayload = {
+  dexterity: number;
+  health: number;
+  intellect: number;
+  senses: number;
+  vigor: number;
+};
+
 export type SearchCharactersPayload = SearchPayload & {
   lineageId?: string | null;
   casteId?: string | null;

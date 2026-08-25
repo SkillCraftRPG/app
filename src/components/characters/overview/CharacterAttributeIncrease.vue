@@ -58,10 +58,11 @@ import { useI18n } from "vue-i18n";
 
 import TarButton from "@/components/tar/TarButton.vue";
 import TarModal from "@/components/tar/TarModal.vue";
-import type { Character } from "@/types/characters";
 import type { Attribute, Skill, Statistic } from "@/types/game";
+import type { Character, IncreaseCharacterAttributesPayload } from "@/types/characters";
 import { ATTRIBUTES, SKILLS_BY_ATTRIBUTE, STATISTICS_BY_ATTRIBUTE, calculateStatistic, camelCase } from "@/utils/game";
 import { formatSignedInteger } from "@/utils/format";
+import { increaseCharacterAttributes } from "@/api/characters";
 
 const MAXIMUM_SCORE: number = 5;
 const { n, t } = useI18n();
@@ -78,9 +79,7 @@ const emit = defineEmits<{
 
 const isLoading = ref<boolean>(false);
 const modal = ref<InstanceType<typeof TarModal> | null>(null);
-const progression = reactive(
-  Object.fromEntries(ATTRIBUTES.map((attribute) => [camelCase(attribute), 0])) as Record<Uncapitalize<Attribute>, number>,
-);
+const progression = reactive(Object.fromEntries(ATTRIBUTES.map((attribute) => [camelCase(attribute), 0])) as Record<Uncapitalize<Attribute>, number>);
 
 type ValueDelta = {
   current: number;
@@ -187,7 +186,17 @@ async function submit(): Promise<void> {
   if (!isLoading.value) {
     isLoading.value = true;
     try {
-      console.log("Submitting!"); // TODO(fpion): implement
+      const payload: IncreaseCharacterAttributesPayload = {
+        dexterity: progression.dexterity,
+        health: progression.health,
+        intellect: progression.intellect,
+        senses: progression.senses,
+        vigor: progression.vigor,
+      };
+      const character: Character = await increaseCharacterAttributes(props.character.id, payload);
+      emit("updated", character);
+      reset();
+      modal.value?.hide();
     } catch (e: unknown) {
       emit("error", e);
     } finally {

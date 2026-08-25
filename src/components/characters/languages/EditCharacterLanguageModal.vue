@@ -157,4 +157,6 @@ function open(): void {
   modal.value?.show();
 }
 defineExpose({ open });
+
+// TODO(fpion): should select the first target
 </script>

@@ -93,7 +93,7 @@ const talents = computed<Map<Skill, number>>(() => {
   return talents;
 });
 
-const learning = computed<number>(() => calculateStatistic("Learning", character.creation.attributes));
+const learning = computed<number>(() => calculateStatistic("Learning", 0, character.creation.attributes));
 const spent = computed<number>(
   () => [...ranks.value.values()].reduce((sum, rank) => sum + rank, 0) - [...talents.value.values()].reduce((sum, count) => sum + count, 0),
 );
