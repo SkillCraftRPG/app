@@ -141,12 +141,14 @@ export function calculateSkill(
     throw new Error(`rank must be comprised between 0 and ${MAXIMUM_RANK}`);
   }
 
-  const attribute: number = attributes.get(getSkillAttribute(skill)) ?? 0;
+  const attribute: Attribute | "Social" = getSkillAttribute(skill);
+  const attributeScore: number = (attribute === "Social" ? undefined : attributes.get(attribute)) ?? 0;
+
   const talentCount: number = (talents ?? []).filter((acquired) => acquired.talent.skill === skill).length;
   const effectiveRank: number = talentCount ? rank : Math.floor(rank / 2);
   const modifierTotal: number = calculateTotalModifier("Skill", skill, modifiers ?? []);
 
-  return attribute + talentCount + effectiveRank + modifierTotal;
+  return attributeScore + talentCount + effectiveRank + modifierTotal;
 }
 
 export function calculateStatisticNew(statistic: Statistic, attributes: Map<Attribute, number>, level: number = 0, modifiers?: CharacterModifier[]): number {
@@ -203,7 +205,7 @@ export function calculateStatisticNew(statistic: Statistic, attributes: Map<Attr
   }
 } // TODO(fpion): rename
 
-export function getAttributeSkills(attribute: Attribute): Skill[] {
+export function getAttributeSkills(attribute: Attribute | "Social"): Skill[] {
   const skills: Skill[] | undefined = ATTRIBUTE_SKILLS.get(attribute);
   if (!skills) {
     throw new Error(`The attribute "${attribute}" did not yield any skill.`);
@@ -219,8 +221,8 @@ export function getAttributeStatistics(attribute: Attribute): Statistic[] {
   return statistics;
 }
 
-export function getSkillAttribute(skill: Skill): Attribute {
-  const attribute: Attribute | undefined = SKILL_ATTRIBUTE.get(skill);
+export function getSkillAttribute(skill: Skill): Attribute | "Social" {
+  const attribute: Attribute | "Social" | undefined = SKILL_ATTRIBUTE.get(skill);
   if (!attribute) {
     throw new Error(`The skill "${skill}" did not yield any attribute.`);
   }

@@ -239,7 +239,8 @@
     "invalid": "The number of points spent must equal your Learning ({learning}). Current total: {spent}.",
     "remaining": "Remaining Points",
     "spent": "Spent Points",
-    "title": "Skills"
+    "title": "Skills",
+    "trained": "Trained"
   },
   "social": "Social",
   "sort": {

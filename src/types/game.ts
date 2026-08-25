@@ -2,11 +2,12 @@ export type Attribute = "Dexterity" | "Health" | "Intellect" | "Senses" | "Vigor
 
 export const ATTRIBUTES: Attribute[] = ["Dexterity", "Health", "Intellect", "Senses", "Vigor"];
 
-export const ATTRIBUTE_SKILLS: Map<Attribute, Skill[]> = new Map([
+export const ATTRIBUTE_SKILLS: Map<Attribute | "Social", Skill[]> = new Map([
   ["Dexterity", ["Acrobatics", "Crafting", "Orientation", "Stealth", "Thievery"]],
   ["Health", ["Discipline", "Resistance"]],
   ["Intellect", ["Investigation", "Knowledge", "Linguistics", "Medicine"]],
   ["Senses", ["Insight", "Occultism", "Perception", "Survival"]],
+  ["Social", ["Deception", "Diplomacy", "Performance"]],
   ["Vigor", ["Athletics", "Melee"]],
 ]);
 
@@ -42,10 +43,12 @@ export type Skill =
   | "Survival"
   | "Thievery";
 
-export const SKILL_ATTRIBUTE: Map<Skill, Attribute> = new Map([
+export const SKILL_ATTRIBUTE: Map<Skill, Attribute | "Social"> = new Map([
   ["Acrobatics", "Dexterity"],
   ["Athletics", "Vigor"],
   ["Crafting", "Dexterity"],
+  ["Deception", "Social"],
+  ["Diplomacy", "Social"],
   ["Discipline", "Health"],
   ["Insight", "Senses"],
   ["Investigation", "Intellect"],
@@ -56,6 +59,7 @@ export const SKILL_ATTRIBUTE: Map<Skill, Attribute> = new Map([
   ["Occultism", "Senses"],
   ["Orientation", "Dexterity"],
   ["Perception", "Senses"],
+  ["Performance", "Social"],
   ["Resistance", "Health"],
   ["Stealth", "Dexterity"],
   ["Survival", "Senses"],

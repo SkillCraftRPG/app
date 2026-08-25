@@ -239,7 +239,8 @@
     "invalid": "Le nombre de points dépensés doit être inférieur ou égal à votre Apprentissage ({learning}). Total actuel : {spent}.",
     "remaining": "Points restants",
     "spent": "Points dépensés",
-    "title": "Compétences"
+    "title": "Compétences",
+    "trained": "Formé"
   },
   "social": "Social",
   "sort": {
