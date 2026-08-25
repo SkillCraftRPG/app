@@ -80,7 +80,7 @@ export function calculateStatistic(statistic: Statistic, level: number, attribut
     case "Initiative":
       return 2 * attributes.senses;
     case "Learning":
-      return Math.floor(Math.max((5 + attributes.intellect + (level / 5) * (2 + attributes.intellect)), (5 + level / 5)));
+      return Math.floor(Math.max(5 + attributes.intellect + (level / 5) * (2 + attributes.intellect), 5 + level / 5));
     case "Load":
       return 10 * (5 + attributes.vigor);
     case "Power":
