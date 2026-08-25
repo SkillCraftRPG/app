@@ -92,16 +92,22 @@ const attributes = computed<AttributeData[]>(() =>
       key: attribute,
       name: t(`game.attribute.options.${attribute}`),
       score: scores.value.get(attribute) ?? 0,
-      statistics: getAttributeStatistics(attribute).map((statistic) => ({
-        key: statistic,
-        name: t(`game.statistic.options.${statistic}`),
-        value: calculateStatisticNew(statistic, scores.value),
-      })),
-      skills: getAttributeSkills(attribute).map((skill) => ({
-        key: skill,
-        name: t(`game.skill.options.${skill}`),
-        value: calculateSkill(skill, scores.value, character.creation.talents),
-      })),
+      statistics: orderBy(
+        getAttributeStatistics(attribute).map((statistic) => ({
+          key: statistic,
+          name: t(`game.statistic.options.${statistic}`),
+          value: calculateStatisticNew(statistic, scores.value),
+        })),
+        "name",
+      ),
+      skills: orderBy(
+        getAttributeSkills(attribute).map((skill) => ({
+          key: skill,
+          name: t(`game.skill.options.${skill}`),
+          value: calculateSkill(skill, scores.value, character.creation.talents),
+        })),
+        "name",
+      ),
     })),
     "name",
   ),
