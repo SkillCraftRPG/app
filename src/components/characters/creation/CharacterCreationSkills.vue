@@ -123,49 +123,33 @@ type AttributeData = {
   score?: number;
   skills: SkillData[];
 };
+function produceSkillData(skill: Skill): SkillData {
+  const talentCount: number = talents.value.get(skill) ?? 0;
+  const rank: number = ranks.value.get(skill) ?? 0;
+  return {
+    key: skill,
+    name: t(`game.skill.options.${skill}`),
+    talents: talentCount,
+    rank,
+    total: calculateSkill(skill, attributeScores.value, character.creation.talents, rank),
+    canDecrease: rank > 0,
+    canIncrease: talentCount + rank < MAXIMUM_VALUE,
+  };
+}
 const attributes = computed<AttributeData[]>(() => {
   const attributes: AttributeData[] = orderBy(
     ATTRIBUTES.map((attribute) => ({
       key: attribute,
       name: t(`game.attribute.options.${attribute}`),
       score: attributeScores.value.get(attribute),
-      skills: orderBy(
-        getAttributeSkills(attribute).map((skill) => {
-          const talentCount: number = talents.value.get(skill) ?? 0;
-          const rank: number = ranks.value.get(skill) ?? 0;
-          return {
-            key: skill,
-            name: t(`game.skill.options.${skill}`),
-            talents: talentCount,
-            rank,
-            total: calculateSkill(skill, attributeScores.value, character.creation.talents, rank),
-            canDecrease: rank > 0,
-            canIncrease: talentCount + rank < MAXIMUM_VALUE,
-          };
-        }),
-        "name",
-      ),
+      skills: orderBy(getAttributeSkills(attribute).map(produceSkillData), "name"),
     })),
     "name",
   );
   attributes.push({
     key: "Social",
     name: t("characters.social"),
-    skills: orderBy(
-      getAttributeSkills("Social").map((skill) => {
-        const talentCount: number = talents.value.get(skill) ?? 0;
-        const rank: number = ranks.value.get(skill) ?? 0;
-        return {
-          key: skill,
-          name: t(`game.skill.options.${skill}`),
-          talents: talentCount,
-          rank,
-          total: calculateSkill(skill, attributeScores.value, character.creation.talents, rank),
-          canDecrease: rank > 0,
-          canIncrease: talentCount + rank < MAXIMUM_VALUE,
-        };
-      }),
-    ),
+    skills: orderBy(getAttributeSkills("Social").map(produceSkillData)),
   });
   return attributes;
 });
