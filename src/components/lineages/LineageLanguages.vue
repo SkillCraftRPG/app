@@ -21,14 +21,7 @@
       </div>
       <div v-if="languages.length" class="row">
         <div v-for="language in languages" :key="language.id" class="col-md-6 col-lg-4 col-xl-3 mb-3">
-          <LanguageCard class="h-100" :language="language">
-            <div class="d-flex justify-content-end mt-2 gap-2">
-              <RouterLink class="btn btn-outline-primary" target="_blank" :to="{ name: 'Language', params: { id: language.id } }">
-                <font-awesome-icon icon="fas fa-edit" />&nbsp;{{ t("actions.edit") }}
-              </RouterLink>
-              <TarButton icon="fas fa-xmark" outline :text="t('actions.remove')" variant="danger" @click="remove(language)" />
-            </div>
-          </LanguageCard>
+          <LineageLanguageCard :language="language" @remove="remove(language)" />
         </div>
       </div>
       <p>{{ t("lineages.languages.granted.empty") }}</p>
@@ -67,7 +60,7 @@ import { useI18n } from "vue-i18n";
 
 import ContentField from "@/components/shared/ContentField.vue";
 import ExtraLanguagesField from "@/components/languages/ExtraLanguagesField.vue";
-import LanguageCard from "@/components/languages/LanguageCard.vue";
+import LineageLanguageCard from "@/components/lineages/LineageLanguageCard.vue";
 import LanguageSelect from "@/components/languages/LanguageSelect.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import type { Language } from "@/types/languages";
