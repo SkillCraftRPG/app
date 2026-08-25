@@ -133,4 +133,7 @@ function open(): void {
   modal.value?.show();
 }
 defineExpose({ open });
+
+// TODO(fpion): modal is not reinitialized when adding a new modifier!
+// TODO(fpion): should select the first target
 </script>

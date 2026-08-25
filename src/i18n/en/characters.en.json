@@ -34,7 +34,9 @@
   },
   "attributes": {
     "help": "Distribute the attribute points so that their total equals 0.",
+    "increase": "Increase attributes",
     "invalid": "The sum of the attributes must equal 0. Current total: {total}.",
+    "remaining": "Points remaining: {remaining}",
     "title": "Attributes"
   },
   "background": {

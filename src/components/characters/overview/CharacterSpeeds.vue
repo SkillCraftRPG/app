@@ -1,7 +1,10 @@
 <template>
-  <div class="row">
-    <div v-for="speed in speeds" :key="speed.key" class="col-6 col-md-4 col-lg-fifth">
-      <CharacterSpeed class="mb-3" :character="character" :kind="speed.key" :name="speed.name" />
+  <div>
+    <div class="fs-5 mb-1">{{ t("lineages.physical.speeds.lead") }}</div>
+    <div class="row">
+      <div v-for="speed in speeds" :key="speed.key" class="col-6 col-md-4 col-lg-fifth">
+        <CharacterSpeed class="mb-3" :character="character" :kind="speed.key" :name="speed.name" />
+      </div>
     </div>
   </div>
 </template>

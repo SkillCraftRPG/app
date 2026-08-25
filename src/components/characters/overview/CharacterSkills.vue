@@ -1,7 +1,10 @@
 <template>
-  <div class="row">
-    <div v-for="skill in skills" :key="skill.key" class="col-6 col-md-4 col-lg-fifth">
-      <CharacterSkill class="mb-3" :character="character" :name="skill.name" :skill="skill.key" />
+  <div>
+    <div class="fs-5 mb-1">{{ t("characters.skills.title") }}</div>
+    <div class="row">
+      <div v-for="skill in skills" :key="skill.key" class="col-6 col-md-4 col-lg-fifth">
+        <CharacterSkill class="mb-3" :character="character" :name="skill.name" :skill="skill.key" />
+      </div>
     </div>
   </div>
 </template>

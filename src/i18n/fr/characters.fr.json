@@ -34,7 +34,9 @@
   },
   "attributes": {
     "help": "Répartissez les points d’attribut de façon à ce que leur somme soit égale à 0.",
+    "increase": "Augmenter les attributs",
     "invalid": "La somme des attributs doit être égale à 0. Somme actuelle : {total}.",
+    "remaining": "Points restants : {remaining}",
     "title": "Attributs"
   },
   "background": {

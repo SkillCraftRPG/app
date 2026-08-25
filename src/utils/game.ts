@@ -73,14 +73,14 @@ export const STATISTIC_ATTRIBUTES: Record<Statistic, Attribute> = {
   Vitality: "Health",
 };
 
-export function calculateStatistic(statistic: Statistic, attributes: Record<Uncapitalize<Attribute>, number>): number {
+export function calculateStatistic(statistic: Statistic, level: number, attributes: Record<Uncapitalize<Attribute>, number>): number {
   switch (statistic) {
     case "Dodge":
       return 10 + attributes.dexterity;
     case "Initiative":
       return 2 * attributes.senses;
     case "Learning":
-      return Math.max(5 + attributes.intellect, 5);
+      return Math.floor(Math.max((5 + attributes.intellect + (level / 5) * (2 + attributes.intellect)), (5 + level / 5)));
     case "Load":
       return 10 * (5 + attributes.vigor);
     case "Power":
@@ -88,13 +88,13 @@ export function calculateStatistic(statistic: Statistic, attributes: Record<Unca
     case "Precision":
       return 5 + attributes.dexterity * 2;
     case "Stamina":
-      return 25 + attributes.health * 5;
+      return Math.floor(((25 + level) * (5 + attributes.health)) / 5);
     case "Stratagem":
       return 5 + attributes.intellect * 2;
     case "Strength":
       return 5 + attributes.vigor * 2;
     case "Vitality":
-      return 25 + attributes.health * 5;
+      return Math.floor(((25 + level) * (5 + attributes.health)) / 5);
   }
 }
 
