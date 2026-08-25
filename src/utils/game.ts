@@ -1,4 +1,10 @@
-import type { Attribute, Skill, SpeedKind, Statistic } from "@/types/game";
+import type { Attribute, Skill, Statistic } from "@/types/game";
+import type { CharacterModifier, CharacterModifierKind, CharacterTalent } from "@/types/characters";
+import { ATTRIBUTE_SKILLS, ATTRIBUTE_STATISTICS, SKILL_ATTRIBUTE, STATISTIC_ATTRIBUTE } from "@/types/game";
+import { MAXIMUM_LEVEL } from "./experience";
+
+/******************************************************************** TODO(FPION): REFACTOR *******************************************************************/
+import type { SpeedKind } from "@/types/game";
 
 export const ATTRIBUTES: Attribute[] = ["Dexterity", "Health", "Intellect", "Senses", "Vigor"];
 
@@ -115,4 +121,116 @@ export const STATISTICS_BY_ATTRIBUTE: Record<Attribute, Statistic[]> = Object.fr
 ) as Record<Attribute, Statistic[]>;
 for (const statistic of STATISTICS) {
   STATISTICS_BY_ATTRIBUTE[STATISTIC_ATTRIBUTES[statistic]].push(statistic);
+}
+/******************************************************************** TODO(FPION): REFACTOR *******************************************************************/
+
+const MAXIMUM_RANK: number = 14;
+
+function calculateTotalModifier(kind: CharacterModifierKind, target: string, modifiers: CharacterModifier[]): number {
+  return modifiers.filter((modifier) => modifier.kind === kind && modifier.target === target).reduce((total, modifier) => total + modifier.value, 0);
+}
+
+export function calculateSkill(
+  skill: Skill,
+  attributes: Map<Attribute, number>,
+  talents?: CharacterTalent[],
+  rank: number = 0,
+  modifiers?: CharacterModifier[],
+): number {
+  if (rank < 0 || rank > MAXIMUM_RANK) {
+    throw new Error(`rank must be comprised between 0 and ${MAXIMUM_RANK}`);
+  }
+
+  const attribute: number = attributes.get(getSkillAttribute(skill)) ?? 0;
+  const talentCount: number = (talents ?? []).filter((acquired) => acquired.talent.skill === skill).length;
+  const effectiveRank: number = talentCount ? rank : Math.floor(rank / 2);
+  const modifierTotal: number = calculateTotalModifier("Skill", skill, modifiers ?? []);
+
+  return attribute + talentCount + effectiveRank + modifierTotal;
+}
+
+export function calculateStatisticNew(statistic: Statistic, attributes: Map<Attribute, number>, level: number = 0, modifiers?: CharacterModifier[]): number {
+  if (level < 0 || level > MAXIMUM_LEVEL) {
+    throw new Error(`level must be comprised between 0 and ${MAXIMUM_LEVEL}`);
+  }
+
+  let total: number = 0;
+  switch (statistic) {
+    case "Dodge":
+      total = 10 + (attributes.get("Dexterity") ?? 0);
+      break;
+    case "Initiative":
+      total = 2 * (attributes.get("Senses") ?? 0);
+      break;
+    case "Learning":
+      const intellect: number = attributes.get("Intellect") ?? 0;
+      total = Math.floor(Math.max(5 + intellect + (level / 5) * (2 + intellect), 5 + level / 5));
+      break;
+    case "Load":
+      total = 10 * (5 + (attributes.get("Vigor") ?? 0));
+      break;
+    case "Power":
+      total = 5 + 2 * (attributes.get("Senses") ?? 0);
+      break;
+    case "Precision":
+      total = 5 + 2 * (attributes.get("Dexterity") ?? 0);
+      break;
+    case "Stamina":
+      total = Math.floor(((25 + level) * (5 + (attributes.get("Health") ?? 0))) / 5);
+      break;
+    case "Stratagem":
+      total = 5 + 2 * (attributes.get("Intellect") ?? 0);
+      break;
+    case "Strength":
+      total = 5 + 2 * (attributes.get("Vigor") ?? 0);
+      break;
+    case "Vitality":
+      total = Math.floor(((25 + level) * (5 + (attributes.get("Health") ?? 0))) / 5);
+      break;
+  }
+
+  total += calculateTotalModifier("Statistic", statistic, modifiers ?? []);
+
+  switch (statistic) {
+    case "Learning":
+    case "Load":
+      return Math.max(total, 0);
+    case "Stamina":
+    case "Vitality":
+      return Math.max(total, 1);
+    default:
+      return total;
+  }
+} // TODO(fpion): rename
+
+export function getAttributeSkills(attribute: Attribute): Skill[] {
+  const skills: Skill[] | undefined = ATTRIBUTE_SKILLS.get(attribute);
+  if (!skills) {
+    throw new Error(`The attribute "${attribute}" did not yield any skill.`);
+  }
+  return skills;
+}
+
+export function getAttributeStatistics(attribute: Attribute): Statistic[] {
+  const statistics: Statistic[] | undefined = ATTRIBUTE_STATISTICS.get(attribute);
+  if (!statistics) {
+    throw new Error(`The attribute "${attribute}" did not yield any statistic.`);
+  }
+  return statistics;
+}
+
+export function getSkillAttribute(skill: Skill): Attribute {
+  const attribute: Attribute | undefined = SKILL_ATTRIBUTE.get(skill);
+  if (!attribute) {
+    throw new Error(`The skill "${skill}" did not yield any attribute.`);
+  }
+  return attribute;
+}
+
+export function getStatisticAttribute(statistic: Statistic): Attribute {
+  const attribute: Attribute | undefined = STATISTIC_ATTRIBUTE.get(statistic);
+  if (!attribute) {
+    throw new Error(`The statistic "${statistic}" did not yield any attribute.`);
+  }
+  return attribute;
 }

@@ -2,26 +2,38 @@
   <form @submit.prevent="handleSubmit(submit)">
     <h2 class="h3">{{ t("characters.attributes.title") }}</h2>
     <p class="text-body-secondary">{{ t("characters.attributes.help") }}</p>
-    <div v-for="attribute in attributes" :key="attribute.key" class="row text-center mb-3">
-      <div class="col">
-        <InputField
-          :id="attribute.key"
-          :label="attribute.name"
-          :min="-2"
-          :max="4"
-          :model-value="attribute.score.toString()"
-          required
-          step="1"
-          type="number"
-          @update:model-value="updateScore(attribute.key, parseNumber($event) ?? 0)"
-        />
+    <section v-for="attribute in attributes" :key="attribute.key" class="mb-3">
+      <div class="d-flex justify-content-between gap-2 mb-1">
+        <div class="fs-5">{{ attribute.name }}</div>
+        <div class="d-flex justify-content-between gap-2">
+          <TarButton
+            :disabled="attribute.score <= MINIMUM_SCORE"
+            icon="fas fa-minus"
+            outline
+            size="small"
+            variant="secondary"
+            @click="decrease(attribute.key)"
+          />
+          <div class="fs-5">{{ formatSignedInteger(attribute.score, n) }}</div>
+          <TarButton :disabled="attribute.score >= MAXIMUM_SCORE" icon="fas fa-plus" outline size="small" @click="increase(attribute.key)" />
+        </div>
       </div>
-      <div v-for="statistic in attribute.statistics" :key="statistic.key" class="col">
-        <div class="fw-bold">{{ statistic.name }}</div>
-        <div>{{ n(statistic.value, "integer") }}</div>
+      <div class="row">
+        <div class="col">
+          <div v-for="statistic in attribute.statistics" :key="statistic.key" class="d-flex justify-content-between gap-2">
+            <div class="text-body-secondary">{{ statistic.name }}</div>
+            <div>{{ n(statistic.value, "integer") }}</div>
+          </div>
+        </div>
+        <div class="col">
+          <div v-for="skill in attribute.skills" :key="skill.key" class="d-flex justify-content-between gap-2">
+            <div class="text-body-secondary">{{ skill.name }}</div>
+            <div>{{ formatSignedInteger(skill.value, n) }}</div>
+          </div>
+        </div>
       </div>
-    </div>
-    <p v-if="!canSubmit" class="text-danger">{{ t("characters.attributes.invalid", { total }) }}</p>
+    </section>
+    <p v-if="total" class="text-danger">{{ t("characters.attributes.invalid", { total }) }}</p>
     <div class="d-flex justify-content-between">
       <div class="d-flex gap-2">
         <TarButton icon="fas fa-xmark" outline :text="t('actions.abandon')" variant="danger" @click="$emit('abandon')" />
@@ -33,31 +45,37 @@
 </template>
 
 <script setup lang="ts">
-import { arrayUtils, parsingUtils } from "logitar-js";
-import { computed, onMounted, reactive } from "vue";
+import { arrayUtils } from "logitar-js";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import InputField from "@/components/forms/InputField.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { Attribute, Statistic } from "@/types/game";
-import type { StartingAttributes } from "@/types/characters";
-import { ATTRIBUTES, STATISTICS_BY_ATTRIBUTE, calculateStatistic, camelCase } from "@/utils/game";
+import type { Attribute, Skill, Statistic } from "@/types/game";
+import { ATTRIBUTES } from "@/types/game";
+import { formatSignedInteger } from "@/utils/format";
+import { calculateSkill, calculateStatisticNew, getAttributeSkills, getAttributeStatistics } from "@/utils/game";
 import { useCharacterStore } from "@/stores/character";
 import { useForm } from "@/forms";
 
+const MAXIMUM_SCORE: number = +4;
+const MINIMUM_SCORE: number = -2;
 const character = useCharacterStore();
 const { n, t } = useI18n();
 const { orderBy } = arrayUtils;
-const { parseNumber } = parsingUtils;
 
 defineEmits<{
   (e: "abandon"): void;
 }>();
 
-const scores = reactive<StartingAttributes>(Object.fromEntries(ATTRIBUTES.map((key) => [camelCase(key), 0])) as StartingAttributes);
+const scores = ref<Map<Attribute, number>>(new Map());
 
 type StatisticData = {
   key: Statistic;
+  name: string;
+  value: number;
+};
+type SkillData = {
+  key: Skill;
   name: string;
   value: number;
 };
@@ -66,40 +84,60 @@ type AttributeData = {
   name: string;
   score: number;
   statistics: StatisticData[];
+  skills: SkillData[];
 };
 const attributes = computed<AttributeData[]>(() =>
   orderBy(
-    ATTRIBUTES.map((key) => ({
-      key,
-      name: t(`game.attribute.options.${key}`),
-      score: scores[camelCase(key)],
-      statistics: orderBy(
-        STATISTICS_BY_ATTRIBUTE[key].map((statistic) => ({
-          key: statistic,
-          name: t(`game.statistic.options.${statistic}`),
-          value: calculateStatistic(statistic, 0, scores),
-        })),
-        "name",
-      ),
+    ATTRIBUTES.map((attribute) => ({
+      key: attribute,
+      name: t(`game.attribute.options.${attribute}`),
+      score: scores.value.get(attribute) ?? 0,
+      statistics: getAttributeStatistics(attribute).map((statistic) => ({
+        key: statistic,
+        name: t(`game.statistic.options.${statistic}`),
+        value: calculateStatisticNew(statistic, scores.value),
+      })),
+      skills: getAttributeSkills(attribute).map((skill) => ({
+        key: skill,
+        name: t(`game.skill.options.${skill}`),
+        value: calculateSkill(skill, scores.value, character.creation.talents),
+      })),
     })),
     "name",
   ),
 );
-const total = computed<number>(() => attributes.value.reduce((sum, attribute) => sum + attribute.score, 0));
-const canSubmit = computed<boolean>(() => !total.value);
 
-function updateScore(attribute: Attribute, value: number): void {
-  scores[camelCase(attribute)] = value;
+const total = computed<number>(() => [...scores.value.values()].reduce((sum, score) => sum + score, 0));
+const canSubmit = computed<boolean>(() => total.value === 0);
+
+function decrease(attribute: Attribute): void {
+  const score: number = scores.value.get(attribute) ?? 0;
+  scores.value.set(attribute, score - 1);
+}
+function increase(attribute: Attribute): void {
+  const score: number = scores.value.get(attribute) ?? 0;
+  scores.value.set(attribute, score + 1);
 }
 
 const { handleSubmit } = useForm();
 function submit(): void {
   if (canSubmit.value) {
-    character.saveAttributes({ ...scores });
+    character.saveAttributes({
+      dexterity: scores.value.get("Dexterity") ?? 0,
+      health: scores.value.get("Health") ?? 0,
+      intellect: scores.value.get("Intellect") ?? 0,
+      senses: scores.value.get("Senses") ?? 0,
+      vigor: scores.value.get("Vigor") ?? 0,
+    });
   }
 }
 
 onMounted(() => {
-  Object.assign(scores, character.creation.attributes);
+  scores.value.clear();
+  scores.value.set("Dexterity", character.creation.attributes.dexterity);
+  scores.value.set("Health", character.creation.attributes.health);
+  scores.value.set("Intellect", character.creation.attributes.intellect);
+  scores.value.set("Senses", character.creation.attributes.senses);
+  scores.value.set("Vigor", character.creation.attributes.vigor);
 });
 </script>
