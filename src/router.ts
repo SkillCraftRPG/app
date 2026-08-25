@@ -129,6 +129,11 @@ const router = createRouter({
       component: () => import("./views/lineages/LineagesView.vue"),
     },
     {
+      name: "SpeciesImport",
+      path: "/lineages/import",
+      component: () => import("./views/lineages/SpeciesImport.vue"),
+    },
+    {
       name: "Lineage",
       path: "/lineages/:id",
       component: () => import("./views/lineages/LineageView.vue"),

@@ -4,6 +4,7 @@ import type { Caste } from "@/types/castes";
 import type { Customization } from "@/types/customizations";
 import type { Education } from "@/types/educations";
 import type { Language } from "@/types/languages";
+import type { Lineage } from "@/types/lineages";
 import type { Script } from "@/types/scripts";
 import type { SearchResults } from "@/types/search";
 import type { Talent } from "@/types/talents";
@@ -32,6 +33,11 @@ export async function getCompendiumLanguages(): Promise<SearchResults<Language>>
 export async function getCompendiumScripts(): Promise<SearchResults<Script>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/compendium/scripts" }).buildRelative();
   return (await get<SearchResults<Script>>(url)).data;
+}
+
+export async function getCompendiumSpecies(): Promise<SearchResults<Lineage>> {
+  const url: string = new urlUtils.UrlBuilder({ path: "/compendium/species" }).buildRelative();
+  return (await get<SearchResults<Lineage>>(url)).data;
 }
 
 export async function getCompendiumTalents(): Promise<SearchResults<Talent>> {

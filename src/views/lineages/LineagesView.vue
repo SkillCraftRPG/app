@@ -3,7 +3,12 @@
     <div v-if="hasLoaded" class="d-flex flex-column flex-grow-1">
       <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-start gap-3">
         <h1 class="mb-0">{{ title }}</h1>
-        <CreateLineage class="mb-3" @created="onCreate" @error="handleError" />
+        <div class="d-flex gap-2">
+          <CreateLineage class="mb-3" @created="onCreate" @error="handleError" />
+          <RouterLink class="btn btn-outline-primary btn-lg mb-3" :to="{ name: 'SpeciesImport' }">
+            <font-awesome-icon aria-hidden="true" icon="fas fa-download" />&nbsp;{{ t("actions.import") }}
+          </RouterLink>
+        </div>
       </div>
       <WorldBreadcrumb :current="title" />
       <section>
