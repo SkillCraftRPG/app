@@ -30,7 +30,7 @@
       </div>
     </div>
     <CharacterConditions v-if="hasConditions" :character="character" class="mb-3" />
-    <CharacterAttributes :character="character" />
+    <CharacterAttributes :character="character" @error="$emit('error', $event)" @updated="$emit('updated', $event)" />
     <CharacterStatistics :character="character" />
     <CharacterSkills :character="character" />
     <CharacterSpeeds :character="character" />

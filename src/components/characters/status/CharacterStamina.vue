@@ -7,7 +7,7 @@
       </div>
       <div class="card-text d-flex justify-content-between align-items-center gap-2">
         <div>{{ t("game.rest.short") }}</div>
-        <div>+{{ n(regeneration, "integer") }}</div>
+        <div>{{ formatSignedInteger(regeneration, n) }}</div>
       </div>
       <TarProgress :aria-label="label" class="mt-1" :label="progress.card.label" :value="progress.card.value" variant="primary" />
     </TarCard>
@@ -24,7 +24,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center gap-2">
               <div class="small text-body-secondary">{{ t("game.rest.short") }}</div>
-              <div>+{{ n(regeneration, "integer") }}</div>
+              <div>{{ formatSignedInteger(regeneration, n) }}</div>
             </div>
           </div>
         </div>
@@ -55,6 +55,7 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { Character, UpdateCharacterPayload } from "@/types/characters";
+import { formatSignedInteger } from "@/utils/format";
 import { updateCharacter } from "@/api/characters";
 import { useForm } from "@/forms";
 
