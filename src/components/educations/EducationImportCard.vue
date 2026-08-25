@@ -1,26 +1,19 @@
 <template>
-  <EducationCard :clickable="isClickable" :education="education" :selected="selected">
-    <div class="d-flex justify-content-between mt-2">
-      <div>
-        <font-awesome-icon v-if="icon" :icon="icon" />
-      </div>
-      <div>
-        <ImportStatusDisplay :status="status" />
-      </div>
+  <EducationCard :clickable="isClickable" :education="education" :selected="selected" :selection="selection">
+    <div class="mt-2 text-end">
+      <ImportStatusDisplay :status="status" />
     </div>
   </EducationCard>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { parsingUtils } from "logitar-js";
 
 import EducationCard from "@/components/educations/EducationCard.vue";
 import ImportStatusDisplay from "@/components/import/ImportStatusDisplay.vue";
 import type { Education } from "@/types/educations";
 import type { ImportStatus } from "@/types/import";
-
-const { parseBoolean } = parsingUtils;
+import type { SelectionKind } from "@/types/shared";
 
 const props = defineProps<{
   education: Education;
@@ -29,9 +22,5 @@ const props = defineProps<{
 }>();
 
 const isClickable = computed<boolean>(() => props.status !== "UpToDate");
-const icon = computed<string | undefined>(() => {
-  if (isClickable.value) {
-    return parseBoolean(props.selected) ? "far fa-square-check" : "far fa-square";
-  }
-});
+const selection = computed<SelectionKind | undefined>(() => (isClickable.value ? "multiple" : undefined));
 </script>

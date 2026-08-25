@@ -1,26 +1,19 @@
 <template>
-  <CustomizationCard :clickable="isClickable" :customization="customization" :selected="selected">
-    <div class="d-flex justify-content-between mt-2">
-      <div>
-        <font-awesome-icon v-if="icon" :icon="icon" />
-      </div>
-      <div>
-        <ImportStatusDisplay :status="status" />
-      </div>
+  <CustomizationCard :clickable="isClickable" :customization="customization" :selected="selected" :selection="selection">
+    <div class="mt-2 text-end">
+      <ImportStatusDisplay :status="status" />
     </div>
   </CustomizationCard>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { parsingUtils } from "logitar-js";
 
 import CustomizationCard from "@/components/customizations/CustomizationCard.vue";
 import ImportStatusDisplay from "@/components/import/ImportStatusDisplay.vue";
 import type { Customization } from "@/types/customizations";
 import type { ImportStatus } from "@/types/import";
-
-const { parseBoolean } = parsingUtils;
+import type { SelectionKind } from "@/types/shared";
 
 const props = defineProps<{
   customization: Customization;
@@ -29,9 +22,5 @@ const props = defineProps<{
 }>();
 
 const isClickable = computed<boolean>(() => props.status !== "UpToDate");
-const icon = computed<string | undefined>(() => {
-  if (isClickable.value) {
-    return parseBoolean(props.selected) ? "far fa-square-check" : "far fa-square";
-  }
-});
+const selection = computed<SelectionKind | undefined>(() => (isClickable.value ? "multiple" : undefined));
 </script>
