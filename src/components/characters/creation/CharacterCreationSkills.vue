@@ -35,9 +35,7 @@
                 <TarButton :disabled="!skill.canIncrease" icon="fas fa-plus" outline size="small" @click="increase(skill.key)" />
               </div>
               <div>
-                <TarBadge v-if="skill.talents" pill variant="secondary">
-                  <font-awesome-icon icon="fas fa-graduation-cap" aria-hidden="true" />&nbsp;{{ t("characters.skills.trained") }}
-                </TarBadge>
+                <TrainedSkillBadge v-if="skill.talents" />
               </div>
             </div>
           </div>
@@ -60,9 +58,9 @@ import { arrayUtils } from "logitar-js";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import TarBadge from "@/components/tar/TarBadge.vue";
 import TarButton from "@/components/tar/TarButton.vue";
 import TarCard from "@/components/tar/TarCard.vue";
+import TrainedSkillBadge from "@/components/characters/overview/TrainedSkillBadge.vue";
 import type { Attribute, Skill } from "@/types/game";
 import type { SkillRankPayload } from "@/types/characters";
 import { ATTRIBUTES } from "@/types/game";
@@ -117,12 +115,6 @@ type SkillData = {
   canDecrease: boolean;
   canIncrease: boolean;
 };
-type AttributeData = {
-  key: Attribute | "Social";
-  name: string;
-  score?: number;
-  skills: SkillData[];
-};
 function produceSkillData(skill: Skill): SkillData {
   const talentCount: number = talents.value.get(skill) ?? 0;
   const rank: number = ranks.value.get(skill) ?? 0;
@@ -136,6 +128,13 @@ function produceSkillData(skill: Skill): SkillData {
     canIncrease: talentCount + rank < MAXIMUM_VALUE,
   };
 }
+
+type AttributeData = {
+  key: Attribute | "Social";
+  name: string;
+  score?: number;
+  skills: SkillData[];
+};
 const attributes = computed<AttributeData[]>(() => {
   const attributes: AttributeData[] = orderBy(
     ATTRIBUTES.map((attribute) => ({
