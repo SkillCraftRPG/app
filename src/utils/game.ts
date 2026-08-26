@@ -1,9 +1,8 @@
 import type { Attribute, Skill, Statistic } from "@/types/game";
 import type { CharacterModifier, CharacterModifierKind, CharacterTalent } from "@/types/characters";
 import type { SpeedKind } from "@/types/game";
-import { ATTRIBUTE_SKILLS, ATTRIBUTE_STATISTICS, ATTRIBUTES, SKILL_ATTRIBUTE, STATISTIC_ATTRIBUTE, STATISTICS } from "@/types/game";
+import { ATTRIBUTE_SKILLS, ATTRIBUTE_STATISTICS, SKILL_ATTRIBUTE, STATISTIC_ATTRIBUTE } from "@/types/game";
 import { MAXIMUM_LEVEL } from "./experience";
-import { SKILLS } from "@/types/game";
 
 /******************************************************************** TODO(FPION): REFACTOR *******************************************************************/
 
