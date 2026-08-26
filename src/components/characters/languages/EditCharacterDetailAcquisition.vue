@@ -109,7 +109,8 @@ function updateNotes(notes: string): void {
   emit("update:model-value", { ...props.modelValue, notes });
 }
 function updateSource(source: string): void {
-  emit("update:model-value", { ...props.modelValue, source, target: "" });
+  const target: string = (options.value?.length === 1 ? options.value[0]?.value : undefined) ?? "";
+  emit("update:model-value", { ...props.modelValue, source, target });
 }
 function updateTarget(target: string): void {
   emit("update:model-value", { ...props.modelValue, target });
