@@ -94,7 +94,7 @@ function clear(): void {
     language.value = undefined;
     step.value = "select";
   }
-  reset();
+  nextTick(reset);
 }
 
 function cancel(): void {

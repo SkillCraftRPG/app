@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ExperienceField from "./ExperienceField.vue";
@@ -167,7 +167,7 @@ async function submit(): Promise<void> {
       const character: Character = await gainCharacterExperience(props.character.id, payload);
       emit("updated", character);
       experience.value = 0;
-      reinitialize();
+      nextTick(reinitialize);
       modal.value?.hide();
     } catch (e: unknown) {
       emit("error", e);
