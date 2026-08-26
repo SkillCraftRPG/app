@@ -21,7 +21,7 @@ import CharacterAttribute from "./CharacterAttribute.vue";
 import CharacterAttributeIncrease from "./CharacterAttributeIncrease.vue";
 import type { Attribute } from "@/types/game";
 import type { Character } from "@/types/characters";
-import { ATTRIBUTES } from "@/utils/game";
+import { ATTRIBUTES } from "@/types/game";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();

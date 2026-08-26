@@ -43,6 +43,29 @@ export type Skill =
   | "Survival"
   | "Thievery";
 
+export const SKILLS: Skill[] = [
+  "Acrobatics",
+  "Athletics",
+  "Crafting",
+  "Deception",
+  "Diplomacy",
+  "Discipline",
+  "Insight",
+  "Investigation",
+  "Knowledge",
+  "Linguistics",
+  "Medicine",
+  "Melee",
+  "Occultism",
+  "Orientation",
+  "Perception",
+  "Performance",
+  "Resistance",
+  "Stealth",
+  "Survival",
+  "Thievery",
+];
+
 export const SKILL_ATTRIBUTE: Map<Skill, Attribute | "Social"> = new Map([
   ["Acrobatics", "Dexterity"],
   ["Athletics", "Vigor"],

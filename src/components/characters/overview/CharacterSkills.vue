@@ -21,7 +21,7 @@ import CharacterSkill from "./CharacterSkill.vue";
 import CharacterSkillIncrease from "./CharacterSkillIncrease.vue";
 import type { Character } from "@/types/characters";
 import type { Skill } from "@/types/game";
-import { SKILLS } from "@/utils/game";
+import { SKILLS } from "@/types/game";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();
