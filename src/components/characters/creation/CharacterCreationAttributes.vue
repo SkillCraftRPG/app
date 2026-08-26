@@ -20,16 +20,24 @@
       </div>
       <div class="row">
         <div class="col">
-          <div v-for="statistic in attribute.statistics" :key="statistic.key" class="d-flex justify-content-between gap-2">
-            <div class="text-body-secondary">{{ statistic.name }}</div>
-            <div>{{ n(statistic.value, "integer") }}</div>
-          </div>
+          <table class="table table-sm">
+            <tbody>
+              <tr v-for="statistic in attribute.statistics" :key="statistic.key">
+                <td class="w-50 text-body-secondary">{{ statistic.name }}</td>
+                <td class="w-50 text-end">{{ n(statistic.value, "integer") }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="col">
-          <div v-for="skill in attribute.skills" :key="skill.key" class="d-flex justify-content-between gap-2">
-            <div class="text-body-secondary">{{ skill.name }}</div>
-            <div>{{ formatSignedInteger(skill.value, n) }}</div>
-          </div>
+          <table class="table table-sm">
+            <tbody>
+              <tr v-for="skill in attribute.skills" :key="skill.key">
+                <td class="w-50 text-body-secondary">{{ skill.name }}</td>
+                <td class="w-50 text-end">{{ formatSignedInteger(skill.value, n) }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
