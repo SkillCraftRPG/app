@@ -14,9 +14,9 @@
     <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" :title="label">
       <section>
         <div class="d-flex align-items-center">
-          <div class="flex-fill text-start">{{ minimum }}</div>
+          <div class="flex-fill text-start">{{ n(minimum, "integer") }}</div>
           <div class="flex-fill text-center fw-semibold">{{ n(character.experience, "integer") }}</div>
-          <div class="flex-fill text-end">{{ maximum }}</div>
+          <div class="flex-fill text-end">{{ n(maximum, "integer") }}</div>
         </div>
         <TarProgress :aria-label="label" class="my-1" :label="progress.label" :value="progress.value" variant="warning" />
         <div class="mb-3">
