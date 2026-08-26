@@ -100,6 +100,11 @@
   "species": {
     "create": "Créer une espèce",
     "created": "L’espèce a été créée.",
+    "import": {
+      "empty": "Aucune espèce disponible pour l’importation.",
+      "help": "Sélectionnez les espèces à importer. Les langues accordées et leurs alphabets seront importés au besoin.",
+      "title": "Importer des espèces"
+    },
     "label": "Espèce",
     "title": "Espèces"
   }

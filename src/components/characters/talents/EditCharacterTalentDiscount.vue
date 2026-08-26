@@ -105,11 +105,10 @@ function updateAmount(amount: number): void {
   emit("update:model-value", { ...props.modelValue, amount });
 }
 function updateSource(source: string): void {
-  emit("update:model-value", { ...props.modelValue, source: source as CharacterTalentDiscountSource, target: "" });
+  const target: string = (options.value && options.value.length === 1 ? options.value[0]?.value : undefined) ?? "";
+  emit("update:model-value", { ...props.modelValue, source: source as CharacterTalentDiscountSource, target });
 }
 function updateTarget(target: string): void {
   emit("update:model-value", { ...props.modelValue, target });
 }
-
-// TODO(fpion): should select the first target
 </script>

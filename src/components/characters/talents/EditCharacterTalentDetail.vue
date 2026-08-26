@@ -44,7 +44,7 @@ import NameField from "@/components/shared/NameField.vue";
 import NotesField from "@/components/shared/NotesField.vue";
 import TalentCard from "@/components/talents/TalentCard.vue";
 import TarButton from "@/components/tar/TarButton.vue";
-import type { CharacterTalentContext, CharacterTalentDetail, CharacterTalentDiscount } from "@/types/characters";
+import type { CharacterTalentContext, CharacterTalentDetail, CharacterTalentDiscount, CharacterTalentDiscountSource } from "@/types/characters";
 import type { Talent } from "@/types/talents";
 import { calculateCost } from "@/utils/talent";
 
@@ -72,7 +72,7 @@ function updateQualifier(qualifier: string): void {
 
 function addDiscount(): void {
   const discounts: CharacterTalentDiscount[] = props.modelValue.discounts.map((discount) => ({ ...discount }));
-  discounts.push({ source: "Lineage", target: "", amount: 1 });
+  discounts.push({ source: "" as CharacterTalentDiscountSource, target: "", amount: 1 });
   emit("update:model-value", { ...props.modelValue, discounts });
 }
 function removeDiscount(index: number): void {

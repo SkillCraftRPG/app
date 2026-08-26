@@ -17,7 +17,7 @@
         </div>
         <div v-for="modifier in modifiers" :key="modifier.id" class="d-flex justify-content-between gap-2">
           <div>{{ modifier.label }}</div>
-          <div>{{ formatSignedInteger(modifier.value, (value) => n(value, "integer")) }}</div>
+          <div>{{ formatSignedInteger(modifier.value, n) }}</div>
         </div>
         <hr />
         <div class="d-flex justify-content-between gap-2 fw-semibold">

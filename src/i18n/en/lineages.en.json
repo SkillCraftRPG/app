@@ -100,6 +100,11 @@
   "species": {
     "create": "Create a species",
     "created": "The species was created.",
+    "import": {
+      "empty": "No species are available for import.",
+      "help": "Select the species to import. Granted languages and their scripts will be imported when needed.",
+      "title": "Import species"
+    },
     "label": "Species",
     "title": "Species"
   }

@@ -94,7 +94,7 @@ function clear(): void {
     language.value = undefined;
     step.value = "select";
   }
-  reset();
+  nextTick(reset);
 }
 
 function cancel(): void {
@@ -123,6 +123,9 @@ async function submit(): Promise<void> {
             };
             const character: Character = await createOrReplaceCharacterLanguage(props.character.id, language.value.id, payload);
             emit("updated", character);
+            if (!props.acquisition) {
+              clear();
+            }
             modal.value?.hide();
           } catch (e: unknown) {
             emit("error", e);
@@ -157,6 +160,4 @@ function open(): void {
   modal.value?.show();
 }
 defineExpose({ open });
-
-// TODO(fpion): should select the first target
 </script>

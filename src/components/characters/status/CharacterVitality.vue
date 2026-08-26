@@ -14,10 +14,10 @@
     <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="label">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <VitalityField id="current" label="characters.vitality.current" :max="total" v-model="current" />
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <div class="d-flex justify-content-between align-items-center gap-2">
               <div class="small text-body-secondary">{{ t("characters.vitality.total") }}</div>
               <div>{{ n(total, "integer") }}</div>
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <TarProgress :aria-label="label" class="mb-3 mt-1" :label="progress.form.label" :value="progress.form.value" variant="danger" />
+        <TarProgress :aria-label="label" class="mb-3" :label="progress.form.label" :value="progress.form.value" variant="danger" />
         <div class="row">
           <div class="col-md-6">
             <VitalityField class="mb-3" id="temporary" label="characters.vitality.temporary" v-model="temporary" />
@@ -63,6 +63,8 @@ import TarModal from "@/components/tar/TarModal.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import VitalityField from "./VitalityField.vue";
 import type { Character, UpdateCharacterPayload } from "@/types/characters";
+import type { ProgressData } from "@/types/progress";
+import { calculateProgress } from "@/utils/progress";
 import { formatSignedInteger } from "@/utils/format";
 import { updateCharacter } from "@/api/characters";
 import { useForm } from "@/forms";
@@ -93,14 +95,15 @@ const hasChanges = computed<boolean>(
 const label = computed<string>(() => t("game.statistic.options.Vitality"));
 const total = computed<number>(() => props.character.statistics.vitality.total);
 const regeneration = computed<number>(() => Math.round(total.value / 7));
-const progress = computed(() => {
-  const card: number = Math.floor((props.character.vitality.current * 100) / total.value);
-  const form: number = Math.floor((current.value * 100) / total.value);
-  return {
-    card: { label: n(card / 100, "percentage"), value: card },
-    form: { label: n(form / 100, "percentage"), value: form },
-  };
-});
+
+type ProgressPair = {
+  card: ProgressData;
+  form: ProgressData;
+};
+const progress = computed<ProgressPair>(() => ({
+  card: calculateProgress(props.character.vitality.current / total.value, n),
+  form: calculateProgress(current.value / total.value, n),
+}));
 
 const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
@@ -144,6 +147,4 @@ watch(
   },
   { deep: true, immediate: true },
 );
-
-// TODO(fpion): show temporary HP and stun damage in card
 </script>

@@ -234,11 +234,14 @@
   },
   "profile": "Profile",
   "skills": {
+    "available": "Available points",
     "help": "Distribute your Learning points among the skills. Each talent associated with a skill reduces the cost of its ranks by 1.",
+    "increase": "Increase skills",
     "invalid": "The number of points spent must equal your Learning ({learning}). Current total: {spent}.",
-    "remaining": "Remaining Points",
-    "spent": "Spent Points",
-    "title": "Skills"
+    "remaining": "Remaining points",
+    "spent": "Spent points",
+    "title": "Skills",
+    "trained": "Trained"
   },
   "social": "Social",
   "sort": {

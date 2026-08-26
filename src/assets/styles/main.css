@@ -41,6 +41,13 @@ button:disabled {
   flex-direction: column;
 }
 
+.w-sixth {
+  width: 16.666666% !important;
+}
+.w-third {
+  width: 33.333333% !important;
+}
+
 @media (min-width: 576px) {
   .jumbotron {
     padding: 4rem 2rem;

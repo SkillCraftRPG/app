@@ -51,6 +51,34 @@ export async function replaceLineageFeature(lineageId: string, featureId: string
   return (await put<Feature, Lineage>(url, payload)).data;
 }
 
+export async function saveLineage(lineage: Lineage): Promise<Lineage> {
+  const payload: CreateOrReplaceLineagePayload = {
+    parentId: lineage.parent?.id,
+    name: lineage.name,
+    summary: lineage.summary,
+    content: lineage.content,
+    features: lineage.features.map((feature) => ({ ...feature })),
+    languages: {
+      ids: lineage.languages.granted.map(({ id }) => id),
+      extra: lineage.languages.extra,
+      content: lineage.languages.content,
+    },
+    names: {
+      family: [...lineage.names.family],
+      female: [...lineage.names.female],
+      male: [...lineage.names.male],
+      unisex: [...lineage.names.unisex],
+      custom: lineage.names.custom.map((category) => ({ category: category.category, values: [...category.values] })),
+      content: lineage.names.content,
+    },
+    speeds: { ...lineage.speeds },
+    size: { ...lineage.size },
+    weight: { ...lineage.weight },
+    age: { ...lineage.age },
+  };
+  return await replaceLineage(lineage.id, payload);
+}
+
 export async function searchLineages(payload: SearchLineagesPayload): Promise<SearchResults<Lineage>> {
   const url: string = new urlUtils.UrlBuilder({ path: "/lineages" })
     .setQuery("ids", payload.ids)

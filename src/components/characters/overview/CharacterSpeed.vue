@@ -20,7 +20,7 @@
         </div>
         <div v-for="modifier in modifiers" :key="modifier.id" class="d-flex justify-content-between gap-2">
           <div>{{ modifier.label }}</div>
-          <div>{{ formatSignedInteger(modifier.value, (value) => n(value, "integer")) }}</div>
+          <div>{{ formatSignedInteger(modifier.value, n) }}</div>
         </div>
         <hr />
         <div class="d-flex justify-content-between gap-2 fw-semibold">
@@ -61,7 +61,7 @@ const modal = ref<InstanceType<typeof TarModal> | null>(null);
 
 const values = computed(() => props.character.speeds[camelCase(props.kind)]);
 const lineage = computed<string>(() => n(values.value.lineage, "integer"));
-const encumbrance = computed<string>(() => formatSignedInteger(values.value.encumbrance, (value) => n(value, "integer")));
+const encumbrance = computed<string>(() => formatSignedInteger(values.value.encumbrance, n));
 const total = computed<string>(() => n(Math.max(0, values.value.total), "integer"));
 
 type LabelledCharacterModifier = CharacterModifier & {

@@ -21,7 +21,7 @@
         </div>
         <div v-for="modifier in modifiers" :key="modifier.id" class="d-flex justify-content-between gap-2">
           <div>{{ modifier.label }}</div>
-          <div>{{ formatSignedInteger(modifier.value, (value) => n(value, "integer")) }}</div>
+          <div>{{ formatSignedInteger(modifier.value, n) }}</div>
         </div>
         <hr />
         <div class="d-flex justify-content-between gap-2 fw-semibold">
@@ -62,9 +62,9 @@ const modal = ref<InstanceType<typeof TarModal> | null>(null);
 
 const category = computed<string>(() => t(`game.attribute.${ATTRIBUTE_CATEGORIES[props.attribute]}`));
 const values = computed(() => props.character.attributes[camelCase(props.attribute)]);
-const starting = computed<string>(() => formatSignedInteger(values.value.starting, (value) => n(value, "integer")));
-const progression = computed<string>(() => formatSignedInteger(values.value.progression, (value) => n(value, "integer")));
-const total = computed<string>(() => formatSignedInteger(values.value.total, (value) => n(value, "integer")));
+const starting = computed<string>(() => formatSignedInteger(values.value.starting, n));
+const progression = computed<string>(() => formatSignedInteger(values.value.progression, n));
+const total = computed<string>(() => formatSignedInteger(values.value.total, n));
 
 type LabelledCharacterModifier = CharacterModifier & {
   label: string;

@@ -10,14 +10,14 @@
     <TarModal centered :close="t('actions.close')" fade scrollable ref="modal" size="large" :title="label">
       <form @submit.prevent="handleSubmit(submit)">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <HopeField id="current" label="game.hope.current" :max="maximum" v-model="current" />
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 mb-3">
             <HopeField id="maximum" label="game.hope.maximum" v-model="maximum" />
           </div>
         </div>
-        <TarProgress :aria-label="label" class="mt-1" :label="progress.form.label" :value="progress.form.value" variant="success" />
+        <TarProgress :aria-label="label" :label="progress.form.label" :value="progress.form.value" variant="success" />
       </form>
       <template #footer>
         <TarButton icon="fas fa-ban" :text="t('actions.cancel')" variant="secondary" @click="cancel" />
@@ -44,6 +44,8 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { Character, UpdateCharacterPayload } from "@/types/characters";
+import type { ProgressData } from "@/types/progress";
+import { calculateProgress } from "@/utils/progress";
 import { updateCharacter } from "@/api/characters";
 import { useForm } from "@/forms";
 
@@ -65,14 +67,15 @@ const maximum = ref<number>(0);
 
 const hasChanges = computed<boolean>(() => current.value !== props.character.hope.current || maximum.value !== props.character.hope.maximum);
 const label = computed<string>(() => t("game.hope.label"));
-const progress = computed(() => {
-  const card: number = Math.floor((props.character.hope.current * 100) / props.character.hope.maximum);
-  const form: number = Math.floor((current.value * 100) / maximum.value);
-  return {
-    card: { label: n(card / 100, "percentage"), value: card },
-    form: { label: n(form / 100, "percentage"), value: form },
-  };
-});
+
+type ProgressPair = {
+  card: ProgressData;
+  form: ProgressData;
+};
+const progress = computed<ProgressPair>(() => ({
+  card: calculateProgress(props.character.hope.current / props.character.hope.maximum, n),
+  form: calculateProgress(current.value / maximum.value, n),
+}));
 
 const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {

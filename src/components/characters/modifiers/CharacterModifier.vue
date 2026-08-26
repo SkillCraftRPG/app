@@ -51,5 +51,5 @@ const icon = computed<string>(() => {
 });
 const kind = computed<string>(() => translateKind(props.modifier, t));
 const target = computed<string>(() => translateTarget(props.modifier, t));
-const value = computed<string>(() => formatSignedInteger(props.modifier.value, (value) => n(value, "integer")));
+const value = computed<string>(() => formatSignedInteger(props.modifier.value, n));
 </script>

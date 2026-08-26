@@ -17,7 +17,7 @@ import { useI18n } from "vue-i18n";
 import CharacterStatistic from "./CharacterStatistic.vue";
 import type { Character } from "@/types/characters";
 import type { Statistic } from "@/types/game";
-import { STATISTICS } from "@/utils/game";
+import { STATISTICS } from "@/types/game";
 
 const { orderBy } = arrayUtils;
 const { t } = useI18n();

@@ -234,11 +234,14 @@
   },
   "profile": "Profil",
   "skills": {
+    "available": "Points disponibles",
     "help": "Répartissez vos points d’Apprentissage entre les compétences. Chaque talent associé à une compétence réduit de 1 le coût de ses rangs.",
+    "increase": "Augmenter les compétences",
     "invalid": "Le nombre de points dépensés doit être inférieur ou égal à votre Apprentissage ({learning}). Total actuel : {spent}.",
     "remaining": "Points restants",
     "spent": "Points dépensés",
-    "title": "Compétences"
+    "title": "Compétences",
+    "trained": "Formé"
   },
   "social": "Social",
   "sort": {
