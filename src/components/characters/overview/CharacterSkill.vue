@@ -17,7 +17,7 @@
         </div>
         <div v-for="talent in talents" :key="talent.id" class="d-flex justify-content-between gap-2">
           <div>{{ talent.name }}</div>
-          <div>{{ formatSignedInteger(1, (value) => n(value, "integer")) }}</div>
+          <div>{{ formatSignedInteger(1, n) }}</div>
         </div>
         <div class="d-flex justify-content-between gap-2">
           <div>{{ attribute }}</div>
@@ -25,7 +25,7 @@
         </div>
         <div v-for="modifier in modifiers" :key="modifier.id" class="d-flex justify-content-between gap-2">
           <div>{{ modifier.label }}</div>
-          <div>{{ formatSignedInteger(modifier.value, (value) => n(value, "integer")) }}</div>
+          <div>{{ formatSignedInteger(modifier.value, n) }}</div>
         </div>
         <hr />
         <div class="d-flex justify-content-between gap-2 fw-semibold">
@@ -70,9 +70,9 @@ const attribute = computed<string>(() => {
   return key ? t(`game.attribute.options.${key}`) : t("characters.social");
 });
 const values = computed(() => props.character.skills[camelCase(props.skill)]);
-const rank = computed<string>(() => formatSignedInteger(values.value.rank, (value) => n(value, "integer")));
-const attributeScore = computed<string>(() => formatSignedInteger(values.value.attribute, (value) => n(value, "integer")));
-const total = computed<string>(() => formatSignedInteger(values.value.total, (value) => n(value, "integer")));
+const rank = computed<string>(() => formatSignedInteger(values.value.rank, n));
+const attributeScore = computed<string>(() => formatSignedInteger(values.value.attribute, n));
+const total = computed<string>(() => formatSignedInteger(values.value.total, n));
 
 type SkillTalent = {
   id: string;
