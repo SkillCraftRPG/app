@@ -97,8 +97,10 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { Character, GainCharacterExperiencePayload } from "@/types/characters";
+import type { ProgressData } from "@/types/progress";
 import { MAXIMUM_LEVEL, getLevel, getThreshold } from "@/utils/experience";
 import { calculateAttributePoints } from "@/utils/character";
+import { calculateProgress } from "@/utils/progress";
 import { formatSignedInteger } from "@/utils/format";
 import { gainCharacterExperience } from "@/api/characters";
 import { useForm } from "@/forms";
@@ -122,10 +124,9 @@ const label = computed<string>(() => t("characters.experience.label"));
 const minimum = computed<number>(() => getThreshold(props.character.level));
 const maximum = computed<number>(() => getThreshold(Math.min(props.character.level + 1, MAXIMUM_LEVEL)));
 const toNextLevel = computed<number>(() => maximum.value - props.character.experience);
-const progress = computed(() => {
-  const value: number = Math.floor(((props.character.experience - minimum.value) / (maximum.value - minimum.value)) * 100);
-  return { label: n(value / 100, "percentage"), value };
-});
+
+const progress = computed<ProgressData>(() => calculateProgress((props.character.experience - minimum.value) / (maximum.value - minimum.value), n));
+
 const expected = computed(() => {
   const level: number = getLevel(props.character.experience + experience.value);
   const attributes: number = calculateAttributePoints(level) - calculateAttributePoints(props.character.level);

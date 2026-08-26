@@ -45,6 +45,8 @@ import TarCard from "@/components/tar/TarCard.vue";
 import TarModal from "@/components/tar/TarModal.vue";
 import TarProgress from "@/components/tar/TarProgress.vue";
 import type { Character, UpdateCharacterPayload } from "@/types/characters";
+import type { ProgressData } from "@/types/progress";
+import { calculateProgress } from "@/utils/progress";
 import { updateCharacter } from "@/api/characters";
 import { useForm } from "@/forms";
 
@@ -66,14 +68,15 @@ const modal = ref<InstanceType<typeof TarModal> | null>(null);
 const hasChanges = computed<boolean>(() => current.value !== props.character.intoxication);
 const label = computed<string>(() => t("characters.intoxication.label"));
 const total = computed<number>(() => props.character.attributes.health.total + 3);
-const progress = computed(() => {
-  const card: number = Math.floor((props.character.intoxication * 100) / total.value);
-  const form: number = Math.floor((current.value * 100) / total.value);
-  return {
-    card: { label: n(card / 100, "percentage"), value: card },
-    form: { label: n(form / 100, "percentage"), value: form },
-  };
-});
+
+type ProgressPair = {
+  card: ProgressData;
+  form: ProgressData;
+};
+const progress = computed<ProgressPair>(() => ({
+  card: calculateProgress(props.character.intoxication / total.value, n),
+  form: calculateProgress(current.value / total.value, n),
+}));
 
 const { handleSubmit, reinitialize, reset } = useForm();
 async function submit(): Promise<void> {
