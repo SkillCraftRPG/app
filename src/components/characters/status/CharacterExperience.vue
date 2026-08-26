@@ -68,7 +68,7 @@ import type { Attribute } from "@/types/game";
 import type { Character, GainCharacterExperiencePayload } from "@/types/characters";
 import type { ProgressData } from "@/types/progress";
 import { MAXIMUM_LEVEL, getLevel, getThreshold } from "@/utils/experience";
-import { calculateAttributePoints } from "@/utils/character";
+import { calculateAttributePoints, getAttributeTotals } from "@/utils/character";
 import { calculateProgress } from "@/utils/progress";
 import { calculateStatisticNew } from "@/utils/game";
 import { formatSignedInteger } from "@/utils/format";
@@ -104,16 +104,7 @@ type Impact = {
   delta: number;
   result: string;
 };
-const attributes = computed<Map<Attribute, number>>(
-  () =>
-    new Map([
-      ["Dexterity", props.character.attributes.dexterity.total],
-      ["Health", props.character.attributes.health.total],
-      ["Intellect", props.character.attributes.intellect.total],
-      ["Senses", props.character.attributes.senses.total],
-      ["Vigor", props.character.attributes.vigor.total],
-    ]),
-);
+const attributes = computed<Map<Attribute, number>>(() => getAttributeTotals(props.character));
 const level = computed<number>(() => getLevel(props.character.experience + experience.value));
 const impacts = computed<Impact[]>(() => {
   const attributeDelta: number = calculateAttributePoints(level.value) - calculateAttributePoints(props.character.level);
