@@ -131,7 +131,6 @@ function detail(value: CharacterLanguage): void {
 }
 function edit(value: CharacterLanguage): void {
   language.value = value;
-  console.log(language.value);
   nextTick(() => editModal.value?.open());
 }
 function remove(value: CharacterLanguage): void {

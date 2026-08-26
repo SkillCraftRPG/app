@@ -147,6 +147,4 @@ watch(
   },
   { deep: true, immediate: true },
 );
-
-// TODO(fpion): show temporary HP and stun damage in card
 </script>

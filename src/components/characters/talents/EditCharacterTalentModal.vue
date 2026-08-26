@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EditCharacterTalentDetail from "./EditCharacterTalentDetail.vue";
@@ -64,14 +64,14 @@ const title = computed<string>(() => t(props.acquisition ? "characters.talents.e
 
 function clear(): void {
   select.value?.clearFilters();
+  detail.value = { qualifier: "", notes: "", discounts: [] };
   if (props.acquisition) {
     step.value = "detail";
   } else {
     talent.value = undefined;
     step.value = "select";
   }
-  detail.value = { qualifier: "", notes: "", discounts: [] };
-  reset();
+  nextTick(reset);
 }
 
 function cancel(): void {
@@ -93,7 +93,7 @@ function toggle(value: Talent): void {
   }
 }
 
-const { handleSubmit, reset } = useForm();
+const { handleSubmit, reinitialize, reset } = useForm();
 function submit(): void {
   if (canSubmit.value) {
     switch (step.value) {
@@ -112,7 +112,9 @@ function submit(): void {
             updatedOn: props.acquisition?.updatedOn ?? "",
           };
           emit("confirm", acquisition);
-          clear();
+          if (!props.acquisition) {
+            clear();
+          }
           modal.value?.hide();
         }
         break;
@@ -133,6 +135,7 @@ watch(
       discounts: acquisition?.discounts.map((discount) => ({ ...discount })) ?? [],
     };
     step.value = talent.value ? "detail" : "select";
+    nextTick(reinitialize);
   },
   { deep: true, immediate: true },
 );
@@ -142,6 +145,5 @@ function open(): void {
 }
 defineExpose({ open });
 
-// TODO(fpion): see EditCharacterModifierModal for fix(es)
 // TODO(fpion): rename `detail` to `acquisition`
 </script>
